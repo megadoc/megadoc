@@ -38,10 +38,7 @@ function PluginManager(plugins, emitter, onDone) {
 
         console.log(`Loading plugin ${name}.`);
 
-        // in development, we'll be eagerly loading the plugins in the devserver
-        //
-        // see /server.js and /.local.js
-        if (process.env.NODE_ENV !== 'development') {
+        if (plugin.options.files) {
           plugin.options.files.map(createPublicPath).forEach(loadScript);
         }
       });

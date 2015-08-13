@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var glob = require('glob');
+var path = require('path');
 var fs = require('fs');
 var findCommonPrefix = require('../lib/utils/findCommonPrefix');
 var strHumanize = require('../lib/utils/strHumanize');
@@ -49,12 +50,14 @@ function scanForSections(article) {
   return sections;
 };
 
-function scanCollection(config, done) {
-  glob(config.source, { nodir: true }, function (err, files) {
+function scanCollection(config, assetRoot, done) {
+  console.log('asset root:', assetRoot);
+  var pattern = path.resolve(assetRoot, config.source);
+  glob(pattern, { nodir: true }, function (err, files) {
     var matchedFiles, database;
 
     if (err) {
-      console.warn('omg');
+      console.error(err);
       return;
     }
 
@@ -73,8 +76,6 @@ function scanCollection(config, done) {
         source: fs.readFileSync(filePath, 'utf-8')
       };
     }, []);
-
-    console.log(database);
 
     var commonPrefix = findCommonPrefix(pluck(database, 'filePath'));
     var id;
@@ -102,11 +103,11 @@ function scanCollection(config, done) {
   });
 };
 
-module.exports = function(tiny, config/*, tinyConfig, utils*/) {
+module.exports = function(tiny, config, tinyConfig/*, utils*/) {
   var aggregateDatabase = {};
 
   config.collections.map(function(collection) {
-    scanCollection(collection, function(database) {
+    scanCollection(collection, tinyConfig.root, function(database) {
       aggregateDatabase[collection.name] = database;
 
       if (Object.keys(aggregateDatabase).length === config.collections.length) {

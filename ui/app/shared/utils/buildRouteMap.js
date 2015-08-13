@@ -32,7 +32,7 @@ module.exports = function(specs) {
     .map(function createRoute(spec) {
       var Type;
 
-      if ([Route.type, Redirect.type].indexOf(spec.type) > -1) {
+      if ([Route, Redirect].indexOf(spec.type) > -1) {
         return spec;
       }
       else {

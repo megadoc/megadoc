@@ -9,19 +9,19 @@
     <meta
       name="description"
       content="A documentation parser and generator."
-    >
+    />
 
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    >
+    />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <script>
       var BUILD_CONFIG = {};
-      var entryResources = [ 'config.js', 'styles.js', 'index.js' ];
-      var publicPath = BUILD_CONFIG.publicPath || './';
+      var entryResources = [ 'vendor.js', 'config.js', 'styles.js', 'main.js', 'plugins.js' ];
+      var publicPath = BUILD_CONFIG.publicPath || '/';
 
       var loadScript = function(filePath) {
         var script = document.createElement('script');

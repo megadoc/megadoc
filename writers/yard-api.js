@@ -25,8 +25,8 @@ module.exports = function(tiny, config, tinyConfig, utils) {
   // );
 
   fs.writeFileSync(
-    path.resolve(outputDir, 'yard-api.js'),
-    'window["yard-api"]=' + JSON.stringify(runtimeConfig) + ';'
+    path.resolve(outputDir, 'yard-api-config.js'),
+    'window["yard-api-config"]=' + JSON.stringify(runtimeConfig) + ';'
   );
 
   console.log('\tDone.');

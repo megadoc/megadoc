@@ -18,13 +18,12 @@ var DocGroup = React.createClass({
 
   render() {
     var { docType, itemProps } = this.props;
-    var DOMTag = this.props.tagName;
+    var DOMTag = React.DOM[this.props.tagName];
     var docs = docType ?
       this.props.docs.filter(function(doc) { return doc.ctx.type === docType; }) :
       this.props.docs
     ;
 
-    var Renderer = this.props.renderer;
     var className;
 
     if (docs.length === 0) {
@@ -42,30 +41,32 @@ var DocGroup = React.createClass({
         </h2>
 
         <DOMTag className={this.props.listClassName}>
-          {docs.map(function(doc) {
-            var id;
-
-            if (Renderer.getKey instanceof Function) {
-              id = Renderer.getKey(doc);
-            }
-            else {
-              id = doc.id || doc.name || doc.ctx.name;
-            }
-
-            return (
-              <Renderer
-                key={id}
-                ref={id}
-                {...itemProps}
-                {...doc}
-              />
-            );
-          })}
+          {docs.map(this.renderItem)}
         </DOMTag>
       </div>
     );
   },
 
+  renderItem(doc) {
+    var id;
+    var Renderer = this.props.renderer;
+
+    if (Renderer.getKey instanceof Function) {
+      id = Renderer.getKey(doc);
+    }
+    else {
+      id = doc.id || doc.name || doc.ctx.name;
+    }
+
+    return (
+      <Renderer
+        key={id}
+        ref={id}
+        {...this.props.itemProps}
+        {...doc}
+      />
+    );
+  },
 
   getItem(id) {
     return this.refs[id];

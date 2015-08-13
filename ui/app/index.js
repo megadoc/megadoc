@@ -1,6 +1,6 @@
 var React = require('react');
 var Router = require('react-router');
-var config = require('config');
+var xConfig = require('./shared/config');
 var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
 var OutletStore = require('stores/OutletStore');
@@ -23,13 +23,17 @@ var emitStarted = function(done) {
   done();
 };
 
-var pluginMgr = new PluginManager(config.plugins, emitter, function start(registrar) {
+console.assert(!!xConfig && Array.isArray(xConfig.plugins),
+  'Configuration file might have not been loaded correctly.'
+);
+
+var pluginMgr = new PluginManager(xConfig.plugins, emitter, function start(registrar) {
   emitter.emit('starting');
 
   var router = Router.create({
-    location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
+    location: xConfig.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
     routes: [
-      <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
+      <Route name="root" path={xConfig.publicPath} handler={require('./screens/Root')}>
         <DefaultRoute name="home" handler={require('./screens/Home')} />
         <Route name="404" handler={require('./screens/NotFound')} />
 
@@ -62,3 +66,5 @@ var pluginMgr = new PluginManager(config.plugins, emitter, function start(regist
 window.tinydocReact.use = pluginMgr.use;
 
 pluginMgr.load();
+
+console.log('Loaded.');

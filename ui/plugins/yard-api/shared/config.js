@@ -1,1 +1,1 @@
-module.exports = window['tinydoc-yard-api-scanner-config'] || {};
+module.exports = window['yard-api-config'] || {};

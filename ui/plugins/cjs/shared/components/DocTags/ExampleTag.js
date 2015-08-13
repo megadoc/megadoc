@@ -14,8 +14,6 @@ var ExampleTag = React.createClass({
     var { string } = this.props;
     var title = string.substr(0, string.indexOf('\n'));
 
-    console.log(title);
-
     if (title[0] === ' ') {
       title = null;
     }

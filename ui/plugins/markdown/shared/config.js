@@ -1,1 +1,1 @@
-module.exports = window['tinydoc-markdown-scanner-config'] || {};
+module.exports = window['markdown-config'] || {};

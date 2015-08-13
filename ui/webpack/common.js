@@ -1,7 +1,11 @@
-var path = require("path");
-var extend = require("lodash").extend;
+var path = require('path');
+var extend = require('lodash').extend;
+var root = path.resolve(__dirname, '..');
 
 var nodeEnv = process.env.NODE_ENV;
+var jsLoaders = [ 'babel-loader' ];
+
+
 var baseConfig = {
   devtool: nodeEnv === 'production' ? null : 'eval',
 
@@ -13,7 +17,7 @@ var baseConfig = {
     // root: path.resolve(__dirname, '..', 'node_modules'),
 
     fallback: [
-      path.resolve(__dirname, '..', 'app', 'shared')
+      path.join(root, 'app', 'shared')
     ],
 
     modulesDirectories: [
@@ -23,23 +27,29 @@ var baseConfig = {
     ],
 
     alias: {
+      'tinydoc': path.join(__dirname, '..', '..'),
       'qtip': path.join(__dirname, '..', 'app', 'vendor', 'jquery.qtip.js')
     }
   },
 
-  resolveLoader: {
-    // root: path.resolve(__dirname, '..', 'node_modules')
+  node: {
+    Buffer: false
   },
 
   module: {
+    noParse: [/vendor\//, /dist\//],
+
     loaders: [
       {
-        test: /(app|qjunk)\/(.*)\.js$/,
-        loader: [
-          'babel-loader',
-          'wrap-loader?js',
-          'react-hot'
-        ].join('!')
+        type: 'js', // for server.js to inject "react-hot"
+        test: /\.js$/,
+        include: [
+          path.join(root, 'app'),
+          path.join(root, 'plugins'),
+          path.join(root, '..', 'node_modules', 'qjunk', 'lib')
+        ],
+
+        loader: jsLoaders.join('!')
       },
 
       {
@@ -57,13 +67,6 @@ var baseConfig = {
         loader: 'style-loader!css-loader?importLoaders=1'
       }
     ]
-  },
-
-  wrap: {
-    js: {
-      before: '(function(){\n',
-      after: '}());'
-    }
   }
 };
 

@@ -9,14 +9,26 @@ var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
 var server;
 
-config.entry.index.unshift("webpack/hot/dev-server");
-config.entry.index.unshift('webpack-dev-server/client?http://localhost:8942');
+config.entry.main = [
+  'webpack/hot/dev-server',
+  'webpack-dev-server/client?http://localhost:8942',
+  config.entry.main
+];
+
 config.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+if (process.env.CONFIG_FILE) {
+  config.entry.main.unshift(path.resolve(process.env.CONFIG_FILE));
+}
 
 // load local plugins that you're developing
 if (fs.existsSync('./.local.js')) {
-  config.entry.index = config.entry.index.concat(require('./.local.js'));
+  config.entry.main.push('./.local.js');
 }
+
+config.module.loaders.filter(function(loader) {
+  return loader.type === 'js';
+})[0].loader += '!react-hot';
 
 server = new WebpackDevServer(webpack(config), {
   contentBase: path.resolve(ROOT, 'app'),
