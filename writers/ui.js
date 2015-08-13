@@ -1,7 +1,6 @@
 var fs = require('fs-extra');
 var path = require('path');
 var Logger = require('../lib/Logger');
-// var Promise = require('promise');
 var ASSETS_DIR = path.resolve(__dirname, '..', 'ui', 'dist');
 var extend = require('lodash').extend;
 var compileCssAssets = require('./ui/compileCssAssets');

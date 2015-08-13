@@ -33,6 +33,8 @@ function PluginManager(plugins, emitter, onDone) {
     },
 
     load: function() {
+      console.log('There are %d registered plugins.', plugins.length);
+
       plugins.forEach(function(plugin) {
         var { name } = plugin;
 

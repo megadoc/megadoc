@@ -1,4 +1,3 @@
-// var less = require('less');
 var fs = require('fs-extra');
 var path = require('path');
 var UI_ROOT = path.resolve(__dirname, '..', '..', 'ui');
@@ -28,20 +27,22 @@ module.exports = function(assetRoot, config, plugins, outputDir) {
   }
 
   extend(webpackConfig, {
-    output: extend(webpackConfig.output, {
-      path: outputDir
-    }),
+    output: {
+      path: outputDir,
+      filename: 'styles.js',
+      libraryTarget: 'var',
+      jsonpFunction: 'webpackJsonp_CSS'
+    },
 
     entry: {
       styles: sourceFiles
-    }
-  });
+    },
 
-  webpackConfig.plugins.push(new webpack.NoErrorsPlugin());
+    plugins: []
+  });
 
   var compiler = new webpack(webpackConfig);
 
-  // return less.render(sources.join('\n'), options).then(function(output) {
   return new Promise(function(resolve, reject) {
     compiler.run(function(err, stats) {
       if (err) {
@@ -56,6 +57,8 @@ module.exports = function(assetRoot, config, plugins, outputDir) {
       else if (jsonStats.warnings.length > 0) {
         return reject(jsonStats.warnings);
       }
+
+      console.log('CSS assets generated.');
 
       resolve();
     });

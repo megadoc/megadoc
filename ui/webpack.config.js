@@ -8,28 +8,29 @@ var UI_ROOT = path.resolve(__dirname);
 var nodeEnv = process.env.NODE_ENV || 'development';
 var config = {
   entry: {
-    main: './app/index.js',
-    plugins: glob.sync('./plugins/*/index.js')
+    main: './app/index.js'
   },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    libraryTarget: 'var'
+    libraryTarget: 'this'
   },
 
   plugins: [
     new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
-    // new webpack.DefinePlugin({
-    //   "process.env.NODE_ENV": JSON.stringify(nodeEnv)
-    // }),
+    new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin()
   ]
 };
 
+glob.sync('./plugins/*/index.js').forEach(function(entryFile) {
+  var pluginName = path.basename(path.dirname(entryFile));
+  config.entry['plugins/' + pluginName] = entryFile;
+});
+
 if (nodeEnv === 'production' && process.env.OPTIMIZE !== '0') {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin());
-  config.plugins.push(new webpack.NoErrorsPlugin());
 }
 
 module.exports = commonConfig(config);

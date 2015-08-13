@@ -4,4 +4,7 @@ if [ -z "${NODE_ENV}" ]; then
   export NODE_ENV=production
 fi
 
-node ../node_modules/webpack/bin/webpack.js --progress --display-chunks
+node ../node_modules/webpack/bin/webpack.js \
+  --progress \
+  --display-chunks \
+  $@
