@@ -1,0 +1,19 @@
+{
+  "env": {
+    "browser": true,
+    "mocha": true
+  },
+  "globals": {
+    "expect": false
+  },
+  "ecmaFeatures": {
+    "arrowFunctions": true,
+    "classes": true,
+    "templateStrings": true,
+    "destructuring": true,
+    "objectLiteralShorthandMethods": true,
+    "spread": true,
+    "restParams": true,
+    "jsx": true
+  }
+}

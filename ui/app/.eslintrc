@@ -1,0 +1,15 @@
+{
+  "env": {
+    "browser": true
+  },
+  "ecmaFeatures": {
+    "arrowFunctions": true,
+    "classes": true,
+    "templateStrings": true,
+    "destructuring": true,
+    "objectLiteralShorthandMethods": true,
+    "spread": false,
+    "restParams": false,
+    "jsx": true
+  }
+}

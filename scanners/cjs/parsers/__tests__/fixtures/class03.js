@@ -1,0 +1,6 @@
+/**
+ * @constructor
+ * Barred?
+ */
+function Foo() {
+}

@@ -1,0 +1,37 @@
+.api-endpoint {
+  &__header {
+    padding-bottom: @whitespace;
+    margin-bottom: @whitespace;
+  }
+
+  &__header-path {
+    float: right;
+    font-size: 0.75em;
+    margin-top: 0.4em;
+  }
+
+  &__route {
+    font-family: monospace;
+  }
+}
+
+.schemable({
+  .api-endpoint__header {
+    border-bottom: 1px solid @base1;
+  }
+
+  .api-endpoint__header-path {
+    color: @base1;
+  }
+
+  .api-endpoint__header-beta {
+    background-color: @base1;
+    color: @base3;
+
+    font-size: 0.75em;
+    display: inline-block;
+
+    padding: 0 @whitespace / 2;
+    margin-left: @whitespace / 2;
+  }
+});

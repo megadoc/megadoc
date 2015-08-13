@@ -1,0 +1,27 @@
+.class-view {
+  &__method-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__header-name {
+    * {
+      .inline-block();
+      vertical-align: middle;
+    }
+
+    .icon {
+      margin-right: 5px;
+    }
+  }
+}
+.schemable({
+  .class-view {
+    &__module-filepath {
+      background: @base2;
+      font-size: smaller;
+      padding: @whitespace/4;
+    }
+  }
+});

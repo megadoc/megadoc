@@ -1,0 +1,20 @@
+.two-column-layout {
+  &__left {
+    position: fixed;
+    bottom: 0;
+    top: @content-top-offset - @whitespace;
+    overflow: auto;
+
+    .resizable-panel__content {
+      padding-top: @whitespace;
+      padding-right: @whitespace;
+      padding-bottom: @whitespace;
+    }
+  }
+}
+
+.schemable({
+  .two-column-layout__left {
+    background: @base3;
+  }
+});

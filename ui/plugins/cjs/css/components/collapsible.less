@@ -1,0 +1,38 @@
+.collapsible {
+  @icon-size: 26px;
+
+  position: relative;
+  padding-left: @icon-size;
+
+  .collapser {
+    transition: transform 0.2s linear 0s;
+  }
+
+  .collapser.icon {
+    vertical-align: middle;
+    position: absolute;
+    // left: 0;
+    line-height: inherit;
+    margin-left: -1.5em;
+  }
+
+  .collapsible-header {
+    cursor: pointer;
+  }
+
+  &:not(&--collapsed) {
+    .collapsible-header:hover .collapser {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &--collapsed {
+    .collapser {
+      transform: rotate(-90deg);
+    }
+
+    .collapsible-header:hover .collapser {
+      transform: rotate(0deg);
+    }
+  }
+}

@@ -1,0 +1,5 @@
+/**
+ * Barred?
+ */
+function Foo() {
+}

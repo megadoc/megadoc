@@ -1,0 +1,41 @@
+.tag-group {
+  .param-tag, .return-tag, .throws-tag {
+    margin: @whitespace 0;
+    margin-left: @whitespace;
+  }
+
+  .param-tag, .return-tag {
+    font-size: @font-size;
+  }
+}
+
+.param-tag, .return-tag, .throws-tag, .property-tag {
+  &__name {
+    font-weight: bold;
+  }
+}
+
+.property-tag {
+  list-style: none;
+  padding: 0;
+  margin: @whitespace 0;
+}
+
+.schemable({
+  .param-tag__types, .return-tag__types {
+    color: @base0;
+  }
+
+  .property-tag + .property-tag {
+    border-top: 1px solid @base2;
+    padding-top: @whitespace;
+  }
+
+  .property-tag__name, .param-tag__name, .return-tag__name {
+    color: @accent;
+  }
+
+  .property-tag__default-value {
+    font-style: italic;
+  }
+});

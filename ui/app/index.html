@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>tinydoc</title>
+
+    <meta
+      name="description"
+      content="A documentation parser and generator."
+    >
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+
+    <script>
+      var BUILD_CONFIG = {};
+      var entryResources = [ 'config.js', 'styles.js', 'index.js' ];
+      var publicPath = BUILD_CONFIG.publicPath || './';
+
+      var loadScript = function(filePath) {
+        var script = document.createElement('script');
+        script.src = filePath;
+        script.type = 'text/javascript';
+        script.async = false;
+        document.head.appendChild(script);
+      };
+
+      entryResources.forEach(function(fileName) {
+        loadScript([ publicPath, fileName ].join('/').replace('//', '/'));
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="__app__">
+      <div class="loading-screen">
+        Loading application data... please wait.
+      </div>
+    </div>
+  </body>
+</html>

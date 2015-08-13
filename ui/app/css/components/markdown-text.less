@@ -1,0 +1,43 @@
+.markdown-text {
+  &__heading-anchor {
+    opacity: 0;
+    font-size: smaller;
+    transition: opacity 0.25s ease-out 0s;
+    font-weight: normal;
+
+    &:hover, &:active, &:focus {
+      text-decoration: none;
+      font-weight: normal;
+      opacity: 1;
+    }
+  }
+
+  &__heading:hover {
+    .markdown-text__heading-anchor {
+      opacity: 1;
+    }
+  }
+
+}
+
+.schemable({
+  .markdown-text {
+    &__heading-anchor {
+      color: @base1;
+    }
+
+    h2 {
+      padding-bottom: @whitespace/2;
+      border-bottom: 1px solid @base2;
+    }
+
+    hr {
+      border: none;
+      border-bottom: 1px solid @base2;
+      background: none;
+    }
+    code {
+      background-color: @base2;
+    }
+  }
+});

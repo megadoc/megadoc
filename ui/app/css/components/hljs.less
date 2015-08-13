@@ -1,0 +1,27 @@
+// syntax highlighting schemes
+body.plain {
+  @import '../vendor/highlight/plain';
+}
+
+body.solarized--light {
+  @import '../vendor/highlight/solarized_light';
+}
+
+body.solarized--dark {
+  @import '../vendor/highlight/solarized_dark';
+}
+
+.schemable({
+  // override the background color, regardless of syntax theme:
+  .hljs {
+    background-color: @base2;
+  }
+
+  .hljs when (@whitespace <= @max-hljs-padding) {
+    padding: @whitespace;
+  }
+
+  .hljs when (@whitespace > @max-hljs-padding) {
+    padding: @max-hljs-padding;
+  }
+});

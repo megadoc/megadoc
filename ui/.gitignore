@@ -1,0 +1,11 @@
+/node_modules
+/.local.js
+/dist
+*.zip
+
+# font stuff
+demo.html
+demo-files
+Read Me.txt
+selection.json
+/app/css/fonts/*.json

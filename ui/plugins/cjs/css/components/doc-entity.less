@@ -1,0 +1,27 @@
+.doc-entity {
+  &__tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &.collapsible--collapsed {
+    .doc-entity__description {
+      font-style: italic;
+    }
+  }
+}
+
+.schemable({
+  .doc-entity {
+    &.collapsible--collapsed {
+      .doc-entity__description {
+        color: @base1;
+      }
+    }
+
+    &__name {
+      color: @accent;
+    }
+  }
+});

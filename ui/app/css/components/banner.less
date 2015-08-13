@@ -1,0 +1,62 @@
+.schemable({
+  @height: @banner-height;
+
+  .banner-wrapper {
+    background: @base3;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: @height;
+    z-index: 3;
+    border-bottom: @banner-border-dim solid @base2;
+  }
+
+  .banner {
+    width: @content-width;
+    margin: @whitespace;
+    height: @banner-inner-height;
+    position: relative;
+    top: @whitespace/2;
+
+    &__logo {
+      margin: 0;
+      display: inline-block;
+    }
+
+    &__motto {
+      font-size: smaller;
+      margin: @whitespace 0 0 0;
+    }
+  }
+
+  .banner__navigation {
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 1;
+
+    &-item {
+      .inline-block();
+
+      a {
+        display: block;
+      }
+
+      min-width: 156px;
+      text-align: center;
+
+      .icon {
+        .inline-block();
+        font-size: 48px;
+        vertical-align: middle;
+        text-align: left;
+        width: 56px;
+      }
+
+      a.active, a:hover {
+        text-decoration: none;
+      }
+    }
+  }
+});

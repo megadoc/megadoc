@@ -1,0 +1,37 @@
+.tag-group {
+  margin: 0;
+  padding: 0;
+
+  // padding: @whitespace;
+
+  &.collapsible {
+    padding-left: @whitespace;
+  }
+
+  // .tag-group__header {
+  //   margin-left: @whitespace * -2;
+  // }
+}
+
+.schemable({
+  .tag-group {
+    // background: @base2;
+  }
+
+  .tag-group--collapsed {
+    .tag-group__header {
+      border-bottom-color: transparent;
+      padding-bottom: 0;
+    }
+  }
+
+  .tag-group__header {
+    margin: @whitespace 0;
+    border-bottom: 1px solid @base2;
+    padding-bottom: @whitespace;
+
+    // .collapser {
+    //   margin-left: @whitespace;
+    // }
+  }
+});

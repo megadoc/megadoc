@@ -1,0 +1,137 @@
+@import "variables";
+@import "helpers";
+@import "typography";
+@import "fonts/tinydoc-1.2/style";
+@import "components/banner";
+@import "components/color-scheme-switcher";
+@import "components/doc-content";
+@import "components/two-column-layout";
+@import "components/resizable-panel";
+@import "components/markdown-text";
+@import "components/hljs";
+@import "components/checkbox";
+
+body.plain {
+  .rebase(
+    @plain-base03,
+    @plain-base02,
+    @plain-base01,
+    @plain-base00,
+    @plain-base0,
+    @plain-base1,
+    @plain-base2,
+    @plain-base3,
+    @plain-accent,
+    @plain-link
+  );
+}
+
+body.solarized--light {
+  .rebase(
+    @solarized-base3,
+    @solarized-base2,
+    @solarized-base1,
+    @solarized-base0,
+    @solarized-base00,
+    @solarized-base01,
+    @solarized-base02,
+    @solarized-base03,
+    @solarized-cyan
+  );
+}
+
+body.solarized--dark {
+  .rebase(
+    @solarized-base03,
+    @solarized-base02,
+    @solarized-base01,
+    @solarized-base00,
+    @solarized-base0,
+    @solarized-base1,
+    @solarized-base2,
+    @solarized-base3,
+    @solarized-cyan
+  );
+}
+
+
+body {
+  font-family: @font;
+  font-size: @font-size;
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+a {
+  outline: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
+
+  &.active {
+    font-weight: bold;
+  }
+}
+
+h1,h2,h3,h4 {
+  margin: @whitespace 0;
+}
+
+ul, ol {
+  padding-left: @whitespace;
+}
+
+#app-container {
+  width: @content-width;
+  margin: 0 @whitespace;
+  margin-top: @content-top-offset;
+}
+
+.schemable({
+  button, .btn {
+    padding: @whitespace/2 @whitespace;
+    line-height: inherit;
+    background: @base2;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    letter-spacing: 1px;
+    font-family: inherit;
+    color: inherit;
+    transition: background 0.08s ease-out 0s;
+
+    &:hover {
+      background: @base3;
+    }
+
+    &:active, &--active {
+      background: @base3;
+      box-shadow: 0 0 0 1px darken(@base2, 5%) inset;
+      outline: none;
+    }
+
+    &:focus, &--focus {
+      box-shadow:
+        0 0 0 1px darken(@base2, 5%) inset,
+        0 0 0 2px negation(@base1, @base2) inset
+      ;
+
+      outline: none;
+    }
+  }
+});
+
+:disabled, [disabled] {
+  pointer-events: none;
+  cursor: default;
+}
