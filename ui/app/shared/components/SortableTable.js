@@ -1,7 +1,7 @@
 var React = require("react");
 var classSet = require("react/lib/cx");
 
-var { string, func, shape } = React.PropTypes;
+var { string, func } = React.PropTypes;
 var K = require("constants");
 var SORT_ASC = K.SORT_ASC;
 var SORT_DESC = K.SORT_DESC;

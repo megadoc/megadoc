@@ -2,8 +2,6 @@ var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
-var TINYDOC_ROOT = path.resolve(__dirname, '..');
-var UI_ROOT = path.resolve(__dirname);
 
 var nodeEnv = process.env.NODE_ENV || 'development';
 var config = {

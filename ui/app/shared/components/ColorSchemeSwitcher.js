@@ -6,6 +6,7 @@ var { AVAILABLE_SCHEMES, DEFAULT_SCHEME } = require("constants");
 var ColorSchemeSwitcher = React.createClass({
   componentDidMount: function() {
     var startingScheme;
+
     try {
       startingScheme = localStorage.getItem('colorScheme');
     }
@@ -17,7 +18,7 @@ var ColorSchemeSwitcher = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <Button
         onClick={this.switchScheme}
         className="color-scheme-switcher"
@@ -48,7 +49,7 @@ var ColorSchemeSwitcher = React.createClass({
       localStorage.setItem('colorScheme', nextScheme);
     }
     catch (e) {
-
+      // ignore
     }
   }
 });

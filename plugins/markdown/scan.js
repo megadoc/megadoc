@@ -120,7 +120,7 @@ module.exports = function(config, utils, done) {
         aggregateDatabase[collection.name] = database;
 
         if (Object.keys(aggregateDatabase).length === config.collections.length) {
-          done();
+          done(null, aggregateDatabase);
         }
       }
     });

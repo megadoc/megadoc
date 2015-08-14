@@ -4,7 +4,7 @@ var NotFound = React.createClass({
   displayName: "NotFound",
 
   render() {
-    return(
+    return (
       <div>404</div>
     );
   }

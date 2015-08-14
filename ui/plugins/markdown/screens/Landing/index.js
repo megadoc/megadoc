@@ -2,10 +2,7 @@ var React = require('react');
 
 var Landing = React.createClass({
   render() {
-    return(
-      <div>
-      </div>
-    );
+    return (<div>Nothing to see here, move along!</div>);
   }
 });
 

@@ -2,7 +2,7 @@ var React = require('react');
 
 var Index = React.createClass({
   render() {
-    return(
+    return (
       <div>
         Welcome to the API docs!
       </div>

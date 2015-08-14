@@ -1,17 +1,7 @@
 var React = require("react");
-var ParamTag = require('./DocTags/ParamTag');
-var ExampleTag = require('./DocTags/ExampleTag');
-var ThrowsTag = require('./DocTags/ThrowsTag');
-var ReturnTag = require('./DocTags/ReturnTag');
-var SeeTag = require('./DocTags/SeeTag');
-var PropertyTag = require('./DocTags/PropertyTag');
-var TagGroup = require('./DocTags/TagGroup');
-var DocTags = require('./DocTags');
-var Icon = require('components/Icon');
 var ellipsify = require('utils/ellipsify');
 var classSet = require('utils/classSet');
 var MarkdownText = require('components/MarkdownText');
-var { where } = require('lodash');
 var Collapsible = require('mixins/Collapsible');
 
 var DocEntity = React.createClass({
@@ -30,7 +20,6 @@ var DocEntity = React.createClass({
   },
 
   render() {
-    var hasReceiver = !!this.props.ctx.receiver;
     var isCollapsed = this.isCollapsed();
     var className = classSet({
       'doc-entity': true,

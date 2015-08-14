@@ -5,7 +5,7 @@ var ExampleRequestTag = React.createClass({
   displayName: "ExampleRequestTag",
 
   render() {
-    return(
+    return (
       <div className="example-request-tag">
         <MarkdownText>{'```javascript\n'+this.props.text+'\n```'}</MarkdownText>
       </div>

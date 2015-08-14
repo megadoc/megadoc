@@ -11,7 +11,7 @@ var Docstring = React.createClass({
       text = this.props.children.join(' ');
     }
 
-    return(
+    return (
       <MarkdownText {...this.props} children={text} />
     );
   }

@@ -14,7 +14,7 @@ describe('Core::YARDAPILinkResolver', function() {
         Hello. Look at {Quizzes} for more info!
       `);
 
-      expect(linked).to.contain('[Quizzes](/api/class/Quizzes)')
+      expect(linked).to.contain('[Quizzes](/api/class/Quizzes)');
     });
   });
 });

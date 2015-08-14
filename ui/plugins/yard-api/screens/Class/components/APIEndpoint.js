@@ -1,3 +1,4 @@
+/* eslint "camelcase":0 */
 var React = require("react");
 var { findWhere, where } = require('lodash');
 var config = require('config');
@@ -21,7 +22,7 @@ var Header = React.createClass({
   },
 
   render() {
-    var { route, tag } = this.props;
+    var { tag } = this.props;
 
     return (
       <h3 className="api-endpoint__header">
@@ -72,7 +73,7 @@ var APIEndpoint = React.createClass({
     var method = this.props;
     var apiTag = findWhere(this.props.tags, { tag_name: 'API' });
 
-    return(
+    return (
       <div key={method.path} className="api-endpoint">
         <Header
           path={method.path}

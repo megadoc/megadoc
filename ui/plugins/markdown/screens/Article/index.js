@@ -1,7 +1,6 @@
 var React = require("react");
 var MarkdownText = require('components/MarkdownText');
 var Database = require('core/Database');
-var scrollIntoView = require('utils/scrollIntoView');
 
 var Article = React.createClass({
   render() {

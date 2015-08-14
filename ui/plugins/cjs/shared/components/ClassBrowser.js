@@ -4,7 +4,7 @@ var Database = require('core/Database');
 var classSet = require('utils/classSet');
 var Storage = require('core/Storage');
 var Checkbox = require('components/Checkbox');
-var { sortBy, where } = require('lodash');
+var { sortBy } = require('lodash');
 
 var PRIVATE_VISIBILITY_KEY = 'js:classBrowser:showPrivate';
 

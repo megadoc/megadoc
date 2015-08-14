@@ -5,7 +5,7 @@ var MethodTag = React.createClass({
   displayName: "MethodTag",
 
   render() {
-    return(
+    return (
       <div>
         <h3><code>{this.props.ctx.name}</code></h3>
 

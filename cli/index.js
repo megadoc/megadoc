@@ -5,7 +5,7 @@ var fs = require('fs-extra');
 var path = require('path');
 var pkg = require('../package');
 var tinydoc = require('..');
-var console = new require('../lib/Logger')('tinydoc-cli');
+var console = require('../lib/Logger')('tinydoc-cli');
 var config = {};
 var tiny, configFilePath;
 
@@ -37,14 +37,14 @@ tiny = tinydoc(config, {
   write: program.write !== false
 });
 
-tiny.run(function(err, database) {
+tiny.run(function(err) {
   if (err) {
     console.error(Array(80 - 'tinydoc-cli'.length).join('*'));
     console.error('An error occurred during compilation. Error details below.');
     console.error(err.stack ? err.stack : err);
     console.error(Array(80 - 'tinydoc-cli'.length).join('*'));
 
-    process.exit(1);
+    throw err;
   }
 
   console.log('done!');

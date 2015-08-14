@@ -1,6 +1,4 @@
 var React = require("react");
-var Icon = require("components/Icon");
-var Button = require("components/Button");
 var OutletStore = require('stores/OutletStore');
 var { Link } = require("react-router");
 var config = require('config');

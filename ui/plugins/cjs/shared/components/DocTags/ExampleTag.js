@@ -21,7 +21,7 @@ var ExampleTag = React.createClass({
       string = String(this.props.string).replace(title, '');
     }
 
-    return(
+    return (
       <div>
         <p>
           <strong>Example</strong>

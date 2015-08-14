@@ -2,7 +2,7 @@ var React = require('react');
 
 var Browser = React.createClass({
   render() {
-    return(
+    return (
       <div>
         Hi! Is JavaScript time!
       </div>

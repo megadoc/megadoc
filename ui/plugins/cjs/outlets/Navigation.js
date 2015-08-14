@@ -9,7 +9,7 @@ var Navigation = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <Link to="js">
         <Icon className="icon-javascript">
           <span className="path1" />

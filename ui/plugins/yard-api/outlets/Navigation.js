@@ -1,6 +1,5 @@
 var React = require("react");
 var { Link } = require('react-router');
-var Icon = require('components/Icon');
 
 var Navigation = React.createClass({
   statics: {
@@ -8,7 +7,7 @@ var Navigation = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <Link to="api">
         <span className="icon icon-ruby">
           <span className="path1" />

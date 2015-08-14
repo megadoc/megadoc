@@ -7,7 +7,7 @@ var Class = React.createClass({
   render() {
     var codeObject = Database.getCodeObject(this.props.params.classId);
 
-    return(
+    return (
       <div className="doc-content">
         <h2>{codeObject.object}</h2>
 

@@ -24,7 +24,7 @@ var Button = React.createClass({
     className['btn-success'] = type === 'success';
     className[this.props.className] = !!this.props.className;
 
-    return(
+    return (
       <button
         onClick={this.props.onClick}
         onKeyPress={this.props.onKeyPress}

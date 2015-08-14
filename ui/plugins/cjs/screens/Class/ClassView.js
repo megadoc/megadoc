@@ -1,7 +1,6 @@
 var React = require("react");
 var DocEntity = require('components/DocEntity');
 var MarkdownText = require('components/MarkdownText');
-var MethodTag = require('components/DocTags/MethodTag');
 var SeeTag = require('components/DocTags/SeeTag');
 var DocGroup = require('components/DocGroup');
 var scrollIntoView = require('utils/scrollIntoView');

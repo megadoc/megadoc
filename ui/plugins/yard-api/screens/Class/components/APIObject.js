@@ -5,7 +5,7 @@ var APIObject = React.createClass({
   displayName: "APIObject",
 
   render() {
-    return(
+    return (
       <div>
         <h4>{this.props.name}</h4>
 

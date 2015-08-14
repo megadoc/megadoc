@@ -1,6 +1,5 @@
 var React = require('react');
 var { Link } = require('react-router');
-var config = require('config');
 var Icon = require('components/Icon');
 
 var Navigation = React.createClass({
@@ -10,10 +9,6 @@ var Navigation = React.createClass({
 
   render() {
     return this.renderCollectionLink(this.props);
-
-    // return (
-    //     // config.collections.map(this.renderCollectionLink)
-    // )
   },
 
   renderCollectionLink(collection) {
@@ -21,7 +16,7 @@ var Navigation = React.createClass({
       return null;
     }
 
-    return(
+    return (
       <Link key={collection.name} to={collection.name}>
         {collection.icon && [
           <Icon key="icon" className={collection.icon} />,

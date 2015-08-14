@@ -17,7 +17,7 @@ var DocGroup = React.createClass({
   },
 
   render() {
-    var { docType, itemProps } = this.props;
+    var { docType } = this.props;
     var DOMTag = this.props.tagName;
     var docs = docType ?
       this.props.docs.filter(function(doc) { return doc.ctx.type === docType; }) :

@@ -4,7 +4,7 @@ var ArgumentTag = React.createClass({
   displayName: "ArgumentTag",
 
   render() {
-    return(
+    return (
       <div className="argument-tag">
         <div className="argument-tag__header">
           <strong>{this.props.name}</strong>

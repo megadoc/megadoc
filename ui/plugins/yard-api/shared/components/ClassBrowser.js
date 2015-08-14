@@ -3,7 +3,7 @@ var { Link } = require('react-router');
 
 var APIClassBrowser = React.createClass({
   render() {
-    return(
+    return (
       <nav>
         {this.props.objects.map(this.renderEntry)}
       </nav>

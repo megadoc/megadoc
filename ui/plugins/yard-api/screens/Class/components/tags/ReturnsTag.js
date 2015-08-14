@@ -5,7 +5,7 @@ var ReturnsTag = React.createClass({
   displayName: "ReturnsTag",
 
   render() {
-    return(
+    return (
       <p>
         <Docstring>Returns {this.props.text}</Docstring>
       </p>

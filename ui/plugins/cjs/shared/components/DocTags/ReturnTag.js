@@ -31,7 +31,7 @@ var ReturnTag = React.createClass({
       name = name.replace('='+defaultValue, '');
     }
 
-    return(
+    return (
       <li className="return-tag">
         <header className="return-tag__header">
           {this.props.withTitle &&

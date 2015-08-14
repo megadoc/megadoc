@@ -4,7 +4,6 @@ var path = require('path');
 var config = require('./webpack.config');
 var fs = require('fs-extra');
 var _ = require('lodash');
-var ROOT = path.join(__dirname);
 
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';

@@ -1,6 +1,6 @@
 var { findWhere } = require('lodash');
 
-var YARDAPILinkResolver = function(docstring, next) {
+var YARDAPILinkResolver = function(docstring/*, next*/) {
   var database = require('config').database;
 
   // return docstring.replace(/\[([^\]]+)\](?!\()/g, function(original, objectName) {

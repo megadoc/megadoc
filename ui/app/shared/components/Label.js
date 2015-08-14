@@ -14,7 +14,7 @@ var Label = React.createClass({
     var Tag = this.props.fakeLabel ? 'div' : 'label';
     var className = classSet({ 'form-label': true }, this.props.className);
 
-    return(
+    return (
       <Tag className={className}>
         <span className="form-label__caption">{this.props.value}</span>
         <div className="form-label__widget">

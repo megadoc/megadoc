@@ -3,10 +3,16 @@
     "browser": true,
     "mocha": true
   },
+
+  "plugins": [
+    "react"
+  ],
+
   "globals": {
     "expect": false
   },
   "ecmaFeatures": {
+    "blockBindings": true,
     "arrowFunctions": true,
     "classes": true,
     "templateStrings": true,
@@ -14,6 +20,10 @@
     "objectLiteralShorthandMethods": true,
     "spread": true,
     "restParams": true,
-    "jsx": true
+    "jsx": true,
+  },
+
+  "rules": {
+    "dot-notation": 0
   }
 }

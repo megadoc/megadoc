@@ -7,7 +7,7 @@ var Indent = React.createClass({
   },
 
   render() {
-    return(
+    return (
       <div
         className={"whitespace-indent whitespace-indent--level-" + Math.min(this.props.level, 3)}
       />
