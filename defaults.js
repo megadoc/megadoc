@@ -1,8 +1,3 @@
-exports.cjs = {
-  source: '${ROOT}/**/*.js',
-  exclude: null
-};
-
 exports.markdown = {
   source: '${ROOT}/**/*.js',
   exclude: null,
@@ -32,6 +27,8 @@ exports.ui = {
    * file.
    */
   outputDir: '${ROOT}/doc/www',
+  scripts: [],
+  pluginScripts: [],
 
   /**
    * @property {String} [readme]

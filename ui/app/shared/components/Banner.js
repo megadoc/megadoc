@@ -23,11 +23,11 @@ var Banner = React.createClass({
       <div className="banner-wrapper">
         <header className="banner">
           <h1 className="banner__logo">
+            {this.props.children}
+
             <Link to="home">
               {config.title || 'tinydoc'}
             </Link>
-
-            {this.props.children}
           </h1>
 
           <p className="banner__motto">

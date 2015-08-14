@@ -17,24 +17,6 @@
     />
 
     <meta name="apple-mobile-web-app-capable" content="yes" />
-
-    <script>
-      var BUILD_CONFIG = {};
-      var entryResources = [ 'config.js', 'vendor.js', 'main.js', 'styles.js' ];
-      var publicPath = BUILD_CONFIG.publicPath || '/';
-
-      var loadScript = function(filePath) {
-        var script = document.createElement('script');
-        script.src = filePath;
-        script.type = 'text/javascript';
-        script.async = false;
-        document.head.appendChild(script);
-      };
-
-      entryResources.forEach(function(fileName) {
-        loadScript([ publicPath, fileName ].join('/').replace('//', '/'));
-      });
-    </script>
   </head>
 
   <body>
@@ -42,6 +24,10 @@
       <div class="loading-screen">
         Loading application data... please wait.
       </div>
+
+      <% _.forEach(scripts, function(script) { %>
+      <script type="text/javascript" src="<%- script %>"></script>
+      <% }); %>
     </div>
   </body>
 </html>

@@ -1,35 +1,31 @@
 var extend = require('lodash').extend;
-var PluginManager = require('./lib/PluginManager');
+// var PluginManager = require('./lib/PluginManager');
 var Utils = require('./lib/Utils');
+var Compiler = require('./lib/Compiler');
 
-var scan = require('./lib/tinydoc.scan');
-var write = require('./lib/tinydoc.write');
+// var scan = require('./lib/tinydoc.scan');
+// var write = require('./lib/tinydoc.write');
 
 var defaults = {
-  plugins: []
+  plugins: [],
+  scripts: [],
+  pluginScripts: []
 };
 
-function tinydoc(userConfig) {
+function tinydoc(userConfig, runOptions) {
   var config = extend({}, defaults, userConfig);
-  var utils = new Utils(config);
-  var pluginMgr = new PluginManager((config.plugins), config);
+  // var utils = new Utils(config);
+  // var pluginMgr = new PluginManager((config.plugins), config);
+  config.plugins.unshift(require('./plugins/ui'));
 
   return {
     config: config,
 
     run: function(done) {
-      scan(pluginMgr.getScanners(), config, utils, function(database) {
-        write(pluginMgr.getWriters(), pluginMgr, database, config, utils, function(err) {
-          if (err) {
-            return done(err, null);
-          }
-
-          done(null, database);
-        });
-      });
+      new Compiler(config).run(done, runOptions);
     },
 
-    utils: utils
+    // utils: utils
   };
 };
 

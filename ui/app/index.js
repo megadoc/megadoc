@@ -23,34 +23,34 @@ var emitStarted = function(done) {
   done();
 };
 
-console.assert(!!config && Array.isArray(config.plugins),
-  'Configuration file might have not been loaded correctly.'
-);
+var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
 
-var pluginMgr = new PluginManager(config.plugins, emitter, function start(registrar) {
+emitter.on('pluginsLoaded', function start(registrar) {
   emitter.emit('starting');
 
-  var router = Router.create({
-    location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
-    routes: [
-      <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
-        <DefaultRoute name="home" handler={require('./screens/Home')} />
-        <Route name="404" handler={require('./screens/NotFound')} />
+  window.addEventListener('DOMContentLoaded', function() {
+    var router = Router.create({
+      location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
+      routes: [
+        <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
+          <DefaultRoute name="home" handler={require('./screens/Home')} />
+          <Route name="404" handler={require('./screens/NotFound')} />
 
-        {registrar.getPluginRouteMap()}
+          {registrar.getPluginRouteMap()}
 
-        <NotFoundRoute
-          name="not-found"
-          handler={require('./screens/NotFound')}
-        />
-      </Route>,
-    ]
-  });
+          <NotFoundRoute
+            name="not-found"
+            handler={require('./screens/NotFound')}
+          />
+        </Route>,
+      ]
+    });
 
-  OutletStore.setOutletElements(registrar.getOutletElements());
+    OutletStore.setOutletElements(registrar.getOutletElements());
 
-  router.run(function(Handler, state) {
-    React.render(<Handler onStart={emitStarted} {...state} />, document.body);
+    router.run(function(Handler, state) {
+      React.render(<Handler onStart={emitStarted} {...state} />, document.body);
+    });
   });
 });
 
@@ -64,5 +64,3 @@ var pluginMgr = new PluginManager(config.plugins, emitter, function start(regist
  *        The plugin registration API you can use.
  */
 window.tinydocReact.use = pluginMgr.use;
-
-pluginMgr.load();

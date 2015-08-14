@@ -1,54 +1,31 @@
-var PluginRegistrar = require('./PluginRegistrar');
-var config = require('config');
-var loadScript = require('utils/loadScript');
-var loadStylesheet = require('utils/loadStylesheet');
+const PluginRegistrar = require('./PluginRegistrar');
 
-function createPublicPath(filePath) {
-  return [ config.publicPath, filePath ].join('/').replace('//', '/');
-}
+function PluginManager(pluginCount, emitter) {
+  const registrar = new PluginRegistrar(emitter);
+  let ran = 0;
 
-function PluginManager(plugins, emitter, onDone) {
-  var registrar = new PluginRegistrar(emitter);
-  var ran = 0;
-
-  if (!plugins.length) {
-    setTimeout(function() {
-      onDone(registrar, []);
-    }, 0);
+  if (pluginCount === 0) {
+    emitter.emit('pluginsLoaded', registrar);
   }
 
   return {
     use: function(runner) {
-      runner(registrar.API);
-
-      console.log('%d more plugins to go.', plugins.length - ran);
-
-      if (++ran === plugins.length) {
-        delete window.tinydocReact.use;
-
-        console.log('All plugins were loaded, starting.');
-
-        onDone(registrar, []);
+      try {
+        runner(registrar.API);
       }
-    },
+      catch (e) {
+        console.warn('A plugin (%s) failed to load, ignoring.', runner.name);
+      }
+      finally {
+        console.log('%d more plugins to go.', pluginCount - (++ran));
 
-    load: function() {
-      console.log('There are %d registered plugins.', plugins.length);
+        if (ran === pluginCount) {
+          delete window.tinydocReact.use;
 
-      plugins.forEach(function(plugin) {
-        var { name } = plugin;
+          console.log('All plugins were loaded, starting.');
 
-        console.log(`Loading plugin ${name}.`);
-
-        if (plugin.options.files) {
-          plugin.options.files.map(createPublicPath).forEach(loadScript);
+          emitter.emit('pluginsLoaded', registrar);
         }
-      });
-
-      if (config.stylesheet) {
-        var styleNode = document.createElement('style');
-        styleNode.innerText = config.stylesheet;
-        document.head.appendChild(styleNode);
       }
     }
   };

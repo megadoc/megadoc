@@ -17,7 +17,8 @@ var baseConfig = {
     // root: path.resolve(__dirname, '..', 'node_modules'),
 
     fallback: [
-      path.join(root, 'app', 'shared')
+      path.join(root, 'app', 'shared'),
+      path.join(root, 'app', 'css'),
     ],
 
     modulesDirectories: [

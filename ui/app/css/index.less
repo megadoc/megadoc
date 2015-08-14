@@ -1,5 +1,5 @@
-@import "~variables";
-@import "~helpers";
+@import "variables";
+@import "helpers";
 @import "typography";
 @import "fonts/tinydoc-1.2/style";
 @import "components/banner";
@@ -93,8 +93,13 @@ ul, ol {
 
 #app-container {
   width: @content-width;
-  margin: 0 @whitespace;
   margin-top: @content-top-offset;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#app-container when (@content-width = auto) {
+  margin: 0 @whitespace;
 }
 
 .schemable({

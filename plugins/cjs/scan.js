@@ -1,19 +1,16 @@
-#!/usr/bin/env node
-
 var glob = require('glob');
 var Logger = require('../../lib/Logger');
 var DoxParser = require('./parsers/DoxParser');
 
-module.exports = function(tiny, config, tinyConfig/*, utils*/) {
+module.exports = function(config, utils, done) {
   var console = new Logger('cjs scanner');
   var doxParser = new DoxParser();
 
-  glob(tinyConfig.root + '/' + config.source, { nodir: true }, function (err, files) {
+  glob(utils.assetPath(config.source), { nodir: true }, function (err, files) {
     var matchedFiles;
 
     if (err) {
-      console.warn('omg');
-      return;
+      return done(err);
     }
 
     matchedFiles = files.filter(function(filePath) {
@@ -34,6 +31,6 @@ module.exports = function(tiny, config, tinyConfig/*, utils*/) {
       return entries.concat(doxParser.parse(filePath));
     }, []);
 
-    tiny.done(entries);
+    done(null, entries);
   });
 };

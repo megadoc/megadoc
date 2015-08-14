@@ -4,7 +4,7 @@ var ResizablePanel = require('components/ResizablePanel');
 
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
-var sidebarWidth = '25em';
+var sidebarWidth = '240px';
 var MAX_SIDEBAR_WIDTH = 640;
 
 var LeftColumn = React.createClass({
