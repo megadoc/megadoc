@@ -11,13 +11,10 @@ var tiny, configFilePath;
 
 program
   .version(pkg.version)
-  // .option('--source [DIR]', 'directory to scan for JS source files')
-  // .option('--exclude [VALUE]', 'pattern to exclude files with')
-  // .option('--output [VALUE]', 'path to output file')
   .option('--config [PATH]', 'path to tinydoc config file (defaults to tinydoc.conf.js)')
+  .option('--no-scan', 'Skip the scanning phase.')
+  .option('--no-write', 'Do not write any assets.')
   .option('--dump-config')
-  .option('--no-scan')
-  // .option('--pretty')
   .parse(process.argv)
 ;
 
@@ -35,11 +32,6 @@ if (program.dumpConfig) {
   console.log('Config:\n', config);
 }
 
-// if (program.output) {
-//   console.log('Database will be written to %s.', program.output);
-//   config.output = program.output;
-// }
-
 tiny = tinydoc(config, {
   scan: program.scan !== false,
   write: program.write !== false
@@ -56,21 +48,4 @@ tiny.run(function(err, database) {
   }
 
   console.log('done!');
-
-  // if (program.dumpDatabase) {
-  //   console.log(database);
-  // }
-
-  // if (config.output) {
-  //   var filePath = tiny.utils.resolvePath(config.output);
-
-  //   console.log('Writing database to %s.', filePath);
-
-  //   fs.ensureFileSync(filePath);
-  //   fs.writeFileSync(filePath,
-  //     program.pretty ?
-  //       JSON.stringify(database, null, 2) :
-  //       JSON.stringify(database)
-  //   );
-  // }
 });

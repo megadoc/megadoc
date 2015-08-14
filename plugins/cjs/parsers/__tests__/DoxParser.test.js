@@ -4,7 +4,7 @@ var fs = require('fs');
 var path = require('path');
 
 function load(fixtureName) {
-  return fs.readFileSync(__dirname+'/fixtures/'+fixtureName, 'utf-8');
+  return fs.readFileSync(path.resolve(__dirname, 'fixtures', fixtureName), 'utf-8');
 }
 
 describe('DoxParser', function() {

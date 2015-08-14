@@ -5,7 +5,6 @@ var Logger = require('../../../lib/Logger');
 var strClassify = require('../../../lib/utils/strClassify');
 var console = new Logger('cjs');
 var extend = require('lodash').extend;
-var findWhere = require('lodash').findWhere;
 
 var DoxParser;
 var NO_DESCRIPTION_TAGS = [
@@ -48,7 +47,7 @@ function isConstructor(doc, classDoc) {
 
 function inferClassId(doc) {
   var classTag = doc.tags.filter(function(tag) {
-    return ['class','module','namespace'].indexOf(tag.type) > -1;
+    return [ 'class', 'module', 'namespace' ].indexOf(tag.type) > -1;
   })[0];
 
   var nameMatch;

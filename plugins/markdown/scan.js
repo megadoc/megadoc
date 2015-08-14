@@ -1,11 +1,9 @@
-#!/usr/bin/env node
-
 var glob = require('glob');
-var path = require('path');
 var fs = require('fs');
-var findCommonPrefix = require('../lib/utils/findCommonPrefix');
-var strHumanize = require('../lib/utils/strHumanize');
+var findCommonPrefix = require('../../lib/utils/findCommonPrefix');
+var strHumanize = require('../../lib/utils/strHumanize');
 var pluck = require('lodash').pluck;
+var console = require('../../lib/Logger')('markdown');
 
 var RE_EXTRACT_TITLE = /^(#{2,3})\s+([^\n]+)|^([^\n]+)\n([\-]{3,})\n/gm;
 
@@ -25,7 +23,7 @@ function scanForTitle(article, id) {
       return strHumanize(id);
     }
   }
-};
+}
 
 function scanForSections(article) {
   var sections = [];
@@ -48,17 +46,17 @@ function scanForSections(article) {
   });
 
   return sections;
-};
+}
 
-function scanCollection(config, assetRoot, done) {
-  console.log('asset root:', assetRoot);
-  var pattern = path.resolve(assetRoot, config.source);
+function scanCollection(config, utils, done) {
+  var pattern = utils.assetPath(config.source);
+
   glob(pattern, { nodir: true }, function (err, files) {
     var matchedFiles, database;
 
     if (err) {
       console.error(err);
-      return;
+      return done(err, null);
     }
 
     matchedFiles = files.filter(function(fileName) {
@@ -97,21 +95,33 @@ function scanCollection(config, assetRoot, done) {
           id.split('/')[0] :
           'root'
       );
+
+      console.log(JSON.stringify({
+        id: entry.id,
+        title: entry.title,
+        folder: entry.folder,
+        filePath: entry.filePath
+      }));
     });
 
-    done(database);
+    done(null, database);
   });
-};
+}
 
-module.exports = function(tiny, config, tinyConfig/*, utils*/) {
+module.exports = function(config, utils, done) {
   var aggregateDatabase = {};
 
   config.collections.map(function(collection) {
-    scanCollection(collection, tinyConfig.root, function(database) {
-      aggregateDatabase[collection.name] = database;
+    scanCollection(collection, utils, function(err, database) {
+      if (err) {
+        done(err);
+      }
+      else {
+        aggregateDatabase[collection.name] = database;
 
-      if (Object.keys(aggregateDatabase).length === config.collections.length) {
-        tiny.done(aggregateDatabase);
+        if (Object.keys(aggregateDatabase).length === config.collections.length) {
+          done();
+        }
       }
     });
   });

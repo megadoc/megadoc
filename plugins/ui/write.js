@@ -1,6 +1,5 @@
 var fs = require('fs-extra');
 var path = require('path');
-var Logger = require('../../lib/Logger');
 var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
 var extend = require('lodash').extend;
 var template = require('lodash').template;
@@ -13,8 +12,7 @@ function generateHTMLIndex(publicPath, scripts) {
   });
 }
 
-module.exports = function(config, scriptLoader, utils, done) {
-  var console = new Logger('ui writer');
+module.exports = function(config, utils, done) {
   var outputDir = utils.assetPath(config.outputDir);
   var runtimeConfig = extend({}, config);
 

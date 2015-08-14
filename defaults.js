@@ -1,21 +1,3 @@
-exports.markdown = {
-  source: '${ROOT}/**/*.js',
-  exclude: null,
-
-  navigationEntry: {
-    enabled: true,
-    title: 'Articles'
-  },
-
-  route: 'markdown'
-};
-
-exports['yard-api'] = {
-  source: '${ROOT}/**/*.js',
-  exclude: null,
-  showEndpointPath: true
-};
-
 exports.ui = {
   /**
    * @property {String} outputDir

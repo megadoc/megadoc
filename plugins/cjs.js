@@ -29,7 +29,7 @@ function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
       done();
     }
   });
-};
+}
 
 CJSPlugin.$inject = [
   'emitter',
