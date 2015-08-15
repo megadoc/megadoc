@@ -60,7 +60,7 @@ var RecentCommits = React.createClass({
 
     return (
       <div>
-        <MarkdownText>{"```\n" + body + "\n```"}</MarkdownText>
+        <pre>{body}</pre>
       </div>
     );
   }

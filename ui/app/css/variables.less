@@ -5,16 +5,13 @@
 
 @max-hljs-padding: 15px;
 
-@banner-border-dim: 5px;
-@banner-height: 120px;
-
-@banner-collapsed-height: 70px;
+@banner-border-dim: 0px;
+@banner-height: 70px;
 
 @content-top-offset: @banner-height;
 
 @sidebar-width: 240px;
 @content-offset-left: @sidebar-width + @whitespace;
-@content-banner-collapsed-top-offset: @banner-collapsed-height;
 
 @content-width: auto;
 @content-widescreen-width: 1160px;
@@ -38,14 +35,16 @@
 
 @plain-base03: #fff;
 @plain-base02: #eaeaea;
-@plain-base01: #888;
+@plain-base01: #666;
 @plain-base00: transparent;
-@plain-base0: #444;
+@plain-base0: #333;
 @plain-base1: transparent;
 @plain-base2: transparent;
 @plain-base3: transparent;
 @plain-accent: @solarized-cyan;
-@plain-link: inherit;
+@plain-accent: @plain-base0;
+@plain-link: @plain-base0;
+@plain-link: #4078c0;
 @plain-code: #ffd;
 
 @icon-checkbox: "\ee64";
@@ -54,6 +53,6 @@
 @icon-qradio: "\ee70";
 @icon-qradio-checked: "\ee76";
 
-@footer-height: 90px;
+@footer-height: 110px;
 
 @import (optional) "~overrides";

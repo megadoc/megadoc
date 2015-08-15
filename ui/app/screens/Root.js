@@ -3,6 +3,7 @@ var Router = require("react-router");
 var RouteActions = require("actions/RouteActions");
 var Banner = require('components/Banner');
 var Footer = require('components/Footer');
+var TwoColumnLayout = require('components/TwoColumnLayout');
 var Storage = require('core/Storage');
 var ColorSchemeManager = require('core/ColorSchemeManager');
 var { APP_DOM_ELEMENT_ID } = require('constants');
@@ -45,15 +46,12 @@ var Root = React.createClass({
   render() {
     var className = classSet({
       'root': true,
-      'root--with-collapsed-banner': this.isBannerCollapsed()
+      'root--with-two-column-layout': TwoColumnLayout.isActive()
     });
 
     return (
       <div id={APP_DOM_ELEMENT_ID /* need this from scrollIntoView */} className={className}>
-        <Banner
-          collapsed={this.isBannerCollapsed()}
-          onToggle={this.toggleBannerCollapsedState}
-        />
+        <Banner />
 
         <div className="root__screen">
           <RouteHandler onChange={this.reload} {...this.props} />
@@ -67,14 +65,6 @@ var Root = React.createClass({
   reload: function() {
     this.forceUpdate();
   },
-
-  isBannerCollapsed() {
-    return Storage.get('bannerCollapsed');
-  },
-
-  toggleBannerCollapsedState() {
-    Storage.set('bannerCollapsed', !this.isBannerCollapsed());
-  }
 });
 
 module.exports = Root;

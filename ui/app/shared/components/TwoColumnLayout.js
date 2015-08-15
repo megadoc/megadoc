@@ -19,7 +19,22 @@ var RightColumn = React.createClass({
   }
 });
 
+var activeInstances = [];
 var TwoColumnLayout = React.createClass({
+  statics: {
+    isActive() {
+      return activeInstances.length > 0;
+    }
+  },
+
+  componentDidMount: function() {
+    activeInstances.push(1);
+  },
+
+  componentWillUnmount: function() {
+    activeInstances.pop();
+  },
+
   render() {
     var left = findChildByType(this.props.children, LeftColumn);
     var right = findChildByType(this.props.children, RightColumn);

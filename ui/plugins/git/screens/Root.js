@@ -2,7 +2,7 @@ var React = require('react');
 var RecentCommits = require('components/RecentCommits');
 var CommitLeaderboard = require('components/CommitLeaderboard');
 var config = require('config');
-var Trollface = require("../../../app/images/Trollface.svg");
+var Trollface = require("../css/images/Trollface.svg");
 var Root = React.createClass({
 
   render: function() {

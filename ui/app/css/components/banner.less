@@ -6,36 +6,20 @@
   height: @banner-height;
   z-index: 3;
   border-bottom: @banner-border-dim solid transparent;
-
-  .root--with-collapsed-banner & {
-    height: @banner-collapsed-height;
-    border-bottom-width: 1px;
-  }
 }
 
 .banner {
   width: @content-width;
-  margin: @whitespace auto;
+  margin: 0 auto;
   position: relative;
-  margin-top: @whitespace * 1.5;
-
-  .root--with-collapsed-banner & {
-    height: auto;
-    top: 0;
-    line-height: @banner-collapsed-height;
-    margin-top: 0 * @whitespace / 2;
-    margin-bottom: 0 * @whitespace / 2;
-  }
+  line-height: @banner-height;
 
   &__logo {
     margin: 0;
     display: inline-block;
     position: relative; // so we can control the position of the color scheme switcher
-
-    .root--with-collapsed-banner & {
-      line-height: 1;
-      font-size: 1em;
-    }
+    line-height: 1;
+    font-size: 1em;
   }
 
   &__motto {
@@ -55,45 +39,29 @@
   position: absolute;
   right: 0;
   top: 0;
-  line-height: 1;
-
-  .root--with-collapsed-banner & {
-    line-height: inherit;
-  }
+  line-height: inherit;
 
   &-item {
     .inline-block();
+    // margin-left: 1em;
+    vertical-align: inherit;
+    text-align: center;
+    min-width: 100px;
 
     a {
       display: block;
+      padding: 0 1em;
 
       &.active, &:hover {
         text-decoration: none;
       }
-
-      .root--with-collapsed-banner & {
-        padding: 0 1em;
-      }
-    }
-
-    min-width: 156px;
-    text-align: center;
-
-    // we make the nav look like tabs in collapsed mode
-    .root--with-collapsed-banner & {
-      min-width: auto;
-      margin-left: 1em;
     }
 
     .icon {
       .inline-block();
-      font-size: 2.75rem;
+      font-size: 16px;
       vertical-align: middle;
       margin-right: 0.25em;
-
-      .root--with-collapsed-banner & {
-        font-size: 16px;
-      }
     }
   }
 }
@@ -103,31 +71,17 @@
 
   .banner-wrapper {
     background: @base2;
-    // border-bottom-color: @border-color;
+    border-bottom-color: @border-color;
   }
 
-  .root--with-collapsed-banner .banner__navigation-item {
-    vertical-align: inherit;
-  }
+  .banner__navigation-item a {
+    color: @base0;
 
-  .root--with-collapsed-banner .banner__navigation-item a.active {
-    background: @base3;
-    // border-left: 1px solid @border-color;
-    // border-right: 1px solid @border-color;
+    &.active, &:hover {
+      background: @base3;
+      color: @accent;
+      border-left:  @banner-border-dim solid @border-color;
+      border-right: @banner-border-dim solid @border-color;
+    }
   }
 });
-
-.banner-collapser {
-  height: @banner-border-dim * 2;
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1 * @banner-border-dim;
-  z-index: 3;
-
-  cursor: n-resize;
-
-  .root--with-collapsed-banner & {
-    cursor: s-resize;
-  }
-}

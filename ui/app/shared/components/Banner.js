@@ -17,19 +17,7 @@ var BannerItem = React.createClass({
 });
 
 var Banner = React.createClass({
-  getDefaultProps: function() {
-    return {
-      collapsed: false
-    };
-  },
-
   render() {
-    const motto = (
-      <span className="banner__motto">
-        {config.motto || 'Developer reference.'}
-      </span>
-    );
-
     return (
       <div className="banner-wrapper">
         <header className="banner">
@@ -40,12 +28,12 @@ var Banner = React.createClass({
 
             {' '}
 
-            {this.props.collapsed && motto}
+            <span className="banner__motto">
+              {config.motto || 'Developer reference.'}
+            </span>
 
             {this.props.children}
           </h1>
-
-          {!this.props.collapsed && (<p>{motto}</p>)}
 
           <nav className="banner__navigation">
             {OutletStore.getElements('navigation').map(this.renderElement)}
@@ -57,8 +45,6 @@ var Banner = React.createClass({
             </BannerItem>
           </nav>
         </header>
-
-        <div className="banner-collapser" onClick={this.props.onToggle} />
       </div>
     );
   },
