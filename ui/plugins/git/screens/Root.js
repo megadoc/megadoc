@@ -1,6 +1,6 @@
 var React = require('react');
 var RecentCommits = require('components/RecentCommits');
-var CommitLeaderboard = require('components/CommitLeaderboard');
+var Leaderboard = require('components/Leaderboard');
 var config = require('config');
 var Trollface = require("../css/images/Trollface.svg");
 var Root = React.createClass({
@@ -15,7 +15,7 @@ var Root = React.createClass({
           activeCommitId={this.props.query.commit}
         />
 
-        <h2>Commit Leaderboard</h2>
+        <h2>Leaderboard</h2>
 
         <p className="git-root__troll">
           A rundown of exactly how much work every team member does.
@@ -25,14 +25,13 @@ var Root = React.createClass({
         </p>
 
 
-        <CommitLeaderboard
+        <Leaderboard
           committers={config.stats.commitHistory}
         />
 
       </div>
     );
   }
-
 });
 
 module.exports = Root;

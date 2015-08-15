@@ -43,14 +43,16 @@
 
   &-item {
     .inline-block();
-    // margin-left: 1em;
     vertical-align: inherit;
     text-align: center;
     min-width: 100px;
+    margin-left: -@banner-border-dim;
 
     a {
       display: block;
       padding: 0 1em;
+      border-left: @banner-border-dim solid transparent;
+      border-right: @banner-border-dim solid transparent;
 
       &.active, &:hover {
         text-decoration: none;
@@ -67,7 +69,7 @@
 }
 
 .schemable({
-  @border-color: softlight(@base1, @base3);
+  @border-color: darken(@base2, 10%);
 
   .banner-wrapper {
     background: @base2;
@@ -77,9 +79,14 @@
   .banner__navigation-item a {
     color: @base0;
 
-    &.active, &:hover {
-      background: @base3;
+    &:hover {
+      color: @link;
+    }
+
+
+    &.active {
       color: @accent;
+      background: @base3;
       border-left:  @banner-border-dim solid @border-color;
       border-right: @banner-border-dim solid @border-color;
     }

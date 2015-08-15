@@ -2,7 +2,7 @@ var React = require('react');
 var { Table, Column, Mixin:SortableTableMixin } = require('components/SortableTable');
 var { sortBy, groupBy } = require('lodash');
 
-var CommitLeaderboard = React.createClass({
+var Leaderboard = React.createClass({
   mixins: [ SortableTableMixin ],
 
   propTypes: {
@@ -45,7 +45,7 @@ var CommitLeaderboard = React.createClass({
       <Table className="commit-leaderboard table">
         <thead>
           <tr>
-            <Column sortKey="commitCount"># Commits</Column>
+            <Column sortKey="commitCount">Commits</Column>
             <th>Member(s)</th>
           </tr>
         </thead>
@@ -67,4 +67,4 @@ var CommitLeaderboard = React.createClass({
   }
 });
 
-module.exports = CommitLeaderboard;
+module.exports = Leaderboard;
