@@ -1,11 +1,31 @@
 var path = require('path');
 var write = require('./ui/write');
+var parseGitStats = require('../lib/utils/parseGitStats');
 
 function UIPlugin(emitter, cssCompiler, config, utils) {
   cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'app', 'css', 'index.less'));
 
+  var readmeGitStats;
+
+  emitter.on('scan', function(compilation, done) {
+    if (config.gitStats && config.readme) {
+      parseGitStats(config.git, utils.assetPath(config.readme)).then(
+        function(stats) {
+          readmeGitStats = stats;
+          done();
+        },
+        function(err) {
+          done(err);
+        })
+      ;
+    }
+    else {
+      done();
+    }
+  });
+
   emitter.on('write', function(compilation, done) {
-    write(config, utils, done);
+    write(config, utils, readmeGitStats, done);
   });
 }
 

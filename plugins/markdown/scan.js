@@ -4,6 +4,7 @@ var findCommonPrefix = require('../../lib/utils/findCommonPrefix');
 var strHumanize = require('../../lib/utils/strHumanize');
 var pluck = require('lodash').pluck;
 var console = require('../../lib/Logger')('markdown');
+var parseGitStats = require('../../lib/utils/parseGitStats');
 
 var RE_EXTRACT_TITLE = /^(#{2,3})\s+([^\n]+)|^([^\n]+)\n([\-]{3,})\n/gm;
 
@@ -48,8 +49,8 @@ function scanForSections(article) {
   return sections;
 }
 
-function scanCollection(config, utils, done) {
-  var pattern = utils.assetPath(config.source);
+function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, done) {
+  var pattern = utils.assetPath(collectionConfig.source);
 
   glob(pattern, { nodir: true }, function (err, files) {
     var matchedFiles, database;
@@ -60,8 +61,8 @@ function scanCollection(config, utils, done) {
     }
 
     matchedFiles = files.filter(function(fileName) {
-      if (config.exclude) {
-        return !fileName.match(config.exclude);
+      if (collectionConfig.exclude) {
+        return !fileName.match(collectionConfig.exclude);
       }
       else {
         return true;
@@ -107,15 +108,32 @@ function scanCollection(config, utils, done) {
       }));
     });
 
-    done(null, database);
+    if (markdownConfig.gitStats) {
+      console.log("Parsing git stats...");
+
+      Promise.all(
+        database.map(function(entry) {
+          return parseGitStats(globalConfig.git, entry.filePath).then(function(stats) {
+            entry.git = stats;
+          });
+        })
+      ).then(function() {
+        done(null, database);
+      }, function(err) {
+        done(err);
+      });
+    }
+    else {
+      done(null, database);
+    }
   });
 }
 
-module.exports = function(config, utils, done) {
+module.exports = function(config, utils, globalConfig, done) {
   var aggregateDatabase = {};
 
   config.collections.map(function(collection) {
-    scanCollection(collection, utils, function(err, database) {
+    scanCollection(collection, utils, config, globalConfig, function(err, database) {
       if (err) {
         done(err);
       }

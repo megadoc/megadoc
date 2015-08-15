@@ -28,6 +28,10 @@ else {
   config.assetRoot = __dirname;
 }
 
+if (!config.git) {
+  config.git = path.resolve(config.assetRoot, '.git');
+}
+
 if (program.dumpConfig) {
   console.log('Config:\n', config);
 }

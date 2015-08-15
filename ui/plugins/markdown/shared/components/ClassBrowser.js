@@ -9,6 +9,8 @@ var strHumanize = require('tinydoc/lib/utils/strHumanize');
 var GROUP_BY_FOLDER = 'markdown:classBrowser:groupByFolder';
 var ROOT_FOLDER_ID = strHumanize('root');
 
+Storage.register(GROUP_BY_FOLDER, true);
+
 var MarkdownClassBrowser = React.createClass({
   getDefaultProps: function() {
     return {

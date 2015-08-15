@@ -11,7 +11,7 @@ function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   globalConfig.pluginScripts.push('plugins/markdown.js');
 
   emitter.on('scan', function(compilation, done) {
-    scan(config, utils, function(err, _database) {
+    scan(config, utils, globalConfig, function(err, _database) {
       if (err) {
         return done(err);
       }

@@ -12,7 +12,7 @@ function generateHTMLIndex(publicPath, scripts) {
   });
 }
 
-module.exports = function(config, utils, done) {
+module.exports = function(config, utils, readmeGitStats, done) {
   var outputDir = utils.assetPath(config.outputDir);
   var runtimeConfig = extend({}, config);
 
@@ -24,7 +24,10 @@ module.exports = function(config, utils, done) {
   ].concat(config.scripts).concat(config.pluginScripts);
 
   if (config.readme) {
-    runtimeConfig.readme = fs.readFileSync(utils.assetPath(config.readme), 'utf-8');
+    runtimeConfig.readme = {
+      source: fs.readFileSync(utils.assetPath(config.readme), 'utf-8'),
+      git: readmeGitStats
+    };
   }
 
   config.assets.forEach(function(filePath) {
