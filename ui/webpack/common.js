@@ -14,7 +14,7 @@ var baseConfig = {
     // look-up from plugins to libraries we support, like react and lodash,
     // won't resolve to that plugin's version of the library in its
     // node_modules/ folder.
-    // root: path.resolve(__dirname, '..', 'node_modules'),
+    root: path.resolve(__dirname, '..', '..', 'node_modules'),
 
     fallback: [
       path.join(root, 'app', 'shared'),
@@ -28,9 +28,12 @@ var baseConfig = {
     ],
 
     alias: {
-      'tinydoc': path.join(__dirname, '..', '..'),
-      'qtip': path.join(__dirname, '..', 'app', 'vendor', 'jquery.qtip.js')
+      'tinydoc': path.join(__dirname, '..', '..')
     }
+  },
+
+  resolveLoader: {
+    root: path.resolve(__dirname, '..', '..', 'node_modules')
   },
 
   node: {
@@ -44,6 +47,7 @@ var baseConfig = {
       {
         type: 'js', // for server.js to inject "react-hot"
         test: /\.js$/,
+        exclude: [ /ui\/app\/vendor/ ],
         include: [
           path.join(root, 'app'),
           path.join(root, 'plugins'),

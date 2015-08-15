@@ -12,13 +12,17 @@
   @line-height +
   @banner-border-dim
 ;
+
+@banner-collapsed-height: 50px;
+
 @content-top-offset: @banner-height;
 
 @sidebar-width: 240px;
 @content-offset-left: @sidebar-width + @whitespace;
+@content-banner-collapsed-top-offset: 50px;
 
 @content-width: auto;
-@content-widescreen-width: 1200px;
+@content-widescreen-width: 1160px;
 
 @solarized-base03:    #002b36;
 @solarized-base02:    #073642;
@@ -37,8 +41,8 @@
 @solarized-cyan:      #2aa198;
 @solarized-green:     #859900;
 
-@plain-base03: #f4f4f4;
-@plain-base02: #e4e4e4;
+@plain-base03: #fff;
+@plain-base02: #f4f4f4;
 @plain-base01: #888;
 @plain-base00: transparent;
 @plain-base0: #444;
@@ -47,6 +51,7 @@
 @plain-base3: transparent;
 @plain-accent: @solarized-cyan;
 @plain-link: inherit;
+@plain-code: #ffd;
 
 @icon-checkbox: "\ee64";
 @icon-checkbox-checked: "\ee63";

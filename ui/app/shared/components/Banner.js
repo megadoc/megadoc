@@ -2,6 +2,7 @@ var React = require("react");
 var OutletStore = require('stores/OutletStore');
 var { Link } = require("react-router");
 var config = require('config');
+var Icon = require('components/Icon');
 
 var BannerItem = React.createClass({
   render() {
@@ -16,26 +17,48 @@ var BannerItem = React.createClass({
 });
 
 var Banner = React.createClass({
+  getDefaultProps: function() {
+    return {
+      collapsed: false
+    };
+  },
+
   render() {
+    const motto = (
+      <span className="banner__motto">
+        {config.motto || 'Developer reference.'}
+      </span>
+    );
+
     return (
       <div className="banner-wrapper">
         <header className="banner">
           <h1 className="banner__logo">
-            {this.props.children}
-
             <Link to="home">
               {config.title || 'tinydoc'}
             </Link>
+
+            {' '}
+
+            {this.props.collapsed && motto}
+
+            {this.props.children}
           </h1>
 
-          <p className="banner__motto">
-            {config.motto || 'Developer reference.'}
-          </p>
+          {!this.props.collapsed && (<p>{motto}</p>)}
 
           <nav className="banner__navigation">
             {OutletStore.getElements('navigation').map(this.renderElement)}
+
+            <BannerItem key="settings">
+              <Link to="settings">
+                <Icon className="icon-cog" />
+              </Link>
+            </BannerItem>
           </nav>
         </header>
+
+        <div className="banner-collapser" onClick={this.props.onToggle} />
       </div>
     );
   },

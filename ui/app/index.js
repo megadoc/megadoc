@@ -12,8 +12,7 @@ var { Route, DefaultRoute, NotFoundRoute } = Router;
 window.tinydocReact = {};
 
 var emitter = new EventEmitter([
-  'loading plugins',
-  'plugins loaded',
+  'pluginsLoaded',
   'starting',
   'started'
 ]);
@@ -34,6 +33,13 @@ emitter.on('pluginsLoaded', function start(registrar) {
       routes: [
         <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
           <DefaultRoute name="home" handler={require('./screens/Home')} />
+
+          <Route
+            name="settings"
+            path="/settings"
+            handler={require('./screens/Settings')}
+          />
+
           <Route name="404" handler={require('./screens/NotFound')} />
 
           {registrar.getPluginRouteMap()}

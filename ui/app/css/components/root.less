@@ -1,12 +1,19 @@
 .root {
-  margin-top: @content-top-offset + @whitespace;
-  margin-left: @whitespace;
-  margin-right: @whitespace;
+  // margin-left: @whitespace;
+  // margin-right: @whitespace;
+  &__screen {
+    position: relative;
+    margin-top: @content-top-offset + @whitespace;
+  }
+
+  .root--with-collapsed-banner &__screen {
+    margin-top: @content-banner-collapsed-top-offset + @whitespace;
+  }
 }
 
 .widescreen({
-  .root {
-    width: 1200px;
+  .root__screen {
+    width: @content-widescreen-width;
     margin-left: auto;
     margin-right: auto;
   }

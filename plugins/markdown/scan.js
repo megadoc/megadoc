@@ -86,9 +86,12 @@ function scanCollection(config, utils, done) {
         id = entry.filePath;
       }
 
+      var fileName = entry.filePath.replace(commonPrefix || '', '').split('/');
+      fileName = fileName[fileName.length-1].replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
+
       // remove the extension
       entry.id = id.replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
-      entry.title = scanForTitle(entry.source, entry.id);
+      entry.title = scanForTitle(entry.source, fileName);
       entry.sections = scanForSections(entry.source);
       entry.folder = strHumanize(
         id.indexOf('/') > -1 ?

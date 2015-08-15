@@ -1,10 +1,11 @@
 var React = require("react");
 var Router = require("react-router");
 var RouteActions = require("actions/RouteActions");
-var ColorSchemeSwitcher = require("components/ColorSchemeSwitcher");
 var Banner = require('components/Banner');
 var Storage = require('core/Storage');
+var ColorSchemeManager = require('core/ColorSchemeManager');
 var { APP_DOM_ELEMENT_ID } = require('constants');
+var classSet = require('utils/classSet');
 
 var { RouteHandler } = Router;
 
@@ -24,6 +25,7 @@ var Root = React.createClass({
 
   componentDidMount: function() {
     RouteActions.assignDelegate(this);
+    ColorSchemeManager.load();
 
     if (this.props.onStart) {
       this.props.onStart(() => {
@@ -31,7 +33,7 @@ var Root = React.createClass({
       });
     }
 
-    Storage.on('change', this.reload);
+    Storage.on('change', () => { console.log('storage changed, reloading'); this.reload(); });
   },
 
   componentWillUnmount: function() {
@@ -40,13 +42,18 @@ var Root = React.createClass({
   },
 
   render() {
-    return (
-      <div className="root" id={APP_DOM_ELEMENT_ID}>
-        <Banner>
-          <ColorSchemeSwitcher />
-        </Banner>
+    var className = classSet({
+      'root': true,
+      'root--with-collapsed-banner': this.isBannerCollapsed()
+    });
 
-        <RouteHandler onChange={this.reload} {...this.props} />
+    return (
+      <div className={className} id={APP_DOM_ELEMENT_ID}>
+        <Banner collapsed={this.isBannerCollapsed()} onToggle={this.toggleBanner} />
+
+        <div className="root__screen">
+          <RouteHandler onChange={this.reload} {...this.props} />
+        </div>
       </div>
     );
   },
@@ -54,6 +61,16 @@ var Root = React.createClass({
   reload: function() {
     this.forceUpdate();
   },
+
+  isBannerCollapsed() {
+    return !!Storage.get('bannerCollapsed');
+  },
+
+  toggleBanner() {
+    console.log('Collapsing banner:', !this.isBannerCollapsed());
+
+    Storage.set('bannerCollapsed', !this.isBannerCollapsed());
+  }
 });
 
 module.exports = Root;
