@@ -1,6 +1,9 @@
 var React = require('react');
 var findChildByType = require('utils/findChildByType');
 var ResizablePanel = require('components/ResizablePanel');
+var EventEmitter = require('core/EventEmitter');
+
+var emitter = new EventEmitter([ 'change' ]);
 
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
@@ -24,15 +27,20 @@ var TwoColumnLayout = React.createClass({
   statics: {
     isActive() {
       return activeInstances.length > 0;
-    }
+    },
+
+    on: emitter.on,
+    off: emitter.off
   },
 
   componentDidMount: function() {
     activeInstances.push(1);
+    emitter.emit('change');
   },
 
   componentWillUnmount: function() {
     activeInstances.pop();
+    emitter.emit('change');
   },
 
   render() {

@@ -36,9 +36,11 @@ var Root = React.createClass({
     }
 
     Storage.on('change', this.reload);
+    TwoColumnLayout.on('change', this.reload);
   },
 
   componentWillUnmount: function() {
+    TwoColumnLayout.off('change', this.reload);
     Storage.off('change', this.reload);
     RouteActions.assignDelegate(undefined);
   },
