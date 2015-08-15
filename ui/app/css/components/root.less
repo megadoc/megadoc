@@ -4,15 +4,29 @@
     margin-top: @content-top-offset + @whitespace;
   }
 
+  &__footer {
+    margin: 1em 0;
+    padding: 1em 0;
+    font-size: 0.85em;
+    text-align: center;
+  }
+
   .root--with-collapsed-banner &__screen {
     margin-top: @content-banner-collapsed-top-offset + @whitespace;
   }
 }
 
 .widescreen({
-  .root__screen {
+  .root__screen, .root__footer {
     width: @content-widescreen-width;
     margin-left: auto;
     margin-right: auto;
+  }
+});
+
+.schemable({
+  .root__footer {
+    border-top: 1px solid @base2;
+    color: @base1;
   }
 });

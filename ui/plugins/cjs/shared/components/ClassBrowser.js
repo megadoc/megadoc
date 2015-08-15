@@ -8,6 +8,8 @@ var { sortBy } = require('lodash');
 
 var PRIVATE_VISIBILITY_KEY = 'js:classBrowser:showPrivate';
 
+Storage.register(PRIVATE_VISIBILITY_KEY, false);
+
 var ClassBrowser = React.createClass({
   displayName: "ClassBrowser",
 

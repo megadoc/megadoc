@@ -1,24 +1,23 @@
 var EventEmitter = require('core/EventEmitter');
-var { findWhere } = require('lodash');
 var emitter = new EventEmitter(['change']);
 
-var STORAGE_ITEMS = [
-  { key: 'colorScheme', defaultValue: 'plain' },
-  { key: 'bannerCollapsed', defaultValue: true },
-  { key: 'highlightingEnabled', defaultValue: true }
-];
+var STORAGE_ITEMS = {
+  colorScheme: 'plain',
+  bannerCollapsed: true,
+  highlightingEnabled: true
+};
 
 exports.get = function(key) {
   var value;
-  var item = findWhere(STORAGE_ITEMS, { key });
+  var defaultValue = STORAGE_ITEMS[key];
 
-  console.assert(!!item,
+  console.assert(STORAGE_ITEMS.hasOwnProperty(key),
     `You are attempting to access an unregistered storage key '${key}'.
     Please add this key to core/Storage.js.`
   );
 
   if (!localStorage.hasOwnProperty(key)) {
-    return item ? item.defaultValue : undefined;
+    return defaultValue;
   }
 
   try {
@@ -35,7 +34,7 @@ exports.get = function(key) {
   }
   finally {
     if (value === undefined) {
-      value = item ? item.defaultValue : undefined;
+      value = defaultValue;
     }
   }
 
@@ -53,4 +52,12 @@ exports.off = emitter.off;
 exports.clear = function() {
   localStorage.clear();
   emitter.emit('change');
+};
+
+exports.register = function(key, defaultValue) {
+  console.assert(!STORAGE_ITEMS.hasOwnProperty(key),
+    `Key ${key} is already taken.`
+  );
+
+  STORAGE_ITEMS[key] = defaultValue;
 };

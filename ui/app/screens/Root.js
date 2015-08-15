@@ -2,6 +2,7 @@ var React = require("react");
 var Router = require("react-router");
 var RouteActions = require("actions/RouteActions");
 var Banner = require('components/Banner');
+var Footer = require('components/Footer');
 var Storage = require('core/Storage');
 var ColorSchemeManager = require('core/ColorSchemeManager');
 var { APP_DOM_ELEMENT_ID } = require('constants');
@@ -57,6 +58,8 @@ var Root = React.createClass({
         <div className="root__screen">
           <RouteHandler onChange={this.reload} {...this.props} />
         </div>
+
+        <Footer />
       </div>
     );
   },
