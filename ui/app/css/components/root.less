@@ -5,13 +5,19 @@
   }
 
   &__footer {
+    position: absolute;
+    bottom: 0;
+    height: @footer-height;
     margin: 1em 0;
     padding: 1em 0;
     font-size: 0.85em;
     text-align: center;
+
+    right: 0;
+    left: 0;
   }
 
-  .root--with-collapsed-banner &__screen {
+  &--with-collapsed-banner &__screen {
     margin-top: @content-banner-collapsed-top-offset + @whitespace;
   }
 }
@@ -28,5 +34,6 @@
   .root__footer {
     border-top: 1px solid @base2;
     color: @base1;
+    // background: @base2;
   }
 });

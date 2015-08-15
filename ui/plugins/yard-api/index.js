@@ -1,4 +1,4 @@
-tinydocReact.use(function(reporter) {
+tinydocReact.use(function YARDAPIPlugin(reporter) {
   reporter.registerRoutes([
     {
       name: 'api',

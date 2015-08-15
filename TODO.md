@@ -2,6 +2,6 @@
 - keyboard shortcuts
 - doc finder/quick jump
 - better / more useful JS tagging
-- comments
-- sticky footer plz
+- ~comments~
+- ~sticky footer plz~
 - custom titles plz

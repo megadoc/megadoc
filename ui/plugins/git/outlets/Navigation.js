@@ -5,19 +5,13 @@ var Icon = require('components/Icon');
 var Navigation = React.createClass({
   displayName: "Navigation",
   statics: {
-    key: 'cjs'
+    key: 'git'
   },
 
   render() {
     return (
-      <Link to="js">
-        <Icon className="icon-javascript">
-          <span className="path1" />
-          <span className="path2" />
-        </Icon>
-
-        {' '}
-        JavaScripts
+      <Link to="git">
+        <Icon className="icon-pulse" /> Activity
       </Link>
     );
   }

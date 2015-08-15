@@ -113,7 +113,7 @@ function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, d
 
       Promise.all(
         database.map(function(entry) {
-          return parseGitStats(globalConfig.git, entry.filePath).then(function(stats) {
+          return parseGitStats(globalConfig.gitRepository, entry.filePath).then(function(stats) {
             entry.git = stats;
           });
         })

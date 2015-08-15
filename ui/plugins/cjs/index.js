@@ -2,7 +2,7 @@ var Database = require('core/Database');
 var LinkResolver = require('core/LinkResolver');
 var config = require('config');
 
-tinydocReact.use(function(api) {
+tinydocReact.use(function CJSPlugin(api) {
   api.registerRoutes([
     {
       name: 'js',

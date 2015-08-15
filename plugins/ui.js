@@ -9,7 +9,7 @@ function UIPlugin(emitter, cssCompiler, config, utils) {
 
   emitter.on('scan', function(compilation, done) {
     if (config.gitStats && config.readme) {
-      parseGitStats(config.git, utils.assetPath(config.readme)).then(
+      parseGitStats(config.gitRepository, utils.assetPath(config.readme)).then(
         function(stats) {
           readmeGitStats = stats;
           done();

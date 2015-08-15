@@ -6,7 +6,7 @@ var LinkResolver = require('core/LinkResolver');
 var resolveLinksInMarkdown = require('core/resolveLinksInMarkdown');
 var Database = require('core/Database');
 
-tinydocReact.use(function(api) {
+tinydocReact.use(function MarkdownPlugin(api) {
   config.collections.forEach(function(collection) {
     var routeName = collection.name;
 

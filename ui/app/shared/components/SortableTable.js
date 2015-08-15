@@ -1,5 +1,5 @@
-var React = require("react");
-var classSet = require("react/lib/cx");
+var React = require('react');
+var classSet = require('utils/classSet');
 
 var { string, func } = React.PropTypes;
 var K = require("constants");

@@ -26,6 +26,7 @@
     "commander": "2.7.1",
     "dox": "0.7.0",
     "fs-extra": "",
+    "git-log-parser": "^1.1.0",
     "glob": "5.0.3",
     "lodash": "3.6.0",
     "md5": "^2.0.0",

@@ -11,6 +11,8 @@ function PluginManager(pluginCount, emitter) {
   return {
     use: function(runner) {
       try {
+        console.log('Loading %s.', runner.name);
+
         runner(registrar.API);
       }
       catch (e) {

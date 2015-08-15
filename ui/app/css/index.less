@@ -3,6 +3,7 @@
 @import "helpers";
 @import "typography";
 @import "font";
+@import "tables";
 @import "components/root";
 @import "components/banner";
 @import "components/color-scheme-switcher";
@@ -62,6 +63,10 @@ body.solarized--dark {
   );
 }
 
+html {
+  position: relative;
+  min-height: 100%;
+}
 
 body {
   font-family: @font;
@@ -69,6 +74,7 @@ body {
   line-height: @line-height;
   padding: 0;
   margin: 0;
+  margin-bottom: @footer-height + @whitespace;
 }
 
 * {

@@ -19,11 +19,13 @@ var Settings = React.createClass({
           </Checkbox>
         </p>
 
-        <h2>Color Scheme <Icon className="icon-contrast" /></h2>
+        <fieldset>
+          <legend><strong>Accessibility: Color Scheme</strong></legend>
 
-        <p>Choose your preferred color palette for easier reading.</p>
+          <p>Choose your preferred color palette for easier reading.</p>
 
-        <ColorSchemeSwitcher />
+          <ColorSchemeSwitcher />
+        </fieldset>
 
         <div className="settings__controls">
           <button className="btn" onClick={this.reset}>Reset settings</button>

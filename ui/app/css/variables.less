@@ -1,5 +1,5 @@
 @whitespace: 20px;
-@line-height: 1;
+@line-height: 1.4;
 @font: Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
 @font-size: 15px;
 
@@ -8,13 +8,13 @@
 @banner-border-dim: 5px;
 @banner-height: 120px;
 
-@banner-collapsed-height: 60px;
+@banner-collapsed-height: 70px;
 
 @content-top-offset: @banner-height;
 
 @sidebar-width: 240px;
 @content-offset-left: @sidebar-width + @whitespace;
-@content-banner-collapsed-top-offset: 60px;
+@content-banner-collapsed-top-offset: @banner-collapsed-height;
 
 @content-width: auto;
 @content-widescreen-width: 1160px;
@@ -37,7 +37,7 @@
 @solarized-green:     #859900;
 
 @plain-base03: #fff;
-@plain-base02: #eee;
+@plain-base02: #eaeaea;
 @plain-base01: #888;
 @plain-base00: transparent;
 @plain-base0: #444;
@@ -53,5 +53,7 @@
 
 @icon-qradio: "\ee70";
 @icon-qradio-checked: "\ee76";
+
+@footer-height: 90px;
 
 @import (optional) "~overrides";
