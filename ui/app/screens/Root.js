@@ -41,7 +41,7 @@ var Root = React.createClass({
 
   render() {
     return (
-      <div id={APP_DOM_ELEMENT_ID}>
+      <div className="root" id={APP_DOM_ELEMENT_ID}>
         <Banner>
           <ColorSchemeSwitcher />
         </Banner>

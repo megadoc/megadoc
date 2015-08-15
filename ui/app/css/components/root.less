@@ -1,0 +1,13 @@
+.root {
+  margin-top: @content-top-offset + @whitespace;
+  margin-left: @whitespace;
+  margin-right: @whitespace;
+}
+
+.widescreen({
+  .root {
+    width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+});

@@ -2,6 +2,7 @@
 @import "helpers";
 @import "typography";
 @import "fonts/tinydoc-1.2/style";
+@import "components/root";
 @import "components/banner";
 @import "components/color-scheme-switcher";
 @import "components/doc-content";
@@ -93,17 +94,6 @@ h1,h2,h3,h4,h5,h6 {
 
 ul, ol {
   padding-left: @whitespace;
-}
-
-#app-container {
-  width: @content-width;
-  margin-top: @content-top-offset;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-#app-container when (@content-width = auto) {
-  margin: 0 @whitespace;
 }
 
 .schemable({

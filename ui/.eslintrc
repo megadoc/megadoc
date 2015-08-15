@@ -24,6 +24,10 @@
   },
 
   "rules": {
-    "dot-notation": 0
+    "dot-notation": 0,
+
+    "react/jsx-uses-react": 2,
+    "react/jsx-no-undef": 2,
+    "react/react-in-jsx-scope": 2
   }
 }

@@ -75,3 +75,9 @@
   padding-bottom: @whitespace/2;
   border-bottom: 1px solid @base2;
 }
+
+.widescreen(@rules) {
+  @media screen and (min-width: 1200px) {
+    @rules();
+  }
+}

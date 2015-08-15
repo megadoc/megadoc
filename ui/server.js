@@ -11,7 +11,7 @@ var server;
 
 config.entry = [
   'webpack/hot/dev-server',
-  'webpack-dev-server/client?http://localhost:8942',
+  'webpack-dev-server/client?http://' + host + ':' + port,
   './app/index.js'
 ];
 
@@ -30,6 +30,10 @@ config.module.loaders.filter(function(loader) {
   return loader.type === 'js';
 })[0].loader += '!react-hot';
 
+// so that loaders can be used by external files, like css assets
+config.resolveLoader = {
+  root: path.resolve(__dirname, '..', 'node_modules'),
+};
 
 var contentBase = '/tmp/tinydoc';
 

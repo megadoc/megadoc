@@ -27,6 +27,10 @@ module.exports = function(config, utils, done) {
     runtimeConfig.readme = fs.readFileSync(utils.assetPath(config.readme), 'utf-8');
   }
 
+  config.assets.forEach(function(filePath) {
+    fs.copySync(utils.assetPath(filePath), path.resolve(outputDir, 'assets', filePath));
+  });
+
   fs.writeFileSync(path.resolve(outputDir, 'index.html'), generateHTMLIndex(config.publicPath, scripts));
 
   // copy the pre-compiled webpack bundles

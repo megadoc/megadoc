@@ -2,6 +2,7 @@ var React = require("react");
 var ellipsify = require('utils/ellipsify');
 var classSet = require('utils/classSet');
 var MarkdownText = require('components/MarkdownText');
+var DocTags = require('components/DocTags');
 var Collapsible = require('mixins/Collapsible');
 
 var DocEntity = React.createClass({

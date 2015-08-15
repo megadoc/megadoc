@@ -22,6 +22,7 @@ UIPlugin.defaults = {
   outputDir: '${ROOT}/doc/www',
   scripts: [],
   pluginScripts: [],
+  assets: [],
 
   /**
    * @property {String} [readme]
