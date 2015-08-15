@@ -25,6 +25,7 @@ module.exports = function(config, utils, readmeGitStats, done) {
 
   if (config.readme) {
     runtimeConfig.readme = {
+      filePath: config.readme,
       source: fs.readFileSync(utils.assetPath(config.readme), 'utf-8'),
       git: readmeGitStats
     };

@@ -51,11 +51,17 @@ exports.assignDelegate = function(inDelegate) {
 };
 
 exports.makeHref = function(name, params) {
-  return delegate.context.makeHref(name, params);
+  return delegate.makeHref(name, params);
 };
 
 exports.goToNotFound = function() {
   withDelegate(function(delegate) {
     delegate.replaceWith('404');
   });
+};
+
+exports.getCurrentRoute = function() {
+  if (delegate) {
+    return delegate.getPath();
+  }
 };

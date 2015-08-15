@@ -15,6 +15,7 @@ function PluginManager(pluginCount, emitter) {
       }
       catch (e) {
         console.warn('A plugin (%s) failed to load, ignoring.', runner.name);
+        console.warn(e);
       }
       finally {
         console.log('%d more plugins to go.', pluginCount - (++ran));

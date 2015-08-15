@@ -21,8 +21,8 @@ var RightColumn = React.createClass({
 
 var TwoColumnLayout = React.createClass({
   render() {
-    var left = findChildByType(this.props.children, LeftColumn.type);
-    var right = findChildByType(this.props.children, RightColumn.type);
+    var left = findChildByType(this.props.children, LeftColumn);
+    var right = findChildByType(this.props.children, RightColumn);
 
     return (
       <div className="two-column-layout">
