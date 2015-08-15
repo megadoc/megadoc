@@ -11,20 +11,13 @@
     height: @banner-collapsed-height;
     border-bottom-width: 1px;
   }
-
-  // transition: height 0.25s ease-out 0s,
-  //   border-bottom-width 0.25s ease-out 0s;
 }
 
 .banner {
   width: @content-width;
   margin: @whitespace auto;
-  height: @banner-inner-height;
   position: relative;
-  // top: @whitespace/2;
   margin-top: @whitespace * 1.5;
-  transition: height 0.25s ease-out 0s,
-    top 0.25s ease-out 0s;
 
   .root--with-collapsed-banner & {
     height: auto;
@@ -46,12 +39,7 @@
   }
 
   &__motto {
-    font-size: smaller;
-    margin: @whitespace 0 0 0;
-
-    // .root--with-collapsed-banner & {
-    //   display: none;
-    // }
+    font-size: 0.85em;
   }
 }
 

@@ -11,6 +11,13 @@ exports.AVAILABLE_SCHEMES = [
   'solarized--light',
   'solarized--dark'
 ];
+
+exports.AVAILABLE_SCHEME_NAMES = [
+  'Light',
+  'Solarized (light)',
+  'Solarized (dark)'
+];
+
 exports.DEFAULT_SCHEME = 'solarized--light';
 
 exports.APP_DOM_ELEMENT_ID = 'app-container';

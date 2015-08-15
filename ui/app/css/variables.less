@@ -1,25 +1,20 @@
 @whitespace: 20px;
-@line-height: 20px;
+@line-height: 1;
 @font: Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
-@font-size: 0.9em;
+@font-size: 15px;
 
 @max-hljs-padding: 15px;
 
-@banner-inner-height: 32px;
 @banner-border-dim: 5px;
-@banner-height: @banner-inner-height +
-  @whitespace*3 +
-  @line-height +
-  @banner-border-dim
-;
+@banner-height: 120px;
 
-@banner-collapsed-height: 50px;
+@banner-collapsed-height: 60px;
 
 @content-top-offset: @banner-height;
 
 @sidebar-width: 240px;
 @content-offset-left: @sidebar-width + @whitespace;
-@content-banner-collapsed-top-offset: 50px;
+@content-banner-collapsed-top-offset: 60px;
 
 @content-width: auto;
 @content-widescreen-width: 1160px;
@@ -42,7 +37,7 @@
 @solarized-green:     #859900;
 
 @plain-base03: #fff;
-@plain-base02: #f4f4f4;
+@plain-base02: #eee;
 @plain-base01: #888;
 @plain-base00: transparent;
 @plain-base0: #444;
@@ -55,5 +50,8 @@
 
 @icon-checkbox: "\ee64";
 @icon-checkbox-checked: "\ee63";
+
+@icon-qradio: "\ee70";
+@icon-qradio-checked: "\ee76";
 
 @import (optional) "~overrides";

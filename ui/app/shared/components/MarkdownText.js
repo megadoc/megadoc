@@ -4,6 +4,7 @@ var hljs = require('highlight.js/lib/highlight');
 var LinkResolver = require('core/LinkResolver');
 var { getQueryItem } = require('actions/RouteActions');
 var scrollIntoView = require('utils/scrollIntoView');
+const Storage = require('core/Storage');
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
@@ -45,7 +46,11 @@ var markedOptions = {
 
 var MarkdownText = React.createClass({
   statics: {
-    normalizeHeading: normalizeHeading
+    normalizeHeading: normalizeHeading,
+
+    isHighlightingEnabled() {
+      return Storage.get('highlightingEnabled');
+    }
   },
 
   propTypes: {
@@ -59,12 +64,18 @@ var MarkdownText = React.createClass({
   },
 
   componentDidMount: function () {
-    this.highlightCode();
+    if (MarkdownText.isHighlightingEnabled()) {
+      this.highlightCode();
+    }
+
     this.jumpIfNeeded();
   },
 
   componentDidUpdate: function () {
-    this.highlightCode();
+    if (MarkdownText.isHighlightingEnabled()) {
+      this.highlightCode();
+    }
+
     this.jumpIfNeeded();
   },
 

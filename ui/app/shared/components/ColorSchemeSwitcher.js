@@ -1,25 +1,34 @@
 var React = require("react");
-var Button = require("components/Button");
-var Icon = require("components/Icon");
+var Radio = require("qjunk/lib/QRadio");
+var { AVAILABLE_SCHEMES, AVAILABLE_SCHEME_NAMES } = require("constants");
 var ColorSchemeManager = require('core/ColorSchemeManager');
 
 var ColorSchemeSwitcher = React.createClass({
   render() {
     return (
-      <Button
-        onClick={this.switchScheme}
-        className="color-scheme-switcher"
-        title="Switch Color Scheme"
-      >
-        <Icon className="icon-contrast" />
-        {' '}
-        {this.props.children}
-      </Button>
+      <div className="color-scheme-switcher">
+        {AVAILABLE_SCHEMES.map(this.renderSchemeOption)}
+      </div>
     );
   },
 
-  switchScheme: function() {
-    ColorSchemeManager.switchScheme();
+  setScheme(e) {
+    ColorSchemeManager.setScheme(e.target.value);
+  },
+
+  renderSchemeOption(scheme, i) {
+    return (
+      <Radio
+        key={scheme}
+        spanner
+        className="color-scheme-switcher__option"
+        value={scheme}
+        checked={ColorSchemeManager.getCurrentScheme() === scheme}
+        onChange={this.setScheme}
+      >
+        {AVAILABLE_SCHEME_NAMES[i]}
+      </Radio>
+    );
   }
 });
 

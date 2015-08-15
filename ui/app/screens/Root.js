@@ -33,7 +33,7 @@ var Root = React.createClass({
       });
     }
 
-    Storage.on('change', () => { console.log('storage changed, reloading'); this.reload(); });
+    Storage.on('change', this.reload);
   },
 
   componentWillUnmount: function() {
@@ -48,8 +48,11 @@ var Root = React.createClass({
     });
 
     return (
-      <div className={className} id={APP_DOM_ELEMENT_ID}>
-        <Banner collapsed={this.isBannerCollapsed()} onToggle={this.toggleBanner} />
+      <div id={APP_DOM_ELEMENT_ID /* need this from scrollIntoView */} className={className}>
+        <Banner
+          collapsed={this.isBannerCollapsed()}
+          onToggle={this.toggleBannerCollapsedState}
+        />
 
         <div className="root__screen">
           <RouteHandler onChange={this.reload} {...this.props} />
@@ -63,12 +66,10 @@ var Root = React.createClass({
   },
 
   isBannerCollapsed() {
-    return !!Storage.get('bannerCollapsed');
+    return Storage.get('bannerCollapsed');
   },
 
-  toggleBanner() {
-    console.log('Collapsing banner:', !this.isBannerCollapsed());
-
+  toggleBannerCollapsedState() {
     Storage.set('bannerCollapsed', !this.isBannerCollapsed());
   }
 });
