@@ -8,7 +8,7 @@ var Footer = React.createClass({
     return (
       <div className="root__footer">
         <MarkdownText>
-          {config.footer || 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).'}
+          {config.footer}
         </MarkdownText>
       </div>
     );

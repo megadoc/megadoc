@@ -54,9 +54,18 @@ UIPlugin.defaults = {
 
   useHashLocation: true,
 
-  publicPath: null,
+  publicPath: '/',
 
   stylesheet: null,
+
+  gitStats: true,
+
+  footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
+
+  disqus: {
+    shortname: '',
+    baseUrl: 'http://localhost'
+  },
 
   /**
    * @immutable

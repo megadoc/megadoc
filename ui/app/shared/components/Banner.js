@@ -29,7 +29,7 @@ var Banner = React.createClass({
             {' '}
 
             <span className="banner__motto">
-              {config.motto || 'Developer reference.'}
+              {config.motto || 'Developer zone.'}
             </span>
 
             {this.props.children}
