@@ -2,8 +2,8 @@ var path = require('path');
 var glob = require('glob');
 var fs = require('fs-extra');
 var extend = require('lodash').extend;
-var parseCommitterRanks = require('./git/parseCommitterRanks');
 var parseLatestActivity = require('./git/parseLatestActivity');
+var parseHistory = require('./git/parseHistory');
 var console = require('../lib/Logger')('git');
 
 function GitPlugin(emitter, cssCompiler, config, globalConfig, utils) {
@@ -15,15 +15,15 @@ function GitPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   globalConfig.pluginScripts.push('plugins/git.js');
 
   emitter.on('scan', function(compilation, done) {
-    console.log('parsing commit history...');
+    console.log('analyzing commit history...');
 
     Promise.all([
-      parseCommitterRanks(globalConfig.gitRepository).then(function(leaderboard) {
-        stats.commitHistory = leaderboard;
-      }),
-
       parseLatestActivity(globalConfig.gitRepository, config.recentCommits).then(function(commits) {
         stats.recentCommits = commits;
+      }),
+
+      parseHistory(globalConfig.gitRepository, config).then(function(history) {
+        stats.history = history;
       })
     ]).then(function() { done(); }, done);
   });

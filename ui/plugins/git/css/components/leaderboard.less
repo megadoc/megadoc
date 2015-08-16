@@ -1,7 +1,17 @@
-.commit-leaderboard {
-  width: 480px;
+@import "~helpers";
+
+.leaderboard {
+  // width: 480px;
 
   th, td {
-    text-align: center;
+    // text-align: center;
   }
 }
+
+.schemable({
+  .leaderboard {
+    &__superstar-record {
+      background-color: @base2;
+    }
+  }
+});

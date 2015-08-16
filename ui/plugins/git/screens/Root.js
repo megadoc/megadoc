@@ -1,6 +1,7 @@
 var React = require('react');
 var RecentCommits = require('components/RecentCommits');
 var Leaderboard = require('components/Leaderboard');
+var Superstars = require('components/Superstars');
 var config = require('config');
 var Trollface = require("../css/images/Trollface.svg");
 var Root = React.createClass({
@@ -15,18 +16,21 @@ var Root = React.createClass({
           activeCommitId={this.props.query.commit}
         />
 
-        <h2>Leaderboard</h2>
+        <h2>Superstars</h2>
+
+        <Superstars people={config.stats.history.people} />
+
+        <h2>Ladder</h2>
 
         <p className="git-root__troll">
           A rundown of exactly how much work every team member does.
           {' '}
-          <b className="type-attention">Really!</b>
           <img className="git-root__troll-head" src={Trollface} width="128" />
         </p>
 
 
         <Leaderboard
-          committers={config.stats.commitHistory}
+          committers={config.stats.history.people}
         />
 
       </div>

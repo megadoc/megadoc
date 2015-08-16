@@ -1,6 +1,7 @@
 var React = require('react');
 var { Table, Column, Mixin:SortableTableMixin } = require('components/SortableTable');
 var { sortBy, groupBy } = require('lodash');
+var classSet = require('utils/classSet');
 
 var Leaderboard = React.createClass({
   mixins: [ SortableTableMixin ],
@@ -21,20 +22,20 @@ var Leaderboard = React.createClass({
 
   getInitialState: function() {
     return {
-      sortKey: 'commitCount',
+      sortKey: 'superStarIndex',
       sortOrder: 'desc'
     };
   },
 
   render: function() {
-    let oc = groupBy(this.props.committers, 'commitCount');
-    let committers = Object.keys(oc).map(function(score) {
-      return {
-        commitCount: parseInt(score, 10),
-        committers: oc[score].map((record) => record.name)
-      };
-    });
-
+    // let oc = groupBy(this.props.committers, 'commitCount');
+    // let committers = Object.keys(oc).map(function(score) {
+    //   return {
+    //     commitCount: parseInt(score, 10),
+    //     committers: oc[score].map((record) => record.name)
+    //   };
+    // });
+    let committers = this.props.committers;
     committers = sortBy(committers, this.state.sortKey);
 
     if (this.state.sortOrder === 'desc') {
@@ -42,11 +43,13 @@ var Leaderboard = React.createClass({
     }
 
     return (
-      <Table className="commit-leaderboard table">
+      <Table className="leaderboard table">
         <thead>
           <tr>
+            <th>Member</th>
+            <Column sortKey="superStarIndex">Superstar Index</Column>
             <Column sortKey="commitCount">Commits</Column>
-            <th>Member(s)</th>
+            <Column sortKey="reviewCount">Reviews</Column>
           </tr>
         </thead>
 
@@ -58,10 +61,16 @@ var Leaderboard = React.createClass({
   },
 
   renderRecord(record) {
+    var className = classSet({
+      'leaderboard__superstar-record': record.isSuperstar
+    });
+
     return (
-      <tr key={record.commitCount}>
+      <tr key={record.commitCount} className={className}>
+        <td>{record.name}{record.isSuperstar && (<em> - wowza</em>)}</td>
+        <td>{(record.superStarIndex * 100).toFixed(2)}</td>
         <td>{record.commitCount}</td>
-        <td>{record.committers.join(', ')}</td>
+        <td>{record.reviewCount}</td>
       </tr>
     );
   }

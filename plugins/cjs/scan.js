@@ -22,7 +22,7 @@ module.exports = function(config, utils, done) {
       }
     });
 
-    console.log('Parsing docs from %d files (%d filtered).',
+    console.log('Parsing docs from %d files (%d were filtered).',
       matchedFiles.length,
       files.length - matchedFiles.length
     );
