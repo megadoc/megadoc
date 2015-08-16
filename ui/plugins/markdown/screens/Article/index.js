@@ -5,8 +5,20 @@ var Database = require('core/Database');
 var config = require('config');
 var Disqus = require('components/Disqus');
 var scrollToTop = require('utils/scrollToTop');
+var HasTitle = require('mixins/HasTitle');
 
 var Article = React.createClass({
+  mixins: [
+    HasTitle(function() {
+      var article = Database.get(this.props.collectionName, this.props.params.articleId);
+      var collection = Database.getCollectionTitle(this.props.collectionName);
+
+      if (article) {
+        return `[${collection}] ${article.title}`;
+      }
+    })
+  ],
+
   componentDidMount: function() {
     scrollToTop();
   },

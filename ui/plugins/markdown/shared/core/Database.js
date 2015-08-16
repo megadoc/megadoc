@@ -6,6 +6,10 @@ var strHumanize = require('tinydoc/lib/utils/strHumanize');
 var folders = {};
 
 module.exports = {
+  getCollectionTitle(collectionName) {
+    return findWhere(config.collections, { name: collectionName }).title;
+  },
+
   getArticleTitles(collection) {
     return config.database[collection];
   },

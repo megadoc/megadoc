@@ -4,8 +4,9 @@ var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
 var extend = require('lodash').extend;
 var template = require('lodash').template;
 
-function generateHTMLIndex(publicPath, scripts) {
+function generateHTMLIndex(publicPath, scripts, title) {
   return template(fs.readFileSync(path.join(UI_DIR, 'app', 'index.tmpl.html'), 'utf-8'))({
+    title: title,
     scripts: scripts.map(function(script) {
       return path.join(publicPath, script);
     })
@@ -35,7 +36,10 @@ module.exports = function(config, utils, readmeGitStats, done) {
     fs.copySync(utils.assetPath(filePath), path.resolve(outputDir, 'assets', filePath));
   });
 
-  fs.writeFileSync(path.resolve(outputDir, 'index.html'), generateHTMLIndex(config.publicPath, scripts));
+  fs.writeFileSync(
+    path.resolve(outputDir, 'index.html'),
+    generateHTMLIndex(config.publicPath, scripts, config.title)
+  );
 
   // copy the pre-compiled webpack bundles
   fs.copySync(path.join(UI_DIR, 'dist'), outputDir);

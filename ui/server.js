@@ -41,6 +41,7 @@ fs.ensureDirSync(contentBase);
 fs.writeFileSync(
   contentBase + '/index.html',
   _.template(fs.readFileSync('./app/index.tmpl.html'), 'utf-8')({
+    title: 'tinydoc--dev',
     scripts: [ 'vendor.js', 'main.js' ]
   })
 );

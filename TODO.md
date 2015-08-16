@@ -1,7 +1,7 @@
 - readme files for the js/api/markdown section
 - keyboard shortcuts
 - doc finder/quick jump
-- better / more useful JS tagging
-- ~comments~
-- ~sticky footer plz~
-- custom titles plz
+- ~~better / more useful JS tagging~~
+- ~~comments~~
+- ~~sticky footer plz~~
+- ~~custom titles plz~~

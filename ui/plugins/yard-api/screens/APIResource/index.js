@@ -5,9 +5,18 @@ var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 var SectionJumperMixin = require('mixins/SectionJumperMixin');
 var { Link } = require('react-router');
+var HasTitle = require('mixins/HasTitle');
 
 var APIResource = React.createClass({
   mixins: [
+    HasTitle(function() {
+      var resource = Database.getCodeObject(this.props.params.resourceId);
+
+      if (resource) {
+        return `[API] ${resource.title}`;
+      }
+    }),
+
     SectionJumperMixin(function() {
       if (this.props.query.endpoint) {
         return this.refs[`endpoint-${this.props.query.endpoint}`];
