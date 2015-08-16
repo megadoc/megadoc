@@ -51,6 +51,8 @@ var APIEndpoint = React.createClass({
           path={endpoint.id}
           tag={apiTag}
           isBeta={!!findWhere(this.props.tags, { tag_name: 'beta' })}
+          resourceId={this.props.resourceId}
+          scopedId={this.props.scoped_id}
         />
 
         <div className="api-endpoint__route">

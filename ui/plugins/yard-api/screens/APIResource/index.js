@@ -4,8 +4,9 @@ var MarkdownText = require('components/MarkdownText');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 var SectionJumperMixin = require('mixins/SectionJumperMixin');
+var { Link } = require('react-router');
 
-var Class = React.createClass({
+var APIResource = React.createClass({
   mixins: [
     SectionJumperMixin(function() {
       if (this.props.query.endpoint) {
@@ -26,9 +27,15 @@ var Class = React.createClass({
 
         <MarkdownText>{resource.text}</MarkdownText>
 
+        {resource.endpoints.length > 0 && (
+          this.renderQuickLinks(resource)
+        )}
+
         {resource.objects.length > 0 && (
           <div className="api-objects">
             <h2>Object Synopses</h2>
+
+            <p>Below is a description of the objects returned, or used, by this API.</p>
 
             {resource.objects.map(this.renderAPIObject)}
           </div>
@@ -39,6 +46,30 @@ var Class = React.createClass({
         </div>
       </div>
     );
+  },
+
+  renderQuickLinks(resource) {
+    return (
+      <div>
+        <h2>Endpoints</h2>
+
+        <ul className="api-endpoint__quicklinks">
+          {resource.endpoints.map((e) => {
+            return (
+              <li key={e.id}>
+                <Link
+                  to="api.resource"
+                  params={{ resourceId: resource.id }}
+                  query={{ endpoint: e.scoped_id }}
+                >
+                  {e.title}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    )
   },
 
   renderAPIObject(object) {
@@ -55,10 +86,11 @@ var Class = React.createClass({
       <APIEndpoint
         ref={`endpoint-${endpoint.scoped_id}`}
         key={endpoint.id}
+        resourceId={this.props.params.resourceId}
         {...endpoint}
       />
     );
   }
 });
 
-module.exports = Class;
+module.exports = APIResource;

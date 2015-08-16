@@ -13,6 +13,6 @@ module.exports = function(selector) {
   ;
 
   if (node) {
-    window.scrollTo(0, inferOffsetTop(node));
+    window.scrollTo(0, node.offsetTop /* inferOffsetTop(node) */);
   }
 };

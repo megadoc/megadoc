@@ -1,5 +1,7 @@
 var React = require('react');
 var config = require('config');
+var { Link } = require('react-router');
+var Icon = require('components/Icon');
 
 var Header = React.createClass({
   propTypes: {
@@ -18,9 +20,10 @@ var Header = React.createClass({
     var { tag } = this.props;
 
     return (
-      <h3 className="api-endpoint__header">
+      <h2 className="api-endpoint__header markdown-text__heading">
         <div className="api-endpoint__header-label">
           {tag.text}
+
           {this.props.isBeta && (
             <span className="api-endpoint__header-beta">
               BETA
@@ -32,8 +35,18 @@ var Header = React.createClass({
               {this.props.path}
             </div>
           )}
+
+          {' '}
+
+          <Link
+            className="markdown-text__heading-anchor"
+            to="api.resource"
+            params={{ resourceId: this.props.resourceId }}
+            query={{ endpoint: this.props.scopedId }}
+            children={(<Icon className="icon-link" />)}
+          />
         </div>
-      </h3>
+      </h2>
     );
   }
 });

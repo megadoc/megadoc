@@ -15,9 +15,9 @@ tinydocReact.use(function YARDAPIPlugin(reporter) {
 
     {
       name: 'api.resource',
-      handler: require('./screens/Class'),
+      handler: require('./screens/APIResource'),
       parent: 'api',
-      path: '/resources/:resourceId'
+      path: 'resources/:resourceId'
     },
 
   ]);
