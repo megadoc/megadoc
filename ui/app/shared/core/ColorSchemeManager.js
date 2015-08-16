@@ -8,7 +8,7 @@ ColorSchemeManager.load = function() {
 
 ColorSchemeManager.switchScheme = function(nextScheme = null) {
   var className = document.body.className;
-  var currScheme, nextScheme;
+  var currScheme;
 
   AVAILABLE_SCHEMES.some(function(scheme, i) {
     if (className.indexOf(scheme) > -1) {

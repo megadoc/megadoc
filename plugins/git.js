@@ -1,6 +1,4 @@
 var path = require('path');
-var glob = require('glob');
-var fs = require('fs-extra');
 var extend = require('lodash').extend;
 var parseLatestActivity = require('./git/parseLatestActivity');
 var parseHistory = require('./git/parseHistory');

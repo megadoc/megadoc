@@ -3,12 +3,14 @@ var { Link } = require('react-router');
 var { sortBy, groupBy } = require('lodash');
 var { normalizeHeading } = require('components/MarkdownText');
 var Checkbox = require('components/Checkbox');
+var HotItemIndicator = require('components/HotItemIndicator');
 var Storage = require('core/Storage');
 var strHumanize = require('tinydoc/lib/utils/strHumanize');
 var scrollIntoView = require('utils/scrollIntoView');
 var GROUP_BY_FOLDER = 'markdown:classBrowser:groupByFolder';
 var ROOT_FOLDER_ID = strHumanize('root');
 var $ = require('jquery');
+var isItemHot = require('utils/isItemHot');
 
 Storage.register(GROUP_BY_FOLDER, true);
 
@@ -23,7 +25,7 @@ var MarkdownClassBrowser = React.createClass({
     this.scrollActiveArticleIntoView();
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     if (prevProps.activeArticleId !== this.props.activeArticleId) {
       this.scrollActiveArticleIntoView();
     }
@@ -99,10 +101,13 @@ var MarkdownClassBrowser = React.createClass({
       <div key={id} ref={`article-${id}`}>
         <Link
           to={`${this.props.collectionName}.article`}
-          params={{ articleId: encodeURIComponent(id) }}
-          children={title}
+          params={{ articleId: id }}
           className="class-browser__entry-link"
-        />
+        >
+          {title}
+
+          {article.git && isItemHot(article.git.lastCommittedAt) && <HotItemIndicator />}
+        </Link>
 
         {isActive && this.renderTOC(article)}
       </div>

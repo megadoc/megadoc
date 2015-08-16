@@ -11,7 +11,7 @@ function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   globalConfig.pluginScripts.push('plugins/cjs.js');
 
   emitter.on('scan', function(compilation, done) {
-    scan(config, utils, function(err, _database) {
+    scan(config, globalConfig.gitRepository, utils, function(err, _database) {
       if (err) {
         return done(err);
       }

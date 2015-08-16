@@ -1,6 +1,5 @@
 var React = require('react');
 var ColorSchemeSwitcher = require("components/ColorSchemeSwitcher");
-var Icon = require("components/Icon");
 var Checkbox = require("components/Checkbox");
 var Storage = require('core/Storage');
 

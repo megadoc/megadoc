@@ -78,7 +78,7 @@ var APIResource = React.createClass({
           })}
         </ul>
       </div>
-    )
+    );
   },
 
   renderAPIObject(object) {

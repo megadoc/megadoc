@@ -1,7 +1,5 @@
 var React = require('react');
 var { Link } = require('react-router');
-var { findWhere } = require('lodash');
-var MarkdownText = require('components/MarkdownText');
 
 var RecentCommits = React.createClass({
   propTypes: {
@@ -55,7 +53,7 @@ var RecentCommits = React.createClass({
     let body = commit.body || '';
 
     if (!body.length) {
-      body = 'No body provided.'
+      body = 'No body provided.';
     }
 
     return (

@@ -1,7 +1,6 @@
 /* eslint "camelcase":0 */
 var React = require("react");
 var { findWhere, where } = require('lodash');
-var config = require('config');
 var MarkdownText = require('components/MarkdownText');
 var PropertyListing = require('./PropertyListing');
 var ExampleRequestTag = require('./tags/ExampleRequestTag');

@@ -23,7 +23,7 @@ var Article = React.createClass({
     scrollToTop();
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     if (prevProps.params.articleId !== this.props.params.articleId) {
       scrollToTop();
     }

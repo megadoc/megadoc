@@ -30,6 +30,6 @@ function resolveLinksInMarkdown(docstring, resolveEntity) {
       }
     })
   ;
-};
+}
 
 module.exports = resolveLinksInMarkdown;

@@ -4,7 +4,9 @@ var Database = require('core/Database');
 var classSet = require('utils/classSet');
 var Storage = require('core/Storage');
 var Checkbox = require('components/Checkbox');
+var HotItemIndicator = require('components/HotItemIndicator');
 var { sortBy, groupBy } = require('lodash');
+var isItemHot = require('utils/isItemHot');
 
 var PRIVATE_VISIBILITY_KEY = 'js:classBrowser:showPrivate';
 
@@ -74,12 +76,15 @@ var ClassBrowser = React.createClass({
 
     return (
       <div key={id} className={className}>
+
         <Link to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
           {doc.ctx.name}
 
           {isPrivate && (
             <span className="class-browser__entry-link--private"> (private)</span>
           )}
+
+          {doc.git && isItemHot(doc.git.lastCommittedAt) && <HotItemIndicator />}
         </Link>
 
         {isActive && this.renderClassMethods(doc)}

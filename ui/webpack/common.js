@@ -14,7 +14,10 @@ var baseConfig = {
     // look-up from plugins to libraries we support, like react and lodash,
     // won't resolve to that plugin's version of the library in its
     // node_modules/ folder.
-    root: path.resolve(__dirname, '..', '..', 'node_modules'),
+    root: [
+      path.resolve(__dirname, '..', '..', 'node_modules'),
+      path.resolve(root, 'app', 'shims')
+    ],
 
     fallback: [
       path.join(root, 'app', 'shared'),

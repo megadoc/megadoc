@@ -3,7 +3,6 @@ var DocEntity = require('components/DocEntity');
 var MarkdownText = require('components/MarkdownText');
 var SeeTag = require('components/DocTags/SeeTag');
 var DocGroup = require('components/DocGroup');
-var scrollIntoView = require('utils/scrollIntoView');
 var PropertyTag = require('components/DocTags/PropertyTag');
 var { where, sortBy } = require("lodash");
 var isClassMethod = require('utils/isClassMethod');

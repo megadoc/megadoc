@@ -62,7 +62,7 @@ function TitleManager(generateTitle) {
       }
     }
   };
-};
+}
 
 TitleManager.TIMEOUT = 2;
 

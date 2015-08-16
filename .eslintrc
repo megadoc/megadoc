@@ -15,6 +15,7 @@
     "no-underscore-dangle": 0,
   },
   "globals": {
-    "tinydocReact": true
+    "tinydocReact": true,
+    "TestUtils"
   }
 }

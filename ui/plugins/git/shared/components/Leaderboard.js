@@ -1,6 +1,6 @@
 var React = require('react');
-var { Table, Column, Mixin:SortableTableMixin } = require('components/SortableTable');
-var { sortBy, groupBy } = require('lodash');
+var { Table, Column, Mixin: SortableTableMixin } = require('components/SortableTable');
+var { sortBy } = require('lodash');
 var classSet = require('utils/classSet');
 
 var Leaderboard = React.createClass({

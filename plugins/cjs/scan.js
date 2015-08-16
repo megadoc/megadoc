@@ -1,8 +1,10 @@
 var glob = require('glob');
 var Logger = require('../../lib/Logger');
 var doxParser = require('./parsers/DoxParser');
+var parseGitStats = require('../../lib/utils/parseGitStats');
+var where = require('lodash').where;
 
-module.exports = function(config, utils, done) {
+module.exports = function(config, gitRepository, utils, done) {
   var console = new Logger('cjs scanner');
 
   glob(utils.assetPath(config.source), { nodir: true }, function (err, files) {
@@ -26,10 +28,32 @@ module.exports = function(config, utils, done) {
       files.length - matchedFiles.length
     );
 
-    var entries = matchedFiles.reduce(function(entries, filePath) {
-      return entries.concat(doxParser(filePath, config));
+    var database = matchedFiles.reduce(function(database, filePath) {
+      return database.concat(doxParser(filePath, config));
     }, []);
 
-    done(null, entries);
+    if (config.gitStats) {
+      console.log("Parsing git stats...");
+
+      Promise.all(
+        matchedFiles.map(function(filePath) {
+          return parseGitStats(gitRepository, filePath).then(function(stats) {
+            where(database, { filePath: filePath }).forEach(function(entry) {
+              entry.git = stats;
+            });
+          });
+        })
+      ).then(
+        function() {
+          done(null, database);
+        },
+        function(err) {
+          done(err);
+        })
+      ;
+    }
+    else {
+      done(null, database);
+    }
   });
 };

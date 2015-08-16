@@ -41,7 +41,7 @@ describe('DoxParser/inferModuleId', function() {
         doc,
         TestUtils.getFixturePath('cjs/class04.js')
       )
-    ).to.equal('Class04');
+    ).to.equal('class04');
   });
 
   it('@class with a declaration (var LayoutList = ...) with a description', function() {

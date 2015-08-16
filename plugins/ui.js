@@ -62,6 +62,11 @@ UIPlugin.defaults = {
 
   footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
 
+  hotness: {
+    count: 1,
+    interval: 'weeks'
+  },
+
   disqus: {
     shortname: '',
     baseUrl: 'http://localhost'

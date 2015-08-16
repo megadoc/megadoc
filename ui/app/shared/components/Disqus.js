@@ -1,3 +1,5 @@
+/* global DISQUS:true */
+
 var React = require('react');
 var config = require('config');
 var RouteActions = require('actions/RouteActions');
@@ -72,7 +74,7 @@ var ReactDisqusThread = React.createClass({
       identifier: null,
       title: null,
       url: null,
-      category_id: null
+      categoryId: null
     };
   },
 
@@ -135,21 +137,21 @@ var ReactDisqusThread = React.createClass({
   render: function () {
     return (
       DOM.div(this.props,
-        DOM.div({id:"disqus_thread"}),
+        DOM.div({id: "disqus_thread"}),
         DOM.noscript(null,
           DOM.span(null,
             'Please enable JavaScript to view the ',
-            DOM.a({href:"http://disqus.com/?ref_noscript"},
+            DOM.a({href: "http://disqus.com/?ref_noscript"},
               'comments powered by Disqus.'
             )
           )
         ),
         DOM.a({
-            href:"http://disqus.com",
-            className:"dsq-brlink"
+            href: "http://disqus.com",
+            className: "dsq-brlink"
           },
           'blog comments powered by ',
-          DOM.span({className:"logo-disqus"},
+          DOM.span({className: "logo-disqus"},
             'Disqus'
           )
         )
