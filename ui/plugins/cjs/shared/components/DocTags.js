@@ -31,19 +31,16 @@ var DocTags = React.createClass({
         'return',
         'example',
         'throws',
-        'see'
+        'see',
+        'module',
+        'protected',
+        'private'
       ].indexOf(tag.type) === -1;
     });
 
     return (
       <div className="doc-entity__tags">
-        <TagGroup
-          collapsible={false}
-          alwaysGroup
-          tagName="ol"
-          tags={paramTags}
-          renderer={ParamTag}
-        >
+        <TagGroup alwaysGroup tagName="ol" tags={paramTags} renderer={ParamTag}>
           Parameters ({paramTags.length})
         </TagGroup>
 

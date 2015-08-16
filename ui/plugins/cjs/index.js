@@ -18,8 +18,8 @@ tinydocReact.use(function CJSPlugin(api) {
     },
 
     {
-      name: 'js.class',
-      path: 'classes/:classId',
+      name: 'js.module',
+      path: 'modules/:moduleId',
       handler: require('./screens/Class'),
       parent: 'js'
     }

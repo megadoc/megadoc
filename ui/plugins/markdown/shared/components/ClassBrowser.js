@@ -5,9 +5,10 @@ var { normalizeHeading } = require('components/MarkdownText');
 var Checkbox = require('components/Checkbox');
 var Storage = require('core/Storage');
 var strHumanize = require('tinydoc/lib/utils/strHumanize');
-
+var scrollIntoView = require('utils/scrollIntoView');
 var GROUP_BY_FOLDER = 'markdown:classBrowser:groupByFolder';
 var ROOT_FOLDER_ID = strHumanize('root');
+var $ = require('jquery');
 
 Storage.register(GROUP_BY_FOLDER, true);
 
@@ -18,10 +19,24 @@ var MarkdownClassBrowser = React.createClass({
     };
   },
 
-  componentWillMount: function() {
-    // default
-    if (Storage.get(GROUP_BY_FOLDER) == null) {
-      Storage.set(GROUP_BY_FOLDER, true);
+  componentDidMount: function() {
+    this.scrollActiveArticleIntoView();
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.activeArticleId !== this.props.activeArticleId) {
+      this.scrollActiveArticleIntoView();
+    }
+  },
+
+  scrollActiveArticleIntoView() {
+    const { activeArticleId } = this.props;
+
+    if (activeArticleId) {
+      scrollIntoView.aSomewhatSmarterVersion(
+        this.refs[`article-${activeArticleId}`].getDOMNode(),
+        $('.resizable-panel__content')[0]
+      );
     }
   },
 
@@ -49,7 +64,7 @@ var MarkdownClassBrowser = React.createClass({
             var isRoot = folderId === ROOT_FOLDER_ID;
 
             return (
-              <div className="class-browser__category">
+              <div key={folderId} className="class-browser__category">
                 <h3 className="class-browser__category-name">
                   {isRoot ? <em>No Folder</em> : strHumanize(folderId)}
                 </h3>
@@ -81,7 +96,7 @@ var MarkdownClassBrowser = React.createClass({
     }
 
     return (
-      <div key={id}>
+      <div key={id} ref={`article-${id}`}>
         <Link
           to={`${this.props.collectionName}.article`}
           params={{ articleId: encodeURIComponent(id) }}

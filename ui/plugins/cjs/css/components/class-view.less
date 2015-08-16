@@ -5,16 +5,27 @@
     padding: 0;
   }
 
-  &__header-name {
-    * {
-      .inline-block();
-      vertical-align: middle;
+  &__header {
+    // * {
+    //   .inline-block();
+    //   vertical-align: middle;
+    // }
+
+    &-name {
+      vertical-align: top;
+    }
+
+    &-type {
+      font-size: 0.65em;
+      vertical-align: baseline;
     }
 
     .icon {
-      margin-right: 5px;
+      vertical-align: middle;
+      // margin-right: 5px;
     }
   }
+
 }
 .schemable({
   .class-view {
@@ -22,6 +33,12 @@
       background: @base2;
       font-size: smaller;
       padding: @whitespace/4;
+    }
+
+    &__header {
+      &-type {
+        color: @base1;
+      }
     }
   }
 });

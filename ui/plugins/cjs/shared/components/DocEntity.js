@@ -17,6 +17,7 @@ var DocEntity = React.createClass({
   getDefaultProps: function() {
     return {
       withTitle: true,
+      withDescription: true
     };
   },
 
@@ -38,15 +39,25 @@ var DocEntity = React.createClass({
             {this.renderCollapser()}
 
             <span className="doc-entity__name">
+              {this.props.ctx.type === 'method' && '#'}
               {this.props.ctx.name}
+
               {this.props.isConstructor && (
                 <span> (constructor)</span>
+              )}
+
+              {' '}
+              {this.props.isProtected && (
+                <span className="doc-entity__protected">PROTECTED</span>
+              )}
+              {this.props.isPrivate && (
+                <span className="doc-entity__private">PRIVATE</span>
               )}
             </span>
           </h4>
         )}
 
-        {!this.props.isConstructor && (
+        {!this.props.isConstructor && this.props.withDescription && (
           <MarkdownText className="doc-entity__description">
             {isCollapsed ? (
               ellipsify(summary, 120) +
@@ -58,12 +69,12 @@ var DocEntity = React.createClass({
           </MarkdownText>
         )}
 
-        {!isCollapsed &&
+        {!isCollapsed && (
           <DocTags
             tags={this.props.tags}
             showExamples={!this.props.isConstructor}
           />
-        }
+        )}
       </div>
     );
   }

@@ -3,7 +3,6 @@ var NavigationOutlet = require('./outlets/Navigation');
 var React = require('react');
 var Root = require('./screens/Root');
 var LinkResolver = require('core/LinkResolver');
-var resolveLinksInMarkdown = require('core/resolveLinksInMarkdown');
 var Database = require('core/Database');
 
 tinydocReact.use(function MarkdownPlugin(api) {
@@ -49,12 +48,6 @@ tinydocReact.use(function MarkdownPlugin(api) {
   api.on('started', function() {
     var links = Database.getLinkableEntities();
     var linkKeys = Object.keys(links);
-
-    config.collections.forEach(function(collection) {
-      LinkResolver.registerScanner(
-        resolveLinksInMarkdown.bind(null, collection.name)
-      );
-    });
 
     LinkResolver.registerResolver(function(id) {
       var entity;

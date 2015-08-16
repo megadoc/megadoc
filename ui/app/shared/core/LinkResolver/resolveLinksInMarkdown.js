@@ -1,7 +1,7 @@
 var TINY_PATH_MATCHER = /\[([^\]]+)\]\((tiny:\/\/[^\)]+)\)/g;
 var SHORTCUT_MATCHER = /\[([^\]]+)\]\(\)/g;
 
-var resolveLinksInMarkdown = function(collectionName, docstring, resolveEntity) {
+function resolveLinksInMarkdown(docstring, resolveEntity) {
   return docstring
     // resolve any link whose URI starts with tiny://
     .replace(TINY_PATH_MATCHER, function(original, linkTitle, objectPath) {

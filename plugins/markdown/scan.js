@@ -5,49 +5,8 @@ var strHumanize = require('../../lib/utils/strHumanize');
 var pluck = require('lodash').pluck;
 var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
-
-var RE_EXTRACT_TITLE = /^(#{2,3})\s+([^\n]+)|^([^\n]+)\n([\-]{3,})\n/gm;
-
-function scanForTitle(article, id) {
-  var hashTitleMatcher = article.match(/^\#\s([^\n]+)/);
-
-  if (hashTitleMatcher) {
-    return hashTitleMatcher[1];
-  }
-  else {
-    var strokedTitleMatcher = article.match(/^([^\n]+)\n[\=]{3,}\n/m);
-
-    if (strokedTitleMatcher) {
-      return strokedTitleMatcher[1];
-    }
-    else {
-      return strHumanize(id);
-    }
-  }
-}
-
-function scanForSections(article) {
-  var sections = [];
-
-  article.replace(RE_EXTRACT_TITLE, function(match, hLevel, hTitle, sTitle, sSymbol) {
-    if (hLevel && hTitle) {
-      sections.push({
-        level: hLevel.length,
-        title: hTitle
-      });
-    }
-    else if (sTitle && sSymbol) {
-      sections.push({
-        level: 2,
-        title: sTitle
-      });
-    }
-
-    return match;
-  });
-
-  return sections;
-}
+var parseTitle = require('./scan/parseTitle');
+var parseSections = require('./scan/parseSections');
 
 function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, done) {
   var pattern = utils.assetPath(collectionConfig.source);
@@ -92,8 +51,8 @@ function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, d
 
       // remove the extension
       entry.id = id.replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
-      entry.title = scanForTitle(entry.source, fileName);
-      entry.sections = scanForSections(entry.source);
+      entry.title = parseTitle(entry.source, fileName);
+      entry.sections = parseSections(entry.source);
       entry.folder = strHumanize(
         id.indexOf('/') > -1 ?
           id.split('/')[0] :

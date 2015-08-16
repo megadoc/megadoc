@@ -5,9 +5,12 @@ var MethodTag = React.createClass({
   displayName: "MethodTag",
 
   render() {
+    console.log(this.props);
     return (
       <div>
-        <h3><code>{this.props.ctx.name}</code></h3>
+        <h3>
+          <code>{this.props.ctx.name}</code>
+        </h3>
 
         <MarkdownText className="param-tag__description">
           {this.props.description.full}

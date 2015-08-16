@@ -3,9 +3,14 @@ var config = require('config');
 var MarkdownText = require('components/MarkdownText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
+var scrollToTop = require('utils/scrollToTop');
 
 var Home = React.createClass({
   displayName: "Home",
+
+  componentDidMount: function() {
+    scrollToTop();
+  },
 
   render() {
     return (

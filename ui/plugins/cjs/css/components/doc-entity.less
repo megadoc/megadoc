@@ -10,6 +10,11 @@
       font-style: italic;
     }
   }
+
+  &__protected, &__private {
+    font-size: 0.75em;
+    padding: 0.25em 0.5em;
+  }
 }
 
 .schemable({
@@ -22,6 +27,11 @@
 
     &__name {
       color: @accent;
+    }
+
+    &__protected, &__private {
+      background: @base2;
+      color: @solarized-orange;
     }
   }
 });

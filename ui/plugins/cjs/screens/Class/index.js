@@ -5,20 +5,20 @@ var ClassView = require('./ClassView');
 var Class = React.createClass({
   statics: {
     willTransitionTo(transition, params) {
-      if (!Database.getClass(params.classId)) {
+      if (!Database.getModule(params.moduleId)) {
         transition.redirect('js');
       }
     }
   },
 
   render() {
-    var { classId } = this.props.params;
+    var { moduleId } = this.props.params;
 
     return (
       <ClassView
         commonPrefix={Database.getCommonPrefix()}
-        classDoc={Database.getClass(classId)}
-        classDocs={Database.getTagsForClass(classId)}
+        classDoc={Database.getModule(moduleId)}
+        classDocs={Database.getModuleTags(moduleId)}
         focusedEntity={this.props.query.entity}
       />
     );

@@ -4,7 +4,7 @@ var Database = require('core/Database');
 var classSet = require('utils/classSet');
 var Storage = require('core/Storage');
 var Checkbox = require('components/Checkbox');
-var { sortBy } = require('lodash');
+var { sortBy, groupBy } = require('lodash');
 
 var PRIVATE_VISIBILITY_KEY = 'js:classBrowser:showPrivate';
 
@@ -14,13 +14,18 @@ var ClassBrowser = React.createClass({
   displayName: "ClassBrowser",
 
   render() {
-    var classes = sortBy(this.props.classes, 'id').filter(function(classDoc) {
-      return classDoc.tags.length > 0 || classDoc.description.full.length > 0;
+    var modules = sortBy(this.props.modules, 'id');
+    var nsClasses = groupBy(modules, 'namespace');
+
+    var namespaces = Object.keys(nsClasses).map(function(ns) {
+      return { name: ns, modules: nsClasses[ns] };
     });
+
+    namespaces = sortBy(namespaces, 'name');
 
     return (
       <nav className="class-browser__listing">
-        {classes.map(this.renderEntry)}
+        {namespaces.map(this.renderNamespace)}
 
         <div className="class-browser__controls">
           <Checkbox
@@ -30,6 +35,22 @@ var ClassBrowser = React.createClass({
           />
         </div>
       </nav>
+    );
+  },
+
+  renderNamespace(ns) {
+    if (ns.modules.length === 0) {
+      return null;
+    }
+
+    return (
+      <div key={ns.name} className="class-browser__category">
+        <h3 className="class-browser__category-name">
+          {ns.name}
+        </h3>
+
+        {ns.modules.map(this.renderEntry)}
+      </div>
     );
   },
 
@@ -53,7 +74,7 @@ var ClassBrowser = React.createClass({
 
     return (
       <div key={id} className={className}>
-        <Link to="js.class" params={{ classId: id }} className="class-browser__entry-link">
+        <Link to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
           {doc.ctx.name}
 
           {isPrivate && (
@@ -67,7 +88,7 @@ var ClassBrowser = React.createClass({
   },
 
   renderClassMethods(classEntry) {
-    var docs = Database.getClassMethods(classEntry.id);
+    var docs = Database.getModuleTags(classEntry.id);
 
     if (!docs.length) {
       return null;
@@ -98,11 +119,14 @@ var ClassBrowser = React.createClass({
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link
-          to="js.class"
-          params={{ classId: classEntry.id }}
+          to="js.module"
+          params={{ moduleId: classEntry.id }}
           query={{ entity: doc.id }}
         >
-          {symbol}{doc.isConstructor ? 'constructor' : doc.ctx.name}
+          {(doc.isConstructor || doc.isClass) ?
+            'constructor' :
+            (symbol + doc.ctx.name)
+          }
         </Link>
       </li>
     );

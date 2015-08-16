@@ -1,6 +1,6 @@
 var { makeHref } = require('actions/RouteActions');
 var config = require('config');
-var { pluck } = require('lodash');
+var { pluck, findWhere } = require('lodash');
 var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
 
 var commonPrefix;
@@ -18,37 +18,37 @@ module.exports = {
     return config.database;
   },
 
-  getClass(classId) {
-    var classDocs = this.getClasses();
-
-    return classDocs.filter(function(classEntry) {
-      return classEntry.id === classId;
-    })[0];
+  getModule(moduleId) {
+    return findWhere(this.getModules(), { id: moduleId });
   },
 
-  getClasses() {
-    return config.database.filter(function(entry) {
-      return entry.isClass;
-    });
+  getModules() {
+    if (!this.modules) {
+      this.modules = config.database.filter(function(entry) {
+        return entry.isModule;
+      });
+    }
+
+    return this.modules;
   },
 
-  getTagsForClass(classId) {
-    var classDoc = this.getClass(classId);
+  getModuleTags(moduleId) {
+    var classDoc = this.getModule(moduleId);
 
     if (!classDoc) {
-      console.warn('Unable to find class entry with id ' + classId);
+      console.warn('Unable to find class entry with id ' + moduleId);
       return [];
     }
 
     return config.database.reduce(function(classDocs, doc) {
       if (doc.ctx) {
-        if (doc.ctx.receiver === classDoc.ctx.name) {
+        if (doc.ctx.receiver === classDoc.id) {
           classDocs.push(doc);
         }
         else if (
           ['method', 'function'].indexOf(doc.ctx.type) > -1 &&
           doc.tags.some(function(tag) {
-            return tag.type === 'memberOf' && tag.parent === classDoc.ctx.name;
+            return tag.type === 'memberOf' && tag.parent === classDoc.id;
           })
         ) {
           classDocs.push(doc);
@@ -59,16 +59,11 @@ module.exports = {
     }, [classDoc]);
   },
 
-  getClassMethods(classId) {
-    var classDocs = this.getTagsForClass(classId);
-    return classDocs;
-  },
-
   getLinks() {
-    return this.getClasses().reduce(function(links, entry) {
-      links[entry.id] = {
-        href: makeHref('js.class', { classId: entry.id }),
-        title: entry.id
+    return this.getModules().reduce(function(links, doc) {
+      links[doc.id] = links[doc.ctx.name] = {
+        href: makeHref('js.module', { moduleId: doc.id }),
+        title: doc.ctx.name
       };
 
       return links;

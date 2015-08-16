@@ -59,7 +59,8 @@ var MarkdownText = React.createClass({
 
   getDefaultProps: function() {
     return {
-      linkify: true
+      linkify: true,
+      jumpy: false
     };
   },
 
@@ -68,7 +69,9 @@ var MarkdownText = React.createClass({
       this.highlightCode();
     }
 
-    this.jumpIfNeeded();
+    if (this.props.jumpy) {
+      this.jumpIfNeeded();
+    }
   },
 
   componentDidUpdate: function () {
@@ -76,7 +79,9 @@ var MarkdownText = React.createClass({
       this.highlightCode();
     }
 
-    this.jumpIfNeeded();
+    if (this.props.jumpy) {
+      this.jumpIfNeeded();
+    }
   },
 
   highlightCode: function () {

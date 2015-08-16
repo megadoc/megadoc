@@ -1,5 +1,5 @@
 var resolvers = [];
-var scanners = [];
+var scanners = [ require('./LinkResolver/resolveLinksInMarkdown') ];
 
 exports.registerResolver = function(resolver) {
   resolvers.push(resolver);

@@ -2,7 +2,7 @@ var EventEmitter = require('core/EventEmitter');
 var emitter = new EventEmitter(['change']);
 
 var STORAGE_ITEMS = {
-  colorScheme: 'plain',
+  colorScheme: 'solarized--light',
   bannerCollapsed: true,
   highlightingEnabled: true
 };

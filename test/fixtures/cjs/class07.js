@@ -26,31 +26,18 @@ function addColorRules(sheet, options) {
  *        The url for the reversed brand logo
  */
 function install(options) {
-  uninstall();
-
-  // only install a new sheet if enabled
-  if (options.enabled) {
-    stylesheet = createStylesheet();
-    addColorRules(stylesheet, options);
-  }
 };
 
 /**
  * Remove the injected stylesheet
  */
 function uninstall() {
-  if (stylesheet && stylesheet.ownerNode) {
-    var node = stylesheet.ownerNode;
-    node.parentNode.removeChild(node);
-    stylesheet = null;
-  }
 }
 
 /**
  * Get a reference to the injected stylesheet
  */
 function getStylesheet() {
-  return stylesheet;
 }
 
 exports.install = install;

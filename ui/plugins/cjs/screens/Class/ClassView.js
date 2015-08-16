@@ -14,14 +14,18 @@ var SectionJumperMixin = require('mixins/SectionJumperMixin');
 var ClassView = React.createClass({
   mixins: [
     SectionJumperMixin(function() {
-      var groups = Object.keys(this.refs);
+      var id = this.props.focusedEntity;
 
-      for (var i = 0; i < groups.length; ++i) {
-        var groupKey = groups[i];
-        var child = this.refs[groupKey].getItem(id);
+      if (id) {
+        var groups = Object.keys(this.refs);
 
-        if (child) {
-          return child;
+        for (var i = 0; i < groups.length; ++i) {
+          var groupKey = groups[i];
+          var child = this.refs[groupKey].getItem(this.props.focusedEntity);
+
+          if (child) {
+            return child;
+          }
         }
       }
     })
@@ -40,14 +44,6 @@ var ClassView = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    this.jumpToEntity();
-  },
-
-  componentDidUpdate: function() {
-    this.jumpToEntity();
-  },
-
   render() {
     var { classDoc, classDocs } = this.props;
     var classMethodDocs = classDocs.filter(isClassMethod);
@@ -61,13 +57,21 @@ var ClassView = React.createClass({
 
     // constructor @see tags only
     var seeTags = where(classDoc.tags, { type: 'see' });
+    var type = classDoc.isClass ? 'Class' : 'Method';
 
     return (
       <div className="class-view doc-content">
         <header>
-          <h1 className="class-view__header-name">
+          <h1 className="class-view__header">
             <Icon className="icon-cube" />
-            {classDoc.ctx.name}
+            {' '}
+
+            <span className="class-view__header-name">
+              {classDoc.ctx.name}
+            </span>
+
+            {' '}
+            <span className="class-view__header-type">{type}</span>
           </h1>
 
           <div className="class-view__module-filepath">
@@ -75,7 +79,7 @@ var ClassView = React.createClass({
           </div>
         </header>
 
-        {<MarkdownText>{classDoc.description.full}</MarkdownText>}
+        <MarkdownText>{classDoc.description.full}</MarkdownText>
 
         <DocGroup
           ref="exampleGroup"
@@ -103,16 +107,24 @@ var ClassView = React.createClass({
           Properties
         </DocGroup>
 
-        <DocGroup
-          ref="methodGroup"
-          tagName="ul"
-          className="class-view__methods"
-          listClassName="class-view__method-list"
-          docs={sortBy(classMethodDocs, 'id')}
-          renderer={DocEntity}
-          itemProps={{initiallyCollapsed: true}}>
-          Methods
-        </DocGroup>
+        {classDoc.isMethod ? (
+          <DocEntity
+            {...classMethodDocs[0]}
+            collapsible={false}
+            withTitle={false}
+            withDescription={false} />
+        ) : (
+          <DocGroup
+            ref="methodGroup"
+            tagName="ul"
+            className="class-view__methods"
+            listClassName="class-view__method-list"
+            docs={sortBy(classMethodDocs, 'id')}
+            renderer={DocEntity}
+            itemProps={{initiallyCollapsed: true}}>
+            Methods
+          </DocGroup>
+        )}
       </div>
     );
   }

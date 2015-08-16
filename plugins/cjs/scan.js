@@ -1,10 +1,9 @@
 var glob = require('glob');
 var Logger = require('../../lib/Logger');
-var DoxParser = require('./parsers/DoxParser');
+var doxParser = require('./parsers/DoxParser');
 
 module.exports = function(config, utils, done) {
   var console = new Logger('cjs scanner');
-  var doxParser = new DoxParser();
 
   glob(utils.assetPath(config.source), { nodir: true }, function (err, files) {
     var matchedFiles;
@@ -28,7 +27,7 @@ module.exports = function(config, utils, done) {
     );
 
     var entries = matchedFiles.reduce(function(entries, filePath) {
-      return entries.concat(doxParser.parse(filePath));
+      return entries.concat(doxParser(filePath, config));
     }, []);
 
     done(null, entries);
