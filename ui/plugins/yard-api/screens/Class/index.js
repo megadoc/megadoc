@@ -3,41 +3,60 @@ var Database = require('core/Database');
 var MarkdownText = require('components/MarkdownText');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
+var SectionJumperMixin = require('mixins/SectionJumperMixin');
 
 var Class = React.createClass({
+  mixins: [
+    SectionJumperMixin(function() {
+      if (this.props.query.endpoint) {
+        return this.refs[`endpoint-${this.props.query.endpoint}`];
+      }
+      else if (this.props.query.object) {
+        return this.refs[`object-${this.props.query.object}`];
+      }
+    })
+  ],
+
   render() {
-    var codeObject = Database.getCodeObject(this.props.params.classId);
+    var resource = Database.getCodeObject(this.props.params.resourceId);
 
     return (
       <div className="doc-content">
-        <h1>{codeObject.object}</h1>
+        <h1>{resource.title}</h1>
 
-        <MarkdownText>{codeObject.docstring}</MarkdownText>
+        <MarkdownText>{resource.text}</MarkdownText>
 
-        {codeObject.api_objects.length > 0 && (
+        {resource.objects.length > 0 && (
           <div className="api-objects">
             <h2>Object Synopses</h2>
 
-            {codeObject.api_objects.map(this.renderApiObject)}
+            {resource.objects.map(this.renderAPIObject)}
           </div>
         )}
 
         <div className="api-endpoints">
-          {codeObject.methods.map(this.renderMethod)}
+          {resource.endpoints.map(this.renderAPIEndpoint)}
         </div>
       </div>
     );
   },
 
-  renderApiObject(entry) {
+  renderAPIObject(object) {
     return (
-      <APIObject key={[entry.controller, entry.name].join('')} {...entry} />
+      <APIObject
+        ref={`object-${object.scoped_id}`}
+        key={object.id} {...object}
+      />
     );
   },
 
-  renderMethod(method) {
+  renderAPIEndpoint(endpoint) {
     return (
-      <APIEndpoint key={method.path} {...method} />
+      <APIEndpoint
+        ref={`endpoint-${endpoint.scoped_id}`}
+        key={endpoint.id}
+        {...endpoint}
+      />
     );
   }
 });

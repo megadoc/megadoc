@@ -7,7 +7,7 @@ module.exports = {
 
   getCodeObject(path) {
     return config.database.filter(function(codeObject) {
-      return codeObject.object === path;
+      return codeObject.id === path;
     })[0];
   },
 

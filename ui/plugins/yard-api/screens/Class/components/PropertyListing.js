@@ -20,14 +20,12 @@ var Properties = React.createClass({
   render: function() {
     return (
       <ul className="argument-listing">
-        {this.props.tags.map(this.renderProperty)}
+        {this.props.tags.map(this.renderArgument)}
       </ul>
     );
   },
 
-  renderProperty(tag) {
-    console.log(tag);
-
+  renderArgument(tag) {
     return (
       <li key={tag.name} className="argument-listing__argument">
         <div className="argument-listing__argument-details">

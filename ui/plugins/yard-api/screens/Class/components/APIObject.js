@@ -1,6 +1,6 @@
 var React = require("react");
 var MarkdownText = require('components/MarkdownText');
-var Properties = require('./Properties');
+var PropertyListing = require('./PropertyListing');
 
 var APIObject = React.createClass({
   displayName: "APIObject",
@@ -12,12 +12,12 @@ var APIObject = React.createClass({
   },
 
   render() {
-    const { props } = this;
+    const apiObject = this.props;
 
     return (
       <div className="object-synopsis">
-        <h3 className="object-synopsis__header" id={`${props.name}-api`}>
-          <span className="object-synopsis__header-text">{props.name}</span>
+        <h3 className="object-synopsis__header" id={apiObject.id}>
+          <span className="object-synopsis__header-text">{apiObject.title}</span>
           <button className="object-synopsis__toggler" onClick={this.toggle}>
             {this.state.expanded ? 'Hide' : 'Show'}
           </button>
@@ -26,12 +26,12 @@ var APIObject = React.createClass({
         {this.state.expanded && (
           <div className="object-synopsis__content">
             <div className="object-synopsis__content-description">
-              {props.description && props.description.length > 0 && (
-                <MarkdownText>{props.description}</MarkdownText>
+              {apiObject.text.length > 0 && (
+                <MarkdownText>{apiObject.text}</MarkdownText>
               )}
             </div>
 
-            <Properties tags={this.props.schema_tags} />
+            <PropertyListing tags={apiObject.schema} />
           </div>
         )}
       </div>

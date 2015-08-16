@@ -14,10 +14,10 @@ tinydocReact.use(function YARDAPIPlugin(reporter) {
     },
 
     {
-      name: 'api.class',
+      name: 'api.resource',
       handler: require('./screens/Class'),
       parent: 'api',
-      path: 'classes/:classId'
+      path: '/resources/:resourceId'
     },
 
   ]);

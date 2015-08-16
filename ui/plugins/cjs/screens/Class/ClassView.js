@@ -9,8 +9,24 @@ var { where, sortBy } = require("lodash");
 var isClassMethod = require('utils/isClassMethod');
 var ExampleTag = require('components/DocTags/ExampleTag');
 var Icon = require('components/Icon');
+var SectionJumperMixin = require('mixins/SectionJumperMixin');
 
 var ClassView = React.createClass({
+  mixins: [
+    SectionJumperMixin(function() {
+      var groups = Object.keys(this.refs);
+
+      for (var i = 0; i < groups.length; ++i) {
+        var groupKey = groups[i];
+        var child = this.refs[groupKey].getItem(id);
+
+        if (child) {
+          return child;
+        }
+      }
+    })
+  ],
+
   propTypes: {
     focusedEntity: React.PropTypes.string,
     classDoc: React.PropTypes.object,
@@ -99,32 +115,6 @@ var ClassView = React.createClass({
         </DocGroup>
       </div>
     );
-  },
-
-  jumpToEntity() {
-    var id = this.props.focusedEntity;
-
-    if (!id) {
-      return;
-    }
-
-    var foundAndScrolled = Object.keys(this.refs).some((groupKey) => {
-      var child = this.refs[groupKey].getItem(id);
-
-      if (child) {
-        scrollIntoView(child.getDOMNode());
-
-        if (child.expand) {
-          child.expand();
-        }
-
-        return true;
-      }
-    });
-
-    if (!foundAndScrolled) {
-      console.warn('Unable to find class entity:', id);
-    }
   }
 });
 

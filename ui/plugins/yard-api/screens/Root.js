@@ -11,7 +11,7 @@ var YARDAPIRoot = React.createClass({
       <TwoColumnLayout className="yard-api-root">
         <LeftColumn>
           <ClassBrowser
-            activeClassId={this.props.params.classId}
+            activeResourceId={this.props.params.resourceId}
             objects={Database.getAllTags()}
           />
         </LeftColumn>
