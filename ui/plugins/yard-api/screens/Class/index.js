@@ -9,13 +9,15 @@ var Class = React.createClass({
 
     return (
       <div className="doc-content">
-        <h2>{codeObject.object}</h2>
+        <h1>{codeObject.object}</h1>
 
-        <div className="api-objects">
-          <h3>API Objects</h3>
+        {codeObject.api_objects.length > 0 && (
+          <div className="api-objects">
+            <h2>Object Synopses</h2>
 
-          {codeObject.api_objects.map(this.renderApiObject)}
-        </div>
+            {codeObject.api_objects.map(this.renderApiObject)}
+          </div>
+        )}
 
         <div className="api-endpoints">
           {codeObject.methods.map(this.renderMethod)}
@@ -26,7 +28,7 @@ var Class = React.createClass({
 
   renderApiObject(entry) {
     return (
-      <APIObject key={entry.controller} {...entry} />
+      <APIObject key={[entry.controller, entry.name].join('')} {...entry} />
     );
   },
 

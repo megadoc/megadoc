@@ -1,0 +1,66 @@
+.argument-listing {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.argument-listing__argument {
+  padding: 0;
+  margin: 2em 0;
+  display: block;
+  min-height: 4em;
+}
+
+.argument-listing__argument-details {
+  /*display: inline-block;*/
+  width: 40%;
+  max-width: 260px;
+  text-align: right;
+  vertical-align: top;
+  float: left;
+}
+
+.argument-listing__argument-name,
+.argument-listing__argument-type,
+.argument-listing__argument-values,
+.argument-listing__argument-required {
+  display: block;
+  word-wrap: break-word;
+}
+
+code.argument-listing__argument-name {
+  overflow: auto;
+  font-weight: bold;
+}
+
+.schemable({
+  code.argument-listing__argument-name {
+    background: @code;
+  }
+});
+
+/* fade these out to give more emphasis to the name */
+.argument-listing__argument-type,
+.argument-listing__argument-values,
+.argument-listing__argument-required {
+  font-size: 85%;
+  color: #777;
+}
+
+.argument-listing__argument-required {
+  font-style: normal;
+  color: #800;
+  font-weight: bold;
+  opacity: 0.6;
+}
+
+.argument-listing__argument-text {
+  vertical-align: top;
+  margin-left: 1em;
+  margin-left: 260px;
+  padding-left: 1em;
+}
+
+.argument-listing__argument-text > p {
+  margin-top: 0;
+}
