@@ -1,5 +1,6 @@
 var React = require("react");
 var Database = require('core/Database');
+var MarkdownText = require('components/MarkdownText');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 
@@ -10,6 +11,8 @@ var Class = React.createClass({
     return (
       <div className="doc-content">
         <h1>{codeObject.object}</h1>
+
+        <MarkdownText>{codeObject.docstring}</MarkdownText>
 
         {codeObject.api_objects.length > 0 && (
           <div className="api-objects">

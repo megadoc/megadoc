@@ -14,8 +14,6 @@ var APIObject = React.createClass({
   render() {
     const { props } = this;
 
-    console.log(this.props.schema_tags);
-
     return (
       <div className="object-synopsis">
         <h3 className="object-synopsis__header" id={`${props.name}-api`}>

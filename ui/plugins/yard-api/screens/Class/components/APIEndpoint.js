@@ -3,6 +3,7 @@ var React = require("react");
 var { findWhere, where } = require('lodash');
 var config = require('config');
 var MarkdownText = require('components/MarkdownText');
+var Properties = require('./Properties');
 var ArgumentTag = require('./tags/ArgumentTag');
 var ExampleRequestTag = require('./tags/ExampleRequestTag');
 var ExampleResponseTag = require('./tags/ExampleResponseTag');
@@ -66,6 +67,26 @@ var TagGroup = React.createClass({
   }
 });
 
+function highlightDynamicFragments(route) {
+  var fragments = route.split('/');
+
+  return fragments.map(function(fragment, index) {
+    return (
+      <span key={fragment}>
+        {fragment.match(/^:[\w|_]+$/) ? (
+          <span className="api-endpoint__route-dynamic-fragment">
+            {fragment}
+          </span>
+        ) : (
+          fragment
+        )}
+
+        {index !== fragments.length-1 && '/'}
+      </span>
+    );
+  });
+}
+
 var APIEndpoint = React.createClass({
   displayName: "APIEndpoint",
 
@@ -82,20 +103,21 @@ var APIEndpoint = React.createClass({
         />
 
         <div className="api-endpoint__route">
-          [{method.route.verb}] {method.route.path}
+          <span className="api-endpoint__route-verb">
+            {method.route.verb}
+          </span>
+
+          {' '}
+
+          {highlightDynamicFragments(method.route.path)}
         </div>
 
         <div className="api-endpoint__docstring">
           <MarkdownText>{method.docstring}</MarkdownText>
         </div>
 
-        <TagGroup
-          tags={method.tags}
-          tagName="argument"
-          renderer={ArgumentTag}
-        >
-          <h4>Arguments</h4>
-        </TagGroup>
+        <h4>Arguments</h4>
+        <Properties tags={where(this.props.tags, { tag_name: 'argument' })} />
 
         <TagGroup
           tagName="returns"

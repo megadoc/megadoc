@@ -34,4 +34,23 @@
     padding: 0 @whitespace / 2;
     margin-left: @whitespace / 2;
   }
+
+  .api-endpoint__route {
+    font-size: 85%;
+    font-weight: normal;
+    font-family: Monaco, Consolas, Courier, monospace;
+    padding: 0.5em;
+    margin: 1em 0;
+    background: @code;
+
+    &-verb {
+      font-weight: bold;
+      color: @solarized-red;
+    }
+
+    &-dynamic-fragment {
+      color: @solarized-red;
+    }
+  }
+
 });
