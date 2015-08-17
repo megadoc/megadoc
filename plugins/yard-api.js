@@ -2,6 +2,7 @@ var path = require('path');
 var glob = require('glob');
 var fs = require('fs-extra');
 var extend = require('lodash').extend;
+var scan = require('./yard-api/scan');
 
 function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
@@ -12,14 +13,12 @@ function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   globalConfig.pluginScripts.push('plugins/yard-api.js');
 
   emitter.on('scan', function(compilation, done) {
-    glob(utils.assetPath(config.source), { nodir: true }, function (err, files) {
+    scan(config, globalConfig, utils, function (err, _database) {
       if (err) {
         return done(err, null);
       }
 
-      database = files.map(function(fileName) {
-        return JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-      });
+      database = _database;
 
       done();
     });

@@ -32,6 +32,10 @@ module.exports = function(config, utils, readmeGitStats, done) {
     };
   }
 
+  if (config.favicon) {
+    fs.copySync(utils.assetPath(config.favicon), path.resolve(outputDir, 'favicon.ico'));
+  }
+
   config.assets.forEach(function(filePath) {
     fs.copySync(utils.assetPath(filePath), path.resolve(outputDir, 'assets', filePath));
   });
