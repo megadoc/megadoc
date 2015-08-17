@@ -1,9 +1,8 @@
-/node_modules
+# tests
+__tests__
 
+/test
 /ui/.local.js
-/ui/dist
-
-# font stuff
 /ui/app/css/fonts/*.json
 *.zip
 demo.html

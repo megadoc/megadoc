@@ -29,10 +29,10 @@ configFilePath = program.config || 'tinydoc.conf.js';
 
 if (fs.existsSync(configFilePath)) {
   config = require(path.resolve(configFilePath));
-  config.assetRoot = path.resolve(path.dirname(configFilePath));
+  config.assetRoot = config.assetRoot || path.resolve(path.dirname(configFilePath));
 }
 else {
-  config.assetRoot = __dirname;
+  throw new Error("You must specify a config file using --config.");
 }
 
 if (!config.gitRepository) {
