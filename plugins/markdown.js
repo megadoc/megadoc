@@ -40,15 +40,16 @@ MarkdownPlugin.$inject = [
 ];
 
 MarkdownPlugin.defaults = {
-  source: 'doc/**/*.md',
-  exclude: null,
-
-  navigationEntry: {
-    enabled: true,
-    title: 'Articles'
-  },
-
-  route: 'markdown'
+  gitStats: false,
+  collections: [
+    {
+      name: 'articles',
+      title: 'Articles',
+      source: 'doc/articles/**/*.md',
+      icon: 'icon-book',
+      exclude: []
+    }
+  ]
 };
 
 module.exports = MarkdownPlugin;

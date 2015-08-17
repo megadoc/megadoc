@@ -3,17 +3,24 @@
 var program = require('commander');
 var fs = require('fs-extra');
 var path = require('path');
+var deep = require('deep-get-set');
 var pkg = require('../package');
 var tinydoc = require('..');
 var console = require('../lib/Logger')('tinydoc-cli');
 var config = {};
 var tiny, configFilePath;
 
+function collect(val, override) {
+  override.push(val);
+  return override;
+}
+
 program
   .version(pkg.version)
   .option('--config [PATH]', 'path to tinydoc config file (defaults to tinydoc.conf.js)')
   .option('--no-scan', 'Skip the scanning phase.')
   .option('--no-write', 'Do not write any assets.')
+  .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--dump-config')
   .parse(process.argv)
 ;
@@ -35,6 +42,16 @@ if (!config.gitRepository) {
 if (program.dumpConfig) {
   console.log('Config:\n', config);
 }
+
+program.override.forEach(function(override) {
+  var fragments = override.split('=');
+  var key = fragments[0];
+  var value = JSON.parse(fragments[1]);
+
+  deep(config, key, value);
+
+  console.log('Overridden "%s" with "%s"', key, value);
+});
 
 tiny = tinydoc(config, {
   scan: program.scan !== false,

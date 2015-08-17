@@ -10,6 +10,11 @@ var parseSections = require('./scan/parseSections');
 
 function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, done) {
   var pattern = utils.assetPath(collectionConfig.source);
+  var filters = collectionConfig.exclude || [];
+
+  if (!Array.isArray(filters)) {
+    filters = [ filters ];
+  }
 
   glob(pattern, { nodir: true }, function (err, files) {
     var matchedFiles, database;
@@ -19,14 +24,13 @@ function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, d
       return done(err, null);
     }
 
-    matchedFiles = files.filter(function(fileName) {
-      if (collectionConfig.exclude) {
-        return !fileName.match(collectionConfig.exclude);
-      }
-      else {
-        return true;
-      }
-    });
+    if (filters.length) {
+      matchedFiles = files.filter(function(fileName) {
+        return !filters.some(function(filter) {
+          return fileName.match(filter);
+        });
+      });
+    }
 
     database = matchedFiles.map(function(filePath) {
       return {

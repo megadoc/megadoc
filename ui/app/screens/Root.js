@@ -30,9 +30,7 @@ var Root = React.createClass({
     ColorSchemeManager.load();
 
     if (this.props.onStart) {
-      this.props.onStart(() => {
-        this.forceUpdate();
-      });
+      this.props.onStart();
     }
 
     Storage.on('change', this.reload);

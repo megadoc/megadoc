@@ -24,6 +24,7 @@
   "homepage": "https://github.com/amireh/tinydoc",
   "dependencies": {
     "commander": "2.7.1",
+    "deep-get-set": "^0.1.1",
     "dox": "0.7.0",
     "fs-extra": "",
     "git-log-parser": "^1.1.0",

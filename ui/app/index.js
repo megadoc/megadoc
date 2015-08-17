@@ -4,6 +4,7 @@ var config = require('config');
 var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
 var OutletStore = require('stores/OutletStore');
+var $ = require('jquery');
 var { Route, DefaultRoute, NotFoundRoute } = Router;
 
 /**
@@ -17,22 +18,27 @@ var emitter = new EventEmitter([
   'started'
 ]);
 
-var emitStarted = function(done) {
-  emitter.emit('started');
-  done();
-};
-
-var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
-
 emitter.on('pluginsLoaded', function start(registrar) {
+  var emitStarted = function() {
+    emitter.emit('started');
+  };
+
+  console.log('Ok, firing up.');
+  console.log('Base path is set to "%s".', config.publicPath);
+
   emitter.emit('starting');
 
-  window.addEventListener('DOMContentLoaded', function() {
+  $(function() {
     var router = Router.create({
       location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
       routes: [
         <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
-          <DefaultRoute name="home" handler={require('./screens/Home')} />
+          <DefaultRoute
+            name="home"
+            handler={require('./screens/Home')}
+          />
+
+          {registrar.getPluginRouteMap()}
 
           <Route
             name="settings"
@@ -40,15 +46,16 @@ emitter.on('pluginsLoaded', function start(registrar) {
             handler={require('./screens/Settings')}
           />
 
-          <Route name="404" handler={require('./screens/NotFound')} />
-
-          {registrar.getPluginRouteMap()}
+          <Route
+            name="404"
+            handler={require('./screens/NotFound')}
+          />
 
           <NotFoundRoute
             name="not-found"
             handler={require('./screens/NotFound')}
           />
-        </Route>,
+        </Route>
       ]
     });
 
@@ -59,6 +66,8 @@ emitter.on('pluginsLoaded', function start(registrar) {
     });
   });
 });
+
+var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
 
 /**
  * @method tinydocReact.use
