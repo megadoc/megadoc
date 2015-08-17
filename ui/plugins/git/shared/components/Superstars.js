@@ -17,10 +17,8 @@ var Superstars = React.createClass({
   },
 
   renderPerson(person) {
-    console.log(person);
-
     return (
-      <div className="superstars__superstar">
+      <div key={person.email} className="superstars__superstar">
         <Gravatar
           email={person.email}
           title={person.name}

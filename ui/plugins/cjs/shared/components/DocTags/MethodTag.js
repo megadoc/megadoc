@@ -5,7 +5,6 @@ var MethodTag = React.createClass({
   displayName: "MethodTag",
 
   render() {
-    console.log(this.props);
     return (
       <div>
         <h3>

@@ -28,15 +28,7 @@ var Leaderboard = React.createClass({
   },
 
   render: function() {
-    // let oc = groupBy(this.props.committers, 'commitCount');
-    // let committers = Object.keys(oc).map(function(score) {
-    //   return {
-    //     commitCount: parseInt(score, 10),
-    //     committers: oc[score].map((record) => record.name)
-    //   };
-    // });
-    let committers = this.props.committers;
-    committers = sortBy(committers, this.state.sortKey);
+    let committers = sortBy(this.props.committers, this.state.sortKey);
 
     if (this.state.sortOrder === 'desc') {
       committers = committers.reverse();
@@ -66,7 +58,7 @@ var Leaderboard = React.createClass({
     });
 
     return (
-      <tr key={record.commitCount} className={className}>
+      <tr key={record.email} className={className}>
         <td>{record.name}{record.isSuperstar && (<em> - wowza</em>)}</td>
         <td>{(record.superStarIndex * 100).toFixed(2)}</td>
         <td>{record.commitCount}</td>
