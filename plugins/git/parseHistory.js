@@ -1,7 +1,31 @@
 var log = require('git-log-parser');
 var console = require('../../lib/Logger')('git');
+var fs = require('fs');
+var path = require('path');
 
-function analyze(commits) {
+function parseMailMap(rawMailMap) {
+  // Braden Anderson <banderson@instructure.com> Braden Anderson <braden@instructure.com>
+  var mailMap = rawMailMap.trim().split("\n").map(function(line) {
+    var match = line.match(/\s*(.*) <(.*)> (.*) <(.*)>/);
+
+    if (!match) { return null; }
+
+    return {
+      to: {
+        name: match[1].trim(),
+        email: match[2].trim()
+      },
+      from: {
+        name: match[3].trim(),
+        email: match[4].trim(),
+      }
+    };
+  });
+
+  return mailMap;
+}
+
+function analyze(commits, mailMap) {
   var stats = {
     commitCount: commits.length,
     people: {}
@@ -10,7 +34,21 @@ function analyze(commits) {
   function getPersonRecord(_email, _name) {
     var email = _email.trim();
     var name = _name.trim();
-    var person = stats.people[email];
+    var person;
+    var mapEntry;
+
+    if (mailMap) {
+      mapEntry = mailMap.filter(function(entry) {
+        return entry.from.email === email;
+      })[0];
+    }
+
+    if (mapEntry) {
+      email = mapEntry.to.email;
+      name = mapEntry.to.name;
+    }
+
+    person = stats.people[email];
 
     if (!person) {
       person = stats.people[email] = {
@@ -28,7 +66,6 @@ function analyze(commits) {
   console.log('Parsing stats from ' + commits.length + ' commits.');
 
   commits.forEach(function(commit) {
-    var email = commit.author.email;
     var committer = getPersonRecord(commit.author.email, commit.author.name);
 
     committer.commitCount += 1;
@@ -56,22 +93,38 @@ function analyze(commits) {
     return person;
   });
 
-  superStar.isSuperstar = true;
+  if (superStar) {
+    superStar.isSuperstar = true;
+  }
 
   return stats;
 }
 
-module.exports = function(repoPath, config) {
+module.exports = function(repoPath/*, config*/) {
   return new Promise(function(resolve, reject) {
-    var parse = log.parse({}, { cwd: repoPath });
+    var parse = log.parse({ 'use-mailmap': true }, { cwd: repoPath });
     var commits = [];
 
     parse.on('data', function(commit) {
       commits.push(commit);
     });
 
-    parse.on('end', function(commit) {
-      resolve(analyze(commits));
+    parse.on('end', function() {
+      var mailMapPath = path.resolve(repoPath.replace(/\.git$/, ''), '.mailmap');
+      var mailMap;
+
+      if (fs.existsSync(mailMapPath)) {
+        mailMap = parseMailMap(fs.readFileSync(mailMapPath, 'utf-8'));
+        console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
+      }
+
+      resolve(analyze(commits, mailMap));
+    });
+
+    parse.on('close', function(exitCode, signal) {
+      if (exitCode !== 0) {
+        reject('git log parse failed mysteriously:', exitCode, signal);
+      }
     });
   });
 };
