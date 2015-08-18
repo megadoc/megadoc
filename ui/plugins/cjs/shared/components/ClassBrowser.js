@@ -20,7 +20,10 @@ var ClassBrowser = React.createClass({
     var nsClasses = groupBy(modules, 'namespace');
 
     var namespaces = Object.keys(nsClasses).map(function(ns) {
-      return { name: ns, modules: nsClasses[ns] };
+      return {
+        name: ns === 'null' ? '[General]' : ns,
+        modules: nsClasses[ns]
+      };
     });
 
     namespaces = sortBy(namespaces, 'name');

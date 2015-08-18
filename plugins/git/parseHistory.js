@@ -1,4 +1,5 @@
 var log = require('git-log-parser');
+var console = require('../../lib/Logger')('git');
 
 function analyze(commits) {
   var stats = {
@@ -24,9 +25,11 @@ function analyze(commits) {
     return person;
   }
 
+  console.log('Parsing stats from ' + commits.length + ' commits.');
+
   commits.forEach(function(commit) {
     var email = commit.author.email;
-    var committer = getPersonRecord(commit.committer.email, commit.committer.name);
+    var committer = getPersonRecord(commit.author.email, commit.author.name);
 
     committer.commitCount += 1;
 
