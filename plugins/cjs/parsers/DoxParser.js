@@ -62,6 +62,16 @@ function isDocEmpty(doc) {
   return doc.tags.length === 0 && doc.description.full === '';
 }
 
+function isMethodStatic(doc, currentModule) {
+  if (findWhere(doc.tags, { type: 'static' })) {
+    return true;
+  }
+  // else if (doc.ctx.string.match(new RegExp('^' + currentModule.ctx.name + '.' + doc.ctx.name))) {
+  else if (doc.ctx.string === currentModule.ctx.name + '.' + doc.ctx.name + '()') {
+    return true;
+  }
+}
+
 function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
   var docs;
   var currentModule;
@@ -91,6 +101,10 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
   });
 
   validDocs.forEach(function(doc) {
+    delete doc.code;
+    delete doc.codeStart;
+    delete doc.line;
+
     doc.$descriptionFragments = [];
     doc.filePath = filePath;
 
@@ -102,7 +116,7 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
       doc.id = inferModuleId(doc, filePath);
       doc.isModule = true;
       doc.isClass = isClass(doc);
-      doc.isMethod = !doc.isClass && ['method', 'function'].indexOf(doc.ctx.type) > -1;
+      // doc.isMethod = !doc.isClass && ['method', 'function'].indexOf(doc.ctx.type) > -1;
       doc.ctx.name = doc.id.replace(/^[\w]+\./, ''); // discard namespace from name
       doc.namespace = inferModuleNamespace(doc, useDirAsNamespace ? filePath : null);
 
@@ -139,10 +153,24 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
         doc.ctx.receiver = currentModule.id;
       }
 
+      // make sure the receiver points to the FQN of the currentModule
+      if (currentModule && doc.ctx.receiver === currentModule.ctx.name) {
+        doc.ctx.receiver = currentModule.id;
+      }
+
+      if (!currentModule) {
+        console.warn("Doc can not be mapped to a module:", JSON.stringify(doc.ctx));
+      }
+
+      if (currentModule && isMethodStatic(doc, currentModule)) {
+        doc.isStatic = true;
+      }
+
       // try to infer an ID
       if (doc.ctx.receiver) {
-        doc.path = doc.ctx.receiver + '.' + doc.ctx.name;
-        doc.id = doc.ctx.name;
+        // doc.path = doc.ctx.receiver + '.' + doc.ctx.name;
+        doc.id = doc.ctx.receiver + '.' + doc.ctx.name;
+        // doc.id = doc.ctx.name;
       }
       else {
         doc.id = doc.ctx.name;
