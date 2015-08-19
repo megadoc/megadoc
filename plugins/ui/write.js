@@ -22,7 +22,6 @@ module.exports = function(config, utils, readmeGitStats, done) {
     'vendor.js',
     'main.js',
     'styles.js',
-    'disqus.embed.js'
   ].concat(config.scripts).concat(config.pluginScripts);
 
   if (config.readme) {
@@ -48,12 +47,6 @@ module.exports = function(config, utils, readmeGitStats, done) {
 
   // copy the pre-compiled webpack bundles
   fs.copySync(path.join(UI_DIR, 'dist'), outputDir);
-
-  // copy the disqus embed script
-  fs.copySync(
-    path.join(UI_DIR, 'app', 'vendor', 'disqus.embed.js'),
-    path.resolve(outputDir, 'disqus.embed.js')
-  );
 
   // write the runtime config file
   utils.writeAsset('config.js', 'window.CONFIG=' + JSON.stringify(runtimeConfig) + ';');

@@ -16,25 +16,7 @@ function camelCase(str) {
   });
 }
 
-// we preload this now
-// addDisqusScript: function () {
-//   var child = this.disqus = document.createElement('script');
-//   var parent = document.getElementsByTagName('head')[0] ||
-//                document.getElementsByTagName('body')[0];
-
-//   child.async = true;
-//   child.type = 'text/javascript';
-//   child.src = '//' + this.props.shortname + '.disqus.com/embed.js';
-
-//   parent.appendChild(child);
-// },
-
-// removeDisqusScript: function () {
-//   if (this.disqus && this.disqus.parentNode) {
-//     this.disqus.parentNode.removeChild(this.disqus);
-//     this.disqus = null;
-//   }
-// },
+var disqusAdded = false;
 
 // stolen from https://github.com/mzabriskie/react-disqus-thread because of the
 // (not merged as of yet) fix in
@@ -96,38 +78,61 @@ var ReactDisqusThread = React.createClass({
     };
   },
 
+  addDisqusScript: function () {
+    if (disqusAdded) {
+      return;
+    }
+
+    var child = this.disqus = document.createElement('script');
+    var parent = document.getElementsByTagName('head')[0] ||
+                 document.getElementsByTagName('body')[0];
+
+    child.async = true;
+    child.type = 'text/javascript';
+    child.src = '//' + this.props.shortname + '.disqus.com/embed.js';
+
+    parent.appendChild(child);
+
+    disqusAdded = true;
+  },
+
+  removeDisqusScript: function () {
+    if (this.disqus && this.disqus.parentNode) {
+      this.disqus.parentNode.removeChild(this.disqus);
+      this.disqus = null;
+    }
+  },
+
   componentDidMount: function() {
     if (this.props.identifier) {
-      this.configureDisqus();
+      this.loadDisqus();
     }
   },
 
   componentDidUpdate: function(prevProps) {
     if (this.props.identifier !== prevProps.identifier) {
-      this.configureDisqus();
+      this.loadDisqus();
     }
   },
 
-  configureDisqus: function() {
+  loadDisqus: function() {
     const { props } = this;
 
     DISQUS_CONFIG.filter((prop) => !!props[camelCase(prop)]).forEach((prop) => {
       window['disqus_' + prop] = props[camelCase(prop)];
     });
 
-    DISQUS.reset({ reload: true });
-
-    // if (typeof DISQUS !== "undefined") {
-    //   DISQUS.reset({ reload: true });
-    // }
-    // else {
-    //   addDisqusScript();
-    // }
+    if (typeof DISQUS !== "undefined") {
+      DISQUS.reset({ reload: true });
+    }
+    else {
+      this.addDisqusScript();
+    }
   },
 
-  // componentWillUnmount() {
-  //   removeDisqusScript();
-  // },
+  componentWillUnmount() {
+    this.removeDisqusScript();
+  },
 
   render: function () {
     return (
@@ -163,10 +168,6 @@ var Disqus = React.createClass({
   },
 
   render: function() {
-    if (!config.disqus || !config.disqus.enabled) {
-      return null;
-    }
-
     var currentRoute = RouteActions.getCurrentRoute();
 
     if (!currentRoute) {
