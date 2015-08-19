@@ -1,13 +1,13 @@
 var path = require('path');
 var extend = require('lodash').extend;
-var parseLatestActivity = require('./git/parseLatestActivity');
-var parseHistory = require('./git/parseHistory');
-var console = require('../lib/Logger')('git');
+var parseLatestActivity = require('./parseLatestActivity');
+var parseHistory = require('./parseHistory');
+var console = require('../../lib/Logger')('git');
 
 function GitPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var stats = {};
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'plugins', 'git', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'git', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/git-config.js');
   globalConfig.pluginScripts.push('plugins/git.js');
@@ -50,8 +50,12 @@ GitPlugin.$inject = [
 
 GitPlugin.defaults = {
   git: {
-    path: 'stats',
-    useMailMap: true
+    routePath: 'activity',
+    useMailMap: true,
+    recentCommits: {
+      since: '3 days ago',
+      ignore: []
+    }
   }
 };
 

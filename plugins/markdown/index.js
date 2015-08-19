@@ -1,11 +1,11 @@
 var path = require('path');
-var scan = require('./markdown/scan');
-var write = require('./markdown/write');
+var scan = require('./scan');
+var write = require('./write');
 
 function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'plugins', 'markdown', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'markdown', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/markdown-config.js');
   globalConfig.pluginScripts.push('plugins/markdown.js');
@@ -41,7 +41,7 @@ MarkdownPlugin.$inject = [
 
 MarkdownPlugin.defaults = {
   markdown: {
-    gitStats: false,
+    gitStats: true,
     collections: [
       {
         name: 'articles',

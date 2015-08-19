@@ -1,9 +1,9 @@
 var path = require('path');
-var write = require('./ui/write');
-var parseGitStats = require('../lib/utils/parseGitStats');
+var write = require('./write');
+var parseGitStats = require('../../lib/utils/parseGitStats');
 
 function UIPlugin(emitter, cssCompiler, config, utils) {
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'app', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'app', 'css', 'index.less'));
 
   var readmeGitStats;
 

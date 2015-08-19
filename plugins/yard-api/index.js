@@ -1,11 +1,11 @@
 var path = require('path');
 var extend = require('lodash').extend;
-var scan = require('./yard-api/scan');
+var scan = require('./scan');
 
 function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'plugins', 'yard-api', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'yard-api', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/yard-api-config.js');
   globalConfig.pluginScripts.push('plugins/yard-api.js');
@@ -46,9 +46,10 @@ YardAPIPlugin.$inject = [
 
 YardAPIPlugin.defaults = {
   'yard-api': {
+    command: 'bundle exec rake yard_api',
     source: 'public/doc/api/**/*.json',
     exclude: null,
-    showEndpointPath: true
+    showEndpointPath: false
   }
 };
 

@@ -1,11 +1,11 @@
 var path = require('path');
-var scan = require('./cjs/scan');
-var write = require('./cjs/write');
+var scan = require('./scan');
+var write = require('./write');
 
 function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', 'ui', 'plugins', 'cjs', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'cjs', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/cjs-config.js');
   globalConfig.pluginScripts.push('plugins/cjs.js');
@@ -41,8 +41,11 @@ CJSPlugin.$inject = [
 
 CJSPlugin.defaults = {
   cjs: {
-    source: '${ROOT}/**/*.js',
-    exclude: null
+    source: '**/*.js',
+    exclude: null,
+    gitStats: true,
+    useDirAsNamespace: true,
+    classifyDoc: null,
   }
 };
 

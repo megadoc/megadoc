@@ -4,7 +4,7 @@ tinydocReact.use(function GitPlugin(api) {
   api.registerRoutes([
     {
       name: 'git',
-      path: config.path,
+      path: config.routePath,
       handler: require('./screens/Root')
     }
   ]);
