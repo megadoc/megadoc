@@ -1,7 +1,9 @@
 var React = require('react');
 var Database = require('core/Database');
 var ClassView = require('./ClassView');
+var FunctionView = require('./FunctionView');
 var HasTitle = require('mixins/HasTitle');
+var ModuleHeader = require('./components/ModuleHeader');
 
 var Class = React.createClass({
   mixins: [
@@ -22,15 +24,28 @@ var Class = React.createClass({
   },
 
   render() {
-    var { moduleId } = this.props.params;
+    const { moduleId } = this.props.params;
+    const doc = Database.getModule(moduleId);
+    const moduleDocs = Database.getModuleEntities(moduleId);
 
     return (
-      <ClassView
-        commonPrefix={Database.getCommonPrefix()}
-        classDoc={Database.getModule(moduleId)}
-        classDocs={Database.getModuleTags(moduleId)}
-        focusedEntity={this.props.query.entity}
-      />
+      <div className="class-view doc-content">
+        <ModuleHeader doc={doc} commonPrefix={Database.getCommonPrefix()} />
+
+        {doc.isFunction ? (
+          <FunctionView
+            doc={doc}
+            moduleDocs={moduleDocs}
+            focusedEntity={this.props.query.entity}
+          />
+        ) : (
+          <ClassView
+            doc={doc}
+            moduleDocs={moduleDocs}
+            focusedEntity={this.props.query.entity}
+          />
+        )}
+      </div>
     );
   }
 });

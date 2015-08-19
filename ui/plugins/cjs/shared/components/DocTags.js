@@ -44,21 +44,21 @@ var DocTags = React.createClass({
           Parameters ({paramTags.length})
         </TagGroup>
 
-        <TagGroup tagName="ol" tags={this.props.tags} tagType="return" renderer={ReturnTag}>
+        <TagGroup alwaysGroup tagName="ol" tags={this.props.tags} tagType="return" renderer={ReturnTag}>
           Returns
         </TagGroup>
 
         {this.props.showExamples && (
-          <TagGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
+          <TagGroup alwaysGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
             Examples
           </TagGroup>
         )}
 
-        <TagGroup tagName="ul" alwaysGroup tags={this.props.tags} tagType="throws" renderer={ThrowsTag}>
+        <TagGroup alwaysGroup tagName="ul" tags={this.props.tags} tagType="throws" renderer={ThrowsTag}>
           <span className="type-attention">Exceptions</span>
         </TagGroup>
 
-        <TagGroup tags={this.props.tags} tagType="see" renderer={SeeTag}>
+        <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag}>
           Additional resources
         </TagGroup>
 

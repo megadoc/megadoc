@@ -18,7 +18,7 @@ var ClassBrowser = React.createClass({
 
     var namespaces = Object.keys(nsClasses).map(function(ns) {
       return {
-        name: ns === 'null' ? '[General]' : ns,
+        name: ns === 'undefined' ? '[General]' : ns,
         modules: nsClasses[ns]
       };
     });
@@ -92,8 +92,8 @@ var ClassBrowser = React.createClass({
     );
   },
 
-  renderClassMethods(classEntry) {
-    var docs = Database.getModuleTags(classEntry.id);
+  renderClassMethods(moduleDoc) {
+    var docs = Database.getModuleEntities(moduleDoc.id);
 
     if (!docs.length) {
       return null;
@@ -110,28 +110,25 @@ var ClassBrowser = React.createClass({
     return (
       <ul className="class-browser__methods">
         {sortBy(propertyDocs, 'id').map((doc) => {
-          return this.renderClassEntity(classEntry, doc, '@');
+          return this.renderClassEntity(moduleDoc, doc, '@');
         })}
 
         {sortBy(methodDocs, 'id').map((doc) => {
-          return this.renderClassEntity(classEntry, doc, '#');
+          return this.renderClassEntity(moduleDoc, doc, '#');
         })}
       </ul>
     );
   },
 
-  renderClassEntity(classEntry, doc, symbol) {
+  renderClassEntity(moduleDoc, doc, symbol) {
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link
           to="js.module"
-          params={{ moduleId: classEntry.id }}
-          query={{ entity: doc.id }}
+          params={{ moduleId: moduleDoc.id }}
+          query={{ entity: doc.ctx.name }}
         >
-          {(doc.isConstructor || doc.isClass) ?
-            'constructor' :
-            (symbol + doc.ctx.name)
-          }
+          {doc.isConstructor ? 'constructor' : (doc.symbol + doc.ctx.name)}
         </Link>
       </li>
     );

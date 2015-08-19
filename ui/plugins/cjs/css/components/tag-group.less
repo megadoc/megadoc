@@ -1,23 +1,36 @@
 .tag-group {
-  margin: 0;
+  @spacing: @whitespace / 2;
+
+  margin: @whitespace 0;
   padding: 0;
 
-  // padding: @whitespace;
+  padding-left: @whitespace;
 
   &.collapsible {
-    padding-left: @whitespace;
   }
 
-  // .tag-group__header {
-  //   margin-left: @whitespace * -2;
-  // }
+  // OK, we want to cram things a bit so the whitespace doesn't get distracting
+  &__header {
+    margin: @spacing 0;
+    padding-bottom: @spacing;
+    font-weight: bold;
+  }
+
+  .param-tag, .return-tag, .throws-tag {
+    margin: @spacing 0;
+    margin-left: @spacing;
+  }
+
+  .markdown-text p {
+    margin: @spacing 0;
+  }
+
+  &--single-child {
+    list-style: none;
+  }
 }
 
 .schemable({
-  .tag-group {
-    // background: @base2;
-  }
-
   .tag-group--collapsed {
     .tag-group__header {
       border-bottom-color: transparent;
@@ -26,12 +39,37 @@
   }
 
   .tag-group__header {
-    margin: @whitespace 0;
-    border-bottom: 1px solid @base2;
-    padding-bottom: @whitespace;
+    border-bottom: 1px solid @border-color;
+  }
+});
 
-    // .collapser {
-    //   margin-left: @whitespace;
-    // }
+.param-tag, .return-tag, .throws-tag, .property-tag {
+  &__name {
+    font-weight: bold;
+  }
+}
+
+.property-tag {
+  list-style: none;
+  padding: 0;
+  margin: @whitespace 0;
+}
+
+.schemable({
+  .param-tag__types, .return-tag__types {
+    color: @base0;
+  }
+
+  .property-tag + .property-tag {
+    border-top: 1px solid @base2;
+    padding-top: @whitespace;
+  }
+
+  .property-tag__name, .param-tag__name, .return-tag__name {
+    color: @accent;
+  }
+
+  .property-tag__default-value {
+    font-style: italic;
   }
 });

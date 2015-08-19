@@ -32,7 +32,7 @@ module.exports = {
     return this.modules;
   },
 
-  getModuleTags(moduleId) {
+  getModuleEntities(moduleId) {
     var classDoc = this.getModule(moduleId);
 
     if (!classDoc) {

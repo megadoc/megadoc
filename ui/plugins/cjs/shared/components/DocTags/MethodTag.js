@@ -8,7 +8,7 @@ var MethodTag = React.createClass({
     return (
       <div>
         <h3>
-          <code>{this.props.ctx.name}</code>
+          <code>{this.props.ctx.name})</code>
         </h3>
 
         <MarkdownText className="param-tag__description">

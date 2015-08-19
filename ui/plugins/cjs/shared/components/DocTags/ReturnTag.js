@@ -31,27 +31,29 @@ var ReturnTag = React.createClass({
       name = name.replace('='+defaultValue, '');
     }
 
+    let hasName = name.length > 0;
+
     return (
       <li className="return-tag">
         <header className="return-tag__header">
-          {this.props.withTitle &&
+          {this.props.withTitle && (
             <strong>
               Returns
             </strong>
-          }
+          )}
 
-          <code className="return-tag__name">{name}</code>
+          {hasName && <code className="return-tag__name">{name}</code>}
 
           {this.props.types && (
             <code className="return-tag__types">
-              {': '}
-                {this.props.types.join(', ')}
+              {hasName && ': '}
+              {this.props.types.join(', ')}
 
-                {defaultValue && (
-                  <span className="param-tag__default-value">
-                    {' ('}defaults to: <code>{defaultValue}</code>)
-                  </span>
-                )}
+              {defaultValue && (
+                <span className="param-tag__default-value">
+                  {' ('}defaults to: <code>{defaultValue}</code>)
+                </span>
+              )}
             </code>
           )}
         </header>

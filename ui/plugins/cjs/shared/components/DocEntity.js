@@ -5,6 +5,18 @@ var MarkdownText = require('components/MarkdownText');
 var DocTags = require('components/DocTags');
 var Collapsible = require('mixins/Collapsible');
 
+function params(tags) {
+  return tags.filter(function(tag){
+    return tag.type === 'param' && tag.name.indexOf('.') === -1;
+  }).map(function(param){
+    return param.name + ':' + param.types.join('|');
+  }).join(', ');
+}
+
+function isMethod(doc) {
+  return doc.ctx.type === 'method' || doc.ctx.type === 'function';
+}
+
 var DocEntity = React.createClass({
   displayName: "DocEntity",
 
@@ -32,6 +44,8 @@ var DocEntity = React.createClass({
     var description = this.props.description.full;
     var summary = this.props.description.summary;
 
+    const doc = this.props;
+
     return (
       <div className={className}>
         {this.props.withTitle && (
@@ -39,18 +53,23 @@ var DocEntity = React.createClass({
             {this.renderCollapser()}
 
             <span className="doc-entity__name">
-              {this.props.ctx.type === 'method' && '#'}
-              {this.props.ctx.name}
+              {doc.ctx.name}
 
-              {this.props.isConstructor && (
+              {isMethod(doc) && (
+                <span className="doc-entity__method-params">
+                  ({params(doc.tags)})
+                </span>
+              )}
+
+              {doc.isConstructor && (
                 <span> (constructor)</span>
               )}
 
               {' '}
-              {this.props.isProtected && (
+              {doc.isProtected && (
                 <span className="doc-entity__protected">PROTECTED</span>
               )}
-              {this.props.isPrivate && (
+              {doc.isPrivate && (
                 <span className="doc-entity__private">PRIVATE</span>
               )}
             </span>

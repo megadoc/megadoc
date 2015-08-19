@@ -55,7 +55,7 @@ var DocGroup = React.createClass({
       id = Renderer.getKey(doc);
     }
     else {
-      id = doc.id || doc.name || doc.ctx.name;
+      id = doc.name;
     }
 
     return (

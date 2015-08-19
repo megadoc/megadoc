@@ -5,36 +5,29 @@ var SeeTag = require('components/DocTags/SeeTag');
 var DocGroup = require('components/DocGroup');
 var PropertyTag = require('components/DocTags/PropertyTag');
 var { where, sortBy } = require("lodash");
-var isClassMethod = require('utils/isClassMethod');
 var ExampleTag = require('components/DocTags/ExampleTag');
 var Icon = require('components/Icon');
-var SectionJumperMixin = require('mixins/SectionJumperMixin');
+var JumperMixin = require('./mixins/JumperMixin');
+
+function isClassMethod(doc) {
+  return !doc.isStatic && [
+    'method',
+    'function',
+    'declaration'
+  ].indexOf(doc.ctx.type) > -1;
+};
+
+function isStaticMethod(doc) {
+  return doc.isStatic;
+};
 
 var ClassView = React.createClass({
-  mixins: [
-    SectionJumperMixin(function() {
-      var id = this.props.focusedEntity;
-
-      if (id) {
-        var groups = Object.keys(this.refs);
-
-        for (var i = 0; i < groups.length; ++i) {
-          var groupKey = groups[i];
-          var child = this.refs[groupKey].getItem(this.props.focusedEntity);
-
-          if (child) {
-            return child;
-          }
-        }
-      }
-    })
-  ],
+  mixins: [ JumperMixin ],
 
   propTypes: {
     focusedEntity: React.PropTypes.string,
-    classDoc: React.PropTypes.object,
-    classDocs: React.PropTypes.arrayOf(React.PropTypes.object),
-    commonPrefix: React.PropTypes.string
+    doc: React.PropTypes.object,
+    moduleDocs: React.PropTypes.arrayOf(React.PropTypes.object),
   },
 
   getDefaultProps: function() {
@@ -44,86 +37,67 @@ var ClassView = React.createClass({
   },
 
   render() {
-    var { classDoc, classDocs } = this.props;
-    var classMethodDocs = classDocs.filter(isClassMethod);
-
-    var propertyTags = classDocs.reduce(function(tags, doc) {
-      return tags.concat(where(doc.tags, { type: 'property' }));
+    var { doc, moduleDocs } = this.props;
+    var methodDocs = moduleDocs.filter(isClassMethod);
+    var staticMethodDocs = moduleDocs.filter(isStaticMethod);
+    var propertyDocs = moduleDocs.reduce(function(propertyDocs, moduleDoc) {
+      return propertyDocs.concat(where(moduleDoc.tags, { type: 'property' }));
     }, []);
 
-    // constructor @example tags only
-    var exampleTags = where(classDoc.tags, { type: 'example' });
-
-    // constructor @see tags only
-    var seeTags = where(classDoc.tags, { type: 'see' });
-    var type = classDoc.isClass ? 'Class' : 'Method';
+    var exampleTags = where(doc.tags, { type: 'example' });
+    var seeTags = where(doc.tags, { type: 'see' });
 
     return (
-      <div className="class-view doc-content">
-        <header>
-          <h1 className="class-view__header">
-            <Icon className="icon-cube" />
-            {' '}
-
-            <span className="class-view__header-name">
-              {classDoc.ctx.name}
-            </span>
-
-            {' '}
-            <span className="class-view__header-type">{type}</span>
-          </h1>
-
-          <div className="class-view__module-filepath">
-            Defined in: {classDoc.filePath.replace(this.props.commonPrefix, '')}
-          </div>
-        </header>
-
-        <MarkdownText>{classDoc.description.full}</MarkdownText>
+      <div>
+        <MarkdownText>{doc.description.full}</MarkdownText>
 
         <DocGroup
           ref="exampleGroup"
           className="class-view__examples"
           docs={exampleTags}
-          renderer={ExampleTag}>
-          Examples
-        </DocGroup>
+          renderer={ExampleTag}
+          children="Examples"
+        />
 
         <DocGroup
           ref="seeGroup"
           className="class-view__sees"
           docs={seeTags}
-          renderer={SeeTag}>
-          Additional resources
-        </DocGroup>
+          renderer={SeeTag}
+          children="Additional resources"
+        />
 
         <DocGroup
           ref="propertyGroup"
           tagName="ul"
           className="class-view__properties"
           listClassName="class-view__property-list"
-          docs={sortBy(propertyTags, 'id')}
-          renderer={PropertyTag}>
-          Properties
-        </DocGroup>
+          docs={sortBy(propertyDocs, 'id')}
+          renderer={PropertyTag}
+          children="Properties"
+        />
 
-        {classDoc.isMethod ? (
-          <DocEntity
-            {...classMethodDocs[0]}
-            collapsible={false}
-            withTitle={false}
-            withDescription={false} />
-        ) : (
-          <DocGroup
-            ref="methodGroup"
-            tagName="ul"
-            className="class-view__methods"
-            listClassName="class-view__method-list"
-            docs={sortBy(classMethodDocs, 'id')}
-            renderer={DocEntity}
-            itemProps={{initiallyCollapsed: true}}>
-            Methods
-          </DocGroup>
-        )}
+        <DocGroup
+          ref="staticMethodGroup"
+          tagName="ul"
+          className="class-view__methods"
+          listClassName="class-view__method-list"
+          docs={sortBy(staticMethodDocs, 'id')}
+          renderer={DocEntity}
+          itemProps={{initiallyCollapsed: true}}
+          children="Static Methods"
+        />
+
+        <DocGroup
+          ref="methodGroup"
+          tagName="ul"
+          className="class-view__methods"
+          listClassName="class-view__method-list"
+          docs={sortBy(methodDocs, 'id')}
+          renderer={DocEntity}
+          itemProps={{initiallyCollapsed: true}}
+          children="Methods"
+        />
       </div>
     );
   }

@@ -134,6 +134,19 @@ ul, ol {
   cursor: default;
 }
 
+.schemable({
+  blockquote {
+    border-left: 4px solid @border-color;
+    padding: 0 @whitespace;
+    color: @base1;
+    margin: @whitespace 0;
+  }
+
+  blockquote.warning {
+    border-color: @solarized-orange;
+  }
+});
+
 @import "components/root";
 @import "components/banner";
 @import "components/color-scheme-switcher";

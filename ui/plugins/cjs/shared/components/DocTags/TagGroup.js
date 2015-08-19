@@ -41,6 +41,7 @@ var TagGroup = React.createClass({
         'tag-group--collapsed': isCollapsed,
         'collapsible': this.isCollapsible(),
         'collapsible--collapsed': isCollapsed,
+        'tag-group--single-child': tags.length === 1
       });
 
       return (

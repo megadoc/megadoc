@@ -12,10 +12,7 @@ var DISCARDED_TAG_TYPES = [ 'namespace' ];
 function isModule(doc) {
   var ctx = doc.ctx || {};
 
-  if (doc.isClass || doc.isConstructor/* || (ctx.type === 'function') */) {
-    return true;
-  }
-  else if (ctx.receiver === 'module' && ctx.name === 'exports') {
+  if (doc.isClass || doc.isConstructor) {
     return true;
   }
   else {
@@ -66,10 +63,46 @@ function isMethodStatic(doc, currentModule) {
   if (findWhere(doc.tags, { type: 'static' })) {
     return true;
   }
-  // else if (doc.ctx.string.match(new RegExp('^' + currentModule.ctx.name + '.' + doc.ctx.name))) {
   else if (doc.ctx.string === currentModule.ctx.name + '.' + doc.ctx.name + '()') {
     return true;
   }
+}
+
+function isFunction(doc) {
+  return doc.ctx.type === 'function';
+}
+
+function isMethod(doc) {
+  return doc.ctx.type === 'method' || doc.ctx.type === 'function';
+}
+
+function isProperty(doc) {
+  return doc.ctx.type === 'property';
+}
+
+function isModuleExports(doc) {
+  return doc.ctx.receiver === 'module' && doc.ctx.string === 'module.exports()';
+}
+
+function generateSymbol(doc) {
+  if (doc.isStatic) {
+    return '.';
+  }
+  else if (isMethod(doc)) {
+    return '#';
+  }
+  else if (isProperty(doc)) {
+    return '@';
+  }
+  else {
+    return '';
+  }
+}
+
+function findReferences(doc, docs) {
+  return docs.filter(function(ref) {
+    return ref.ctx.receiver === doc.id;
+  });
 }
 
 function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
@@ -92,19 +125,18 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     }
   }
 
-  var validDocs = docs.filter(function(doc) {
-    return (isModule(doc) || !!doc.ctx) && !doc.tags.some(function(tag) {
-      return tag.type === 'internal';
-    });
-  }).filter(function(doc) {
-    return !isDocEmpty(doc);
-  });
+  var validDocs = docs
+    .filter(function(doc) {
+      return (isModule(doc) || !!doc.ctx) && !doc.tags.some(function(tag) {
+        return tag.type === 'internal';
+      });
+    })
+    .filter(function(doc) {
+      return !isDocEmpty(doc);
+    })
+  ;
 
   validDocs.forEach(function(doc) {
-    delete doc.code;
-    delete doc.codeStart;
-    delete doc.line;
-
     doc.$descriptionFragments = [];
     doc.filePath = filePath;
 
@@ -116,9 +148,16 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
       doc.id = inferModuleId(doc, filePath);
       doc.isModule = true;
       doc.isClass = isClass(doc);
-      // doc.isMethod = !doc.isClass && ['method', 'function'].indexOf(doc.ctx.type) > -1;
-      doc.ctx.name = doc.id.replace(/^[\w]+\./, ''); // discard namespace from name
       doc.namespace = inferModuleNamespace(doc, useDirAsNamespace ? filePath : null);
+      doc.ctx.name = doc.id.replace(/^[\w_]+\./, ''); // discard namespace from name
+
+      if (doc.ctx.name.length === 0) {
+        console.warn(
+          "The module found at the source below must be named manually and will",
+          "be ignored until this is corrected.",
+          "Source:", doc.filePath + ':' + doc.line
+        );
+      }
 
       if (doc.namespace) {
         doc.id = doc.namespace + '.' + doc.ctx.name;
@@ -148,42 +187,38 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
       currentModule = doc;
     }
     else {
-      // handle exports.* which were preceded by some @class identifier
-      if (currentModule && (!doc.ctx.receiver || doc.ctx.receiver === 'exports')) {
-        doc.ctx.receiver = currentModule.id;
-      }
+      if (currentModule) {
+        // handle exports.* which were preceded by some @class identifier
+        if (!doc.ctx.receiver || doc.ctx.receiver === 'exports') {
+          doc.ctx.receiver = currentModule.id;
+        }
 
-      // make sure the receiver points to the FQN of the currentModule
-      if (currentModule && doc.ctx.receiver === currentModule.ctx.name) {
-        doc.ctx.receiver = currentModule.id;
-      }
+        // make sure the receiver points to the FQN of the currentModule
+        if (doc.ctx.receiver === currentModule.ctx.name) {
+          doc.ctx.receiver = currentModule.id;
+        }
 
-      if (!currentModule) {
-        console.warn("Doc can not be mapped to a module:", JSON.stringify(doc.ctx));
-      }
-
-      if (currentModule && isMethodStatic(doc, currentModule)) {
-        doc.isStatic = true;
+        if (isMethodStatic(doc, currentModule)) {
+          doc.isStatic = true;
+        }
       }
 
       // try to infer an ID
       if (doc.ctx.receiver) {
-        // doc.path = doc.ctx.receiver + '.' + doc.ctx.name;
         doc.id = doc.ctx.receiver + '.' + doc.ctx.name;
-        // doc.id = doc.ctx.name;
       }
       else {
         doc.id = doc.ctx.name;
       }
     }
 
-    if (currentModule) {
-      if (!doc.isConstructor && isConstructor(doc, currentModule)) {
-        // doc.isConstructor = true;
-      }
-    }
-
+    doc.name = doc.ctx.name;
+    doc.symbol = generateSymbol(doc, currentModule);
     doc.tags.forEach(decorateTag.bind(null, doc));
+
+    // if (doc.symbol.length) {
+    //   doc.id = doc.id.replace('.', doc.symbol);
+    // }
 
     discardUnwantedTags(doc);
 
@@ -195,6 +230,36 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     removeExtraneousClassIdFromOfDescription(doc);
 
     delete doc.$descriptionFragments;
+  });
+
+  validDocs
+    .filter(function(doc) {
+      return isFunction(doc) || isModuleExports(doc);
+    })
+    .forEach(function(doc) {
+      var references = findReferences(doc, validDocs);
+      if (references.length === 0) {
+        doc.isFunction = true;
+
+        if (isModuleExports(doc)) {
+          // don't consider module.exports = function() a member method
+          doc.ctx.type = 'function';
+
+          if (doc.ctx.name === 'exports') {
+            console.warn(
+              "You should manually name this exported function using a @module tag.",
+              "Source: " + doc.filePath + ':' + doc.line
+            );
+          }
+        }
+      }
+    })
+  ;
+
+  validDocs.forEach(function(doc) {
+    delete doc.code;
+    delete doc.codeStart;
+    delete doc.line;
   });
 
   return validDocs;

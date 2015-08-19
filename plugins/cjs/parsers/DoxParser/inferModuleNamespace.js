@@ -18,7 +18,7 @@ module.exports = function(doc, filePath) {
       return strClassify(path.basename(path.dirname(filePath)));
     }
     else {
-      return null;
+      return undefined;
     }
   }
 };

@@ -49,6 +49,7 @@
     @base3: @plain-base03;
     @accent: @plain-accent;
     @code: @plain-code;
+    @border-color: @plain-border-color;
 
     @rules();
   }
@@ -60,6 +61,7 @@
     @base3: @solarized-base3;
     @accent: @solarized-cyan;
     @code: @base2;
+    @border-color: @base2;
 
     @rules();
   }
@@ -71,6 +73,7 @@
     @base3: @solarized-base03;
     @accent: @solarized-cyan;
     @code: @base2;
+    @border-color: @base2;
 
     @rules();
   }
@@ -78,7 +81,7 @@
 
 .borderize-header() {
   padding-bottom: @whitespace/2;
-  border-bottom: 1px solid @base2;
+  border-bottom: 1px solid @border-color;
 }
 
 .widescreen(@rules) {
