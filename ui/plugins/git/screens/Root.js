@@ -1,12 +1,15 @@
 var React = require('react');
 var RecentCommits = require('components/RecentCommits');
 var Leaderboard = require('components/Leaderboard');
+var TeamLeaderboard = require('components/TeamLeaderboard');
 var Superstars = require('components/Superstars');
 var config = require('config');
 var Trollface = require("../css/images/Trollface.svg");
 var Root = React.createClass({
 
   render: function() {
+    const { history } = config.stats;
+
     return (
       <div className="git-root">
         <h2>Recent Activity</h2>
@@ -16,22 +19,31 @@ var Root = React.createClass({
           activeCommitId={this.props.query.commit}
         />
 
-        <h2>Superstars</h2>
-
-        <Superstars people={config.stats.history.people} />
-
-        <h2>Ladder</h2>
-
-        <p className="git-root__troll">
-          A rundown of exactly how much work every team member does.
-          {' '}
-          <img className="git-root__troll-head" src={Trollface} width="128" />
-        </p>
+        {config.superStars && [
+          <h2>Superstars</h2>,
+          <Superstars people={config.stats.history.people} />
+        ]}
 
 
-        <Leaderboard
-          committers={config.stats.history.people}
-        />
+        {history.teams.length > 0 && [
+          <h2>Team Breakdown</h2>,
+
+          <TeamLeaderboard teams={history.teams} />
+        ]}
+
+        {history.teams.length === 0 && [
+          <h2>Ladder</h2>,
+
+          <p className="git-root__troll">
+            A rundown of exactly how much work every team member does.
+            {' '}
+            <img className="git-root__troll-head" src={Trollface} width="128" />
+          </p>,
+
+          <Leaderboard
+            committers={config.stats.history.people}
+          />
+        ]}
 
       </div>
     );

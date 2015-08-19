@@ -3,7 +3,7 @@ var { Table, Column, Mixin: SortableTableMixin } = require('components/SortableT
 var { sortBy } = require('lodash');
 var classSet = require('utils/classSet');
 
-var Leaderboard = React.createClass({
+var TeamLeaderboard = React.createClass({
   mixins: [ SortableTableMixin ],
 
   propTypes: {
@@ -22,47 +22,39 @@ var Leaderboard = React.createClass({
 
   getInitialState: function() {
     return {
-      sortKey: 'superStarIndex',
-      sortOrder: 'desc'
+      sortKey: 'name',
+      sortOrder: 'asc'
     };
   },
 
   render: function() {
-    let committers = sortBy(this.props.committers, this.state.sortKey);
+    let teams = sortBy(this.props.teams, this.state.sortKey);
 
     if (this.state.sortOrder === 'desc') {
-      committers = committers.reverse();
+      teams = teams.reverse();
     }
 
     return (
       <Table className="leaderboard table">
         <thead>
           <tr>
-            <Column sortKey="name">Member</Column>
-            <Column sortKey="email">Email</Column>
-            <Column sortKey="superStarIndex">Superstar Index</Column>
+            <Column sortKey="name">Team</Column>
             <Column sortKey="commitCount">Commits</Column>
             <Column sortKey="reviewCount">Reviews</Column>
           </tr>
         </thead>
 
         <tbody>
-          {committers.map(this.renderRecord)}
+          {teams.map(this.renderRecord)}
         </tbody>
       </Table>
     );
   },
 
   renderRecord(record) {
-    var className = classSet({
-      'leaderboard__superstar-record': record.isSuperstar
-    });
-
     return (
-      <tr key={record.email} className={className}>
-        <td>{record.name}{record.isSuperstar && (<em> - wowza</em>)}</td>
-        <td>{record.email}</td>
-        <td>{(record.superStarIndex * 100).toFixed(2)}</td>
+      <tr key={record.name}>
+        <td>{record.name}</td>
         <td>{record.commitCount}</td>
         <td>{record.reviewCount}</td>
       </tr>
@@ -70,4 +62,4 @@ var Leaderboard = React.createClass({
   }
 });
 
-module.exports = Leaderboard;
+module.exports = TeamLeaderboard;

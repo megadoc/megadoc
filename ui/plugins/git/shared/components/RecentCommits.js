@@ -1,4 +1,5 @@
 var React = require('react');
+var MarkdownText = require('components/MarkdownText')
 var { Link } = require('react-router');
 
 var RecentCommits = React.createClass({
@@ -24,8 +25,8 @@ var RecentCommits = React.createClass({
     const { commits } = this.props;
 
     return (
-      <div>
-        <ul>
+      <div className="recent-commits">
+        <ul className="recent-commits__listing">
           {commits.map(this.renderLink)}
         </ul>
 
@@ -56,9 +57,11 @@ var RecentCommits = React.createClass({
       body = 'No body provided.';
     }
 
+    console.log(commit);
+
     return (
-      <div>
-        <pre>{body}</pre>
+      <div className="recent-commits__commit">
+        <MarkdownText>{`**${commit.subject}**\n\n${body}`}</MarkdownText>
       </div>
     );
   }

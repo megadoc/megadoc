@@ -25,10 +25,11 @@ function parseMailMap(rawMailMap) {
   }, []);
 }
 
-function analyze(commits, mailMap) {
+function analyze(commits, mailMap, teams) {
   var stats = {
     commitCount: commits.length,
-    people: {}
+    people: {},
+    teams: []
   };
 
   function getPersonRecord(_email, _name) {
@@ -79,22 +80,47 @@ function analyze(commits, mailMap) {
     }
   });
 
-  var superStar;
+  if (teams) {
+    stats.teams = teams.map(function(teamConfig) {
+      var team = {
+        name: teamConfig.name,
+        commitCount: 0,
+        reviewCount: 0
+      };
 
-  // flatten the people hash to array
-  stats.people = Object.keys(stats.people).map(function(email) {
-    var person = stats.people[email];
-    person.superStarIndex = (person.commitCount + person.reviewCount) / commits.length;
+      teamConfig.members.forEach(function(email) {
+        var person = stats.people[email.trim()];
 
-    if (!superStar || superStar.superStarIndex < person.superStarIndex) {
-      superStar = person;
+        if (person) {
+          team.commitCount += person.commitCount;
+          team.reviewCount += person.reviewCount;
+        }
+        else {
+          console.warn("Unable to find an entry for team member <%s>", email);
+        }
+      });
+
+      return team;
+    });
+  }
+  else {
+    var superStar;
+
+    // flatten the people hash to array
+    stats.people = Object.keys(stats.people).map(function(email) {
+      var person = stats.people[email];
+      person.superStarIndex = (person.commitCount + person.reviewCount) / commits.length;
+
+      if (!superStar || superStar.superStarIndex < person.superStarIndex) {
+        superStar = person;
+      }
+
+      return person;
+    });
+
+    if (superStar) {
+      superStar.isSuperstar = true;
     }
-
-    return person;
-  });
-
-  if (superStar) {
-    superStar.isSuperstar = true;
   }
 
   return stats;
@@ -118,7 +144,7 @@ module.exports = function(repoPath, config) {
         console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
       }
 
-      resolve(analyze(commits, mailMap));
+      resolve(analyze(commits, mailMap, config.teams));
     });
 
     parse.on('close', function(exitCode, signal) {

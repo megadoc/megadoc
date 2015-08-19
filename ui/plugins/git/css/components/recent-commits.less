@@ -1,0 +1,35 @@
+.recent-commits {
+  @height: 500px;
+  position: relative;
+
+  font-size: 0.85em;
+
+  &__listing {
+    width: 50%;
+    vertical-align: top;
+    height: @height;
+    overflow: auto;
+  }
+
+  &__commit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 51%;
+    height: @height;
+    overflow: auto;
+    padding: 0 1em;
+
+    pre {
+      margin: 0;
+    }
+  }
+}
+
+.schemable({
+  .recent-commits {
+    &__commit {
+      background: @base2;
+    }
+  }
+});
