@@ -62,14 +62,9 @@ function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, d
           id.split('/')[0] :
           'root'
       );
-
-      console.log(JSON.stringify({
-        id: entry.id,
-        title: entry.title,
-        folder: entry.folder,
-        filePath: entry.filePath
-      }));
     });
+
+    console.log(JSON.stringify(database.map(function(e) { return e.id; })));
 
     if (markdownConfig.gitStats) {
       console.log("Parsing git stats...");

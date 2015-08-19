@@ -12,7 +12,7 @@ function generateDocs(config, globalConfig, done) {
   yardApi.stdout.pipe(process.stdout);
   yardApi.stderr.pipe(process.stderr);
 
-  yardApi.on('close', function(exitCode, signal) {
+  yardApi.on('close', function(exitCode) {
     if (exitCode === 0) {
       done();
     }

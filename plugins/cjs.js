@@ -40,8 +40,10 @@ CJSPlugin.$inject = [
 ];
 
 CJSPlugin.defaults = {
-  source: '${ROOT}/**/*.js',
-  exclude: null
+  cjs: {
+    source: '${ROOT}/**/*.js',
+    exclude: null
+  }
 };
 
 module.exports = CJSPlugin;

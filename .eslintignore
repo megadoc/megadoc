@@ -3,3 +3,4 @@ node_modules
 ui/dist
 ui/app/vendor/**/*
 ui/karma.conf.js
+test/fixtures

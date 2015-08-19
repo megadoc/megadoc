@@ -1,3 +1,8 @@
+const Storage = require('core/Storage');
+const K = require('constants');
+
+Storage.register(K.CFG_CLASS_BROWSER_EXPAND_ALL, false);
+
 tinydocReact.use(function YARDAPIPlugin(reporter) {
   reporter.registerRoutes([
     {

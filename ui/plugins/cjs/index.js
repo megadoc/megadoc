@@ -1,6 +1,10 @@
-var Database = require('core/Database');
-var LinkResolver = require('core/LinkResolver');
-var config = require('config');
+const Database = require('core/Database');
+const LinkResolver = require('core/LinkResolver');
+const config = require('config');
+const Storage = require('core/Storage');
+const K = require('constants');
+
+Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
 tinydocReact.use(function CJSPlugin(api) {
   api.registerRoutes([

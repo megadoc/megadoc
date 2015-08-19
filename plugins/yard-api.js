@@ -1,6 +1,4 @@
 var path = require('path');
-var glob = require('glob');
-var fs = require('fs-extra');
 var extend = require('lodash').extend;
 var scan = require('./yard-api/scan');
 
@@ -47,9 +45,11 @@ YardAPIPlugin.$inject = [
 ];
 
 YardAPIPlugin.defaults = {
-  source: 'public/doc/api/**/*.json',
-  exclude: null,
-  showEndpointPath: true
+  'yard-api': {
+    source: 'public/doc/api/**/*.json',
+    exclude: null,
+    showEndpointPath: true
+  }
 };
 
 module.exports = YardAPIPlugin;

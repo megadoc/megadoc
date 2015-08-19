@@ -19,8 +19,15 @@ module.exports = function(repoPath, config) {
       }
     });
 
-    parse.on('end', function(commit) {
+    parse.on('end', function() {
       resolve(commits);
+    });
+
+    parse.on('error', reject);
+    parse.on('close', function(exitCode) {
+      if (exitCode !== 0) {
+        reject('parsing latest git activity failed mysteriously');
+      }
     });
   });
 };

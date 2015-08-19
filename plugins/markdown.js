@@ -40,16 +40,18 @@ MarkdownPlugin.$inject = [
 ];
 
 MarkdownPlugin.defaults = {
-  gitStats: false,
-  collections: [
-    {
-      name: 'articles',
-      title: 'Articles',
-      source: 'doc/articles/**/*.md',
-      icon: 'icon-book',
-      exclude: []
-    }
-  ]
+  markdown: {
+    gitStats: false,
+    collections: [
+      {
+        name: 'articles',
+        title: 'Articles',
+        source: 'doc/articles/**/*.md',
+        icon: 'icon-book',
+        exclude: []
+      }
+    ]
+  }
 };
 
 module.exports = MarkdownPlugin;

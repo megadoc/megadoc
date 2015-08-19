@@ -5,24 +5,24 @@ var path = require('path');
 
 function parseMailMap(rawMailMap) {
   // Braden Anderson <banderson@instructure.com> Braden Anderson <braden@instructure.com>
-  var mailMap = rawMailMap.trim().split("\n").map(function(line) {
+  return rawMailMap.trim().split("\n").reduce(function(mailMap, line) {
     var match = line.match(/\s*(.*) <(.*)> (.*) <(.*)>/);
 
-    if (!match) { return null; }
+    if (match) {
+      mailMap.push({
+        to: {
+          name: match[1].trim(),
+          email: match[2].trim()
+        },
+        from: {
+          name: match[3].trim(),
+          email: match[4].trim(),
+        }
+      });
+    }
 
-    return {
-      to: {
-        name: match[1].trim(),
-        email: match[2].trim()
-      },
-      from: {
-        name: match[3].trim(),
-        email: match[4].trim(),
-      }
-    };
-  });
-
-  return mailMap;
+    return mailMap;
+  }, []);
 }
 
 function analyze(commits, mailMap) {
@@ -100,7 +100,7 @@ function analyze(commits, mailMap) {
   return stats;
 }
 
-module.exports = function(repoPath/*, config*/) {
+module.exports = function(repoPath, config) {
   return new Promise(function(resolve, reject) {
     var parse = log.parse({ 'use-mailmap': true }, { cwd: repoPath });
     var commits = [];
@@ -113,7 +113,7 @@ module.exports = function(repoPath/*, config*/) {
       var mailMapPath = path.resolve(repoPath.replace(/\.git$/, ''), '.mailmap');
       var mailMap;
 
-      if (fs.existsSync(mailMapPath)) {
+      if (config.useMailMap && fs.existsSync(mailMapPath)) {
         mailMap = parseMailMap(fs.readFileSync(mailMapPath, 'utf-8'));
         console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
       }

@@ -30,46 +30,48 @@ function UIPlugin(emitter, cssCompiler, config, utils) {
 }
 
 UIPlugin.defaults = {
-  /**
-   * @property {String} outputDir
-   *
-   * Path to where the built assets (index.html and friends) will be saved to.
-   *
-   * Note that most scanner plugins will implicitly use this path to save their
-   * own assets so that they're accessible relative from the index.html entry
-   * file.
-   */
-  outputDir: '${ROOT}/doc/www',
-  scripts: [],
-  pluginScripts: [],
-  assets: [],
+  ui: {
+    /**
+     * @property {String} outputDir
+     *
+     * Path to where the built assets (index.html and friends) will be saved to.
+     *
+     * Note that most scanner plugins will implicitly use this path to save their
+     * own assets so that they're accessible relative from the index.html entry
+     * file.
+     */
+    outputDir: '${ROOT}/doc/www',
+    scripts: [],
+    pluginScripts: [],
+    assets: [],
 
-  /**
-   * @property {String} [readme]
-   *
-   * You can point this to a markdown (or text) file and it will be displayed
-   * as the landing/home page.
-   */
-  readme: null,
+    /**
+     * @property {String} [readme]
+     *
+     * You can point this to a markdown (or text) file and it will be displayed
+     * as the landing/home page.
+     */
+    readme: null,
 
-  useHashLocation: true,
+    useHashLocation: true,
 
-  publicPath: '/',
+    publicPath: '/',
 
-  stylesheet: null,
+    stylesheet: null,
 
-  gitStats: true,
+    gitStats: true,
 
-  footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
+    footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
 
-  hotness: {
-    count: 1,
-    interval: 'weeks'
-  },
+    hotness: {
+      count: 1,
+      interval: 'weeks'
+    },
 
-  disqus: {
-    shortname: '',
-    baseUrl: 'http://localhost'
+    disqus: {
+      shortname: '',
+      baseUrl: 'http://localhost'
+    }
   }
 };
 

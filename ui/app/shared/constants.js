@@ -18,6 +18,9 @@ exports.AVAILABLE_SCHEME_NAMES = [
   'Solarized (dark)'
 ];
 
-exports.DEFAULT_SCHEME = 'solarized--light';
+exports.DEFAULT_SCHEME = 'plain';
 
 exports.APP_DOM_ELEMENT_ID = 'app-container';
+
+exports.CFG_COLOR_SCHEME = 'colorScheme';
+exports.CFG_SYNTAX_HIGHLIGHTING = 'highlightingEnabled';

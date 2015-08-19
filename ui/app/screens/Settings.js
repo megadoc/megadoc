@@ -2,6 +2,7 @@ var React = require('react');
 var ColorSchemeSwitcher = require("components/ColorSchemeSwitcher");
 var Checkbox = require("components/Checkbox");
 var Storage = require('core/Storage');
+var { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
 
 var Settings = React.createClass({
   render: function() {
@@ -34,11 +35,11 @@ var Settings = React.createClass({
   },
 
   isHighlightingEnabled() {
-    return Storage.get('highlightingEnabled', true);
+    return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
   },
 
   toggleHighlighting() {
-    Storage.set('highlightingEnabled', !this.isHighlightingEnabled());
+    Storage.set(CFG_SYNTAX_HIGHLIGHTING, !this.isHighlightingEnabled());
   },
 
   reset() {

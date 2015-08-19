@@ -1,7 +1,5 @@
 var parseSections = require('../parseSections');
 var expect = require('chai').expect;
-var fs = require('fs');
-var path = require('path');
 
 describe('markdown/scan/parseSections', function() {
   it('should work', function() {

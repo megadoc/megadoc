@@ -1,9 +1,11 @@
 var { AVAILABLE_SCHEMES, DEFAULT_SCHEME } = require("constants");
 var Storage = require('core/Storage');
+var K = require('constants');
+
 var ColorSchemeManager = exports;
 
 ColorSchemeManager.load = function() {
-  document.body.className = Storage.get('colorScheme');
+  document.body.className = Storage.get(K.CFG_COLOR_SCHEME);
 };
 
 ColorSchemeManager.switchScheme = function(nextScheme = null) {
@@ -28,7 +30,7 @@ ColorSchemeManager.switchScheme = function(nextScheme = null) {
   document.body.className = className;
 
   try {
-    Storage.set('colorScheme', nextScheme);
+    Storage.set(K.CFG_COLOR_SCHEME, nextScheme);
   }
   catch (e) {
     // ignore

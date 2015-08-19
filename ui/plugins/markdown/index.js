@@ -1,9 +1,13 @@
-var config = require('config');
-var NavigationOutlet = require('./outlets/Navigation');
-var React = require('react');
-var Root = require('./screens/Root');
-var LinkResolver = require('core/LinkResolver');
-var Database = require('core/Database');
+const config = require('config');
+const NavigationOutlet = require('./outlets/Navigation');
+const React = require('react');
+const Root = require('./screens/Root');
+const LinkResolver = require('core/LinkResolver');
+const Database = require('core/Database');
+const Storage = require('core/Storage');
+const K = require('constants');
+
+Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydocReact.use(function MarkdownPlugin(api) {
   config.collections.forEach(function(collection) {

@@ -7,10 +7,7 @@ var Checkbox = require('components/Checkbox');
 var HotItemIndicator = require('components/HotItemIndicator');
 var { sortBy, groupBy } = require('lodash');
 var isItemHot = require('utils/isItemHot');
-
-var PRIVATE_VISIBILITY_KEY = 'js:classBrowser:showPrivate';
-
-Storage.register(PRIVATE_VISIBILITY_KEY, false);
+var PRIVATE_VISIBILITY_KEY = require('constants').CFG_CLASS_BROWSER_SHOW_PRIVATE;
 
 var ClassBrowser = React.createClass({
   displayName: "ClassBrowser",

@@ -1,7 +1,5 @@
 var inferModuleId = require('../inferModuleId');
 var expect = require('chai').expect;
-var fs = require('fs');
-var path = require('path');
 var dox = require('dox');
 
 var load = TestUtils.loadFixture;
@@ -55,5 +53,5 @@ describe('DoxParser/inferModuleId', function() {
 
   it('a declaration with a @namespace', function() {
     expect( inferModuleId(parse('cjs/class08.js')[0]) ).to.equal('EventEmitter');
-  })
+  });
 });

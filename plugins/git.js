@@ -49,7 +49,10 @@ GitPlugin.$inject = [
 ];
 
 GitPlugin.defaults = {
-  path: 'stats'
+  git: {
+    path: 'stats',
+    useMailMap: true
+  }
 };
 
 module.exports = GitPlugin;

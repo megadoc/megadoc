@@ -1,15 +1,11 @@
-var EventEmitter = require('core/EventEmitter');
-var emitter = new EventEmitter(['change']);
+const EventEmitter = require('core/EventEmitter');
+const emitter = new EventEmitter(['change']);
 
-var STORAGE_ITEMS = {
-  colorScheme: 'solarized--light',
-  bannerCollapsed: true,
-  highlightingEnabled: true
-};
+let STORAGE_ITEMS = {};
 
 exports.get = function(key) {
-  var value;
-  var defaultValue = STORAGE_ITEMS[key];
+  const defaultValue = STORAGE_ITEMS[key];
+  let value;
 
   console.assert(STORAGE_ITEMS.hasOwnProperty(key),
     `You are attempting to access an unregistered storage key '${key}'.

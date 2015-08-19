@@ -5,7 +5,12 @@ var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
 var OutletStore = require('stores/OutletStore');
 var $ = require('jquery');
+var Storage = require('core/Storage');
 var { Route, DefaultRoute, NotFoundRoute } = Router;
+var K = require('constants');
+
+Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
+Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
 /**
  * @namespace tinydocReact

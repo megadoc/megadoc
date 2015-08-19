@@ -7,12 +7,10 @@ var HotItemIndicator = require('components/HotItemIndicator');
 var Storage = require('core/Storage');
 var strHumanize = require('tinydoc/lib/utils/strHumanize');
 var scrollIntoView = require('utils/scrollIntoView');
-var GROUP_BY_FOLDER = 'markdown:classBrowser:groupByFolder';
+var GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 var ROOT_FOLDER_ID = strHumanize('root');
 var $ = require('jquery');
 var isItemHot = require('utils/isItemHot');
-
-Storage.register(GROUP_BY_FOLDER, true);
 
 var MarkdownClassBrowser = React.createClass({
   getDefaultProps: function() {

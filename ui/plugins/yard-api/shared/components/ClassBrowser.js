@@ -2,10 +2,7 @@ var React = require("react");
 var { Link } = require('react-router');
 var Checkbox = require('components/Checkbox');
 var Storage = require('core/Storage');
-
-var EXPAND_ALL = 'yard-api:classBrowser:expandAll';
-
-Storage.register(EXPAND_ALL, false);
+var EXPAND_ALL = require('constants').CFG_CLASS_BROWSER_EXPAND_ALL;
 
 var APIClassBrowser = React.createClass({
   render() {

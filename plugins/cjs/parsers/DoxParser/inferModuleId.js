@@ -1,4 +1,3 @@
-var strClassify = require('../../../../lib/utils/strClassify');
 var path = require('path');
 
 function inferModuleId(doc, filePath) {
@@ -14,7 +13,6 @@ function inferModuleId(doc, filePath) {
 
   if (nameMatch) {
     return nameMatch[1] || nameMatch[2];
-    ;
   }
   else if (doc.ctx && doc.ctx.name === 'exports') {
     return path.basename(filePath, path.extname(filePath));

@@ -170,8 +170,7 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
   });
 
   return validDocs;
-};
-
+}
 
 module.exports = function parseFile(filePath, config) {
   return parse(

@@ -1,0 +1,1 @@
+exports.CFG_CLASS_BROWSER_SHOW_PRIVATE = 'js:classBrowser:showPrivate';

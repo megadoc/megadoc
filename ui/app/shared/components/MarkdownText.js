@@ -5,6 +5,7 @@ var LinkResolver = require('core/LinkResolver');
 var { getQueryItem } = require('actions/RouteActions');
 var scrollIntoView = require('utils/scrollIntoView');
 const Storage = require('core/Storage');
+const { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
@@ -49,7 +50,7 @@ var MarkdownText = React.createClass({
     normalizeHeading: normalizeHeading,
 
     isHighlightingEnabled() {
-      return Storage.get('highlightingEnabled');
+      return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
     }
   },
 

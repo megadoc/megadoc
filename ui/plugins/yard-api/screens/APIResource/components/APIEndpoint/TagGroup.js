@@ -1,3 +1,4 @@
+/* eslint "camelcase":0 */
 var React = require('react');
 var { where } = require('lodash');
 
