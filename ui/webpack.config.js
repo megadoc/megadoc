@@ -2,11 +2,12 @@ var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
+var root = path.resolve(__dirname);
 
 var nodeEnv = process.env.NODE_ENV || 'development';
 var config = {
   entry: {
-    main: './app/index.js'
+    main: path.join(root, 'app/index.js')
   },
 
   output: {
@@ -22,7 +23,7 @@ var config = {
   ]
 };
 
-glob.sync('./plugins/*/index.js').forEach(function(entryFile) {
+glob.sync(path.join(root, 'plugins/*/index.js')).forEach(function(entryFile) {
   var pluginName = path.basename(path.dirname(entryFile));
   config.entry['plugins/' + pluginName] = entryFile;
 });

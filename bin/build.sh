@@ -9,7 +9,10 @@ if [ ! -d "./node_modules" ]; then
   exit 1
 fi
 
+export NODE_ENV="production"
+
 node ./node_modules/webpack/bin/webpack.js \
   --progress \
   --display-chunks \
+  --config=./ui/webpack.config.js \
   $@

@@ -5,7 +5,8 @@
   "main": "index.js",
   "bin": "./cli/index.js",
   "scripts": {
-    "prepublish": "./bin/build",
+    "prepublish": "./bin/build.sh",
+    "server": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
     "test": "./node_modules/mocha/bin/mocha"
   },

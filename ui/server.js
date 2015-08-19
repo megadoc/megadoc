@@ -4,6 +4,7 @@ var path = require('path');
 var config = require('./webpack.config');
 var fs = require('fs-extra');
 var _ = require('lodash');
+var root = path.resolve(__dirname);
 
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
@@ -12,7 +13,7 @@ var server;
 config.entry = [
   'webpack/hot/dev-server',
   'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
-  './app/index.js'
+  path.join(root, 'app/index.js')
 ];
 
 config.plugins.push(new webpack.HotModuleReplacementPlugin());
@@ -22,8 +23,8 @@ if (process.env.CONFIG_FILE) {
 }
 
 // load local plugins that you're developing
-if (fs.existsSync('./.local.js')) {
-  config.entry.push('./.local.js');
+if (fs.existsSync(path.join(root, '.local.js'))) {
+  config.entry.push(path.join(root, '.local.js'));
 }
 
 config.module.loaders.filter(function(loader) {
@@ -40,7 +41,7 @@ var contentBase = '/tmp/tinydoc';
 fs.ensureDirSync(contentBase);
 fs.writeFileSync(
   contentBase + '/index.html',
-  _.template(fs.readFileSync('./app/index.tmpl.html'), 'utf-8')({
+  _.template(fs.readFileSync(path.join(root, 'app/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
     scripts: [ 'vendor.js', 'main.js' ]
   })
