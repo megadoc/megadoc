@@ -18,4 +18,9 @@ if [ ! -z "${CONFIG_FILE}" ]; then
   echo "Using config file ${CONFIG_FILE}"
 fi
 
-node ./server.js
+if [ ! -d "./ui" ]; then
+  echo "$1 must be run from tinydoc's root."
+  exit 1
+fi
+
+node ./ui/server.js
