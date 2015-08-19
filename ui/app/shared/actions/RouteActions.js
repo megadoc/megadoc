@@ -50,8 +50,8 @@ exports.assignDelegate = function(inDelegate) {
   pendingCallbacks = [];
 };
 
-exports.makeHref = function(name, params) {
-  return delegate.makeHref(name, params);
+exports.makeHref = function(name, params, query) {
+  return delegate.makeHref(name, params, query);
 };
 
 exports.goToNotFound = function() {

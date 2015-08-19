@@ -13,7 +13,7 @@ var SeeTag = React.createClass({
   render() {
     return (
       <MarkdownText className="see-tag">
-        {`See also: [${this.props.string}]().`}
+        {`See also: [${this.props.string.trim()}]().`}
       </MarkdownText>
     );
   }

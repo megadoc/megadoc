@@ -42,7 +42,9 @@ renderer.heading = function (text, level) {
 };
 
 var markedOptions = {
-  renderer: renderer
+  renderer: renderer,
+  breaks: false,
+  sanitize: true
 };
 
 var MarkdownText = React.createClass({

@@ -32,18 +32,17 @@ tinydocReact.use(function CJSPlugin(api) {
   api.registerOutletElement('navigation', require('./outlets/Navigation'));
 
   api.on('started', function() {
-    LinkResolver.registerResolver((function() {
-      var links = Database.getLinks();
+    const links = Database.getLinks();
 
-      return function resolve(id) {
-        var entity;
+    LinkResolver.registerResolver('JS', function resolveLink(id, context) {
+      console.debug('cjs: looking for an entity called', id);
 
-        if (links[id]) {
-          entity = links[id];
-        }
-
-        return entity;
-      };
-    }()));
+      if (links[id]) {
+        return links[id];
+      }
+      else if (context.moduleId) {
+        return links[context.moduleId + id];
+      }
+    });
   });
 });

@@ -8,9 +8,16 @@ var HotItemIndicator = require('components/HotItemIndicator');
 var { sortBy, groupBy } = require('lodash');
 var isItemHot = require('utils/isItemHot');
 var PRIVATE_VISIBILITY_KEY = require('constants').CFG_CLASS_BROWSER_SHOW_PRIVATE;
+var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
 
 var ClassBrowser = React.createClass({
-  displayName: "ClassBrowser",
+  mixins: [
+    BrowserJumperMixin(function(props) {
+      if (props.activeModuleId) {
+        return this.refs[props.activeModuleId];
+      }
+    })
+  ],
 
   render() {
     var modules = sortBy(this.props.modules, 'id');
@@ -58,7 +65,7 @@ var ClassBrowser = React.createClass({
 
   renderEntry(doc) {
     var { id } = doc;
-    var isActive = this.props.activeClassId === id;
+    var isActive = this.props.activeModuleId === id;
     var className = classSet({
       'class-browser__entry': true,
       'class-browser__entry--active': isActive
@@ -76,8 +83,7 @@ var ClassBrowser = React.createClass({
 
     return (
       <div key={id} className={className}>
-
-        <Link to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
+        <Link ref={id} to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
           {doc.ctx.name}
 
           {isPrivate && (

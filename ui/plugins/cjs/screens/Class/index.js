@@ -4,6 +4,7 @@ var ClassView = require('./ClassView');
 var FunctionView = require('./FunctionView');
 var HasTitle = require('mixins/HasTitle');
 var ModuleHeader = require('./components/ModuleHeader');
+const LinkResolver = require('core/LinkResolver');
 
 var Class = React.createClass({
   mixins: [
@@ -21,6 +22,13 @@ var Class = React.createClass({
         transition.redirect('js');
       }
     }
+  },
+
+  componentWillMount: function() {
+    LinkResolver.setContext({
+      namespace: 'JS',
+      moduleId: this.props.params.moduleId
+    });
   },
 
   render() {

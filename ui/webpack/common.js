@@ -44,7 +44,7 @@ var baseConfig = {
   },
 
   module: {
-    noParse: [/vendor\//, /dist\//],
+    noParse: [/vendor\/moment/, /dist\//],
 
     loaders: [
       {

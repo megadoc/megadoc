@@ -33,7 +33,13 @@ var ClassView = React.createClass({
 
         <h2 className="doc-group__header">Signature</h2>
 
-        <DocEntity withDescription={false} collapsible={false} {...moduleDocs[0]} />
+        <DocEntity
+          withDescription={false}
+          withExamples={false}
+          withAdditionalResources={false}
+          collapsible={false}
+          {...moduleDocs[0]}
+        />
 
         <DocGroup
           ref="exampleGroup"

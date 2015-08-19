@@ -1,28 +1,21 @@
-var scrollIntoView = require('utils/scrollIntoView');
+var jqScrollIntoView = require('jqScrollIntoView');
 
 var SectionJumperMixin = function(locateElement) {
   function jumpToEntity(component, props, state) {
     var element = locateElement.call(component, props, state);
-    var isReactComponent;
 
     if (!element) {
       return false;
     }
-
-    isReactComponent = element.getDOMNode instanceof Function;
-
-    if (isReactComponent) {
-      scrollIntoView(element.getDOMNode());
+    else {
+      jqScrollIntoView(React.findDOMNode(element));
 
       if (element.expand instanceof Function) {
         element.expand();
       }
-    }
-    else {
-      scrollIntoView(element);
-    }
 
-    return true;
+      return true;
+    }
   }
 
   return {

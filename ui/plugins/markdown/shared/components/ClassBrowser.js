@@ -6,38 +6,25 @@ var Checkbox = require('components/Checkbox');
 var HotItemIndicator = require('components/HotItemIndicator');
 var Storage = require('core/Storage');
 var strHumanize = require('tinydoc/lib/utils/strHumanize');
-var scrollIntoView = require('utils/scrollIntoView');
 var GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 var ROOT_FOLDER_ID = strHumanize('root');
 var $ = require('jquery');
 var isItemHot = require('utils/isItemHot');
+var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
 
 var MarkdownClassBrowser = React.createClass({
+  mixins: [
+    BrowserJumperMixin(function(props) {
+      if (props.activeArticleId) {
+        return this.refs[props.activeArticleId];
+      }
+    })
+  ],
+
   getDefaultProps: function() {
     return {
       folders: []
     };
-  },
-
-  componentDidMount: function() {
-    this.scrollActiveArticleIntoView();
-  },
-
-  componentDidUpdate: function(prevProps) {
-    if (prevProps.activeArticleId !== this.props.activeArticleId) {
-      this.scrollActiveArticleIntoView();
-    }
-  },
-
-  scrollActiveArticleIntoView() {
-    const { activeArticleId } = this.props;
-
-    if (activeArticleId) {
-      scrollIntoView.aSomewhatSmarterVersion(
-        this.refs[`article-${activeArticleId}`].getDOMNode(),
-        $('.resizable-panel__content')[0]
-      );
-    }
   },
 
   render() {
@@ -96,7 +83,7 @@ var MarkdownClassBrowser = React.createClass({
     }
 
     return (
-      <div key={id} ref={`article-${id}`}>
+      <div key={id} ref={id}>
         <Link
           to={`${this.props.collectionName}.article`}
           params={{ articleId: id }}

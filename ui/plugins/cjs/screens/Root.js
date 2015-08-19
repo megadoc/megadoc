@@ -17,7 +17,7 @@ var JSRoot = React.createClass({
       <TwoColumnLayout className="js-root">
         <LeftColumn>
           <ClassBrowser
-            activeClassId={this.props.params.moduleId}
+            activeModuleId={this.props.params.moduleId}
             modules={Database.getModules()}
           />
         </LeftColumn>

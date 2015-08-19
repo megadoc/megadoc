@@ -52,7 +52,7 @@ var ParamTag = React.createClass({
         </header>
 
         <MarkdownText className="param-tag__description">
-          {this.props.description.replace(/[ ]{4,5}/g, '')}
+          {this.props.description.replace(/[ ]{4,}/g, '')}
         </MarkdownText>
       </li>
     );

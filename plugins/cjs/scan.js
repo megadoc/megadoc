@@ -13,13 +13,12 @@ module.exports = function(config, gitRepository, utils, done) {
     return sources.concat(glob.sync(utils.assetPath(pattern), { nodir: true }));
   }, []);
 
+  var filters = arrayWrap(config.exclude || []);
+
   var matchedFiles = files.filter(function(filePath) {
-    if (config.exclude) {
-      return !filePath.match(config.exclude);
-    }
-    else {
-      return true;
-    }
+    return !filters.some(function(filter) {
+      return filePath.match(filter);
+    });
   });
 
   console.log('Parsing docs from %d files (%d were filtered).',

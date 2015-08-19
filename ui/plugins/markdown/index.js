@@ -53,7 +53,7 @@ tinydocReact.use(function MarkdownPlugin(api) {
     var links = Database.getLinkableEntities();
     var linkKeys = Object.keys(links);
 
-    LinkResolver.registerResolver(function(id) {
+    LinkResolver.registerResolver('md', function(id) {
       var entity;
 
       if (links[id]) {

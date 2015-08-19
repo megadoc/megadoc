@@ -6,7 +6,6 @@ var Footer = require('components/Footer');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var Storage = require('core/Storage');
 var ColorSchemeManager = require('core/ColorSchemeManager');
-var { APP_DOM_ELEMENT_ID } = require('constants');
 var classSet = require('utils/classSet');
 
 var { RouteHandler } = Router;
@@ -25,6 +24,12 @@ var Root = React.createClass({
     };
   },
 
+  getInitialState: function() {
+    return {
+      started: false
+    };
+  },
+
   componentDidMount: function() {
     RouteActions.assignDelegate(this);
     ColorSchemeManager.load();
@@ -35,6 +40,10 @@ var Root = React.createClass({
 
     Storage.on('change', this.reload);
     TwoColumnLayout.on('change', this.reload);
+
+    // we need the router to be running for LinkResolvers to register
+    // themselves *before* we start rendering anything.
+    this.setState({ started: true });
   },
 
   componentWillUnmount: function() {
@@ -44,13 +53,17 @@ var Root = React.createClass({
   },
 
   render() {
+    if (!this.state.started) {
+      return null;
+    }
+
     var className = classSet({
       'root': true,
       'root--with-two-column-layout': TwoColumnLayout.isActive()
     });
 
     return (
-      <div id={APP_DOM_ELEMENT_ID /* need this from scrollIntoView */} className={className}>
+      <div className={className}>
         <Banner />
 
         <div className="root__screen">

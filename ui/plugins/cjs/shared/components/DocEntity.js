@@ -29,7 +29,8 @@ var DocEntity = React.createClass({
   getDefaultProps: function() {
     return {
       withTitle: true,
-      withDescription: true
+      withDescription: true,
+      withExamples: true
     };
   },
 
@@ -91,7 +92,8 @@ var DocEntity = React.createClass({
         {!isCollapsed && (
           <DocTags
             tags={this.props.tags}
-            showExamples={!this.props.isConstructor}
+            withExamples={!this.props.isConstructor && this.props.withExamples}
+            withAdditionalResources={this.props.withAdditionalResources}
           />
         )}
       </div>

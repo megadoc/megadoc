@@ -60,11 +60,31 @@ module.exports = {
   },
 
   getLinks() {
-    return this.getModules().reduce(function(links, doc) {
+    return this.getModules().reduce((links, doc) => {
       links[doc.id] = links[doc.ctx.name] = {
         href: makeHref('js.module', { moduleId: doc.id }),
         title: doc.ctx.name
       };
+
+      var moduleDocs = this.getModuleEntities(doc.id);
+
+      moduleDocs.forEach(function(refDoc) {
+        if (refDoc === doc) {
+          return;
+        }
+
+        var linkablePath = [ doc.id, refDoc.name ].join(refDoc.symbol);
+
+        links[linkablePath] = {
+          href: makeHref('js.module', {
+            moduleId: doc.id,
+          }, {
+            entity: refDoc.ctx.name
+          }),
+
+          title: refDoc.ctx.name
+        };
+      });
 
       return links;
     }, {});

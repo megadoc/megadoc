@@ -13,13 +13,14 @@ var DocTags = React.createClass({
 
   propTypes: {
     tags: React.PropTypes.array,
-    showExamples: React.PropTypes.bool
+    withExamples: React.PropTypes.bool
   },
 
   getDefaultProps: function() {
     return {
       tags: [],
-      showExamples: true
+      withExamples: true,
+      withAdditionalResources: true
     };
   },
 
@@ -27,9 +28,10 @@ var DocTags = React.createClass({
     var paramTags = where(this.props.tags, { type: 'param' });
     var unhandledTags = this.props.tags.filter(function(tag) {
       return [
+        'constructor',
+        'example',
         'param',
         'return',
-        'example',
         'throws',
         'see',
         'module',
@@ -48,7 +50,7 @@ var DocTags = React.createClass({
           Returns
         </TagGroup>
 
-        {this.props.showExamples && (
+        {this.props.withExamples && (
           <TagGroup alwaysGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
             Examples
           </TagGroup>
@@ -58,9 +60,11 @@ var DocTags = React.createClass({
           <span className="type-attention">Exceptions</span>
         </TagGroup>
 
-        <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag}>
-          Additional resources
-        </TagGroup>
+        {this.props.withAdditionalResources && (
+          <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag}>
+            Additional resources
+          </TagGroup>
+        )}
 
         {unhandledTags.length > 0 && unhandledTags.map(this.renderTag)}
       </div>
