@@ -1,5 +1,6 @@
 var React = require('react');
 var Router = require('react-router');
+var RouteActions = require('actions/RouteActions');
 var config = require('config');
 var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
@@ -28,8 +29,10 @@ emitter.on('pluginsLoaded', function start(registrar) {
     emitter.emit('started');
   };
 
+  var publicPath = config.publicPath.length === 0 ? '/' : config.publicPath;
+
   console.log('Ok, firing up.');
-  console.log('Base path is set to "%s".', config.publicPath);
+  console.log('Base path is set to "%s".', publicPath);
 
   emitter.emit('starting');
 
@@ -37,7 +40,7 @@ emitter.on('pluginsLoaded', function start(registrar) {
     var router = Router.create({
       location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
       routes: [
-        <Route name="root" path={config.publicPath} handler={require('./screens/Root')}>
+        <Route name="root" path={publicPath} handler={require('./screens/Root')}>
           <DefaultRoute
             name="home"
             handler={require('./screens/Home')}
@@ -70,6 +73,14 @@ emitter.on('pluginsLoaded', function start(registrar) {
       React.render(<Handler onStart={emitStarted} {...state} />, document.body);
     });
   });
+
+  if (!config.useHashLocation) {
+    $(document.body).on('click', 'a[data-internal="true"]', function(e) {
+      var $a = $(e.target);
+      e.preventDefault();
+      RouteActions.transitionTo($a.attr('href').replace(/^#/, ''));
+    });
+  }
 });
 
 var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);

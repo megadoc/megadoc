@@ -1,4 +1,5 @@
 var jqScrollIntoView = require('jqScrollIntoView');
+var React = require('react');
 
 var SectionJumperMixin = function(locateElement) {
   function jumpToEntity(component, props, state) {

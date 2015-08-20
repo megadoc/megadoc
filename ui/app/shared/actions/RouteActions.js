@@ -60,6 +60,12 @@ exports.goToNotFound = function() {
   });
 };
 
+exports.transitionTo = function(path, params, query) {
+  withDelegate(function(delegate) {
+    delegate.transitionTo(path, params, query);
+  });
+};
+
 exports.getCurrentRoute = function() {
   if (delegate) {
     return delegate.getPath();

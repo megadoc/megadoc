@@ -1,7 +1,6 @@
 var React = require('react');
 var { Table, Column, Mixin: SortableTableMixin } = require('components/SortableTable');
 var { sortBy } = require('lodash');
-var classSet = require('utils/classSet');
 
 var TeamLeaderboard = React.createClass({
   mixins: [ SortableTableMixin ],

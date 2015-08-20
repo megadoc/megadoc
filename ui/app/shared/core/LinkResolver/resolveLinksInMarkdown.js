@@ -1,5 +1,15 @@
-var TINY_PATH_MATCHER = /\[([^\]]+)\]\((tiny:\/\/[^\)]+)\)/g;
 var SHORTCUT_MATCHER = /\[([^\]]+)\]\(\)/g;
+var config = require('config');
+
+var renderTitle = function(title) {
+  return title;
+};
+
+if (!config.useHashLocation) {
+  renderTitle = function(title) {
+    return `tiny://${title}`;
+  };
+}
 
 function resolveLinksInMarkdown(docstring, resolveEntity, context) {
   return docstring
@@ -10,10 +20,10 @@ function resolveLinksInMarkdown(docstring, resolveEntity, context) {
     //     [XHRPaginator@prop]()
     //     [XHRPaginator.staticMethod]()
     .replace(SHORTCUT_MATCHER, function(original, objectPath) {
-      var href = resolveEntity(objectPath, context);
+      var link = resolveEntity(objectPath, context);
 
-      if (href) {
-        return `[${href.title || objectPath}](${href.href})`;
+      if (link) {
+        return `[${renderTitle(link.title || objectPath)}](${link.href})`;
       }
       else {
         console.warn('Unable to resolve link to object: ' + objectPath);

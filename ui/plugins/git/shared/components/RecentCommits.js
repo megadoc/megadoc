@@ -1,5 +1,5 @@
 var React = require('react');
-var MarkdownText = require('components/MarkdownText')
+var MarkdownText = require('components/MarkdownText');
 var { Link } = require('react-router');
 
 var RecentCommits = React.createClass({

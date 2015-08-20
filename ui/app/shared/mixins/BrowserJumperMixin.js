@@ -24,6 +24,6 @@ function BrowserJumperMixin(locateElement) {
       jumpToEntity(this, this.props, this.state);
     },
   };
-};
+}
 
 module.exports = BrowserJumperMixin;

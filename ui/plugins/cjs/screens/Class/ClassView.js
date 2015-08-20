@@ -6,7 +6,6 @@ var DocGroup = require('components/DocGroup');
 var PropertyTag = require('components/DocTags/PropertyTag');
 var { where, sortBy } = require("lodash");
 var ExampleTag = require('components/DocTags/ExampleTag');
-var Icon = require('components/Icon');
 var JumperMixin = require('./mixins/JumperMixin');
 
 function isClassMethod(doc) {
@@ -15,11 +14,11 @@ function isClassMethod(doc) {
     'function',
     'declaration'
   ].indexOf(doc.ctx.type) > -1;
-};
+}
 
 function isStaticMethod(doc) {
   return doc.isStatic;
-};
+}
 
 var ClassView = React.createClass({
   mixins: [ JumperMixin ],

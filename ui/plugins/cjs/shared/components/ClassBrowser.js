@@ -116,17 +116,17 @@ var ClassBrowser = React.createClass({
     return (
       <ul className="class-browser__methods">
         {sortBy(propertyDocs, 'id').map((doc) => {
-          return this.renderClassEntity(moduleDoc, doc, '@');
+          return this.renderClassEntity(moduleDoc, doc);
         })}
 
         {sortBy(methodDocs, 'id').map((doc) => {
-          return this.renderClassEntity(moduleDoc, doc, '#');
+          return this.renderClassEntity(moduleDoc, doc);
         })}
       </ul>
     );
   },
 
-  renderClassEntity(moduleDoc, doc, symbol) {
+  renderClassEntity(moduleDoc, doc) {
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link

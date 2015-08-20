@@ -10,8 +10,6 @@ var decorateTag = require('./DoxParser/decorateTag');
 var DISCARDED_TAG_TYPES = [ 'namespace' ];
 
 function isModule(doc) {
-  var ctx = doc.ctx || {};
-
   if (doc.isClass || doc.isConstructor) {
     return true;
   }
@@ -37,12 +35,12 @@ function isClass(doc) {
   }
 }
 
-function isConstructor(doc, classDoc) {
-  return doc.ctx.name === classDoc.ctx.name && (
-    doc.ctx.type === 'declaration' ||
-    doc.ctx.type === 'function'
-  );
-}
+// function isConstructor(doc, classDoc) {
+//   return doc.ctx.name === classDoc.ctx.name && (
+//     doc.ctx.type === 'declaration' ||
+//     doc.ctx.type === 'function'
+//   );
+// }
 
 function removeExtraneousClassIdFromOfDescription(doc) {
   var replacer = new RegExp('^' + doc.id + '\\s*\\n');

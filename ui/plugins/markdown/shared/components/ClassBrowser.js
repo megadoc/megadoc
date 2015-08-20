@@ -8,7 +8,6 @@ var Storage = require('core/Storage');
 var strHumanize = require('tinydoc/lib/utils/strHumanize');
 var GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 var ROOT_FOLDER_ID = strHumanize('root');
-var $ = require('jquery');
 var isItemHot = require('utils/isItemHot');
 var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
 

@@ -5,6 +5,7 @@ var LinkResolver = require('core/LinkResolver');
 var { getQueryItem } = require('actions/RouteActions');
 var scrollIntoView = require('utils/scrollIntoView');
 const Storage = require('core/Storage');
+const config = require('config');
 const { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
@@ -40,6 +41,31 @@ renderer.heading = function (text, level) {
     </h${level}>
   `);
 };
+
+// When using History-based location, we need to mark internal links generated
+// by the LinkResolver with "data-internal" so that we can intercept them and
+// cause a transition when they're clicked, instead of causing the browser
+// to refresh.
+if (!config.useHashLocation) {
+  const TINY_LINK_MARKER = Object.freeze(/^tiny:\/\//);
+
+  renderer.link = function(href, title, text) {
+    var a = document.createElement('a');
+
+    a.href = href;
+    a.title = title;
+
+    let textWithoutMarker = text.replace(TINY_LINK_MARKER, '');
+
+    if (text !== textWithoutMarker) {
+      a.dataset.internal = true;
+    }
+
+    a.innerText = textWithoutMarker;
+
+    return a.outerHTML;
+  };
+}
 
 var markedOptions = {
   renderer: renderer,
