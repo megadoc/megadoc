@@ -1,4 +1,6 @@
 .class-browser {
+  @indent: 1.25em;
+
   &__entry-link {
     display: block;
     position: relative;
@@ -6,7 +8,7 @@
   }
 
   &__methods, &__sections {
-    padding-left: 2.5em;
+    padding-left: @indent;
     list-style: square;
 
     &:empty {
@@ -15,11 +17,19 @@
   }
 
   &__category {
-    margin: 0 0 2em 0;
+    margin: 0 0 @indent 0;
   }
 
   &__sections-section--indented {
-    margin-left: 2em;
+    margin-left: @indent;
+    padding: 0;
+  }
+
+  &__sections-section,
+  &__entry-link {
+    white-space: nowrap;
+    max-width: @sidebar-width;
+    list-style: none;
   }
 
   &__section-header {
@@ -30,7 +40,7 @@
 
   &__subsection {
     list-style: none;
-    margin-left: -2.5em;
+    margin-left: -@indent;
   }
 }
 

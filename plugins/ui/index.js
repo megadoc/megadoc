@@ -13,10 +13,7 @@ function UIPlugin(emitter, cssCompiler, config, utils) {
     if (config.gitStats && config.readme) {
       var filePaths = [ utils.assetPath(config.readme) ];
 
-      console.log(filePaths);
-
       svc = parseGitStats(config.gitRepository, filePaths).then(function(stats) {
-        console.log('README::', stats)
         readmeGitStats = stats[0];
       });
     }

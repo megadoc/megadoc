@@ -70,7 +70,8 @@ if (!config.useHashLocation) {
 var markedOptions = {
   renderer: renderer,
   breaks: false,
-  sanitize: true
+  sanitize: true,
+  linkify: true
 };
 
 var MarkdownText = React.createClass({
