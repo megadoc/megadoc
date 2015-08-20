@@ -3,6 +3,8 @@ var fs = require('fs');
 var findCommonPrefix = require('../../lib/utils/findCommonPrefix');
 var strHumanize = require('../../lib/utils/strHumanize');
 var pluck = require('lodash').pluck;
+var uniq = require('lodash').uniq;
+var where = require('lodash').where;
 var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
@@ -64,26 +66,25 @@ function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, d
       );
     });
 
-    console.log(JSON.stringify(database.map(function(e) { return e.id; })));
+    console.debug(JSON.stringify(database.map(function(e) { return e.id; })));
+
+    var svc = Promise.resolve();
 
     if (markdownConfig.gitStats) {
       console.log("Parsing git stats...");
 
-      Promise.all(
-        database.map(function(entry) {
-          return parseGitStats(globalConfig.gitRepository, entry.filePath).then(function(stats) {
-            entry.git = stats;
+      var filePaths = uniq(pluck(database, 'filePath'));
+
+      svc = parseGitStats(globalConfig.gitRepository, filePaths).then(function(stats) {
+        stats.forEach(function(fileStats) {
+          where(database, { filePath: fileStats.filePath }).forEach(function(entry) {
+            entry.git = fileStats;
           });
-        })
-      ).then(function() {
-        done(null, database);
-      }, function(err) {
-        done(err);
+        });
       });
     }
-    else {
-      done(null, database);
-    }
+
+    svc.then(function() { done(null, database); }, done);
   });
 }
 

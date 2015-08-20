@@ -8,20 +8,20 @@ function UIPlugin(emitter, cssCompiler, config, utils) {
   var readmeGitStats;
 
   emitter.on('scan', function(compilation, done) {
+    var svc = Promise.resolve();
+
     if (config.gitStats && config.readme) {
-      parseGitStats(config.gitRepository, utils.assetPath(config.readme)).then(
-        function(stats) {
-          readmeGitStats = stats;
-          done();
-        },
-        function(err) {
-          done(err);
-        })
-      ;
+      var filePaths = [ utils.assetPath(config.readme) ];
+
+      console.log(filePaths);
+
+      svc = parseGitStats(config.gitRepository, filePaths).then(function(stats) {
+        console.log('README::', stats)
+        readmeGitStats = stats[0];
+      });
     }
-    else {
-      done();
-    }
+
+    svc.then(function() { done(); }, done);
   });
 
   emitter.on('write', function(compilation, done) {

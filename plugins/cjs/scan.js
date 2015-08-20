@@ -4,6 +4,8 @@ var arrayWrap = require('../../lib/utils/arrayWrap');
 var doxParser = require('./parsers/DoxParser');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var where = require('lodash').where;
+var pluck = require('lodash').pluck;
+var uniq = require('lodash').uniq;
 
 module.exports = function(config, gitRepository, utils, done) {
   var console = new Logger('cjs scanner');
@@ -30,27 +32,23 @@ module.exports = function(config, gitRepository, utils, done) {
     return database.concat(doxParser(filePath, config));
   }, []);
 
+  var svc = Promise.resolve();
+
   if (config.gitStats) {
     console.log("Parsing git stats...");
 
-    Promise.all(
-      matchedFiles.map(function(filePath) {
-        return parseGitStats(gitRepository, filePath).then(function(stats) {
-          where(database, { filePath: filePath }).forEach(function(entry) {
-            entry.git = stats;
-          });
+    // cuz some files might have been filtered, we don't want to use
+    // matchedFiles - stat only what we actually parsed
+    var filePaths = uniq(pluck(database, 'filePath'));
+
+    svc = parseGitStats(gitRepository, filePaths).then(function(stats) {
+      stats.forEach(function(fileStats) {
+        where(database, { filePath: fileStats.filePath }).forEach(function(entry) {
+          entry.git = fileStats;
         });
       })
-    ).then(
-      function() {
-        done(null, database);
-      },
-      function(err) {
-        done(err);
-      })
-    ;
+    });
   }
-  else {
-    done(null, database);
-  }
+
+  svc.then(function() { done(null, database); }, done);
 };

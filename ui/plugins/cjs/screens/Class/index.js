@@ -4,7 +4,9 @@ var ClassView = require('./ClassView');
 var FunctionView = require('./FunctionView');
 var HasTitle = require('mixins/HasTitle');
 var ModuleHeader = require('./components/ModuleHeader');
+var GitStats = require('components/GitStats');
 const LinkResolver = require('core/LinkResolver');
+const config = require('config');
 
 var Class = React.createClass({
   mixins: [
@@ -36,6 +38,8 @@ var Class = React.createClass({
     const doc = Database.getModule(moduleId);
     const moduleDocs = Database.getModuleEntities(moduleId);
 
+    console.log(doc);
+
     return (
       <div className="class-view doc-content">
         <ModuleHeader doc={doc} commonPrefix={Database.getCommonPrefix()} />
@@ -52,6 +56,10 @@ var Class = React.createClass({
             moduleDocs={moduleDocs}
             focusedEntity={this.props.query.entity}
           />
+        )}
+
+        {config.gitStats && (
+          <GitStats {...doc.git} />
         )}
       </div>
     );

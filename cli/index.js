@@ -6,7 +6,8 @@ var path = require('path');
 var deep = require('deep-get-set');
 var pkg = require('../package');
 var tinydoc = require('..');
-var console = require('../lib/Logger')('tinydoc-cli');
+var Logger = require('../lib/Logger');
+var console = new Logger('tinydoc-cli');
 var config = {};
 var tiny, configFilePath;
 
@@ -22,6 +23,8 @@ program
   .option('--no-write', 'Do not write any assets.')
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--dump-config')
+  .option('--verbose')
+  .option('--debug')
   .parse(process.argv)
 ;
 
@@ -41,6 +44,14 @@ if (!config.gitRepository) {
 
 if (program.dumpConfig) {
   console.log('Config:\n', config);
+}
+
+if (program.verbose) {
+  Logger.setVerbose(true);
+}
+
+if (program.debug) {
+  Logger.setDebug(true);
 }
 
 program.override.forEach(function(override) {

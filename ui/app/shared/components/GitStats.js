@@ -11,7 +11,7 @@ var GitStats = React.createClass({
   render: function() {
     return (
       <div className="git-stats">
-        {this.props.committers.length > 0 && (
+        {Object.keys(this.props.committers).length > 0 && (
           this.renderCommitters()
         )}
       </div>
@@ -19,7 +19,7 @@ var GitStats = React.createClass({
   },
 
   renderCommitters() {
-    var lastCommittedAt = new Date(this.props.lastCommittedAt);
+    var lastCommittedAt = new Date(this.props.lastCommittedAt * 1000);
 
     return (
       <div className="git-stats__committers">
@@ -27,13 +27,15 @@ var GitStats = React.createClass({
         the following team members:
 
         <ul className="git-stats__committers-list">
-          {this.props.committers.map(this.renderCommitter)}
+          {Object.keys(this.props.committers).map(this.renderCommitter)}
         </ul>
       </div>
     );
   },
 
-  renderCommitter(committer) {
+  renderCommitter(email) {
+    var committer = { email, name: this.props.committers[email] };
+
     return (
       <li key={committer.email} className="git-stats__committers-list-item">
         <Gravatar
