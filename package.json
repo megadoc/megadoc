@@ -5,7 +5,7 @@
   "main": "index.js",
   "bin": "./cli/index.js",
   "scripts": {
-    "prepublish": "./bin/build.sh",
+    "prepublish": "./bin/test.sh && ./bin/build.sh",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
     "test": "./bin/test.sh"
@@ -43,6 +43,7 @@
     "react": "^0.13.3",
     "style-loader": "0.8.3",
     "url-loader": "0.5.5",
+    "weakset": "^0.2.1",
     "webpack": "1.7.3"
   },
   "devDependencies": {
