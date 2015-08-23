@@ -1,12 +1,12 @@
 {
   "name": "tinydoc",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "description": "Fast and sleek documentation generator.",
   "main": "index.js",
   "bin": "./cli/index.js",
   "scripts": {
     "prepublish": "./bin/build.sh",
-    "server": "./bin/devserver.sh",
+    "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
     "test": "./node_modules/mocha/bin/mocha"
   },
