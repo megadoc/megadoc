@@ -9,6 +9,7 @@ var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
 var parseSections = require('./scan/parseSections');
+var Promise = require('bluebird');
 
 function scanCollection(collectionConfig, utils, markdownConfig, globalConfig, done) {
   var pattern = utils.assetPath(collectionConfig.source);

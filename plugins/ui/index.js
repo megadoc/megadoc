@@ -1,6 +1,7 @@
 var path = require('path');
 var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
+var Promise = require('bluebird');
 
 function UIPlugin(emitter, cssCompiler, config, utils) {
   cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'app', 'css', 'index.less'));

@@ -3,6 +3,7 @@ var extend = require('lodash').extend;
 var parseLatestActivity = require('./parseLatestActivity');
 var parseHistory = require('./parseHistory');
 var console = require('../../lib/Logger')('git');
+var Promise = require('bluebird');
 
 function GitPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var stats = {};

@@ -1,6 +1,6 @@
 {
   "name": "tinydoc",
-  "version": "2.0.17",
+  "version": "2.0.18",
   "description": "Fast and sleek documentation generator.",
   "main": "index.js",
   "bin": "./cli/index.js",
@@ -8,7 +8,7 @@
     "prepublish": "./bin/build.sh",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./bin/test.sh"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/amireh/tinydoc",
   "dependencies": {
+    "bluebird": "^2.9.34",
     "commander": "2.7.1",
     "css-loader": "0.9.1",
     "deep-get-set": "^0.1.1",
@@ -38,10 +39,10 @@
     "lodash": "3.6.0",
     "md5": "^2.0.0",
     "normalize.css": "^3.0.3",
+    "qjunk": "1.0.2",
     "react": "^0.13.3",
     "style-loader": "0.8.3",
     "url-loader": "0.5.5",
-    "qjunk": "1.0.2",
     "webpack": "1.7.3"
   },
   "devDependencies": {

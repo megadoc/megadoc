@@ -1,7 +1,7 @@
 var log = require('git-log-parser');
+var Promise = require('bluebird');
 
 module.exports = function(repoPath, config) {
-
   return new Promise(function(resolve, reject) {
     var ignore = config.ignore || [];
     delete config.ignore;

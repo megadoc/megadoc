@@ -2,6 +2,7 @@ var log = require('git-log-parser');
 var console = require('../../lib/Logger')('git');
 var fs = require('fs');
 var path = require('path');
+var Promise = require('bluebird');
 
 function parseMailMap(rawMailMap) {
   // Braden Anderson <banderson@instructure.com> Braden Anderson <braden@instructure.com>

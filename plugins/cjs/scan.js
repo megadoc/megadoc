@@ -3,6 +3,7 @@ var Logger = require('../../lib/Logger');
 var arrayWrap = require('../../lib/utils/arrayWrap');
 var doxParser = require('./parsers/DoxParser');
 var parseGitStats = require('../../lib/utils/parseGitStats');
+var Promise = require('bluebird');
 var where = require('lodash').where;
 var pluck = require('lodash').pluck;
 var uniq = require('lodash').uniq;
