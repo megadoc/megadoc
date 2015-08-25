@@ -35,7 +35,21 @@ module.exports = {
        * Array of patterns to exclude from the recent activity list.
        * These will be matched against the commit _subjects_.
        */
-      ignore: []
+      ignore: [],
+
+      /**
+       * @property {Function}
+       *
+       * A function that can be implemented to post-process a commit's message
+       * for display in the Recent Activity section.
+       *
+       * You can implement this to remove any extraneous information found in
+       * all commit messages, like a gerrit's "Change-Id" or "Reviewed-By"
+       * field messages.
+       */
+      transform: function(commitMsg) {
+        return commitMsg;
+      }
     }
   }
 }

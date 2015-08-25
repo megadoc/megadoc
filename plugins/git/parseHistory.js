@@ -26,6 +26,46 @@ function parseMailMap(rawMailMap) {
   }, []);
 }
 
+function analyzeTeams(people, teams) {
+  return teams.map(function(teamConfig) {
+    var team = {
+      name: teamConfig.name,
+      memberCount: teamConfig.members.length,
+      age: 0,
+      commitCount: 0,
+      reviewCount: 0,
+      firstCommitAt: 0,
+      lastCommitAt: 0
+    };
+
+    teamConfig.members.forEach(function(email) {
+      var person = people[email.trim()];
+
+      if (person) {
+        team.commitCount += person.commitCount;
+        team.reviewCount += person.reviewCount;
+
+        if (team.lastCommitAt === 0 || person.lastCommitAt > team.lastCommitAt) {
+          team.lastCommitAt = person.lastCommitAt;
+        }
+
+        if (team.firstCommitAt === 0 || person.firstCommitAt < team.firstCommitAt) {
+          team.firstCommitAt = person.firstCommitAt;
+        }
+      }
+      else {
+        console.warn("Unable to find an entry for team member <%s>", email);
+      }
+    });
+
+    team.age = team.lastCommitAt - team.firstCommitAt;
+
+    console.debug(JSON.stringify(team));
+
+    return team;
+  });
+}
+
 function analyze(commits, mailMap, teams) {
   var stats = {
     commitCount: commits.length,
@@ -58,7 +98,9 @@ function analyze(commits, mailMap, teams) {
         name: name,
         commitCount: 0,
         reviewCount: 0,
-        superStarIndex: 0
+        superStarIndex: 0,
+        lastCommitAt: 0,
+        firstCommitAt: 0
       };
     }
 
@@ -69,40 +111,31 @@ function analyze(commits, mailMap, teams) {
 
   commits.forEach(function(commit) {
     var committer = getPersonRecord(commit.author.email, commit.author.name);
+    var commitDate = (new Date(commit.author.date)).getTime();
+    var reviewField, reviewer;
 
     committer.commitCount += 1;
 
+    if (committer.lastCommitAt === 0 || committer.lastCommitAt <= commitDate) {
+      committer.lastCommitAt = commitDate;
+    }
+
+    if (committer.firstCommitAt === 0 || committer.firstCommitAt >= commitDate) {
+      committer.firstCommitAt = commitDate;
+    }
+
     // parse "Reviewed-by: AUTHOR <EMAIL>" code review field
-    var reviewField = commit.body.match(/Reviewed\-by: (.*) \<([^\>]+)\>/);
+    reviewField = commit.body.match(/Reviewed\-by: (.*) \<([^\>]+)\>/);
+
     if (reviewField) {
-      var reviewer = getPersonRecord(reviewField[2], reviewField[1]);
+      reviewer = getPersonRecord(reviewField[2], reviewField[1]);
 
       reviewer.reviewCount += 1;
     }
   });
 
   if (teams) {
-    stats.teams = teams.map(function(teamConfig) {
-      var team = {
-        name: teamConfig.name,
-        commitCount: 0,
-        reviewCount: 0
-      };
-
-      teamConfig.members.forEach(function(email) {
-        var person = stats.people[email.trim()];
-
-        if (person) {
-          team.commitCount += person.commitCount;
-          team.reviewCount += person.reviewCount;
-        }
-        else {
-          console.warn("Unable to find an entry for team member <%s>", email);
-        }
-      });
-
-      return team;
-    });
+    stats.teams = analyzeTeams(stats.people, teams);
   }
   else {
     var superStar;
@@ -110,7 +143,10 @@ function analyze(commits, mailMap, teams) {
     // flatten the people hash to array
     stats.people = Object.keys(stats.people).map(function(email) {
       var person = stats.people[email];
-      person.superStarIndex = (person.commitCount + person.reviewCount) / commits.length;
+
+      person.superStarIndex = (
+        (person.commitCount + person.reviewCount) / commits.length
+      );
 
       if (!superStar || superStar.superStarIndex < person.superStarIndex) {
         superStar = person;

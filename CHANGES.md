@@ -1,3 +1,15 @@
+**2.0.20**
+
+- `git` plugin now accepts a `transform()` function that can post-process a 
+  commit message's body for display in the Recent Activity section
+- fixed an issue that was preventing hot items from being marked as such
+- `git` team leaderboard now displays the member count as well as the age of 
+  the team (based on their first and last commit timestamps)
+
+**2.0.19**
+
+- node 0.10 compatibility
+
 **2.0.15**
 
 - git-stat parser now works in bulk-mode, should no longer cause issues of spawning too many child processes

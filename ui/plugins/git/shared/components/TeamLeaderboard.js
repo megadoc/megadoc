@@ -1,6 +1,7 @@
 var React = require('react');
 var { Table, Column, Mixin: SortableTableMixin } = require('components/SortableTable');
 var { sortBy } = require('lodash');
+const moment = require('moment');
 
 var TeamLeaderboard = React.createClass({
   mixins: [ SortableTableMixin ],
@@ -40,6 +41,8 @@ var TeamLeaderboard = React.createClass({
             <Column sortKey="name">Team</Column>
             <Column sortKey="commitCount">Commits</Column>
             <Column sortKey="reviewCount">Reviews</Column>
+            <Column sortKey="memberCount">Members</Column>
+            <Column sortKey="age">Age</Column>
           </tr>
         </thead>
 
@@ -56,6 +59,10 @@ var TeamLeaderboard = React.createClass({
         <td>{record.name}</td>
         <td>{record.commitCount}</td>
         <td>{record.reviewCount}</td>
+        <td>{record.memberCount}</td>
+        <td>
+          ~{Math.ceil(moment.duration(record.age, 'ms').asMonths())} months
+        </td>
       </tr>
     );
   }

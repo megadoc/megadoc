@@ -7,7 +7,7 @@ const hotness = config.hotness || {
 
 function isItemHot(commitTs) {
   const since = moment().subtract(hotness.count, hotness.interval);
-  const ts = moment(new Date(commitTs));
+  const ts = moment(new Date(commitTs * 1000));
 
   return !ts.isBefore(since);
 }

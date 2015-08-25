@@ -19,31 +19,36 @@ var Root = React.createClass({
           activeCommitId={this.props.query.commit}
         />
 
-        {config.superStars && [
-          <h2>Superstars</h2>,
-          <Superstars people={config.stats.history.people} />
-        ]}
+        {config.superStars && (
+          <div>
+            <h2>Superstars</h2>,
+            <Superstars people={config.stats.history.people} />
+          </div>
+        )}
 
+        {history.teams.length > 0 && (
+          <div>
+            <h2>Team Breakdown</h2>,
 
-        {history.teams.length > 0 && [
-          <h2>Team Breakdown</h2>,
+            <TeamLeaderboard teams={history.teams} />
+          </div>
+        )}
 
-          <TeamLeaderboard teams={history.teams} />
-        ]}
+        {history.teams.length === 0 && (
+          <div>
+            <h2>Ladder</h2>,
 
-        {history.teams.length === 0 && [
-          <h2>Ladder</h2>,
+            <p className="git-root__troll">
+              A rundown of exactly how much work every team member does.
+              {' '}
+              <img className="git-root__troll-head" src={Trollface} width="128" />
+            </p>,
 
-          <p className="git-root__troll">
-            A rundown of exactly how much work every team member does.
-            {' '}
-            <img className="git-root__troll-head" src={Trollface} width="128" />
-          </p>,
-
-          <Leaderboard
-            committers={config.stats.history.people}
-          />
-        ]}
+            <Leaderboard
+              committers={config.stats.history.people}
+            />
+          </div>
+        )}
 
       </div>
     );

@@ -57,8 +57,6 @@ var RecentCommits = React.createClass({
       body = 'No body provided.';
     }
 
-    console.log(commit);
-
     return (
       <div className="recent-commits__commit">
         <MarkdownText>{`**${commit.subject}**\n\n${body}`}</MarkdownText>

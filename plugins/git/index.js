@@ -55,7 +55,8 @@ GitPlugin.defaults = {
     useMailMap: true,
     recentCommits: {
       since: '3 days ago',
-      ignore: []
+      ignore: [],
+      transform: null
     }
   }
 };

@@ -38,8 +38,6 @@ var Class = React.createClass({
     const doc = Database.getModule(moduleId);
     const moduleDocs = Database.getModuleEntities(moduleId);
 
-    console.log(doc);
-
     return (
       <div className="class-view doc-content">
         <ModuleHeader doc={doc} commonPrefix={Database.getCommonPrefix()} />
