@@ -230,12 +230,25 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     delete doc.$descriptionFragments;
   });
 
-  validDocs
+  return validDocs;
+}
+
+exports.parseFile = function(filePath, config) {
+  return parse(
+    fs.readFileSync(filePath, 'utf-8'),
+    filePath,
+    config.useDirAsNamespace,
+    config.classifyDoc
+  );
+};
+
+exports.postProcess = function(docs) {
+  docs
     .filter(function(doc) {
       return isFunction(doc) || isModuleExports(doc);
     })
     .forEach(function(doc) {
-      var references = findReferences(doc, validDocs);
+      var references = findReferences(doc, docs);
       if (references.length === 0) {
         doc.isFunction = true;
 
@@ -254,20 +267,9 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     })
   ;
 
-  validDocs.forEach(function(doc) {
+  docs.forEach(function(doc) {
     delete doc.code;
     delete doc.codeStart;
     delete doc.line;
   });
-
-  return validDocs;
-}
-
-module.exports = function parseFile(filePath, config) {
-  return parse(
-    fs.readFileSync(filePath, 'utf-8'),
-    filePath,
-    config.useDirAsNamespace,
-    config.classifyDoc
-  );
 };

@@ -1,7 +1,7 @@
 var glob = require('glob');
 var Logger = require('../../lib/Logger');
 var arrayWrap = require('../../lib/utils/arrayWrap');
-var doxParser = require('./parsers/DoxParser');
+var DoxParser = require('./parsers/DoxParser');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
 var where = require('lodash').where;
@@ -30,8 +30,10 @@ module.exports = function(config, gitRepository, utils, done) {
   );
 
   var database = matchedFiles.reduce(function(database, filePath) {
-    return database.concat(doxParser(filePath, config));
+    return database.concat(DoxParser.parseFile(filePath, config));
   }, []);
+
+  DoxParser.postProcess(database);
 
   var svc = Promise.resolve();
 
