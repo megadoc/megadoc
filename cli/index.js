@@ -11,9 +11,10 @@ var console = new Logger('tinydoc-cli');
 var config = {};
 var tiny, configFilePath;
 
-function collect(val, override) {
-  override.push(val);
-  return override;
+function collect(val, set) {
+  console.log('collecting:', val, 'into', set);
+  set.push(val);
+  return set;
 }
 
 program
@@ -22,9 +23,10 @@ program
   .option('--no-scan', 'Skip the scanning phase.')
   .option('--no-write', 'Do not write any assets.')
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
+  .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
-  .option('--verbose')
-  .option('--debug')
+  .option('-v, --verbose')
+  .option('-d, --debug')
   .parse(process.argv)
 ;
 
@@ -55,7 +57,7 @@ if (program.debug) {
 }
 
 program.override.forEach(function(override) {
-  var fragments = override.split('=');
+  var fragments = override.split(/\s*=\s*/);
   var key = fragments[0];
   var value = JSON.parse(fragments[1]);
 
@@ -63,6 +65,19 @@ program.override.forEach(function(override) {
 
   console.log('Overridden "%s" with "%s"', key, value);
 });
+
+if (program.plugin.length > 0) {
+  console.log('Plugins:', JSON.stringify(program.plugin));
+
+  var activePlugins = config.plugins.filter(function(plugin) {
+    return program.plugin.indexOf(plugin.name) > -1;
+  });
+
+  if (activePlugins.length !== config.plugins.length) {
+    console.log('%d plugins were excluded.', config.plugins.length - activePlugins.length);
+    config.plugins = activePlugins;
+  }
+}
 
 tiny = tinydoc(config, {
   scan: program.scan !== false,

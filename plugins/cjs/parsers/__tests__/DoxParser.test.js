@@ -2,7 +2,9 @@ var DoxParser = require('../DoxParser');
 var assert = require('assert');
 
 function parse(filePath, options) {
-  return DoxParser(TestUtils.getFixturePath(filePath), options || {});
+  var docs = DoxParser.parseFile(TestUtils.getFixturePath(filePath), options || {});
+  DoxParser.postProcess(docs);
+  return docs;
 }
 
 describe('DoxParser', function() {
@@ -91,6 +93,16 @@ describe('DoxParser', function() {
       assert.equal(docs[0].ctx.type, 'function');
       assert.equal(docs[0].id, 'module.exports');
       assert.ok(docs[0].isFunction);
+    });
+  });
+
+  describe('[gh#1] module definition across multiple files', function() {
+    it('works', function() {
+      var mainDocs = parse('cjs/module_a_part1.js');
+      var auxDocs = parse('cjs/module_a_part2.js');
+
+      assert.equal(auxDocs.length, 1);
+      assert.equal(auxDocs[0].ctx.receiver, mainDocs[0].id);
     });
   });
 });

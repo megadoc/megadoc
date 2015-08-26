@@ -1,3 +1,8 @@
+**2.0.21**
+
+- `cjs` plugin now supports the `@memberOf` tag for documenting a module defined in a different file
+- the CLI now accepts a `--plugin` parameter for filtering active plugins at run-time
+
 **2.0.20**
 
 - `git` plugin now accepts a `transform()` function that can post-process a 

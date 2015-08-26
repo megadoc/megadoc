@@ -35,6 +35,10 @@ function decorateTag(doc, tag) {
     case 'protected':
       doc.isProtected = true;
     break;
+
+    case 'memberOf':
+      doc.ctx.receiver = tag.parent;
+    break;
   }
 
 
