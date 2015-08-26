@@ -71,7 +71,7 @@ var markedOptions = {
   renderer: renderer,
   breaks: false,
   sanitize: true,
-  linkify: true
+  linkify: false
 };
 
 var MarkdownText = React.createClass({

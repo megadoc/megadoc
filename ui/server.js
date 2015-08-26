@@ -17,6 +17,9 @@ config.entry = [
 ];
 
 config.plugins.push(new webpack.HotModuleReplacementPlugin());
+config.plugins.push(new webpack.DefinePlugin(({
+  'process.env.VERBOSE': JSON.stringify(!!process.env.VERBOSE)
+})));
 
 if (process.env.CONFIG_FILE) {
   config.entry.unshift(path.resolve(process.env.CONFIG_FILE));

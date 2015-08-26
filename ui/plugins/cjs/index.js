@@ -35,7 +35,9 @@ tinydocReact.use(function CJSPlugin(api) {
     const links = Database.getLinks();
 
     LinkResolver.registerResolver('JS', function resolveLink(id, context) {
-      console.debug('cjs: looking for an entity called', id);
+      if (process.env.VERBOSE) {
+        console.debug('cjs: looking for an entity called', id);
+      }
 
       if (links[id]) {
         return links[id];
