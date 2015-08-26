@@ -2,8 +2,7 @@ const React = require('react');
 const findChildByType = require('utils/findChildByType');
 const EventEmitter = require('core/EventEmitter');
 const Storage = require('core/Storage');
-const $ = require('jquery');
-require('jQueryUI');
+const $ = require('jQueryUI');
 const emitter = new EventEmitter([ 'change', 'resize' ]);
 const {
   CFG_SIDEBAR_WIDTH,

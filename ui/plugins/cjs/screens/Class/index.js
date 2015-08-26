@@ -26,13 +26,6 @@ var Class = React.createClass({
     }
   },
 
-  componentWillMount: function() {
-    LinkResolver.setContext({
-      namespace: 'JS',
-      moduleId: this.props.params.moduleId
-    });
-  },
-
   render() {
     const { moduleId } = this.props.params;
     const doc = Database.getModule(moduleId);

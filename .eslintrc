@@ -89,8 +89,9 @@
     "no-extra-bind": 2,
 
   },
+
   "globals": {
     "tinydocReact": true,
-    "TestUtils"
+    "TestUtils": false,
   }
 }

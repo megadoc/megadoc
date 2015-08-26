@@ -91,7 +91,7 @@ describe('DoxParser', function() {
       assert.equal(docs.length, 1);
 
       assert.equal(docs[0].ctx.type, 'function');
-      assert.equal(docs[0].id, 'module.exports');
+      assert.equal(docs[0].id, 'module#exports');
       assert.ok(docs[0].isFunction);
     });
   });

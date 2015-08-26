@@ -22,6 +22,7 @@ program
   .option('--config [PATH]', 'path to tinydoc config file (defaults to tinydoc.conf.js)')
   .option('--no-scan', 'Skip the scanning phase.')
   .option('--no-write', 'Do not write any assets.')
+  .option('--no-index', 'Do not index documentation entities (for linking.)')
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
@@ -81,7 +82,8 @@ if (program.plugin.length > 0) {
 
 tiny = tinydoc(config, {
   scan: program.scan !== false,
-  write: program.write !== false
+  write: program.write !== false,
+  index: program.index !== false
 });
 
 tiny.run(function(err) {

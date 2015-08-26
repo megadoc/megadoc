@@ -1,13 +1,14 @@
 var React = require('react');
-var Router = require('react-router');
+var ReactRouter = require('react-router');
+var Router = require('core/Router');
 var RouteActions = require('actions/RouteActions');
 var config = require('config');
 var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
-var OutletStore = require('stores/OutletStore');
+var OutletManager = require('core/OutletManager');
 var $ = require('jquery');
 var Storage = require('core/Storage');
-var { Route, DefaultRoute, NotFoundRoute } = Router;
+var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
@@ -37,8 +38,12 @@ emitter.on('pluginsLoaded', function start(registrar) {
   emitter.emit('starting');
 
   $(function() {
-    var router = Router.create({
-      location: config.useHashLocation ? Router.HashLocation : Router.HistoryLocation,
+    var router = ReactRouter.create({
+      location: config.useHashLocation ?
+        ReactRouter.HashLocation :
+        ReactRouter.HistoryLocation
+      ,
+
       routes: [
         <Route name="root" path={publicPath} handler={require('./screens/Root')}>
           <DefaultRoute
@@ -67,7 +72,9 @@ emitter.on('pluginsLoaded', function start(registrar) {
       ]
     });
 
-    OutletStore.setOutletElements(registrar.getOutletElements());
+    Router.setInstance(router);
+
+    OutletManager.setElements(registrar.getOutletElements());
 
     router.run(function(Handler, state) {
       React.render(<Handler onStart={emitStarted} {...state} />, document.body);

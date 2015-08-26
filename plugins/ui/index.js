@@ -3,7 +3,7 @@ var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
 
-function UIPlugin(emitter, cssCompiler, config, utils) {
+function UIPlugin(emitter, cssCompiler, config, utils, registry) {
   cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'app', 'css', 'index.less'));
 
   var readmeGitStats;
@@ -23,7 +23,7 @@ function UIPlugin(emitter, cssCompiler, config, utils) {
   });
 
   emitter.on('write', function(compilation, done) {
-    write(config, utils, readmeGitStats, done);
+    write(config, registry, utils, readmeGitStats, done);
   });
 }
 
@@ -74,6 +74,6 @@ UIPlugin.defaults = {
   launchExternalLinksInNewTabs: true
 };
 
-UIPlugin.$inject = [ 'emitter', 'cssCompiler', 'config', 'utils' ];
+UIPlugin.$inject = [ 'emitter', 'cssCompiler', 'config', 'utils', 'registry' ];
 
 module.exports = UIPlugin;

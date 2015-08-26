@@ -1,5 +1,5 @@
 var React = require("react");
-var OutletStore = require('stores/OutletStore');
+var OutletManager = require('core/OutletManager');
 var { Link } = require("react-router");
 var config = require('config');
 var Icon = require('components/Icon');
@@ -36,7 +36,7 @@ var Banner = React.createClass({
           </h1>
 
           <nav className="banner__navigation">
-            {OutletStore.getElements('navigation').map(this.renderElement)}
+            {OutletManager.getElements('navigation').map(this.renderElement)}
 
             <BannerItem key="settings">
               <Link to="settings">

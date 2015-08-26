@@ -226,10 +226,12 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
         }
       }
 
+      doc.symbol = generateSymbol(doc, currentModule);
+
       if (doc.ctx.name) {
         // try to infer an ID
         if (doc.ctx.receiver) {
-          doc.id = doc.ctx.receiver + '.' + doc.ctx.name;
+          doc.id = [ doc.ctx.receiver, doc.ctx.name ].join(doc.symbol);
         }
         else {
           doc.id = doc.ctx.name;
@@ -238,7 +240,6 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     }
 
     doc.name = doc.ctx.name;
-    doc.symbol = generateSymbol(doc, currentModule);
 
     // if (doc.symbol.length) {
     //   doc.id = doc.id.replace('.', doc.symbol);

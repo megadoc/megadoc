@@ -24,15 +24,7 @@ var ExampleTag = React.createClass({
     return (
       <div>
         <p>
-
-          {title && [
-            <strong>Example</strong>,
-
-            <span>
-              {': '}
-              {title}
-            </span>
-          ]}
+          {title && (<span><strong>Example:</strong> {title}</span>)}
         </p>
 
         <MarkdownText className="example-tag__code">

@@ -13,9 +13,11 @@ function generateHTMLIndex(publicPath, scripts, title) {
   });
 }
 
-module.exports = function(config, utils, readmeGitStats, done) {
+module.exports = function(config, registry, utils, readmeGitStats, done) {
   var outputDir = utils.getAssetPath(config.outputDir);
-  var runtimeConfig = extend({}, config);
+  var runtimeConfig = extend({}, config, {
+    registry: registry.toJSON()
+  });
 
   var scripts = [
     'config.js',

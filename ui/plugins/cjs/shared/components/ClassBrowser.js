@@ -17,7 +17,7 @@ var ClassBrowser = React.createClass({
       if (props.activeModuleId) {
         return this.refs[props.activeModuleId];
       }
-    })
+    }, 50)
   ],
 
   render() {

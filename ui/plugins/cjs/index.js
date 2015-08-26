@@ -1,8 +1,8 @@
-const Database = require('core/Database');
 const LinkResolver = require('core/LinkResolver');
 const config = require('config');
 const Storage = require('core/Storage');
 const K = require('constants');
+const resolveLink = require('utils/resolveLink');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
@@ -32,15 +32,6 @@ tinydocReact.use(function CJSPlugin(api) {
   api.registerOutletElement('navigation', require('./outlets/Navigation'));
 
   api.on('started', function() {
-    const links = Database.getLinks();
-
-    LinkResolver.registerResolver('JS', function resolveLink(id, context) {
-      if (links[id]) {
-        return links[id];
-      }
-      else if (context.moduleId) {
-        return links[context.moduleId + id];
-      }
-    });
+    LinkResolver.use(resolveLink);
   });
 });

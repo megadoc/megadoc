@@ -8,3 +8,10 @@ exports.getFixturePath = function(fileName) {
 exports.loadFixture = function(fileName) {
   return fs.readFileSync(exports.getFixturePath(fileName), 'utf-8');
 };
+
+exports.getInlineString = function(strGenerator) {
+  return strGenerator.toString()
+    .replace(/^function\s*\(\)\s*\{|\}$/g, '')
+    .replace(/^(\s+)\/\//mg, '$1')
+  ;
+};

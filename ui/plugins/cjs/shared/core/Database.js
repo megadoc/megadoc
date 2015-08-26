@@ -59,40 +59,4 @@ module.exports = {
     }, [classDoc]);
   },
 
-  getLinks() {
-    return this.getModules().reduce((links, doc) => {
-      links[doc.id] = links[doc.ctx.name] = {
-        href: makeHref('js.module', { moduleId: doc.id }),
-        title: doc.ctx.name
-      };
-
-      var moduleDocs = this.getModuleEntities(doc.id);
-
-      moduleDocs.forEach(function(refDoc) {
-        if (refDoc === doc) {
-          return;
-        }
-
-        var linkablePaths = [];
-        var entry = {
-          href: makeHref('js.module', {
-            moduleId: doc.id,
-          }, {
-            entity: refDoc.ctx.name
-          }),
-
-          title: /*doc.ctx.name + */refDoc.symbol + refDoc.ctx.name
-        };
-
-        linkablePaths.push([ doc.id, refDoc.name ].join(refDoc.symbol));
-        linkablePaths.push([ doc.name, refDoc.name ].join(refDoc.symbol));
-
-        linkablePaths.forEach(function(path) {
-          links[path] = entry;
-        });
-      });
-
-      return links;
-    }, {});
-  }
 };
