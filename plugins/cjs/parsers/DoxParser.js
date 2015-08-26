@@ -64,6 +64,12 @@ function isMethodStatic(doc, currentModule) {
   else if (doc.ctx.string === currentModule.ctx.name + '.' + doc.ctx.name + '()') {
     return true;
   }
+  // dox considers any function attached to any scope a "method", while we want
+  // to make the distinction between "methods" for Objects with custom
+  // prototypes, and "module functions" that could be used statically.
+  else if (doc.ctx.type === 'method' && !!doc.ctx.constructor) {
+    return true;
+  }
 }
 
 function isFunction(doc) {

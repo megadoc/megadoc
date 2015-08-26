@@ -73,17 +73,23 @@ module.exports = {
           return;
         }
 
-        var linkablePath = [ doc.id, refDoc.name ].join(refDoc.symbol);
-
-        links[linkablePath] = {
+        var linkablePaths = [];
+        var entry = {
           href: makeHref('js.module', {
             moduleId: doc.id,
           }, {
             entity: refDoc.ctx.name
           }),
 
-          title: refDoc.ctx.name
+          title: doc.ctx.name + refDoc.symbol + refDoc.ctx.name
         };
+
+        linkablePaths.push([ doc.id, refDoc.name ].join(refDoc.symbol));
+        linkablePaths.push([ doc.name, refDoc.name ].join(refDoc.symbol));
+
+        linkablePaths.forEach(function(path) {
+          links[path] = entry;
+        });
       });
 
       return links;

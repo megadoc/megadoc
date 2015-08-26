@@ -105,4 +105,22 @@ describe('DoxParser', function() {
       assert.equal(auxDocs[0].ctx.receiver, mainDocs[0].id);
     });
   });
+
+  describe('[gh#3] module static methods should use the "." symbol', function() {
+    it('works', function() {
+      docs = parse('cjs/module_with_static_methods.js');
+
+      assert.equal(docs.length, 2);
+      assert.equal(docs[1].symbol, '.');
+      assert.equal(docs[1].id, 'Duck.quack');
+    });
+
+    it('works with named exports', function() {
+      docs = parse('cjs/exports_with_static_methods.js');
+
+      assert.equal(docs.length, 2);
+      assert.equal(docs[1].symbol, '.');
+      assert.equal(docs[1].id, 'Transitioner.canTransition');
+    });
+  });
 });

@@ -8,6 +8,21 @@ var ThrowsTag = require('./DocTags/ThrowsTag');
 var ReturnTag = require('./DocTags/ReturnTag');
 var { where } = require('lodash');
 
+const HANDLED_TAGS = [
+  'constructor',
+  'example',
+  'param',
+  'return',
+  'throws',
+  'see',
+  'module',
+  'protected',
+  'private',
+  'async',
+  'memberOf',
+  'static'
+];
+
 var DocTags = React.createClass({
   displayName: 'DocTags',
 
@@ -27,17 +42,7 @@ var DocTags = React.createClass({
   render() {
     var paramTags = where(this.props.tags, { type: 'param' });
     var unhandledTags = this.props.tags.filter(function(tag) {
-      return [
-        'constructor',
-        'example',
-        'param',
-        'return',
-        'throws',
-        'see',
-        'module',
-        'protected',
-        'private'
-      ].indexOf(tag.type) === -1;
+      return HANDLED_TAGS.indexOf(tag.type) === -1;
     });
 
     return (

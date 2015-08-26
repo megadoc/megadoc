@@ -1,3 +1,7 @@
+**2.0.22**
+
+- `cjs` plugin: module "static" methods (like `exports.something = function()`) are now linked to using the `.` symbol. For example: `[exports.something]()` instead of `[exports#something]()`
+
 **2.0.21**
 
 - `cjs` plugin now supports the `@memberOf` tag for documenting a module defined in a different file

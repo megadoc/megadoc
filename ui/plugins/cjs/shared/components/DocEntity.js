@@ -63,15 +63,19 @@ var DocEntity = React.createClass({
               )}
 
               {doc.isConstructor && (
-                <span> (constructor)</span>
+                <span className="doc-entity__modifier">CONSTRUCTOR</span>
               )}
 
-              {' '}
               {doc.isProtected && (
-                <span className="doc-entity__protected">PROTECTED</span>
+                <span className="doc-entity__modifier doc-entity__protected">PROTECTED</span>
               )}
+
               {doc.isPrivate && (
-                <span className="doc-entity__private">PRIVATE</span>
+                <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
+              )}
+
+              {doc.tags.some((t) => t.type === 'async') && (
+                <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
             </span>
           </h4>
