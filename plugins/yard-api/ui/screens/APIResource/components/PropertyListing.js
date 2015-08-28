@@ -11,6 +11,16 @@ function htmlifyTagType(tag) {
 }
 
 var Properties = React.createClass({
+  propTypes: {
+    tags: React.PropTypes.arrayOf(React.PropTypes.shape({
+      name: React.PropTypes.string,
+      types: React.PropTypes.arrayOf(React.PropTypes.string),
+      accepted_values: React.PropTypes.arrayOf(React.PropTypes.string),
+      is_required: React.PropTypes.bool,
+      text: React.PropTypes.string,
+    })),
+  },
+
   getDefaultProps: function() {
     return {
       tags: []

@@ -6,6 +6,12 @@ var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
 var JSRoot = React.createClass({
+  propTypes: {
+    params: React.PropTypes.shape({
+      moduleId: React.PropTypes.string
+    })
+  },
+
   getInitialState: function() {
     return {
       sidebarWidth: '240px'

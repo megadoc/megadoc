@@ -1,6 +1,0 @@
-/**
- * @constructor
- * Barred?
- */
-function Foo() {
-}

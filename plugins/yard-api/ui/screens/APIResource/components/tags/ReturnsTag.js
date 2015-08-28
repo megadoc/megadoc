@@ -2,7 +2,9 @@ var React = require("react");
 var Docstring = require('components/Docstring');
 
 var ReturnsTag = React.createClass({
-  displayName: "ReturnsTag",
+  propTypes: {
+    text: React.PropTypes.string,
+  },
 
   render() {
     return (

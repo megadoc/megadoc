@@ -11,6 +11,11 @@ function getStyle(node, styleProp) {
 }
 
 var EllipsifedText = React.createClass({
+  propTypes: {
+    className: React.PropTypes.string,
+    children: React.PropTypes.string
+  },
+
   componentDidMount: function() {
     this.adjustSize();
   },

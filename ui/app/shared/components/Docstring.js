@@ -2,7 +2,12 @@ var React = require("react");
 var MarkdownText = require('components/MarkdownText');
 
 var Docstring = React.createClass({
-  displayName: "Docstring",
+  propTypes: {
+    children: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.arrayOf(React.PropTypes.string)
+    ])
+  },
 
   render() {
     var text = this.props.children;

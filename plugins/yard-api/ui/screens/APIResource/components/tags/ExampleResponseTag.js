@@ -2,7 +2,9 @@ var React = require("react");
 var MarkdownText = require('components/MarkdownText');
 
 var ExampleResponseTag = React.createClass({
-  displayName: "ExampleResponseTag",
+  propTypes: {
+    text: React.PropTypes.string
+  },
 
   render() {
     return (

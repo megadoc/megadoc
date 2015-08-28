@@ -1,11 +1,10 @@
 var React = require('react');
-var TagGroup = require('./DocTags/TagGroup');
-var ExampleTag = require('./DocTags/ExampleTag');
-var ParamTag = require('./DocTags/ParamTag');
-var PropertyTag = require('./DocTags/PropertyTag');
-var SeeTag = require('./DocTags/SeeTag');
-var ThrowsTag = require('./DocTags/ThrowsTag');
-var ReturnTag = require('./DocTags/ReturnTag');
+var TagGroup = require('./Tags/TagGroup');
+var ExampleTag = require('./Tags/ExampleTag');
+var ParamTag = require('./Tags/ParamTag');
+var SeeTag = require('./Tags/SeeTag');
+var ThrowsTag = require('./Tags/ThrowsTag');
+var ReturnTag = require('./Tags/ReturnTag');
 var { where } = require('lodash');
 
 const HANDLED_TAGS = [
@@ -22,7 +21,9 @@ const HANDLED_TAGS = [
   'memberOf',
   'static',
   'preserveOrder',
-  'method'
+  'method',
+  'namespace',
+  'type'
 ];
 
 var DocTags = React.createClass({
@@ -30,7 +31,8 @@ var DocTags = React.createClass({
 
   propTypes: {
     tags: React.PropTypes.array,
-    withExamples: React.PropTypes.bool
+    withExamples: React.PropTypes.bool,
+    withAdditionalResources: React.PropTypes.bool,
   },
 
   getDefaultProps: function() {
@@ -73,53 +75,19 @@ var DocTags = React.createClass({
           </TagGroup>
         )}
 
-        {unhandledTags.length > 0 && unhandledTags.map(this.renderTag)}
+        {unhandledTags.length > 0 && (
+          unhandledTags.map(this.renderTagString)
+        )}
       </div>
     );
   },
 
-  renderTag(tag) {
-    var key = tag.string.split(' ').slice(0, 4).join('_');
-    var content;
-
-    switch(tag.type) {
-      case 'param':
-        content = (
-          <ParamTag key={key} {...tag} />
-        );
-        break;
-
-      case 'return':
-        content = (
-          <ReturnTag key={key} {...tag} />
-        );
-        break;
-
-      case 'example':
-        content = <ExampleTag key={key} {...tag} />;
-        break;
-
-      case 'see':
-        content = <SeeTag key={key} {...tag} />;
-        break;
-
-      case 'property':
-        content = <PropertyTag key={key} {...tag} />;
-        break;
-
-      case 'class':
-        content = null;
-        break;
-
-      default:
-        content = (
-          <div className="type-attention" key={key}>
-            <pre>{JSON.stringify(tag, null, 2)}</pre>
-          </div>
-        );
-    }
-
-    return content;
+  renderTagString(tag) {
+    return (
+      <div key={tag.string} className="type-attention">
+        <pre>{JSON.stringify(tag, null, 2)}</pre>
+      </div>
+    );
   }
 });
 

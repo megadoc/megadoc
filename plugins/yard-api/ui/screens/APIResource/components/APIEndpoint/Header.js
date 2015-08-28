@@ -7,6 +7,12 @@ var Header = React.createClass({
   propTypes: {
     showEndpointPath: React.PropTypes.bool,
     isBeta: React.PropTypes.bool,
+    tag: React.PropTypes.shape({
+      text: React.PropTypes.string,
+    }),
+    path: React.PropTypes.string,
+    resourceId: React.PropTypes.string,
+    scopedId: React.PropTypes.string,
   },
 
   getDefaultProps: function() {

@@ -44,7 +44,6 @@
     // Maybe use that chai-lint package someday? so many tests to modify...
     "no-unused-expressions": 0,
 
-    "no-extra-semi": 0,
     "no-console": 0,
     "space-return-throw-case": 0,
 

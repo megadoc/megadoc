@@ -1,7 +1,10 @@
 plugins/**/fixtures/*.js
+plugins/**/*.fixture.js
+
 node_modules
 ui/dist
 ui/app/vendor/**/*
 ui/karma.conf.js
 test/fixtures
 ui/app/css/fonts/**/*/demo.js
+doc/compiled

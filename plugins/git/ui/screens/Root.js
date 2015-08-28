@@ -5,7 +5,13 @@ var TeamLeaderboard = require('components/TeamLeaderboard');
 var Superstars = require('components/Superstars');
 var config = require('config');
 var Trollface = require("../css/images/Trollface.svg");
+
 var Root = React.createClass({
+  propTypes: {
+    query: React.PropTypes.shape({
+      commit: React.PropTypes.string
+    })
+  },
 
   render: function() {
     const { history } = config.stats;

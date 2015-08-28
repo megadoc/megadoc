@@ -30,6 +30,12 @@ function highlightDynamicFragments(route) {
 }
 
 var APIEndpoint = React.createClass({
+  propTypes: {
+    tags: React.PropTypes.array,
+    resourceId: React.PropTypes.string,
+    scoped_id: React.PropTypes.string,
+  },
+
   render() {
     var endpoint = this.props;
     var apiTag = findWhere(this.props.tags, { tag_name: 'API' });

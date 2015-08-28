@@ -2,7 +2,11 @@ var path = require('path');
 var scan = require('./scan');
 var write = require('./write');
 var indexEntities = require('./indexEntities');
+var generateStats = require('./generateStats');
 
+/**
+ * @module CJSPlugin
+ */
 function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
@@ -33,10 +37,20 @@ function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
 
   emitter.on('index', function(compilation, registry, done) {
     indexEntities(database).forEach(function(index) {
-      registry.add(index.path, index.context);
+      registry.add(index.path, index.index);
     });
 
     done();
+  });
+
+  emitter.on('generateStats', function(compilation, stats, done) {
+    if (compilation.scanned) {
+      stats.js = generateStats(database);
+      done();
+    }
+    else {
+      done();
+    }
   });
 }
 
@@ -49,10 +63,18 @@ CJSPlugin.$inject = [
 ];
 
 CJSPlugin.defaults = {
+  /**
+   * @module CJSPlugin.Config
+   */
   cjs: {
-    source: '**/*.js',
+    /**
+     * @property {String|String[]} source
+     *
+     * The source files to parse.
+     */
+    source: [ '**/*.js' ],
     exclude: null,
-    gitStats: true,
+    gitStats: false,
     useDirAsNamespace: true,
     classifyDoc: null,
   }

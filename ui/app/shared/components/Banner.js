@@ -5,6 +5,11 @@ var config = require('config');
 var Icon = require('components/Icon');
 
 var BannerItem = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+    onClick: React.PropTypes.func,
+  },
+
   render() {
     return (
       <div
@@ -17,6 +22,10 @@ var BannerItem = React.createClass({
 });
 
 var Banner = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+  },
+
   render() {
     return (
       <div className="banner-wrapper">

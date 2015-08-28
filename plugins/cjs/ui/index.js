@@ -24,7 +24,7 @@ tinydoc.use(function CJSPlugin(api) {
     {
       name: 'js.module',
       path: 'modules/:moduleId',
-      handler: require('./screens/Class'),
+      handler: require('./screens/Module'),
       parent: 'js'
     }
   ]);

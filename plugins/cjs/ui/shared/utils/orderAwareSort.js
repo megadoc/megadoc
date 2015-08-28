@@ -6,7 +6,7 @@ module.exports = function(doc, array, key) {
   });
 
   if (preserveOrder) {
-    return array;
+    return sortBy(array, 'line');
   }
   else {
     return sortBy(array, key);

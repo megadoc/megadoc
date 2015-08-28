@@ -1,32 +1,31 @@
 var resolveLink = require('../resolveLink');
 var indexEntities = require('../indexEntities');
 var assert = require('assert');
+var TestUtils = require('../Parser/TestUtils');
 
 describe('cjs::resolveLink', function() {
-  var database = [
-    {
-      isModule: true,
-      id: 'Core.Cache',
-      name: 'Cache',
-      ctx: {
-        type: 'function'
-      }
-    },
-    {
-      id: 'Core.Cache#add',
-      symbol: '#',
-      name: 'add',
-      ctx: {
-        receiver: 'Core.Cache',
-        type: 'method'
-      },
-    }
-  ];
+  var database, registry;
 
-  var registry = indexEntities(database).reduce(function(hsh, index) {
-    hsh[index.path] = index.context;
-    return hsh;
-  }, {});
+  before(function() {
+    database = TestUtils.parseInline(function() {
+      // /**
+      //  * @namespace Core
+      //  * @module
+      //  */
+      // function Cache() {}
+      //
+      // /**
+      //  * Add an item to the cache.
+      //  */
+      // Cache.prototype.add = function() {
+      // };
+    });
+
+    registry = indexEntities(database).reduce(function(hsh, index) {
+      hsh[index.path] = index.index;
+      return hsh;
+    }, {});
+  });
 
   it('resolves ${NS}.${MODULE}', function() {
     var link = resolveLink('Core.Cache', database, registry);

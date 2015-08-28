@@ -54,3 +54,134 @@ module.exports = {
   }
 };
 ```
+
+## CommonJS support
+
+Variant 1:
+
+```javascript
+var SomeModule = {};
+module.exports = SomeModule;
+```
+
+Variant 2:
+
+```javascript
+var SomeModule = exports;
+```
+
+Variant 3:
+
+```javascript
+module.exports = {
+    someProperty: 'a',
+    someFunction: function() {
+    }
+};
+```
+
+Variant 4:
+
+```javascript
+module.exports = function someNamedFunction() {
+};
+```
+
+## Recognized Module Types
+
+### Object Modules
+
+```javascript
+var SomeModule = {};
+
+SomeModule.someStaticFunction = function() {
+};
+
+SomeModule.someStaticProperty = 'a';
+```
+
+### Function Modules
+
+Variant 1:
+
+```javascript
+var SomeModule = function() {
+};
+
+SomeModule.someStaticFunction = function() {
+};
+
+SomeModule.someStaticProperty = 'a';
+```
+
+Variant 2:
+
+```javascript
+function SomeModule() {
+}
+
+SomeModule.someStaticFunction = function() {
+};
+
+SomeModule.someStaticProperty = 'a';
+```
+
+### Prototypal Functions
+
+```javascript
+function SomeModule() {
+    this.someProperty = 'a';
+}
+
+SomeModule.prototype.someMethod = function() {
+
+};
+
+SomeModule.someStaticFunction = function() {
+
+};
+
+SomeModule.staticProp = 'a';
+```
+
+### ES6 Classes
+
+```javascript
+class SomeModule {
+    static someStaticProperty = 5;
+    static someStaticFunction() {
+    }
+
+    constructor() {
+        this.someProperty = 'a';
+    }
+
+    someMethod() {
+    }
+}
+```
+
+### Closure-bound factories
+
+```javascript
+function createSomeModule() {
+    return {
+        someProperty: 'a',
+        someMethod: function() {}
+    };
+}
+```
+
+Variant 2: assigning to some exported object.
+
+```javascript
+function createSomeModule() {
+    let api = {};
+
+    api.someProperty = 'a';
+    api.someMethod = function() {}
+    };
+
+    return api;
+}
+```

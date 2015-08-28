@@ -12,7 +12,7 @@ function parseTitle(article, id) {
     if (strokedTitleMatcher) {
       return strokedTitleMatcher[1];
     }
-    else {
+    else if (id) {
       return strHumanize(id);
     }
   }

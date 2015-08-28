@@ -1,13 +1,12 @@
-var React = require('react');
-var classSet = require('utils/classSet');
+const React = require('react');
+const { string, any } = React.PropTypes;
 
-var DocGroup = React.createClass({
-  mixins: [],
-
+const DocGroup = React.createClass({
   propTypes: {
-    tagName: React.PropTypes.string,
-    docType: React.PropTypes.string,
-    docs: React.PropTypes.array
+    tagName: string,
+    label: string,
+    className: string,
+    children: any
   },
 
   getDefaultProps: function() {
@@ -17,64 +16,17 @@ var DocGroup = React.createClass({
   },
 
   render() {
-    var { docType } = this.props;
-    var DOMTag = this.props.tagName;
-    var docs = docType ?
-      this.props.docs.filter(function(doc) { return doc.ctx.type === docType; }) :
-      this.props.docs
-    ;
-
-    var className;
-
-    if (docs.length === 0) {
-      return null;
-    }
-
-    className = classSet({
-      'doc-group': true
-    }, this.props.className);
+    const DOMTag = this.props.tagName;
 
     return (
-      <div className={className}>
-        <h2 className="doc-group__header">
-          {this.props.children}
-        </h2>
+      <div className="doc-group">
+        <h2 className="doc-group__header" children={this.props.label} />
 
-        <DOMTag className={this.props.listClassName}>
-          {docs.map(this.renderItem)}
+        <DOMTag className={this.props.className}>
+          {this.props.children}
         </DOMTag>
       </div>
     );
-  },
-
-  renderItem(doc) {
-    var id;
-    var Renderer = this.props.renderer;
-
-    if (Renderer.getKey instanceof Function) {
-      id = Renderer.getKey(doc);
-    }
-    else {
-      if (doc.symbol) {
-        id = doc.symbol + doc.name;
-      }
-      else {
-        id = doc.name;
-      }
-    }
-
-    return (
-      <Renderer
-        key={id}
-        ref={id}
-        {...this.props.itemProps}
-        {...doc}
-      />
-    );
-  },
-
-  getItem(id) {
-    return this.refs[id];
   }
 });
 

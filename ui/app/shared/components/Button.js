@@ -8,6 +8,15 @@ var classSet = require("react/lib/cx");
  * classes we need to specify for buttons.
  */
 var Button = React.createClass({
+  propTypes: {
+    type: React.PropTypes.oneOf(['default', 'danger', 'success']),
+    className: React.PropTypes.string,
+    title: React.PropTypes.string,
+    children: React.PropTypes.any,
+    onClick: React.PropTypes.func,
+    onKeyPress: React.PropTypes.func,
+  },
+
   getDefaultProps: function() {
     return {
       type: 'default'

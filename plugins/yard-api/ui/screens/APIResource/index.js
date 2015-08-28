@@ -27,6 +27,17 @@ var APIResource = React.createClass({
     })
   ],
 
+  propTypes: {
+    params: React.PropTypes.shape({
+      resourceId: React.PropTypes.string
+    }),
+
+    query: React.PropTypes.shape({
+      endpoint: React.PropTypes.string,
+      object: React.PropTypes.string,
+    })
+  },
+
   render() {
     var resource = Database.getCodeObject(this.props.params.resourceId);
 

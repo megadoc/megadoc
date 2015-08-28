@@ -54,10 +54,10 @@ MarkdownPlugin.$inject = [
 
 MarkdownPlugin.defaults = {
   markdown: {
-    gitStats: true,
+    gitStats: false,
     name: 'articles',
     title: 'Articles',
-    source: 'doc/articles/**/*.md',
+    source: [ 'doc/articles/**/*.md' ],
     icon: 'icon-book',
     exclude: [],
     fullFolderTitles: true,

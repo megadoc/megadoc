@@ -1,14 +1,15 @@
-var React = require("react");
-var { Link } = require('react-router');
-var Database = require('core/Database');
-var classSet = require('utils/classSet');
-var Storage = require('core/Storage');
-var Checkbox = require('components/Checkbox');
-var HotItemIndicator = require('components/HotItemIndicator');
-var { sortBy, groupBy } = require('lodash');
-var isItemHot = require('utils/isItemHot');
-var PRIVATE_VISIBILITY_KEY = require('constants').CFG_CLASS_BROWSER_SHOW_PRIVATE;
-var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const React = require("react");
+const { Link } = require('react-router');
+const Database = require('core/Database');
+const classSet = require('utils/classSet');
+const Storage = require('core/Storage');
+const Checkbox = require('components/Checkbox');
+const HotItemIndicator = require('components/HotItemIndicator');
+const { findWhere, sortBy, groupBy } = require('lodash');
+const isItemHot = require('utils/isItemHot');
+const K = require('constants');
+const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
+const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
 const orderAwareSort = require('utils/orderAwareSort');
 
 var ClassBrowser = React.createClass({
@@ -20,6 +21,11 @@ var ClassBrowser = React.createClass({
     }, 50)
   ],
 
+  propTypes: {
+    modules: React.PropTypes.array,
+    activeModuleId: React.PropTypes.string,
+  },
+
   render() {
     var modules = sortBy(this.props.modules, 'id');
     var nsClasses = groupBy(modules, 'namespace');
@@ -27,11 +33,12 @@ var ClassBrowser = React.createClass({
     var namespaces = Object.keys(nsClasses).map(function(ns) {
       return {
         name: ns === 'undefined' ? '[General]' : ns,
+        sortableName: ns === 'undefined' ? '1' : '0' + ns.toLowerCase(),
         modules: nsClasses[ns]
       };
     });
 
-    namespaces = sortBy(namespaces, 'name');
+    namespaces = sortBy(namespaces, 'sortableName');
 
     return (
       <nav className="class-browser__listing">
@@ -59,12 +66,12 @@ var ClassBrowser = React.createClass({
           {ns.name}
         </h3>
 
-        {ns.modules.map(this.renderEntry)}
+        {ns.modules.map(this.renderModule)}
       </div>
     );
   },
 
-  renderEntry(doc) {
+  renderModule(doc) {
     var { id } = doc;
     var isActive = this.props.activeModuleId === id;
     var className = classSet({
@@ -85,7 +92,7 @@ var ClassBrowser = React.createClass({
     return (
       <div key={id} className={className}>
         <Link ref={id} to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
-          {doc.ctx.name}
+          {doc.name}
 
           {isPrivate && (
             <span className="class-browser__entry-link--private"> (private)</span>
@@ -94,12 +101,12 @@ var ClassBrowser = React.createClass({
           {doc.git && isItemHot(doc.git.lastCommittedAt) && <HotItemIndicator />}
         </Link>
 
-        {isActive && this.renderClassMethods(doc)}
+        {isActive && this.renderModuleEntities(doc)}
       </div>
     );
   },
 
-  renderClassMethods(moduleDoc) {
+  renderModuleEntities(moduleDoc) {
     var docs = Database.getModuleEntities(moduleDoc.id);
 
     if (!docs.length) {
@@ -107,28 +114,28 @@ var ClassBrowser = React.createClass({
     }
 
     var methodDocs = docs.filter(function(doc) {
-      return doc.ctx.type === 'method' || doc.isConstructor;
+      return doc.ctx.type === K.TYPE_FUNCTION;
     });
 
     var propertyDocs = docs.filter(function(doc) {
-      return doc.ctx.type === 'property';
+      return findWhere(doc.tags, { type: 'property' });
     });
 
     return (
       <ul className="class-browser__methods">
-        {orderAwareSort(moduleDoc, propertyDocs, 'id').map((doc) => {
-          return this.renderClassEntity(moduleDoc, doc);
+        {orderAwareSort(moduleDoc, methodDocs, 'id').map((doc) => {
+          return this.renderModuleEntity(moduleDoc, doc);
         })}
 
-        {orderAwareSort(moduleDoc, methodDocs, 'id').map((doc) => {
-          return this.renderClassEntity(moduleDoc, doc);
+        {orderAwareSort(moduleDoc, propertyDocs, 'id').map((doc) => {
+          return this.renderModuleEntity(moduleDoc, doc);
         })}
       </ul>
     );
   },
 
-  renderClassEntity(moduleDoc, doc) {
-    const entityPath = doc.symbol + doc.ctx.name;
+  renderModuleEntity(moduleDoc, doc) {
+    const entityPath = (doc.ctx.symbol || '') + doc.name;
 
     return (
       <li key={doc.id} className="class-browser__methods-entity">
@@ -136,9 +143,8 @@ var ClassBrowser = React.createClass({
           to="js.module"
           params={{ moduleId: moduleDoc.id }}
           query={{ entity: entityPath }}
-        >
-          {doc.isConstructor ? 'constructor' : entityPath}
-        </Link>
+          children={entityPath}
+        />
       </li>
     );
   },

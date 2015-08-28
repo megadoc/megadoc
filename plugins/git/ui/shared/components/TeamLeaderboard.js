@@ -7,16 +7,16 @@ var TeamLeaderboard = React.createClass({
   mixins: [ SortableTableMixin ],
 
   propTypes: {
-    committers: React.PropTypes.arrayOf(React.PropTypes.shape({
+    teams: React.PropTypes.arrayOf(React.PropTypes.shape({
       commitCount: React.PropTypes.number,
       email: React.PropTypes.string,
       name: React.PropTypes.string
-    }))
+    })),
   },
 
   getDefaultProps: function() {
     return {
-      committers: []
+      teams: []
     };
   },
 

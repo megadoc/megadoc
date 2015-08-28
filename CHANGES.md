@@ -1,3 +1,5 @@
+# Changelog
+
 **2.2.4**
 
 - CJS: support for the `@alias` tag

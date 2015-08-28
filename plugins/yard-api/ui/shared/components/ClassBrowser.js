@@ -5,6 +5,11 @@ var Storage = require('core/Storage');
 var EXPAND_ALL = require('constants').CFG_CLASS_BROWSER_EXPAND_ALL;
 
 var APIClassBrowser = React.createClass({
+  propTypes: {
+    objects: React.PropTypes.array,
+    activeResourceId: React.PropTypes.string,
+  },
+
   render() {
     return (
       <nav>

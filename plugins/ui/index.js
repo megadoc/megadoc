@@ -56,7 +56,7 @@ UIPlugin.defaults = {
 
   stylesheet: null,
 
-  gitStats: true,
+  gitStats: false,
 
   footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
 

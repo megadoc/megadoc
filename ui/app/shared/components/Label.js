@@ -2,7 +2,12 @@ var React = require("react");
 var classSet = require("utils/classSet");
 
 var Label = React.createClass({
-  displayName: "Label",
+  propTypes: {
+    fakeLabel: React.PropTypes.bool,
+    value: React.PropTypes.string,
+    className: React.PropTypes.string,
+    children: React.PropTypes.any,
+  },
 
   getDefaultProps: function() {
     return {

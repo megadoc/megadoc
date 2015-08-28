@@ -6,7 +6,7 @@ function lookup(database, id) {
 
 function lookupModuleEntity(database, moduleId, entityName) {
   var entities = database.filter(function(doc) {
-    return doc.ctx.receiver === moduleId;
+    return doc.receiver === moduleId;
   });
 
   var entity = findWhere(entities, { name: entityName });
@@ -18,7 +18,9 @@ function lookupModuleEntity(database, moduleId, entityName) {
     var symbol = entityName.slice(0,1);
     var name = entityName.slice(1);
 
-    entity = findWhere(entities, { name: name, symbol: symbol });
+    entity = entities.filter(function(e) {
+      return e.name === name && e.ctx.symbol === symbol;
+    })[0];
   }
 
   return entity;
@@ -34,7 +36,7 @@ function getIndex(id, database, registry, currentModuleId) {
     var entity = lookupModuleEntity(database, currentModuleId, id);
 
     if (entity) {
-      return registry[entity.id];
+      return registry[entity.path];
     }
   }
 }
@@ -62,15 +64,15 @@ function resolveLink(id, database, registry, currentModuleId) {
       );
 
       moduleId = parentDoc.id;
-      entityId = doc.symbol + doc.name;
+      entityId = doc.ctx.symbol + doc.name;
 
       // if we are in the same module, just use the entity's name and its
       // symbol - no need for the full ID.
       if (currentModuleId === parentDoc.id) {
-        title = doc.symbol + doc.name;
+        title = doc.ctx.symbol + doc.name;
       }
       else {
-        title = [ parentDoc.name, doc.name ].join(doc.symbol);
+        title = [ parentDoc.name, doc.name ].join(doc.ctx.symbol);
       }
 
       return {

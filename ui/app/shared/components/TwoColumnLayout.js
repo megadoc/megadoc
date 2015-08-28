@@ -23,12 +23,20 @@ Storage.on('change', function() {
 });
 
 const LeftColumn = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+  },
+
   render() {
     return this.props.children;
   }
 });
 
 const RightColumn = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+  },
+
   render() {
     return this.props.children;
   }
@@ -46,6 +54,10 @@ const TwoColumnLayout = React.createClass({
 
     on: emitter.on,
     off: emitter.off
+  },
+
+  propTypes: {
+    children: React.PropTypes.any,
   },
 
   componentDidMount() {

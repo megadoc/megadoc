@@ -25,8 +25,10 @@ program
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
-  .option('-v, --verbose')
-  .option('-d, --debug')
+  .option('--log-level [LEVEL]', 'Logger level. Valid values: "debug", "info", "log", "warn", or "error"')
+  .option('-v, --verbose', 'Shortcut for --log-level="info"')
+  .option('-d, --debug', 'Shortcut for --log-level="debug"')
+  .option('--stats', 'Show scanner-related statistics.')
   .parse(process.argv)
 ;
 
@@ -54,6 +56,10 @@ if (program.verbose) {
 
 if (program.debug) {
   Logger.setDebug(true);
+}
+
+if (program.logLevel) {
+  Logger.setLevel(program.logLevel);
 }
 
 program.override.forEach(function(override) {
@@ -95,5 +101,21 @@ tiny.run(function(err) {
     throw err;
   }
 
-  console.log('done!');
+  if (program.stats === true) {
+    console.log('Generating stats...')
+
+    tiny.generateStats(function(statsErr, stats) {
+      if (statsErr) {
+        console.error('Unable to generate stats:');
+        console.error(statsErr.stack ? statsErr.stack : statsErr);
+        return;
+      }
+
+      console.raw.log(JSON.stringify(stats, null, 2));
+      console.log('done!');
+    });
+  }
+  else {
+    console.log('done!');
+  }
 });

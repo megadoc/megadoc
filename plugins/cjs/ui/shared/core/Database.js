@@ -1,61 +1,55 @@
-var config = require('config');
-var { pluck, findWhere } = require('lodash');
-var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
+const { database } = require('config');
+const { pluck, where, findWhere } = require('lodash');
+const findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
+const DocClassifier = require('core/DocClassifier');
 
-var commonPrefix;
+const commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
+const moduleDocs = where(database, { isModule: true });
 
-module.exports = {
+const Database = {
   getCommonPrefix() {
-    if (!commonPrefix) {
-      commonPrefix = findCommonPrefix(pluck(config.database, 'filePath'), '/');
-    }
-
     return commonPrefix;
   },
 
   getAllTags() {
-    return config.database;
+    return database;
   },
 
   getModule(moduleId) {
-    return findWhere(this.getModules(), { id: moduleId });
+    return findWhere(moduleDocs, { id: moduleId });
   },
 
   getModules() {
-    if (!this.modules) {
-      this.modules = config.database.filter(function(entry) {
-        return entry.isModule;
-      });
-    }
-
-    return this.modules;
+    return moduleDocs;
   },
 
   getModuleEntities(moduleId) {
-    var classDoc = this.getModule(moduleId);
+    const moduleDoc = this.getModule(moduleId);
 
-    if (!classDoc) {
+    if (!moduleDoc) {
       console.warn('Unable to find class entry with id ' + moduleId);
       return [];
     }
 
-    return config.database.reduce(function(classDocs, doc) {
-      if (doc.ctx) {
-        if (doc.ctx.receiver === classDoc.id) {
-          classDocs.push(doc);
-        }
-        else if (
-          ['method', 'function'].indexOf(doc.ctx.type) > -1 &&
-          doc.tags.some(function(tag) {
-            return tag.type === 'memberOf' && tag.parent === classDoc.id;
-          })
-        ) {
-          classDocs.push(doc);
-        }
-      }
-
-      return classDocs;
-    }, [classDoc]);
+    return where(database, { receiver: moduleDoc.id });
   },
-
 };
+
+Database.getModules().forEach(function(module) {
+  module.renderableType = DocClassifier.getRenderableType(
+    module,
+    Database.getModuleEntities(module.id)
+  );
+});
+
+// we'll need this for @preserveOrder support
+database.forEach(function(doc) {
+  if (doc.loc) {
+    doc.line = doc.loc.start.line;
+    doc.tags.forEach(function(tag) {
+      tag.line = doc.line;
+    });
+  }
+});
+
+module.exports = Database;

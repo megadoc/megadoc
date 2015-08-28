@@ -6,6 +6,12 @@ var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
 var MarkdownRoot = React.createClass({
+  propTypes: {
+    params: React.PropTypes.shape({
+      splat: React.PropTypes.string
+    })
+  },
+
   render() {
     return (
       <TwoColumnLayout className="markdown-root">

@@ -1,7 +1,7 @@
 var React = require('react');
 var classSet = require('utils/classSet');
 
-var { string, func } = React.PropTypes;
+var { string, func, any } = React.PropTypes;
 var K = require("constants");
 var SORT_ASC = K.SORT_ASC;
 var SORT_DESC = K.SORT_DESC;
@@ -9,7 +9,8 @@ var SORT_DESC = K.SORT_DESC;
 var Column = React.createClass({
   propTypes: {
     sortKey: string.isRequired,
-    activeSortOrder: string
+    activeSortOrder: string,
+    children: any
   },
 
   contextTypes: {
@@ -41,7 +42,10 @@ var Column = React.createClass({
 });
 
 var SortableTable = React.createClass({
-  displayName: "SortableTable",
+  propTypes: {
+    children: any,
+    className: string,
+  },
 
   // childContextTypes: {
   //   onSort: func

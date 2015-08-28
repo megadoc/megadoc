@@ -2,6 +2,14 @@ var React = require('react');
 const Gravatar = require('components/Gravatar');
 
 var GitStats = React.createClass({
+  propTypes: {
+    committers: React.PropTypes.array,
+    lastCommittedAt: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.number
+    ]),
+  },
+
   getDefaultProps: function() {
     return {
       committers: []

@@ -6,6 +6,12 @@ var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
 var YARDAPIRoot = React.createClass({
+  propTypes: {
+    params: React.PropTypes.shape({
+      resourceId: React.PropTypes.string
+    })
+  },
+
   render() {
     return (
       <TwoColumnLayout className="yard-api-root">

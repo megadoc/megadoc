@@ -3,6 +3,10 @@ var Gravatar = require('components/Gravatar');
 var { sortBy } = require('lodash');
 
 var Superstars = React.createClass({
+  propTypes: {
+    people: React.PropTypes.arrayOf(React.PropTypes.object),
+  },
+
   render: function() {
     var people = sortBy(this.props.people, 'superStarIndex').reverse().slice(0, 4);
     var superStar = people.slice(0, 1)[0];

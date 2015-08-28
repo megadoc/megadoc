@@ -23,11 +23,30 @@ function tinydoc(userConfig, runOptions) {
 
   config = merge({}, defaults, pluginDefaults, userConfig);
 
+  var compiler = new Compiler(config);
+  var compilation;
+
   return {
     config: config,
 
     run: function(done) {
-      new Compiler(config).run(done, runOptions);
+      compiler.run(function(err, _compilation) {
+        compilation = _compilation;
+        done(err, _compilation);
+      }, runOptions);
+    },
+
+    generateStats: function(done) {
+      if (compilation) {
+        compiler.generateStats(compilation).then(function(stats) {
+          done(null, stats);
+        }, function(error) {
+          done(error);
+        });
+      }
+      else {
+        done('You must compile the docs first before generating stats!');
+      }
     }
   };
 }

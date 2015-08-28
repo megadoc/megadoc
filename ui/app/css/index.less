@@ -57,6 +57,11 @@ ul, ol {
   padding-left: @whitespace;
 }
 
+:disabled, [disabled] {
+  pointer-events: none;
+  cursor: default;
+}
+
 .schemable({
   background-color: @base3;
   color: @base0;
@@ -114,14 +119,7 @@ ul, ol {
       outline: none;
     }
   }
-});
 
-:disabled, [disabled] {
-  pointer-events: none;
-  cursor: default;
-}
-
-.schemable({
   blockquote {
     border-left: 4px solid @border-color;
     padding: 0 @whitespace;
