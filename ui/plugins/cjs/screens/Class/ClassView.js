@@ -7,13 +7,10 @@ var PropertyTag = require('components/DocTags/PropertyTag');
 var { where, sortBy } = require("lodash");
 var ExampleTag = require('components/DocTags/ExampleTag');
 var JumperMixin = require('./mixins/JumperMixin');
+const orderAwareSort = require('utils/orderAwareSort');
 
 function isClassMethod(doc) {
-  return !doc.isStatic && [
-    'method',
-    'function',
-    'declaration'
-  ].indexOf(doc.ctx.type) > -1;
+  return !doc.isStatic && [ 'method', 'function' ].indexOf(doc.ctx.type) > -1;
 }
 
 function isStaticMethod(doc) {
@@ -71,7 +68,7 @@ var ClassView = React.createClass({
           tagName="ul"
           className="class-view__properties"
           listClassName="class-view__property-list"
-          docs={sortBy(propertyDocs, 'id')}
+          docs={orderAwareSort(doc, propertyDocs, 'id')}
           renderer={PropertyTag}
           children="Properties"
         />
@@ -81,7 +78,7 @@ var ClassView = React.createClass({
           tagName="ul"
           className="class-view__methods"
           listClassName="class-view__method-list"
-          docs={sortBy(staticMethodDocs, 'id')}
+          docs={orderAwareSort(doc, staticMethodDocs, 'id')}
           renderer={DocEntity}
           itemProps={{initiallyCollapsed: true}}
           children="Static Methods"
@@ -92,7 +89,7 @@ var ClassView = React.createClass({
           tagName="ul"
           className="class-view__methods"
           listClassName="class-view__method-list"
-          docs={sortBy(methodDocs, 'id')}
+          docs={orderAwareSort(doc, methodDocs, 'id')}
           renderer={DocEntity}
           itemProps={{initiallyCollapsed: true}}
           children="Methods"

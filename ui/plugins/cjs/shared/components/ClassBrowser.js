@@ -9,6 +9,7 @@ var { sortBy, groupBy } = require('lodash');
 var isItemHot = require('utils/isItemHot');
 var PRIVATE_VISIBILITY_KEY = require('constants').CFG_CLASS_BROWSER_SHOW_PRIVATE;
 var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const orderAwareSort = require('utils/orderAwareSort');
 
 var ClassBrowser = React.createClass({
   mixins: [
@@ -115,11 +116,11 @@ var ClassBrowser = React.createClass({
 
     return (
       <ul className="class-browser__methods">
-        {sortBy(propertyDocs, 'id').map((doc) => {
+        {orderAwareSort(moduleDoc, propertyDocs, 'id').map((doc) => {
           return this.renderClassEntity(moduleDoc, doc);
         })}
 
-        {sortBy(methodDocs, 'id').map((doc) => {
+        {orderAwareSort(moduleDoc, methodDocs, 'id').map((doc) => {
           return this.renderClassEntity(moduleDoc, doc);
         })}
       </ul>

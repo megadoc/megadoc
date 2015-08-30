@@ -8,7 +8,8 @@ var NO_DESCRIPTION_TAGS = [
   'extends',
   'private',
   'mixin',
-  'module'
+  'module',
+  'preserveOrder',
 ];
 
 function decorateTag(doc, tag) {
@@ -32,6 +33,13 @@ function decorateTag(doc, tag) {
     case 'property':
       tag.id = tag.name;
     break;
+
+    // if it was marked @method, treat it as such (not stupid "property" type
+    // on object modules)
+    case 'method':
+      doc.ctx.type = 'method';
+    break;
+
     case 'protected':
       doc.isProtected = true;
     break;

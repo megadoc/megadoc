@@ -81,7 +81,7 @@ module.exports = {
             entity: refDoc.ctx.name
           }),
 
-          title: doc.ctx.name + refDoc.symbol + refDoc.ctx.name
+          title: /*doc.ctx.name + */refDoc.symbol + refDoc.ctx.name
         };
 
         linkablePaths.push([ doc.id, refDoc.name ].join(refDoc.symbol));

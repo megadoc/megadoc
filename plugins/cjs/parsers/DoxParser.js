@@ -131,7 +131,7 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
 
   var validDocs = docs
     .filter(function(doc) {
-      return (isModule(doc) || !!doc.ctx) && !doc.tags.some(function(tag) {
+      return !doc.tags.some(function(tag) {
         return tag.type === 'internal';
       });
     })
@@ -188,6 +188,8 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
         doc.$descriptionFragments.push(description);
       }
 
+      doc.tags.forEach(decorateTag.bind(null, doc));
+
       currentModule = doc;
     }
     else {
@@ -207,18 +209,36 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
         }
       }
 
-      // try to infer an ID
-      if (doc.ctx.receiver) {
-        doc.id = doc.ctx.receiver + '.' + doc.ctx.name;
+      doc.tags.forEach(decorateTag.bind(null, doc));
+
+      if (!doc.ctx.name) {
+        var tag;
+
+        if ((tag = findWhere(doc.tags, { type: 'property' }))) {
+          doc.ctx.name = tag.name;
+
+          if (doc.ctx.type !== 'property') {
+            doc.ctx.type = 'property';
+          }
+        }
+        else if ((tag = findWhere(doc.tags, { type: 'param' }))) {
+          doc.ctx.name = tag.name;
+        }
       }
-      else {
-        doc.id = doc.ctx.name;
+
+      if (doc.ctx.name) {
+        // try to infer an ID
+        if (doc.ctx.receiver) {
+          doc.id = doc.ctx.receiver + '.' + doc.ctx.name;
+        }
+        else {
+          doc.id = doc.ctx.name;
+        }
       }
     }
 
     doc.name = doc.ctx.name;
     doc.symbol = generateSymbol(doc, currentModule);
-    doc.tags.forEach(decorateTag.bind(null, doc));
 
     // if (doc.symbol.length) {
     //   doc.id = doc.id.replace('.', doc.symbol);
@@ -234,6 +254,10 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
     removeExtraneousClassIdFromOfDescription(doc);
 
     delete doc.$descriptionFragments;
+  });
+
+  validDocs = validDocs.filter(function(doc) {
+    return !!doc.id;
   });
 
   return validDocs;

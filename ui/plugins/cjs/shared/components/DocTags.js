@@ -20,7 +20,9 @@ const HANDLED_TAGS = [
   'private',
   'async',
   'memberOf',
-  'static'
+  'static',
+  'preserveOrder',
+  'method'
 ];
 
 var DocTags = React.createClass({
