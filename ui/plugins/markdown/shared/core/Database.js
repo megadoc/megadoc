@@ -1,8 +1,7 @@
 const config = require('config');
-const { assign, where, findWhere, uniq, pluck } = require('lodash');
+const { assign, where, findWhere } = require('lodash');
 const { makeHref } = require('actions/RouteActions');
 const strHumanize = require('tinydoc/lib/utils/strHumanize');
-const arrayWrap = require('tinydoc/lib/utils/arrayWrap');
 
 const articles = config.database;
 let folders = [];

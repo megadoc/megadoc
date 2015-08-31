@@ -1,6 +1,4 @@
-var glob = require('glob');
 var Logger = require('../../lib/Logger');
-var arrayWrap = require('../../lib/utils/arrayWrap');
 var DoxParser = require('./parsers/DoxParser');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
@@ -17,8 +15,8 @@ module.exports = function(config, gitRepository, utils, done) {
 
   console.log('Parsing docs from %d files.', files.length);
 
-  database = files.reduce(function(database, filePath) {
-    return database.concat(DoxParser.parseFile(filePath, config));
+  database = files.reduce(function(docs, filePath) {
+    return docs.concat(DoxParser.parseFile(filePath, config));
   }, []);
 
   DoxParser.postProcess(database);

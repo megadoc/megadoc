@@ -55,14 +55,14 @@ exports.makeHref = function(name, params, query) {
 };
 
 exports.goToNotFound = function() {
-  withDelegate(function(delegate) {
-    delegate.replaceWith('404');
+  withDelegate(function(d) {
+    d.replaceWith('404');
   });
 };
 
 exports.transitionTo = function(path, params, query) {
-  withDelegate(function(delegate) {
-    delegate.transitionTo(path, params, query);
+  withDelegate(function(d) {
+    d.transitionTo(path, params, query);
   });
 };
 

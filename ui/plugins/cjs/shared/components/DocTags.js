@@ -87,29 +87,29 @@ var DocTags = React.createClass({
         content = (
           <ParamTag key={key} {...tag} />
         );
-      break;
+        break;
 
       case 'return':
         content = (
           <ReturnTag key={key} {...tag} />
         );
-      break;
+        break;
 
       case 'example':
         content = <ExampleTag key={key} {...tag} />;
-      break;
+        break;
 
       case 'see':
         content = <SeeTag key={key} {...tag} />;
-      break;
+        break;
 
       case 'property':
         content = <PropertyTag key={key} {...tag} />;
-      break;
+        break;
 
       case 'class':
         content = null;
-      break;
+        break;
 
       default:
         content = (

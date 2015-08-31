@@ -150,14 +150,14 @@ var ReactDisqusThread = React.createClass({
             )
           )
         ),
-        DOM.a({
+
+        DOM.a(
+          {
             href: "http://disqus.com",
             className: "dsq-brlink"
           },
           'blog comments powered by ',
-          DOM.span({className: "logo-disqus"},
-            'Disqus'
-          )
+          DOM.span({className: "logo-disqus"}, 'Disqus')
         )
       )
     );

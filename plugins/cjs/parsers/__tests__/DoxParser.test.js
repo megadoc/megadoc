@@ -107,6 +107,8 @@ describe('DoxParser', function() {
   });
 
   describe('[gh#3] module static methods should use the "." symbol', function() {
+    var docs;
+
     it('works', function() {
       docs = parse('cjs/module_with_static_methods.js');
 

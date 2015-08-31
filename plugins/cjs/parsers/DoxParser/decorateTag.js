@@ -25,28 +25,28 @@ function decorateTag(doc, tag) {
     case 'property':
     case 'param':
       extend(tag, parseProperty(tag.string));
-    break;
+      break;
   }
 
   // attach IDs
   switch(tagType) {
     case 'property':
       tag.id = tag.name;
-    break;
+      break;
 
     // if it was marked @method, treat it as such (not stupid "property" type
     // on object modules)
     case 'method':
       doc.ctx.type = 'method';
-    break;
+      break;
 
     case 'protected':
       doc.isProtected = true;
-    break;
+      break;
 
     case 'memberOf':
       doc.ctx.receiver = tag.parent;
-    break;
+      break;
   }
 
 

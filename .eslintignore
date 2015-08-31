@@ -4,3 +4,4 @@ ui/dist
 ui/app/vendor/**/*
 ui/karma.conf.js
 test/fixtures
+ui/app/css/fonts/**/*/demo.js

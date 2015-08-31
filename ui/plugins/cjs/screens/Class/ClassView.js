@@ -4,7 +4,7 @@ var MarkdownText = require('components/MarkdownText');
 var SeeTag = require('components/DocTags/SeeTag');
 var DocGroup = require('components/DocGroup');
 var PropertyTag = require('components/DocTags/PropertyTag');
-var { where, sortBy } = require("lodash");
+var { where } = require("lodash");
 var ExampleTag = require('components/DocTags/ExampleTag');
 var JumperMixin = require('./mixins/JumperMixin');
 const orderAwareSort = require('utils/orderAwareSort');
@@ -36,8 +36,8 @@ var ClassView = React.createClass({
     var { doc, moduleDocs } = this.props;
     var methodDocs = moduleDocs.filter(isClassMethod);
     var staticMethodDocs = moduleDocs.filter(isStaticMethod);
-    var propertyDocs = moduleDocs.reduce(function(propertyDocs, moduleDoc) {
-      return propertyDocs.concat(where(moduleDoc.tags, { type: 'property' }));
+    var propertyDocs = moduleDocs.reduce(function(docs, moduleDoc) {
+      return docs.concat(where(moduleDoc.tags, { type: 'property' }));
     }, []);
 
     var exampleTags = where(doc.tags, { type: 'example' });

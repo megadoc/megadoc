@@ -1,8 +1,8 @@
 var EventEmitter = function(events) {
-  var listeners = events.reduce(function(listeners, event) {
-    listeners[event] = [];
+  var listeners = events.reduce(function(hash, event) {
+    hash[event] = [];
 
-    return listeners;
+    return hash;
   }, {});
 
   function assertEventIsKnown(event) {
