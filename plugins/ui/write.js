@@ -14,7 +14,7 @@ function generateHTMLIndex(publicPath, scripts, title) {
 }
 
 module.exports = function(config, utils, readmeGitStats, done) {
-  var outputDir = utils.assetPath(config.outputDir);
+  var outputDir = utils.getAssetPath(config.outputDir);
   var runtimeConfig = extend({}, config);
 
   var scripts = [
@@ -27,17 +27,17 @@ module.exports = function(config, utils, readmeGitStats, done) {
   if (config.readme) {
     runtimeConfig.readme = {
       filePath: config.readme,
-      source: fs.readFileSync(utils.assetPath(config.readme), 'utf-8'),
+      source: fs.readFileSync(utils.getAssetPath(config.readme), 'utf-8'),
       git: readmeGitStats
     };
   }
 
   if (config.favicon) {
-    fs.copySync(utils.assetPath(config.favicon), path.resolve(outputDir, 'favicon.ico'));
+    fs.copySync(utils.getAssetPath(config.favicon), path.resolve(outputDir, 'favicon.ico'));
   }
 
   config.assets.forEach(function(filePath) {
-    fs.copySync(utils.assetPath(filePath), path.resolve(outputDir, 'assets', filePath));
+    fs.copySync(utils.getAssetPath(filePath), path.resolve(outputDir, 'assets', filePath));
   });
 
   fs.writeFileSync(

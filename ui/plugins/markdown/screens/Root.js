@@ -7,22 +7,19 @@ var { LeftColumn, RightColumn } = TwoColumnLayout;
 
 var MarkdownRoot = React.createClass({
   render() {
-    var { collectionName } = this.props;
-
     return (
       <TwoColumnLayout className="markdown-root">
         <LeftColumn>
           <ClassBrowser
-            collectionName={collectionName}
             activeArticleId={this.props.params.articleId}
-            folders={Database.getFolders(collectionName)}
-            articles={Database.getArticleTitles(collectionName)}
+            folders={Database.getFolders()}
+            articles={Database.getArticles()}
           />
         </LeftColumn>
 
         <RightColumn>
           <div className="markdown-root__content">
-            <RouteHandler collectionName={collectionName} {...this.props} />
+            <RouteHandler {...this.props} />
           </div>
         </RightColumn>
       </TwoColumnLayout>

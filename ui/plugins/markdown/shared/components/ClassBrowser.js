@@ -1,15 +1,17 @@
-var React = require("react");
-var { Link } = require('react-router');
-var { sortBy, groupBy } = require('lodash');
-var { normalizeHeading } = require('components/MarkdownText');
-var Checkbox = require('components/Checkbox');
-var HotItemIndicator = require('components/HotItemIndicator');
-var Storage = require('core/Storage');
-var strHumanize = require('tinydoc/lib/utils/strHumanize');
-var GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
-var ROOT_FOLDER_ID = strHumanize('root');
-var isItemHot = require('utils/isItemHot');
-var BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const React = require("react");
+const { Link } = require('react-router');
+const { sortBy } = require('lodash');
+const { normalizeHeading } = require('components/MarkdownText');
+const Checkbox = require('components/Checkbox');
+const HotItemIndicator = require('components/HotItemIndicator');
+const Storage = require('core/Storage');
+const strHumanize = require('tinydoc/lib/utils/strHumanize');
+const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
+const ROOT_FOLDER_ID = strHumanize('root');
+const isItemHot = require('utils/isItemHot');
+const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const Database = require('core/Database');
+const config = require('config');
 
 var MarkdownClassBrowser = React.createClass({
   mixins: [
@@ -31,7 +33,7 @@ var MarkdownClassBrowser = React.createClass({
       <nav>
         {this.hasFolders() && Storage.get(GROUP_BY_FOLDER) ?
           this.renderGroupedEntries() :
-          this.renderArticles(this.props.articles)
+          this.renderAllArticles()
         }
 
         {this.renderControls()}
@@ -40,51 +42,70 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderGroupedEntries() {
-    var folders = groupBy(this.props.articles, 'folder');
+    const folders = sortBy(Database.getFolders(), 'title');
 
     return (
       <div>
-        {
-          Object.keys(folders).sort().map((folderId) => {
-            var articles = folders[folderId];
-            var isRoot = folderId === ROOT_FOLDER_ID;
-
-            return (
-              <div key={folderId} className="class-browser__category">
-                <h3 className="class-browser__category-name">
-                  {isRoot ? <em>No Folder</em> : strHumanize(folderId)}
-                </h3>
-
-                <div>
-                  {this.renderArticles(articles)}
-                </div>
-              </div>
-            );
-          })
-        }
+        {folders.map(this.renderFolder)}
       </div>
     );
   },
 
-  renderArticles(articles) {
-    return sortBy(articles, 'title').map(this.renderArticle);
+  renderFolder(folder) {
+    let articles = folder.articles;
+
+    if (!folder.series) {
+      articles = sortBy(articles, 'title');
+    }
+
+    // README always comes first
+    articles = sortBy(articles, function(a) {
+      if (a.fileName === 'README') {
+        return -1;
+      }
+      else {
+        return 1;
+      }
+    });
+
+    return (
+      <div key={folder.path} className="class-browser__category">
+        <h3 className="class-browser__category-name">
+          {folder.title}
+        </h3>
+
+        <div>
+          {articles.map(this.renderArticle)}
+        </div>
+      </div>
+    );
+  },
+
+  renderAllArticles() {
+    const articles = sortBy(this.props.articles, 'title');
+
+    return (
+      <div>
+        {articles.map(this.renderArticle)}
+      </div>
+    );
   },
 
   renderArticle(article) {
-    var id = article.id;
-    var isActive = this.props.activeArticleId === article.id;
-    var title = article.title;
+    const { id } = article;
+    let { title } = article;
+    const isActive = this.props.activeArticleId === id;
 
-    if (Storage.get(GROUP_BY_FOLDER) && article.folder !== ROOT_FOLDER_ID) {
-      if (title.indexOf(article.folder+'/') === 0) {
-        title = title.substr(article.folder.length + 1 /* '/' */);
+    if (Storage.get(GROUP_BY_FOLDER) && article.folderTitle !== ROOT_FOLDER_ID) {
+      if (title.indexOf(article.folderTitle + '/') === 0) {
+        title = title.substr(article.folderTitle.length + 1 /* '/' */);
       }
     }
 
     return (
       <div key={id} ref={id}>
         <Link
-          to={`${this.props.collectionName}.article`}
+          to={`${config.name}.article`}
           params={{ articleId: id }}
           className="class-browser__entry-link"
         >
@@ -117,7 +138,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <li key={section.title} className={className}>
         <Link
-          to={`${this.props.collectionName}.article`}
+          to={`${config.name}.article`}
           params={{ articleId: encodeURIComponent(article.id) }}
           query={{ section: sectionId }}
           children={section.title}

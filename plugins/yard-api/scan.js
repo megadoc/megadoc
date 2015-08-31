@@ -23,19 +23,13 @@ function generateDocs(config, globalConfig, done) {
 }
 
 function scan(config, utils, done) {
-  glob(utils.assetPath(config.source), { nodir: true }, function (err, files) {
-    if (err) {
-      return done(err, null);
-    }
-
-    var database = files.map(function(fileName) {
-      return JSON.parse(fs.readFileSync(fileName, 'utf-8'));
-    });
-
-    done(null, database);
+  var files = glob.sync(utils.getAssetPath(config.source), { nodir: true });
+  var database = files.map(function(fileName) {
+    return JSON.parse(fs.readFileSync(fileName, 'utf-8'));
   });
-}
 
+  done(null, database);
+}
 
 module.exports = function(config, globalConfig, utils, done) {
   generateDocs(config, globalConfig, function(err) {

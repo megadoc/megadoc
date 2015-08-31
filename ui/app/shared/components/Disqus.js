@@ -18,6 +18,10 @@ function camelCase(str) {
 
 var disqusAdded = false;
 
+function isDisabled() {
+  return !config.disqus || config.disqus.enabled === false;
+}
+
 // stolen from https://github.com/mzabriskie/react-disqus-thread because of the
 // (not merged as of yet) fix in
 // https://github.com/mzabriskie/react-disqus-thread/pull/9/files
@@ -170,7 +174,7 @@ var Disqus = React.createClass({
   render: function() {
     var currentRoute = RouteActions.getCurrentRoute();
 
-    if (!currentRoute) {
+    if (!currentRoute || isDisabled()) {
       return null;
     }
 

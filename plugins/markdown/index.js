@@ -42,15 +42,13 @@ MarkdownPlugin.$inject = [
 MarkdownPlugin.defaults = {
   markdown: {
     gitStats: true,
-    collections: [
-      {
-        name: 'articles',
-        title: 'Articles',
-        source: 'doc/articles/**/*.md',
-        icon: 'icon-book',
-        exclude: []
-      }
-    ]
+    name: 'articles',
+    title: 'Articles',
+    source: 'doc/articles/**/*.md',
+    icon: 'icon-book',
+    exclude: [],
+    fullFolderTitles: true,
+    fullFolderTitleDelimiter: ' - '
   }
 };
 

@@ -1,5 +1,6 @@
 var glob = require('glob');
 var fs = require('fs');
+var path = require('path');
 var findCommonPrefix = require('../../lib/utils/findCommonPrefix');
 var strHumanize = require('../../lib/utils/strHumanize');
 var pluck = require('lodash').pluck;
@@ -11,8 +12,8 @@ var parseTitle = require('./scan/parseTitle');
 var parseSections = require('./scan/parseSections');
 var Promise = require('bluebird');
 
-function scanCollection(collection, utils, markdownConfig, globalConfig, done) {
-  var files = utils.globAndFilter(collection.source, collection.exclude);
+function scan(config, utils, globalConfig, done) {
+  var files = utils.globAndFilter(config.source, config.exclude);
   var database = files.map(function(filePath) {
     return {
       filePath: filePath,
@@ -20,36 +21,32 @@ function scanCollection(collection, utils, markdownConfig, globalConfig, done) {
     };
   }, []);
 
-  var commonPrefix = findCommonPrefix(pluck(database, 'filePath'));
-  var id;
-
   database.forEach(function(entry) {
-    if (commonPrefix && commonPrefix.length) {
-      id = entry.filePath.replace(commonPrefix, '');
-    }
-    else {
-      id = entry.filePath;
-    }
+    var fileName;
 
-    var fileName = entry.filePath.replace(commonPrefix || '', '').split('/');
-    fileName = fileName[fileName.length-1].replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
+    entry.filePath = utils.getRelativeAssetPath(entry.filePath);
+
+    fileName = entry.filePath.split('/');
+    fileName = fileName[fileName.length-1]
+      .replace(/\.[\w]{1,3}$/, '')
+      .replace(/\W/g, '-')
+    ;
 
     // remove the extension
-    entry.id = id.replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
+    entry.id = entry.filePath.replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
     entry.title = parseTitle(entry.source, fileName);
     entry.sections = parseSections(entry.source);
-    entry.folder = strHumanize(
-      id.indexOf('/') > -1 ?
-        id.split('/')[0] :
-        'root'
-    );
+    entry.fileName = fileName;
+    entry.folder = path.dirname(entry.filePath);
   });
+
+  config.commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
 
   console.debug(JSON.stringify(database.map(function(e) { return e.id; })));
 
   var svc = Promise.resolve();
 
-  if (markdownConfig.gitStats) {
+  if (config.gitStats) {
     console.log("Parsing git stats...");
 
     var filePaths = uniq(pluck(database, 'filePath'));
@@ -67,20 +64,12 @@ function scanCollection(collection, utils, markdownConfig, globalConfig, done) {
 }
 
 module.exports = function(config, utils, globalConfig, done) {
-  var aggregateDatabase = {};
-
-  config.collections.map(function(collection) {
-    scanCollection(collection, utils, config, globalConfig, function(err, database) {
-      if (err) {
-        done(err);
-      }
-      else {
-        aggregateDatabase[collection.name] = database;
-
-        if (Object.keys(aggregateDatabase).length === config.collections.length) {
-          done(null, aggregateDatabase);
-        }
-      }
-    });
+  scan(config, utils, globalConfig, function(err, database) {
+    if (err) {
+      done(err);
+    }
+    else {
+      done(null, database);
+    }
   });
 };

@@ -10,8 +10,8 @@ var HasTitle = require('mixins/HasTitle');
 var Article = React.createClass({
   mixins: [
     HasTitle(function() {
-      var article = Database.get(this.props.collectionName, this.props.params.articleId);
-      var collection = Database.getCollectionTitle(this.props.collectionName);
+      var article = Database.get(this.props.params.articleId);
+      var collection = Database.getTitle();
 
       if (article) {
         return `[${collection}] ${article.title}`;
@@ -30,7 +30,7 @@ var Article = React.createClass({
   },
 
   render() {
-    var article = Database.get(this.props.collectionName, this.props.params.articleId);
+    var article = Database.get(this.props.params.articleId);
 
     if (!article) {
       return <div>Article not found...</div>;

@@ -1,3 +1,8 @@
+**2.1.0**
+
+- markdown no longer accepts multiple "collections"
+- Utils#assetPath renamed to Utils#getAssetPath
+
 **2.0.22**
 
 - `cjs` plugin: module "static" methods (like `exports.something = function()`) are now linked to using the `.` symbol. For example: `[exports.something]()` instead of `[exports#something]()`

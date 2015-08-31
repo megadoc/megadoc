@@ -10,44 +10,42 @@ const K = require('constants');
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydocReact.use(function MarkdownPlugin(api) {
-  config.collections.forEach(function(collection) {
-    var routeName = collection.name;
+  const routeName = config.name;
 
-    api.registerRoutes([
-      {
-        name: routeName,
-        path: routeName,
-        handler: React.createClass({
-          render() {
-            return <Root collectionName={routeName} {...this.props} />;
-          }
-        })
-      },
-
-      {
-        name: `${routeName}.landing`,
-        default: true,
-        handler: require('./screens/Landing'),
-        parent: routeName
-      },
-
-      {
-        name: `${routeName}.article`,
-        path: ':articleId',
-        handler: require('./screens/Article'),
-        parent: routeName
-      }
-    ]);
-
-    api.registerOutletElement('navigation',
-      React.createClass({
+  api.registerRoutes([
+    {
+      name: routeName,
+      path: routeName,
+      handler: React.createClass({
         render() {
-          return <NavigationOutlet {...collection} />;
+          return <Root {...this.props} />;
         }
-      }),
-      collection.name
-    );
-  });
+      })
+    },
+
+    {
+      name: `${routeName}.landing`,
+      default: true,
+      handler: require('./screens/Landing'),
+      parent: routeName
+    },
+
+    {
+      name: `${routeName}.article`,
+      path: ':articleId',
+      handler: require('./screens/Article'),
+      parent: routeName
+    }
+  ]);
+
+  api.registerOutletElement('navigation',
+    React.createClass({
+      render() {
+        return <NavigationOutlet {...config} />;
+      }
+    }),
+    config.name
+  );
 
   api.on('started', function() {
     var links = Database.getLinkableEntities();

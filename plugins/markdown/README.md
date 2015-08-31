@@ -6,31 +6,49 @@ Read markdown files and render them as HTML with syntax highlighting and linking
 
 ```javascript
 exports.markdown = {
-  // Each "collection" will show up as a different tab in the navigation
-  // bar.
-  collections: [
+  // This is the routing path in the UI. So, "articles" will be 
+  // visitable at http://your.tinydoc.com/articles
+  name: 'articles',
+
+  // The text of the navigation tab link.
+  title: 'Articles',
+
+  // Pattern (relative to tinydoc.conf.js) to match the source files.
+  source: 'doc/articles/**/*.md',
+
+  // An icon to use for the tab link.
+  // See the `demo.html` file in the fonts directory for the available
+  // icons which you can find at:
+  // 
+  //   https://github.com/tinydoc/tinydoc/tree/master/ui/app/css/fonts
+  // 
+  // Also, you can use a custom icon if you provide a custom css file.
+  icon: 'icon-book',
+
+  // Patterns to use to ignore source files.
+  exclude: [],
+
+  // Whether to use the full (relative) folder path as a title for the folder,
+  // as opposed to the single folder name.
+  // 
+  // For example:
+  // 
+  //     "/doc/api"       turns into "API"
+  //     "/doc/api/usage" turns into "API - Usage"
+  //     
+  // While if it is set to `false`:
+  // 
+  //     "/doc/api"       turns into "API"
+  //     "/doc/api/usage" turns into "Usage"
+  // 
+  fullFolderTitles: true,
+  fullFolderTitleDelimiter: " - ",
+
+  folders: [
     {
-      // This is the routing path in the UI. So, "articles" will be 
-      // visitable at http://your.tinydoc.com/articles
-      name: 'articles',
-
-      // The text of the navigation tab link.
-      title: 'Articles',
-
-      // Pattern (relative to tinydoc.conf.js) to match the source files.
-      source: 'doc/articles/**/*.md',
-
-      // An icon to use for the tab link.
-      // See the `demo.html` file in the fonts directory for the available
-      // icons which you can find at:
-      // 
-      //   https://github.com/tinydoc/tinydoc/tree/master/ui/app/css/fonts
-      // 
-      // Also, you can use a custom icon if you provide a custom css file.
-      icon: 'icon-book',
-
-      // Patterns to use to ignore source files.
-      exclude: []
+      path: 'relative/path/to/folder',
+      title: 'Custom Title',
+      series: true
     }
   ],
 
