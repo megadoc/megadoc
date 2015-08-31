@@ -20,12 +20,24 @@ function resolveLinksInMarkdown(docstring, resolveEntity, context) {
     //     [XHRPaginator#method]()
     //     [XHRPaginator@prop]()
     //     [XHRPaginator.staticMethod]()
-    .replace(SHORTCUT_MATCHER, function(original, objectPath) {
+    .replace(SHORTCUT_MATCHER, function(original, path) {
+      var customTitle, objectPath;
+
+      if (path.indexOf(' ') > -1) {
+        var fragments = path.split(' ');
+        objectPath = fragments.shift();
+        customTitle = fragments.join(' ');
+      }
+      else {
+        objectPath = path;
+      }
+
       var link = resolveEntity(objectPath, context);
       var prefixChar = original[0];
 
       if (link) {
-        return prefixChar + `[${renderTitle(link.title || objectPath)}](${link.href})`;
+        var title = customTitle || link.title || objectPath;
+        return prefixChar + `[${renderTitle(title)}](${link.href})`;
       }
       else {
         console.warn('Unable to resolve link to object: ' + objectPath);

@@ -57,5 +57,16 @@ exports.markdown = {
   // 
   // You need to turn this on if you want to use the "Hot Items" feature.
   gitStats: true,
+
+  // Allow links to contain a leading "/".
+  // 
+  // For example:
+  // 
+  //     [/doc/foo.md]() 
+  // 
+  // Is equivalent to:
+  // 
+  //     [doc/foo.md]()
+  allowLeadingSlashInLinks: true
 };
 ```

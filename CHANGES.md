@@ -1,3 +1,8 @@
+**2.1.1**
+
+- support for custom link titles in the format: `[/path/to/entity Custom Title]()`
+- new markdown option: `allowLeadingSlashInLinks`
+
 **2.1.0**
 
 - markdown no longer accepts multiple "collections"

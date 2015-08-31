@@ -48,7 +48,8 @@ MarkdownPlugin.defaults = {
     icon: 'icon-book',
     exclude: [],
     fullFolderTitles: true,
-    fullFolderTitleDelimiter: ' - '
+    fullFolderTitleDelimiter: ' - ',
+    allowLeadingSlashInLinks: true
   }
 };
 
