@@ -1,3 +1,11 @@
+**2.1.2**
+
+- new markdown option: `discardIdPrefix`
+- new UI option: `launchExternalLinksInNewTabs`
+- external links are now highlighted by a small icon
+- links and markdown headings will now contain only plain-text, no weird markdown artficats
+- improved markdown linking
+
 **2.1.1**
 
 - support for custom link titles in the format: `[/path/to/entity Custom Title]()`

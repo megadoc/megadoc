@@ -49,7 +49,8 @@ MarkdownPlugin.defaults = {
     exclude: [],
     fullFolderTitles: true,
     fullFolderTitleDelimiter: ' - ',
-    allowLeadingSlashInLinks: true
+    allowLeadingSlashInLinks: true,
+    discardIdPrefix: null
   }
 };
 

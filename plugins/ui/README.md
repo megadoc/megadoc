@@ -191,7 +191,9 @@ module.exports = {
   disqus: {
     shortname: '',
     baseUrl: 'http://localhost'
-  }
+  },
+
+  launchExternalLinksInNewTabs: true
 };
 ```
 

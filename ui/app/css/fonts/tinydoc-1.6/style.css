@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'tinydoc';
-	src:url('fonts/tinydoc.eot');
-	src:url('fonts/tinydoc.eot?#iefi') format('embedded-opentype'),
-		url('fonts/tinydoc.ttf') format('truetype'),
-		url('fonts/tinydoc.woff') format('woff'),
-		url('fonts/tinydoc.svg#tinydoc') format('svg');
+	src:url('fonts/tinydoc.eot?-rmrp6w');
+	src:url('fonts/tinydoc.eot?#iefix-rmrp6w') format('embedded-opentype'),
+		url('fonts/tinydoc.ttf?-rmrp6w') format('truetype'),
+		url('fonts/tinydoc.woff?-rmrp6w') format('woff'),
+		url('fonts/tinydoc.svg?-rmrp6w#tinydoc') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,8 +23,14 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-link-external:before {
+	content: "\e615";
+}
 .icon-flame:before {
 	content: "\e613";
+}
+.icon-new-tab:before {
+	content: "\e616";
 }
 .icon-fire:before {
 	content: "\e614";

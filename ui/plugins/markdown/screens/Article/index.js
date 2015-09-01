@@ -10,7 +10,7 @@ var HasTitle = require('mixins/HasTitle');
 var Article = React.createClass({
   mixins: [
     HasTitle(function() {
-      var article = Database.get(this.props.params.articleId);
+      var article = Database.get(this.getArticleId());
       var collection = Database.getTitle();
 
       if (article) {
@@ -24,13 +24,17 @@ var Article = React.createClass({
   },
 
   componentDidUpdate: function(prevProps) {
-    if (prevProps.params.articleId !== this.props.params.articleId) {
+    if (this.getArticleId(prevProps) !== this.getArticleId()) {
       scrollToTop();
     }
   },
 
+  getArticleId(props = this.props) {
+    return props.params.splat;
+  },
+
   render() {
-    var article = Database.get(this.props.params.articleId);
+    var article = Database.get(this.getArticleId());
 
     if (!article) {
       return <div>Article not found...</div>;

@@ -1,4 +1,4 @@
-const React = window.React = require('react');
+const React = require('react');
 const jqScrollIntoView = require('jqScrollIntoView');
 
 function BrowserJumperMixin(locateElement) {

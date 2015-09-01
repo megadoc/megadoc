@@ -38,6 +38,10 @@ a {
   &.active {
     font-weight: bold;
   }
+
+  &[href^="http"] {
+    .mark-link-external();
+  }
 }
 
 h1, h2, h3 {

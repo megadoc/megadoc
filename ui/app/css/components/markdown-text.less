@@ -17,13 +17,15 @@
       opacity: 1;
     }
   }
-
 }
 
 .schemable({
   .markdown-text {
-    &__heading-anchor {
+    &__heading-anchor, &__heading-anchor:visited {
+      margin-left: 5px;
       color: @base1;
+
+      .unmark-link-external();
     }
 
     h1, h2, h3 {

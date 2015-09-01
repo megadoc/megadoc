@@ -1,12 +1,20 @@
-var React = require("react");
-var marked = require('marked');
-var hljs = require('highlight.js/lib/highlight');
-var LinkResolver = require('core/LinkResolver');
-var { getQueryItem } = require('actions/RouteActions');
-var scrollIntoView = require('utils/scrollIntoView');
+const React = require("react");
+const marked = require('marked');
+const hljs = require('highlight.js/lib/highlight');
+const LinkResolver = require('core/LinkResolver');
+const { getQueryItem } = require('actions/RouteActions');
+const scrollIntoView = require('utils/scrollIntoView');
 const Storage = require('core/Storage');
-const config = require('config');
 const { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
+const Utils = require('./MarkdownText/Utils');
+const Renderer = require('./MarkdownText/Renderer');
+
+const markedOptions = Object.freeze({
+  renderer: new Renderer(),
+  sanitize: true,
+  breaks: false,
+  linkify: false
+});
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
@@ -14,73 +22,14 @@ hljs.registerLanguage('ruby', require('highlight.js/lib/languages/ruby'));
 hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
 hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'));
 
-var renderer = new marked.Renderer();
-var RE_FIND_MARKUP_TAGS = /\<[^\>]+\>([^\<]+)\<[^\>]+\>/g;
-var RE_FIND_ACCENTS = /[^\w]+/g;
-
-var normalizeHeading = function(str) {
-  return encodeURIComponent(
-    str
-      .toLowerCase()
-      .replace(RE_FIND_MARKUP_TAGS, '$1')
-      .replace(RE_FIND_ACCENTS, '-')
-  );
-};
-
-renderer.heading = function (text, level) {
-  var id = normalizeHeading(text);
-  var link = location.href.replace(/[\?|\&]section=[^\&]+/, '');
-  var token = link.indexOf('?') > -1 ? '&' : '?';
-
-  link = `${link}${token}section=${id}`;
-
-  return (`
-    <h${level} class="markdown-text__heading" id="${id}">
-      <span class="markdown-text__heading-title">${text}</span>
-      <a name="${id}" class="markdown-text__heading-anchor icon icon-link" href="${link}"></a>
-    </h${level}>
-  `);
-};
-
-// When using History-based location, we need to mark internal links generated
-// by the LinkResolver with "data-internal" so that we can intercept them and
-// cause a transition when they're clicked, instead of causing the browser
-// to refresh.
-if (!config.useHashLocation) {
-  const TINY_LINK_MARKER = Object.freeze(/^tiny:\/\//);
-
-  renderer.link = function(href, title, text) {
-    var a = document.createElement('a');
-
-    a.href = href;
-    a.title = title;
-
-    let textWithoutMarker = text.replace(TINY_LINK_MARKER, '');
-
-    if (text !== textWithoutMarker) {
-      a.dataset.internal = true;
-    }
-
-    a.innerText = textWithoutMarker;
-
-    return a.outerHTML;
-  };
-}
-
-var markedOptions = {
-  renderer: renderer,
-  breaks: false,
-  sanitize: true,
-  linkify: false
-};
-
 var MarkdownText = React.createClass({
   statics: {
-    normalizeHeading: normalizeHeading,
+    normalizeHeading: Utils.normalizeHeading,
+    renderText: Utils.renderText,
 
     isHighlightingEnabled() {
       return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
-    }
+    },
   },
 
   propTypes: {

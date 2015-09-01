@@ -31,11 +31,16 @@ function scan(config, utils, globalConfig, done) {
     ;
 
     // remove the extension
-    entry.id = entry.filePath.replace(/\.[\w]{1,3}$/, '').replace(/\W/g, '-');
+    entry.id = entry.filePath;
+    entry.sortingId = entry.filePath;
     entry.title = parseTitle(entry.source, fileName);
     entry.sections = parseSections(entry.source);
     entry.fileName = fileName;
     entry.folder = path.dirname(entry.filePath);
+
+    if (config.discardIdPrefix) {
+      entry.id = entry.id.replace(config.discardIdPrefix, '');
+    }
   });
 
   config.commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');

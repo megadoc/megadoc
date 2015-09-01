@@ -11,7 +11,7 @@ var MarkdownRoot = React.createClass({
       <TwoColumnLayout className="markdown-root">
         <LeftColumn>
           <ClassBrowser
-            activeArticleId={this.props.params.articleId}
+            activeArticleId={this.props.params.splat}
             folders={Database.getFolders()}
             articles={Database.getArticles()}
           />

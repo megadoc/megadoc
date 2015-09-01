@@ -25,16 +25,19 @@ let Database = {
 
   getLinkableEntities() {
     return articles.reduce(function(links, entry) {
-      const { filePath } = entry;
-
-      links[filePath] = {
-        href: makeHref(`${config.name}.article`, { articleId: entry.id }),
+      const { filePath, id } = entry;
+      const link = {
+        href: makeHref(`${config.name}.article`, { splat: id }),
         title: `${strHumanize(config.title)}: ${entry.title}`
       };
 
+      links[filePath] = link;
+      links[id] = link;
+
       if (config.allowLeadingSlashInLinks) {
         if (filePath[0] !== '/') {
-          links['/' + filePath] = links[filePath];
+          links['/' + filePath] = link;
+          links['/' + id] = link;
         }
       }
 

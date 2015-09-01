@@ -18,9 +18,9 @@ LinkResolver.linkTo = function(entityId, context={}) {
   var i, href;
   let contextResolver;
 
-  if (process.env.VERBOSE) {
-    console.debug('Resolving link to %s in context %s', entityId, JSON.stringify(context));
-  }
+  // if (process.env.VERBOSE) {
+  //   console.debug('Resolving link to %s in context %s', entityId, JSON.stringify(context));
+  // }
 
   if (context.namespace) {
     contextResolver = findWhere(resolvers, { namespace: context.namespace });

@@ -1,7 +1,7 @@
 const React = require("react");
 const { Link } = require('react-router');
 const { sortBy } = require('lodash');
-const { normalizeHeading } = require('components/MarkdownText');
+const { normalizeHeading, renderText } = require('components/MarkdownText');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
 const Storage = require('core/Storage');
@@ -106,7 +106,7 @@ var MarkdownClassBrowser = React.createClass({
       <div key={id} ref={id}>
         <Link
           to={`${config.name}.article`}
-          params={{ articleId: id }}
+          params={{ splat: id }}
           className="class-browser__entry-link"
         >
           {title}
@@ -129,7 +129,7 @@ var MarkdownClassBrowser = React.createClass({
 
   renderSection(article, section) {
     var className = "class-browser__sections-section";
-    var sectionId = normalizeHeading(section.title);
+    var sectionId = normalizeHeading(renderText(section.title.split('\n')[0]));
 
     if (section.level > 2) {
       className += " class-browser__sections-section--indented";
@@ -139,9 +139,9 @@ var MarkdownClassBrowser = React.createClass({
       <li key={section.title} className={className}>
         <Link
           to={`${config.name}.article`}
-          params={{ articleId: encodeURIComponent(article.id) }}
+          params={{ splat: article.id }}
           query={{ section: sectionId }}
-          children={section.title}
+          children={renderText(section.title)}
         />
       </li>
     );

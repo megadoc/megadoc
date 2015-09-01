@@ -32,7 +32,7 @@ tinydocReact.use(function MarkdownPlugin(api) {
 
     {
       name: `${routeName}.article`,
-      path: ':articleId',
+      path: '*',
       handler: require('./screens/Article'),
       parent: routeName
     }

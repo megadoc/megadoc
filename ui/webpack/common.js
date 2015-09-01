@@ -36,7 +36,10 @@ var baseConfig = {
   },
 
   resolveLoader: {
-    root: path.resolve(__dirname, '..', '..', 'node_modules')
+    root: path.resolve(__dirname, '..', '..', 'node_modules'),
+    alias: {
+      'less-json-loader': path.resolve(__dirname, 'less-json-loader.js')
+    }
   },
 
   node: {

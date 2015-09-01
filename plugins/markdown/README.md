@@ -67,6 +67,9 @@ exports.markdown = {
   // Is equivalent to:
   // 
   //     [doc/foo.md]()
-  allowLeadingSlashInLinks: true
+  allowLeadingSlashInLinks: true,
+
+  // @param {RegExp}
+  discardIdPrefix: null
 };
 ```

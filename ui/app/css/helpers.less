@@ -75,3 +75,31 @@
   overflow: hidden;
   resize: none;
 }
+
+.iconify(@glyph) {
+  content: @glyph;
+  font-family: 'tinydoc';
+}
+
+.mark-link-external() {
+  margin-right: 16px;
+
+  &:after {
+    .iconify('\e615');
+    pointer-events: none;
+    display: inline-block;
+    margin-left: 3px;
+    font-weight: 100;
+    color: inherit;
+    opacity: 0.5;
+    position: absolute;
+  }
+}
+
+.unmark-link-external() {
+  margin-right: 0;
+
+  &:after {
+    content: none;
+  }
+}
