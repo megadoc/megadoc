@@ -22,3 +22,6 @@ exports.DEFAULT_SCHEME = 'plain';
 
 exports.CFG_COLOR_SCHEME = 'colorScheme';
 exports.CFG_SYNTAX_HIGHLIGHTING = 'highlightingEnabled';
+exports.CFG_SIDEBAR_WIDTH = 'sidebarWidth';
+exports.MIN_SIDEBAR_WIDTH = 160;
+exports.INITIAL_SIDEBAR_WIDTH = 240;

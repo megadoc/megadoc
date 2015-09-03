@@ -1,3 +1,7 @@
+**2.1.5**
+
+- functional sidebar resizing using jQueryUI.resizable
+
 **2.1.4**
 
 - clicking a link with the CTRL or META keys held down will now work properly

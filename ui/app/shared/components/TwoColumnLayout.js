@@ -1,44 +1,72 @@
-var React = require('react');
-var findChildByType = require('utils/findChildByType');
-var ResizablePanel = require('components/ResizablePanel');
-var EventEmitter = require('core/EventEmitter');
-
-var emitter = new EventEmitter([ 'change' ]);
+const React = require('react');
+const findChildByType = require('utils/findChildByType');
+const EventEmitter = require('core/EventEmitter');
+const Storage = require('core/Storage');
+const $ = require('jquery');
+require('jQueryUI');
+const emitter = new EventEmitter([ 'change', 'resize' ]);
+const {
+  CFG_SIDEBAR_WIDTH,
+  MIN_SIDEBAR_WIDTH,
+  INITIAL_SIDEBAR_WIDTH
+} = require('constants');
 
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
-var sidebarWidth = '240px';
-var MAX_SIDEBAR_WIDTH = 640;
+let sidebarWidth = Storage.get(CFG_SIDEBAR_WIDTH);
+let activeInstances = [];
 
-var LeftColumn = React.createClass({
+Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
+
+// so that we reset the sidebar width if storage was cleared
+Storage.on('change', function() {
+  sidebarWidth = Storage.get(CFG_SIDEBAR_WIDTH);
+});
+
+const LeftColumn = React.createClass({
   render() {
     return this.props.children;
   }
 });
 
-var RightColumn = React.createClass({
+const RightColumn = React.createClass({
   render() {
     return this.props.children;
   }
 });
 
-var activeInstances = [];
-var TwoColumnLayout = React.createClass({
+const TwoColumnLayout = React.createClass({
   statics: {
     isActive() {
       return activeInstances.length > 0;
+    },
+
+    getSidebarWidth() {
+      return TwoColumnLayout.isActive() ? sidebarWidth : 0;
     },
 
     on: emitter.on,
     off: emitter.off
   },
 
-  componentDidMount: function() {
+  componentDidMount() {
     activeInstances.push(1);
+
+    $(React.findDOMNode(this.refs.resizer))
+      .resizable({
+        handles: 'e'
+      })
+      .on('resize', this.updateSidebarWidth)
+      .on('resizestop', this.updateAndSaveSidebarWidth)
+    ;
+
+    emitter.on('resize', this.reloadOnResize);
     emitter.emit('change');
   },
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
+    $(React.findDOMNode(this.refs.resizer)).resizable('destroy');
+
     activeInstances.pop();
     emitter.emit('change');
   },
@@ -49,10 +77,16 @@ var TwoColumnLayout = React.createClass({
 
     return (
       <div className="two-column-layout">
-        <div className="two-column-layout__left">
-          <ResizablePanel width={sidebarWidth} onResize={this.updateSidebarWidth}>
-            {left}
-          </ResizablePanel>
+        <div
+          ref="resizer"
+          className="two-column-layout__left"
+          style={{ width: sidebarWidth }}
+        >
+          <div className="resizable-panel">
+            <div className="resizable-panel__content">
+              {left}
+            </div>
+          </div>
         </div>
 
         <div
@@ -64,9 +98,18 @@ var TwoColumnLayout = React.createClass({
     );
   },
 
-  updateSidebarWidth(e) {
-    sidebarWidth = Math.min(e.clientX, MAX_SIDEBAR_WIDTH);
+  reloadOnResize() {
     this.forceUpdate();
+  },
+
+  updateSidebarWidth(e, ui) {
+    sidebarWidth = Math.max(ui.size.width, MIN_SIDEBAR_WIDTH);
+    emitter.emit('resize', sidebarWidth);
+  },
+
+  updateAndSaveSidebarWidth(e, ui) {
+    this.updateSidebarWidth(e, ui);
+    Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
   }
 });
 
