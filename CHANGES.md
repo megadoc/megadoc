@@ -1,3 +1,8 @@
+**2.1.4**
+
+- clicking a link with the CTRL or META keys held down will now work properly
+- adjusted the class/module browser to show list bullets & squares to improve readability
+
 **2.1.3**
 
 - Fixed an issue with double-HTML escaping in links

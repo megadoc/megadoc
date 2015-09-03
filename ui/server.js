@@ -11,6 +11,7 @@ var port = process.env.PORT || '8942';
 var server;
 
 config.entry = [
+  path.resolve(process.env.CONFIG_FILE),
   'webpack/hot/dev-server',
   'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
   path.join(root, 'app/index.js')
@@ -20,10 +21,6 @@ config.plugins.push(new webpack.HotModuleReplacementPlugin());
 config.plugins.push(new webpack.DefinePlugin(({
   'process.env.VERBOSE': JSON.stringify(!!process.env.VERBOSE)
 })));
-
-if (process.env.CONFIG_FILE) {
-  config.entry.unshift(path.resolve(process.env.CONFIG_FILE));
-}
 
 // load local plugins that you're developing
 if (fs.existsSync(path.join(root, '.local.js'))) {
@@ -48,6 +45,11 @@ fs.writeFileSync(
     title: 'tinydoc--dev',
     scripts: [ 'vendor.js', 'main.js' ]
   })
+);
+
+fs.symlinkSync(
+  path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'assets'),
+  path.join(contentBase, 'assets')
 );
 
 server = new WebpackDevServer(webpack(config), {

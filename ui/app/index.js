@@ -76,9 +76,11 @@ emitter.on('pluginsLoaded', function start(registrar) {
 
   if (!config.useHashLocation) {
     $(document.body).on('click', 'a[data-internal="true"]', function(e) {
-      var $a = $(e.target);
-      e.preventDefault();
-      RouteActions.transitionTo($a.attr('href').replace(/^#/, ''));
+      if (!e.ctrlKey && !e.metaKey) {
+        const href = $(e.target).attr('href');
+        e.preventDefault();
+        RouteActions.transitionTo(href.replace(/^#/, ''));
+      }
     });
   }
 });
