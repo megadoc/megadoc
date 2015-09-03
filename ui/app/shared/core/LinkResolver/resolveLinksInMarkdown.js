@@ -2,15 +2,15 @@ var SHORTCUT_MATCHER = /[^\\]\[([^\]]+)\]\(\)/g;
 var ESCAPED_MATCHER = /[\\]\[([^\]]+)\]\(\)/g;
 var config = require('config');
 
-var renderTitle = function(title) {
+var renderTitle = function(rawTitle) {
+  var title = rawTitle;
+
+  if (!config.useHashLocation) {
+    title = `tiny://${title}`;
+  }
+
   return title;
 };
-
-if (!config.useHashLocation) {
-  renderTitle = function(title) {
-    return `tiny://${title}`;
-  };
-}
 
 function resolveLinksInMarkdown(docstring, resolveEntity, context) {
   return docstring

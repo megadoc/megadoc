@@ -1,3 +1,7 @@
+**2.1.3**
+
+- Fixed an issue with double-HTML escaping in links
+
 **2.1.2**
 
 - new markdown option: `discardIdPrefix`

@@ -57,7 +57,7 @@ module.exports = function createRenderer() {
       }
     }
 
-    a.innerText = textWithoutMarker;
+    a.innerHTML = textWithoutMarker;
 
     return a.outerHTML;
   };
