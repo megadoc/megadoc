@@ -38,6 +38,10 @@ config.resolveLoader = {
 
 var contentBase = '/tmp/tinydoc';
 
+if (fs.existsSync(contentBase)) {
+  fs.removeSync(contentBase);
+}
+
 fs.ensureDirSync(contentBase);
 fs.writeFileSync(
   contentBase + '/index.html',

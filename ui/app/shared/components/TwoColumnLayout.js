@@ -11,12 +11,12 @@ const {
   INITIAL_SIDEBAR_WIDTH
 } = require('constants');
 
+Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
+
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
 let sidebarWidth = Storage.get(CFG_SIDEBAR_WIDTH);
 let activeInstances = [];
-
-Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
 
 // so that we reset the sidebar width if storage was cleared
 Storage.on('change', function() {
