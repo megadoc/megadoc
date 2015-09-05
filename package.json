@@ -8,7 +8,7 @@
     "prepublish": "./bin/test.sh && ./bin/build.sh",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
-    "test": "./bin/test.sh"
+    "test": "./bin/test.sh && ./bin/test-ui.sh --single-run"
   },
   "repository": {
     "type": "git",
