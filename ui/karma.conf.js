@@ -3,7 +3,7 @@ var webpackConfig = require('./webpack/common');
 module.exports = function(config) {
   config.set({
     frameworks: [ 'mocha' ],
-    browsers: [ 'Chrome' ],
+    browsers: [ 'chrome_without_security' ],
 
     customLaunchers: {
       // if you want to use this (for CI or to debug a ScriptError), run karma
@@ -39,12 +39,17 @@ module.exports = function(config) {
     },
 
     files: [
-      'lib/test.js',
-      'ui/test.js',
+      'test.js',
     ],
 
     preprocessors: {
-      // 'ui/test.js': [ 'webpack', 'sourcemap' ]
+      'test.js': [ 'webpack', 'sourcemap' ]
+    },
+
+    reporters: [ 'mocha' ],
+
+    mochaReporter: {
+      ignoreSkipped: true
     },
 
     client: {
@@ -61,4 +66,8 @@ module.exports = function(config) {
       noInfo: true
     }
   });
+
+  if (process.env.DEBUG) {
+    config.set({ logLevel: 'DEBUG' });
+  }
 };
