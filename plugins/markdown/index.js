@@ -29,12 +29,9 @@ function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
       Object.keys(indices).forEach(function(indexPath) {
         registry.add(indexPath, indices[indexPath]);
       });
+    }
 
-      done();
-    }
-    else {
-      done();
-    }
+    done();
   });
 
   emitter.on('write', function(compilation, done) {

@@ -45,11 +45,7 @@ function resolveLink(id, database, registry, currentModuleId) {
   // registry index, we'll need this to look up the proper doc(s)
   var index = getIndex(id, database, registry, currentModuleId);
 
-  if (!index) {
-    console.warn('Unable to resolve link to "%s".', id);
-    return undefined;
-  }
-  else {
+  if (index && index.type === 'cjs') {
     doc = lookup(database, index.id);
 
     console.assert(!!doc,

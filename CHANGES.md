@@ -1,3 +1,8 @@
+**2.2.0**
+
+- compile-time indexing of link tokens, this allows for linting in the future
+- (UI) global plugin hook `tinydocReact.use` renamed to `tinydoc.use`
+
 **2.1.5**
 
 - functional sidebar resizing using jQueryUI.resizable

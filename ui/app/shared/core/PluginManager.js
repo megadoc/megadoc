@@ -23,7 +23,7 @@ function PluginManager(pluginCount, emitter) {
         console.log('%d more plugins to go.', pluginCount - (++ran));
 
         if (ran === pluginCount) {
-          delete window.tinydocReact.use;
+          delete window.tinydoc.use;
 
           console.log('All plugins were loaded, starting.');
 

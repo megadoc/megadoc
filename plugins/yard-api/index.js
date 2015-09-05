@@ -1,6 +1,7 @@
 var path = require('path');
 var extend = require('lodash').extend;
 var scan = require('./scan');
+var indexEntities = require('./indexEntities');
 
 function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
@@ -20,6 +21,18 @@ function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
 
       done();
     });
+  });
+
+  emitter.on('index', function(compilation, registry, done) {
+    if (compilation.scanned) {
+      var indices = indexEntities(database, config);
+
+      Object.keys(indices).forEach(function(indexPath) {
+        registry.add(indexPath, indices[indexPath]);
+      });
+    }
+
+    done();
   });
 
   emitter.on('write', function(compilation, done) {
