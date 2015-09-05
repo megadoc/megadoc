@@ -3,6 +3,11 @@
 - compile-time indexing of link tokens, this allows for linting in the future
 - (UI) global plugin hook `tinydocReact.use` renamed to `tinydoc.use`
 
+Internal changes:
+
+- UI tests can now be run using `/bin/test-ui.sh` or `karma start ui/karma.conf.js`
+- `npm test` (and `npm publish`) will now fail if there are any eslint, core-test, or ui-test failures
+
 **2.1.5**
 
 - functional sidebar resizing using jQueryUI.resizable

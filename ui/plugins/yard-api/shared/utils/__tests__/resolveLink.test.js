@@ -1,5 +1,4 @@
 const subject = require('../resolveLink');
-const config = require('config');
 const Database = require('core/Database');
 const Router = require('core/Router');
 const sinonSuite = require('test_utils/sinonSuite');

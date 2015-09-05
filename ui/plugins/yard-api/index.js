@@ -1,9 +1,6 @@
-const Router = require('core/Router');
 const Storage = require('core/Storage');
 const LinkResolver = require('core/LinkResolver');
-const Database = require('core/Database');
 const K = require('constants');
-const { findWhere } = require('lodash');
 
 Storage.register(K.CFG_CLASS_BROWSER_EXPAND_ALL, false);
 
