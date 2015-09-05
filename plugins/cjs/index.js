@@ -6,7 +6,7 @@ var indexEntities = require('./indexEntities');
 function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'cjs', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/cjs-config.js');
   globalConfig.pluginScripts.push('plugins/cjs.js');

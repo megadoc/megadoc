@@ -6,7 +6,7 @@ var indexEntities = require('./indexEntities');
 function YardAPIPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'yard-api', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/yard-api-config.js');
   globalConfig.pluginScripts.push('plugins/yard-api.js');

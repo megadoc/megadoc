@@ -56,7 +56,7 @@ var baseConfig = {
         exclude: [ /ui\/app\/vendor/ ],
         include: [
           path.join(root, 'app'),
-          path.join(root, 'plugins'),
+          path.join(root, '..', 'plugins'),
           path.join(root, '..', 'node_modules', 'qjunk', 'lib')
         ],
 

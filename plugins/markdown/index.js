@@ -6,7 +6,7 @@ var write = require('./write');
 function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var database;
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'markdown', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/markdown-config.js');
   globalConfig.pluginScripts.push('plugins/markdown.js');

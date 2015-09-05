@@ -12,7 +12,6 @@ var config = {};
 var tiny, configFilePath;
 
 function collect(val, set) {
-  console.log('collecting:', val, 'into', set);
   set.push(val);
   return set;
 }

@@ -23,9 +23,11 @@ var config = {
   ]
 };
 
-glob.sync(path.join(root, 'plugins/*/index.js')).forEach(function(entryFile) {
-  var pluginName = path.basename(path.dirname(entryFile));
-  config.entry['plugins/' + pluginName] = entryFile;
+var corePluginsDir = path.join(root, '..', 'plugins');
+
+glob.sync('*/ui/index.js', { cwd: corePluginsDir }).forEach(function(entryFile) {
+  var pluginName = entryFile.split('/')[0];
+  config.entry['plugins/' + pluginName] = path.resolve(corePluginsDir, entryFile);
 });
 
 if (nodeEnv === 'production' && process.env.OPTIMIZE !== '0') {

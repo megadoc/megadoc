@@ -8,7 +8,7 @@ var Promise = require('bluebird');
 function GitPlugin(emitter, cssCompiler, config, globalConfig, utils) {
   var stats = {};
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'plugins', 'git', 'css', 'index.less'));
+  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
 
   globalConfig.scripts.push('plugins/git-config.js');
   globalConfig.pluginScripts.push('plugins/git.js');
