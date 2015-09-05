@@ -1,13 +1,15 @@
-const { where } = require('lodash');
-
-let outlets = [];
+let outlets = {};
 let OutletManager = {
-  setElements(inOutlets) {
-    outlets = inOutlets;
+  add(outlet, renderer) {
+    if (!outlets[outlet]) {
+      outlets[outlet] = [];
+    }
+
+    outlets[outlet].push(renderer);
   },
 
   getElements(outlet) {
-    return where(outlets, { outlet });
+    return outlets[outlet];
   }
 };
 

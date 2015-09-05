@@ -8,7 +8,8 @@
   ],
 
   "globals": {
-    "expect": false
+    "expect": false,
+    "tinydoc": false
   },
 
   "ecmaFeatures": {

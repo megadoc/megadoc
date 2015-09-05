@@ -1,4 +1,3 @@
-var { makeHref } = require('actions/RouteActions');
 var config = require('config');
 var { pluck, findWhere } = require('lodash');
 var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');

@@ -34,11 +34,13 @@ module.exports = function(docs) {
             paths.push([ parentDoc.id, doc.name ].join(doc.symbol));
             paths.push([ parentDoc.name, doc.name ].join(doc.symbol));
           }
-        break;
+          break;
       }
     }
 
     if (context) {
+      context.type = 'cjs';
+
       paths.forEach(function(path) {
         indices.push({ path: path, context: context });
       });

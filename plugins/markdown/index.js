@@ -1,5 +1,6 @@
 var path = require('path');
 var scan = require('./scan');
+var indexEntities = require('./indexEntities');
 var write = require('./write');
 
 function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
@@ -19,6 +20,21 @@ function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
       database = _database;
       done();
     });
+  });
+
+  emitter.on('index', function(compilation, registry, done) {
+    if (compilation.scanned) {
+      var indices = indexEntities(database, config);
+
+      Object.keys(indices).forEach(function(indexPath) {
+        registry.add(indexPath, indices[indexPath]);
+      });
+
+      done();
+    }
+    else {
+      done();
+    }
   });
 
   emitter.on('write', function(compilation, done) {

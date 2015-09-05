@@ -27,7 +27,7 @@ function lookupModuleEntity(database, moduleId, entityName) {
 function getIndex(id, database, registry, currentModuleId) {
   var index = registry[id];
 
-  if (index) {
+  if (index && index.type === 'cjs') {
     return index;
   }
   else if (currentModuleId) {
@@ -37,8 +37,6 @@ function getIndex(id, database, registry, currentModuleId) {
       return registry[entity.id];
     }
   }
-
-  return index;
 }
 
 function resolveLink(id, database, registry, currentModuleId) {

@@ -1,6 +1,5 @@
 const config = require('config');
 const { assign, where, findWhere } = require('lodash');
-const { makeHref } = require('actions/RouteActions');
 const strHumanize = require('tinydoc/lib/utils/strHumanize');
 
 const articles = config.database;
@@ -21,28 +20,6 @@ let Database = {
 
   getFolders() {
     return folders;
-  },
-
-  getLinkableEntities() {
-    return articles.reduce(function(links, entry) {
-      const { filePath, id } = entry;
-      const link = {
-        href: makeHref(`${config.name}.article`, { splat: id }),
-        title: `${strHumanize(config.title)}: ${entry.title}`
-      };
-
-      links[filePath] = link;
-      links[id] = link;
-
-      if (config.allowLeadingSlashInLinks) {
-        if (filePath[0] !== '/') {
-          links['/' + filePath] = link;
-          links['/' + id] = link;
-        }
-      }
-
-      return links;
-    }, {});
   }
 };
 

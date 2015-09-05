@@ -2,7 +2,7 @@
 
 var React = require('react');
 var config = require('config');
-var RouteActions = require('actions/RouteActions');
+var Router = require('core/Router');
 
 var DOM = React.DOM;
 var DISQUS_CONFIG = [
@@ -172,9 +172,9 @@ var Disqus = React.createClass({
   },
 
   render: function() {
-    var currentRoute = RouteActions.getCurrentRoute();
+    var currentPath = Router.getCurrentPath();
 
-    if (!currentRoute || isDisabled()) {
+    if (!currentPath || isDisabled()) {
       return null;
     }
 
@@ -183,7 +183,7 @@ var Disqus = React.createClass({
         shortname={config.disqus.shortname}
         identifier={this.props.identifier}
         title={this.props.title || document.title}
-        url={config.disqus.baseUrl + '/' + currentRoute}
+        url={config.disqus.baseUrl + '/' + currentPath}
         categoryId={this.props.categoryId}
       />
     );

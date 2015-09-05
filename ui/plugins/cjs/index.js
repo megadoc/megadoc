@@ -6,7 +6,7 @@ const resolveLink = require('utils/resolveLink');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
-tinydocReact.use(function CJSPlugin(api) {
+tinydoc.use(function CJSPlugin(api) {
   api.registerRoutes([
     {
       name: 'js',

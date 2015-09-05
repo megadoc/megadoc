@@ -30,7 +30,6 @@ function scan(config, utils, globalConfig, done) {
       .replace(/\W/g, '-')
     ;
 
-    // remove the extension
     entry.id = entry.filePath;
     entry.sortingId = entry.filePath;
     entry.title = parseTitle(entry.source, fileName);

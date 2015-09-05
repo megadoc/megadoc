@@ -1,6 +1,6 @@
 var config = require('config');
 
-tinydocReact.use(function GitPlugin(api) {
+tinydoc.use(function GitPlugin(api) {
   api.registerRoutes([
     {
       name: 'git',

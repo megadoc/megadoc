@@ -1,17 +1,14 @@
 const Router = require('core/Router');
 const Database = require('core/Database');
-const { makeHref } = require('actions/RouteActions');
 const resolveLink = require('tinydoc/plugins/cjs/resolveLink');
 
 function linkTo(id, registry) {
-  const router = Router.getSingleton();
-
   let currentModuleId;
 
   // Are we browsing some CJS module? If so, links could be relative to the
   // current module being browsed.
-  if (router.isActive('js.module')) {
-    currentModuleId = router.getCurrentParams().moduleId;
+  if (Router.isActive('js.module')) {
+    currentModuleId = Router.getParamItem('moduleId');
   }
 
   const link = resolveLink(id, Database.getAllTags(), registry, currentModuleId);
@@ -24,7 +21,7 @@ function linkTo(id, registry) {
     }
 
     return {
-      href: makeHref('js.module', {
+      href: Router.makeHref('js.module', {
         moduleId: link.moduleId
       }, queryParams),
 

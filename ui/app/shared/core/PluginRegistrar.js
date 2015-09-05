@@ -1,21 +1,12 @@
-var buildRouteMap = require('utils/buildRouteMap');
+const buildRouteMap = require('utils/buildRouteMap');
+const OutletManager = require('core/OutletManager');
 
 module.exports = function(emitter) {
   var routeSpecs = [];
-  var outletElements = [];
-  var linkableEntities = [];
 
   return {
     getPluginRouteMap: function() {
       return buildRouteMap(routeSpecs);
-    },
-
-    getOutletElements() {
-      return outletElements;
-    },
-
-    getLinkableEntities() {
-      return linkableEntities;
     },
 
     API: {
@@ -30,8 +21,8 @@ module.exports = function(emitter) {
         });
       },
 
-      registerOutletElement: function(outlet, renderer, key) {
-        outletElements.push({ outlet, renderer, key: key || renderer.key });
+      registerOutletElement: function(outlet, renderer) {
+        OutletManager.add(outlet, renderer);
       }
     }
   };

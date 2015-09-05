@@ -6,10 +6,12 @@ const LinkResolver = require('core/LinkResolver');
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
+const strHumanize = require('tinydoc/lib/utils/strHumanize');
+const Router = require('core/Router');
 
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
-tinydocReact.use(function MarkdownPlugin(api) {
+tinydoc.use(function MarkdownPlugin(api) {
   const routeName = config.name;
 
   api.registerRoutes([
@@ -38,35 +40,24 @@ tinydocReact.use(function MarkdownPlugin(api) {
     }
   ]);
 
-  api.registerOutletElement('navigation',
-    React.createClass({
-      render() {
-        return <NavigationOutlet {...config} />;
-      }
-    }),
-    config.name
-  );
+  api.registerOutletElement('navigation', NavigationOutlet);
 
   api.on('started', function() {
-    var links = Database.getLinkableEntities();
-    var linkKeys = Object.keys(links);
+    LinkResolver.use(function(id, registry) {
+      const index = registry[id];
 
-    LinkResolver.use(function(id) {
-      var entity;
+      if (index && index.type === 'markdown') {
+        const article = Database.get(index.articleId);
 
-      if (links[id]) {
-        entity = links[id];
+        console.assert(!!article,
+          `Expected to find a markdown article with id '${index.articleId}'`
+        );
+
+        return {
+          href: Router.makeHref(`${config.name}.article`, { splat: article.id }),
+          title: `${strHumanize(config.title)}: ${article.title}`
+        };
       }
-      else {
-        linkKeys.some(function(linkKey) {
-          if (linkKey.indexOf(id) > -1) {
-            entity = links[linkKey];
-            return true;
-          }
-        });
-      }
-
-      return entity;
     });
   });
 });

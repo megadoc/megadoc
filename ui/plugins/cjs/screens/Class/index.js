@@ -1,14 +1,13 @@
-var React = require('react');
-var Database = require('core/Database');
-var ClassView = require('./ClassView');
-var FunctionView = require('./FunctionView');
-var HasTitle = require('mixins/HasTitle');
-var ModuleHeader = require('./components/ModuleHeader');
-var GitStats = require('components/GitStats');
-const LinkResolver = require('core/LinkResolver');
+const React = require('react');
+const Database = require('core/Database');
+const ClassView = require('./ClassView');
+const FunctionView = require('./FunctionView');
+const HasTitle = require('mixins/HasTitle');
+const ModuleHeader = require('./components/ModuleHeader');
+const GitStats = require('components/GitStats');
 const config = require('config');
 
-var Class = React.createClass({
+const Class = React.createClass({
   mixins: [
     HasTitle(function() {
       var module = Database.getModule(this.props.params.moduleId);

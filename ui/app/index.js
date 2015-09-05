@@ -1,11 +1,9 @@
 var React = require('react');
 var ReactRouter = require('react-router');
 var Router = require('core/Router');
-var RouteActions = require('actions/RouteActions');
 var config = require('config');
 var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
-var OutletManager = require('core/OutletManager');
 var $ = require('jquery');
 var Storage = require('core/Storage');
 var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
@@ -15,9 +13,9 @@ Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
 /**
- * @namespace tinydocReact
+ * @namespace tinydoc
  */
-window.tinydocReact = {};
+window.tinydoc = {};
 
 var emitter = new EventEmitter([
   'pluginsLoaded',
@@ -74,28 +72,16 @@ emitter.on('pluginsLoaded', function start(registrar) {
 
     Router.setInstance(router);
 
-    OutletManager.setElements(registrar.getOutletElements());
-
     router.run(function(Handler, state) {
       React.render(<Handler onStart={emitStarted} {...state} />, document.body);
     });
   });
-
-  if (!config.useHashLocation) {
-    $(document.body).on('click', 'a[data-internal="true"]', function(e) {
-      if (!e.ctrlKey && !e.metaKey) {
-        const href = $(e.target).attr('href');
-        e.preventDefault();
-        RouteActions.transitionTo(href.replace(/^#/, ''));
-      }
-    });
-  }
 });
 
 var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
 
 /**
- * @method tinydocReact.use
+ * @method tinydoc.use
  *
  * @param {Function} pluginEntryRunner
  *        The function that will register your plugin.
@@ -103,4 +89,4 @@ var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
  * @param {PluginRegistrar} pluginEntryRunner.api
  *        The plugin registration API you can use.
  */
-window.tinydocReact.use = pluginMgr.use;
+window.tinydoc.use = pluginMgr.use;

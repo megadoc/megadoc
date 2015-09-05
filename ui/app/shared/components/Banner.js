@@ -50,7 +50,7 @@ var Banner = React.createClass({
   },
 
   renderElement(element) {
-    var Element = element.renderer;
+    var Element = element;
 
     return (
       <BannerItem key={element.key}>

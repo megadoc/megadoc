@@ -1,29 +1,26 @@
-var React = require('react');
-var { Link } = require('react-router');
-var Icon = require('components/Icon');
+const React = require('react');
+const { Link } = require('react-router');
+const Icon = require('components/Icon');
+const config = require('config');
 
-var Navigation = React.createClass({
-  getKey() {
-    return this.props.name;
+const Navigation = React.createClass({
+  statics: {
+    key: config.name
   },
 
   render() {
-    return this.renderCollectionLink(this.props);
-  },
-
-  renderCollectionLink(collection) {
-    if (collection.navigationEntry === false) {
+    if (config.navigationEntry === false) {
       return null;
     }
 
     return (
-      <Link key={collection.name} to={collection.name}>
-        {collection.icon && [
-          <Icon key="icon" className={collection.icon} />,
+      <Link to={config.name}>
+        {config.icon && [
+          <Icon key="icon" className={config.icon} />,
           ' '
         ]}
 
-        {collection.title}
+        {config.title}
       </Link>
     );
   }
