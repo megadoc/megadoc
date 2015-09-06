@@ -2,6 +2,8 @@
 
 - compile-time indexing of link tokens, this allows for linting in the future
 - (UI) global plugin hook `tinydocReact.use` renamed to `tinydoc.use`
+- fixed an issue that was causing some markdown headings to be out-of-sync with their links/anchors
+- fixed an issue that was causing CJS entities not to be reachable via sidebar links
 
 Internal changes:
 

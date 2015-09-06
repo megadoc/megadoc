@@ -7,5 +7,5 @@ fi
 
 ./node_modules/mocha/bin/mocha \
   -r test/index.js \
-  {lib,plugins}/**/*.test.js \
+  $(find {lib,plugins} -name '*.test.js' ! -path '*ui/*') \
   $@

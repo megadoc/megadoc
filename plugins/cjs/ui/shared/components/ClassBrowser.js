@@ -128,14 +128,16 @@ var ClassBrowser = React.createClass({
   },
 
   renderClassEntity(moduleDoc, doc) {
+    const entityPath = doc.symbol + doc.ctx.name;
+
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link
           to="js.module"
           params={{ moduleId: moduleDoc.id }}
-          query={{ entity: doc.ctx.name }}
+          query={{ entity: entityPath }}
         >
-          {doc.isConstructor ? 'constructor' : (doc.symbol + doc.ctx.name)}
+          {doc.isConstructor ? 'constructor' : entityPath}
         </Link>
       </li>
     );

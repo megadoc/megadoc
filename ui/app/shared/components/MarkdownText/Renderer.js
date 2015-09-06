@@ -11,7 +11,7 @@ module.exports = function createRenderer() {
 
   // this could be heavily optimized, but meh for now
   renderer.heading = function (text, level) {
-    const sectionId = Utils.normalizeHeading(Utils.sanitize(text));
+    const sectionId = Utils.normalizeHeading(Utils.sanitize(text.split('\n')[0]));
     const articleURL = location.href.replace(/[\?|\&]section=[^\&]+/, '');
     const token = articleURL.indexOf('?') > -1 ? '&' : '?';
     const Tag = `h${level}`;

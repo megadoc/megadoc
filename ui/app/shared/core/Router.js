@@ -38,7 +38,7 @@ exports.getQueryItem = function(item) {
 };
 
 exports.makeHref = function(name, params, query) {
-  return instance.makeHref(name, params, query);
+  return encodeURIComponent(instance.makeHref(name, params, query));
 };
 
 

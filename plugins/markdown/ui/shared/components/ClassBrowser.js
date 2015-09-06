@@ -1,7 +1,8 @@
 const React = require("react");
 const { Link } = require('react-router');
 const { sortBy } = require('lodash');
-const { normalizeHeading, renderText } = require('components/MarkdownText');
+const { renderText } = require('components/MarkdownText');
+const renderPlainTextHeading = require('utils/renderPlainTextHeading');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
 const Storage = require('core/Storage');
@@ -111,7 +112,9 @@ var MarkdownClassBrowser = React.createClass({
         >
           {title}
 
-          {article.git && isItemHot(article.git.lastCommittedAt) && <HotItemIndicator />}
+          {article.git && isItemHot(article.git.lastCommittedAt) && (
+            <HotItemIndicator />
+          )}
         </Link>
 
         {isActive && this.renderTOC(article)}
@@ -129,19 +132,19 @@ var MarkdownClassBrowser = React.createClass({
 
   renderSection(article, section) {
     var className = "class-browser__sections-section";
-    var sectionId = normalizeHeading(renderText(section.title.split('\n')[0]));
+    var sectionId = renderPlainTextHeading(section.title);
 
     if (section.level > 2) {
       className += " class-browser__sections-section--indented";
     }
 
     return (
-      <li key={section.title} className={className}>
+      <li key={sectionId} className={className}>
         <Link
           to={`${config.name}.article`}
           params={{ splat: article.id }}
           query={{ section: sectionId }}
-          children={renderText(section.title)}
+          children={renderPlainTextHeading(section.title, false)}
         />
       </li>
     );

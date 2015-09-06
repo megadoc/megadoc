@@ -81,7 +81,12 @@ var MarkdownText = React.createClass({
       node = this.getDOMNode().querySelector(`#${section}`);
 
       if (node) {
-        scrollIntoView(node);
+        if (typeof node.scrollIntoViewIfNeeded === 'function') {
+          node.scrollIntoViewIfNeeded();
+        }
+        else {
+          scrollIntoView(node);
+        }
       }
       else {
         console.warn('Unable to jump to section ' + section + '; element not found.');

@@ -55,7 +55,12 @@ var DocGroup = React.createClass({
       id = Renderer.getKey(doc);
     }
     else {
-      id = doc.name;
+      if (doc.symbol) {
+        id = doc.symbol + doc.name;
+      }
+      else {
+        id = doc.name;
+      }
     }
 
     return (

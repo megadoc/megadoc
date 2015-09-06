@@ -1,14 +1,14 @@
-var SectionJumperMixin = require('mixins/SectionJumperMixin');
+const SectionJumperMixin = require('mixins/SectionJumperMixin');
 
 module.exports = SectionJumperMixin(function() {
-  var id = this.props.focusedEntity;
+  const id = this.props.focusedEntity;
 
   if (id) {
-    var groups = Object.keys(this.refs);
+    const groups = Object.keys(this.refs);
 
-    for (var i = 0; i < groups.length; ++i) {
-      var groupKey = groups[i];
-      var child = this.refs[groupKey].getItem(this.props.focusedEntity);
+    for (let i = 0; i < groups.length; ++i) {
+      const groupKey = groups[i];
+      const child = this.refs[groupKey].getItem(this.props.focusedEntity);
 
       if (child) {
         return child;
