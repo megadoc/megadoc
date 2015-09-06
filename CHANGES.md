@@ -1,3 +1,7 @@
+**2.2.3**
+
+- more whitespace around the content panel
+
 **2.2.0**
 
 - compile-time indexing of link tokens, this allows for linting in the future
