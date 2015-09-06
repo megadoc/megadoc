@@ -1,7 +1,6 @@
 const React = require("react");
 const { Link } = require('react-router');
 const { sortBy } = require('lodash');
-const { renderText } = require('components/MarkdownText');
 const renderPlainTextHeading = require('utils/renderPlainTextHeading');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');

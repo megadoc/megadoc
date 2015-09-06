@@ -1,9 +1,9 @@
 {
   "name": "tinydoc",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "description": "Fast and sleek documentation generator.",
   "main": "index.js",
-  "bin": "./bin/index.js",
+  "bin": "./cli/index.js",
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js .",
     "test": "npm run-script lint && ./bin/test.sh && ./bin/test-ui.sh --single-run",
