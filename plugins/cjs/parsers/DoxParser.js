@@ -241,10 +241,6 @@ function parse(sourceCode, filePath, useDirAsNamespace, customClassify) {
 
     doc.name = doc.ctx.name;
 
-    // if (doc.symbol.length) {
-    //   doc.id = doc.id.replace('.', doc.symbol);
-    // }
-
     discardUnwantedTags(doc);
 
     if (doc.$descriptionFragments.length > 0) {

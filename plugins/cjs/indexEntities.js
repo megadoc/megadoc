@@ -41,6 +41,11 @@ module.exports = function(docs) {
     if (context) {
       context.type = 'cjs';
 
+      if (doc.alias) {
+        paths.push(doc.alias);
+        console.log('Using alias "%s" for "%s"', doc.alias, doc.id);
+      }
+
       paths.forEach(function(path) {
         indices.push({ path: path, context: context });
       });

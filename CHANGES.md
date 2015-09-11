@@ -1,3 +1,8 @@
+**2.2.4**
+
+- CJS: support for the `@alias` tag
+- fixed an issue that was causing links not to be intercepted when running in history location mode
+
 **2.2.3**
 
 - more whitespace around the content panel

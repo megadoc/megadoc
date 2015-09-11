@@ -80,7 +80,7 @@ const Root = React.createClass({
   },
 
   interceptInternalLinkClicks() {
-    $(React.findDOMNode(this)).on('click', 'a[data-internal="true"]', function(e) {
+    $(document.body).on('click', 'a[data-internal="true"]', function(e) {
       if (!e.ctrlKey && !e.metaKey) {
         const href = $(e.target).attr('href');
         e.preventDefault();

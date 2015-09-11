@@ -10,6 +10,7 @@ var NO_DESCRIPTION_TAGS = [
   'mixin',
   'module',
   'preserveOrder',
+  'alias',
 ];
 
 function decorateTag(doc, tag) {
@@ -46,6 +47,11 @@ function decorateTag(doc, tag) {
 
     case 'memberOf':
       doc.ctx.receiver = tag.parent;
+      break;
+
+    case 'alias':
+      doc.alias = tag.string.split('\n')[0].trim();
+      tag.string = tag.string.replace(doc.alias, '');
       break;
   }
 
