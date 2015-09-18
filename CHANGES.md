@@ -1,5 +1,11 @@
 # Changelog
 
+**2.3.0**
+
+- CJS parsing is now done using a custom AST-based parser instead of dox.
+- UI: better JSX syntax highlighting
+- new runtime option `--stats` for generating compile-time stats
+
 **2.2.4**
 
 - CJS: support for the `@alias` tag
