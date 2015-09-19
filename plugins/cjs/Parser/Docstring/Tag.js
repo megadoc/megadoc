@@ -57,7 +57,7 @@ function Tag(doxTag) {
 
   /**
    * @property {String}
-   *           Available on @property, @type, and @param tags.
+   *           Available on @property, @type, @param, and @live_example tags.
    */
   this.typeInfo = {
     /**
@@ -86,6 +86,11 @@ function Tag(doxTag) {
     case 'param':
     case 'return':
       this.typeInfo = parseProperty(doxTag.string);
+      break;
+
+    case 'live_example':
+      this.typeInfo = parseProperty(doxTag.string);
+      this.string = this.string.split('\n').slice(1).join('\n');
       break;
 
     case 'type':

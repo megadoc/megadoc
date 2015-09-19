@@ -6,6 +6,7 @@ const DocGroup = require('components/DocGroup');
 const PropertyTag = require('components/Tags/PropertyTag');
 const { findWhere, where } = require("lodash");
 const ExampleTag = require('components/Tags/ExampleTag');
+const LiveExampleTag = require('components/Tags/LiveExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
@@ -59,6 +60,7 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderExamples(doc)}
+        {this.renderLiveExamples(doc)}
         {this.renderAdditionalResources(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
         {this.renderProperties(doc, moduleDocs)}
@@ -95,6 +97,27 @@ const ModuleBody = React.createClass({
         {tags.map(function(tag) {
           return (
             <ExampleTag key={tag.string} string={tag.string} />
+          );
+        })}
+      </DocGroup>
+    );
+  },
+
+  renderLiveExamples(doc) {
+    const tags = where(doc.tags, { type: 'live_example' });
+
+    if (!tags.length) {
+      return null;
+    }
+
+    return (
+      <DocGroup label="Live Examples">
+        {tags.map(function(tag) {
+          return (
+            <LiveExampleTag
+              key={tag.string}
+              tag={tag}
+            />
           );
         })}
       </DocGroup>

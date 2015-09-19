@@ -5,13 +5,14 @@ var assign = require('lodash').assign;
 var assert = require('assert');
 var console = new Logger('cjs');
 
-function Doc(filePath, docstring, nodeInfo) {
+function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
   this.consumeDocstring(docstring);
   this.consumeNodeInfo(nodeInfo);
 
   this.id = this.generateId();
   this.name = this.generateName();
   this.filePath = filePath;
+  this.absoluteFilePath = absoluteFilePath;
 
   return this;
 }
@@ -22,6 +23,7 @@ Doc.prototype.toJSON = function() {
   doc.id = this.id;
   doc.name = this.generateName();
   doc.filePath = this.filePath;
+  doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
   doc.receiver = this.getReceiver();
 

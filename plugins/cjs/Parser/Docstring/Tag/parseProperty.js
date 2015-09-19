@@ -37,7 +37,7 @@ function parseProperty(docstring) {
         else if (char === '\n') {
           state = STATE_PARSING_DESCRIPTION;
         }
-        else if (char !== ' ' && char !== '\t' && char !== ']') {
+        else if (char !== ']') {
           nameStr += char;
         }
 
@@ -64,8 +64,13 @@ function parseProperty(docstring) {
   });
 
   typeInfo.types = typeStr.split(TYPE_SPLITTER);
-  typeInfo.name = nameStr ? nameStr.trim() : undefined;
-  typeInfo.description = descStr ? descStr.trim() : undefined;
+
+  typeInfo.name = nameStr && nameStr.trim().length > 0 ?
+    nameStr.trim() :
+    null
+  ;
+
+  typeInfo.description = descStr ? descStr.trim() : null;
 
   return typeInfo;
 }

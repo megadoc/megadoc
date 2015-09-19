@@ -30,10 +30,11 @@ var Ppt = Parser.prototype;
 
 Ppt.parseFile = function(filePath, config, commonPrefix) {
   try {
-    return this.parseString(
+    this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
       config,
-      filePath.replace(commonPrefix, '')
+      filePath.replace(commonPrefix, ''),
+      filePath
     );
   }
   catch(e) {
@@ -42,17 +43,14 @@ Ppt.parseFile = function(filePath, config, commonPrefix) {
   }
 };
 
-Ppt.parseString = function(str, config, filePath) {
+Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   if (str.length > 0) {
     this.ast = recast.parse(str);
-    return this.walk(this.ast, filePath, config);
-  }
-  else {
-    return [];
+    this.walk(this.ast, config, filePath, absoluteFilePath);
   }
 };
 
-Ppt.walk = function(ast, filePath, config) {
+Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
   var parser = this;
 
   console.debug('\nParsing: %s', filePath);
@@ -73,7 +71,7 @@ Ppt.walk = function(ast, filePath, config) {
       if (path.value.leading && comment[0] === '*') {
         // console.log('Found a possibly JSDoc comment:', comment);
 
-        var docstring = new Docstring('/*' + comment + '*/', filePath);
+        var docstring = new Docstring('/*' + comment + '*/');
 
         if (docstring.isInternal()) {
           return false;
@@ -85,7 +83,7 @@ Ppt.walk = function(ast, filePath, config) {
           parser.registry.trackLend(docstring.getLentTo(), path);
         }
 
-        var doc = new Doc(filePath, docstring, nodeInfo);
+        var doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
 
         if (doc.id) {
           if (doc.isModule()) {

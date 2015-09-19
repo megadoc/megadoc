@@ -1,5 +1,5 @@
 var Docstring = require('../Docstring');
-var assert = require('assert');
+var assert = require('chai').assert;
 
 var parse = function(strGenerator) {
   var comment = global.TestUtils.getInlineString(strGenerator);
@@ -183,6 +183,56 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(docstring.tags.length, 1);
       assert.equal(docstring.tags[0].typeInfo.description, 'Something.');
+    });
+  });
+
+  describe('@live_example', function() {
+    it('parses the example type', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.deepEqual(docstring.tags[0].typeInfo.types, [ 'jsx' ]);
+    });
+
+    it('removes the type from the string', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  *
+        //  *     <Button />
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.notInclude(docstring.tags[0].string, '{jsx}');
+    });
+
+    it('parses the example summary', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx} Doing something.
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].typeInfo.name, 'Doing something.');
+    });
+
+    it('parses the code when a summary is present', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx} Doing something.
+        //  *
+        //  *     <Button />
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].string, '    <Button />');
     });
   });
 });

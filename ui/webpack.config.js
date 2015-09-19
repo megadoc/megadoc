@@ -13,7 +13,8 @@ var config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    libraryTarget: 'this'
+    libraryTarget: 'this',
+    jsonpFunction: 'tinydocWebpackJsonp'
   },
 
   plugins: [

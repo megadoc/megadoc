@@ -39,6 +39,7 @@ module.exports = function(config, registry, utils, readmeGitStats, done) {
   }
 
   config.assets.forEach(function(filePath) {
+    console.log('Copying asset:', filePath);
     fs.copySync(utils.getAssetPath(filePath), path.resolve(outputDir, 'assets', filePath));
   });
 
