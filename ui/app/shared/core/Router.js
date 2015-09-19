@@ -52,6 +52,9 @@ exports.isActive = function(routeName) {
   return instance && instance.isRunning && instance.isActive(routeName);
 };
 
+exports.isRunning = function() {
+  return instance && instance.isRunning;
+};
 
 exports.getParamItem = function(item) {
   if (instance) {

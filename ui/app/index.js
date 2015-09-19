@@ -15,7 +15,7 @@ Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 /**
  * @namespace tinydoc
  */
-window.tinydoc = {};
+let tinydoc = window.tinydoc = {};
 
 var emitter = new EventEmitter([
   'pluginsLoaded',
@@ -78,7 +78,7 @@ emitter.on('pluginsLoaded', function start(registrar) {
   });
 });
 
-var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
+var pluginMgr = new PluginManager(config.pluginCount, emitter);
 
 /**
  * @method tinydoc.use
@@ -89,4 +89,10 @@ var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
  * @param {PluginRegistrar} pluginEntryRunner.api
  *        The plugin registration API you can use.
  */
-window.tinydoc.use = pluginMgr.use;
+tinydoc.use = pluginMgr.use;
+tinydoc.addPluginConfig = pluginMgr.addPluginConfig;
+tinydoc.getRuntimeConfigs = function(pluginId) {
+  return CONFIG.pluginConfigs[pluginId];
+};
+
+tinydoc.pluginMgr = pluginMgr;

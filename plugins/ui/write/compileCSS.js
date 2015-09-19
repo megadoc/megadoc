@@ -1,21 +1,15 @@
 var path = require('path');
 var webpack = require('webpack');
 var Promise = require('bluebird');
+var root = path.resolve(__dirname, '..', '..', '..');
 
-function CSSCompiler(getAssetPath) {
-  this.stylesheets = [];
-  this.getAssetPath = getAssetPath;
-}
+module.exports = function compileCSS(compiler, config) {
+  var files = compiler.assets.styleSheets;
+  var utils = compiler.utils;
 
-CSSCompiler.prototype.addStylesheet = function(filePath) {
-  this.stylesheets.push(filePath);
-};
-
-CSSCompiler.prototype.run = function(config) {
-  var files = this.stylesheets;
   var webpackConfig = {
     output: {
-      path: this.getAssetPath(config.outputDir),
+      path: utils.getOutputPath(),
       filename: 'styles.js',
       jsonpFunction: 'webpackJsonp_CSS'
     },
@@ -26,11 +20,11 @@ CSSCompiler.prototype.run = function(config) {
     resolve: {
       extensions: [ '', '.less', '.css' ],
       modulesDirectories: [ 'node_modules' ],
-      fallback: path.resolve(__dirname, '..', 'ui', 'app', 'css')
+      fallback: path.resolve(root, 'ui', 'app', 'css')
     },
 
     resolveLoader: {
-      root: path.resolve(__dirname, '..', 'node_modules'),
+      root: path.resolve(root, 'node_modules'),
     },
 
     module: {
@@ -59,19 +53,18 @@ CSSCompiler.prototype.run = function(config) {
 
   if (config.styleOverrides) {
     webpackConfig.resolve.modulesDirectories
-      .unshift(path.dirname(this.getAssetPath(config.styleOverrides)))
+      .unshift(path.dirname(utils.getAssetPath(config.styleOverrides)))
     ;
   }
 
   if (config.stylesheet) {
-    webpackConfig.entry.push(this.getAssetPath(config.stylesheet));
+    webpackConfig.entry.push(utils.getAssetPath(config.stylesheet));
   }
 
   console.log('Compiling CSS assets:\n%s', JSON.stringify(files, null, 2));
 
   return new Promise(function(resolve, reject) {
-    var webpackCompiler = new webpack(webpackConfig);
-    webpackCompiler.run(function(err, stats) {
+    webpack(webpackConfig, function(err, stats) {
       if (err) {
         console.log('CSS compilation failed!!!', err);
         return reject(err);
@@ -91,5 +84,3 @@ CSSCompiler.prototype.run = function(config) {
     });
   });
 };
-
-module.exports = CSSCompiler;

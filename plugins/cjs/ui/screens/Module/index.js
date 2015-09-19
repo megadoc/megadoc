@@ -5,24 +5,17 @@ const HasTitle = require('mixins/HasTitle');
 const ModuleHeader = require('components/ModuleHeader');
 const GitStats = require('components/GitStats');
 const config = require('config');
+const Router = require('core/Router');
 
 const Module = React.createClass({
   mixins: [
     HasTitle(function() {
-      var module = Database.getModule(this.props.params.moduleId);
+      var module = Database.for(this.props.routeName).getModule(this.props.params.moduleId);
       if (module) {
         return `[JS] ${module.name}`;
       }
     })
   ],
-
-  statics: {
-    willTransitionTo(transition, params) {
-      if (!Database.getModule(params.moduleId)) {
-        transition.redirect('js');
-      }
-    }
-  },
 
   propTypes: {
     params: React.PropTypes.shape({
@@ -33,10 +26,21 @@ const Module = React.createClass({
     })
   },
 
+  componentWillMount() {
+    const { routeName, params } = this.props;
+  },
+
   render() {
+    const { routeName } = this.props;
     const { moduleId } = this.props.params;
-    const doc = Database.getModule(moduleId);
-    const moduleDocs = Database.getModuleEntities(moduleId);
+    const doc = Database.for(routeName).getModule(moduleId);
+
+    if (!doc) {
+      Router.goToNotFound();
+      return null;
+    }
+
+    const moduleDocs = Database.for(routeName).getModuleEntities(moduleId);
 
     if (process.env.NODE_ENV === 'development') {
       window.currentModule = doc;
@@ -48,7 +52,6 @@ const Module = React.createClass({
         <ModuleHeader
           doc={doc}
           moduleDocs={moduleDocs}
-          commonPrefix={Database.getCommonPrefix()}
         />
 
         {(
@@ -59,7 +62,7 @@ const Module = React.createClass({
           />
         )}
 
-        {config.gitStats && (
+        {config.for(routeName).gitStats && (
           <GitStats {...doc.git} />
         )}
       </div>

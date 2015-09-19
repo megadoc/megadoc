@@ -2,11 +2,14 @@ const PluginRegistrar = require('./PluginRegistrar');
 
 function PluginManager(pluginCount, emitter) {
   const registrar = new PluginRegistrar(emitter);
+  let pluginConfigs = {};
   let ran = 0;
 
   if (pluginCount === 0) {
     emitter.emit('pluginsLoaded', registrar);
   }
+
+  console.log('Awaiting %d plugins to be loaded.', pluginCount);
 
   return {
     use: function(runner) {
@@ -20,16 +23,26 @@ function PluginManager(pluginCount, emitter) {
         console.warn(e);
       }
       finally {
-        console.log('%d more plugins to go.', pluginCount - (++ran));
-
-        if (ran === pluginCount) {
+        if (++ran === pluginCount) {
           delete window.tinydoc.use;
 
-          console.log('All plugins were loaded, starting.');
+          console.log('All plugins were loaded, sealing the plugin API.');
 
           emitter.emit('pluginsLoaded', registrar);
         }
       }
+    },
+
+    addPluginConfig: function(pluginId, config) {
+      if (!pluginConfigs[pluginId]) {
+        pluginConfigs[pluginId] = [];
+      }
+
+      pluginConfigs[pluginId].push(config);
+    },
+
+    getPluginConfigs: function(pluginId) {
+      return pluginConfigs[pluginId];
     }
   };
 }

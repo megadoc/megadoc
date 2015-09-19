@@ -1,55 +1,71 @@
-const { database } = require('config');
 const { pluck, where, findWhere } = require('lodash');
 const findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
 const DocClassifier = require('core/DocClassifier');
 
-const commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
-const moduleDocs = where(database, { isModule: true });
+let databases = {};
 
-const Database = {
-  getCommonPrefix() {
-    return commonPrefix;
-  },
+function createDatabase(key, database) {
+  const commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
+  const moduleDocs = where(database, { isModule: true });
 
-  getAllTags() {
-    return database;
-  },
+  let exports = {
+    getKey() {
+      return key;
+    },
 
-  getModule(moduleId) {
-    return findWhere(moduleDocs, { id: moduleId });
-  },
+    getAllDocs() {
+      return database;
+    },
 
-  getModules() {
-    return moduleDocs;
-  },
+    getModules() {
+      return moduleDocs;
+    },
 
-  getModuleEntities(moduleId) {
-    const moduleDoc = this.getModule(moduleId);
+    getModule(moduleId) {
+      return findWhere(moduleDocs, { id: moduleId });
+    },
 
-    if (!moduleDoc) {
-      console.warn('Unable to find class entry with id ' + moduleId);
-      return [];
+    getModuleEntities(moduleId) {
+      const moduleDoc = this.getModule(moduleId);
+
+      if (!moduleDoc) {
+        console.warn('Unable to find class entry with id ' + moduleId);
+        return [];
+      }
+
+      return where(database, { receiver: moduleDoc.id });
+    },
+  };
+
+  // we'll need this for @preserveOrder support
+  database.forEach(function(doc) {
+    if (doc.loc) {
+      doc.line = doc.loc.start.line;
+      doc.tags.forEach(function(tag) {
+        tag.line = doc.line;
+      });
     }
+  });
 
-    return where(database, { receiver: moduleDoc.id });
+  return exports;
+}
+
+module.exports = {
+  createDatabase(config) {
+    const key = config.routeName;
+
+    databases[key] = createDatabase(key, config.database);
+
+    return databases[key];
+  },
+
+  for(key) {
+    return databases[key];
+  },
+
+  getAllDatabases() {
+    return Object.keys(databases).map(function(id) {
+      return databases[id];
+    });
   },
 };
-
-Database.getModules().forEach(function(module) {
-  module.renderableType = DocClassifier.getRenderableType(
-    module,
-    Database.getModuleEntities(module.id)
-  );
-});
-
-// we'll need this for @preserveOrder support
-database.forEach(function(doc) {
-  if (doc.loc) {
-    doc.line = doc.loc.start.line;
-    doc.tags.forEach(function(tag) {
-      tag.line = doc.line;
-    });
-  }
-});
-
-module.exports = Database;

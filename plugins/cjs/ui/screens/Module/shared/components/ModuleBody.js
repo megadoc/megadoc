@@ -12,6 +12,23 @@ const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
 const SectionJumperMixin = require('mixins/SectionJumperMixin');
 
+function getRenderableType(doc, moduleDocs) {
+  if (doc.ctx.type === K.TYPE_FUNCTION) {
+    if (moduleDocs.some(DocClassifier.isFactoryExports)) {
+      return K.TYPE_FACTORY;
+    }
+    else if (moduleDocs.some(DocClassifier.isClassEntity)) {
+      return K.TYPE_CLASS;
+    }
+    else {
+      return K.TYPE_FUNCTION;
+    }
+  }
+  else {
+    return K.TYPE_OBJECT;
+  }
+}
+
 const ModuleBody = React.createClass({
   mixins: [
     SectionJumperMixin(function() {
@@ -44,16 +61,17 @@ const ModuleBody = React.createClass({
 
   render() {
     const { doc, moduleDocs } = this.props;
+    const renderableType = getRenderableType(doc, moduleDocs);
 
     return (
       <div>
         <MarkdownText>{doc.description}</MarkdownText>
 
-        {doc.renderableType === K.TYPE_FACTORY && (
+        {renderableType === K.TYPE_FACTORY && (
           this.renderConstructor(doc, "Instance Constructor")
         )}
 
-        {doc.renderableType === K.TYPE_FUNCTION ? (
+        {renderableType === K.TYPE_FUNCTION ? (
           this.renderConstructor(doc, "Signature")
         ) : (
           null

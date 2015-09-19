@@ -55,6 +55,10 @@ fs.symlinkSync(
   path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'assets'),
   path.join(contentBase, 'assets')
 );
+fs.symlinkSync(
+  path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'plugins'),
+  path.join(contentBase, 'plugins')
+);
 
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,

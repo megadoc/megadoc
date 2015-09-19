@@ -48,7 +48,7 @@ const ModuleHeader = React.createClass({
         </h1>
 
         <div className="class-view__module-filepath">
-          Defined in: {doc.filePath.replace(this.props.commonPrefix, '')}
+          Defined in: {doc.filePath}
         </div>
       </header>
     );

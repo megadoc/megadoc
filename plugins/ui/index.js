@@ -2,32 +2,9 @@ var path = require('path');
 var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
+var merge = require('lodash').merge;
 
-function UIPlugin(emitter, cssCompiler, config, utils, registry) {
-  cssCompiler.addStylesheet(path.resolve(__dirname, '..', '..', 'ui', 'app', 'css', 'index.less'));
-
-  var readmeGitStats;
-
-  emitter.on('scan', function(compilation, done) {
-    var svc = Promise.resolve();
-
-    if (config.gitStats && config.readme) {
-      var filePaths = [ utils.getAssetPath(config.readme) ];
-
-      svc = parseGitStats(config.gitRepository, filePaths).then(function(stats) {
-        readmeGitStats = stats[0];
-      });
-    }
-
-    svc.then(function() { done(); }, done);
-  });
-
-  emitter.on('write', function(compilation, done) {
-    write(config, registry, utils, readmeGitStats, done);
-  });
-}
-
-UIPlugin.defaults = {
+var defaults = {
   /**
    * @property {String} outputDir
    *
@@ -38,8 +15,6 @@ UIPlugin.defaults = {
    * file.
    */
   outputDir: '${ROOT}/doc/www',
-  scripts: [],
-  pluginScripts: [],
   assets: [],
 
   /**
@@ -55,6 +30,7 @@ UIPlugin.defaults = {
   publicPath: '/',
 
   stylesheet: null,
+  styleOverrides: null,
 
   gitStats: false,
 
@@ -74,6 +50,31 @@ UIPlugin.defaults = {
   launchExternalLinksInNewTabs: true
 };
 
-UIPlugin.$inject = [ 'emitter', 'cssCompiler', 'config', 'utils', 'registry' ];
+exports.name = 'UIPlugin';
+exports.run = function(compiler) {
+  var config = merge({}, defaults, compiler.config);
+  var utils = compiler.utils;
+  var readmeGitStats;
 
-module.exports = UIPlugin;
+  compiler.assets.addStyleSheet(
+    path.resolve(__dirname, '..', '..', 'ui', 'app', 'css', 'index.less')
+  );
+
+  compiler.on('scan', function(done) {
+    var svc = Promise.resolve();
+
+    if (config.gitStats && config.readme) {
+      var filePaths = [ utils.getAssetPath(config.readme) ];
+
+      svc = parseGitStats(config.gitRepository, filePaths).then(function(stats) {
+        readmeGitStats = stats[0];
+      });
+    }
+
+    svc.then(function() { done(); }, done);
+  });
+
+  compiler.on('write', function(done) {
+    write(config, compiler, readmeGitStats, done);
+  });
+};

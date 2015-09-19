@@ -1,1 +1,1 @@
-module.exports = window['git-config'];
+module.exports = window.tinydoc.getRuntimeConfigs('git')[0];

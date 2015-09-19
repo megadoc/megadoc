@@ -1,70 +1,60 @@
 var path = require('path');
 var scan = require('./scan');
 var indexEntities = require('./indexEntities');
-var write = require('./write');
+var merge = require('lodash').merge;
 
-function MarkdownPlugin(emitter, cssCompiler, config, globalConfig, utils) {
-  var database;
+var defaults = {
+  gitStats: false,
+  name: 'articles',
+  title: 'Articles',
+  source: [ 'doc/**/*.md' ],
+  icon: 'icon-book',
+  exclude: [],
+  fullFolderTitles: true,
+  fullFolderTitleDelimiter: ' - ',
+  allowLeadingSlashInLinks: true,
+  discardIdPrefix: null
+};
 
-  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
+function MarkdownPlugin(userConfig) {
+  var config = merge({}, defaults, userConfig);
 
-  globalConfig.scripts.push('plugins/markdown-config.js');
-  globalConfig.pluginScripts.push('plugins/markdown.js');
+  return {
+    run: function(compiler) {
+      var database;
 
-  emitter.on('scan', function(compilation, done) {
-    scan(config, utils, globalConfig, function(err, _database) {
-      if (err) {
-        return done(err);
-      }
+      compiler.on('scan', function(done) {
+        scan(config, compiler.utils, compiler.config, function(err, _database) {
+          if (err) {
+            return done(err);
+          }
 
-      database = _database;
-      done();
-    });
-  });
+          database = _database;
+          done();
+        });
+      });
 
-  emitter.on('index', function(compilation, registry, done) {
-    if (compilation.scanned) {
-      var indices = indexEntities(database, config);
+      compiler.on('index', function(registry, done) {
+        var indices = indexEntities(database, config);
 
-      Object.keys(indices).forEach(function(indexPath) {
-        registry.add(indexPath, indices[indexPath]);
+        Object.keys(indices).forEach(function(indexPath) {
+          registry.add(indexPath, indices[indexPath]);
+        });
+
+        done();
+      });
+
+      compiler.on('write', function(done) {
+        var runtimeConfig = merge({}, config, { database: database });
+
+        compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
+        compiler.assets.addPluginScript('plugins/markdown.js');
+        compiler.assets.addPluginRuntimeConfig('markdown', runtimeConfig);
+
+        done();
       });
     }
-
-    done();
-  });
-
-  emitter.on('write', function(compilation, done) {
-    if (compilation.scanned) {
-      write(database, config, utils, done);
-    }
-    else {
-      done();
-    }
-  });
+  };
 }
-
-MarkdownPlugin.$inject = [
-  'emitter',
-  'cssCompiler',
-  'config.markdown',
-  'config',
-  'utils'
-];
-
-MarkdownPlugin.defaults = {
-  markdown: {
-    gitStats: false,
-    name: 'articles',
-    title: 'Articles',
-    source: [ 'doc/articles/**/*.md' ],
-    icon: 'icon-book',
-    exclude: [],
-    fullFolderTitles: true,
-    fullFolderTitleDelimiter: ' - ',
-    allowLeadingSlashInLinks: true,
-    discardIdPrefix: null
-  }
-};
 
 module.exports = MarkdownPlugin;

@@ -29,6 +29,7 @@ program
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
   .option('-d, --debug', 'Shortcut for --log-level="debug"')
   .option('--stats', 'Show scanner-related statistics.')
+  .option('--tmp-dir [PATH]', 'Path to a directory tinydoc will use for intermediatery files. Defaults to .tinydoc/')
   .parse(process.argv)
 ;
 
@@ -41,6 +42,8 @@ if (fs.existsSync(configFilePath)) {
 else {
   throw new Error("You must specify a config file using --config.");
 }
+
+config.tmpDir = path.join(config.assetRoot, '.tinydoc');
 
 if (!config.gitRepository) {
   config.gitRepository = path.resolve(config.assetRoot, '.git');
@@ -88,10 +91,11 @@ if (program.plugin.length > 0) {
 tiny = tinydoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
-  index: program.index !== false
+  index: program.index !== false && program.scan !== false,
+  stats: program.stats === true
 });
 
-tiny.run(function(err) {
+tiny.run(function(err, stats) {
   if (err) {
     console.error(Array(80 - 'tinydoc-cli'.length).join('*'));
     console.error('An error occurred during compilation. Error details below.');
@@ -101,21 +105,9 @@ tiny.run(function(err) {
     throw err;
   }
 
-  if (program.stats === true) {
-    console.log('Generating stats...')
-
-    tiny.generateStats(function(statsErr, stats) {
-      if (statsErr) {
-        console.error('Unable to generate stats:');
-        console.error(statsErr.stack ? statsErr.stack : statsErr);
-        return;
-      }
-
-      console.raw.log(JSON.stringify(stats, null, 2));
-      console.log('done!');
-    });
+  if (stats) {
+    console.raw.log(JSON.stringify(stats, null, 2));
   }
-  else {
-    console.log('done!');
-  }
+
+  console.log('done!');
 });

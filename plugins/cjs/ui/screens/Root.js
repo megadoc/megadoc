@@ -5,38 +5,40 @@ var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
-var JSRoot = React.createClass({
-  propTypes: {
-    params: React.PropTypes.shape({
-      moduleId: React.PropTypes.string
-    })
-  },
+module.exports = function createRoot(routeName) {
+  return React.createClass({
+    displayName: 'JSRoot',
 
-  getInitialState: function() {
-    return {
-      sidebarWidth: '240px'
-    };
-  },
+    propTypes: {
+      params: React.PropTypes.shape({
+        moduleId: React.PropTypes.string
+      })
+    },
 
-  render() {
-    return (
-      <TwoColumnLayout className="js-root">
-        <LeftColumn>
-          <ClassBrowser
-            activeModuleId={this.props.params.moduleId}
-            modules={Database.getModules()}
-          />
-        </LeftColumn>
+    getInitialState: function() {
+      return {
+        sidebarWidth: '240px'
+      };
+    },
 
-        <RightColumn>
-          <div className="js-root__content">
-            <RouteHandler {...this.props} />
-          </div>
-        </RightColumn>
+    render() {
+      return (
+        <TwoColumnLayout className="js-root">
+          <LeftColumn>
+            <ClassBrowser
+              routeName={routeName}
+              activeModuleId={this.props.params.moduleId}
+            />
+          </LeftColumn>
 
-      </TwoColumnLayout>
-    );
-  }
-});
+          <RightColumn>
+            <div className="js-root__content">
+              <RouteHandler routeName={routeName} {...this.props} />
+            </div>
+          </RightColumn>
 
-module.exports = JSRoot;
+        </TwoColumnLayout>
+      );
+    }
+  });
+};

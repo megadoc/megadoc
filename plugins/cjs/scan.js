@@ -48,9 +48,7 @@ module.exports = function scan(config, gitRepository, utils, done) {
   svc.then(function() { done(null, database); }, done);
 };
 
-
 function generateLiveExamples(database, config) {
-
   var entries = database.reduce(function(entries, doc) {
     doc.tags.forEach(function(tag) {
       if (tag.type === 'live_example') {
@@ -91,6 +89,9 @@ function generateLiveExamples(database, config) {
 
           processTag(cursor + 1);
         });
+      }
+      else {
+        processTag(cursor + 1);
       }
     }
 

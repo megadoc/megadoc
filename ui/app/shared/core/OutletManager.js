@@ -9,7 +9,7 @@ let OutletManager = {
   },
 
   getElements(outlet) {
-    return outlets[outlet];
+    return outlets[outlet] || [];
   }
 };
 
