@@ -91,6 +91,7 @@ function generateLiveExamples(database, config) {
         });
       }
       else {
+        console.warn('Found no processor for @live_example of type ' + exampleType);
         processTag(cursor + 1);
       }
     }

@@ -90,7 +90,21 @@ function Tag(doxTag) {
 
     case 'live_example':
       this.typeInfo = parseProperty(doxTag.string);
-      this.string = this.string.split('\n').slice(1).join('\n');
+
+      var lines = this.string.split('\n');
+      var firstLine = lines[0];
+
+      // this.string = lines.slice(1).join('\n');
+
+      if (firstLine.match(/\s(\d+)x(\d+)\s/)) {
+        this.typeInfo.width = RegExp.$1;
+        this.typeInfo.height = RegExp.$2;
+      }
+
+      this.string = lines.slice(1).filter(function(line) {
+        return line.substr(0,4) === '    ';
+      }).join('\n');
+
       break;
 
     case 'type':

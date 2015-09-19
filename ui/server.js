@@ -8,24 +8,25 @@ var root = path.resolve(__dirname);
 
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
+var contentBase = '/tmp/tinydoc';
 var server;
 
-config.entry = [
-  path.resolve(process.env.CONFIG_FILE),
-  'webpack/hot/dev-server',
-  'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
-  path.join(root, 'app/index.js')
-];
-
-config.plugins.push(new webpack.HotModuleReplacementPlugin());
-config.plugins.push(new webpack.DefinePlugin(({
-  'process.env.VERBOSE': JSON.stringify(!!process.env.VERBOSE)
-})));
-
-// load local plugins that you're developing
-if (fs.existsSync(path.join(root, '.local.js'))) {
-  config.entry.push(path.join(root, '.local.js'));
+config.entry = {
+  main: [
+    path.join(root, '.local.js'),
+    path.join(root, 'app', 'index.js'),
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
+  ]
 }
+
+config.plugins = [
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+  }),
+
+  new webpack.HotModuleReplacementPlugin(),
+];
 
 config.module.loaders.filter(function(loader) {
   return loader.type === 'js';
@@ -36,8 +37,6 @@ config.resolveLoader = {
   root: path.resolve(__dirname, '..', 'node_modules'),
 };
 
-var contentBase = '/tmp/tinydoc';
-
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
 }
@@ -47,7 +46,7 @@ fs.writeFileSync(
   contentBase + '/index.html',
   _.template(fs.readFileSync(path.join(root, 'app/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
-    scripts: [ 'vendor.js', 'main.js' ]
+    scripts: [ 'main.js' ]
   })
 );
 

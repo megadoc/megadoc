@@ -234,5 +234,32 @@ describe('CJS::Parser::Docstring::Tag', function() {
       assert.equal(docstring.tags.length, 1);
       assert.equal(docstring.tags[0].string, '    <Button />');
     });
+
+    it('takes only the padded lines', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * Render a block of text with a substring of it highlighted in a different
+        //  * color. Useful for use with text-based filters or active search terms.
+        //  *
+        //  * @live_example
+        //  *
+        //  *     <HighlightedText
+        //  *       text="Down to the zoo."
+        //  *       highlight="zoo"
+        //  *     />
+        //  *
+        //  * That will cause the "zoo" word to be rendered in a different color than
+        //  * the rest of the sentence.
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].string,
+        '    <HighlightedText\n' +
+        '      text="Down to the zoo."\n' +
+        '      highlight="zoo"\n' +
+        '    />'
+      );
+    });
   });
 });

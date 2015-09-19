@@ -1,8 +1,10 @@
 var LinkResolver = require('../../../../tinydoc/lib/LinkResolver');
+var Registry = require('../../../../tinydoc/lib/Registry');
 var indexEntities = require('../indexEntities');
 var assert = require('assert');
 
 describe('yard-api::indexEntities', function() {
+  var registry = new Registry();
   var database = [{
     id: 'api_users',
     endpoints: [{
@@ -17,10 +19,10 @@ describe('yard-api::indexEntities', function() {
     }]
   }];
 
-  var resolver = new LinkResolver(indexEntities(database));
+  var resolver = new LinkResolver(indexEntities(database, registry));
 
-  resolver.use(function(id, registry) {
-    var index = registry[id];
+  resolver.use(function(id) {
+    var index = registry.toJSON()[id];
 
     if (index) {
       var href;

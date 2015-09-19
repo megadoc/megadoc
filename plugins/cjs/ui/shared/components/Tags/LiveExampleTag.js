@@ -28,6 +28,7 @@ const ExampleTag = React.createClass({
   },
 
   render() {
+    const { tag } = this.props;
     var { string } = this.props.tag;
     var title = string.substr(0, string.indexOf('\n'));
     var type = this.props.tag.typeInfo.types[0];
@@ -59,7 +60,9 @@ const ExampleTag = React.createClass({
           ref="iframe"
           className="live-example-tag__iframe"
           style={{
-            display: this.state.activeTab === TAB_PREVIEW ? 'block' : 'none'
+            display: this.state.activeTab === TAB_PREVIEW ? 'block' : 'none',
+            width: tag.typeInfo.width || 'auto',
+            height: tag.typeInfo.height || 'auto',
           }}
         />
       </div>

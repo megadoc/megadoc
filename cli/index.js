@@ -30,6 +30,7 @@ program
   .option('-d, --debug', 'Shortcut for --log-level="debug"')
   .option('--stats', 'Show scanner-related statistics.')
   .option('--tmp-dir [PATH]', 'Path to a directory tinydoc will use for intermediatery files. Defaults to .tinydoc/')
+  .option('--no-purge', 'Do not purge the output directory.')
   .parse(process.argv)
 ;
 
@@ -92,7 +93,8 @@ tiny = tinydoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
   index: program.index !== false && program.scan !== false,
-  stats: program.stats === true
+  stats: program.stats === true,
+  purge: program.purge !== false
 });
 
 tiny.run(function(err, stats) {
