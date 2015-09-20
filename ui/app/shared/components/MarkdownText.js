@@ -31,6 +31,10 @@ var MarkdownText = React.createClass({
     isHighlightingEnabled() {
       return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
     },
+
+    renderMarkdown(md) {
+      return marked(md, markedOptions);
+    }
   },
 
   propTypes: {

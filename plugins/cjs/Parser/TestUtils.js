@@ -10,14 +10,22 @@ function parseInline(strGenerator, options, filePath) {
   return parser.toJSON();
 }
 
-function parseFile(filePath, config, commonPrefix) {
+function parseFiles(filePaths, config, commonPrefix) {
   var parser = new ASTParser();
 
-  parser.parseFile(filePath, config || {}, commonPrefix);
+  filePaths.forEach(function(filePath) {
+    parser.parseFile(filePath, config || {}, commonPrefix);
+  });
+
   parser.postProcess();
 
   return parser.toJSON();
 }
 
+function parseFile(filePath, config, commonPrefix) {
+  return parseFiles([ filePath ], config, commonPrefix);
+}
+
 exports.parseInline = parseInline;
 exports.parseFile = parseFile;
+exports.parseFiles = parseFiles;

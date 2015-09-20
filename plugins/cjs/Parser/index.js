@@ -125,14 +125,11 @@ Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
           }
 
           if (name) {
-            doc = parser.registry.get(name);
+            doc = parser.registry.get(name, filePath);
 
             if (doc) {
               doc.markAsExported();
-              // assert(doc.$path);
-              // assert(doc.$path === Utils.findNearestPathWithComments(doc.$path))
               parser.registry.trackModuleDocAtPath(doc, doc.$path);
-              // parser.registry.docPaths.set(doc.$path, doc);
             }
           }
           else {

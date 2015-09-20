@@ -1,5 +1,6 @@
 var React = require("react");
 var MarkdownText = require('components/MarkdownText');
+var Types = require('components/Tags/Types');
 
 var PropertyTag = React.createClass({
   displayName: "PropertyTag",
@@ -25,7 +26,7 @@ var PropertyTag = React.createClass({
 
           {': '}
 
-          <code>{typeInfo.types.join(', ')}</code>
+          <Types types={typeInfo.types} />
         </header>
 
         {typeInfo.description && (

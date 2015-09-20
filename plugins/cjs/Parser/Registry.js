@@ -54,9 +54,11 @@ Rpt.remove = function(doc) {
   }
 }
 
-Rpt.get = function(id) {
+Rpt.get = function(id, filePath) {
   return this.docs.filter(function(doc) {
-    return doc.id === id || doc.name === id;
+    return (doc.id === id || doc.name === id) && (
+      filePath ? doc.filePath === filePath : true
+    );
   })[0];
 };
 

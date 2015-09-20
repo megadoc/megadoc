@@ -6,17 +6,56 @@ var console = require('../../lib/Logger')('git');
 var Promise = require('bluebird');
 var merge = require('lodash').merge;
 
+/**
+ * @module Plugins.Git.Config
+ * @preserveOrder
+ */
 var defaults = {
+  /**
+   * @property {String}
+   *
+   * The relative URL to reach the git activity page at.
+   */
   routePath: 'activity',
+
+  /**
+   * @property {Boolean}
+   *
+   * Whether to use .mailmap (if found) for resolving coaelescing emails/names.
+   */
   useMailMap: true,
+
+  /**
+   * @property {Object}
+   *
+   * Tuning for the "Recent Commits" section.
+   */
   recentCommits: {
+    /**
+     * @property {String}
+     *
+     * Indicates the time threshold for filtering recent activity.
+     */
     since: '3 days ago',
+
+    /**
+     * @property {String[]}
+     */
     ignore: [],
+
+    /**
+     * @property {Function}
+     */
     transform: null
   }
 };
 
-function GitPlugin(userConfig) {
+/**
+ * @namespace Plugins.Git
+ *
+ * @param {Config} userConfig
+ */
+function createGitPlugin(userConfig) {
   var stats = {};
   var config = merge({}, defaults, userConfig);
 
@@ -51,4 +90,4 @@ function GitPlugin(userConfig) {
   };
 }
 
-module.exports = GitPlugin;
+module.exports = createGitPlugin;

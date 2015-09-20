@@ -71,6 +71,10 @@ const ModuleBody = React.createClass({
           this.renderConstructor(doc, "Instance Constructor")
         )}
 
+        {renderableType === K.TYPE_CLASS && (
+          this.renderConstructor(doc, "Constructor")
+        )}
+
         {renderableType === K.TYPE_FUNCTION ? (
           this.renderConstructor(doc, "Signature")
         ) : (
@@ -81,7 +85,20 @@ const ModuleBody = React.createClass({
         {this.renderLiveExamples(doc)}
         {this.renderAdditionalResources(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
-        {this.renderProperties(doc, moduleDocs)}
+        {this.renderProperties(
+          doc,
+          moduleDocs,
+          (scope) => scope === K.SCOPE_INSTANCE,
+          "Instance Properties"
+        )}
+
+        {this.renderProperties(
+          doc,
+          moduleDocs,
+          (scope) => scope !== K.SCOPE_INSTANCE,
+          "Properties"
+        )}
+
         {this.renderMethods(doc, moduleDocs)}
       </div>
     );
@@ -160,11 +177,14 @@ const ModuleBody = React.createClass({
     );
   },
 
-  renderProperties(doc, moduleDocs) {
+  renderProperties(doc, moduleDocs, scope = null, title = 'Properties') {
     const propertyDocs = orderAwareSort(
       doc,
       moduleDocs.filter(function(entityDoc) {
-        return where(entityDoc.tags, { type: 'property' }).length > 0;
+        return (
+          (scope ? scope(entityDoc.ctx.scope) : true) &&
+          where(entityDoc.tags, { type: 'property' }).length > 0
+        );
       }),
       'id'
     );
@@ -174,7 +194,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Properties" tagName="ul">
+      <DocGroup label={title} tagName="ul">
         {propertyDocs.map(function(entityDoc) {
           const tag = findWhere(entityDoc.tags, { type: 'property' });
           const path = entityDoc.ctx.symbol + entityDoc.id;

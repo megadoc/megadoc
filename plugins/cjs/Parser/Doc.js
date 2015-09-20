@@ -1,10 +1,20 @@
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var Logger = require('../../../lib/Logger');
-var assign = require('lodash').assign;
+var _ = require('lodash');
+var findWhere = _.findWhere;
+var assign = _.assign;
 var assert = require('assert');
 var console = new Logger('cjs');
 
+/**
+ * @namespace Plugins.CJS
+ *
+ * @param {Docstring} docstring
+ * @param {NodeInfo} nodeInfo
+ * @param {String} filePath
+ * @param {String} absoluteFilePath
+ */
 function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
   this.consumeDocstring(docstring);
   this.consumeNodeInfo(nodeInfo);
@@ -39,6 +49,8 @@ Doc.prototype.toJSON = function() {
   else {
     doc.path = doc.id;
   }
+
+  this.useSourceNameWhereNeeded(doc.name, doc);
 
   return doc;
 };
@@ -142,6 +154,13 @@ Doc.prototype.getReceiver = function() {
 
 Doc.prototype.hasReceiver = function() {
   return Boolean(this.getReceiver());
+};
+
+Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
+  var propertyTag = findWhere(doc.tags, { type: 'property' });
+  if (propertyTag && !propertyTag.typeInfo.name) {
+    propertyTag.typeInfo.name = name;
+  }
 };
 
 module.exports = Doc;

@@ -213,6 +213,16 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
       info.receiver = Utils.flattenNodePath(lhs.object);
     }
   }
+  else if (n.MemberExpression.check(lhs)) {
+    // Properties assigned to `this`:
+    //
+    //     this.foo = something;
+    //     this.foo = new Something();
+    if (n.ThisExpression.check(lhs.object)) {
+      info.id = lhs.property.name;
+      info.markAsInstanceProperty();
+    }
+  }
 
   if (!info.id) {
     console.warn("Unrecognized ExpressionStatement '%s' => '%s' (Source: %s).",

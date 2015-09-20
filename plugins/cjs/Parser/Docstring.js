@@ -7,7 +7,12 @@ var collectDescription = require('./Docstring/collectDescription');
 var findWhere = _.findWhere;
 
 /**
+ * @namespace Plugins.CJS
+ *
  * An object representing a JSDoc comment (parsed using dox).
+ *
+ * @param {String} comment
+ *        The JSDoc-compatible comment string to build from.
  */
 function Docstring(comment) {
   var doxDocs = dox.parseComments(comment, { raw: true });
@@ -47,7 +52,7 @@ var Dpt = Docstring.prototype;
  * @return {Tag[]} doc.tags
  *         All the JSDoc tags found in the docstring.
  */
-Dpt.toJSON = function() {
+Docstring.prototype.toJSON = function() {
   var docstring = _.pick(this, [
     'id',
     'namespace',
