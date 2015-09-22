@@ -2,7 +2,6 @@ const PluginRegistrar = require('./PluginRegistrar');
 
 function PluginManager(pluginCount, emitter) {
   const registrar = new PluginRegistrar(emitter);
-  let pluginConfigs = {};
   let ran = 0;
 
   if (pluginCount === 0) {
@@ -19,30 +18,18 @@ function PluginManager(pluginCount, emitter) {
         runner(registrar.API);
       }
       catch (e) {
-        console.warn('A plugin (%s) failed to load, ignoring.', runner.name);
-        console.warn(e);
+        console.error('A plugin (%s) failed to load, it will be ignored.', runner.name);
+        console.error(e.stack || e);
       }
       finally {
         if (++ran === pluginCount) {
-          delete window.tinydoc.use;
+          console.log('All plugins have been loaded, no more may be loaded from now on.');
 
-          console.log('All plugins were loaded, sealing the plugin API.');
+          window.tinydoc.seal();
 
           emitter.emit('pluginsLoaded', registrar);
         }
       }
-    },
-
-    addPluginConfig: function(pluginId, config) {
-      if (!pluginConfigs[pluginId]) {
-        pluginConfigs[pluginId] = [];
-      }
-
-      pluginConfigs[pluginId].push(config);
-    },
-
-    getPluginConfigs: function(pluginId) {
-      return pluginConfigs[pluginId];
     }
   };
 }

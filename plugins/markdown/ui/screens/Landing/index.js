@@ -1,8 +1,24 @@
-var React = require('react');
+const React = require('react');
+const Article = require('../Article');
 
-var Landing = React.createClass({
+const Landing = React.createClass({
   render() {
-    return (<div>Nothing to see here, move along!</div>);
+    const homePageId = this.props.config.homePage || 'README.md';
+    const homePage = this.props.database.get(homePageId);
+
+    if (homePage) {
+      console.log('ok! going to homepage:', homePage);
+
+      return (
+        <Article
+          {...this.props}
+          params={{splat: homePageId }}
+        />
+      );
+    }
+    else {
+      return (<div>Nothing to see here, move along!</div>);
+    }
   }
 });
 

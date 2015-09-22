@@ -31,6 +31,10 @@ exports.transitionTo = function(path, params, query) {
   instance.transitionTo(path, params, query);
 };
 
+exports.replaceWith = function(path, params, query) {
+  instance.replaceWith(path, params, query);
+};
+
 exports.getQueryItem = function(item) {
   if (instance) {
     return instance.getCurrentQuery()[item];

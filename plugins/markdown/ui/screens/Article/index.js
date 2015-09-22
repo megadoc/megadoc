@@ -1,20 +1,19 @@
 var React = require("react");
 var MarkdownText = require('components/MarkdownText');
 var GitStats = require('components/GitStats');
-var Database = require('core/Database');
 var config = require('config');
 var Disqus = require('components/Disqus');
 var scrollToTop = require('utils/scrollToTop');
 var HasTitle = require('mixins/HasTitle');
+var Router = require('core/Router');
 
 var Article = React.createClass({
   mixins: [
     HasTitle(function() {
-      var article = Database.get(this.getArticleId());
-      var collection = Database.getTitle();
+      var article = this.props.database.get(this.getArticleId());
 
       if (article) {
-        return `[${collection}] ${article.title}`;
+        return article.title;
       }
     })
   ],
@@ -34,10 +33,11 @@ var Article = React.createClass({
   },
 
   render() {
-    var article = Database.get(this.getArticleId());
+    var article = this.props.database.get(this.getArticleId());
 
     if (!article) {
-      return <div>Article not found...</div>;
+      Router.goToNotFound();
+      return null;
     }
 
     return (

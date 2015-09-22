@@ -10,8 +10,6 @@ const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const ROOT_FOLDER_ID = strHumanize('root');
 const isItemHot = require('utils/isItemHot');
 const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
-const Database = require('core/Database');
-const config = require('config');
 
 var MarkdownClassBrowser = React.createClass({
   mixins: [
@@ -48,7 +46,7 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderGroupedEntries() {
-    const folders = sortBy(Database.getFolders(), 'title');
+    const folders = sortBy(this.props.folders, 'title');
 
     return (
       <div>
@@ -77,7 +75,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <div key={folder.path} className="class-browser__category">
         <h3 className="class-browser__category-name">
-          {folder.title}
+          {folder.title === '.' ? '/' : folder.title}
         </h3>
 
         <div>
@@ -102,7 +100,9 @@ var MarkdownClassBrowser = React.createClass({
     let { title } = article;
     const isActive = this.props.activeArticleId === id;
 
-    if (Storage.get(GROUP_BY_FOLDER) && article.folderTitle !== ROOT_FOLDER_ID) {
+    if (Storage.get(GROUP_BY_FOLDER) &&
+      article.folderTitle !== ROOT_FOLDER_ID &&
+      article.folderTitle !== '.') {
       if (title.indexOf(article.folderTitle + '/') === 0) {
         title = title.substr(article.folderTitle.length + 1 /* '/' */);
       }
@@ -111,7 +111,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <div key={id} ref={id}>
         <Link
-          to={`${config.name}.article`}
+          to={`${this.props.routeName}.article`}
           params={{ splat: id }}
           className="class-browser__entry-link"
         >
@@ -146,7 +146,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <li key={sectionId} className={className}>
         <Link
-          to={`${config.name}.article`}
+          to={`${this.props.routeName}.article`}
           params={{ splat: article.id }}
           query={{ section: sectionId }}
           children={renderPlainTextHeading(section.title, false)}
@@ -173,7 +173,7 @@ var MarkdownClassBrowser = React.createClass({
 
   hasFolders() {
     return this.props.folders.filter(function(folderId) {
-      return folderId !== ROOT_FOLDER_ID;
+      return folderId !== ROOT_FOLDER_ID && folderId !== '.';
     }).length > 0;
   }
 });

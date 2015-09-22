@@ -9,8 +9,7 @@ var config = {
   publicPath: '',
   stylesheet: 'doc/theme.less',
   styleOverride: 'doc/theme-variables.less',
-
-  disqus: false
+  disqus: false,
 };
 
 config.plugins = [
@@ -35,6 +34,7 @@ config.plugins = [
 
     useDirAsNamespace: false
   }),
+
   require('../plugins/markdown')({
     source: [
       'CHANGES.md',

@@ -4,9 +4,18 @@ var MarkdownText = require('components/MarkdownText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
 var scrollToTop = require('utils/scrollToTop');
+var Router = require('core/Router');
 
 var Home = React.createClass({
   displayName: "Home",
+
+  statics: {
+    willTransitionTo(transition) {
+      if (config.home) {
+        transition.redirect(config.home);
+      }
+    }
+  },
 
   componentDidMount: function() {
     scrollToTop();
@@ -24,7 +33,9 @@ var Home = React.createClass({
           <GitStats {...config.readme.git} />
         )}
 
-        <Disqus identifier={config.readme.filePath} title="README" />
+        {config.readme && (
+          <Disqus identifier={config.readme.filePath} title="README" />
+        )}
       </div>
     );
   }

@@ -96,7 +96,7 @@ var MarkdownText = React.createClass({
     var node;
 
     if (section && section.length) {
-      node = this.getDOMNode().querySelector(`#${section}`);
+      node = this.getDOMNode().querySelector(`[id="${section}"]`);
 
       if (node) {
         if (typeof node.scrollIntoViewIfNeeded === 'function') {

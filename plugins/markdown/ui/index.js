@@ -1,5 +1,5 @@
 const config = require('config');
-const NavigationOutlet = require('./outlets/Navigation');
+const createNavigationOutlet = require('./outlets/Navigation');
 const React = require('react');
 const Root = require('./screens/Root');
 const LinkResolver = require('core/LinkResolver');
@@ -12,15 +12,31 @@ const Router = require('core/Router');
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydoc.use(function MarkdownPlugin(api) {
+  const configs = tinydoc.getRuntimeConfigs('markdown');
+
+  configs.forEach(function(config) {
+    register(api, config);
+  });
+});
+
+function register(api, config) {
   const routeName = config.name;
+  const database = Database.createDatabase(routeName, config);
 
   api.registerRoutes([
     {
       name: routeName,
-      path: routeName,
+      path: config.path || routeName,
       handler: React.createClass({
         render() {
-          return <Root {...this.props} />;
+          return (
+            <Root
+              config={config}
+              routeName={routeName}
+              database={database}
+              {...this.props}
+            />
+          );
         }
       })
     },
@@ -40,14 +56,16 @@ tinydoc.use(function MarkdownPlugin(api) {
     }
   ]);
 
-  api.registerOutletElement('navigation', NavigationOutlet);
+  if (config.title) {
+    api.registerOutletElement('navigation', createNavigationOutlet(config));
+  }
 
   api.on('started', function() {
     LinkResolver.use(function(id, registry) {
       const index = registry[id];
 
       if (index && index.type === 'markdown') {
-        const article = Database.get(index.articleId);
+        const article = database.get(index.articleId);
 
         console.assert(!!article,
           `Expected to find a markdown article with id '${index.articleId}'`
@@ -60,4 +78,4 @@ tinydoc.use(function MarkdownPlugin(api) {
       }
     });
   });
-});
+}

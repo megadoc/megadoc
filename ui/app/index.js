@@ -90,9 +90,18 @@ var pluginMgr = new PluginManager(config.pluginCount, emitter);
  *        The plugin registration API you can use.
  */
 tinydoc.use = pluginMgr.use;
-tinydoc.addPluginConfig = pluginMgr.addPluginConfig;
 tinydoc.getRuntimeConfigs = function(pluginId) {
-  return CONFIG.pluginConfigs[pluginId];
+  return CONFIG.pluginConfigs[pluginId] || [];
+};
+
+tinydoc.seal = function() {
+  tinydoc.use = function() {
+    console.warn(
+      "You are attempting to call 'tinydoc.use()' after all plugins were " +
+      "loaded. This probably means you forgot to register your " +
+      "script as a plugin script."
+    );
+  }
 };
 
 tinydoc.pluginMgr = pluginMgr;
