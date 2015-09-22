@@ -1,6 +1,6 @@
 {
   "name": "tinydoc",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Fast and sleek documentation generator.",
   "main": "index.js",
   "bin": "./cli/index.js",
@@ -67,6 +67,7 @@
     "karma-sourcemap-loader": "0.3.3",
     "karma-webpack": "1.5.0",
     "marked": "0.3.3",
+    "mocha": "^2.3.3",
     "react": "0.13.3",
     "react-hot-loader": "",
     "react-router": "",

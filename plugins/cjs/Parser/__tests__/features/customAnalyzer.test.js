@@ -3,18 +3,17 @@ var TestUtils = require('../../TestUtils');
 
 describe('CJS::Parser: customAnalyzer support', function() {
   it('accepts a custom analyzeNode function', function() {
-    var docs = TestUtils.parseInline(
-      function() {
-        // /**
-        //  * A component that does hairy things.
-        //  */
-        // const SomeComponent = React.createClass({
-        //   render() {
-        //     return <div />;
-        //   }
-        // });
-        //
-        // module.exports = SomeComponent;
+    var docs = TestUtils.parseInline(function() {
+      // /**
+      //  * A component that does hairy things.
+      //  */
+      // const SomeComponent = React.createClass({
+      //   render() {
+      //     return <div />;
+      //   }
+      // });
+      //
+      // module.exports = SomeComponent;
     }, {
       analyzeNode: function(n, node, path, nodeInfo) {
         if (n.VariableDeclaration.check(node)) {
