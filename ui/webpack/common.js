@@ -5,6 +5,9 @@ var root = path.resolve(__dirname, '..');
 var nodeEnv = process.env.NODE_ENV;
 var jsLoaders = [ 'babel-loader' ];
 
+if (process.env.NODE_ENV === 'development') {
+  jsLoaders.push('react-hot');
+}
 
 var baseConfig = {
   devtool: nodeEnv === 'production' ? null : 'eval',
@@ -51,15 +54,11 @@ var baseConfig = {
 
     loaders: [
       {
-        type: 'js', // for server.js to inject "react-hot"
         test: /\.js$/,
-        exclude: [ /ui\/app\/vendor/ ],
-        include: [
-          path.join(root, 'app'),
-          path.join(root, '..', 'plugins'),
-          path.join(root, '..', 'node_modules', 'qjunk', 'lib')
+        exclude: [
+          /ui\/app\/vendor/,
+          /node_modules\/(?!qjunk)/
         ],
-
         loader: jsLoaders.join('!')
       },
 

@@ -14,7 +14,6 @@ var server;
 config.entry = {
   main: [
     path.join(root, '.local.js'),
-    path.join(root, 'app', 'index.js'),
     'webpack/hot/dev-server',
     'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
   ]
@@ -27,15 +26,6 @@ config.plugins = [
 
   new webpack.HotModuleReplacementPlugin(),
 ];
-
-config.module.loaders.filter(function(loader) {
-  return loader.type === 'js';
-})[0].loader += '!react-hot';
-
-// so that loaders can be used by external files, like css assets
-config.resolveLoader = {
-  root: path.resolve(__dirname, '..', 'node_modules'),
-};
 
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
@@ -50,14 +40,21 @@ fs.writeFileSync(
   })
 );
 
-fs.symlinkSync(
-  path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'assets'),
-  path.join(contentBase, 'assets')
-);
-fs.symlinkSync(
-  path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'plugins'),
-  path.join(contentBase, 'plugins')
-);
+function symlinkAllDirectories(root) {
+  fs.readdirSync(root)
+    .filter(function(file) {
+      return fs.statSync(path.join(root, file)).isDirectory();
+    })
+    .forEach(function(dir) {
+      fs.symlinkSync(
+        path.join(root, dir),
+        path.join(contentBase, dir)
+      );
+    })
+  ;
+}
+
+symlinkAllDirectories(path.dirname(path.resolve(process.env.CONFIG_FILE)));
 
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,
@@ -75,6 +72,7 @@ server = new WebpackDevServer(webpack(config), {
 server.listen(port, host, function(err) {
   if (err) {
     console.error(err);
+    return;
   }
 
   console.log('Hot server listening at ' + host +':'+ port);

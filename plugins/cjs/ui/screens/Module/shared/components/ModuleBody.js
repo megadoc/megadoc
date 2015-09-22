@@ -1,12 +1,12 @@
 const React = require("react");
-const Doc = require('components/Doc');
+const Outlet = require('components/Outlet');
 const MarkdownText = require('components/MarkdownText');
+const Doc = require('components/Doc');
 const SeeTag = require('components/Tags/SeeTag');
 const DocGroup = require('components/DocGroup');
 const PropertyTag = require('components/Tags/PropertyTag');
 const { findWhere, where } = require("lodash");
 const ExampleTag = require('components/Tags/ExampleTag');
-const LiveExampleTag = require('components/Tags/LiveExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
@@ -82,7 +82,6 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderExamples(doc)}
-        {this.renderLiveExamples(doc)}
         {this.renderAdditionalResources(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
         {this.renderProperties(
@@ -123,39 +122,18 @@ const ModuleBody = React.createClass({
   renderExamples(doc) {
     const tags = where(doc.tags, { type: 'example' });
 
-    if (!tags.length) {
-      return null;
-    }
-
     return (
-      <DocGroup label="Examples">
-        {tags.map(function(tag) {
-          return (
-            <ExampleTag key={tag.string} string={tag.string} />
-          );
-        })}
-      </DocGroup>
-    );
-  },
-
-  renderLiveExamples(doc) {
-    const tags = where(doc.tags, { type: 'live_example' });
-
-    if (!tags.length) {
-      return null;
-    }
-
-    return (
-      <DocGroup label="Live Examples">
-        {tags.map(function(tag) {
-          return (
-            <LiveExampleTag
-              key={tag.string}
-              tag={tag}
-            />
-          );
-        })}
-      </DocGroup>
+      <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
+        {tags.length > 0 && (
+          <DocGroup label="Examples">
+            {tags.map(function(tag) {
+              return (
+                <ExampleTag key={tag.string} string={tag.string} />
+              );
+            })}
+          </DocGroup>
+        )}
+      </Outlet>
     );
   },
 

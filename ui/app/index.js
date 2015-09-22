@@ -8,6 +8,7 @@ var $ = require('jquery');
 var Storage = require('core/Storage');
 var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
+var OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -77,6 +78,8 @@ emitter.on('pluginsLoaded', function start(registrar) {
     });
   });
 });
+
+OutletManager.define('navigation');
 
 var pluginMgr = new PluginManager(config.pluginCount, emitter);
 

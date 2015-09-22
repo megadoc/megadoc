@@ -1,10 +1,10 @@
 var Docstring = require('../Docstring');
 var assert = require('chai').assert;
 
-var parse = function(strGenerator) {
+var parse = function(strGenerator, customTags, filePath) {
   var comment = global.TestUtils.getInlineString(strGenerator);
 
-  return new Docstring(comment);
+  return new Docstring(comment, customTags, filePath);
 };
 
 describe('CJS::Parser::Docstring', function() {
@@ -186,80 +186,97 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
   });
 
-  describe('@live_example', function() {
+  describe('custom tag: @live_example', function() {
+    var customTags = {
+      live_example: {
+        withTypeInfo: true
+      }
+    };
+
     it('parses the example type', function() {
       var docstring = parse(function() {
         // /**
         //  * @live_example {jsx}
         //  */
-      });
+      }, customTags);
 
       assert.equal(docstring.tags.length, 1);
       assert.deepEqual(docstring.tags[0].typeInfo.types, [ 'jsx' ]);
     });
 
-    it('removes the type from the string', function() {
+    it('accepts a custom processor', function(done) {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          process: function(tag) {
+            assert.ok(tag);
+            done();
+          }
+        }
+      });
+    });
+
+    it('accepts custom attributes', function(done) {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          attributes: [ 'width' ],
+          process: function(tag) {
+            assert.doesNotThrow(function() {
+              tag.setCustomAttribute('width', 240);
+            });
+
+            done();
+          }
+        }
+      });
+    });
+
+    it('whines if attempting to write to an unspecified attribute', function(done) {
       var docstring = parse(function() {
         // /**
         //  * @live_example {jsx}
         //  *
         //  *     <Button />
         //  */
-      });
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          process: function(tag) {
+            assert.throws(function() {
+              tag.setCustomAttribute('foo', 'bar');
+            }, /Unrecognized custom attribute/);
 
-      assert.equal(docstring.tags.length, 1);
-      assert.notInclude(docstring.tags[0].string, '{jsx}');
+            done();
+          }
+        }
+      });
     });
 
-    it('parses the example summary', function() {
+    it('serializes custom attributes', function() {
       var docstring = parse(function() {
         // /**
-        //  * @live_example {jsx} Doing something.
+        //  * @live_example {jsx}
         //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          attributes: [ 'width' ],
+          process: function(tag) {
+            tag.setCustomAttribute('width', 240);
+          }
+        }
       });
 
-      assert.equal(docstring.tags.length, 1);
-      assert.equal(docstring.tags[0].typeInfo.name, 'Doing something.');
-    });
-
-    it('parses the code when a summary is present', function() {
-      var docstring = parse(function() {
-        // /**
-        //  * @live_example {jsx} Doing something.
-        //  *
-        //  *     <Button />
-        //  */
-      });
-
-      assert.equal(docstring.tags.length, 1);
-      assert.equal(docstring.tags[0].string, '    <Button />');
-    });
-
-    it('takes only the padded lines', function() {
-      var docstring = parse(function() {
-        // /**
-        //  * Render a block of text with a substring of it highlighted in a different
-        //  * color. Useful for use with text-based filters or active search terms.
-        //  *
-        //  * @live_example
-        //  *
-        //  *     <HighlightedText
-        //  *       text="Down to the zoo."
-        //  *       highlight="zoo"
-        //  *     />
-        //  *
-        //  * That will cause the "zoo" word to be rendered in a different color than
-        //  * the rest of the sentence.
-        //  */
-      });
-
-      assert.equal(docstring.tags.length, 1);
-      assert.equal(docstring.tags[0].string,
-        '    <HighlightedText\n' +
-        '      text="Down to the zoo."\n' +
-        '      highlight="zoo"\n' +
-        '    />'
-      );
+      assert.equal(docstring.toJSON().tags[0].width, 240);
     });
   });
 });

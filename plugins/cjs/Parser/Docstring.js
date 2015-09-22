@@ -14,7 +14,7 @@ var findWhere = _.findWhere;
  * @param {String} comment
  *        The JSDoc-compatible comment string to build from.
  */
-function Docstring(comment) {
+function Docstring(comment, customTags, filePath) {
   var doxDocs = dox.parseComments(comment, { raw: true });
   var idInfo;
 
@@ -23,7 +23,7 @@ function Docstring(comment) {
   );
 
   this.tags = doxDocs[0].tags.map(function(doxTag) {
-    return new Tag(doxTag);
+    return new Tag(doxTag, customTags, filePath);
   });
 
   idInfo = extractIdInfo(this.tags);

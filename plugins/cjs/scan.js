@@ -10,7 +10,7 @@ var uniq = require('lodash').uniq;
 module.exports = function scan(config, gitRepository, utils, done) {
   var database;
   var console = new Logger('cjs');
-  var svc;
+  var svc = Promise.resolve();
   var files = utils.globAndFilter(config.source, config.exclude);
 
   console.log('Parsing docs from %d files.', files.length);
@@ -24,8 +24,6 @@ module.exports = function scan(config, gitRepository, utils, done) {
 
   parser.postProcess();
   database = parser.toJSON();
-
-  svc = generateLiveExamples(database, config);
 
   if (config.gitStats) {
     console.log("Parsing git stats...");
@@ -47,55 +45,3 @@ module.exports = function scan(config, gitRepository, utils, done) {
 
   svc.then(function() { done(null, database); }, done);
 };
-
-function generateLiveExamples(database, config) {
-  var entries = database.reduce(function(entries, doc) {
-    doc.tags.forEach(function(tag) {
-      if (tag.type === 'live_example') {
-        entries.push({ tag: tag, doc: doc });
-      }
-    });
-
-    return entries;
-  }, []);
-
-  if (entries.length === 0) {
-    return Promise.resolve();
-  }
-
-  console.log('Processing ' + entries.length + ' @live_example tags.');
-
-  return new Promise(function(resolve, reject) {
-    function processTag(cursor) {
-      var entry = entries[cursor];
-
-      if (!entry) {
-        return resolve();
-      }
-
-      var tag = entry.tag;
-      var doc = entry.doc;
-
-      var exampleType = tag.typeInfo.types[0];
-      var processor = config.liveExamples[exampleType];
-
-      if (processor) {
-        processor(tag.string, doc, function(err, code) {
-          if (err) {
-            return reject(err);
-          }
-
-          tag.code = code;
-
-          processTag(cursor + 1);
-        });
-      }
-      else {
-        console.warn('Found no processor for @live_example of type ' + exampleType);
-        processTag(cursor + 1);
-      }
-    }
-
-    processTag(0);
-  });
-}

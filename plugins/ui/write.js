@@ -3,10 +3,17 @@ var path = require('path');
 var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
 var _ = require('lodash');
 var compileCSS = require('./write/compileCSS');
+var compileJS = require('./write/compileJS');
 var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js', 'styles.js'];
+var runAll = require('../../lib/utils/runAll');
 
 module.exports = function(config, compiler, readmeGitStats, done) {
-  compileCSS(compiler, config).then(function() {
+  runAll([ compileJS, compileCSS ], [ compiler, config ], function(err) {
+    if (err) {
+      done(err);
+      return;
+    }
+
     copyFavicon(compiler, config);
     copyAssets(compiler, config.assets);
     copyAppScripts(compiler);
@@ -14,7 +21,7 @@ module.exports = function(config, compiler, readmeGitStats, done) {
     generateRuntimeConfigScript(compiler, config, readmeGitStats);
 
     done();
-  }, done);
+  });
 };
 
 function copyFavicon(compiler, config) {
@@ -33,12 +40,12 @@ function copyAssets(compiler, staticAssets) {
     compiler.assets.add(asset);
   });
 
-  compiler.assets.files.forEach(function(filePath) {
-    console.log('Copying asset:', filePath);
+  compiler.assets.files.forEach(function(entry) {
+    console.log('Copying asset:', entry.sourcePath);
 
     fs.copySync(
-      compiler.utils.getAssetPath(filePath),
-      compiler.utils.getOutputPath('assets', filePath)
+      compiler.utils.getAssetPath(entry.sourcePath),
+      compiler.utils.getOutputPath(entry.outputPath)
     );
   });
 }
@@ -48,6 +55,10 @@ function generateHTMLFile(compiler, config) {
     .concat(compiler.assets.runtimeScripts)
     .concat(compiler.assets.pluginScripts)
   ;
+
+  if (compiler.assets.hasInlinePlugins()) {
+    scripts.push('inline_plugins.js');
+  }
 
   var tmpl = _.template(
     fs.readFileSync(path.join(UI_DIR, 'app', 'index.tmpl.html'), 'utf-8')
@@ -74,7 +85,10 @@ function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
     {},
     _.omit(config, [ 'outputDir', 'plugins', 'assets', ]),
     {
-      pluginCount: compiler.assets.pluginScripts.length,
+      pluginCount: (
+        compiler.assets.pluginScripts.length +
+        (compiler.assets.hasInlinePlugins() ? 1 : 0)
+      ),
       pluginConfigs: compiler.assets.runtimeConfigs,
       registry: compiler.registry.toJSON()
     }

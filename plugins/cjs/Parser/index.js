@@ -71,7 +71,11 @@ Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
       if (path.value.leading && comment[0] === '*') {
         // console.log('Found a possibly JSDoc comment:', comment);
 
-        var docstring = new Docstring('/*' + comment + '*/');
+        var docstring = new Docstring(
+          '/*' + comment + '*/',
+          config.customTags,
+          absoluteFilePath
+        );
 
         if (docstring.isInternal()) {
           return false;

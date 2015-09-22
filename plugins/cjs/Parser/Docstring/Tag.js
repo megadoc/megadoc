@@ -1,5 +1,6 @@
 var parseProperty = require('./Tag/parseProperty');
 var K = require('../constants');
+var assert = require('assert');
 
 function renamePrimitiveType(type) {
   if (type === 'Function') {
@@ -10,7 +11,7 @@ function renamePrimitiveType(type) {
   }
 }
 
-function Tag(doxTag) {
+function Tag(doxTag, customTags, filePath) {
   /**
    * @property {String}
    *           The type of this tag. This is always present.
@@ -88,25 +89,6 @@ function Tag(doxTag) {
       this.typeInfo = parseProperty(doxTag.string);
       break;
 
-    case 'live_example':
-      this.typeInfo = parseProperty(doxTag.string);
-
-      var lines = this.string.split('\n');
-      var firstLine = lines[0];
-
-      // this.string = lines.slice(1).join('\n');
-
-      if (firstLine.match(/\s(\d+)x(\d+)\s/)) {
-        this.typeInfo.width = RegExp.$1;
-        this.typeInfo.height = RegExp.$2;
-      }
-
-      this.string = lines.slice(1).filter(function(line) {
-        return line.substr(0,4) === '    ';
-      }).join('\n');
-
-      break;
-
     case 'type':
       console.assert(doxTag.types.length === 1,
         "Expected @type tag to contain only a single type, but it contained %d.",
@@ -152,6 +134,11 @@ function Tag(doxTag) {
     case 'lends':
       this.lendReceiver = doxTag.parent;
       break;
+
+    default:
+      if (customTags && customTags.hasOwnProperty(doxTag.type)) {
+        this.useCustomTagDefinition(doxTag, customTags[doxTag.type], filePath);
+      }
   }
 
   return this;
@@ -170,5 +157,32 @@ Tag.prototype.toJSON = function() {
     return json;
   }.bind(this), {});
 };
+
+Tag.prototype.useCustomTagDefinition = function(doxTag, customTag, filePath) {
+  var customAttributes = customTag.attributes || [];
+
+  if (customTag.withTypeInfo) {
+    this.typeInfo = parseProperty(doxTag.string);
+  }
+
+  if (customTag.process instanceof Function) {
+    customTag.process(createCustomTagAPI(this, customAttributes), filePath);
+  }
+};
+
+function createCustomTagAPI(tag, attrWhitelist) {
+  var api = tag.toJSON();
+
+  api.setCustomAttribute = function(name, value) {
+    assert(attrWhitelist.indexOf(name) > -1,
+      "Unrecognized custom attribute '" + name + "'. Make sure you " +
+      "you specify it in the @attributes array for the customTag."
+    );
+
+    tag[name] = value;
+  };
+
+  return api;
+}
 
 module.exports = Tag;

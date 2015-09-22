@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var Promise = require('bluebird');
 var root = path.resolve(__dirname, '..', '..', '..');
 
-module.exports = function compileCSS(compiler, config) {
+module.exports = function compileCSS(compiler, config, done) {
   var files = compiler.assets.styleSheets;
   var utils = compiler.utils;
 
@@ -63,24 +63,23 @@ module.exports = function compileCSS(compiler, config) {
 
   console.log('Compiling CSS assets:\n%s', JSON.stringify(files, null, 2));
 
-  return new Promise(function(resolve, reject) {
-    webpack(webpackConfig, function(err, stats) {
-      if (err) {
-        console.log('CSS compilation failed!!!', err);
-        return reject(err);
-      }
+  webpack(webpackConfig, function(err, stats) {
+    if (err) {
+      console.log('CSS compilation failed!!!', err);
+      return done(err);
+    }
 
-      var jsonStats = stats.toJson();
-      if (jsonStats.errors.length > 0) {
-        return reject(jsonStats.errors);
-      }
-      else if (jsonStats.warnings.length > 0) {
-        return reject(jsonStats.warnings);
-      }
+    var jsonStats = stats.toJson();
 
-      console.log('CSS assets generated.');
+    if (jsonStats.errors.length > 0) {
+      return done(jsonStats.errors);
+    }
+    else if (jsonStats.warnings.length > 0) {
+      return done(jsonStats.warnings);
+    }
 
-      resolve();
-    });
+    console.log('CSS assets generated.');
+
+    done();
   });
 };

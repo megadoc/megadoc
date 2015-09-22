@@ -24,6 +24,12 @@ Thanks to #3 above, the same plugin can now be used more than once with differen
 - Markdown plugin now supports multiple instances
 - JS plugin now supports a new `@live_example` tag which allows the user to configure an `<iframe />` contents to display live examples (for example, to preview Ember or React components.)
 - The output directory is now purged before writing.
+- JS plugin can now accept custom tag definitions
+- It is now possible to compile UI plugins at compile-time using tinydoc's internal JS compiler
+
+### Bugfixes
+
+- Fixed an issue that was causing the compiler to silently fail when facing fatal errors during the write phase
 
 ## 2.3.0
 

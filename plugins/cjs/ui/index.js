@@ -4,8 +4,12 @@ const Storage = require('core/Storage');
 const K = require('constants');
 const resolveLink = require('utils/resolveLink');
 const createNavigationOutlet = require('./outlets/Navigation');
+const OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
+
+OutletManager.define('CJS::Tag');
+OutletManager.define('CJS::ExampleTags');
 
 tinydoc.use(function CJSPlugin(api) {
   const configs = tinydoc.getRuntimeConfigs('cjs');
