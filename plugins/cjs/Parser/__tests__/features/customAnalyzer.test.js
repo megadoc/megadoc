@@ -15,21 +15,23 @@ describe('CJS::Parser: customAnalyzer support', function() {
       //
       // module.exports = SomeComponent;
     }, {
-      analyzeNode: function(n, node, path, nodeInfo) {
-        if (n.VariableDeclaration.check(node)) {
-          var decl = node.declarations[0];
+      nodeAnalyzers: [
+        function(n, node, path, nodeInfo) {
+          if (n.VariableDeclaration.check(node)) {
+            var decl = node.declarations[0];
 
-          if (n.CallExpression.check(decl.init) && n.MemberExpression.check(decl.init.callee)) {
-            var callee = decl.init.callee;
+            if (n.CallExpression.check(decl.init) && n.MemberExpression.check(decl.init.callee)) {
+              var callee = decl.init.callee;
 
-            if (callee.object.name === 'React' && callee.property.name === 'createClass') {
-              nodeInfo.setContext({
-                type: 'component'
-              });
+              if (callee.object.name === 'React' && callee.property.name === 'createClass') {
+                nodeInfo.setContext({
+                  type: 'component'
+                });
+              }
             }
           }
         }
-      }
+      ]
     });
 
     assert.equal(docs.length, 1);

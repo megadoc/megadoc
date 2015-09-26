@@ -1,3 +1,4 @@
+var TestUtils = require('../../../lib/TestUtils');
 var ASTParser = require('./');
 
 function parseInline(strGenerator, options, filePath) {

@@ -3,6 +3,7 @@ var scan = require('./scan');
 var indexEntities = require('./indexEntities');
 var generateStats = require('./generateStats');
 var merge = require('lodash').merge;
+var assert = require('assert');
 
 /**
  * @module Plugins.CJS.Config
@@ -65,7 +66,7 @@ var defaults = {
    */
   analyzeNode: null,
 
-  liveExamples: {},
+  customTags: {},
 };
 
 /**
@@ -75,14 +76,37 @@ var defaults = {
  */
 function createCJSPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
+  var parserConfig = {
+    inferModuleIdFromFilename: config.inferModuleIdFromFilename,
+    customTags: config.customTags,
+    nodeAnalyzers: [],
+    docstringProcessors: []
+  };
 
   return {
     name: 'CJSPlugin',
+
+    defineCustomTag: function(tagName, definition) {
+      assert(!config.customTags.hasOwnProperty(tagName),
+        "Tag '" + tagName + "' already has a definition!"
+      );
+
+      config.customTags[tagName] = definition;
+    },
+
+    addNodeAnalyzer: function(analyzer) {
+      parserConfig.nodeAnalyzers.push(analyzer);
+    },
+
+    addDocstringProcessor: function(processor) {
+      parserConfig.docstringProcessors.push(processor);
+    },
+
     run: function(compiler) {
       var database;
 
       compiler.on('scan', function(done) {
-        scan(config, compiler.config.gitRepository, compiler.utils, function(err, _database) {
+        scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _database) {
           if (err) {
             return done(err);
           }

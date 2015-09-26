@@ -45,7 +45,9 @@ var ClassBrowser = React.createClass({
 
     return (
       <nav className="class-browser__listing">
-        {namespaces.map(this.renderNamespace)}
+        {namespaces.map((ns) => {
+          return this.renderNamespace(ns, namespaces.length > 1);
+        })}
 
         <div className="class-browser__controls">
           <Checkbox
@@ -58,16 +60,18 @@ var ClassBrowser = React.createClass({
     );
   },
 
-  renderNamespace(ns) {
+  renderNamespace(ns, displayName = true) {
     if (ns.modules.length === 0) {
       return null;
     }
 
     return (
       <div key={ns.name} className="class-browser__category">
-        <h3 className="class-browser__category-name">
-          {ns.name}
-        </h3>
+        {displayName && (
+          <h3 className="class-browser__category-name">
+            {ns.name}
+          </h3>
+        )}
 
         {ns.modules.map(this.renderModule)}
       </div>

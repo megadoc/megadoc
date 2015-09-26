@@ -7,7 +7,9 @@ var Registry = require('./Registry');
 var PostProcessor = require('./PostProcessor');
 var NodeAnalyzer = require('./NodeAnalyzer');
 var WeakSet = require('weakset');
+var pick = require('lodash').pick;
 
+var runAllSync = require('../../../lib/utils/runAllSync');
 var Logger = require('../../../lib/Logger');
 var console = Logger('cjs');
 
@@ -50,8 +52,14 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   }
 };
 
-Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
+Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
   var parser = this;
+  var config = pick(inConfig, [
+    'inferModuleIdFromFileName',
+    'nodeAnalyzers',
+    'docstringProcessors',
+    'customTags',
+  ]);
 
   console.debug('\nParsing: %s', filePath);
   console.debug(Array(80).join('-'));
@@ -67,11 +75,12 @@ Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
 
       var comment = path.value.value;
       var contextNode = path.node;
+      var docstring, nodeInfo, doc;
 
       if (path.value.leading && comment[0] === '*') {
         // console.log('Found a possibly JSDoc comment:', comment);
 
-        var docstring = new Docstring(
+        docstring = new Docstring(
           '/*' + comment + '*/',
           config.customTags,
           absoluteFilePath
@@ -80,14 +89,15 @@ Ppt.walk = function(ast, config, filePath, absoluteFilePath) {
         if (docstring.isInternal()) {
           return false;
         }
-
-        var nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
-
-        if (docstring.doesLend()) {
+        else if (docstring.doesLend()) {
           parser.registry.trackLend(docstring.getLentTo(), path);
         }
 
-        var doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+        runAllSync(config.docstringProcessors, [ docstring ]);
+
+        nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+
+        doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
 
         if (doc.id) {
           if (doc.isModule()) {

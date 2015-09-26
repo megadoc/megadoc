@@ -8,6 +8,10 @@ const OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
+OutletManager.define('CJS::ModuleHeader::Type', {
+  firstMatching: true
+});
+
 OutletManager.define('CJS::Tag');
 OutletManager.define('CJS::ExampleTags');
 

@@ -14,14 +14,14 @@ var config = {
 
 config.plugins = [
   require('../plugins/cjs')({
-    navigationLabel: 'Hacking',
+    navigationLabel: 'API',
 
     source: [
       'lib/**/*.js',
       'plugins/cjs/**/*.js',
       'plugins/ui/**/*.js',
       'plugins/git/**/*.js',
-      // 'ui/app/**/*.js',
+      'ui/app/**/*.js',
     ],
 
     exclude: [

@@ -7,7 +7,7 @@ var where = require('lodash').where;
 var pluck = require('lodash').pluck;
 var uniq = require('lodash').uniq;
 
-module.exports = function scan(config, gitRepository, utils, done) {
+module.exports = function scan(config, parserConfig, gitRepository, utils, done) {
   var database;
   var console = new Logger('cjs');
   var svc = Promise.resolve();
@@ -19,7 +19,7 @@ module.exports = function scan(config, gitRepository, utils, done) {
   var parser = new Parser();
 
   files.forEach(function(filePath) {
-    parser.parseFile(filePath, config, commonPrefix);
+    parser.parseFile(filePath, parserConfig, commonPrefix);
   });
 
   parser.postProcess();

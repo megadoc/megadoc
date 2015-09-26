@@ -23,7 +23,9 @@ module.exports = function compileJS(compiler, config, done) {
 
     plugins: [
       new webpack.NoErrorsPlugin()
-    ]
+    ],
+
+    // TODO: externals
   });
 
   console.log('Compiling %d plugins: %s.',

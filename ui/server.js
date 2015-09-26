@@ -4,12 +4,27 @@ var path = require('path');
 var config = require('./webpack.config');
 var fs = require('fs-extra');
 var _ = require('lodash');
-var root = path.resolve(__dirname);
 
+function symlinkAllDirectories(root) {
+  fs.readdirSync(root)
+    .filter(function(file) {
+      return fs.statSync(path.join(root, file)).isDirectory();
+    })
+    .forEach(function(dir) {
+      fs.symlinkSync(
+        path.join(root, dir),
+        path.join(contentBase, dir)
+      );
+    })
+  ;
+}
+
+var root = path.resolve(__dirname);
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
 var contentBase = '/tmp/tinydoc';
 var server;
+var configFile = path.resolve(process.env.CONFIG_FILE);
 
 config.entry = {
   main: [
@@ -17,11 +32,12 @@ config.entry = {
     'webpack/hot/dev-server',
     'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
   ]
-}
+};
 
 config.plugins = [
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.CONFIG_FILE': JSON.stringify(configFile),
   }),
 
   new webpack.HotModuleReplacementPlugin(),
@@ -40,21 +56,7 @@ fs.writeFileSync(
   })
 );
 
-function symlinkAllDirectories(root) {
-  fs.readdirSync(root)
-    .filter(function(file) {
-      return fs.statSync(path.join(root, file)).isDirectory();
-    })
-    .forEach(function(dir) {
-      fs.symlinkSync(
-        path.join(root, dir),
-        path.join(contentBase, dir)
-      );
-    })
-  ;
-}
-
-symlinkAllDirectories(path.dirname(path.resolve(process.env.CONFIG_FILE)));
+symlinkAllDirectories(path.dirname(configFile));
 
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,

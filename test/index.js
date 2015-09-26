@@ -1,1 +1,1 @@
-global.TestUtils = require('./TestUtils');
+global.TestUtils = require('../lib/TestUtils');
