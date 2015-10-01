@@ -164,7 +164,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
   });
 };
 
-Ppt.postProcess = function() {
+Ppt.seal = function() {
   PostProcessor.run(this.registry);
 };
 

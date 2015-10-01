@@ -16,7 +16,9 @@ Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 /**
  * @namespace tinydoc
  */
-let tinydoc = window.tinydoc = {};
+let tinydoc = window.tinydoc = {
+  publicModules: require('../tmp/publicModules')
+};
 
 var emitter = new EventEmitter([
   'pluginsLoaded',

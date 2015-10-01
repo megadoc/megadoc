@@ -6,3 +6,4 @@
 - ~~sticky footer plz~~
 - ~~custom titles plz~~
 - ~~CJS: linkify types found in @param, @property, and @return tags~~
+- plugin compiler (cli)

@@ -80,18 +80,19 @@ function createCJSPlugin(userConfig) {
     inferModuleIdFromFilename: config.inferModuleIdFromFilename,
     customTags: config.customTags,
     nodeAnalyzers: [],
-    docstringProcessors: []
+    docstringProcessors: [],
+    postProcessors: [],
   };
 
   return {
     name: 'CJSPlugin',
 
     defineCustomTag: function(tagName, definition) {
-      assert(!config.customTags.hasOwnProperty(tagName),
+      assert(!parserConfig.customTags.hasOwnProperty(tagName),
         "Tag '" + tagName + "' already has a definition!"
       );
 
-      config.customTags[tagName] = definition;
+      parserConfig.customTags[tagName] = definition;
     },
 
     addNodeAnalyzer: function(analyzer) {
@@ -100,6 +101,10 @@ function createCJSPlugin(userConfig) {
 
     addDocstringProcessor: function(processor) {
       parserConfig.docstringProcessors.push(processor);
+    },
+
+    addPostProcessor: function(postProcessor) {
+      parserConfig.postProcessors.push(postProcessor);
     },
 
     run: function(compiler) {

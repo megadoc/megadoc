@@ -2,6 +2,8 @@ var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
+var ExternalsPlugin = require('./webpack/externals-plugin');
+
 var root = path.resolve(__dirname);
 
 var nodeEnv = process.env.NODE_ENV || 'development';
@@ -23,7 +25,9 @@ var config = {
     new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
-    })
+    }),
+
+    ExternalsPlugin
   ]
 };
 

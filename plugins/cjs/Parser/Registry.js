@@ -1,7 +1,6 @@
 var WeakMap = require('weakmap');
 var Utils = require('./Utils');
 var assert = require('assert');
-// var findWhere = require('lodash').findWhere;
 
 function Registry() {
   this.docs = [];

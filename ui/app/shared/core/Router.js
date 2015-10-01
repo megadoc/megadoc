@@ -12,15 +12,19 @@ exports.setInstance = function(_instance) {
  *         The query parameters.
  */
 exports.updateQuery = function(newQuery) {
-  var routes = instance.getRoutes();
+  var routes = instance.getCurrentRoutes();
   var currentRouteName = routes[routes.length-1].name;
-  var query = instance.getQuery();
+  var query = instance.getCurrentQuery();
 
   Object.keys(newQuery).forEach(function(key) {
     query[key] = newQuery[key];
+
+    if (query[key] === null) {
+      delete query[key];
+    }
   });
 
-  instance.replaceWith(currentRouteName, instance.getParams(), query);
+  instance.replaceWith(currentRouteName, instance.getCurrentParams(), query);
 };
 
 exports.goToNotFound = function() {

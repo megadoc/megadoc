@@ -22,8 +22,15 @@ module.exports = function scan(config, parserConfig, gitRepository, utils, done)
     parser.parseFile(filePath, parserConfig, commonPrefix);
   });
 
-  parser.postProcess();
+  parser.seal();
+
   database = parser.toJSON();
+
+  if (config.postProcessors) {
+    config.postProcessors.forEach(function(postProcessor) {
+      postProcessor(database);
+    });
+  }
 
   if (config.gitStats) {
     console.log("Parsing git stats...");

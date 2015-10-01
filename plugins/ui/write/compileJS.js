@@ -25,7 +25,7 @@ module.exports = function compileJS(compiler, config, done) {
       new webpack.NoErrorsPlugin()
     ],
 
-    // TODO: externals
+    externals: require('../../../ui/webpack/externals')
   });
 
   console.log('Compiling %d plugins: %s.',

@@ -2,6 +2,7 @@ var WebpackDevServer = require('webpack-dev-server');
 var webpack = require('webpack');
 var path = require('path');
 var config = require('./webpack.config');
+var ExternalsPlugin = require('./webpack/externals-plugin');
 var fs = require('fs-extra');
 var _ = require('lodash');
 
@@ -41,7 +42,11 @@ config.plugins = [
   }),
 
   new webpack.HotModuleReplacementPlugin(),
+
+  ExternalsPlugin
 ];
+
+config.resolve.alias['tinydoc-ui'] = path.join(root, 'app', 'shared');
 
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
