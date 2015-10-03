@@ -1,16 +1,24 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
-var GitStats = require('components/GitStats');
-var config = require('config');
-var Disqus = require('components/Disqus');
-var scrollToTop = require('utils/scrollToTop');
-var HasTitle = require('mixins/HasTitle');
-var Router = require('core/Router');
+const React = require("react");
+const MarkdownText = require('components/MarkdownText');
+const GitStats = require('components/GitStats');
+const Disqus = require('components/Disqus');
+const scrollToTop = require('utils/scrollToTop');
+const HasTitle = require('mixins/HasTitle');
+const Router = require('core/Router');
 
-var Article = React.createClass({
+const { shape, object, bool } = React.PropTypes;
+
+const Article = React.createClass({
+  propTypes: {
+    database: object,
+    config: shape({
+      gitStats: bool
+    })
+  },
+
   mixins: [
     HasTitle(function() {
-      var article = this.props.database.get(this.getArticleId());
+      const article = this.props.database.get(this.getArticleId());
 
       if (article) {
         return article.title;
@@ -33,7 +41,7 @@ var Article = React.createClass({
   },
 
   render() {
-    var article = this.props.database.get(this.getArticleId());
+    const article = this.props.database.get(this.getArticleId());
 
     if (!article) {
       Router.goToNotFound();
@@ -44,7 +52,7 @@ var Article = React.createClass({
       <div className="doc-content">
         <MarkdownText jumpy>{article.source}</MarkdownText>
 
-        {config.gitStats && (
+        {this.props.config.gitStats && (
           <GitStats {...article.git} />
         )}
 

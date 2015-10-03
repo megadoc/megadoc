@@ -67,8 +67,8 @@ describe('CJS::Parser - Object modules', function() {
 
     assert.ok(docs.length > 0);
 
-    var doc = docs.filter(function(doc) {
-      return doc.id === 'analyzeNode';
+    var doc = docs.filter(function(d) {
+      return d.id === 'analyzeNode';
     })[0];
 
     assert.ok(doc);

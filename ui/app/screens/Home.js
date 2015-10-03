@@ -4,7 +4,6 @@ var MarkdownText = require('components/MarkdownText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
 var scrollToTop = require('utils/scrollToTop');
-var Router = require('core/Router');
 
 var Home = React.createClass({
   displayName: "Home",

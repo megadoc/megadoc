@@ -11,8 +11,9 @@ module.exports = function createRoot(routeName) {
     displayName: 'JSRoot',
 
     propTypes: {
+      query: React.PropTypes.object,
       params: React.PropTypes.shape({
-        moduleId: React.PropTypes.string
+        moduleId: React.PropTypes.string,
       })
     },
 
@@ -35,7 +36,15 @@ module.exports = function createRoot(routeName) {
           <RightColumn>
             <div className="js-root__content">
               <RouteHandler routeName={routeName} {...this.props} />
-              <Outlet name="CJS::ContentPanel" props={this.props} />
+              <Outlet
+                name="CJS::ContentPanel"
+                props={{
+                  routeName: routeName,
+                  database: Database.for(routeName),
+                  params: this.props.params,
+                  query: this.props.query,
+                }}
+              />
             </div>
           </RightColumn>
 

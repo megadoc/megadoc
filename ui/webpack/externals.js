@@ -1,14 +1,12 @@
 var path = require('path');
 var glob = require('glob');
-var fs = require('fs-extra');
-var _ = require('lodash');
 var root = path.resolve(__dirname, '..', 'app');
 
+var GLOBAL = 'tinydoc.publicModules';
 var vendorModules = [
   'react',
   'react-router',
   'lodash',
-  'qtip',
   'marked',
   'moment',
 ];
@@ -20,11 +18,8 @@ var sharedModuleDirs = [
   'utils',
 ];
 
-var externals = {};
-var globalName = 'tinydoc.publicModules';
-
 vendorModules.forEach(function(moduleId) {
-  externals[moduleId] = globalName + '["' + moduleId + '"]';
+  exports[moduleId] = GLOBAL + '["' + moduleId + '"]';
 });
 
 sharedModuleDirs.forEach(function(dir) {
@@ -34,9 +29,8 @@ sharedModuleDirs.forEach(function(dir) {
       return !file.match('.test.js');
     }).forEach(function(file) {
       var moduleId = file.replace(/^\.\/|\.js$/g, '');
-      externals[moduleId] = globalName + '["' + moduleId + '"]';
+      exports[moduleId] = GLOBAL + '["' + moduleId + '"]';
     })
   ;
 });
 
-module.exports = externals;

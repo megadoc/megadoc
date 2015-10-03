@@ -3,8 +3,10 @@ plugins/**/*.fixture.js
 
 node_modules
 ui/dist
+ui/tmp
 ui/app/vendor/**/*
 ui/karma.conf.js
 test/fixtures
 ui/app/css/fonts/**/*/demo.js
 doc/compiled
+**/*.tmpl.js

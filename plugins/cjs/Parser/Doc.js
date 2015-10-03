@@ -95,7 +95,7 @@ Doc.prototype.isModule = function() {
   return Boolean(
     this.isExported() ||
     this.docstring.isModule() ||
-    this.nodeInfo.isExports()
+    this.nodeInfo.isModule()
   );
 };
 

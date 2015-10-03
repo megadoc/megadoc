@@ -1,6 +1,6 @@
 const React = require('react');
 const OutletManager = require('core/OutletManager');
-const { string, object } = React.PropTypes;
+const { string, object, any } = React.PropTypes;
 
 function getRenderer(element) {
   return element.renderer || element.component;
@@ -14,6 +14,7 @@ const Outlet = React.createClass({
     siblingProps: object,
 
     tagName: string,
+    children: any,
   },
 
   getDefaultProps: function() {

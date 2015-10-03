@@ -1,7 +1,7 @@
 const React = require('react');
 const { bool, string, func, any } = React.PropTypes;
 
-const Checkbox = React.createClass({
+const Radio = React.createClass({
   propTypes: {
     checked: bool,
     value: string,
@@ -11,10 +11,10 @@ const Checkbox = React.createClass({
 
   render() {
     return (
-      <label className="checkbox">
+      <label className="radio">
         <input
-          type="checkbox"
-          className="checkbox__indicator"
+          type="radio"
+          className="radio__indicator"
           checked={this.props.checked}
           value={this.props.value}
           onChange={this.props.onChange}
@@ -26,4 +26,5 @@ const Checkbox = React.createClass({
   }
 });
 
-module.exports = Checkbox;
+
+module.exports = Radio;

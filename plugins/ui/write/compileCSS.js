@@ -1,6 +1,5 @@
 var path = require('path');
 var webpack = require('webpack');
-var Promise = require('bluebird');
 var root = path.resolve(__dirname, '..', '..', '..');
 
 module.exports = function compileCSS(compiler, config, done) {

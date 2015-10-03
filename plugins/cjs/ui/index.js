@@ -20,8 +20,9 @@ tinydoc.use(function CJSPlugin(api) {
   const configs = tinydoc.getRuntimeConfigs('cjs');
 
   configs.forEach(function(config) {
-    let database = Database.createDatabase(config);
     const { routeName } = config;
+
+    Database.createDatabase(config);
 
     api.registerRoutes([
       {

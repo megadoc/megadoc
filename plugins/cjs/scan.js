@@ -26,8 +26,8 @@ module.exports = function scan(config, parserConfig, gitRepository, utils, done)
 
   database = parser.toJSON();
 
-  if (config.postProcessors) {
-    config.postProcessors.forEach(function(postProcessor) {
+  if (parserConfig.postProcessors) {
+    parserConfig.postProcessors.forEach(function(postProcessor) {
       postProcessor(database);
     });
   }

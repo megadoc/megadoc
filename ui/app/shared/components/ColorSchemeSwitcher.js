@@ -1,5 +1,5 @@
 var React = require("react");
-var Radio = require("qjunk/lib/QRadio");
+var Radio = require("components/Radio");
 var { AVAILABLE_SCHEMES, AVAILABLE_SCHEME_NAMES } = require("constants");
 var ColorSchemeManager = require('core/ColorSchemeManager');
 

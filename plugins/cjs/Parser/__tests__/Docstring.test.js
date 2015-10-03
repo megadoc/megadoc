@@ -205,7 +205,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('accepts a custom processor', function(done) {
-      var docstring = parse(function() {
+      parse(function() {
         // /**
         //  * @live_example {jsx}
         //  */
@@ -221,7 +221,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('accepts custom attributes', function(done) {
-      var docstring = parse(function() {
+      parse(function() {
         // /**
         //  * @live_example {jsx}
         //  */
@@ -241,7 +241,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('whines if attempting to write to an unspecified attribute', function(done) {
-      var docstring = parse(function() {
+      parse(function() {
         // /**
         //  * @live_example {jsx}
         //  *

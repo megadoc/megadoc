@@ -96,7 +96,7 @@ var pluginMgr = new PluginManager(config.pluginCount, emitter);
  */
 tinydoc.use = pluginMgr.use;
 tinydoc.getRuntimeConfigs = function(pluginId) {
-  return CONFIG.pluginConfigs[pluginId] || [];
+  return config.pluginConfigs[pluginId] || [];
 };
 
 tinydoc.seal = function() {

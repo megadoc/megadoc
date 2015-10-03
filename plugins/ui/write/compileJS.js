@@ -1,8 +1,5 @@
-var path = require('path');
 var webpack = require('webpack');
-var Promise = require('bluebird');
 var generateCustomWebpackConfig = require('../../../ui/webpack/common');
-var merge = require('lodash').merge;
 
 module.exports = function compileJS(compiler, config, done) {
   var scripts = compiler.assets.inlineRuntimeScripts;

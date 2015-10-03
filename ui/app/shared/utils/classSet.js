@@ -1,1 +1,1 @@
-module.exports = require('qjunk/lib/utils/classSet');
+module.exports = require('classnames');

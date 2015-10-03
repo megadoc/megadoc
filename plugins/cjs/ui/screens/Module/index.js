@@ -18,16 +18,13 @@ const Module = React.createClass({
   ],
 
   propTypes: {
+    routeName: React.PropTypes.string,
     params: React.PropTypes.shape({
       moduleId: React.PropTypes.string
     }),
     query: React.PropTypes.shape({
       entity: React.PropTypes.string
     })
-  },
-
-  componentWillMount() {
-    const { routeName, params } = this.props;
   },
 
   render() {

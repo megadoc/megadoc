@@ -24,6 +24,7 @@ var MarkdownClassBrowser = React.createClass({
     articles: React.PropTypes.array,
     activeArticleId: React.PropTypes.string,
     folders: React.PropTypes.array,
+    routeName: React.PropTypes.string,
   },
 
   getDefaultProps: function() {

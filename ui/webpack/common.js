@@ -56,6 +56,7 @@ var baseConfig = {
       {
         test: /\.js$/,
         exclude: [
+          /\.tmpl\.js$/,
           /ui\/app\/vendor/,
           /node_modules\/(?!qjunk)/
         ],

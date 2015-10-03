@@ -13,10 +13,11 @@ const Types = React.createClass({
     }).join(', ');
 
     return (
-      <span dangerouslySetInnerHTML={{
-        __html: MarkdownText.renderMarkdown(types)
-          .replace('<p>', '')
-          .replace('</p>', '')
+      <span
+        dangerouslySetInnerHTML={{
+          __html: MarkdownText.renderMarkdown(types)
+            .replace('<p>', '')
+            .replace('</p>', '')
         }}
       />
     );

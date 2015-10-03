@@ -4,13 +4,20 @@ var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
+const { string, shape, object } = React.PropTypes;
+
 var MarkdownRoot = React.createClass({
   propTypes: {
-    params: React.PropTypes.shape({
-      splat: React.PropTypes.string
+    params: shape({
+      splat: string
     }),
 
-    database: React.PropTypes.object
+    database: object,
+    routeName: string,
+
+    config: shape({
+      layout: string,
+    })
   },
 
   render() {

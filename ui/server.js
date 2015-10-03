@@ -6,20 +6,6 @@ var ExternalsPlugin = require('./webpack/externals-plugin');
 var fs = require('fs-extra');
 var _ = require('lodash');
 
-function symlinkAllDirectories(root) {
-  fs.readdirSync(root)
-    .filter(function(file) {
-      return fs.statSync(path.join(root, file)).isDirectory();
-    })
-    .forEach(function(dir) {
-      fs.symlinkSync(
-        path.join(root, dir),
-        path.join(contentBase, dir)
-      );
-    })
-  ;
-}
-
 var root = path.resolve(__dirname);
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
@@ -84,3 +70,18 @@ server.listen(port, host, function(err) {
 
   console.log('Hot server listening at ' + host +':'+ port);
 });
+
+// =--------------------------------------------------------------------------=
+function symlinkAllDirectories(baseDir) {
+  fs.readdirSync(baseDir)
+    .filter(function(file) {
+      return fs.statSync(path.join(baseDir, file)).isDirectory();
+    })
+    .forEach(function(dir) {
+      fs.symlinkSync(
+        path.join(baseDir, dir),
+        path.join(contentBase, dir)
+      );
+    })
+  ;
+}

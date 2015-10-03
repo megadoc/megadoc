@@ -41,10 +41,19 @@ function copyAssets(compiler, staticAssets) {
   });
 
   compiler.assets.files.forEach(function(entry) {
-    console.log('Copying asset:', entry.sourcePath);
+    if (entry.hasCustomOutputPath) {
+      console.log('Copying asset "%s" => "%s".', entry.sourcePath, entry.outputPath);
+
+    }
+    else {
+      console.log('Copying asset "%s".', entry.sourcePath);
+    }
 
     fs.copySync(
-      compiler.utils.getAssetPath(entry.sourcePath),
+      entry.isAbsolute ?
+        '/' + entry.sourcePath :
+        compiler.utils.getAssetPath(entry.sourcePath)
+      ,
       compiler.utils.getOutputPath(entry.outputPath)
     );
   });

@@ -1,4 +1,3 @@
-var merge = require('lodash').merge;
 var Compiler = require('./lib/Compiler');
 
 function tinydoc(config, runOptions) {

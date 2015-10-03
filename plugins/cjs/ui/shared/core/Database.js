@@ -1,11 +1,8 @@
-const { pluck, where, findWhere } = require('lodash');
-const findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
-const DocClassifier = require('core/DocClassifier');
+const { where, findWhere } = require('lodash');
 
 let databases = {};
 
 function createDatabase(key, database) {
-  const commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
   const moduleDocs = where(database, { isModule: true });
 
   let exports = {

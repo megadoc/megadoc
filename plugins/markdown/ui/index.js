@@ -1,4 +1,3 @@
-const config = require('config');
 const createNavigationOutlet = require('./outlets/Navigation');
 const React = require('react');
 const Root = require('./screens/Root');
