@@ -65,14 +65,31 @@ function resolveReceiver(registry, doc) {
   }
 
   // Resolve @lends
-  var realReceiver = registry.findAliasedReceiver(doc.$path, receiver);
+  var lendEntry = (
+    registry.findAliasedLendTarget(doc.$path, receiver) ||
+    registry.findClosestLend(doc.$path)
+  );
 
-  if (!realReceiver) {
-    realReceiver = registry.findClosestModuleToPath(doc.$path)
+  if (lendEntry) {
+    var actualReceiver = registry.get(lendEntry.receiver);
+
+    if (actualReceiver) {
+      doc.overrideReceiver(actualReceiver.id);
+
+      if (lendEntry.scope) {
+        doc.nodeInfo.ctx.scope = lendEntry.scope;
+      }
+    }
   }
+  else {
+    var actualReceiver = (
+      registry.findAliasedReceiver(doc.$path, receiver) ||
+      registry.findClosestModule(doc.$path)
+    );
 
-  if (realReceiver) {
-    doc.overrideReceiver(realReceiver);
+    if (actualReceiver) {
+      doc.overrideReceiver(actualReceiver);
+    }
   }
 }
 

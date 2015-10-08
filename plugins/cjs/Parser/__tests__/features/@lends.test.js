@@ -1,6 +1,7 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
 var findWhere = require('lodash').findWhere;
+var K = require('../../constants');
 
 describe('CJS::Parser - @lends support', function() {
   it('redirects all entities belonging to a @lends object into the specified receiver', function() {
@@ -89,5 +90,31 @@ describe('CJS::Parser - @lends support', function() {
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'API.DragonHunter');
     assert.equal(docs[1].ctx.value, 'a');
+  });
+
+  it('lends to a prototype', function() {
+    var docs = TestUtils.parseInline(function() {
+      // /** @module */
+      // function DragonHunter() {}
+      //
+      // /** @lends DragonHunter.prototype */
+      // assign(DragonHunter, {
+      //  /** Adooken. */
+      //   someProperty: 'a',
+      //
+      //   /** Booyah */
+      //   someMethod: function() {
+      //   }
+      // });
+    });
+
+    assert.equal(docs.length, 3);
+    assert.equal(docs[1].name, 'someProperty');
+    assert.equal(docs[1].receiver, 'DragonHunter');
+    assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+
+    assert.equal(docs[2].name, 'someMethod');
+    assert.equal(docs[2].receiver, 'DragonHunter');
+    assert.equal(docs[2].ctx.scope, K.SCOPE_PROTOTYPE);
   });
 });
