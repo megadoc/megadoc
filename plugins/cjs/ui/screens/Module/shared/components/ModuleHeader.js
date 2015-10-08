@@ -7,7 +7,8 @@ const ModuleHeader = React.createClass({
   propTypes: {
     doc: React.PropTypes.object,
     commonPrefix: React.PropTypes.string,
-    moduleDocs: React.PropTypes.array
+    moduleDocs: React.PropTypes.array,
+    showSourcePaths: React.PropTypes.bool,
   },
 
   render() {
@@ -50,9 +51,11 @@ const ModuleHeader = React.createClass({
           </span>
         </h1>
 
-        <div className="class-view__module-filepath">
-          Defined in: {doc.filePath}
-        </div>
+        {this.props.showSourcePaths && (
+          <div className="class-view__module-filepath">
+            Defined in: {doc.filePath}
+          </div>
+        )}
       </header>
     );
   }

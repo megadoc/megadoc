@@ -30,6 +30,14 @@ var defaults = {
   /**
    * @property {String}
    *
+   * A brief sentence describing what this is about. It will be displayed right
+   * next to the title in a small type.
+   */
+  motto: null,
+
+  /**
+   * @property {String}
+   *
    * Path to where a favicon can be found. Clear this if you don't want any.
    */
   favicon: null,

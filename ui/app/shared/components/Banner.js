@@ -37,9 +37,11 @@ var Banner = React.createClass({
 
             {' '}
 
-            <span className="banner__motto">
-              {config.motto || 'Developer zone.'}
-            </span>
+            {config.motto && config.motto.length > 0 && (
+              <span className="banner__motto">
+                {config.motto}
+              </span>
+            )}
 
             {this.props.children}
           </h1>

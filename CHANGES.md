@@ -27,6 +27,11 @@ Thanks to #3 above, the same plugin can now be used more than once with differen
 - JS plugin can now accept custom tag definitions
 - It is now possible to compile UI plugins at compile-time using tinydoc's internal JS compiler
 
+### New options
+
+- new core option `motto: String` for tuning the motto/slogan next to the title
+- new JS plugin option: `showSourcePaths: Boolean` for displaying the file path inside the module header
+
 ### Bugfixes
 
 - Fixed an issue that was causing the compiler to silently fail when facing fatal errors during the write phase

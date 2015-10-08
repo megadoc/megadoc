@@ -67,6 +67,13 @@ var defaults = {
   analyzeNode: null,
 
   customTags: {},
+
+  /**
+   * @property {Boolean}
+   *
+   * Whether to show the file path the module was defined in.
+   */
+  showSourcePaths: true,
 };
 
 /**

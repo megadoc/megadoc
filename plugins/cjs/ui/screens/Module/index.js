@@ -49,6 +49,7 @@ const Module = React.createClass({
         <ModuleHeader
           doc={doc}
           moduleDocs={moduleDocs}
+          showSourcePaths={config.for(routeName).showSourcePaths}
         />
 
         {(
