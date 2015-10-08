@@ -26,6 +26,12 @@ var emitter = new EventEmitter([
   'started'
 ]);
 
+OutletManager.add('SinglePageLayout::ContentPanel', {
+  component: require('./screens/Home'),
+  key: 'home'
+});
+
+
 emitter.on('pluginsLoaded', function start(registrar) {
   var emitStarted = function() {
     emitter.emit('started');

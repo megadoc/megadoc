@@ -1,0 +1,46 @@
+const React = require("react");
+const Banner = require('components/Banner');
+const Footer = require('components/Footer');
+const TwoColumnLayout = require('components/TwoColumnLayout');
+const classSet = require('utils/classSet');
+
+const { node } = React.PropTypes;
+
+const MultiPageLayout = React.createClass({
+  propTypes: {
+    children: node
+  },
+
+  componentDidMount() {
+    TwoColumnLayout.on('change', this.reload);
+  },
+
+  componentWillUnmount() {
+    TwoColumnLayout.off('change', this.reload);
+  },
+
+  render() {
+    var className = classSet({
+      'root': true,
+      'root--with-two-column-layout': TwoColumnLayout.isActive()
+    });
+
+    return (
+      <div className={className}>
+        <Banner />
+
+        <div className="root__screen">
+          {this.props.children}
+        </div>
+
+        <Footer />
+      </div>
+    );
+  },
+
+  reload() {
+    this.forceUpdate();
+  },
+});
+
+module.exports = MultiPageLayout;

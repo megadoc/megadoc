@@ -1,11 +1,9 @@
 const React = require("react");
 const { RouteHandler } = require("react-router");
-const Banner = require('components/Banner');
-const Footer = require('components/Footer');
-const TwoColumnLayout = require('components/TwoColumnLayout');
+const SinglePageLayout = require('components/SinglePageLayout');
+const MultiPageLayout = require('components/MultiPageLayout');
 const Storage = require('core/Storage');
 const ColorSchemeManager = require('core/ColorSchemeManager');
-const classSet = require('utils/classSet');
 const config = require('config');
 const $ = require('jquery');
 const Router = require('core/Router');
@@ -36,7 +34,6 @@ const Root = React.createClass({
     }
 
     Storage.on('change', this.reload);
-    TwoColumnLayout.on('change', this.reload);
 
     // we need the router to be running for LinkResolvers to register
     // themselves *before* we start rendering anything.
@@ -48,7 +45,6 @@ const Root = React.createClass({
   },
 
   componentWillUnmount: function() {
-    TwoColumnLayout.off('change', this.reload);
     Storage.off('change', this.reload);
   },
 
@@ -62,16 +58,15 @@ const Root = React.createClass({
       'root--with-two-column-layout': TwoColumnLayout.isActive(),
     });
 
+    const Layout = config.layout === 'single-page' ?
+      SinglePageLayout :
+      MultiPageLayout
+    ;
+
     return (
-      <div className={className}>
-        <Banner />
-
-        <div className="root__screen">
-          <RouteHandler onChange={this.reload} {...this.props} />
-        </div>
-
-        <Footer />
-      </div>
+      <Layout {...this.props}>
+        <RouteHandler onChange={this.reload} {...this.props} />
+      </Layout>
     );
   },
 

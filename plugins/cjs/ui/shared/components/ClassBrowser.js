@@ -23,7 +23,6 @@ var ClassBrowser = React.createClass({
 
   propTypes: {
     routeName: React.PropTypes.string,
-    modules: React.PropTypes.array,
     activeModuleId: React.PropTypes.string,
   },
 

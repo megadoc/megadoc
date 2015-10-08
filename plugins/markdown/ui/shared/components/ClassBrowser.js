@@ -23,6 +23,7 @@ var MarkdownClassBrowser = React.createClass({
   propTypes: {
     activeArticleId: React.PropTypes.string,
     routeName: React.PropTypes.string,
+    expanded: React.PropTypes.bool,
   },
 
   getDefaultProps: function() {
@@ -97,7 +98,7 @@ var MarkdownClassBrowser = React.createClass({
   renderArticle(article) {
     const { id } = article;
     let { title } = article;
-    const isActive = this.props.activeArticleId === id;
+    const isActive = this.props.activeArticleId === id || this.props.expanded;
 
     if (Storage.get(GROUP_BY_FOLDER) &&
       article.folderTitle !== ROOT_FOLDER_ID &&

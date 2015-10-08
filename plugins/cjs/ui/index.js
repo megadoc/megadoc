@@ -58,5 +58,7 @@ tinydoc.use(function CJSPlugin(api) {
       'navigation',
       createNavigationOutlet(routeName, config.navigationLabel, config.icon)
     );
+
+    require('./outlets/SinglePageLayout')(routeName);
   });
 });

@@ -2,8 +2,16 @@ const React = require('react');
 const jqScrollIntoView = require('jqScrollIntoView');
 
 function BrowserJumperMixin(locateElement, offset) {
-  function jumpToEntity(component, props, state) {
-    const element = locateElement.call(component, props, state);
+  function jumpToEntity(component, props, state, prevProps = null) {
+    const element = locateElement.call(component, props, prevProps, state);
+
+    if (prevProps) {
+      const prevElement = locateElement.call(component, prevProps, state);
+
+      if (prevElement === element) {
+        return false;
+      }
+    }
 
     if (element) {
       jqScrollIntoView(React.findDOMNode(element), { offset });
@@ -24,8 +32,8 @@ function BrowserJumperMixin(locateElement, offset) {
       jumpToEntity(this, this.props, this.state);
     },
 
-    componentDidUpdate: function() {
-      jumpToEntity(this, this.props, this.state);
+    componentDidUpdate: function(prevProps) {
+      jumpToEntity(this, this.props, this.state, prevProps);
     },
   };
 }

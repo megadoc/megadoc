@@ -98,7 +98,7 @@ const Outlet = React.createClass({
 
     return (
       <Renderer
-        key={Renderer.getKey && Renderer.getKey(props.props)}
+        key={el.key || Renderer.getKey && Renderer.getKey(props.props)}
         {...props}
       />
     );

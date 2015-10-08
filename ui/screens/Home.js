@@ -4,6 +4,8 @@ var HighlightedText = require('components/HighlightedText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
 
+var OutletManager = require('core/OutletManager');
+
 var Home = React.createClass({
   displayName: "Home",
 
