@@ -9,12 +9,12 @@ const { findWhere, sortBy, groupBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
-const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const JumperMixin = require('mixins/JumperMixin');
 const orderAwareSort = require('utils/orderAwareSort');
 
 var ClassBrowser = React.createClass({
   mixins: [
-    BrowserJumperMixin(function(props) {
+    JumperMixin(function(props) {
       if (props.activeModuleId) {
         return this.refs[props.activeModuleId];
       }

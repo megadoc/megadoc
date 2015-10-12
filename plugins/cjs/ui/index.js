@@ -8,13 +8,16 @@ const OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
-OutletManager.define('CJS::ContentPanel');
+OutletManager.define('CJS::ModuleBody');
 OutletManager.define('CJS::ModuleHeader::Type', {
   firstMatching: true
 });
 
 OutletManager.define('CJS::Tag');
 OutletManager.define('CJS::ExampleTags');
+OutletManager.define('CJS::ExampleTag', {
+  firstMatching: true
+});
 
 tinydoc.use(function CJSPlugin(api) {
   const configs = tinydoc.getRuntimeConfigs('cjs');

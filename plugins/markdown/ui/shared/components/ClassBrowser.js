@@ -9,11 +9,11 @@ const strHumanize = require('tinydoc/lib/utils/strHumanize');
 const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const ROOT_FOLDER_ID = strHumanize('root');
 const isItemHot = require('utils/isItemHot');
-const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const JumperMixin = require('mixins/JumperMixin');
 
 var MarkdownClassBrowser = React.createClass({
   mixins: [
-    BrowserJumperMixin(function(props) {
+    JumperMixin(function(props) {
       if (props.activeArticleId) {
         return this.refs[props.activeArticleId];
       }

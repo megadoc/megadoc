@@ -58,8 +58,11 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     'inferModuleIdFromFileName',
     'nodeAnalyzers',
     'docstringProcessors',
+    'tagProcessors',
     'customTags',
   ]);
+
+  config.tagProcessors = config.tagProcessors || [];
 
   console.debug('\nParsing: %s', filePath);
   console.debug(Array(80).join('-'));
@@ -98,6 +101,10 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
 
         doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+
+        docstring.tags.forEach(function(tag) {
+          runAllSync(config.tagProcessors, [ tag ]);
+        });
 
         if (doc.id) {
           if (doc.isModule()) {

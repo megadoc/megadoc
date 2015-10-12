@@ -10,7 +10,7 @@ const ExampleTag = require('components/Tags/ExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
-const SectionJumperMixin = require('mixins/SectionJumperMixin');
+const JumperMixin = require('mixins/JumperMixin');
 
 function getRenderableType(doc, moduleDocs) {
   if (doc.ctx.type === K.TYPE_FUNCTION) {
@@ -31,7 +31,7 @@ function getRenderableType(doc, moduleDocs) {
 
 const ModuleBody = React.createClass({
   mixins: [
-    SectionJumperMixin(function() {
+    JumperMixin(function() {
       const id = this.props.focusedEntity;
 
       if (id) {
@@ -126,13 +126,17 @@ const ModuleBody = React.createClass({
       <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
         {tags.length > 0 && (
           <DocGroup label="Examples">
-            {tags.map(function(tag) {
-              return (
-                <ExampleTag key={tag.string} string={tag.string} />
-              );
-            })}
+            {tags.map(this.renderExampleTag)}
           </DocGroup>
         )}
+      </Outlet>
+    );
+  },
+
+  renderExampleTag(tag) {
+    return (
+      <Outlet key={tag.string} name="CJS::ExampleTag" props={tag}>
+        <ExampleTag string={tag.string} />
       </Outlet>
     );
   },

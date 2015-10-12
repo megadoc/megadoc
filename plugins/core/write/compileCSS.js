@@ -1,9 +1,10 @@
 var path = require('path');
 var webpack = require('webpack');
 var root = path.resolve(__dirname, '..', '..', '..');
+var CORE_STYLE = path.resolve(root, 'ui', 'app', 'css', 'index.less');
 
 module.exports = function compileCSS(compiler, config, done) {
-  var files = compiler.assets.styleSheets;
+  var files = [ CORE_STYLE ].concat(compiler.assets.styleSheets);
   var utils = compiler.utils;
 
   var webpackConfig = {
@@ -73,9 +74,12 @@ module.exports = function compileCSS(compiler, config, done) {
     if (jsonStats.errors.length > 0) {
       return done(jsonStats.errors);
     }
-    else if (jsonStats.warnings.length > 0) {
-      return done(jsonStats.warnings);
+
+    if (jsonStats.warnings.length > 0) {
+      console.warn(jsonStats.warnings);
     }
+
+    compiler.assets.addRuntimeScript(utils.getOutputPath('styles.js'));
 
     console.log('CSS assets generated.');
 

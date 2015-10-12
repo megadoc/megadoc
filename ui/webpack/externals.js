@@ -9,6 +9,8 @@ var vendorModules = [
   'lodash',
   'marked',
   'moment',
+  'jquery',
+  'jQueryUI'
 ];
 
 var sharedModuleDirs = [

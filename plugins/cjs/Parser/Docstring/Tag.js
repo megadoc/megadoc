@@ -87,6 +87,7 @@ function Tag(doxTag, customTags, filePath) {
     case 'param':
     case 'return':
     case 'throws':
+    case 'example':
       this.typeInfo = parseProperty(doxTag.string);
       break;
 

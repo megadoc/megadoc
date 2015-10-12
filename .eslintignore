@@ -10,3 +10,4 @@ test/fixtures
 ui/app/css/fonts/**/*/demo.js
 doc/compiled
 **/*.tmpl.js
+**/dist/*.js

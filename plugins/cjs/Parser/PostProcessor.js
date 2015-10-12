@@ -55,6 +55,7 @@ function identifyScope(registry, doc) {
 
 function resolveReceiver(registry, doc) {
   var receiver = doc.nodeInfo.receiver;
+  var actualReceiver;
 
   // @memberOf support
   //
@@ -70,8 +71,9 @@ function resolveReceiver(registry, doc) {
     registry.findClosestLend(doc.$path)
   );
 
+  // TODO: this needs a bit of rethinking really
   if (lendEntry) {
-    var actualReceiver = registry.get(lendEntry.receiver);
+    actualReceiver = registry.get(lendEntry.receiver);
 
     if (actualReceiver) {
       doc.overrideReceiver(actualReceiver.id);
@@ -82,7 +84,8 @@ function resolveReceiver(registry, doc) {
     }
   }
   else {
-    var actualReceiver = (
+  // TODO: this too
+    actualReceiver = (
       registry.findAliasedReceiver(doc.$path, receiver) ||
       registry.findClosestModule(doc.$path)
     );

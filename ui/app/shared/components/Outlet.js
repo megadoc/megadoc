@@ -87,9 +87,7 @@ const Outlet = React.createClass({
     else {
       return (
         <div>
-          {elements.map((el) => {
-            return this.renderElement(el, elementProps);
-          })}
+          {elements.map(this.renderElementWithProps.bind(null, elementProps))}
         </div>
       );
     }
@@ -104,6 +102,10 @@ const Outlet = React.createClass({
         {...props}
       />
     );
+  },
+
+  renderElementWithProps(props, el) {
+    return this.renderElement(el, props);
   },
 
   getFirstMatchingElement(elements, elementProps) {

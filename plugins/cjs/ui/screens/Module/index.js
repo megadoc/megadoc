@@ -6,6 +6,7 @@ const ModuleHeader = require('components/ModuleHeader');
 const GitStats = require('components/GitStats');
 const config = require('config');
 const Router = require('core/Router');
+const Outlet = require('components/Outlet');
 
 const Module = React.createClass({
   mixins: [
@@ -52,13 +53,23 @@ const Module = React.createClass({
           showSourcePaths={config.for(routeName).showSourcePaths}
         />
 
-        {(
-          <ModuleBody
-            doc={doc}
-            moduleDocs={moduleDocs}
-            focusedEntity={this.props.query.entity}
-          />
-        )}
+        <ModuleBody
+          doc={doc}
+          moduleDocs={moduleDocs}
+          focusedEntity={this.props.query.entity}
+        />
+
+        <Outlet
+          name="CJS::ModuleBody"
+          props={{
+            routeName: routeName,
+            params: this.props.params,
+            query: this.props.query,
+            moduleId: moduleId,
+            moduleDoc: doc,
+            moduleDocs: moduleDocs,
+          }}
+        />
 
         {config.for(routeName).gitStats && (
           <GitStats {...doc.git} />

@@ -48,7 +48,9 @@ function MarkdownPlugin(userConfig) {
         var runtimeConfig = merge({}, config, { database: database });
 
         compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript('plugins/markdown.js');
+        compiler.assets.addPluginScript(
+          path.resolve(__dirname, 'ui/dist/tinydoc-plugin-markdown.js')
+        );
         compiler.assets.addPluginRuntimeConfig('markdown', runtimeConfig);
 
         done();

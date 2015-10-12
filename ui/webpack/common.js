@@ -40,9 +40,6 @@ var baseConfig = {
 
   resolveLoader: {
     root: path.resolve(__dirname, '..', '..', 'node_modules'),
-    alias: {
-      'less-json-loader': path.resolve(__dirname, 'less-json-loader.js')
-    }
   },
 
   node: {
@@ -58,7 +55,7 @@ var baseConfig = {
         exclude: [
           /\.tmpl\.js$/,
           /ui\/app\/vendor/,
-          /node_modules\/(?!qjunk)/
+          /node_modules/
         ],
         loader: jsLoaders.join('!')
       },

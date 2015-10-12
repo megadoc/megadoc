@@ -3,12 +3,12 @@ var path = require('path');
 var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
 var _ = require('lodash');
 var compileCSS = require('./write/compileCSS');
-var compileJS = require('./write/compileJS');
-var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js', 'styles.js'];
+var compileInlinePlugins = require('./write/compileInlinePlugins');
+var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
 var runAll = require('../../lib/utils/runAll');
 
 module.exports = function(config, compiler, readmeGitStats, done) {
-  runAll([ compileJS, compileCSS ], [ compiler, config ], function(err) {
+  runAll([ compileInlinePlugins, compileCSS ], [ compiler, config ], function(err) {
     if (err) {
       done(err);
       return;
@@ -57,12 +57,23 @@ function copyAssets(compiler, staticAssets) {
       compiler.utils.getOutputPath(entry.outputPath)
     );
   });
+
+  compiler.assets.pluginScripts.forEach(function(filePath) {
+    fs.copySync(
+      filePath,
+      compiler.utils.getOutputPath('plugins', path.basename(filePath))
+    );
+  });
 }
 
 function generateHTMLFile(compiler, config) {
   var scripts = CORE_SCRIPTS
     .concat(compiler.assets.runtimeScripts)
-    .concat(compiler.assets.pluginScripts)
+    .concat(
+      compiler.assets.pluginScripts.map(function(filePath) {
+        return 'plugins/' + path.basename(filePath);
+      })
+    )
   ;
 
   if (compiler.assets.hasInlinePlugins()) {
@@ -103,7 +114,11 @@ function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
     }
   );
 
-  console.log('Registered UI plugins:', compiler.assets.pluginScripts)
+  console.log('Registered UI plugins:',
+    compiler.assets.pluginScripts.map(function(filePath) {
+      return path.basename(filePath);
+    })
+  );
 
   if (config.readme) {
     runtimeConfig.readme = {

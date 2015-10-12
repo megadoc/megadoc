@@ -81,7 +81,9 @@ function createGitPlugin(userConfig) {
         var runtimeConfig = extend({}, config, { stats: stats });
 
         compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript('plugins/git.js');
+        compiler.assets.addPluginScript(
+          path.resolve(__dirname, 'ui/dist/tinydoc-plugin-git.js')
+        );
         compiler.assets.addPluginRuntimeConfig('git', runtimeConfig);
 
         done();

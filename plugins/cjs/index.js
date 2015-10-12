@@ -88,6 +88,7 @@ function createCJSPlugin(userConfig) {
     customTags: config.customTags,
     nodeAnalyzers: [],
     docstringProcessors: [],
+    tagProcessors: [],
     postProcessors: [],
   };
 
@@ -108,6 +109,10 @@ function createCJSPlugin(userConfig) {
 
     addDocstringProcessor: function(processor) {
       parserConfig.docstringProcessors.push(processor);
+    },
+
+    addTagProcessor: function(processor) {
+      parserConfig.tagProcessors.push(processor);
     },
 
     addPostProcessor: function(postProcessor) {
@@ -143,7 +148,10 @@ function createCJSPlugin(userConfig) {
 
       compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript('plugins/cjs.js');
+        compiler.assets.addPluginScript(
+          path.resolve(__dirname, 'ui/dist/tinydoc-plugin-cjs.js')
+        );
+
         compiler.assets.addPluginRuntimeConfig('cjs', merge({}, config, {
           database: database
         }));

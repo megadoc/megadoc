@@ -62,6 +62,17 @@ ul, ol {
   cursor: default;
 }
 
+
+.btn {
+  padding: @whitespace/2 @whitespace;
+  line-height: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
 .schemable({
   background-color: @base3;
   color: @base0;
@@ -85,14 +96,7 @@ ul, ol {
   }
 
   .btn {
-    padding: @whitespace/2 @whitespace;
-    line-height: inherit;
     background: @base2;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9em;
-    letter-spacing: 1px;
-    font-family: inherit;
     color: inherit;
     transition: background 0.08s ease-out 0s;
 

@@ -1,10 +1,8 @@
 var React = require('react');
-var Database = require('core/Database');
 var ClassBrowser = require('components/ClassBrowser');
 var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
-const Outlet = require('components/Outlet');
 
 module.exports = function createRoot(routeName) {
   return React.createClass({
@@ -36,15 +34,6 @@ module.exports = function createRoot(routeName) {
           <RightColumn>
             <div className="js-root__content">
               <RouteHandler routeName={routeName} {...this.props} />
-              <Outlet
-                name="CJS::ContentPanel"
-                props={{
-                  routeName: routeName,
-                  database: Database.for(routeName),
-                  params: this.props.params,
-                  query: this.props.query,
-                }}
-              />
             </div>
           </RightColumn>
 

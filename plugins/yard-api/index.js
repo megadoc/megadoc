@@ -41,7 +41,9 @@ function YardAPIPlugin(userConfig) {
         var runtimeConfig = merge({}, config, { database: database });
 
         compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript('plugins/yard-api.js');
+        compiler.assets.addPluginScript(
+          path.resolve(__dirname, 'ui/dist/tinydoc-plugin-yard-api.js')
+        );
         compiler.assets.addPluginRuntimeConfig('yard-api', runtimeConfig);
 
         done();

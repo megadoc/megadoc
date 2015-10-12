@@ -1,6 +1,6 @@
 var React = require("react");
 var OutletManager = require('core/OutletManager');
-var { Link } = require("react-router");
+var Link = require("components/Link");
 var config = require('config');
 var Icon = require('components/Icon');
 
