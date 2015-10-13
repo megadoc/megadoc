@@ -11,17 +11,26 @@ function linkTo(id, registry) {
     currentModuleId = Router.getParamItem('moduleId');
   }
 
-  const link = resolveLink(id, Database.getAllTags(), registry, currentModuleId);
+  let link;
+  let databaseContainingLink;
+
+  Database.getAllDatabases().some(function(database) {
+    link = resolveLink(id, database.getAllDocs(), registry, currentModuleId);
+    databaseContainingLink = database;
+
+    return !!link;
+  });
 
   if (link) {
     let queryParams = {};
+    let routeName = databaseContainingLink.getKey();
 
     if (link.entityId) {
       queryParams.entity = link.entityId;
     }
 
     return {
-      href: Router.makeHref('js.module', {
+      href: Router.makeHref(`${routeName}.module`, {
         moduleId: link.moduleId
       }, queryParams),
 

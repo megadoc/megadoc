@@ -24,7 +24,7 @@
     "no-unused-vars": 2,
     "comma-dangle": 0,
     "semi-spacing": 0,
-    "consistent-return": 2,
+    "consistent-return": 0,
     "camelcase": 0,
     "eol-last": 0,
     "no-multi-spaces": 0,

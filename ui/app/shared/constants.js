@@ -8,12 +8,14 @@ exports.KC_RETURN = 13;
 
 exports.AVAILABLE_SCHEMES = [
   'plain',
+  'steel',
   'solarized--light',
   'solarized--dark'
 ];
 
 exports.AVAILABLE_SCHEME_NAMES = [
   'Light',
+  'Steel',
   'Solarized (light)',
   'Solarized (dark)'
 ];

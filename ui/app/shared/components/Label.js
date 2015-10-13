@@ -17,7 +17,11 @@ var Label = React.createClass({
 
   render() {
     var Tag = this.props.fakeLabel ? 'div' : 'label';
-    var className = classSet({ 'form-label': true }, this.props.className);
+    var className = classSet({ 'form-label': true });
+
+    if (this.props.className) {
+      className += ` ${this.props.className}`;
+    }
 
     return (
       <Tag className={className}>

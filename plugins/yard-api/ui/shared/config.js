@@ -1,1 +1,1 @@
-module.exports = window['yard-api-config'] || {};
+module.exports = window.tinydoc.getRuntimeConfigs('yard-api')[0];

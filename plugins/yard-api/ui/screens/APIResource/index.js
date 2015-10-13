@@ -3,7 +3,7 @@ var Database = require('core/Database');
 var MarkdownText = require('components/MarkdownText');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
-var SectionJumperMixin = require('mixins/SectionJumperMixin');
+var JumperMixin = require('mixins/JumperMixin');
 var { Link } = require('react-router');
 var HasTitle = require('mixins/HasTitle');
 
@@ -17,7 +17,7 @@ var APIResource = React.createClass({
       }
     }),
 
-    SectionJumperMixin(function() {
+    JumperMixin(function() {
       if (this.props.query.endpoint) {
         return this.refs[`endpoint-${this.props.query.endpoint}`];
       }

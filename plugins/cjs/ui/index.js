@@ -1,35 +1,59 @@
 const LinkResolver = require('core/LinkResolver');
-const config = require('config');
+const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
 const resolveLink = require('utils/resolveLink');
+const createNavigationOutlet = require('./outlets/Navigation');
+const OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
+OutletManager.define('CJS::ModuleBody');
+OutletManager.define('CJS::ModuleHeader::Type', {
+  firstMatching: true
+});
+
+OutletManager.define('CJS::Tag');
+OutletManager.define('CJS::ExampleTags');
+OutletManager.define('CJS::ExampleTag', {
+  firstMatching: true
+});
+
 tinydoc.use(function CJSPlugin(api) {
-  api.registerRoutes([
-    {
-      name: 'js',
-      path: config.path,
-      handler: require('./screens/Root')
-    },
+  const configs = tinydoc.getRuntimeConfigs('cjs');
 
-    {
-      name: 'js.landing',
-      default: true,
-      handler: require('./screens/Landing'),
-      parent: 'js'
-    },
+  configs.forEach(function(config) {
+    const { routeName } = config;
 
-    {
-      name: 'js.module',
-      path: 'modules/:moduleId',
-      handler: require('./screens/Module'),
-      parent: 'js'
-    }
-  ]);
+    Database.createDatabase(config);
 
-  api.registerOutletElement('navigation', require('./outlets/Navigation'));
+    api.registerRoutes([
+      {
+        name: routeName,
+        path: '/' + routeName,
+        handler: require('./screens/Root')(routeName)
+      },
+
+      {
+        default: true,
+        name: `${routeName}.landing`,
+        handler: require('./screens/Landing'),
+        parent: routeName
+      },
+
+      {
+        name: `${routeName}.module`,
+        path: 'modules/:moduleId',
+        handler: require('./screens/Module'),
+        parent: routeName
+      }
+    ]);
+
+    api.registerOutletElement(
+      'navigation',
+      createNavigationOutlet(routeName, config.navigationLabel)
+    );
+  });
 
   api.on('started', function() {
     LinkResolver.use(resolveLink);

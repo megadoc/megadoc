@@ -1,6 +1,12 @@
 const chai = require('chai');
 const sinon = require('sinon');
 
+window.CONFIG = {
+  pluginConfigs: {}
+};
+
+require('./app');
+
 sinon.assert.expose(chai.assert, { prefix: "" });
 
 const CoreUITests = require.context('./app', true, /.test.js$/);

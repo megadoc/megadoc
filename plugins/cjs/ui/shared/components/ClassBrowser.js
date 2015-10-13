@@ -9,12 +9,12 @@ const { findWhere, sortBy, groupBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
-const BrowserJumperMixin = require('mixins/BrowserJumperMixin');
+const JumperMixin = require('mixins/JumperMixin');
 const orderAwareSort = require('utils/orderAwareSort');
 
 var ClassBrowser = React.createClass({
   mixins: [
-    BrowserJumperMixin(function(props) {
+    JumperMixin(function(props) {
       if (props.activeModuleId) {
         return this.refs[props.activeModuleId];
       }
@@ -22,12 +22,16 @@ var ClassBrowser = React.createClass({
   ],
 
   propTypes: {
+    routeName: React.PropTypes.string,
     modules: React.PropTypes.array,
     activeModuleId: React.PropTypes.string,
   },
 
   render() {
-    var modules = sortBy(this.props.modules, 'id');
+    let modules = Database.for(this.props.routeName).getModules();
+
+    modules = sortBy(modules, 'id');
+
     var nsClasses = groupBy(modules, 'namespace');
 
     var namespaces = Object.keys(nsClasses).map(function(ns) {
@@ -42,7 +46,9 @@ var ClassBrowser = React.createClass({
 
     return (
       <nav className="class-browser__listing">
-        {namespaces.map(this.renderNamespace)}
+        {namespaces.map((ns) => {
+          return this.renderNamespace(ns, namespaces.length > 1);
+        })}
 
         <div className="class-browser__controls">
           <Checkbox
@@ -55,16 +61,18 @@ var ClassBrowser = React.createClass({
     );
   },
 
-  renderNamespace(ns) {
+  renderNamespace(ns, displayName = true) {
     if (ns.modules.length === 0) {
       return null;
     }
 
     return (
       <div key={ns.name} className="class-browser__category">
-        <h3 className="class-browser__category-name">
-          {ns.name}
-        </h3>
+        {displayName && (
+          <h3 className="class-browser__category-name">
+            {ns.name}
+          </h3>
+        )}
 
         {ns.modules.map(this.renderModule)}
       </div>
@@ -72,26 +80,28 @@ var ClassBrowser = React.createClass({
   },
 
   renderModule(doc) {
-    var { id } = doc;
-    var isActive = this.props.activeModuleId === id;
-    var className = classSet({
+    const routeName = this.props.routeName;
+    const { id } = doc;
+    const isActive = this.props.activeModuleId === id;
+    const className = classSet({
       'class-browser__entry': true,
       'class-browser__entry--active': isActive
     });
 
-    var isPrivate = doc.isInternal || doc.isPrivate;
+    const isPrivate = doc.isPrivate;
 
-    if (isPrivate) {
-      var showingPrivate = Storage.get(PRIVATE_VISIBILITY_KEY);
-
-      if (!showingPrivate) {
-        return null;
-      }
+    if (isPrivate && !Storage.get(PRIVATE_VISIBILITY_KEY)) {
+      return null;
     }
 
     return (
       <div key={id} className={className}>
-        <Link ref={id} to="js.module" params={{ moduleId: id }} className="class-browser__entry-link">
+        <Link
+          ref={id}
+          to={`${routeName}.module`}
+          params={{ moduleId: id }}
+          className="class-browser__entry-link"
+        >
           {doc.name}
 
           {isPrivate && (
@@ -107,7 +117,7 @@ var ClassBrowser = React.createClass({
   },
 
   renderModuleEntities(moduleDoc) {
-    var docs = Database.getModuleEntities(moduleDoc.id);
+    var docs = Database.for(this.props.routeName).getModuleEntities(moduleDoc.id);
 
     if (!docs.length) {
       return null;
@@ -136,11 +146,12 @@ var ClassBrowser = React.createClass({
 
   renderModuleEntity(moduleDoc, doc) {
     const entityPath = (doc.ctx.symbol || '') + doc.name;
+    const routeName = this.props.routeName;
 
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link
-          to="js.module"
+          to={`${routeName}.module`}
           params={{ moduleId: moduleDoc.id }}
           query={{ entity: entityPath }}
           children={entityPath}

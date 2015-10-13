@@ -1,5 +1,6 @@
 var React = require("react");
 var MarkdownText = require('components/MarkdownText');
+var Types = require('components/Tags/Types');
 
 var ParamTag = React.createClass({
   displayName: "ParamTag",
@@ -34,7 +35,7 @@ var ParamTag = React.createClass({
             <code className="param-tag__types">
               {': '}
 
-              {typeInfo.types.join(', ')}
+              <Types types={typeInfo.types} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">

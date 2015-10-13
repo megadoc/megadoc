@@ -1,7 +1,7 @@
 var WeakMap = require('weakmap');
 var Utils = require('./Utils');
+var K = require('./constants');
 var assert = require('assert');
-// var findWhere = require('lodash').findWhere;
 
 function Registry() {
   this.docs = [];
@@ -44,7 +44,17 @@ Rpt.addEntityDoc = function(doc, path) {
 Rpt.trackLend = function(lendsTo, path) {
   var targetPath = Utils.findNearestPathWithComments(path);
 
-  this.lends.set(targetPath, lendsTo);
+  if (lendsTo.match(/(.*)\.prototype$/)) {
+    this.lends.set(targetPath, {
+      receiver: RegExp.$1,
+      scope: K.SCOPE_PROTOTYPE
+    });
+  }
+  else {
+    this.lends.set(targetPath, {
+      receiver: lendsTo
+    });
+  }
 };
 
 Rpt.remove = function(doc) {
@@ -54,9 +64,11 @@ Rpt.remove = function(doc) {
   }
 }
 
-Rpt.get = function(id) {
+Rpt.get = function(id, filePath) {
   return this.docs.filter(function(doc) {
-    return doc.id === id || doc.name === id;
+    return (doc.id === id || doc.name === id) && (
+      filePath ? doc.filePath === filePath : true
+    );
   })[0];
 };
 
@@ -68,21 +80,66 @@ Rpt.get = function(id) {
  * @return {String}
  *         The module ID.
  */
-Rpt.findClosestModuleToPath = function(path) {
+Rpt.findClosestModule = function(path) {
   var receiverDoc = this.findEnclosingDoc(path, this.docPaths);
 
   if (receiverDoc) {
     return receiverDoc.id;
   }
-  else {
-    var lentTo = this.findEnclosingDoc(path, this.lends);
+};
 
-    if (lentTo) {
-      return this.get(lentTo).id;
+/**
+ * Locate the closest @lend doc to a given path.
+ *
+ * @param {recast.path} path
+ *
+ * @return {Object} lendEntry
+ *
+ * @return {String} lendEntry.receiver
+ *         The target of the @lends.
+ *
+ * @return {String} [lendEntry.scope]
+ *         Could be a "prototype" if `@lends Something.prototype`.
+ */
+Rpt.findClosestLend = function(path) {
+  return this.findEnclosingDoc(path, this.lends);
+};
+
+/**
+ * This will look for an identifier that has a @lends entry. For example:
+ *
+ *     /** @lends Something * /
+ *     var helpers = {};
+ *
+ *     /** @module * /
+ *     var Something = {};
+ *
+ *     helpers.someProp = '5'; // <- at this path, we will locate "helpers"
+ *                             // above
+ *
+ * @param  {[type]} path  [description]
+ * @param  {String} alias
+ *         The name of the identifier. In the example above, this will be
+ *         "helpers" (as this will be the receiver we parse during analysis.)
+ *
+ * @return {Object} lendEntry
+ */
+Rpt.findAliasedLendTarget = function(path, alias) {
+  var identifierPath = Utils.findIdentifierInScope(alias, path);
+
+  if (identifierPath) {
+    var targetPath = Utils.findNearestPathWithComments(identifierPath);
+
+    if (targetPath) {
+      return this.lends.get(targetPath);
     }
   }
 };
 
+/**
+ * @return {String}
+ *         The actual/resolved receiver.
+ */
 Rpt.findAliasedReceiver = function(path, alias) {
   var identifierPath = Utils.findIdentifierInScope(alias, path);
 
@@ -90,16 +147,10 @@ Rpt.findAliasedReceiver = function(path, alias) {
     var receiverPath = Utils.findNearestPathWithComments(identifierPath);
 
     if (receiverPath) {
-      var lentTo = this.lends.get(receiverPath);
-      if (lentTo) {
-        return lentTo;
-      }
-      else {
-        var receiverDoc = this.getModuleDocAtPath(receiverPath);
-        if (receiverDoc) {
-          if (receiverDoc.id !== alias) {
-            return receiverDoc.id;
-          }
+      var receiverDoc = this.getModuleDocAtPath(receiverPath);
+      if (receiverDoc) {
+        if (receiverDoc.id !== alias) {
+          return receiverDoc.id;
         }
       }
     }

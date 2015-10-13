@@ -1,6 +1,6 @@
 var React = require("react");
 var OutletManager = require('core/OutletManager');
-var { Link } = require("react-router");
+var Link = require("components/Link");
 var config = require('config');
 var Icon = require('components/Icon');
 
@@ -37,9 +37,11 @@ var Banner = React.createClass({
 
             {' '}
 
-            <span className="banner__motto">
-              {config.motto || 'Developer zone.'}
-            </span>
+            {config.motto && config.motto.length > 0 && (
+              <span className="banner__motto">
+                {config.motto}
+              </span>
+            )}
 
             {this.props.children}
           </h1>

@@ -1,83 +1,165 @@
 var path = require('path');
 var scan = require('./scan');
-var write = require('./write');
 var indexEntities = require('./indexEntities');
 var generateStats = require('./generateStats');
+var merge = require('lodash').merge;
+var assert = require('assert');
 
 /**
- * @module CJSPlugin
+ * @module Plugins.CJS.Config
+ * @preserveOrder
  */
-function CJSPlugin(emitter, cssCompiler, config, globalConfig, utils) {
-  var database;
-
-  cssCompiler.addStylesheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-
-  globalConfig.scripts.push('plugins/cjs-config.js');
-  globalConfig.pluginScripts.push('plugins/cjs.js');
-
-  emitter.on('scan', function(compilation, done) {
-    scan(config, globalConfig.gitRepository, utils, function(err, _database) {
-      if (err) {
-        return done(err);
-      }
-
-      database = _database;
-      done();
-    });
-  });
-
-  emitter.on('write', function(compilation, done) {
-    if (compilation.scanned) {
-      write(database, config, utils, done);
-    }
-    else {
-      done();
-    }
-  });
-
-  emitter.on('index', function(compilation, registry, done) {
-    indexEntities(database).forEach(function(index) {
-      registry.add(index.path, index.index);
-    });
-
-    done();
-  });
-
-  emitter.on('generateStats', function(compilation, stats, done) {
-    if (compilation.scanned) {
-      stats.js = generateStats(database);
-      done();
-    }
-    else {
-      done();
-    }
-  });
-}
-
-CJSPlugin.$inject = [
-  'emitter',
-  'cssCompiler',
-  'config.cjs',
-  'config',
-  'utils'
-];
-
-CJSPlugin.defaults = {
+var defaults = {
   /**
-   * @module CJSPlugin.Config
+   * @property {String}
+   *           The relative URL to reach the JavaScript documentation at.
+   *           A value of `"js"` would make the modules available at `/js`.
    */
-  cjs: {
-    /**
-     * @property {String|String[]} source
-     *
-     * The source files to parse.
-     */
-    source: [ '**/*.js' ],
-    exclude: null,
-    gitStats: false,
-    useDirAsNamespace: true,
-    classifyDoc: null,
-  }
+  routeName: 'js',
+
+  /**
+   * @property {String}
+   *           Text to use for the navigation link.
+   */
+  navigationLabel: 'JavaScripts',
+
+  /**
+   * @property {String[]} source
+   *
+   * A list of patterns to match the source files to parse.
+   */
+  source: [ '**/*.js' ],
+
+  /**
+   * @property {String[]}
+   *
+   * A list of patterns to exclude source files.
+   */
+  exclude: null,
+
+  /**
+   * @property {Boolean}
+   *
+   * Turn this on if you want to extract git stats for the files, like
+   * the last commit timestamp and the authors of each file.
+   *
+   * This is needed if you want to use the "Hot Items" feature.
+   */
+  gitStats: false,
+
+  /**
+   * @property {Boolean}
+   *
+   * Turn this on if you want to use the file's folder name as its namespace.
+   * This will be used only if the source file defines no @namespace tag.
+   */
+  useDirAsNamespace: true,
+
+  /**
+   * @property {Function}
+   *
+   * You can implement this function if you need to perform any custom
+   * decoration or transformation on a source file's doc entry.
+   *
+   * The parameter you receive is a Dox construct. Please refer to its
+   * documentation for how that looks like.
+   */
+  analyzeNode: null,
+
+  customTags: {},
+
+  /**
+   * @property {Boolean}
+   *
+   * Whether to show the file path the module was defined in.
+   */
+  showSourcePaths: true,
 };
 
-module.exports = CJSPlugin;
+/**
+ * @namespace Plugins.CJS
+ *
+ * @param {Plugins.CJS.Config} userConfig
+ */
+function createCJSPlugin(userConfig) {
+  var config = merge({}, defaults, userConfig);
+  var parserConfig = {
+    inferModuleIdFromFilename: config.inferModuleIdFromFilename,
+    customTags: config.customTags,
+    nodeAnalyzers: [],
+    docstringProcessors: [],
+    tagProcessors: [],
+    postProcessors: [],
+  };
+
+  return {
+    name: 'CJSPlugin',
+
+    defineCustomTag: function(tagName, definition) {
+      assert(!parserConfig.customTags.hasOwnProperty(tagName),
+        "Tag '" + tagName + "' already has a definition!"
+      );
+
+      parserConfig.customTags[tagName] = definition;
+    },
+
+    addNodeAnalyzer: function(analyzer) {
+      parserConfig.nodeAnalyzers.push(analyzer);
+    },
+
+    addDocstringProcessor: function(processor) {
+      parserConfig.docstringProcessors.push(processor);
+    },
+
+    addTagProcessor: function(processor) {
+      parserConfig.tagProcessors.push(processor);
+    },
+
+    addPostProcessor: function(postProcessor) {
+      parserConfig.postProcessors.push(postProcessor);
+    },
+
+    run: function(compiler) {
+      var database;
+
+      compiler.on('scan', function(done) {
+        scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _database) {
+          if (err) {
+            return done(err);
+          }
+
+          database = _database;
+          done();
+        });
+      });
+
+      compiler.on('index', function(registry, done) {
+        indexEntities(database).forEach(function(index) {
+          registry.add(index.path, index.index);
+        });
+
+        done();
+      });
+
+      compiler.on('generateStats', function(stats, done) {
+        stats[config.routeName] = generateStats(database);
+        done();
+      });
+
+      compiler.on('write', function(done) {
+        compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
+        compiler.assets.addPluginScript(
+          path.resolve(__dirname, 'ui/dist/tinydoc-plugin-cjs.js')
+        );
+
+        compiler.assets.addPluginRuntimeConfig('cjs', merge({}, config, {
+          database: database
+        }));
+
+        done();
+      });
+    }
+  };
+}
+
+module.exports = createCJSPlugin;

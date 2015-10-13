@@ -7,7 +7,7 @@ var where = require('lodash').where;
 var pluck = require('lodash').pluck;
 var uniq = require('lodash').uniq;
 
-module.exports = function(config, gitRepository, utils, done) {
+module.exports = function scan(config, parserConfig, gitRepository, utils, done) {
   var database;
   var console = new Logger('cjs');
   var svc = Promise.resolve();
@@ -19,11 +19,18 @@ module.exports = function(config, gitRepository, utils, done) {
   var parser = new Parser();
 
   files.forEach(function(filePath) {
-    parser.parseFile(filePath, config, commonPrefix);
+    parser.parseFile(filePath, parserConfig, commonPrefix);
   });
 
-  parser.postProcess();
+  parser.seal();
+
   database = parser.toJSON();
+
+  if (parserConfig.postProcessors) {
+    parserConfig.postProcessors.forEach(function(postProcessor) {
+      postProcessor(database);
+    });
+  }
 
   if (config.gitStats) {
     console.log("Parsing git stats...");
@@ -32,12 +39,14 @@ module.exports = function(config, gitRepository, utils, done) {
     // parsed
     var filePaths = uniq(pluck(database, 'filePath'));
 
-    svc = parseGitStats(gitRepository, filePaths).then(function(stats) {
-      stats.forEach(function(fileStats) {
-        where(database, { filePath: fileStats.filePath }).forEach(function(entry) {
-          entry.git = fileStats;
-        });
-      })
+    svc = svc.then(function() {
+      parseGitStats(gitRepository, filePaths).then(function(stats) {
+        stats.forEach(function(fileStats) {
+          where(database, { filePath: fileStats.filePath }).forEach(function(entry) {
+            entry.git = fileStats;
+          });
+        })
+      });
     });
   }
 

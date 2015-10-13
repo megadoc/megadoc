@@ -2,24 +2,26 @@ var React = require("react");
 var { Link } = require('react-router');
 var Icon = require('components/Icon');
 
-var Navigation = React.createClass({
-  statics: {
-    key: 'cjs'
-  },
+module.exports = function createNavigationOutlet(routeName, label = 'JavaScripts') {
+  return React.createClass({
+    displayName: 'CJSNavigation',
 
-  render() {
-    return (
-      <Link to="js">
-        <Icon className="icon-javascript">
-          <span className="path1" />
-          <span className="path2" />
-        </Icon>
+    statics: {
+      key: routeName
+    },
 
-        {' '}
-        JavaScripts
-      </Link>
-    );
-  }
-});
+    render() {
+      return (
+        <Link to={routeName}>
+          <Icon className="icon-javascript">
+            <span className="path1" />
+            <span className="path2" />
+          </Icon>
 
-module.exports = Navigation;
+          {' '}
+          {label}
+        </Link>
+      );
+    }
+  });
+};

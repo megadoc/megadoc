@@ -7,6 +7,17 @@ fi
 
 export NODE_ENV="production"
 
+declare plugins=("cjs" "markdown" "git" "yard-api")
+
+for plugin in "cjs" "markdown" "git" "yard-api"; do
+  ./cli/tinydoc-compile \
+    --optimize \
+    plugins/${plugin}/ui/dist/tinydoc-plugin-${plugin}.js \
+    plugins/${plugin}/ui/index.js
+
+  [ $? -ne 0 ] && exit 1
+done
+
 node ./node_modules/webpack/bin/webpack.js \
   --progress \
   --display-chunks \

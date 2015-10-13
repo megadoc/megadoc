@@ -1,6 +1,7 @@
 const React = require("react");
-const Doc = require('components/Doc');
+const Outlet = require('components/Outlet');
 const MarkdownText = require('components/MarkdownText');
+const Doc = require('components/Doc');
 const SeeTag = require('components/Tags/SeeTag');
 const DocGroup = require('components/DocGroup');
 const PropertyTag = require('components/Tags/PropertyTag');
@@ -9,11 +10,28 @@ const ExampleTag = require('components/Tags/ExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
-const SectionJumperMixin = require('mixins/SectionJumperMixin');
+const JumperMixin = require('mixins/JumperMixin');
+
+function getRenderableType(doc, moduleDocs) {
+  if (doc.ctx.type === K.TYPE_FUNCTION) {
+    if (moduleDocs.some(DocClassifier.isFactoryExports)) {
+      return K.TYPE_FACTORY;
+    }
+    else if (moduleDocs.some(DocClassifier.isClassEntity)) {
+      return K.TYPE_CLASS;
+    }
+    else {
+      return K.TYPE_FUNCTION;
+    }
+  }
+  else {
+    return K.TYPE_OBJECT;
+  }
+}
 
 const ModuleBody = React.createClass({
   mixins: [
-    SectionJumperMixin(function() {
+    JumperMixin(function() {
       const id = this.props.focusedEntity;
 
       if (id) {
@@ -43,16 +61,21 @@ const ModuleBody = React.createClass({
 
   render() {
     const { doc, moduleDocs } = this.props;
+    const renderableType = getRenderableType(doc, moduleDocs);
 
     return (
       <div>
         <MarkdownText>{doc.description}</MarkdownText>
 
-        {doc.renderableType === K.TYPE_FACTORY && (
+        {renderableType === K.TYPE_FACTORY && (
           this.renderConstructor(doc, "Instance Constructor")
         )}
 
-        {doc.renderableType === K.TYPE_FUNCTION ? (
+        {renderableType === K.TYPE_CLASS && (
+          this.renderConstructor(doc, "Constructor")
+        )}
+
+        {renderableType === K.TYPE_FUNCTION ? (
           this.renderConstructor(doc, "Signature")
         ) : (
           null
@@ -61,7 +84,20 @@ const ModuleBody = React.createClass({
         {this.renderExamples(doc)}
         {this.renderAdditionalResources(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
-        {this.renderProperties(doc, moduleDocs)}
+        {this.renderProperties(
+          doc,
+          moduleDocs,
+          (scope) => scope === K.SCOPE_INSTANCE,
+          "Instance Properties"
+        )}
+
+        {this.renderProperties(
+          doc,
+          moduleDocs,
+          (scope) => scope !== K.SCOPE_INSTANCE,
+          "Properties"
+        )}
+
         {this.renderMethods(doc, moduleDocs)}
       </div>
     );
@@ -86,18 +122,22 @@ const ModuleBody = React.createClass({
   renderExamples(doc) {
     const tags = where(doc.tags, { type: 'example' });
 
-    if (!tags.length) {
-      return null;
-    }
-
     return (
-      <DocGroup label="Examples">
-        {tags.map(function(tag) {
-          return (
-            <ExampleTag key={tag.string} string={tag.string} />
-          );
-        })}
-      </DocGroup>
+      <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
+        {tags.length > 0 && (
+          <DocGroup label="Examples">
+            {tags.map(this.renderExampleTag)}
+          </DocGroup>
+        )}
+      </Outlet>
+    );
+  },
+
+  renderExampleTag(tag) {
+    return (
+      <Outlet key={tag.string} name="CJS::ExampleTag" props={tag}>
+        <ExampleTag string={tag.string} />
+      </Outlet>
     );
   },
 
@@ -119,11 +159,14 @@ const ModuleBody = React.createClass({
     );
   },
 
-  renderProperties(doc, moduleDocs) {
+  renderProperties(doc, moduleDocs, scope = null, title = 'Properties') {
     const propertyDocs = orderAwareSort(
       doc,
       moduleDocs.filter(function(entityDoc) {
-        return where(entityDoc.tags, { type: 'property' }).length > 0;
+        return (
+          (scope ? scope(entityDoc.ctx.scope) : true) &&
+          where(entityDoc.tags, { type: 'property' }).length > 0
+        );
       }),
       'id'
     );
@@ -133,7 +176,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Properties" tagName="ul">
+      <DocGroup label={title} tagName="ul">
         {propertyDocs.map(function(entityDoc) {
           const tag = findWhere(entityDoc.tags, { type: 'property' });
           const path = entityDoc.ctx.symbol + entityDoc.id;

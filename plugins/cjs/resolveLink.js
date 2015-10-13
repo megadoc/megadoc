@@ -50,9 +50,9 @@ function resolveLink(id, database, registry, currentModuleId) {
   if (index && index.type === 'cjs') {
     doc = lookup(database, index.id);
 
-    console.assert(!!doc,
-      "Expected to find a module doc by the id '" + index.id + "'"
-    );
+    if (!doc) {
+      return;
+    }
 
     // This is a link to a module entity, like [Module@propName] or
     // [Module#methodName]:

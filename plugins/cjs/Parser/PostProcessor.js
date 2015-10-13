@@ -55,6 +55,7 @@ function identifyScope(registry, doc) {
 
 function resolveReceiver(registry, doc) {
   var receiver = doc.nodeInfo.receiver;
+  var actualReceiver;
 
   // @memberOf support
   //
@@ -65,14 +66,33 @@ function resolveReceiver(registry, doc) {
   }
 
   // Resolve @lends
-  var realReceiver = registry.findAliasedReceiver(doc.$path, receiver);
+  var lendEntry = (
+    registry.findAliasedLendTarget(doc.$path, receiver) ||
+    registry.findClosestLend(doc.$path)
+  );
 
-  if (!realReceiver) {
-    realReceiver = registry.findClosestModuleToPath(doc.$path)
+  // TODO: this needs a bit of rethinking really
+  if (lendEntry) {
+    actualReceiver = registry.get(lendEntry.receiver);
+
+    if (actualReceiver) {
+      doc.overrideReceiver(actualReceiver.id);
+
+      if (lendEntry.scope) {
+        doc.nodeInfo.ctx.scope = lendEntry.scope;
+      }
+    }
   }
+  else {
+  // TODO: this too
+    actualReceiver = (
+      registry.findAliasedReceiver(doc.$path, receiver) ||
+      registry.findClosestModule(doc.$path)
+    );
 
-  if (realReceiver) {
-    doc.overrideReceiver(realReceiver);
+    if (actualReceiver) {
+      doc.overrideReceiver(actualReceiver);
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
+var path = require('path');
 var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - Object modules', function() {
@@ -56,5 +57,21 @@ describe('CJS::Parser - Object modules', function() {
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
     assert.deepEqual(docs[1].ctx.properties, []);
+  });
+
+  it('does not confuse tokens with ones defined in another file', function() {
+    var docs = TestUtils.parseFiles([
+      path.resolve(__dirname, '../../../index.js'),
+      path.resolve(__dirname, '../../../Parser/NodeAnalyzer/analyzeNode.js'),
+    ]);
+
+    assert.ok(docs.length > 0);
+
+    var doc = docs.filter(function(d) {
+      return d.id === 'analyzeNode';
+    })[0];
+
+    assert.ok(doc);
+    assert.ok(!!doc.receiver);
   });
 });

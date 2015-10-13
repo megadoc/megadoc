@@ -2,41 +2,37 @@ var WebpackDevServer = require('webpack-dev-server');
 var webpack = require('webpack');
 var path = require('path');
 var config = require('./webpack.config');
+var ExternalsPlugin = require('./webpack/externals-plugin');
 var fs = require('fs-extra');
 var _ = require('lodash');
-var root = path.resolve(__dirname);
 
+var root = path.resolve(__dirname);
 var host = process.env.HOST || '0.0.0.0';
 var port = process.env.PORT || '8942';
+var contentBase = '/tmp/tinydoc';
 var server;
+var configFile = path.resolve(process.env.CONFIG_FILE);
 
-config.entry = [
-  path.resolve(process.env.CONFIG_FILE),
-  'webpack/hot/dev-server',
-  'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
-  path.join(root, 'app/index.js')
-];
-
-config.plugins.push(new webpack.HotModuleReplacementPlugin());
-config.plugins.push(new webpack.DefinePlugin(({
-  'process.env.VERBOSE': JSON.stringify(!!process.env.VERBOSE)
-})));
-
-// load local plugins that you're developing
-if (fs.existsSync(path.join(root, '.local.js'))) {
-  config.entry.push(path.join(root, '.local.js'));
-}
-
-config.module.loaders.filter(function(loader) {
-  return loader.type === 'js';
-})[0].loader += '!react-hot';
-
-// so that loaders can be used by external files, like css assets
-config.resolveLoader = {
-  root: path.resolve(__dirname, '..', 'node_modules'),
+config.entry = {
+  main: [
+    path.join(root, '.local.js'),
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
+  ]
 };
 
-var contentBase = '/tmp/tinydoc';
+config.plugins = [
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.CONFIG_FILE': JSON.stringify(configFile),
+  }),
+
+  new webpack.HotModuleReplacementPlugin(),
+
+  ExternalsPlugin
+];
+
+config.resolve.alias['tinydoc-ui'] = path.join(root, 'app', 'shared');
 
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
@@ -47,14 +43,11 @@ fs.writeFileSync(
   contentBase + '/index.html',
   _.template(fs.readFileSync(path.join(root, 'app/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
-    scripts: [ 'vendor.js', 'main.js' ]
+    scripts: [ 'main.js' ]
   })
 );
 
-fs.symlinkSync(
-  path.join(path.dirname(path.resolve(process.env.CONFIG_FILE)), 'assets'),
-  path.join(contentBase, 'assets')
-);
+symlinkAllDirectories(path.dirname(configFile));
 
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,
@@ -72,7 +65,23 @@ server = new WebpackDevServer(webpack(config), {
 server.listen(port, host, function(err) {
   if (err) {
     console.error(err);
+    return;
   }
 
   console.log('Hot server listening at ' + host +':'+ port);
 });
+
+// =--------------------------------------------------------------------------=
+function symlinkAllDirectories(baseDir) {
+  fs.readdirSync(baseDir)
+    .filter(function(file) {
+      return fs.statSync(path.join(baseDir, file)).isDirectory();
+    })
+    .forEach(function(dir) {
+      fs.symlinkSync(
+        path.join(baseDir, dir),
+        path.join(contentBase, dir)
+      );
+    })
+  ;
+}

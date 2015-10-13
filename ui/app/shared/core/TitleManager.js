@@ -2,7 +2,7 @@ var invariant = require('utils/invariant');
 var config = require('config');
 
 /**
- * @class Core::TitleManager
+ * @namespace UI.Core
  *
  * A module for adjusting the document's title for a while then restoring it.
  *

@@ -17,35 +17,31 @@
  *       objectId: null
  *     }
  */
-module.exports = function(resources) {
-  var indices = {};
-
+module.exports = function(resources, registry) {
   resources.forEach(function(resource) {
-    indices[ resource.id ] = {
+    registry.add(resource.id, {
       type: 'yard-api',
       resourceId: resource.id
-    };
+    });
 
     resource.endpoints.forEach(function(endpoint) {
       var linkPath = [ endpoint.controller, endpoint.name ].join('#');
 
-      indices[linkPath] = {
+      registry.add(linkPath, {
         type: 'yard-api',
         resourceId: resource.id,
         endpointId: endpoint.id
-      };
+      });
     });
 
     resource.objects.forEach(function(object) {
       var linkPath = [ object.controller, object.title ].join('::');
 
-      indices[linkPath] = {
+      registry.add(linkPath, {
         type: 'yard-api',
         resourceId: resource.id,
         objectId: object.id
-      };
+      });
     });
   });
-
-  return indices;
 };

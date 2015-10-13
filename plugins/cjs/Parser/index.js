@@ -7,7 +7,9 @@ var Registry = require('./Registry');
 var PostProcessor = require('./PostProcessor');
 var NodeAnalyzer = require('./NodeAnalyzer');
 var WeakSet = require('weakset');
+var pick = require('lodash').pick;
 
+var runAllSync = require('../../../lib/utils/runAllSync');
 var Logger = require('../../../lib/Logger');
 var console = Logger('cjs');
 
@@ -30,10 +32,11 @@ var Ppt = Parser.prototype;
 
 Ppt.parseFile = function(filePath, config, commonPrefix) {
   try {
-    return this.parseString(
+    this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
       config,
-      filePath.replace(commonPrefix, '')
+      filePath.replace(commonPrefix, ''),
+      filePath
     );
   }
   catch(e) {
@@ -42,18 +45,24 @@ Ppt.parseFile = function(filePath, config, commonPrefix) {
   }
 };
 
-Ppt.parseString = function(str, config, filePath) {
+Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   if (str.length > 0) {
     this.ast = recast.parse(str);
-    return this.walk(this.ast, filePath, config);
-  }
-  else {
-    return [];
+    this.walk(this.ast, config, filePath, absoluteFilePath);
   }
 };
 
-Ppt.walk = function(ast, filePath, config) {
+Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
   var parser = this;
+  var config = pick(inConfig, [
+    'inferModuleIdFromFileName',
+    'nodeAnalyzers',
+    'docstringProcessors',
+    'tagProcessors',
+    'customTags',
+  ]);
+
+  config.tagProcessors = config.tagProcessors || [];
 
   console.debug('\nParsing: %s', filePath);
   console.debug(Array(80).join('-'));
@@ -69,23 +78,33 @@ Ppt.walk = function(ast, filePath, config) {
 
       var comment = path.value.value;
       var contextNode = path.node;
+      var docstring, nodeInfo, doc;
 
       if (path.value.leading && comment[0] === '*') {
         // console.log('Found a possibly JSDoc comment:', comment);
 
-        var docstring = new Docstring('/*' + comment + '*/', filePath);
+        docstring = new Docstring(
+          '/*' + comment + '*/',
+          config.customTags,
+          absoluteFilePath
+        );
 
         if (docstring.isInternal()) {
           return false;
         }
-
-        var nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
-
-        if (docstring.doesLend()) {
+        else if (docstring.doesLend()) {
           parser.registry.trackLend(docstring.getLentTo(), path);
         }
 
-        var doc = new Doc(filePath, docstring, nodeInfo);
+        runAllSync(config.docstringProcessors, [ docstring ]);
+
+        nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+
+        doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+
+        docstring.tags.forEach(function(tag) {
+          runAllSync(config.tagProcessors, [ tag ]);
+        });
 
         if (doc.id) {
           if (doc.isModule()) {
@@ -127,14 +146,11 @@ Ppt.walk = function(ast, filePath, config) {
           }
 
           if (name) {
-            doc = parser.registry.get(name);
+            doc = parser.registry.get(name, filePath);
 
             if (doc) {
               doc.markAsExported();
-              // assert(doc.$path);
-              // assert(doc.$path === Utils.findNearestPathWithComments(doc.$path))
               parser.registry.trackModuleDocAtPath(doc, doc.$path);
-              // parser.registry.docPaths.set(doc.$path, doc);
             }
           }
           else {
@@ -155,7 +171,7 @@ Ppt.walk = function(ast, filePath, config) {
   });
 };
 
-Ppt.postProcess = function() {
+Ppt.seal = function() {
   PostProcessor.run(this.registry);
 };
 

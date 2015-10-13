@@ -7,40 +7,40 @@ var config = {
   readme: 'README.md',
   useHashLocation: true,
   publicPath: '',
-
-  disqus: false
+  stylesheet: 'doc/theme.less',
+  styleOverride: 'doc/theme-variables.less',
+  disqus: false,
 };
 
 config.plugins = [
-  require('../plugins/cjs'),
-  require('../plugins/markdown')
+  require('../plugins/cjs')({
+    navigationLabel: 'API',
+
+    source: [
+      'lib/**/*.js',
+      'plugins/cjs/**/*.js',
+      'plugins/ui/**/*.js',
+      'plugins/git/**/*.js',
+      'ui/app/**/*.js',
+    ],
+
+    exclude: [
+      /plugins\/.*\/ui/,
+      /\.test\.js$/,
+      'ui/app/vendor',
+    ],
+
+    inferModuleIdFromFileName: true,
+
+    useDirAsNamespace: false
+  }),
+
+  require('../plugins/markdown')({
+    source: [
+      'CHANGES.md',
+      'plugins/**/*.md'
+    ]
+  })
 ];
-
-config.cjs = {
-  source: [
-    // 'lib/Utils.js',
-    'plugins/cjs/**/*.js',
-    'lib/**/*.js',
-    // 'plugins/**/*.js',
-    // 'ui/app/**/*.js',
-  ],
-
-  exclude: [
-    /plugins\/.*\/ui/,
-    /\.test\.js$/,
-    'ui/app/vendor',
-  ],
-
-  inferModuleIdFromFileName: true,
-
-  useDirAsNamespace: false
-};
-
-config.markdown = {
-  source: [
-    'CHANGES.md',
-    'plugins/**/*.md'
-  ]
-};
 
 module.exports = config;

@@ -25,7 +25,11 @@ var EllipsifedText = React.createClass({
   },
 
   render() {
-    var className = classSet({ 'type-ellipsify': true }, this.props.className);
+    var className = classSet({ 'type-ellipsify': true });
+
+    if (this.props.className) {
+      className += ` ${this.props.className}`;
+    }
 
     return (
       <span

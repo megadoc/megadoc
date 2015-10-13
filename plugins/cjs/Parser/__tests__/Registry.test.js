@@ -14,7 +14,7 @@ function parse(strGenerator) {
 }
 
 describe('CJS::Parser::Registry', function() {
-  describe('#findClosestModuleToPath', function() {
+  describe('#findClosestModule', function() {
     it('should work', function() {
       var parser = parse(function() {
         // /**
@@ -35,7 +35,7 @@ describe('CJS::Parser::Registry', function() {
 
       assert.equal(registry.size, 2);
       assert.equal(
-        registry.findClosestModuleToPath(registry.get('someProp').$path),
+        registry.findClosestModule(registry.get('someProp').$path),
         registry.get('SomeModule').id
       );
     });

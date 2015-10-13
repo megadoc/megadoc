@@ -1,12 +1,14 @@
 const React = require("react");
 const Icon = require('components/Icon');
+const Outlet = require('components/Outlet');
 const K = require('constants');
 
 const ModuleHeader = React.createClass({
   propTypes: {
     doc: React.PropTypes.object,
     commonPrefix: React.PropTypes.string,
-    moduleDocs: React.PropTypes.array
+    moduleDocs: React.PropTypes.array,
+    showSourcePaths: React.PropTypes.bool,
   },
 
   render() {
@@ -17,10 +19,7 @@ const ModuleHeader = React.createClass({
       return <header>Unsupported Entity</header>;
     }
 
-    if (doc.ctx.type === 'component') {
-      type = 'Component';
-    }
-    else if (moduleDocs.some((d) => d.ctx.scope === K.SCOPE_PROTOTYPE))  {
+    if (moduleDocs.some((d) => d.ctx.scope === K.SCOPE_PROTOTYPE))  {
       type = 'Class';
     }
     else if (moduleDocs.some((d) => d.ctx.scope === K.SCOPE_FACTORY_EXPORTS))  {
@@ -44,12 +43,19 @@ const ModuleHeader = React.createClass({
           </span>
 
           {' '}
-          <span className="class-view__header-type">{type}</span>
+
+          <span className="class-view__header-type">
+            <Outlet name="CJS::ModuleHeader::Type" props={this.props}>
+              <span>{type}</span>
+            </Outlet>
+          </span>
         </h1>
 
-        <div className="class-view__module-filepath">
-          Defined in: {doc.filePath.replace(this.props.commonPrefix, '')}
-        </div>
+        {this.props.showSourcePaths && (
+          <div className="class-view__module-filepath">
+            Defined in: {doc.filePath}
+          </div>
+        )}
       </header>
     );
   }

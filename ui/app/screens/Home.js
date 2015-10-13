@@ -8,6 +8,14 @@ var scrollToTop = require('utils/scrollToTop');
 var Home = React.createClass({
   displayName: "Home",
 
+  statics: {
+    willTransitionTo(transition) {
+      if (config.home) {
+        transition.redirect(config.home);
+      }
+    }
+  },
+
   componentDidMount: function() {
     scrollToTop();
   },
@@ -24,7 +32,9 @@ var Home = React.createClass({
           <GitStats {...config.readme.git} />
         )}
 
-        <Disqus identifier={config.readme.filePath} title="README" />
+        {config.readme && (
+          <Disqus identifier={config.readme.filePath} title="README" />
+        )}
       </div>
     );
   }

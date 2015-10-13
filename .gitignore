@@ -2,6 +2,8 @@
 
 /ui/.local.js
 /ui/dist
+/ui/tmp
+/plugins/*/ui/dist
 
 # font stuff
 /ui/app/css/fonts/*.json

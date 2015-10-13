@@ -1,10 +1,10 @@
 var Docstring = require('../Docstring');
-var assert = require('assert');
+var assert = require('chai').assert;
 
-var parse = function(strGenerator) {
+var parse = function(strGenerator, customTags, filePath) {
   var comment = global.TestUtils.getInlineString(strGenerator);
 
-  return new Docstring(comment);
+  return new Docstring(comment, customTags, filePath);
 };
 
 describe('CJS::Parser::Docstring', function() {
@@ -183,6 +183,100 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(docstring.tags.length, 1);
       assert.equal(docstring.tags[0].typeInfo.description, 'Something.');
+    });
+  });
+
+  describe('custom tag: @live_example', function() {
+    var customTags = {
+      live_example: {
+        withTypeInfo: true
+      }
+    };
+
+    it('parses the example type', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, customTags);
+
+      assert.equal(docstring.tags.length, 1);
+      assert.deepEqual(docstring.tags[0].typeInfo.types, [ 'jsx' ]);
+    });
+
+    it('accepts a custom processor', function(done) {
+      parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          process: function(tag) {
+            assert.ok(tag);
+            done();
+          }
+        }
+      });
+    });
+
+    it('accepts custom attributes', function(done) {
+      parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          attributes: [ 'width' ],
+          process: function(tag) {
+            assert.doesNotThrow(function() {
+              tag.setCustomAttribute('width', 240);
+            });
+
+            done();
+          }
+        }
+      });
+    });
+
+    it('whines if attempting to write to an unspecified attribute', function(done) {
+      parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  *
+        //  *     <Button />
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          process: function(tag) {
+            assert.throws(function() {
+              tag.setCustomAttribute('foo', 'bar');
+            }, /Unrecognized custom attribute/);
+
+            done();
+          }
+        }
+      });
+    });
+
+    it('serializes custom attributes', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @live_example {jsx}
+        //  */
+      }, {
+        live_example: {
+          withTypeInfo: true,
+          attributes: [ 'width' ],
+          process: function(tag) {
+            tag.setCustomAttribute('width', 240);
+          }
+        }
+      });
+
+      assert.equal(docstring.toJSON().tags[0].width, 240);
     });
   });
 });

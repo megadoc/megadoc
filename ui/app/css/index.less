@@ -62,13 +62,20 @@ ul, ol {
   cursor: default;
 }
 
+
+.btn {
+  padding: @whitespace/2 @whitespace;
+  line-height: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
 .schemable({
   background-color: @base3;
   color: @base0;
-
-  h1, h2 {
-    color: @accent;
-  }
 
   a, a:visited {
     color: @link;
@@ -89,14 +96,7 @@ ul, ol {
   }
 
   .btn {
-    padding: @whitespace/2 @whitespace;
-    line-height: inherit;
     background: @base2;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9em;
-    letter-spacing: 1px;
-    font-family: inherit;
     color: inherit;
     transition: background 0.08s ease-out 0s;
 
@@ -141,12 +141,11 @@ ul, ol {
 @import 'components/class-browser';
 @import "components/hljs";
 @import "components/checkbox";
+@import "components/radio";
 @import "components/settings";
 @import "components/gravatar";
 @import 'components/git-stats';
 @import 'components/disqus';
 @import 'components/hot-item-indicator';
 
-@import "qtip";
 @import "./vendor/jquery-ui.css";
-@import "~qjunk/lib/QRadio/index";

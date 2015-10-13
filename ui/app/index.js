@@ -8,6 +8,7 @@ var $ = require('jquery');
 var Storage = require('core/Storage');
 var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
+var OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -15,7 +16,9 @@ Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 /**
  * @namespace tinydoc
  */
-window.tinydoc = {};
+let tinydoc = window.tinydoc = {
+  publicModules: require('../tmp/publicModules')
+};
 
 var emitter = new EventEmitter([
   'pluginsLoaded',
@@ -78,7 +81,9 @@ emitter.on('pluginsLoaded', function start(registrar) {
   });
 });
 
-var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
+OutletManager.define('navigation');
+
+var pluginMgr = new PluginManager(config.pluginCount, emitter);
 
 /**
  * @method tinydoc.use
@@ -89,4 +94,19 @@ var pluginMgr = new PluginManager(config.pluginScripts.length, emitter);
  * @param {PluginRegistrar} pluginEntryRunner.api
  *        The plugin registration API you can use.
  */
-window.tinydoc.use = pluginMgr.use;
+tinydoc.use = pluginMgr.use;
+tinydoc.getRuntimeConfigs = function(pluginId) {
+  return config.pluginConfigs[pluginId] || [];
+};
+
+tinydoc.seal = function() {
+  tinydoc.use = function() {
+    console.warn(
+      "You are attempting to call 'tinydoc.use()' after all plugins were " +
+      "loaded. This probably means you forgot to register your " +
+      "script as a plugin script."
+    );
+  }
+};
+
+tinydoc.pluginMgr = pluginMgr;

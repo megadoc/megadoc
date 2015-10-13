@@ -8,6 +8,8 @@ function PluginManager(pluginCount, emitter) {
     emitter.emit('pluginsLoaded', registrar);
   }
 
+  console.log('Awaiting %d plugins to be loaded.', pluginCount);
+
   return {
     use: function(runner) {
       try {
@@ -16,16 +18,14 @@ function PluginManager(pluginCount, emitter) {
         runner(registrar.API);
       }
       catch (e) {
-        console.warn('A plugin (%s) failed to load, ignoring.', runner.name);
-        console.warn(e);
+        console.error('A plugin (%s) failed to load, it will be ignored.', runner.name);
+        console.error(e.stack || e);
       }
       finally {
-        console.log('%d more plugins to go.', pluginCount - (++ran));
+        if (++ran === pluginCount) {
+          console.log('All plugins have been loaded, no more may be loaded from now on.');
 
-        if (ran === pluginCount) {
-          delete window.tinydoc.use;
-
-          console.log('All plugins were loaded, starting.');
+          window.tinydoc.seal();
 
           emitter.emit('pluginsLoaded', registrar);
         }

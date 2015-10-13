@@ -33,27 +33,9 @@ function isStaticMethod(doc) {
   return doc.ctx.type === 'function' && !isMethod(doc);
 }
 
-function getRenderableType(module, docs) {
-  var ctx = module.ctx || {};
-  var renderableType = 'module';
-
-  if (ctx.type === 'function') {
-    if (docs.some(isFactoryExports)) {
-      renderableType = K.TYPE_FACTORY;
-    }
-    else if (docs.some(isClassEntity)) {
-      renderableType = K.TYPE_CLASS;
-    }
-    else {
-      renderableType = K.TYPE_FUNCTION;
-    }
-  }
-
-  return renderableType;
-}
-
 exports.isModule = isModule;
 exports.isEntity = isEntity;
 exports.isMethod = isMethod;
 exports.isStaticMethod = isStaticMethod;
-exports.getRenderableType = getRenderableType;
+exports.isFactoryExports = isFactoryExports;
+exports.isClassEntity = isClassEntity;
