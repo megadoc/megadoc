@@ -36,6 +36,11 @@ Doc.prototype.toJSON = function() {
   doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
   doc.receiver = this.getReceiver();
+  doc.aliases = doc.tags.filter(function(tag) {
+    return tag.type === 'alias';
+  }).map(function(tag) {
+    return tag.alias;
+  });
 
   // support for explicit typing using tags like @method or @type
   if (this.docstring.hasTypeOverride()) {

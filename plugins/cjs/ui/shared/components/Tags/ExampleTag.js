@@ -10,34 +10,27 @@ var ExampleTag = React.createClass({
   },
 
   render() {
-    var { string } = this.props;
-    var title;
-    // var title = string.substr(0, string.indexOf('\n'));
-
-    // TODO: this is broken in the pre-rendered version, we need to parse the
-    // example name at compile time instead
-    // if (title[0] === ' ') {
-    //   title = null;
-    // }
-    // else {
-    //   string = String(this.props.string).replace(title, '');
-    // }
+    var { name, description } = this.props.typeInfo;
 
     return (
       <div className="example-tag">
         <p>
-          {title && (
+          {name && (
             <div>
               <strong>Example: </strong>
-              <span dangerouslySetInnerHTML={{__html: title.replace('<p>', '').replace('</p>', '') }} />
+              <span
+                dangerouslySetInnerHTML={{
+                __html: name
+                }}
+              />
             </div>
           )}
 
-          {!title && (<strong>Example</strong>)}
+          {!name && (<strong>Example</strong>)}
         </p>
 
         <HighlightedText className="example-tag__code">
-          {string}
+          {description}
         </HighlightedText>
       </div>
     );

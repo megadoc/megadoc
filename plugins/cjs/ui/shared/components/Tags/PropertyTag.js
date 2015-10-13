@@ -1,5 +1,5 @@
 const React = require("react");
-const MarkdownText = require('components/MarkdownText');
+const HighlightedText = require('components/HighlightedText');
 const Types = require('components/Tags/Types');
 const Anchor = require('components/Anchor');
 
@@ -39,9 +39,9 @@ const PropertyTag = React.createClass({
         </header>
 
         {typeInfo.description && (
-          <MarkdownText className="property-tag__description">
+          <HighlightedText className="property-tag__description">
             {typeInfo.description}
-          </MarkdownText>
+          </HighlightedText>
         )}
 
         {typeInfo.defaultValue && (

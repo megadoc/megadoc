@@ -1,5 +1,6 @@
 var React = require("react");
-var Docstring = require('components/Docstring');
+var HighlightedText = require('components/HighlightedText');
+var Types = require('components/Tags/Types');
 
 var ThrowsTag = React.createClass({
   propTypes: {
@@ -10,11 +11,16 @@ var ThrowsTag = React.createClass({
   render() {
     return (
       <li className="throws-tag">
-        <Docstring>
-          `{this.props.types.join(', ')}` -
+        <p className="inline-block">
+          <Types types={this.props.typeInfo.types} />
+        </p>
 
-          {this.props.description.trim()}
-        </Docstring>
+        {' - '}
+
+        <HighlightedText
+          className="inline-block"
+          children={this.props.typeInfo.description}
+        />
       </li>
     );
   }

@@ -12,6 +12,17 @@
     }
   }
 
+  &__heading {
+    .markdown-text__heading-anchor {
+      // TODO: make it look like an icon-link
+      &:before {
+      }
+      content: "\ec96";
+      display: inline-block;
+      font-family: 'tinydoc';
+    }
+  }
+
   &__heading:hover {
     .markdown-text__heading-anchor {
       opacity: 1;

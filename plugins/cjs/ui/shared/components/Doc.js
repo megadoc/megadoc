@@ -1,8 +1,9 @@
 var React = require("react");
 var ellipsify = require('utils/ellipsify');
 var classSet = require('utils/classSet');
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
 var DocTags = require('components/DocTags');
+var Types = require('components/Tags/Types');
 var Anchor = require('components/Anchor');
 var Collapsible = require('mixins/Collapsible');
 
@@ -10,7 +11,7 @@ function params(tags) {
   return tags.filter(function(tag){
     return tag.type === 'param' && tag.typeInfo.name.indexOf('.') === -1;
   }).map(function(param){
-    return param.typeInfo.name + ':' + param.typeInfo.types.join('|');
+    return param.typeInfo.name + ': ' + param.typeInfo.types.join('|');
   }).join(', ');
 }
 
@@ -73,9 +74,15 @@ var Doc = React.createClass({
 
               {isFunction(doc) && (
                 <span className="doc-entity__method-params">
-                  ({params(doc.tags)})
+                  (
+                    <span
+                      dangerouslySetInnerHTML={{ __html: params(doc.tags) }}
+                    />
+                  )
                 </span>
               )}
+
+              {this.renderReturnType()}
 
               {doc.isConstructor && (
                 <span className="doc-entity__modifier">CONSTRUCTOR</span>
@@ -102,9 +109,9 @@ var Doc = React.createClass({
           )}
 
           {this.props.withDescription && description && !isCollapsed && (
-            <MarkdownText>
+            <HighlightedText>
               {description}
-            </MarkdownText>
+            </HighlightedText>
           )}
         </div>
 
@@ -116,6 +123,21 @@ var Doc = React.createClass({
           />
         )}
       </div>
+    );
+  },
+
+  renderReturnType() {
+    const [ tag ] = this.props.doc.tags.filter(t => t.type === 'return');
+
+    if (!tag) {
+      return null;
+    }
+
+    return (
+      <span className="doc-entity__method-params">
+        {' -> '}
+        <Types types={tag.typeInfo.types} />
+      </span>
     );
   }
 });

@@ -57,7 +57,7 @@ var HighlightedText = React.createClass({
   render() {
     return (
       <div
-        className="highlighted-text"
+        className={`highlighted-text ${this.props.className || ''}`}
         dangerouslySetInnerHTML={{__html: this.props.children}}
       />
     );

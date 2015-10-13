@@ -1,6 +1,6 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
-const MarkdownText = require('components/MarkdownText');
+const HighlightedText = require('components/HighlightedText');
 const Doc = require('components/Doc');
 const SeeTag = require('components/Tags/SeeTag');
 const DocGroup = require('components/DocGroup');
@@ -10,7 +10,6 @@ const ExampleTag = require('components/Tags/ExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const K = require('constants');
-const JumperMixin = require('mixins/JumperMixin');
 
 function getRenderableType(doc, moduleDocs) {
   if (doc.ctx.type === K.TYPE_FUNCTION) {
@@ -30,23 +29,6 @@ function getRenderableType(doc, moduleDocs) {
 }
 
 const ModuleBody = React.createClass({
-  mixins: [
-    // JumperMixin(function() {
-    //   const id = this.props.focusedEntity;
-
-    //   if (id) {
-    //     const item = this.refs[this.props.focusedEntity];
-
-    //     if (item) {
-    //       return item;
-    //     }
-    //     else {
-    //       console.warn('waaah, unable to find entity to jump to:', id);
-    //     }
-    //   }
-    // })
-  ],
-
   propTypes: {
     focusedEntity: React.PropTypes.string,
     doc: React.PropTypes.object,
@@ -65,7 +47,7 @@ const ModuleBody = React.createClass({
 
     return (
       <div>
-        <MarkdownText>{doc.description}</MarkdownText>
+        <HighlightedText>{doc.description}</HighlightedText>
 
         {renderableType === K.TYPE_FACTORY && (
           this.renderConstructor(doc, "Instance Constructor")
@@ -134,7 +116,7 @@ const ModuleBody = React.createClass({
   renderExampleTag(tag) {
     return (
       <Outlet key={tag.string} name="CJS::ExampleTag" props={tag}>
-        <ExampleTag string={tag.string} />
+        <ExampleTag string={tag.string} typeInfo={tag.typeInfo} />
       </Outlet>
     );
   },

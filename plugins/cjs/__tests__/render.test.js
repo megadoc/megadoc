@@ -46,8 +46,8 @@ describe('cjs::render', function() {
   });
 
   it('renders doc.tags.[].typeInfo.string', function() {
-    assert.calledWith(linkify, 'A _unique_ record identifier.', 'Core.Cache');
-    assert.calledWith(renderMarkdown, 'A _unique_ record identifier.');
+    assert.calledWith(linkify, 'A _unique_ record identifier.\n', 'Core.Cache');
+    assert.calledWith(renderMarkdown, 'A _unique_ record identifier.\n');
   });
 
   it('renders the "string" of an @example tag', function() {

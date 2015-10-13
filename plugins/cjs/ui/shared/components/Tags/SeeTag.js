@@ -10,7 +10,7 @@ var SeeTag = React.createClass({
 
   render() {
     return (
-      <span className="see-tag">
+      <p className="see-tag">
         See also:
         {' '}
 
@@ -19,7 +19,7 @@ var SeeTag = React.createClass({
             __html: this.props.string
           }}
         />
-      </span>
+      </p>
     );
   }
 });
