@@ -8,16 +8,10 @@ const Types = React.createClass({
   },
 
   render() {
-    let types = this.props.types.map(function(type) {
-      return LinkResolver.linkify(`[${type}]()`, false);
-    }).join(', ');
-
     return (
       <span
         dangerouslySetInnerHTML={{
-          __html: MarkdownText.renderMarkdown(types)
-            .replace('<p>', '')
-            .replace('</p>', '')
+          __html: this.props.types
         }}
       />
     );

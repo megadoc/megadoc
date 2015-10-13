@@ -31,20 +31,20 @@ function getRenderableType(doc, moduleDocs) {
 
 const ModuleBody = React.createClass({
   mixins: [
-    JumperMixin(function() {
-      const id = this.props.focusedEntity;
+    // JumperMixin(function() {
+    //   const id = this.props.focusedEntity;
 
-      if (id) {
-        const item = this.refs[this.props.focusedEntity];
+    //   if (id) {
+    //     const item = this.refs[this.props.focusedEntity];
 
-        if (item) {
-          return item;
-        }
-        else {
-          console.warn('waaah, unable to find entity to jump to:', id);
-        }
-      }
-    })
+    //     if (item) {
+    //       return item;
+    //     }
+    //     else {
+    //       console.warn('waaah, unable to find entity to jump to:', id);
+    //     }
+    //   }
+    // })
   ],
 
   propTypes: {
@@ -75,10 +75,8 @@ const ModuleBody = React.createClass({
           this.renderConstructor(doc, "Constructor")
         )}
 
-        {renderableType === K.TYPE_FUNCTION ? (
+        {renderableType === K.TYPE_FUNCTION && (
           this.renderConstructor(doc, "Signature")
-        ) : (
-          null
         )}
 
         {this.renderExamples(doc)}
@@ -177,19 +175,25 @@ const ModuleBody = React.createClass({
 
     return (
       <DocGroup label={title} tagName="ul">
-        {propertyDocs.map(function(entityDoc) {
-          const tag = findWhere(entityDoc.tags, { type: 'property' });
-          const path = entityDoc.ctx.symbol + entityDoc.id;
-
-          return (
-            <PropertyTag
-              key={path}
-              ref={path}
-              typeInfo={tag.typeInfo}
-            />
-          );
-        })}
+        {propertyDocs.map(this.renderProperty)}
       </DocGroup>
+    );
+  },
+
+  renderProperty(doc) {
+    const tag = findWhere(doc.tags, { type: 'property' });
+    const path = doc.ctx.symbol + doc.id;
+
+    return (
+      <PropertyTag
+        key={path}
+        ref={path}
+        typeInfo={tag.typeInfo}
+        initiallyCollapsed
+        expanded={this.props.focusedEntity === path}
+        path={path}
+        parentPath={this.props.doc.id}
+      />
     );
   },
 
@@ -206,19 +210,24 @@ const ModuleBody = React.createClass({
 
     return (
       <DocGroup label="Static Methods" tagName="ul" className="class-view__method-list">
-        {staticMethodDocs.map(function(staticMethodDoc) {
-          const path = staticMethodDoc.ctx.symbol + staticMethodDoc.id
-
-          return (
-            <Doc
-              ref={path}
-              key={path}
-              initiallyCollapsed
-              doc={staticMethodDoc}
-            />
-          );
-        })}
+        {staticMethodDocs.map(this.renderStaticMethod)}
       </DocGroup>
+    );
+  },
+
+  renderStaticMethod(doc) {
+    const path = doc.ctx.symbol + doc.id
+
+    return (
+      <Doc
+        ref={path}
+        key={path}
+        initiallyCollapsed
+        expanded={this.props.focusedEntity === path}
+        doc={doc}
+        path={path}
+        parentPath={this.props.doc.id}
+      />
     );
   },
 
@@ -235,19 +244,24 @@ const ModuleBody = React.createClass({
 
     return (
       <DocGroup label="Methods" tagName="ul" className="class-view__method-list">
-        {methodDocs.map(function(methodDoc) {
-          const path = methodDoc.ctx.symbol + methodDoc.id;
-
-          return (
-            <Doc
-              ref={path}
-              key={methodDoc.id}
-              initiallyCollapsed
-              doc={methodDoc}
-            />
-          );
-        })}
+        {methodDocs.map(this.renderMethod)}
       </DocGroup>
+    );
+  },
+
+  renderMethod(doc) {
+    const path = doc.ctx.symbol + doc.id;
+
+    return (
+      <Doc
+        ref={path}
+        key={doc.id}
+        initiallyCollapsed
+        expanded={this.props.focusedEntity === path}
+        doc={doc}
+        path={path}
+        parentPath={this.props.doc.id}
+      />
     );
   }
 });

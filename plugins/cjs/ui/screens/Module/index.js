@@ -7,6 +7,7 @@ const GitStats = require('components/GitStats');
 const config = require('config');
 const Router = require('core/Router');
 const Outlet = require('components/Outlet');
+const scrollToTop = require('utils/scrollToTop');
 
 const Module = React.createClass({
   mixins: [
@@ -21,11 +22,21 @@ const Module = React.createClass({
   propTypes: {
     routeName: React.PropTypes.string,
     params: React.PropTypes.shape({
-      moduleId: React.PropTypes.string
+      moduleId: React.PropTypes.string,
+      entity: React.PropTypes.string
     }),
     query: React.PropTypes.shape({
-      entity: React.PropTypes.string
     })
+  },
+
+  componentDidMount: function() {
+    scrollToTop();
+  },
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if (prevProps.params.moduleId !== this.props.params.moduleId) {
+      scrollToTop();
+    }
   },
 
   render() {
@@ -56,7 +67,7 @@ const Module = React.createClass({
         <ModuleBody
           doc={doc}
           moduleDocs={moduleDocs}
-          focusedEntity={this.props.query.entity}
+          focusedEntity={decodeURIComponent(this.props.params.entity)}
         />
 
         <Outlet

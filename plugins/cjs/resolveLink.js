@@ -26,8 +26,8 @@ function lookupModuleEntity(database, moduleId, entityName) {
   return entity;
 }
 
-function getIndex(id, database, registry, currentModuleId) {
-  var index = registry[id];
+function getIndex(database, id, registry, currentModuleId) {
+  var index = registry.entries[id];
 
   if (index && index.type === 'cjs') {
     return index;
@@ -36,18 +36,18 @@ function getIndex(id, database, registry, currentModuleId) {
     var entity = lookupModuleEntity(database, currentModuleId, id);
 
     if (entity) {
-      return registry[entity.path];
+      return getIndex(database, entity.path, registry);
     }
   }
 }
 
-function resolveLink(id, database, registry, currentModuleId) {
+function resolveLink(database, id, registry, currentModuleId) {
   var moduleId, entityId, title, doc, parentDoc;
 
   // registry index, we'll need this to look up the proper doc(s)
-  var index = getIndex(id, database, registry, currentModuleId);
+  var index = getIndex(database, id, registry, currentModuleId);
 
-  if (index && index.type === 'cjs') {
+  if (index) {
     doc = lookup(database, index.id);
 
     if (!doc) {
@@ -76,15 +76,15 @@ function resolveLink(id, database, registry, currentModuleId) {
       }
 
       return {
-        moduleId: moduleId,
-        entityId: entityId,
+        // TODO: figure out routeName and actual path ...
+        href: '#' + database.__meta__.routeName + '/modules/' + encodeURIComponent(moduleId) + '/' + encodeURIComponent(entityId),
         title: title
       };
     }
     // a direct link to a module:
     else {
       return {
-        moduleId: doc.id,
+        href: '#' + database.__meta__.routeName + '/modules/' + encodeURIComponent(doc.id),
         title: doc.name
       };
     }

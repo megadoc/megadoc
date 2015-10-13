@@ -1,6 +1,6 @@
 var findWhere = require('lodash').findWhere;
 var Logger = require('../../lib/Logger');
-var console = new Logger('cjs-linker');
+// var console = new Logger('cjs-linker');
 
 module.exports = function(docs) {
   var indices = [];

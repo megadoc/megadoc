@@ -61,7 +61,7 @@ describe('CJS::Parser - Object modules', function() {
 
   it('does not confuse tokens with ones defined in another file', function() {
     var docs = TestUtils.parseFiles([
-      path.resolve(__dirname, '../../../index.js'),
+      path.resolve(__dirname, '../../../config.js'),
       path.resolve(__dirname, '../../../Parser/NodeAnalyzer/analyzeNode.js'),
     ]);
 

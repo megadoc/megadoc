@@ -4,6 +4,13 @@ exports.setInstance = function(_instance) {
   instance = _instance;
 };
 
+if (process.env.NODE_ENV === 'development') {
+  exports.getInstance = function(_instance) {
+    console.warn('You are using a development-only method.');
+    return instance;
+  };
+}
+
 /**
  * Update the query string to reflect the new given key/value pairs. This
  * will trigger a re-transition of the current route.
@@ -46,7 +53,7 @@ exports.getQueryItem = function(item) {
 };
 
 exports.makeHref = function(name, params, query) {
-  return encodeURIComponent(instance.makeHref(name, params, query));
+  return instance.makeHref(name, params, query);
 };
 
 

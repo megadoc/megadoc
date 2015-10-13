@@ -151,9 +151,11 @@ var ClassBrowser = React.createClass({
     return (
       <li key={doc.id} className="class-browser__methods-entity">
         <Link
-          to={`${routeName}.module`}
-          params={{ moduleId: moduleDoc.id }}
-          query={{ entity: entityPath }}
+          to={`${routeName}.module.entity`}
+          params={{
+            moduleId: moduleDoc.id,
+            entity: encodeURIComponent(entityPath)
+          }}
           children={entityPath}
         />
       </li>

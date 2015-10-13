@@ -3,6 +3,7 @@ var ellipsify = require('utils/ellipsify');
 var classSet = require('utils/classSet');
 var MarkdownText = require('components/MarkdownText');
 var DocTags = require('components/DocTags');
+var Anchor = require('components/Anchor');
 var Collapsible = require('mixins/Collapsible');
 
 function params(tags) {
@@ -49,10 +50,20 @@ var Doc = React.createClass({
 
     const { doc } = this.props;
     const description = doc.description;
-    const summary = doc.description.split('\n\n')[0];
+    const summary = doc.summary;
 
     return (
       <div className={className}>
+        {this.props.path && (
+          <Anchor
+            routeName="js.module.entity"
+            params={{
+              moduleId: this.props.parentPath,
+              entity: this.props.path
+            }}
+          />
+        )}
+
         {this.props.withTitle && (
           <h4 className="doc-entity__header collapsible-header" onClick={this.toggleCollapsed}>
             {this.renderCollapser()}
@@ -85,17 +96,17 @@ var Doc = React.createClass({
           </h4>
         )}
 
-        {!doc.isConstructor && this.props.withDescription && (
-          <MarkdownText className="doc-entity__description">
-            {isCollapsed ? (
-              ellipsify(summary, 120) +
-              (summary.length < 120 && description.length > summary.length ?
-                '...' :
-                ''
-              )
-            ) : description}
-          </MarkdownText>
-        )}
+        <div className="doc-entity__description">
+          {this.props.withDescription && description && isCollapsed && (
+            <p>{summary}...</p>
+          )}
+
+          {this.props.withDescription && description && !isCollapsed && (
+            <MarkdownText>
+              {description}
+            </MarkdownText>
+          )}
+        </div>
 
         {!isCollapsed && (
           <DocTags

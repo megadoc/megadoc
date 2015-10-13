@@ -10,9 +10,16 @@ var SeeTag = React.createClass({
 
   render() {
     return (
-      <MarkdownText className="see-tag">
-        {`See also: [${this.props.string.trim()}]().`}
-      </MarkdownText>
+      <span className="see-tag">
+        See also:
+        {' '}
+
+        <span
+          dangerouslySetInnerHTML={{
+            __html: this.props.string
+          }}
+        />
+      </span>
     );
   }
 });

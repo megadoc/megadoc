@@ -1,10 +1,9 @@
-const LinkResolver = require('core/LinkResolver');
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const resolveLink = require('utils/resolveLink');
 const createNavigationOutlet = require('./outlets/Navigation');
 const OutletManager = require('core/OutletManager');
+const React = require('react');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
@@ -45,17 +44,20 @@ tinydoc.use(function CJSPlugin(api) {
         name: `${routeName}.module`,
         path: 'modules/:moduleId',
         handler: require('./screens/Module'),
-        parent: routeName
-      }
+        parent: routeName,
+        ignoreScrollBehavior: true
+      },
+      {
+        name: `${routeName}.module.entity`,
+        parent: `${routeName}.module`,
+        path: ':entity',
+        ignoreScrollBehavior: true
+      },
     ]);
 
     api.registerOutletElement(
       'navigation',
       createNavigationOutlet(routeName, config.navigationLabel)
     );
-  });
-
-  api.on('started', function() {
-    LinkResolver.use(resolveLink);
   });
 });

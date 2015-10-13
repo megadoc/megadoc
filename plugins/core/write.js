@@ -7,7 +7,7 @@ var compileInlinePlugins = require('./write/compileInlinePlugins');
 var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
 var runAll = require('../../lib/utils/runAll');
 
-module.exports = function(config, compiler, readmeGitStats, done) {
+module.exports = function(config, compiler, database, done) {
   runAll([ compileInlinePlugins, compileCSS ], [ compiler, config ], function(err) {
     if (err) {
       done(err);
@@ -18,7 +18,7 @@ module.exports = function(config, compiler, readmeGitStats, done) {
     copyAssets(compiler, config.assets);
     copyAppScripts(compiler);
     generateHTMLFile(compiler, config);
-    generateRuntimeConfigScript(compiler, config, readmeGitStats);
+    generateRuntimeConfigScript(compiler, config, database);
 
     done();
   });
@@ -100,7 +100,7 @@ function copyAppScripts(compiler) {
   fs.copySync(path.join(UI_DIR, 'dist'), compiler.utils.getOutputPath());
 }
 
-function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
+function generateRuntimeConfigScript(compiler, config, database) {
   var runtimeConfig = _.extend(
     {},
     _.omit(config, [ 'outputDir', 'plugins', 'assets', ]),
@@ -120,12 +120,15 @@ function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
     })
   );
 
-  if (config.readme) {
+  if (database.readme) {
     runtimeConfig.readme = {
       filePath: config.readme,
-      source: fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8'),
-      git: readmeGitStats
+      source: database.readme,
+      git: database.readmeGitStats
     };
+  }
+  if (database.footer) {
+    runtimeConfig.footer = database.footer;
   }
 
   // write the runtime config file

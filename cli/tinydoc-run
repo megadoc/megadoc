@@ -20,8 +20,9 @@ program
   .version(pkg.version)
   .option('--config [PATH]', 'path to tinydoc config file (defaults to tinydoc.conf.js)')
   .option('--no-scan', 'Skip the scanning phase.')
-  .option('--no-write', 'Do not write any assets.')
   .option('--no-index', 'Do not index documentation entities (for linking.)')
+  .option('--no-render', 'Do not render markdown or resolve links.')
+  .option('--no-write', 'Do not write any assets.')
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
@@ -93,6 +94,7 @@ tiny = tinydoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
   index: program.index !== false && program.scan !== false,
+  render: program.render !== false && program.index !== false,
   stats: program.stats === true,
   purge: program.purge !== false
 });

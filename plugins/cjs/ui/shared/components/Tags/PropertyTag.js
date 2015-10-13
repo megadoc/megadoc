@@ -1,8 +1,9 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
-var Types = require('components/Tags/Types');
+const React = require("react");
+const MarkdownText = require('components/MarkdownText');
+const Types = require('components/Tags/Types');
+const Anchor = require('components/Anchor');
 
-var PropertyTag = React.createClass({
+const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
@@ -19,6 +20,14 @@ var PropertyTag = React.createClass({
 
     return (
       <li className="property-tag">
+        <Anchor
+          routeName="js.module.entity"
+          params={{
+            moduleId: this.props.parentPath,
+            entity: this.props.path
+          }}
+        />
+
         <header className="property-tag__header">
           <span className="property-tag__name">
             <code>{typeInfo.name}</code>

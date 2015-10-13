@@ -21,35 +21,39 @@ describe('cjs::resolveLink', function() {
       // };
     });
 
-    registry = indexEntities(database).reduce(function(hsh, index) {
-      hsh[index.path] = index.index;
-      return hsh;
-    }, {});
+    database.__meta__ = { routeName: '' };
+
+    registry = {
+      entries: indexEntities(database).reduce(function(hsh, index) {
+        hsh[index.path] = index.index;
+        return hsh;
+      }, {})
+    };
   });
 
   it('resolves ${NS}.${MODULE}', function() {
-    var link = resolveLink('Core.Cache', database, registry);
+    var link = resolveLink(database, 'Core.Cache', registry);
 
     assert.ok(link);
     assert.equal(link.title, 'Cache');
   });
 
   it('resolves ${MODULE}', function() {
-    var link = resolveLink('Cache', database, registry);
+    var link = resolveLink(database, 'Cache', registry);
 
     assert.ok(link);
     assert.equal(link.title, 'Cache');
   });
 
   it('resolves ${NS}.${MODULE}${SYM}${ENTITY}', function() {
-    var link = resolveLink('Core.Cache#add', database, registry);
+    var link = resolveLink(database, 'Core.Cache#add', registry);
 
     assert.ok(link);
     assert.equal(link.title, 'Cache#add');
   });
 
   it('resolves ${MODULE}${SYM}${ENTITY}', function() {
-    var link = resolveLink('Cache#add', database, registry);
+    var link = resolveLink(database, 'Cache#add', registry);
 
     assert.ok(link);
     assert.equal(link.title, 'Cache#add');
@@ -57,18 +61,18 @@ describe('cjs::resolveLink', function() {
 
   context('Given a currentModuleId', function() {
     it('resolves ${SYM}${ENTITY}', function() {
-      var link = resolveLink('#add', database, registry, 'Core.Cache');
+      var link = resolveLink(database, '#add', registry, 'Core.Cache');
 
       assert.ok(link);
     });
 
     it('strips ${MODULE} from title if it is the same module', function() {
-      var link = resolveLink('Cache#add', database, registry, 'Core.Cache');
+      var link = resolveLink(database, 'Cache#add', registry, 'Core.Cache');
       assert.equal(link.title, '#add');
     });
 
     it('does not strip ${MODULE} from title if it is a different module', function() {
-      var link = resolveLink('Cache#add', database, registry, 'Something');
+      var link = resolveLink(database, 'Cache#add', registry, 'Something');
       assert.equal(link.title, 'Cache#add');
     });
   });

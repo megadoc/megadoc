@@ -70,7 +70,7 @@ function parseProperty(docstring) {
     null
   ;
 
-  typeInfo.description = descStr ? descStr.trim() : null;
+  typeInfo.description = descStr || null;
 
   return typeInfo;
 }

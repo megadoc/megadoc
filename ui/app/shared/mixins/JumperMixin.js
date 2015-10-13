@@ -8,6 +8,10 @@ function BrowserJumperMixin(locateElement, offset) {
     if (element) {
       jqScrollIntoView(React.findDOMNode(element), { offset });
 
+      if (element.expand instanceof Function) {
+        element.expand();
+      }
+
       return true;
     }
     else {

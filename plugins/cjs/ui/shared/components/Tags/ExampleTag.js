@@ -1,5 +1,6 @@
 var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
+var PrecompiledText = require('components/PrecompiledText');
 
 var ExampleTag = React.createClass({
   displayName: "ExampleTag",
@@ -10,26 +11,34 @@ var ExampleTag = React.createClass({
 
   render() {
     var { string } = this.props;
-    var title = string.substr(0, string.indexOf('\n'));
+    var title;
+    // var title = string.substr(0, string.indexOf('\n'));
 
-    if (title[0] === ' ') {
-      title = null;
-    }
-    else {
-      string = String(this.props.string).replace(title, '');
-    }
+    // TODO: this is broken in the pre-rendered version, we need to parse the
+    // example name at compile time instead
+    // if (title[0] === ' ') {
+    //   title = null;
+    // }
+    // else {
+    //   string = String(this.props.string).replace(title, '');
+    // }
 
     return (
       <div className="example-tag">
-        {title && (
-          <p>
-            <span><strong>Example:</strong> {title}</span>
-          </p>
-        )}
+        <p>
+          {title && (
+            <div>
+              <strong>Example: </strong>
+              <span dangerouslySetInnerHTML={{__html: title.replace('<p>', '').replace('</p>', '') }} />
+            </div>
+          )}
 
-        <MarkdownText className="example-tag__code">
+          {!title && (<strong>Example</strong>)}
+        </p>
+
+        <HighlightedText className="example-tag__code">
           {string}
-        </MarkdownText>
+        </HighlightedText>
       </div>
     );
   }
