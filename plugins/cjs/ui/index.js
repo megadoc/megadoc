@@ -3,7 +3,6 @@ const Storage = require('core/Storage');
 const K = require('constants');
 const createNavigationOutlet = require('./outlets/Navigation');
 const OutletManager = require('core/OutletManager');
-const React = require('react');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 

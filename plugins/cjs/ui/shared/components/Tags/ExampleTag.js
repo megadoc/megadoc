@@ -1,16 +1,21 @@
-var React = require("react");
-var HighlightedText = require('components/HighlightedText');
-var PrecompiledText = require('components/PrecompiledText');
+const React = require("react");
+const HighlightedText = require('components/HighlightedText');
 
-var ExampleTag = React.createClass({
+const { shape, string } = React.PropTypes;
+
+const ExampleTag = React.createClass({
   displayName: "ExampleTag",
 
   propTypes: {
-    string: React.PropTypes.string,
+    string: string,
+    typeInfo: shape({
+      name: string,
+      description: string,
+    })
   },
 
   render() {
-    var { name, description } = this.props.typeInfo;
+    const { name, description } = this.props.typeInfo;
 
     return (
       <div className="example-tag">
@@ -18,11 +23,7 @@ var ExampleTag = React.createClass({
           {name && (
             <div>
               <strong>Example: </strong>
-              <span
-                dangerouslySetInnerHTML={{
-                __html: name
-                }}
-              />
+              <span dangerouslySetInnerHTML={{ __html: name }} />
             </div>
           )}
 

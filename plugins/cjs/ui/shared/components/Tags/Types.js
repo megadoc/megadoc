@@ -1,6 +1,4 @@
 const React = require('react');
-const LinkResolver = require('core/LinkResolver');
-const MarkdownText = require('components/MarkdownText');
 
 const Types = React.createClass({
   propTypes: {

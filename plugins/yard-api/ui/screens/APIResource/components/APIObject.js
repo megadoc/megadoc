@@ -1,13 +1,25 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
-var PropertyListing = require('./PropertyListing');
+const React = require("react");
+const MarkdownText = require('components/MarkdownText');
+const PropertyListing = require('./PropertyListing');
 
-var APIObject = React.createClass({
+const { shape, string, array, node } = React.PropTypes;
+
+const APIObject = React.createClass({
   displayName: "APIObject",
+
+  propTypes: {
+    anchor: node,
+    object: shape({
+      id: string,
+      title: string,
+      text: string,
+      schema: array
+    })
+  },
 
   getInitialState: function() {
     return {
-      expanded: true
+      expanded: true,
     };
   },
 

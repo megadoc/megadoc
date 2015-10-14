@@ -1,12 +1,9 @@
 const createNavigationOutlet = require('./outlets/Navigation');
 const React = require('react');
 const Root = require('./screens/Root');
-const LinkResolver = require('core/LinkResolver');
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const strHumanize = require('tinydoc/lib/utils/strHumanize');
-const Router = require('core/Router');
 
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 

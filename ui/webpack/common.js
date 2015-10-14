@@ -34,7 +34,8 @@ var baseConfig = {
     ],
 
     alias: {
-      'tinydoc': path.join(__dirname, '..', '..')
+      'tinydoc': path.join(__dirname, '..', '..'),
+      'sinon': path.join(root, 'app', 'shims', 'sinon.js'),
     }
   },
 

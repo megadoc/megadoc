@@ -1,7 +1,6 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
 const Types = require('components/Tags/Types');
-const Anchor = require('components/Anchor');
 
 const { shape, string, arrayOf, node } = React.PropTypes;
 

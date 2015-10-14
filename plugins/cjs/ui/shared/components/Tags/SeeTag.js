@@ -11,14 +11,7 @@ var SeeTag = React.createClass({
   render() {
     return (
       <p className="see-tag">
-        See also:
-        {' '}
-
-        <span
-          dangerouslySetInnerHTML={{
-            __html: this.props.string
-          }}
-        />
+        See also: <MarkdownText>{this.props.string}</MarkdownText>
       </p>
     );
   }

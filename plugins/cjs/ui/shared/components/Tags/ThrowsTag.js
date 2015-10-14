@@ -1,11 +1,15 @@
-var React = require("react");
-var HighlightedText = require('components/HighlightedText');
-var Types = require('components/Tags/Types');
+const React = require("react");
+const HighlightedText = require('components/HighlightedText');
+const Types = require('components/Tags/Types');
 
-var ThrowsTag = React.createClass({
+const { shape, string, arrayOf } = React.PropTypes;
+
+const ThrowsTag = React.createClass({
   propTypes: {
-    types: React.PropTypes.arrayOf(React.PropTypes.string),
-    description: React.PropTypes.string,
+    typeInfo: shape({
+      types: arrayOf(string),
+      description: string,
+    }),
   },
 
   render() {

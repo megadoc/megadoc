@@ -1,10 +1,8 @@
 var React = require("react");
-var ellipsify = require('utils/ellipsify');
 var classSet = require('utils/classSet');
 var HighlightedText = require('components/HighlightedText');
 var DocTags = require('components/DocTags');
 var Types = require('components/Tags/Types');
-var Anchor = require('components/Anchor');
 var Collapsible = require('mixins/Collapsible');
 
 function params(tags) {

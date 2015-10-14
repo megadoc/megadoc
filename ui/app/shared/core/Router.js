@@ -5,7 +5,7 @@ exports.setInstance = function(_instance) {
 };
 
 if (process.env.NODE_ENV === 'development') {
-  exports.getInstance = function(_instance) {
+  exports.getInstance = function() {
     console.warn('You are using a development-only method.');
     return instance;
   };

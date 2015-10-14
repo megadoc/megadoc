@@ -1,12 +1,9 @@
 var render = require('../render');
-var indexEntities = require('../indexEntities');
 var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
-var Renderer = require('../../../lib/Renderer');
-var LinkResolver = require('../../../lib/LinkResolver');
 
 describe('cjs::render', function() {
-  var database, registry, linkResolver, renderer;
+  var database;
   var getSandbox = global.TestUtils.sinonSuite(this);
   var renderMarkdown, linkify;
 

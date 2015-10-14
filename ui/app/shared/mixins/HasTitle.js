@@ -10,17 +10,15 @@ module.exports = function(generateTitle) {
     generateTitle = IDENTITY.bind(null, generateTitle);
   }
 
-  return {
-    componentWillMount: function() {
-      titleManager = new TitleManager(generateTitle.bind(this));
-    },
+  titleManager = new TitleManager(generateTitle);
 
+  return {
     componentDidMount: function() {
-      titleManager.update();
+      titleManager.update(this);
     },
 
     componentDidUpdate: function() {
-      titleManager.update();
+      titleManager.update(this);
     },
 
     componentWillUnmount: function() {

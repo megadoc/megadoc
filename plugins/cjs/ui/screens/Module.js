@@ -33,7 +33,7 @@ const Module = React.createClass({
     scrollToTop();
   },
 
-  componentDidUpdate: function(prevProps, prevState) {
+  componentDidUpdate: function(prevProps) {
     if (prevProps.params.moduleId !== this.props.params.moduleId) {
       scrollToTop();
     }

@@ -27,8 +27,8 @@ function TitleManager(generateTitle) {
      * @return {Boolean}
      *         Whether the title was updated or not.
      */
-    update() {
-      var newTitle = generateTitle.apply(null, arguments);
+    update(thisArg = null) {
+      var newTitle = generateTitle.apply(thisArg, arguments);
 
       if (newTitle && newTitle !== document.title) {
         if (!previousTitle) { // track the "anchor" title if we haven't yet

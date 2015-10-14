@@ -10,7 +10,9 @@ hljs.registerLanguage('ruby', require('highlight.js/lib/languages/ruby'));
 hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
 hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'));
 
-var HighlightedText = React.createClass({
+const { any, string, bool } = React.PropTypes;
+
+const HighlightedText = React.createClass({
   statics: {
     isHighlightingEnabled() {
       return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
@@ -18,8 +20,9 @@ var HighlightedText = React.createClass({
   },
 
   propTypes: {
-    children: React.PropTypes.any,
-    className: React.PropTypes.string,
+    children: any,
+    className: string,
+    unsafe: bool,
   },
 
   componentDidMount: function () {
@@ -35,10 +38,10 @@ var HighlightedText = React.createClass({
   },
 
   highlightCode: function () {
-    var nodes = this.getDOMNode().querySelectorAll('pre');
+    const nodes = this.getDOMNode().querySelectorAll('pre');
 
     if (nodes.length > 0) {
-      for (var i = 0; i < nodes.length; i=i+1) {
+      for (let i = 0; i < nodes.length; i=i+1) {
         hljs.highlightBlock(nodes[i]);
       }
     }
