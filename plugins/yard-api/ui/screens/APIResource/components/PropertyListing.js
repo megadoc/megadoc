@@ -42,7 +42,7 @@ var Properties = React.createClass({
           <code className="argument-listing__argument-name">{tag.name}</code>
 
           <span className="argument-listing__argument-type">
-            {htmlifyTagType(tag)}
+            <MarkdownText>{tag.types.join('|')}</MarkdownText>
           </span>
 
           {(tag.accepted_values || []).length > 0 && (

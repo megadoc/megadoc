@@ -1,6 +1,7 @@
 var React = require("react");
 var Database = require('core/Database');
 var MarkdownText = require('components/MarkdownText');
+var Anchor = require('components/Anchor');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 var JumperMixin = require('mixins/JumperMixin');
@@ -17,14 +18,14 @@ var APIResource = React.createClass({
       }
     }),
 
-    JumperMixin(function() {
-      if (this.props.query.endpoint) {
-        return this.refs[`endpoint-${this.props.query.endpoint}`];
-      }
-      else if (this.props.query.object) {
-        return this.refs[`object-${this.props.query.object}`];
-      }
-    })
+    // JumperMixin(function() {
+    //   if (this.props.query.endpoint) {
+    //     return this.refs[`endpoint-${this.props.query.endpoint}`];
+    //   }
+    //   else if (this.props.query.object) {
+    //     return this.refs[`object-${this.props.query.object}`];
+    //   }
+    // })
   ],
 
   propTypes: {
@@ -96,7 +97,17 @@ var APIResource = React.createClass({
     return (
       <APIObject
         ref={`object-${object.scoped_id}`}
-        key={object.id} {...object}
+        key={object.id}
+        object={object}
+        anchor={(
+          <Anchor
+            routeName="api.resource.object"
+            params={{
+              resourceId: this.props.params.resourceId,
+              objectId: object.scoped_id
+            }}
+          />
+        )}
       />
     );
   },
@@ -107,7 +118,28 @@ var APIResource = React.createClass({
         ref={`endpoint-${endpoint.scoped_id}`}
         key={endpoint.id}
         resourceId={this.props.params.resourceId}
-        {...endpoint}
+        anchor={(
+          <Anchor
+            routeName="api.resource.endpoint"
+            params={{
+              resourceId: this.props.params.resourceId,
+              endpointId: endpoint.scoped_id
+            }}
+          />
+        )}
+        endpoint={endpoint}
+      />
+    );
+  },
+
+  renderAnchorTo(entityId) {
+    return (
+      <Anchor
+        routeName="api.resource.entity"
+        params={{
+          resourceId: this.props.params.resourceId,
+          entityId
+        }}
       />
     );
   }

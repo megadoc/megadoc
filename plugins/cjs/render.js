@@ -1,9 +1,5 @@
 var htmlToText = require('../../lib/utils/htmlToText');
 
-function trimHTML(html) {
-  return html.replace('<p>', '').replace('</p>', '').trim();
-}
-
 module.exports = function(database, md, linkify) {
   database.forEach(function(doc) {
     var moduleId = doc.isModule ? doc.id : doc.receiver;
@@ -27,10 +23,9 @@ module.exports = function(database, md, linkify) {
         }
 
         else if (tag.type === 'see') {
-          tag.string = trimHTML(
-            md(
-              linkify('['+tag.string.trim()+']()', moduleId)
-            )
+          tag.string = md(
+            linkify('['+tag.string.trim()+']()', moduleId),
+            { trimHTML: true }
           );
         }
 
@@ -43,7 +38,10 @@ module.exports = function(database, md, linkify) {
             isArray = true;
           }
 
-          var linkedStr = trimHTML(md(linkify('['+typeStr+']()', moduleId, false)));
+          var linkedStr = md(
+            linkify('['+typeStr+']()', moduleId, { strict: false }),
+            { trimHTML: true }
+          );
 
           if (isArray) {
             linkedStr = 'Array&lt;' + linkedStr + '&gt;';

@@ -12,10 +12,12 @@ var APIObject = React.createClass({
   },
 
   render() {
-    const apiObject = this.props;
+    const apiObject = this.props.object;
 
     return (
       <div className="object-synopsis">
+        {this.props.anchor || null}
+
         <h3 className="object-synopsis__header" id={apiObject.id}>
           <span className="object-synopsis__header-text">{apiObject.title}</span>
           <button className="object-synopsis__toggler" onClick={this.toggle}>

@@ -1,3 +1,6 @@
+var ROOT_NS = 'API';
+var NS_SEP = '::';
+
 /**
  * @memberOf YARDAPIPlugin
  * @method indexEntities
@@ -35,13 +38,14 @@ module.exports = function(resources, registry) {
     });
 
     resource.objects.forEach(function(object) {
-      var linkPath = [ object.controller, object.title ].join('::');
-
-      registry.add(linkPath, {
+      var index = {
         type: 'yard-api',
         resourceId: resource.id,
         objectId: object.id
-      });
+      };
+
+      registry.add([ object.controller, object.title ].join(NS_SEP), index);
+      registry.add([ ROOT_NS,           object.title ].join(NS_SEP), index)
     });
   });
 };

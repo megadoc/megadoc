@@ -1,7 +1,7 @@
 /* eslint "camelcase":0 */
 var React = require("react");
 var { findWhere, where } = require('lodash');
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
 var PropertyListing = require('./PropertyListing');
 var ExampleRequestTag = require('./tags/ExampleRequestTag');
 var ExampleResponseTag = require('./tags/ExampleResponseTag');
@@ -37,8 +37,8 @@ var APIEndpoint = React.createClass({
   },
 
   render() {
-    var endpoint = this.props;
-    var apiTag = findWhere(this.props.tags, { tag_name: 'API' });
+    var endpoint = this.props.endpoint;
+    var apiTag = findWhere(endpoint.tags, { tag_name: 'API' });
     var unhandledTags = endpoint.tags.filter(function(tag) {
       return [
         'API',
@@ -52,12 +52,14 @@ var APIEndpoint = React.createClass({
 
     return (
       <div key={endpoint.id} className="api-endpoint">
+        {this.props.anchor || null}
+
         <Header
           path={endpoint.id}
           tag={apiTag}
-          isBeta={!!findWhere(this.props.tags, { tag_name: 'beta' })}
+          isBeta={!!findWhere(endpoint.tags, { tag_name: 'beta' })}
           resourceId={this.props.resourceId}
-          scopedId={this.props.scoped_id}
+          scopedId={endpoint.scoped_id}
         />
 
         <div className="api-endpoint__route">
@@ -71,11 +73,11 @@ var APIEndpoint = React.createClass({
         </div>
 
         <div className="api-endpoint__docstring">
-          <MarkdownText>{endpoint.text}</MarkdownText>
+          <HighlightedText>{endpoint.text}</HighlightedText>
         </div>
 
         <h4>Arguments</h4>
-        <PropertyListing tags={where(this.props.tags, { tag_name: 'argument' })} />
+        <PropertyListing tags={where(endpoint.tags, { tag_name: 'argument' })} />
 
         <TagGroup
           tagName="returns"

@@ -32,6 +32,10 @@ function scan(config, utils, done) {
 }
 
 module.exports = function(config, globalConfig, utils, done) {
+  if (config.skipScan) {
+    return scan(config, utils, done);
+  }
+
   generateDocs(config, globalConfig, function(err) {
     if (err) {
       return done(err);
