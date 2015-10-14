@@ -1,6 +1,6 @@
 var path = require('path');
 var glob = require('glob');
-var root = path.resolve(__dirname, '..', 'app');
+var root = path.resolve(__dirname, '..', 'ui');
 
 var GLOBAL = 'tinydoc.publicModules';
 var vendorModules = [

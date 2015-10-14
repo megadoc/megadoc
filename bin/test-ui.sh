@@ -7,5 +7,5 @@ fi
 
 ./node_modules/karma/bin/karma \
   start \
-  ui/karma.conf.js \
+  karma.conf.js \
   $@

@@ -1,13 +1,16 @@
 var fs = require('fs-extra');
 var path = require('path');
-var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
+var root = path.resolve(__dirname, '..', '..');
 var _ = require('lodash');
 var compileCSS = require('./write/compileCSS');
 var compileInlinePlugins = require('./write/compileInlinePlugins');
-var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
 var runAll = require('../../lib/utils/runAll');
+var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
+var CORE_STYLE = path.resolve(root, 'ui', 'css', 'index.less');
 
 module.exports = function(config, compiler, database, done) {
+  compiler.assets.styleSheets.unshift(CORE_STYLE);
+
   runAll([ compileInlinePlugins, compileCSS ], [ compiler, config ], function(err) {
     if (err) {
       done(err);
@@ -81,7 +84,7 @@ function generateHTMLFile(compiler, config) {
   }
 
   var tmpl = _.template(
-    fs.readFileSync(path.join(UI_DIR, 'app', 'index.tmpl.html'), 'utf-8')
+    fs.readFileSync(path.join(root, 'ui', 'index.tmpl.html'), 'utf-8')
   );
 
   var html = tmpl({
@@ -97,7 +100,7 @@ function generateHTMLFile(compiler, config) {
 
 // copy the pre-compiled webpack bundles
 function copyAppScripts(compiler) {
-  fs.copySync(path.join(UI_DIR, 'dist'), compiler.utils.getOutputPath());
+  fs.copySync(path.join(root, 'dist'), compiler.utils.getOutputPath());
 }
 
 function generateRuntimeConfigScript(compiler, config, database) {

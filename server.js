@@ -32,7 +32,7 @@ config.plugins = [
   ExternalsPlugin
 ];
 
-config.resolve.alias['tinydoc-ui'] = path.join(root, 'app', 'shared');
+config.resolve.alias['tinydoc-ui'] = path.join(root, 'ui', 'shared');
 
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
@@ -41,7 +41,7 @@ if (fs.existsSync(contentBase)) {
 fs.ensureDirSync(contentBase);
 fs.writeFileSync(
   contentBase + '/index.html',
-  _.template(fs.readFileSync(path.join(root, 'app/index.tmpl.html')), 'utf-8')({
+  _.template(fs.readFileSync(path.join(root, 'ui/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
     scripts: [ 'main.js' ]
   })

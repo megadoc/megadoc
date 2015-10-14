@@ -1,6 +1,7 @@
 var React = require("react");
 var { Link } = require('react-router');
 var config = require('config');
+var Icon = require('components/Icon');
 
 var Navigation = React.createClass({
   statics: {

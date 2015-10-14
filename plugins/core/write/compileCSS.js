@@ -1,10 +1,9 @@
 var path = require('path');
 var webpack = require('webpack');
 var root = path.resolve(__dirname, '..', '..', '..');
-var CORE_STYLE = path.resolve(root, 'ui', 'app', 'css', 'index.less');
 
 module.exports = function compileCSS(compiler, config, done) {
-  var files = [ CORE_STYLE ].concat(compiler.assets.styleSheets);
+  var files = compiler.assets.styleSheets;
   var utils = compiler.utils;
 
   var webpackConfig = {
@@ -20,7 +19,7 @@ module.exports = function compileCSS(compiler, config, done) {
     resolve: {
       extensions: [ '', '.less', '.css' ],
       modulesDirectories: [ 'node_modules' ],
-      fallback: path.resolve(root, 'ui', 'app', 'css')
+      fallback: path.resolve(root, 'ui', 'css')
     },
 
     resolveLoader: {
@@ -75,9 +74,9 @@ module.exports = function compileCSS(compiler, config, done) {
       return done(jsonStats.errors);
     }
 
-    if (jsonStats.warnings.length > 0) {
-      console.warn(jsonStats.warnings);
-    }
+    jsonStats.warnings.forEach(function(message) {
+      console.warn(message);
+    });
 
     compiler.assets.addRuntimeScript('styles.js');
 

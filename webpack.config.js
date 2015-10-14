@@ -6,7 +6,7 @@ var nodeEnv = process.env.NODE_ENV || 'development';
 
 var config = {
   entry: {
-    main: path.resolve(__dirname, 'app/index.js')
+    main: path.resolve(__dirname, 'ui/index.js')
   },
 
   output: {

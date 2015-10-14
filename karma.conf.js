@@ -39,11 +39,11 @@ module.exports = function(config) {
     },
 
     files: [
-      'test.js',
+      'test/index.ui.js',
     ],
 
     preprocessors: {
-      'test.js': [ 'webpack', 'sourcemap' ]
+      'test/index.ui.js': [ 'webpack' ]
     },
 
     reporters: [ 'mocha' ],

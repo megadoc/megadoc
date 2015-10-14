@@ -27,7 +27,7 @@ describe('markdown::indexEntities', function() {
 
     assert.equal(
       resolver.linkify('[doc/guides/00-candy.md]()'),
-      '[doc/guides/candy.md](tiny://doc/guides/candy.md)'
+      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
     );
   });
 
@@ -41,7 +41,7 @@ describe('markdown::indexEntities', function() {
 
     assert.equal(
       resolver.linkify('[doc/guides/candy.md]()'),
-      '[doc/guides/candy.md](tiny://doc/guides/candy.md)'
+      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
     );
   });
 
@@ -56,7 +56,7 @@ describe('markdown::indexEntities', function() {
 
       assert.equal(
         resolver.linkify('[/doc/guides/candy.md]()'),
-        '[doc/guides/candy.md](tiny://doc/guides/candy.md)'
+        '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
       );
     });
   });

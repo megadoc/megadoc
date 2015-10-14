@@ -18,13 +18,13 @@ var baseConfig = {
     // won't resolve to that plugin's version of the library in its
     // node_modules/ folder.
     root: [
-      path.resolve(__dirname, '..', '..', 'node_modules'),
-      path.resolve(root, 'app', 'shims')
+      path.join(root, 'node_modules'),
+      path.join(root, 'ui', 'shims')
     ],
 
     fallback: [
-      path.join(root, 'app', 'shared'),
-      path.join(root, 'app', 'css'),
+      path.join(root, 'ui', 'shared'),
+      path.join(root, 'ui', 'css'),
     ],
 
     modulesDirectories: [
@@ -34,13 +34,13 @@ var baseConfig = {
     ],
 
     alias: {
-      'tinydoc': path.join(__dirname, '..', '..'),
-      'sinon': path.join(root, 'app', 'shims', 'sinon.js'),
+      'tinydoc': root,
+      'sinon': path.join(root, 'ui', 'shims', 'sinon.js'),
     }
   },
 
   resolveLoader: {
-    root: path.resolve(__dirname, '..', '..', 'node_modules'),
+    root: path.join(root, 'node_modules'),
   },
 
   node: {
@@ -55,7 +55,7 @@ var baseConfig = {
         test: /\.js$/,
         exclude: [
           /\.tmpl\.js$/,
-          /ui\/app\/vendor/,
+          /ui\/vendor/,
           /node_modules/
         ],
         loader: jsLoaders.join('!')
