@@ -28,7 +28,8 @@ var Root = React.createClass({
 
         {config.superStars && (
           <div>
-            <h2>Superstars</h2>,
+            <h2>Superstars</h2>
+
             <Superstars people={config.stats.history.people} />
           </div>
         )}
@@ -42,7 +43,7 @@ var Root = React.createClass({
 
         {history.teams.length === 0 && (
           <div>
-            <h2>Ladder</h2>,
+            <h2>Ladder</h2>
 
             <p className="git-root__troll">
               A rundown of exactly how much work every team member does.
