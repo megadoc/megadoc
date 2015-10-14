@@ -64,8 +64,6 @@ function renderEndpointTag(tag, md, linkify, parentId) {
         linkedStr = 'Array&lt;' + linkedStr + '&gt;';
       }
 
-      console.log('Linkifying "%s" => "%s"', type, linkedStr);
-
       return linkedStr;
     });
   }

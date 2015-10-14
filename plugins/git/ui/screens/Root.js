@@ -23,6 +23,7 @@ var Root = React.createClass({
         <RecentCommits
           commits={config.stats.recentCommits}
           activeCommitId={this.props.query.commit}
+          since={config.recentCommits.since}
         />
 
         {config.superStars && (
@@ -34,8 +35,7 @@ var Root = React.createClass({
 
         {history.teams.length > 0 && (
           <div>
-            <h2>Team Breakdown</h2>,
-
+            <h2>Team Breakdown</h2>
             <TeamLeaderboard teams={history.teams} />
           </div>
         )}
