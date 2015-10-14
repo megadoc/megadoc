@@ -30,7 +30,9 @@ exports.run = function(compiler) {
       database.readme = renderMarkdown(
         linkify(
           fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8')
-        )
+        ), {
+          baseURL: '/readme'
+        }
       );
     }
 
@@ -43,30 +45,5 @@ exports.run = function(compiler) {
 
   compiler.on('write', function(done) {
     write(config, compiler, database, done);
-  });
-};
-
-exports.testRouter = function(done) {
-  var React = require('react');
-  var ReactRouter = require('react-router');
-
-  var routeMap = React.createElement(ReactRouter.Route, {
-    path: '/',
-    name: 'root',
-    handler: React.createClass({
-      render: function() {
-        return null;
-      }
-    })
-  });
-
-  console.log(typeof ReactRouter.match)
-
-  ReactRouter.run({
-    location: ReactRouter.StaticLocation,
-    path: null,
-    routes: routeMap
-  }, function() {
-    done();
   });
 };

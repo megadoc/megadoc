@@ -32,7 +32,8 @@ var MarkdownRoot = React.createClass({
         <LeftColumn>
           <ClassBrowser
             routeName={this.props.routeName}
-            activeArticleId={this.props.params.splat}
+            activeArticleId={decodeURIComponent(this.props.params.articleId)}
+            activeSectionId={decodeURIComponent(this.props.params.sectionId)}
             folders={database.getFolders()}
             articles={database.getArticles()}
           />

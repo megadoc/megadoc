@@ -56,7 +56,7 @@ tinydoc.use(function CJSPlugin(api) {
 
     api.registerOutletElement(
       'navigation',
-      createNavigationOutlet(routeName, config.navigationLabel)
+      createNavigationOutlet(routeName, config.navigationLabel, config.icon)
     );
   });
 });

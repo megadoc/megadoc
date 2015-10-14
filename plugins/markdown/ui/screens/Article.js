@@ -37,7 +37,7 @@ const Article = React.createClass({
   },
 
   getArticleId(props = this.props) {
-    return props.params.splat;
+    return props.params.articleId;
   },
 
   render() {

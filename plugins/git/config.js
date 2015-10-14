@@ -17,6 +17,9 @@ module.exports = {
    */
   useMailMap: true,
 
+  navigationIcon: null,
+  navigationLabel: 'Activity',
+
   /**
    * @property {Object}
    *

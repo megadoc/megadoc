@@ -7,6 +7,6 @@ fi
 
 ./node_modules/mocha/bin/mocha \
   --reporter min \
-  -r test/index.js \
+  test/index.js \
   $(find {lib,plugins} -name '*.test.js' ! -path '*ui/*') \
   $@

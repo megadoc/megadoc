@@ -21,15 +21,18 @@
       vertical-align: middle;
     }
   }
+
+  &__module-filepath {
+    font-size: smaller;
+    position: absolute;
+    right: 0;
+    top: 0;
+    line-height: 42px;
+  }
 }
 
 .schemable({
   .class-view {
-    &__module-filepath {
-      background: @code;
-      padding: @whitespace/4 @whitespace/2;
-    }
-
     &__header {
       &-type {
         color: @base1;

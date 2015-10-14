@@ -51,8 +51,8 @@ const ModuleHeader = React.createClass({
         </h1>
 
         {this.props.showSourcePaths && (
-          <div className="class-view__module-filepath">
-            Defined in: {doc.filePath}
+          <div className="class-view__module-filepath type-mute">
+            {doc.filePath}
           </div>
         )}
       </header>

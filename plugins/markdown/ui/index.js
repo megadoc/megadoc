@@ -46,9 +46,15 @@ function register(api, config) {
 
     {
       name: `${routeName}.article`,
-      path: '*',
+      path: ':articleId',
       handler: require('./screens/Article'),
       parent: routeName
+    },
+
+    {
+      name: `${routeName}.article.section`,
+      parent: `${routeName}.article`,
+      path: ':sectionId'
     }
   ]);
 

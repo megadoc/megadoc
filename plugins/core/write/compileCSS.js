@@ -79,7 +79,7 @@ module.exports = function compileCSS(compiler, config, done) {
       console.warn(jsonStats.warnings);
     }
 
-    compiler.assets.addRuntimeScript(utils.getOutputPath('styles.js'));
+    compiler.assets.addRuntimeScript('styles.js');
 
     console.log('CSS assets generated.');
 

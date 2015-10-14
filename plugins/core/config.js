@@ -175,5 +175,7 @@ module.exports = {
    *
    * Whether links to external sites should be opened in new tabs.
    */
-  launchExternalLinksInNewTabs: true
+  launchExternalLinksInNewTabs: true,
+
+  showSettingsLinkInBanner: true,
 };

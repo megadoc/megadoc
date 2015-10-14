@@ -112,7 +112,7 @@ var MarkdownClassBrowser = React.createClass({
       <div key={id} ref={id}>
         <Link
           to={`${this.props.routeName}.article`}
-          params={{ splat: id }}
+          params={{ articleId: encodeURIComponent(id) }}
           className="class-browser__entry-link"
         >
           {title}
@@ -146,9 +146,11 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <li key={sectionId} className={className}>
         <Link
-          to={`${this.props.routeName}.article`}
-          params={{ splat: article.id }}
-          query={{ section: sectionId }}
+          to={`${this.props.routeName}.article.section`}
+          params={{
+            articleId: encodeURIComponent(article.id),
+            sectionId: encodeURIComponent(sectionId),
+          }}
           children={section.plainTitle}
         />
       </li>

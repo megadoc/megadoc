@@ -1,16 +1,32 @@
 var Compiler = require('./lib/Compiler');
 
 function tinydoc(config, runOptions) {
+  var compiler;
+
   config.plugins = config.plugins || [];
   config.plugins.push(require('./plugins/core'));
 
-  var compiler = new Compiler(config);
+  compiler = new Compiler(config);
+
+  console.log('There are %d registered plugins:',
+    config.plugins.length,
+    config.plugins.map(function(p) { return p.name; })
+  );
+
+  config.plugins.forEach(function(plugin) {
+    assert(plugin.run instanceof Function,
+      "A plugin must define a 'run' function." +
+      (plugin.name ? ' (Name: ' + plugin.name + ')' : '')
+    );
+
+    plugin.run(compiler);
+  });
 
   return {
     config: config,
 
     run: function(done) {
-      compiler.run(done, runOptions);
+      compiler.run(runOptions, done);
     }
   };
 }

@@ -2,7 +2,7 @@ var React = require("react");
 var { Link } = require('react-router');
 var Icon = require('components/Icon');
 
-module.exports = function createNavigationOutlet(routeName, label = 'JavaScripts') {
+module.exports = function createNavigationOutlet(routeName, label = 'JavaScripts', icon = null) {
   return React.createClass({
     displayName: 'CJSNavigation',
 
@@ -13,13 +13,7 @@ module.exports = function createNavigationOutlet(routeName, label = 'JavaScripts
     render() {
       return (
         <Link to={routeName}>
-          <Icon className="icon-javascript">
-            <span className="path1" />
-            <span className="path2" />
-          </Icon>
-
-          {' '}
-          {label}
+          {icon && <Icon className={icon} />} {label}
         </Link>
       );
     }

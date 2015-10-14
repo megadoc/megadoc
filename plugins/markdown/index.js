@@ -9,7 +9,7 @@ var defaults = {
   name: 'articles',
   title: 'Articles',
   source: [ 'doc/**/*.md' ],
-  icon: 'icon-book',
+  icon: null,
   exclude: [],
   fullFolderTitles: true,
   fullFolderTitleDelimiter: ' - ',

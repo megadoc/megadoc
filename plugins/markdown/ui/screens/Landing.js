@@ -1,5 +1,5 @@
 const React = require('react');
-const Article = require('../Article');
+const Article = require('./Article');
 
 const { string, shape, object } = React.PropTypes;
 
@@ -20,7 +20,7 @@ const Landing = React.createClass({
       return (
         <Article
           {...this.props}
-          params={{splat: homePageId }}
+          params={{ articleId: homePageId }}
         />
       );
     }

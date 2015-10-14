@@ -49,11 +49,13 @@ var Banner = React.createClass({
           <nav className="banner__navigation">
             {OutletManager.getElements('navigation').map(this.renderElement)}
 
-            <BannerItem key="settings">
-              <Link to="settings">
-                <Icon className="icon-cog" />
-              </Link>
-            </BannerItem>
+            {config.showSettingsLinkInBanner && (
+              <BannerItem key="settings">
+                <Link to="settings">
+                  <Icon className="icon-cog" />
+                </Link>
+              </BannerItem>
+            )}
           </nav>
         </header>
       </div>
