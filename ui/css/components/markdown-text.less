@@ -1,18 +1,36 @@
 .markdown-text {
+  @offset: @banner-height + @banner-border-dim + @whitespace;
+
   &__heading-anchor {
+
     opacity: 0;
     font-size: smaller;
     transition: opacity 0.25s ease-out 0s;
     font-weight: normal;
 
+
     &:hover, &:active, &:focus {
       text-decoration: none;
       font-weight: normal;
       opacity: 1;
+      outline: none;
     }
   }
 
   &__heading {
+    &[id]:before {
+      content: '';
+      display: block;
+
+      // This is so crazy that it works, but it works perfectly. Credit goes to
+      // the answer by Jan on http://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
+      //
+      // We need this for the browser to scroll correctly to the heading anchors,
+      // ignoring the fixed space on top (occupied by the banner.)
+      margin-top: -1 * @offset;
+      padding-top: @offset;
+    }
+
     .markdown-text__heading-anchor {
       // TODO: make it look like an icon-link
       &:before {

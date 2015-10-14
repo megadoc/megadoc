@@ -16,8 +16,9 @@ tinydoc.use(function MarkdownPlugin(api) {
 });
 
 function register(api, config) {
-  const routeName = config.name;
-  const database = Database.createDatabase(routeName, config);
+  const { routeName } = config;
+
+  Database.createDatabase(routeName, config);
 
   api.registerRoutes([
     {
@@ -29,7 +30,6 @@ function register(api, config) {
             <Root
               config={config}
               routeName={routeName}
-              database={database}
               {...this.props}
             />
           );
@@ -48,13 +48,15 @@ function register(api, config) {
       name: `${routeName}.article`,
       path: ':articleId',
       handler: require('./screens/Article'),
-      parent: routeName
+      parent: routeName,
+      ignoreScrollBehavior: true,
     },
 
     {
       name: `${routeName}.article.section`,
       parent: `${routeName}.article`,
-      path: ':sectionId'
+      path: ':sectionId',
+      ignoreScrollBehavior: true,
     }
   ]);
 

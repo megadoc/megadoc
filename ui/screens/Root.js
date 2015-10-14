@@ -24,7 +24,7 @@ const Root = React.createClass({
 
   getInitialState: function() {
     return {
-      started: false
+      started: false,
     };
   },
 
@@ -59,7 +59,7 @@ const Root = React.createClass({
 
     var className = classSet({
       'root': true,
-      'root--with-two-column-layout': TwoColumnLayout.isActive()
+      'root--with-two-column-layout': TwoColumnLayout.isActive(),
     });
 
     return (

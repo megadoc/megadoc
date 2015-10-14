@@ -20,10 +20,13 @@ function scan(config, utils, globalConfig, done) {
     };
   }, []);
 
+  var commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
+
   database.forEach(function(entry) {
     var fileName;
+    var filePath = entry.filePath;
 
-    entry.filePath = utils.getRelativeAssetPath(entry.filePath);
+    entry.filePath = utils.getRelativeAssetPath(filePath);
 
     fileName = entry.filePath.split('/');
     fileName = fileName[fileName.length-1]
@@ -31,7 +34,7 @@ function scan(config, utils, globalConfig, done) {
       .replace(/\W/g, '-')
     ;
 
-    entry.id = entry.filePath;
+    entry.id = normalizeHeading(filePath.replace(commonPrefix, ''));
     entry.sortingId = entry.filePath;
     entry.title = parseTitle(entry.source, fileName);
     entry.plainTitle = normalizeHeading(entry.title);
@@ -44,7 +47,7 @@ function scan(config, utils, globalConfig, done) {
     }
   });
 
-  config.commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
+  config.commonPrefix = commonPrefix;
 
   var svc = Promise.resolve();
 

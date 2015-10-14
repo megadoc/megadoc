@@ -3,7 +3,6 @@ var config = require('config');
 var HighlightedText = require('components/HighlightedText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
-var scrollToTop = require('utils/scrollToTop');
 
 var Home = React.createClass({
   displayName: "Home",
@@ -14,10 +13,6 @@ var Home = React.createClass({
         transition.redirect(config.home);
       }
     }
-  },
-
-  componentDidMount: function() {
-    scrollToTop();
   },
 
   render() {

@@ -5,7 +5,6 @@
   right: 0;
   height: @banner-height;
   z-index: 3;
-  border-bottom: @banner-border-dim solid transparent;
 }
 
 .banner {
@@ -13,6 +12,7 @@
   margin: 0 auto;
   position: relative;
   line-height: @banner-height;
+  border-bottom: @banner-border-dim solid transparent;
 
   &__logo {
     margin: 0;
@@ -51,8 +51,8 @@
     a {
       display: block;
       padding: 0 1em;
-      border-left: @banner-border-dim solid transparent;
-      border-right: @banner-border-dim solid transparent;
+      // border-left: @banner-border-dim solid transparent;
+      // border-right: @banner-border-dim solid transparent;
 
       &.active, &:hover {
         text-decoration: none;
@@ -72,8 +72,11 @@
   @border-color: darken(@base2, 10%);
 
   .banner-wrapper {
-    background: @base2;
-    border-bottom-color: @border-color;
+    background: @base3;
+  }
+
+  .banner {
+    border-bottom-color: @base2;
   }
 
   .banner__navigation-item a {
@@ -83,12 +86,13 @@
       color: @link;
     }
 
-
     &.active {
       color: @accent;
-      background: @base3;
-      border-left:  @banner-border-dim solid @border-color;
-      border-right: @banner-border-dim solid @border-color;
+      // background: @base3;
+      // border-left:  @banner-border-dim solid @border-color;
+      // border-right: @banner-border-dim solid @border-color;
+      border-bottom: 3px solid @accent;
+      // box-shadow: 0 -0px 0 0px @accent inset;
     }
   }
 });

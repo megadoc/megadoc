@@ -1,20 +1,21 @@
 const React = require('react');
 const Article = require('./Article');
+const Database = require('core/Database');
 
-const { string, shape, object } = React.PropTypes;
+const { string, shape } = React.PropTypes;
 
 const Landing = React.createClass({
   propTypes: {
+    routeName: string,
+
     config: shape({
       homePage: string,
     }),
-
-    database: object,
   },
 
   render() {
     const homePageId = this.props.config.homePage || 'README.md';
-    const homePage = this.props.database.get(homePageId);
+    const homePage = Database.for(this.props.routeName).get(homePageId);
 
     if (homePage) {
       return (

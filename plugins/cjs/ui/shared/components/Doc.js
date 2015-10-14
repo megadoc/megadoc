@@ -56,7 +56,6 @@ var Doc = React.createClass({
 
     return (
       <div className={className}>
-        {this.props.anchor || null}
         {this.props.withTitle && (
           <h4 className="doc-entity__header collapsible-header" onClick={this.toggleCollapsed}>
             {this.renderCollapser()}
@@ -94,6 +93,8 @@ var Doc = React.createClass({
             </span>
           </h4>
         )}
+
+        {this.props.anchor || null}
 
         <div className="doc-entity__description">
           {this.props.withDescription && description && isCollapsed && (

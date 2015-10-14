@@ -5,7 +5,7 @@ const Icon = require('components/Icon');
 module.exports = function createNavigationOutlet(config) {
   const Navigation = React.createClass({
     statics: {
-      key: config.name
+      key: config.routeName
     },
 
     render() {
@@ -14,7 +14,7 @@ module.exports = function createNavigationOutlet(config) {
       }
 
       return (
-        <Link to={config.name}>
+        <Link to={config.routeName}>
           {config.icon && [
             <Icon key="icon" className={config.icon} />,
             ' '

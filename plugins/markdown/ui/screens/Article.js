@@ -5,12 +5,13 @@ const Disqus = require('components/Disqus');
 const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
 const Router = require('core/Router');
+const Database = require('core/Database');
 
-const { shape, object, bool } = React.PropTypes;
+const { shape, bool, string } = React.PropTypes;
 
 const Article = React.createClass({
   propTypes: {
-    database: object,
+    routeName: string,
     config: shape({
       gitStats: bool
     })
@@ -18,7 +19,7 @@ const Article = React.createClass({
 
   mixins: [
     HasTitle(function() {
-      const article = this.props.database.get(this.getArticleId());
+      const article = Database.for(this.props.routeName).get(this.getArticleId());
 
       if (article) {
         return article.title;
@@ -41,7 +42,7 @@ const Article = React.createClass({
   },
 
   render() {
-    const article = this.props.database.get(this.getArticleId());
+    const article = Database.for(this.props.routeName).get(this.getArticleId());
 
     if (!article) {
       Router.goToNotFound();

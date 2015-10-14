@@ -17,7 +17,7 @@ config.entry = {
   main: [
     path.join(root, '.local.js'),
     'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://' + (process.env.HOT_HOST || host) + ':' + port,
+    'webpack-dev-server/client?http://' + host + ':' + port,
   ]
 };
 

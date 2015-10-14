@@ -9,6 +9,7 @@ const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const ROOT_FOLDER_ID = strHumanize('root');
 const isItemHot = require('utils/isItemHot');
 const JumperMixin = require('mixins/JumperMixin');
+const Database = require('core/Database');
 
 var MarkdownClassBrowser = React.createClass({
   mixins: [
@@ -20,9 +21,7 @@ var MarkdownClassBrowser = React.createClass({
   ],
 
   propTypes: {
-    articles: React.PropTypes.array,
     activeArticleId: React.PropTypes.string,
-    folders: React.PropTypes.array,
     routeName: React.PropTypes.string,
   },
 
@@ -46,7 +45,7 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderGroupedEntries() {
-    const folders = sortBy(this.props.folders, 'title');
+    const folders = sortBy(this.getFolders(), 'title');
 
     return (
       <div>
@@ -86,7 +85,7 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderAllArticles() {
-    const articles = sortBy(this.props.articles, 'title');
+    const articles = sortBy(this.getArticles(), 'title');
 
     return (
       <div>
@@ -173,8 +172,16 @@ var MarkdownClassBrowser = React.createClass({
     Storage.set(GROUP_BY_FOLDER, !Storage.get(GROUP_BY_FOLDER));
   },
 
+  getFolders() {
+    return Database.for(this.props.routeName).getFolders();
+  },
+
+  getArticles() {
+    return Database.for(this.props.routeName).getArticles();
+  },
+
   hasFolders() {
-    return this.props.folders.filter(function(folderId) {
+    return this.getFolders().filter(function(folderId) {
       return folderId !== ROOT_FOLDER_ID && folderId !== '.';
     }).length > 0;
   }

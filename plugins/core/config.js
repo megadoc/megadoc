@@ -21,6 +21,8 @@ module.exports = {
    */
   title: "tinydoc",
 
+  metaDescription: 'A documentation parser and generator.',
+
   /**
    * @property {String}
    *
@@ -63,6 +65,11 @@ module.exports = {
 
   /**
    * @property {Boolean}
+   *
+   * > **DEPRECATED**
+   * >
+   * > This option is no longer supported in tinydoc 3.0+; Hash location is
+   * > always used.
    *
    * Turn this off if you want to use the HTML5 History location, but then
    * you must ensure your server is configured to rewrite any URL that

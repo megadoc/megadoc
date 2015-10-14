@@ -89,6 +89,7 @@ function generateHTMLFile(compiler, config) {
 
   var html = tmpl({
     title: config.title,
+    metaDescription: config.metaDescription,
     scripts: scripts.map(function(script) {
       return path.join(config.publicPath, script);
     })

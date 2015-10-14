@@ -40,21 +40,21 @@ emitter.on('pluginsLoaded', function start(registrar) {
 
   $(function() {
     var router = ReactRouter.create({
-      location: config.useHashLocation ?
-        ReactRouter.HashLocation :
-        ReactRouter.HistoryLocation
-      ,
+      location: ReactRouter.HashLocation,
 
       routes: [
         <Route name="root" path={publicPath} handler={require('./screens/Root')}>
           <DefaultRoute
             name="home"
             handler={require('./screens/Home')}
+            ignoreScrollBehavior
           />
 
           <Route
             name="readme"
+            path="/readme*"
             handler={require('./screens/Home')}
+            ignoreScrollBehavior
           />
 
           {registrar.getPluginRouteMap()}

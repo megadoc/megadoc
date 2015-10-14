@@ -6,7 +6,7 @@ var merge = require('lodash').merge;
 
 var defaults = {
   gitStats: false,
-  name: 'articles',
+  routeName: 'articles',
   title: 'Articles',
   source: [ 'doc/**/*.md' ],
   icon: null,
@@ -53,7 +53,9 @@ function MarkdownPlugin(userConfig) {
 
       compiler.on('render', function(md, linkify, done) {
         database.forEach(function(doc) {
-          doc.source = md(linkify(doc.source));
+          doc.source = md(linkify(doc.source), {
+            baseURL: '/' + config.routeName + '/' + encodeURIComponent(doc.id)
+          });
         });
 
         done();
