@@ -57,7 +57,6 @@ server = new WebpackDevServer(webpack(config), {
   noInfo: false,
   lazy: false,
   inline: true,
-  watchDelay: 300,
   stats: { colors: true },
   historyApiFallback: true,
 });
