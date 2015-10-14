@@ -52,6 +52,11 @@ emitter.on('pluginsLoaded', function start(registrar) {
             handler={require('./screens/Home')}
           />
 
+          <Route
+            name="readme"
+            handler={require('./screens/Home')}
+          />
+
           {registrar.getPluginRouteMap()}
 
           <Route

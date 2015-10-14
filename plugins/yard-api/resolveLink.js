@@ -12,7 +12,7 @@ module.exports = function(routeName, database, id, registry) {
       "Expected to find a YARD-API resource called '" + index.resourceId + "'"
     );
 
-    baseURL = '#' + routeName + '/resources/' + resource.id;
+    baseURL = routeName + '/resources/' + resource.id;
 
     if (index.endpointId) {
       endpoint = findWhere(resource.endpoints, { id: index.endpointId });

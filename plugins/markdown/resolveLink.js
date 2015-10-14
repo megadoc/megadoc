@@ -13,7 +13,7 @@ module.exports = function(database, id, registry) {
     );
 
     return {
-      href: '#' + database.__meta__.routeName + '/' + article.id,
+      href: database.__meta__.routeName + '/' + encodeURIComponent(article.id),
       title: article.title
     };
   }
