@@ -16,7 +16,7 @@ var defaults = {
    *
    * The relative URL to reach the git activity page at.
    */
-  routePath: 'activity',
+  routeName: 'activity',
 
   /**
    * @property {Boolean}

@@ -4,7 +4,7 @@ tinydoc.use(function GitPlugin(api) {
   api.registerRoutes([
     {
       name: 'git',
-      path: config.routePath,
+      path: config.routeName,
       handler: require('./screens/Root')
     }
   ]);

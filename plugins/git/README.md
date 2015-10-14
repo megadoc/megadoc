@@ -13,7 +13,7 @@ module.exports = {
     // 
     // A value of "activity", for example, will make the page available at:
     // http://your.tinydoc.com/activity
-    routePath: 'activity',
+    routeName: 'activity',
 
     /**
      * @property {Boolean}
