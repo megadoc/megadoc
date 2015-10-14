@@ -1,16 +1,16 @@
 /* eslint "camelcase":0 */
-var React = require("react");
-var { findWhere, where } = require('lodash');
-var MarkdownText = require('components/MarkdownText');
-var PropertyListing = require('./PropertyListing');
-var ExampleRequestTag = require('./tags/ExampleRequestTag');
-var ExampleResponseTag = require('./tags/ExampleResponseTag');
-var ReturnsTag = require('./tags/ReturnsTag');
-var Header = require('./APIEndpoint/Header');
-var TagGroup = require('./APIEndpoint/TagGroup');
+const React = require("react");
+const { findWhere, where } = require('lodash');
+const HighlightedText = require('components/HighlightedText');
+const PropertyListing = require('./PropertyListing');
+const ExampleRequestTag = require('./tags/ExampleRequestTag');
+const ExampleResponseTag = require('./tags/ExampleResponseTag');
+const ReturnsTag = require('./tags/ReturnsTag');
+const Header = require('./APIEndpoint/Header');
+const TagGroup = require('./APIEndpoint/TagGroup');
 
 function highlightDynamicFragments(route) {
-  var fragments = route.split('/');
+  const fragments = route.split('/');
 
   return fragments.map(function(fragment, index) {
     return (
@@ -29,16 +29,34 @@ function highlightDynamicFragments(route) {
   });
 }
 
-var APIEndpoint = React.createClass({
+const { shape, string, node, arrayOf } = React.PropTypes;
+
+const APIEndpoint = React.createClass({
   propTypes: {
-    tags: React.PropTypes.array,
+    anchor: node,
+
+    endpoint: shape({
+      id: string,
+      scoped_id: string,
+      text: string,
+
+      tags: arrayOf(shape({
+        tag_name: string,
+      })),
+
+      route: shape({
+        verb: string,
+        path: string,
+      })
+    }),
+
     resourceId: React.PropTypes.string,
     scoped_id: React.PropTypes.string,
   },
 
   render() {
-    var endpoint = this.props;
-    var apiTag = findWhere(this.props.tags, { tag_name: 'API' });
+    var endpoint = this.props.endpoint;
+    var apiTag = findWhere(endpoint.tags, { tag_name: 'API' });
     var unhandledTags = endpoint.tags.filter(function(tag) {
       return [
         'API',
@@ -52,12 +70,14 @@ var APIEndpoint = React.createClass({
 
     return (
       <div key={endpoint.id} className="api-endpoint">
+        {this.props.anchor || null}
+
         <Header
           path={endpoint.id}
           tag={apiTag}
-          isBeta={!!findWhere(this.props.tags, { tag_name: 'beta' })}
+          isBeta={!!findWhere(endpoint.tags, { tag_name: 'beta' })}
           resourceId={this.props.resourceId}
-          scopedId={this.props.scoped_id}
+          scopedId={endpoint.scoped_id}
         />
 
         <div className="api-endpoint__route">
@@ -71,11 +91,11 @@ var APIEndpoint = React.createClass({
         </div>
 
         <div className="api-endpoint__docstring">
-          <MarkdownText>{endpoint.text}</MarkdownText>
+          <HighlightedText>{endpoint.text}</HighlightedText>
         </div>
 
         <h4>Arguments</h4>
-        <PropertyListing tags={where(this.props.tags, { tag_name: 'argument' })} />
+        <PropertyListing tags={where(endpoint.tags, { tag_name: 'argument' })} />
 
         <TagGroup
           tagName="returns"

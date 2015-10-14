@@ -2,6 +2,8 @@ var path = require('path');
 var merge = require('lodash').merge;
 var scan = require('./scan');
 var indexEntities = require('./indexEntities');
+var resolveLink = require('./resolveLink');
+var render = require('./render');
 
 var defaults = {
   command: 'bundle exec rake yard_api',
@@ -26,6 +28,7 @@ function YardAPIPlugin(userConfig) {
           }
 
           database = _database;
+          compiler.linkResolver.use(resolveLink.bind(null, 'api' /* TODO: configurable routeName */,  database));
 
           done();
         });
@@ -34,6 +37,11 @@ function YardAPIPlugin(userConfig) {
       compiler.on('index', function(registry, done) {
         indexEntities(database, registry, config);
 
+        done();
+      });
+
+      compiler.on('render', function(md, linkify, done) {
+        render(database, md, linkify);
         done();
       });
 

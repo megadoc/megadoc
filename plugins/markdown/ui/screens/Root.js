@@ -4,7 +4,7 @@ var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
 
-const { string, shape, object } = React.PropTypes;
+const { string, shape } = React.PropTypes;
 
 var MarkdownRoot = React.createClass({
   propTypes: {
@@ -12,7 +12,6 @@ var MarkdownRoot = React.createClass({
       splat: string
     }),
 
-    database: object,
     routeName: string,
 
     config: shape({
@@ -21,8 +20,6 @@ var MarkdownRoot = React.createClass({
   },
 
   render() {
-    const { database } = this.props;
-
     if (this.props.config.layout === 'SinglePageLayout') {
       return <RouteHandler {...this.props} />
     }
@@ -32,9 +29,8 @@ var MarkdownRoot = React.createClass({
         <LeftColumn>
           <ClassBrowser
             routeName={this.props.routeName}
-            activeArticleId={this.props.params.splat}
-            folders={database.getFolders()}
-            articles={database.getArticles()}
+            activeArticleId={decodeURIComponent(this.props.params.articleId)}
+            activeSectionId={decodeURIComponent(this.props.params.sectionId)}
           />
         </LeftColumn>
 

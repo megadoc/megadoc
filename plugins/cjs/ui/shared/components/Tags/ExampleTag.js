@@ -1,35 +1,38 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+const React = require("react");
+const HighlightedText = require('components/HighlightedText');
 
-var ExampleTag = React.createClass({
+const { shape, string } = React.PropTypes;
+
+const ExampleTag = React.createClass({
   displayName: "ExampleTag",
 
   propTypes: {
-    string: React.PropTypes.string,
+    string: string,
+    typeInfo: shape({
+      name: string,
+      description: string,
+    })
   },
 
   render() {
-    var { string } = this.props;
-    var title = string.substr(0, string.indexOf('\n'));
-
-    if (title[0] === ' ') {
-      title = null;
-    }
-    else {
-      string = String(this.props.string).replace(title, '');
-    }
+    const { name, description } = this.props.typeInfo;
 
     return (
       <div className="example-tag">
-        {title && (
-          <p>
-            <span><strong>Example:</strong> {title}</span>
-          </p>
-        )}
+        <p>
+          {name && (
+            <div>
+              <strong>Example: </strong>
+              <span dangerouslySetInnerHTML={{ __html: name }} />
+            </div>
+          )}
 
-        <MarkdownText className="example-tag__code">
-          {string}
-        </MarkdownText>
+          {!name && (<strong>Example</strong>)}
+        </p>
+
+        <HighlightedText className="example-tag__code">
+          {description}
+        </HighlightedText>
       </div>
     );
   }

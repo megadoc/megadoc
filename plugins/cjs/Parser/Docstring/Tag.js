@@ -1,4 +1,5 @@
 var parseProperty = require('./Tag/parseProperty');
+var neutralizeWhitespace = require('./Tag/neutralizeWhitespace');
 var K = require('../constants');
 var assert = require('assert');
 
@@ -22,7 +23,7 @@ function Tag(doxTag, customTags, filePath) {
    * @property {String}
    *           The raw text.
    */
-  this.string = String(doxTag.string || '');
+  this.string = String(doxTag.string || '')
 
   /**
    * @property {String}
@@ -67,6 +68,11 @@ function Tag(doxTag, customTags, filePath) {
     name: null,
 
     /**
+     * @property {String}
+     */
+    description: null,
+
+    /**
      * @property {Boolean}
      */
     isOptional: null,
@@ -89,6 +95,11 @@ function Tag(doxTag, customTags, filePath) {
     case 'throws':
     case 'example':
       this.typeInfo = parseProperty(doxTag.string);
+
+      if (this.typeInfo.description) {
+        this.typeInfo.description = neutralizeWhitespace(this.typeInfo.description);
+      }
+
       break;
 
     case 'type':

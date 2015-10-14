@@ -65,9 +65,11 @@ var APIClassBrowser = React.createClass({
     return (
       <li key={object.id}>
         <Link
-          to="api.resource"
-          params={{ resourceId: resource.id }}
-          query={{ object: object.scoped_id }}
+          to="api.resource.object"
+          params={{
+            resourceId: resource.id,
+            objectId: object.scoped_id
+          }}
           children={object.title}
         />
       </li>
@@ -78,9 +80,11 @@ var APIClassBrowser = React.createClass({
     return (
       <li key={endpoint.id}>
         <Link
-          to="api.resource"
-          params={{ resourceId: resource.id }}
-          query={{ endpoint: endpoint.scoped_id }}
+          to="api.resource.endpoint"
+          params={{
+            resourceId: resource.id,
+            endpointId: endpoint.scoped_id
+          }}
           children={endpoint.title}
         />
       </li>

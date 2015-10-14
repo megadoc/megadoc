@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title><%= title %></title>
+
+    <meta name="description" content="<%= metaDescription %>" />
+  </head>
+
+  <body>
+    <div id="__app__">
+      <div class="loading-screen">
+        Loading application data... please wait.
+      </div>
+
+      <% _.forEach(scripts, function(script) { %>
+      <script type="text/javascript" src="<%- script %>"></script>
+      <% }); %>
+    </div>
+  </body>
+</html>

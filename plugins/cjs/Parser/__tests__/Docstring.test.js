@@ -125,6 +125,24 @@ describe('CJS::Parser::Docstring::Tag', function() {
       assert.equal(docstring.tags.length, 1);
       assert.equal(docstring.tags[0].typeInfo.description, 'Something.');
     });
+
+    it('strips leading whitespace from description', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @property {String} foo
+        //  *           This
+        //  *           is
+        //  *           a
+        //  *           multiline
+        //  *           description.
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].typeInfo.description,
+        'This\nis\na\nmultiline\ndescription.'
+      );
+    });
   });
 
   describe('@return', function() {
@@ -277,6 +295,102 @@ describe('CJS::Parser::Docstring::Tag', function() {
       });
 
       assert.equal(docstring.toJSON().tags[0].width, 240);
+    });
+  });
+
+  describe('neutralizing whitespace', function() {
+    it('sample 1: an example with a name and code body', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @example A child screen
+        //  *
+        //  *     module.exports = {
+        //  *       name: 'author.user',
+        //  *       path: ':userId',
+        //  *       parent: 'author.users'
+        //  *     };
+        //  *
+        //  *     // visitable at "/author/users/1" or "/author/users/:userId"
+        //  *
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+
+      assert.equal(docstring.tags[0].typeInfo.name, 'A child screen');
+      assert.deepEqual(docstring.tags[0].typeInfo.description, [
+        "    module.exports = {",
+        "      name: 'author.user',",
+        "      path: ':userId',",
+        "      parent: 'author.users'",
+        "    };",
+        "",
+        "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
+      ].join('\n'));
+    });
+
+    it('sample 2: with no name', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @example
+        //  *
+        //  * A child screen.
+        //  *
+        //  *     module.exports = {
+        //  *       name: 'author.user',
+        //  *       path: ':userId',
+        //  *       parent: 'author.users'
+        //  *     };
+        //  *
+        //  *     // visitable at "/author/users/1" or "/author/users/:userId"
+        //  *
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+
+      assert.equal(docstring.tags[0].typeInfo.name, null);
+      assert.deepEqual(docstring.tags[0].typeInfo.description, [
+        "A child screen.",
+        "",
+        "    module.exports = {",
+        "      name: 'author.user',",
+        "      path: ':userId',",
+        "      parent: 'author.users'",
+        "    };",
+        "",
+        "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
+      ].join('\n'));
+    });
+
+    it('sample 3: example with code only', function() {
+      var docstring = parse(function() {
+        // /**
+        //  * @example
+        //  *
+        //  *     module.exports = {
+        //  *       name: 'author.user',
+        //  *       path: ':userId',
+        //  *       parent: 'author.users'
+        //  *     };
+        //  *
+        //  *     // visitable at "/author/users/1" or "/author/users/:userId"
+        //  *
+        //  */
+      });
+
+      assert.equal(docstring.tags.length, 1);
+
+      assert.equal(docstring.tags[0].typeInfo.name, null);
+      assert.deepEqual(docstring.tags[0].typeInfo.description, [
+        "    module.exports = {",
+        "      name: 'author.user',",
+        "      path: ':userId',",
+        "      parent: 'author.users'",
+        "    };",
+        "",
+        "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
+      ].join('\n'));
     });
   });
 });

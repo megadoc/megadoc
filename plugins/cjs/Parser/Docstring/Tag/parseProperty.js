@@ -3,18 +3,34 @@ var TYPE_SPLITTER = /,|\|/
 function parseProperty(docstring) {
   var typeInfo = {};
 
+  var STATE_PARSING_NONE = 0;
   var STATE_PARSING_TYPE = 1;
   var STATE_PARSING_NAME = 2;
   var STATE_PARSING_DEFAULT_VALUE = 3;
   var STATE_PARSING_DESCRIPTION = 4;
-  var state = STATE_PARSING_TYPE;
+  var state = STATE_PARSING_NONE;
 
-  var typeStr = '';
+  var typeStr;
   var nameStr;
   var descStr;
 
-  docstring.trim().split('').forEach(function(char) {
+  docstring.split('').forEach(function(char) {
     switch (state) {
+      case STATE_PARSING_NONE:
+        if (char === '{') {
+          typeStr = '';
+          state = STATE_PARSING_TYPE;
+        }
+        else if (char === '\n') {
+          state = STATE_PARSING_DESCRIPTION;
+        }
+        else if (char !== ' ') {
+          nameStr = char;
+          state = STATE_PARSING_NAME;
+        }
+
+        break;
+
       case STATE_PARSING_TYPE:
         if (char === '}') {
           state = STATE_PARSING_NAME;
@@ -63,14 +79,19 @@ function parseProperty(docstring) {
     }
   });
 
-  typeInfo.types = typeStr.split(TYPE_SPLITTER);
+  if (typeStr) {
+    typeInfo.types = typeStr.split(TYPE_SPLITTER);
+  }
+  else {
+    typeInfo.types = [];
+  }
 
   typeInfo.name = nameStr && nameStr.trim().length > 0 ?
     nameStr.trim() :
     null
   ;
 
-  typeInfo.description = descStr ? descStr.trim() : null;
+  typeInfo.description = descStr || null;
 
   return typeInfo;
 }

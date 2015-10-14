@@ -1,15 +1,6 @@
 var React = require('react');
 var MarkdownText = require('components/MarkdownText');
 
-function htmlify(text) {
-  return <MarkdownText>{text}</MarkdownText>;
-}
-
-function htmlifyTagType(tag) {
-  // TODO: linkify
-  return tag.types.join(', ');
-}
-
 var Properties = React.createClass({
   propTypes: {
     tags: React.PropTypes.arrayOf(React.PropTypes.shape({
@@ -42,7 +33,7 @@ var Properties = React.createClass({
           <code className="argument-listing__argument-name">{tag.name}</code>
 
           <span className="argument-listing__argument-type">
-            {htmlifyTagType(tag)}
+            <MarkdownText>{tag.types.join('|')}</MarkdownText>
           </span>
 
           {(tag.accepted_values || []).length > 0 && (
@@ -58,7 +49,7 @@ var Properties = React.createClass({
 
         <div className="argument-listing__argument-text">
           {tag.text.length > 0 && (
-            htmlify(tag.text)
+            <MarkdownText>{tag.text}</MarkdownText>
           )}
 
           {tag.text.length === 0 && (

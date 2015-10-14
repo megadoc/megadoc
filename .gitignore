@@ -1,12 +1,12 @@
 /node_modules
 
-/ui/.local.js
-/ui/dist
-/ui/tmp
+/dist
+/tmp
+/.local.js
 /plugins/*/ui/dist
 
 # font stuff
-/ui/app/css/fonts/*.json
+/ui/css/fonts/*.json
 *.zip
 demo.html
 demo-files

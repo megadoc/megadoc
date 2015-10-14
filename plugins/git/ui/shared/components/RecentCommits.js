@@ -11,7 +11,8 @@ var RecentCommits = React.createClass({
       body: React.PropTypes.string
     })),
 
-    activeCommitId: React.PropTypes.string
+    activeCommitId: React.PropTypes.string,
+    since: React.PropTypes.string,
   },
 
   getDefaultProps: function() {
@@ -26,9 +27,15 @@ var RecentCommits = React.createClass({
 
     return (
       <div className="recent-commits">
-        <ul className="recent-commits__listing">
-          {commits.map(this.renderLink)}
-        </ul>
+        {commits.length === 0 && (
+          <p>There was no activity during the last period ({this.props.since}).</p>
+        )}
+
+        {commits.length > 0 && (
+          <ul className="recent-commits__listing">
+            {commits.map(this.renderLink)}
+          </ul>
+        )}
 
         {this.props.activeCommitId && this.renderCommit(this.props.activeCommitId)}
       </div>
@@ -47,19 +54,20 @@ var RecentCommits = React.createClass({
 
   renderCommit(sha) {
     const commit = this.props.commits.filter((c) => c.commit.short === sha)[0];
+
     if (!commit) {
       return (<p>Woot? No such commit with SHA {sha}.</p>);
     }
 
-    let body = commit.body || '';
-
-    if (!body.length) {
-      body = 'No body provided.';
-    }
-
     return (
       <div className="recent-commits__commit">
-        <MarkdownText>{`**${commit.subject}**\n\n${body}`}</MarkdownText>
+        <MarkdownText>{commit.renderedSubject}</MarkdownText>
+
+        {commit.renderedBody ? (
+          <MarkdownText>{commit.renderedBody}</MarkdownText>
+        ) : (
+          <p>No body provided</p>
+        )}
       </div>
     );
   }

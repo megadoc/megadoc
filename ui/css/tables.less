@@ -1,0 +1,48 @@
+
+table {
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.table th, .table td {
+  padding: 0.85em;
+  line-height: 20px;
+  text-align: left;
+  vertical-align: top;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+
+.table th {
+  font-weight: bold;
+}
+.table thead th {
+  vertical-align: bottom;
+}
+
+.table caption + thead tr:first-child th,
+.table caption + thead tr:first-child td,
+.table colgroup + thead tr:first-child th,
+.table colgroup + thead tr:first-child td,
+.table thead:first-child tr:first-child th,
+.table thead:first-child tr:first-child td {
+  border-top: 0;
+}
+
+.schemable({
+  .table {
+    th, td {
+      border-top-color: @border-color;
+    }
+
+    tr:hover {
+      background: @base2;
+    }
+  }
+});

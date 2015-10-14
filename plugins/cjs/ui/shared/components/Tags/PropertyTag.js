@@ -1,16 +1,19 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
-var Types = require('components/Tags/Types');
+const React = require("react");
+const HighlightedText = require('components/HighlightedText');
+const Types = require('components/Tags/Types');
 
-var PropertyTag = React.createClass({
+const { shape, string, arrayOf, node } = React.PropTypes;
+
+const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
-    typeInfo: React.PropTypes.shape({
-      types: React.PropTypes.arrayOf(React.PropTypes.string),
-      name: React.PropTypes.string,
-      defaultValue: React.PropTypes.string,
-      description: React.PropTypes.string
+    anchor: node,
+    typeInfo: shape({
+      types: arrayOf(string),
+      name: string,
+      defaultValue: string,
+      description: string
     })
   },
 
@@ -19,6 +22,8 @@ var PropertyTag = React.createClass({
 
     return (
       <li className="property-tag">
+        {this.props.anchor || null}
+
         <header className="property-tag__header">
           <span className="property-tag__name">
             <code>{typeInfo.name}</code>
@@ -30,9 +35,9 @@ var PropertyTag = React.createClass({
         </header>
 
         {typeInfo.description && (
-          <MarkdownText className="property-tag__description">
+          <HighlightedText className="property-tag__description">
             {typeInfo.description}
-          </MarkdownText>
+          </HighlightedText>
         )}
 
         {typeInfo.defaultValue && (

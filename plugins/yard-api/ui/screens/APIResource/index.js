@@ -1,9 +1,9 @@
 var React = require("react");
 var Database = require('core/Database');
 var MarkdownText = require('components/MarkdownText');
+var Anchor = require('components/Anchor');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
-var JumperMixin = require('mixins/JumperMixin');
 var { Link } = require('react-router');
 var HasTitle = require('mixins/HasTitle');
 
@@ -14,15 +14,6 @@ var APIResource = React.createClass({
 
       if (resource) {
         return `[API] ${resource.title}`;
-      }
-    }),
-
-    JumperMixin(function() {
-      if (this.props.query.endpoint) {
-        return this.refs[`endpoint-${this.props.query.endpoint}`];
-      }
-      else if (this.props.query.object) {
-        return this.refs[`object-${this.props.query.object}`];
       }
     })
   ],
@@ -74,21 +65,24 @@ var APIResource = React.createClass({
         <h2>Endpoints</h2>
 
         <ul className="api-endpoint__quicklinks">
-          {resource.endpoints.map((e) => {
-            return (
-              <li key={e.id}>
-                <Link
-                  to="api.resource"
-                  params={{ resourceId: resource.id }}
-                  query={{ endpoint: e.scoped_id }}
-                >
-                  {e.title}
-                </Link>
-              </li>
-            );
-          })}
+          {resource.endpoints.map(this.renderQuickLink)}
         </ul>
       </div>
+    );
+  },
+
+  renderQuickLink(endpoint) {
+    return (
+      <li key={endpoint.id}>
+        <Link
+          to="api.resource.endpoint"
+          params={{
+            resourceId: this.props.params.resourceId,
+            endpointId: endpoint.scoped_id
+          }}
+          children={endpoint.title}
+        />
+      </li>
     );
   },
 
@@ -96,7 +90,17 @@ var APIResource = React.createClass({
     return (
       <APIObject
         ref={`object-${object.scoped_id}`}
-        key={object.id} {...object}
+        key={object.id}
+        object={object}
+        anchor={(
+          <Anchor
+            routeName="api.resource.object"
+            params={{
+              resourceId: this.props.params.resourceId,
+              objectId: object.scoped_id
+            }}
+          />
+        )}
       />
     );
   },
@@ -107,7 +111,28 @@ var APIResource = React.createClass({
         ref={`endpoint-${endpoint.scoped_id}`}
         key={endpoint.id}
         resourceId={this.props.params.resourceId}
-        {...endpoint}
+        anchor={(
+          <Anchor
+            routeName="api.resource.endpoint"
+            params={{
+              resourceId: this.props.params.resourceId,
+              endpointId: endpoint.scoped_id
+            }}
+          />
+        )}
+        endpoint={endpoint}
+      />
+    );
+  },
+
+  renderAnchorTo(entityId) {
+    return (
+      <Anchor
+        routeName="api.resource.entity"
+        params={{
+          resourceId: this.props.params.resourceId,
+          entityId
+        }}
       />
     );
   }

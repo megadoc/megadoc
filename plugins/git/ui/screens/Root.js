@@ -23,26 +23,27 @@ var Root = React.createClass({
         <RecentCommits
           commits={config.stats.recentCommits}
           activeCommitId={this.props.query.commit}
+          since={config.recentCommits.since}
         />
 
         {config.superStars && (
           <div>
-            <h2>Superstars</h2>,
+            <h2>Superstars</h2>
+
             <Superstars people={config.stats.history.people} />
           </div>
         )}
 
         {history.teams.length > 0 && (
           <div>
-            <h2>Team Breakdown</h2>,
-
+            <h2>Team Breakdown</h2>
             <TeamLeaderboard teams={history.teams} />
           </div>
         )}
 
         {history.teams.length === 0 && (
           <div>
-            <h2>Ladder</h2>,
+            <h2>Ladder</h2>
 
             <p className="git-root__troll">
               A rundown of exactly how much work every team member does.

@@ -1,5 +1,4 @@
 var React = require("react");
-var Docstring = require('components/Docstring');
 
 var ReturnsTag = React.createClass({
   propTypes: {
@@ -9,7 +8,7 @@ var ReturnsTag = React.createClass({
   render() {
     return (
       <p>
-        <Docstring>Returns {this.props.text}</Docstring>
+        Returns {this.props.text}
       </p>
     );
   }

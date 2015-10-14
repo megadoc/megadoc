@@ -21,5 +21,5 @@ done
 node ./node_modules/webpack/bin/webpack.js \
   --progress \
   --display-chunks \
-  --config=./ui/webpack.config.js \
+  --config=./webpack.config.js \
   $@

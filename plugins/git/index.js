@@ -1,54 +1,13 @@
 var path = require('path');
 var extend = require('lodash').extend;
 var parseLatestActivity = require('./parseLatestActivity');
+var render = require('./render');
 var parseHistory = require('./parseHistory');
 var console = require('../../lib/Logger')('git');
 var Promise = require('bluebird');
 var merge = require('lodash').merge;
 
-/**
- * @module Plugins.Git.Config
- * @preserveOrder
- */
-var defaults = {
-  /**
-   * @property {String}
-   *
-   * The relative URL to reach the git activity page at.
-   */
-  routePath: 'activity',
-
-  /**
-   * @property {Boolean}
-   *
-   * Whether to use .mailmap (if found) for resolving coaelescing emails/names.
-   */
-  useMailMap: true,
-
-  /**
-   * @property {Object}
-   *
-   * Tuning for the "Recent Commits" section.
-   */
-  recentCommits: {
-    /**
-     * @property {String}
-     *
-     * Indicates the time threshold for filtering recent activity.
-     */
-    since: '3 days ago',
-
-    /**
-     * @property {String[]}
-     */
-    ignore: [],
-
-    /**
-     * @property {Function}
-     */
-    transform: null
-  }
-};
+var defaults = require('./config');
 
 /**
  * @namespace Plugins.Git
@@ -75,6 +34,11 @@ function createGitPlugin(userConfig) {
             stats.history = history;
           })
         ]).then(function() { done(); }, done);
+      });
+
+      compiler.on('render', function(md, linkify, done) {
+        render(stats, md, linkify);
+        done();
       });
 
       compiler.on('write', function(done) {

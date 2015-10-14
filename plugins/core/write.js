@@ -1,13 +1,16 @@
 var fs = require('fs-extra');
 var path = require('path');
-var UI_DIR = path.resolve(__dirname, '..', '..', 'ui');
+var root = path.resolve(__dirname, '..', '..');
 var _ = require('lodash');
 var compileCSS = require('./write/compileCSS');
 var compileInlinePlugins = require('./write/compileInlinePlugins');
-var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
 var runAll = require('../../lib/utils/runAll');
+var CORE_SCRIPTS = ['config.js', 'vendor.js', 'main.js'];
+var CORE_STYLE = path.resolve(root, 'ui', 'css', 'index.less');
 
-module.exports = function(config, compiler, readmeGitStats, done) {
+module.exports = function(config, compiler, database, done) {
+  compiler.assets.styleSheets.unshift(CORE_STYLE);
+
   runAll([ compileInlinePlugins, compileCSS ], [ compiler, config ], function(err) {
     if (err) {
       done(err);
@@ -18,7 +21,7 @@ module.exports = function(config, compiler, readmeGitStats, done) {
     copyAssets(compiler, config.assets);
     copyAppScripts(compiler);
     generateHTMLFile(compiler, config);
-    generateRuntimeConfigScript(compiler, config, readmeGitStats);
+    generateRuntimeConfigScript(compiler, config, database);
 
     done();
   });
@@ -81,11 +84,12 @@ function generateHTMLFile(compiler, config) {
   }
 
   var tmpl = _.template(
-    fs.readFileSync(path.join(UI_DIR, 'app', 'index.tmpl.html'), 'utf-8')
+    fs.readFileSync(path.join(root, 'ui', 'index.tmpl.html'), 'utf-8')
   );
 
   var html = tmpl({
     title: config.title,
+    metaDescription: config.metaDescription,
     scripts: scripts.map(function(script) {
       return path.join(config.publicPath, script);
     })
@@ -97,10 +101,10 @@ function generateHTMLFile(compiler, config) {
 
 // copy the pre-compiled webpack bundles
 function copyAppScripts(compiler) {
-  fs.copySync(path.join(UI_DIR, 'dist'), compiler.utils.getOutputPath());
+  fs.copySync(path.join(root, 'dist'), compiler.utils.getOutputPath());
 }
 
-function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
+function generateRuntimeConfigScript(compiler, config, database) {
   var runtimeConfig = _.extend(
     {},
     _.omit(config, [ 'outputDir', 'plugins', 'assets', ]),
@@ -109,8 +113,7 @@ function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
         compiler.assets.pluginScripts.length +
         (compiler.assets.hasInlinePlugins() ? 1 : 0)
       ),
-      pluginConfigs: compiler.assets.runtimeConfigs,
-      registry: compiler.registry.toJSON()
+      pluginConfigs: compiler.assets.runtimeConfigs
     }
   );
 
@@ -120,12 +123,15 @@ function generateRuntimeConfigScript(compiler, config, readmeGitStats) {
     })
   );
 
-  if (config.readme) {
+  if (database.readme) {
     runtimeConfig.readme = {
       filePath: config.readme,
-      source: fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8'),
-      git: readmeGitStats
+      source: database.readme,
+      git: database.readmeGitStats
     };
+  }
+  if (database.footer) {
+    runtimeConfig.footer = database.footer;
   }
 
   // write the runtime config file

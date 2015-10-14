@@ -1,5 +1,6 @@
 var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
+var Types = require('components/Tags/Types');
 
 var ReturnTag = React.createClass({
   displayName: "ReturnTag",
@@ -38,7 +39,8 @@ var ReturnTag = React.createClass({
           {typeInfo.types.length > 0 && (
             <code className="return-tag__types">
               {hasName && ': '}
-              {typeInfo.types.join(', ')}
+
+              <Types types={typeInfo.types} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">
@@ -50,9 +52,9 @@ var ReturnTag = React.createClass({
         </header>
 
         {typeInfo.description && (
-          <MarkdownText className="return-tag__description">
+          <HighlightedText className="return-tag__description">
             {typeInfo.description.replace(/[ ]{5,8}/g, '')}
-          </MarkdownText>
+          </HighlightedText>
         )}
       </li>
     );

@@ -9,6 +9,7 @@ var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
 var parseSections = require('./scan/parseSections');
 var Promise = require('bluebird');
+var normalizeHeading = require('../../lib/Renderer/Utils').normalizeHeading;
 
 function scan(config, utils, globalConfig, done) {
   var files = utils.globAndFilter(config.source, config.exclude);
@@ -19,10 +20,13 @@ function scan(config, utils, globalConfig, done) {
     };
   }, []);
 
+  var commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
+
   database.forEach(function(entry) {
     var fileName;
+    var filePath = entry.filePath;
 
-    entry.filePath = utils.getRelativeAssetPath(entry.filePath);
+    entry.filePath = utils.getRelativeAssetPath(filePath);
 
     fileName = entry.filePath.split('/');
     fileName = fileName[fileName.length-1]
@@ -30,9 +34,10 @@ function scan(config, utils, globalConfig, done) {
       .replace(/\W/g, '-')
     ;
 
-    entry.id = entry.filePath;
+    entry.id = normalizeHeading(filePath.replace(commonPrefix, ''));
     entry.sortingId = entry.filePath;
     entry.title = parseTitle(entry.source, fileName);
+    entry.plainTitle = normalizeHeading(entry.title);
     entry.sections = parseSections(entry.source);
     entry.fileName = fileName;
     entry.folder = path.dirname(entry.filePath);
@@ -42,9 +47,7 @@ function scan(config, utils, globalConfig, done) {
     }
   });
 
-  config.commonPrefix = findCommonPrefix(pluck(database, 'filePath'), '/');
-
-  console.debug(JSON.stringify(database.map(function(e) { return e.id; })));
+  config.commonPrefix = commonPrefix;
 
   var svc = Promise.resolve();
 

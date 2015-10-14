@@ -1,5 +1,5 @@
 var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
 
 var ExampleRequestTag = React.createClass({
   propTypes: {
@@ -9,7 +9,7 @@ var ExampleRequestTag = React.createClass({
   render() {
     return (
       <div className="example-request-tag">
-        <MarkdownText>{'```javascript\n'+this.props.text+'\n```'}</MarkdownText>
+        <HighlightedText>{this.props.text}</HighlightedText>
       </div>
     );
   }

@@ -1,6 +1,7 @@
 var React = require("react");
 var { Link } = require('react-router');
 var Icon = require('components/Icon');
+var config = require('config');
 
 var Navigation = React.createClass({
   displayName: "Navigation",
@@ -9,9 +10,12 @@ var Navigation = React.createClass({
   },
 
   render() {
+    const icon = config.navigationIcon;
+    const label = config.navigationLabel;
+
     return (
       <Link to="git">
-        <Icon className="icon-pulse" /> Activity
+        {icon && <Icon className={icon} />} {label || 'Activity'}
       </Link>
     );
   }

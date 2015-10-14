@@ -1,20 +1,30 @@
-var React = require("react");
-var Docstring = require('components/Docstring');
+const React = require("react");
+const HighlightedText = require('components/HighlightedText');
+const Types = require('components/Tags/Types');
 
-var ThrowsTag = React.createClass({
+const { shape, string, arrayOf } = React.PropTypes;
+
+const ThrowsTag = React.createClass({
   propTypes: {
-    types: React.PropTypes.arrayOf(React.PropTypes.string),
-    description: React.PropTypes.string,
+    typeInfo: shape({
+      types: arrayOf(string),
+      description: string,
+    }),
   },
 
   render() {
     return (
       <li className="throws-tag">
-        <Docstring>
-          `{this.props.types.join(', ')}` -
+        <p className="inline-block">
+          <Types types={this.props.typeInfo.types} />
+        </p>
 
-          {this.props.description.trim()}
-        </Docstring>
+        {' - '}
+
+        <HighlightedText
+          className="inline-block"
+          children={this.props.typeInfo.description}
+        />
       </li>
     );
   }

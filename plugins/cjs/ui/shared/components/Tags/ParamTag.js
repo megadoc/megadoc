@@ -1,5 +1,5 @@
 var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
 var Types = require('components/Tags/Types');
 
 var ParamTag = React.createClass({
@@ -47,9 +47,9 @@ var ParamTag = React.createClass({
         </header>
 
         {typeInfo.description && (
-          <MarkdownText className="param-tag__description">
+          <HighlightedText className="param-tag__description">
             {typeInfo.description.replace(/[ ]{4,}/g, '')}
-          </MarkdownText>
+          </HighlightedText>
         )}
       </li>
     );

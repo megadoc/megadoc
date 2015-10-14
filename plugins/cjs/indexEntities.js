@@ -1,6 +1,4 @@
 var findWhere = require('lodash').findWhere;
-var Logger = require('../../lib/Logger');
-var console = new Logger('cjs-linker');
 
 module.exports = function(docs) {
   var indices = [];
@@ -35,10 +33,10 @@ module.exports = function(docs) {
     if (index) {
       index.type = 'cjs';
 
-      if (doc.alias) {
-        paths.push(doc.alias);
-        console.log('Using alias "%s" for "%s"', doc.alias, doc.id);
-      }
+      doc.aliases.forEach(function(alias) {
+        paths.push(alias);
+        console.log('Using alias "%s" for "%s"', alias, doc.id);
+      });
 
       paths.forEach(function(path) {
         indices.push({ path: path, index: index });

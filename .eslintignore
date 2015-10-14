@@ -1,13 +1,19 @@
 plugins/**/fixtures/*.js
 plugins/**/*.fixture.js
 
-node_modules
-ui/dist
-ui/tmp
-ui/app/vendor/**/*
-ui/karma.conf.js
-test/fixtures
-ui/app/css/fonts/**/*/demo.js
+dist
 doc/compiled
+
+node_modules
+karma.conf.js
+
+tmp
+
+ui/tmp
+ui/css/fonts/**/*/demo.js
+ui/vendor/**/*
+
+test/index.ui.js
+
 **/*.tmpl.js
 **/dist/*.js

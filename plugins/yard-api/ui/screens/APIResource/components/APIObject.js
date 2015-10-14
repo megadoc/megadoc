@@ -1,21 +1,35 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
-var PropertyListing = require('./PropertyListing');
+const React = require("react");
+const MarkdownText = require('components/MarkdownText');
+const PropertyListing = require('./PropertyListing');
 
-var APIObject = React.createClass({
+const { shape, string, array, node } = React.PropTypes;
+
+const APIObject = React.createClass({
   displayName: "APIObject",
+
+  propTypes: {
+    anchor: node,
+    object: shape({
+      id: string,
+      title: string,
+      text: string,
+      schema: array
+    })
+  },
 
   getInitialState: function() {
     return {
-      expanded: true
+      expanded: true,
     };
   },
 
   render() {
-    const apiObject = this.props;
+    const apiObject = this.props.object;
 
     return (
       <div className="object-synopsis">
+        {this.props.anchor || null}
+
         <h3 className="object-synopsis__header" id={apiObject.id}>
           <span className="object-synopsis__header-text">{apiObject.title}</span>
           <button className="object-synopsis__toggler" onClick={this.toggle}>

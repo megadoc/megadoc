@@ -117,7 +117,7 @@ Rpt.findClosestLend = function(path) {
  *     helpers.someProp = '5'; // <- at this path, we will locate "helpers"
  *                             // above
  *
- * @param  {[type]} path  [description]
+ * @param  {recast.path} path
  * @param  {String} alias
  *         The name of the identifier. In the example above, this will be
  *         "helpers" (as this will be the receiver we parse during analysis.)

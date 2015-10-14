@@ -4,7 +4,8 @@ var Icon = require('components/Icon');
 var Collapsible = {
   propTypes: {
     collapsible: React.PropTypes.bool,
-    initiallyCollapsed: React.PropTypes.bool
+    initiallyCollapsed: React.PropTypes.bool,
+    expanded: React.PropTypes.bool,
   },
 
   getDefaultProps: function() {
@@ -36,7 +37,7 @@ var Collapsible = {
   },
 
   isCollapsed() {
-    return this.isCollapsible() && this.state.collapsed;
+    return this.isCollapsible() && !this.props.expanded && this.state.collapsed;
   },
 
   isCollapsible() {
