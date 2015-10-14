@@ -68,6 +68,7 @@ const Module = React.createClass({
           doc={doc}
           moduleDocs={moduleDocs}
           focusedEntity={decodeURIComponent(this.props.params.entity)}
+          routeName={routeName}
         />
 
         <Outlet

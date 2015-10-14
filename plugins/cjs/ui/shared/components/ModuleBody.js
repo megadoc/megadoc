@@ -1,6 +1,7 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
 const HighlightedText = require('components/HighlightedText');
+const Anchor = require('components/Anchor');
 const Doc = require('components/Doc');
 const SeeTag = require('components/Tags/SeeTag');
 const DocGroup = require('components/DocGroup');
@@ -28,11 +29,14 @@ function getRenderableType(doc, moduleDocs) {
   }
 }
 
+const { string, object, arrayOf } = React.PropTypes;
+
 const ModuleBody = React.createClass({
   propTypes: {
-    focusedEntity: React.PropTypes.string,
-    doc: React.PropTypes.object,
-    moduleDocs: React.PropTypes.arrayOf(React.PropTypes.object),
+    routeName: string,
+    focusedEntity: string,
+    doc: object,
+    moduleDocs: arrayOf(object),
   },
 
   getDefaultProps: function() {
@@ -130,12 +134,14 @@ const ModuleBody = React.createClass({
 
     return (
       <DocGroup label="Additional resources" className="class-view__sees">
-        {tags.map(function(tag) {
-          return (
-            <SeeTag key={tag.string} string={tag.string} />
-          );
-        })}
+        {tags.map(this.renderSeeTag)}
       </DocGroup>
+    );
+  },
+
+  renderSeeTag(tag) {
+    return (
+      <SeeTag key={tag.string} string={tag.string} />
     );
   },
 
@@ -175,6 +181,7 @@ const ModuleBody = React.createClass({
         expanded={this.props.focusedEntity === path}
         path={path}
         parentPath={this.props.doc.id}
+        anchor={this.renderAnchorTo(path)}
       />
     );
   },
@@ -207,8 +214,7 @@ const ModuleBody = React.createClass({
         initiallyCollapsed
         expanded={this.props.focusedEntity === path}
         doc={doc}
-        path={path}
-        parentPath={this.props.doc.id}
+        anchor={this.renderAnchorTo(path)}
       />
     );
   },
@@ -241,8 +247,19 @@ const ModuleBody = React.createClass({
         initiallyCollapsed
         expanded={this.props.focusedEntity === path}
         doc={doc}
-        path={path}
-        parentPath={this.props.doc.id}
+        anchor={this.renderAnchorTo(path)}
+      />
+    );
+  },
+
+  renderAnchorTo(path) {
+    return (
+      <Anchor
+        routeName={`${this.props.routeName}.module.entity`}
+        params={{
+          moduleId: this.props.doc.id,
+          entity: path
+        }}
       />
     );
   }

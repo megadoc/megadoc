@@ -1,5 +1,5 @@
 const React = require("react");
-const MarkdownText = require('components/MarkdownText');
+const HighlightedText = require('components/HighlightedText');
 const GitStats = require('components/GitStats');
 const Disqus = require('components/Disqus');
 const scrollToTop = require('utils/scrollToTop');
@@ -50,7 +50,7 @@ const Article = React.createClass({
 
     return (
       <div className="doc-content">
-        <MarkdownText jumpy>{article.source}</MarkdownText>
+        <HighlightedText>{article.source}</HighlightedText>
 
         {this.props.config.gitStats && (
           <GitStats {...article.git} />

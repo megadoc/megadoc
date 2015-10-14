@@ -23,7 +23,7 @@ module.exports = function createRoot(routeName) {
 
     render() {
       return (
-        <TwoColumnLayout className="js-root">
+        <TwoColumnLayout>
           <LeftColumn>
             <ClassBrowser
               routeName={routeName}
@@ -32,9 +32,7 @@ module.exports = function createRoot(routeName) {
           </LeftColumn>
 
           <RightColumn>
-            <div className="js-root__content">
-              <RouteHandler routeName={routeName} {...this.props} />
-            </div>
+            <RouteHandler routeName={routeName} {...this.props} />
           </RightColumn>
 
         </TwoColumnLayout>

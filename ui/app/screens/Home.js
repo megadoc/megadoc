@@ -1,6 +1,6 @@
 var React = require("react");
 var config = require('config');
-var MarkdownText = require('components/MarkdownText');
+var HighlightedText = require('components/HighlightedText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
 var scrollToTop = require('utils/scrollToTop');
@@ -24,7 +24,7 @@ var Home = React.createClass({
     return (
       <div className="doc-content">
         {config.readme ?
-          <MarkdownText>{config.readme.source}</MarkdownText> :
+          <HighlightedText>{config.readme.source}</HighlightedText> :
           <p>Welcome to <strong>tiny</strong>doc!</p>
         }
 

@@ -4,7 +4,7 @@ const Storage = require('core/Storage');
 const { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
-hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
+// hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
 hljs.registerLanguage('ruby', require('highlight.js/lib/languages/ruby'));
 hljs.registerLanguage('css', require('highlight.js/lib/languages/css'));
@@ -40,21 +40,20 @@ var HighlightedText = React.createClass({
     if (nodes.length > 0) {
       for (var i = 0; i < nodes.length; i=i+1) {
         hljs.highlightBlock(nodes[i]);
-
-        // a hack for better JSX support
-        if (nodes[i].className.match(/xml|javascript/)) {
-          // nodes[i].className = 'javascript';
-          // hljs.highlightBlock(nodes[i]);
-          nodes[i].className = 'xml';
-          hljs.highlightBlock(nodes[i]);
-
-          nodes[i].className = 'hljs xml javascript';
-        }
       }
     }
   },
 
   render() {
+    if (this.props.unsafe) {
+      return (
+        <div
+          className={`highlighted-text ${this.props.className || ''}`}
+          children={this.props.children}
+        />
+      );
+    }
+
     return (
       <div
         className={`highlighted-text ${this.props.className || ''}`}

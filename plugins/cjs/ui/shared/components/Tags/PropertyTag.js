@@ -3,15 +3,18 @@ const HighlightedText = require('components/HighlightedText');
 const Types = require('components/Tags/Types');
 const Anchor = require('components/Anchor');
 
+const { shape, string, arrayOf, node } = React.PropTypes;
+
 const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
-    typeInfo: React.PropTypes.shape({
-      types: React.PropTypes.arrayOf(React.PropTypes.string),
-      name: React.PropTypes.string,
-      defaultValue: React.PropTypes.string,
-      description: React.PropTypes.string
+    anchor: node,
+    typeInfo: shape({
+      types: arrayOf(string),
+      name: string,
+      defaultValue: string,
+      description: string
     })
   },
 
@@ -20,13 +23,7 @@ const PropertyTag = React.createClass({
 
     return (
       <li className="property-tag">
-        <Anchor
-          routeName="js.module.entity"
-          params={{
-            moduleId: this.props.parentPath,
-            entity: this.props.path
-          }}
-        />
+        {this.props.anchor || null}
 
         <header className="property-tag__header">
           <span className="property-tag__name">

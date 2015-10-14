@@ -109,8 +109,7 @@ function generateRuntimeConfigScript(compiler, config, database) {
         compiler.assets.pluginScripts.length +
         (compiler.assets.hasInlinePlugins() ? 1 : 0)
       ),
-      pluginConfigs: compiler.assets.runtimeConfigs,
-      registry: compiler.registry.toJSON()
+      pluginConfigs: compiler.assets.runtimeConfigs
     }
   );
 

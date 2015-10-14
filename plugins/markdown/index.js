@@ -1,6 +1,7 @@
 var path = require('path');
 var scan = require('./scan');
 var indexEntities = require('./indexEntities');
+var resolveLink = require('./resolveLink');
 var merge = require('lodash').merge;
 
 var defaults = {
@@ -30,6 +31,12 @@ function MarkdownPlugin(userConfig) {
           }
 
           database = _database;
+          database.__meta__ = {
+            routeName: config.name
+          };
+
+          compiler.linkResolver.use(resolveLink.bind(null, database));
+
           done();
         });
       });
@@ -39,6 +46,14 @@ function MarkdownPlugin(userConfig) {
 
         Object.keys(indices).forEach(function(indexPath) {
           registry.add(indexPath, indices[indexPath]);
+        });
+
+        done();
+      });
+
+      compiler.on('render', function(md, linkify, done) {
+        database.forEach(function(doc) {
+          doc.source = md(linkify(doc.source));
         });
 
         done();

@@ -66,6 +66,8 @@ function createCJSPlugin(userConfig) {
             routeName: config.routeName
           };
 
+          console.log('Route name: %s (%d docs)', config.routeName, database.length);
+
           compiler.linkResolver.use(resolveLink.bind(null, database));
 
           done();

@@ -19,18 +19,21 @@ function isFunction(doc) {
   return doc.ctx.type === 'function';
 }
 
+const { object, bool, node } = React.PropTypes;
+
 var Doc = React.createClass({
   displayName: "Doc",
 
   mixins: [ Collapsible ],
 
   propTypes: {
-    doc: React.PropTypes.object.isRequired,
-    collapsible: React.PropTypes.bool,
-    withExamples: React.PropTypes.bool,
-    withTitle: React.PropTypes.bool,
-    withDescription: React.PropTypes.bool,
-    withAdditionalResources: React.PropTypes.bool,
+    anchor: node,
+    doc: object.isRequired,
+    collapsible: bool,
+    withExamples: bool,
+    withTitle: bool,
+    withDescription: bool,
+    withAdditionalResources: bool,
   },
 
   getDefaultProps: function() {
@@ -55,16 +58,7 @@ var Doc = React.createClass({
 
     return (
       <div className={className}>
-        {this.props.path && (
-          <Anchor
-            routeName="js.module.entity"
-            params={{
-              moduleId: this.props.parentPath,
-              entity: this.props.path
-            }}
-          />
-        )}
-
+        {this.props.anchor || null}
         {this.props.withTitle && (
           <h4 className="doc-entity__header collapsible-header" onClick={this.toggleCollapsed}>
             {this.renderCollapser()}

@@ -58,23 +58,4 @@ function register(api, config) {
   if (config.title) {
     api.registerOutletElement('navigation', createNavigationOutlet(config));
   }
-
-  api.on('started', function() {
-    LinkResolver.use(function(id, registry) {
-      const index = registry[id];
-
-      if (index && index.type === 'markdown') {
-        const article = database.get(index.articleId);
-
-        console.assert(!!article,
-          `Expected to find a markdown article with id '${index.articleId}'`
-        );
-
-        return {
-          href: Router.makeHref(`${config.name}.article`, { splat: article.id }),
-          title: `${strHumanize(config.title)}: ${article.title}`
-        };
-      }
-    });
-  });
 }

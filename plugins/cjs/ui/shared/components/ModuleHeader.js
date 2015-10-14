@@ -35,8 +35,7 @@ const ModuleHeader = React.createClass({
     return (
       <header>
         <h1 className="class-view__header">
-          <Icon className="icon-cube" />
-          {' '}
+          {false && (<Icon className="icon-cube" />)}
 
           <span className="class-view__header-name">
             {doc.name}
