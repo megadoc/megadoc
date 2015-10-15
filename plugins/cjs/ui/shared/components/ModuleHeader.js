@@ -1,5 +1,4 @@
 const React = require("react");
-const Icon = require('components/Icon');
 const Outlet = require('components/Outlet');
 const K = require('constants');
 
@@ -35,8 +34,6 @@ const ModuleHeader = React.createClass({
     return (
       <header>
         <h1 className="class-view__header">
-          {false && (<Icon className="icon-cube" />)}
-
           <span className="class-view__header-name">
             {doc.name}
           </span>

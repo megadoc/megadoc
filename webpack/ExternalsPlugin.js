@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs-extra');
 var _ = require('lodash');
-var externals = require('./externals');
+var publicModules = require('./publicModules');
 
 exports.apply = function(/*compiler*/) {
   var tmpl = _.template(fs.readFileSync(path.resolve(__dirname, 'publicModules.tmpl.js'), 'utf-8'));
@@ -10,6 +10,6 @@ exports.apply = function(/*compiler*/) {
 
   fs.ensureDirSync(outputDir);
   fs.writeFileSync(outputPath, tmpl({
-    externals: Object.keys(externals)
+    externals: Object.keys(publicModules)
   }));
 };

@@ -1,12 +1,12 @@
 var path = require('path');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
-var ExternalsPlugin = require('./webpack/externals-plugin');
 var nodeEnv = process.env.NODE_ENV || 'development';
 
 var config = {
   entry: {
-    main: path.resolve(__dirname, 'ui/index.js')
+    main: path.resolve(__dirname, 'ui/index.js'),
+    vendor: require('./webpack/vendorModules')
   },
 
   output: {
@@ -24,7 +24,7 @@ var config = {
       'process.env.NODE_ENV': JSON.stringify(nodeEnv)
     }),
 
-    ExternalsPlugin
+    require('./webpack/ExternalsPlugin'),
   ]
 };
 

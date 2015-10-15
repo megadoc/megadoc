@@ -2,8 +2,8 @@
 __tests__
 
 /test
-/ui/.local.js
-/ui/app/css/fonts/*.json
+/.local.js
+/ui/css/fonts/*.json
 *.zip
 demo.html
 demo-files

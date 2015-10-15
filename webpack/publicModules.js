@@ -3,15 +3,7 @@ var glob = require('glob');
 var root = path.resolve(__dirname, '..', 'ui');
 
 var GLOBAL = 'tinydoc.publicModules';
-var vendorModules = [
-  'react',
-  'react-router',
-  'lodash',
-  'marked',
-  'moment',
-  'jquery',
-  'jQueryUI'
-];
+var vendorModules = require('./vendorModules');
 
 var sharedModuleDirs = [
   'components',

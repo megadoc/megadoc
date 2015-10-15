@@ -31,10 +31,7 @@ emitter.on('pluginsLoaded', function start(registrar) {
     emitter.emit('started');
   };
 
-  var publicPath = config.publicPath.length === 0 ? '/' : config.publicPath;
-
   console.log('Ok, firing up.');
-  console.log('Base path is set to "%s".', publicPath);
 
   emitter.emit('starting');
 
@@ -43,7 +40,7 @@ emitter.on('pluginsLoaded', function start(registrar) {
       location: ReactRouter.HashLocation,
 
       routes: [
-        <Route name="root" path={publicPath} handler={require('./screens/Root')}>
+        <Route name="root" path="/" handler={require('./screens/Root')}>
           <DefaultRoute
             name="home"
             handler={require('./screens/Home')}
