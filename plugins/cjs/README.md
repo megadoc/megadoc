@@ -126,7 +126,7 @@ SomeModule.someStaticFunction = function() {
 SomeModule.someStaticProperty = 'a';
 ```
 
-### Prototypal Functions
+### Prototypal Modules
 
 ```javascript
 function SomeModule() {
@@ -161,7 +161,7 @@ class SomeModule {
 }
 ```
 
-### Closure-bound factories
+### Factory Modules
 
 ```javascript
 function createSomeModule() {

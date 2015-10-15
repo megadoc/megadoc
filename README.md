@@ -1,8 +1,22 @@
 # tinydoc
 
-tinydoc is a documentation scraper library that is able to scan and present documentation found in different sources, like CommonJS JavaScript modules, Markdown articles, and Rails API sources.
+tinydoc is a documentation generation tool that is able to scan, parse, and present documentation found in different sources in a coherent UI. Example sources are JavaScript modules, Markdown articles, and Rails APIs.
 
-The scanning and rendering is done through plugins so it is possible to support more sources by writing new ones.
+## Motivation
+
+- Write anywhere: docs may live inside the main codebase (right next to your code) or outside; the tool shouldn't care. This caters for people who don't like to look up documentation online and would rather find everything in their code editor, and for others who either do not have the code base, or prefer reading in a browser.
+- Aggregate, linkable docs: the ability to inter-link entities regardless of the source; like pointing to a JavaScript module from a markdown article.
+- Easy deployment: an .html file that requires no webserver to power, so that one can easily host the docs anywhere (like on GitHub Pages or any static server.)
+
+## Installation
+
+tinydoc requires [Node.js](http://nodejs.org) to run and you can get it through NPM by running:
+
+```
+npm install -g tinydoc
+```
+
+Now run `tinydoc --help` for more information.
 
 ## Configuration
 
@@ -14,14 +28,19 @@ module.exports = {
 };
 ```
 
-Of course, you can use any JavaScript libraries in your config file since it's run in Node.
-
 For the actual configuration parameters, please refer to each plugin's README file found under `plugins/`.
 
 ## Extending
 
-Like mentioned earlier, tinydoc can accept plugins that are run during the compilation of the docs. The compilation basically has two phases: a scanning phase, in which the sources are scraped and a _database_ is generated, and a writing phase in which the database is exported to some file which the UI can render.
+tinydoc accepts plugins that can hook into the compilation of the docs. The compilation is composed of several phases:
 
-The UI of tinydoc is written in React and also supports plugins. You are not forced to actually use React to write the UI for your plugin; any JavaScript module can do.
+1. the scanning phase: sources are scraped and a _database_ is generated
+2. the indexing phase: a registry of all linkable entities is generated
+3. the rendering phase: all non-HTML content is converted to HTML and links are resolved 
+4. the writing phase: the database, now containing rendered content, is exported to some file which the UI can use to render its stuff
 
-See the core plugin implementations for guidance. The scanners & writers can be found under `plugins/*` and their UIs under `ui/plugins/*`.
+The UI of tinydoc is written in [React](https://facebook.github.io/react/) and is also extensible through different means: outlets and full-fledged plugins.
+
+_TODO_: UI plugin guide.
+
+See the core plugins for guidance. The plugin implementations lives under `plugins/*/*` and their UIs are found under `plugins/*/ui`.

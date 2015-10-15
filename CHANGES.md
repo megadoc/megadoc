@@ -2,6 +2,10 @@
 
 ## 3.0.0
 
+This release brings a whole lot of improvements to the robustness of tinydoc's parsers, the UI, and runtime performance since we now do all the content rendering at compile-time instead.
+
+Also, plugins have been revisited and it's now very easy to write a custom plugin and hook it into the system.
+
 ### Major changes to the plugin architecture
 
 1. tinydoc no longer configures plugins by itself, instead the caller configures each plugin manually.
@@ -10,26 +14,51 @@
 
 Thanks to #3 above, the same plugin can now be used more than once with different configs.
 
-**Breaking plugin API changes**
+### Compilation changes
+
+The compilation now has two more phases:
+
+1. `index` in which all the linkable entities may be indexed
+2. `render` in which all plugins are expected to render their content to something the UI can display (mainly: markdown -> html and linkifying everything in that content)
+
+### Breaking plugin API changes
 
 - the `compilation` object that was being passed to all stage processors has been dropped
 - the `$inject` and `$defaults` properties are no longer supported. A plugin's runner will receive the compiler as the only argument, and from there it can reach whatever dependencies it requires.
 - the `emitter` module is now the same as the compiler; just use `compiler.on()`.
 
-### Other changes
+### CLI changes
 
-- New utility helper for generating temporary files, `Utils.writeTmpFile`
-- A new Assets API for plugins to register different kinds of assets they generate.
-- JS plugin now supports multiple instances
+- the `tinydoc` binary now supports two commands: `run` for generating the docs, and `compile` for compiling external plugins
+- The output directory is now purged before writing unless you pass in `--no-purge` to `run`
+
+### Internal API changes
+
+- New utility helper for generating temporary files, [Utils#writeTmpFile]()
+- A new Assets API for plugins to register different kinds of assets they generate. See [Assets]().
 - Markdown plugin now supports multiple instances
-- JS plugin now supports a new `@live_example` tag which allows the user to configure an `<iframe />` contents to display live examples (for example, to preview Ember or React components.)
-- The output directory is now purged before writing.
-- JS plugin can now accept custom tag definitions
-- It is now possible to compile UI plugins at compile-time using tinydoc's internal JS compiler
+
+### CJS Plugin changes
+
+- parsing was switched to an AST-based implementation using [recast](https://github.com/benjamn/recast). We still use [dox](https://github.com/tj/dox) for parsing docstrings.
+- the plugin can now accept custom tag definitions, see [Plugins.CJS#defineCustomTag]()
+- the plugin can now accept custom processors for the following entities:
+  + tags: [Plugins.CJS#addTagProcessor]()
+  + docs (the entire database): [Plugins.CJS#addPostProcessor]()
+  + recast node analyzer: [Plugins.CJS#addNodeAnalyzer]()
+  + dox docstring processor: [Plugins.CJS#addDocstringProcessor]()
+- much better `@lends` support:
+  + you can now lend to a prototype: `@lends SomeObject.prototype`
+  + or lend to an instance: `@lends exports`
+  + or to an object: `@lends SomeObject`
+- The following tags now support typeInfo (like name, type, and description):
+  + `@throws`
+  + `@example`
 
 ### New options
 
 - new core option `motto: String` for tuning the motto/slogan next to the title
+- new core option `metaDescription: String` for tuning the `<meta description />` tag
 - new JS plugin option: `showSourcePaths: Boolean` for displaying the file path inside the module header
 
 ### Bugfixes
