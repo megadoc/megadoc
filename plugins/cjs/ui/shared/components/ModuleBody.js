@@ -1,7 +1,6 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
 const HighlightedText = require('components/HighlightedText');
-const Anchor = require('components/Anchor');
 const Doc = require('components/Doc');
 const SeeTag = require('components/Tags/SeeTag');
 const DocGroup = require('components/DocGroup');
@@ -10,6 +9,7 @@ const { findWhere, where } = require("lodash");
 const ExampleTag = require('components/Tags/ExampleTag');
 const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
+const Router = require('core/Router');
 const K = require('constants');
 
 function getRenderableType(doc, moduleDocs) {
@@ -175,13 +175,12 @@ const ModuleBody = React.createClass({
     return (
       <PropertyTag
         key={path}
-        ref={path}
         typeInfo={tag.typeInfo}
         initiallyCollapsed
         expanded={this.props.focusedEntity === path}
         path={path}
         parentPath={this.props.doc.id}
-        anchor={this.renderAnchorTo(path)}
+        anchorId={this.generateAnchorId(path)}
       />
     );
   },
@@ -209,12 +208,11 @@ const ModuleBody = React.createClass({
 
     return (
       <Doc
-        ref={path}
         key={path}
         initiallyCollapsed
         expanded={this.props.focusedEntity === path}
         doc={doc}
-        anchor={this.renderAnchorTo(path)}
+        anchorId={this.generateAnchorId(path)}
       />
     );
   },
@@ -242,26 +240,23 @@ const ModuleBody = React.createClass({
 
     return (
       <Doc
-        ref={path}
         key={doc.id}
         initiallyCollapsed
         expanded={this.props.focusedEntity === path}
         doc={doc}
-        anchor={this.renderAnchorTo(path)}
+        anchorId={this.generateAnchorId(path)}
       />
     );
   },
 
-  renderAnchorTo(path) {
-    return (
-      <Anchor
-        routeName={`${this.props.routeName}.module.entity`}
-        params={{
-          moduleId: this.props.doc.id,
-          entity: path
-        }}
-      />
-    );
+  generateAnchorId(path) {
+    return Router.generateAnchorId({
+      routeName: `${this.props.routeName}.module.entity`,
+      params: {
+        moduleId: this.props.doc.id,
+        entity: path
+      }
+    });
   }
 });
 

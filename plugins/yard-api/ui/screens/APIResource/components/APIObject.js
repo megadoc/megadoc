@@ -2,13 +2,13 @@ const React = require("react");
 const MarkdownText = require('components/MarkdownText');
 const PropertyListing = require('./PropertyListing');
 
-const { shape, string, array, node } = React.PropTypes;
+const { shape, string, array } = React.PropTypes;
 
 const APIObject = React.createClass({
   displayName: "APIObject",
 
   propTypes: {
-    anchor: node,
+    anchorId: string,
     object: shape({
       id: string,
       title: string,
@@ -28,9 +28,7 @@ const APIObject = React.createClass({
 
     return (
       <div className="object-synopsis">
-        {this.props.anchor || null}
-
-        <h3 className="object-synopsis__header" id={apiObject.id}>
+        <h3 id={this.props.anchorId} className="object-synopsis__header anchorable-heading">
           <span className="object-synopsis__header-text">{apiObject.title}</span>
           <button className="object-synopsis__toggler" onClick={this.toggle}>
             {this.state.expanded ? 'Hide' : 'Show'}

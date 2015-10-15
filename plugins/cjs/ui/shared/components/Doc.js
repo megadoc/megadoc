@@ -17,7 +17,7 @@ function isFunction(doc) {
   return doc.ctx.type === 'function';
 }
 
-const { object, bool, node } = React.PropTypes;
+const { object, bool, string } = React.PropTypes;
 
 var Doc = React.createClass({
   displayName: "Doc",
@@ -25,7 +25,7 @@ var Doc = React.createClass({
   mixins: [ Collapsible ],
 
   propTypes: {
-    anchor: node,
+    anchorId: string,
     doc: object.isRequired,
     collapsible: bool,
     withExamples: bool,
@@ -57,7 +57,11 @@ var Doc = React.createClass({
     return (
       <div className={className}>
         {this.props.withTitle && (
-          <h4 className="doc-entity__header collapsible-header" onClick={this.toggleCollapsed}>
+          <h4
+            id={this.props.anchorId}
+            className="anchorable-heading doc-entity__header collapsible-header"
+            onClick={this.toggleCollapsed}
+          >
             {this.renderCollapser()}
 
             <span className="doc-entity__name">
@@ -93,8 +97,6 @@ var Doc = React.createClass({
             </span>
           </h4>
         )}
-
-        {this.props.anchor || null}
 
         <div className="doc-entity__description">
           {this.props.withDescription && description && isCollapsed && (

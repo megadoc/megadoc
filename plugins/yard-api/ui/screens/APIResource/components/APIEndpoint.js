@@ -29,11 +29,11 @@ function highlightDynamicFragments(route) {
   });
 }
 
-const { shape, string, node, arrayOf } = React.PropTypes;
+const { shape, string, arrayOf } = React.PropTypes;
 
 const APIEndpoint = React.createClass({
   propTypes: {
-    anchor: node,
+    anchorId: string,
 
     endpoint: shape({
       id: string,
@@ -70,14 +70,13 @@ const APIEndpoint = React.createClass({
 
     return (
       <div key={endpoint.id} className="api-endpoint">
-        {this.props.anchor || null}
-
         <Header
           path={endpoint.id}
           tag={apiTag}
           isBeta={!!findWhere(endpoint.tags, { tag_name: 'beta' })}
           resourceId={this.props.resourceId}
           scopedId={endpoint.scoped_id}
+          anchorId={this.props.anchorId}
         />
 
         <div className="api-endpoint__route">

@@ -81,6 +81,11 @@ module.exports = {
   /**
    * @property {String}
    *
+   * > **DEPRECATED**
+   * >
+   * > This option is no longer supported in tinydoc 3.0+; all assets are
+   * > included relative to the html file.
+   *
    * The path at which the files will be hosted. A value of `/` means
    * all the tinydoc generated files will be found at `/*`, like `/index.html`
    * for example.
@@ -88,7 +93,7 @@ module.exports = {
    * If you're serving tinydoc from a sub-folder, like `/doc`, then you
    * should tune this parameter accordingly.
    */
-  publicPath: "/",
+  publicPath: "./",
 
   /**
    * @property {String}

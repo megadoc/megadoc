@@ -56,6 +56,12 @@ exports.makeHref = function(name, params, query) {
   return instance.makeHref(name, params, query);
 };
 
+exports.generateAnchorId = function({ routeName, params }) {
+  return instance.makeHref(routeName, Object.keys(params).reduce(function(encoded, key) {
+    encoded[key] = encodeURIComponent(params[key]);
+    return encoded;
+  }, {})).replace(/^#/, '');
+};
 
 exports.getCurrentPath = function() {
   if (instance) {

@@ -2,13 +2,13 @@ const React = require("react");
 const HighlightedText = require('components/HighlightedText');
 const Types = require('components/Tags/Types');
 
-const { shape, string, arrayOf, node } = React.PropTypes;
+const { shape, string, arrayOf } = React.PropTypes;
 
 const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
-    anchor: node,
+    anchorId: string,
     typeInfo: shape({
       types: arrayOf(string),
       name: string,
@@ -22,9 +22,10 @@ const PropertyTag = React.createClass({
 
     return (
       <li className="property-tag">
-        {this.props.anchor || null}
-
-        <header className="property-tag__header">
+        <header
+          id={this.props.anchorId}
+          className="property-tag__header anchorable-heading"
+        >
           <span className="property-tag__name">
             <code>{typeInfo.name}</code>
           </span>

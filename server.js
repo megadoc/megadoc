@@ -43,6 +43,7 @@ fs.writeFileSync(
   contentBase + '/index.html',
   _.template(fs.readFileSync(path.join(root, 'ui/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
+    metaDescription: '',
     scripts: [ 'main.js' ]
   })
 );

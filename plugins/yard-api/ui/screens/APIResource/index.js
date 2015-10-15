@@ -1,7 +1,7 @@
 var React = require("react");
+var Router = require('core/Router');
 var Database = require('core/Database');
 var MarkdownText = require('components/MarkdownText');
-var Anchor = require('components/Anchor');
 var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 var { Link } = require('react-router');
@@ -89,18 +89,17 @@ var APIResource = React.createClass({
   renderAPIObject(object) {
     return (
       <APIObject
-        ref={`object-${object.scoped_id}`}
         key={object.id}
         object={object}
-        anchor={(
-          <Anchor
-            routeName="api.resource.object"
-            params={{
+        anchorId={
+          Router.generateAnchorId({
+            routeName: "api.resource.object",
+            params: {
               resourceId: this.props.params.resourceId,
               objectId: object.scoped_id
-            }}
-          />
-        )}
+            }
+          })
+        }
       />
     );
   },
@@ -108,31 +107,18 @@ var APIResource = React.createClass({
   renderAPIEndpoint(endpoint) {
     return (
       <APIEndpoint
-        ref={`endpoint-${endpoint.scoped_id}`}
         key={endpoint.id}
         resourceId={this.props.params.resourceId}
-        anchor={(
-          <Anchor
-            routeName="api.resource.endpoint"
-            params={{
+        anchorId={
+          Router.generateAnchorId({
+            routeName: "api.resource.endpoint",
+            params: {
               resourceId: this.props.params.resourceId,
               endpointId: endpoint.scoped_id
-            }}
-          />
-        )}
+            }
+          })
+        }
         endpoint={endpoint}
-      />
-    );
-  },
-
-  renderAnchorTo(entityId) {
-    return (
-      <Anchor
-        routeName="api.resource.entity"
-        params={{
-          resourceId: this.props.params.resourceId,
-          entityId
-        }}
       />
     );
   }

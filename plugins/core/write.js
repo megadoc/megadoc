@@ -90,9 +90,7 @@ function generateHTMLFile(compiler, config) {
   var html = tmpl({
     title: config.title,
     metaDescription: config.metaDescription,
-    scripts: scripts.map(function(script) {
-      return path.join(config.publicPath, script);
-    })
+    scripts: scripts
   });
 
 
@@ -105,17 +103,16 @@ function copyAppScripts(compiler) {
 }
 
 function generateRuntimeConfigScript(compiler, config, database) {
-  var runtimeConfig = _.extend(
-    {},
-    _.omit(config, [ 'outputDir', 'plugins', 'assets', ]),
-    {
-      pluginCount: (
-        compiler.assets.pluginScripts.length +
-        (compiler.assets.hasInlinePlugins() ? 1 : 0)
-      ),
-      pluginConfigs: compiler.assets.runtimeConfigs
-    }
-  );
+  var runtimeConfig = _.extend({}, _.omit(config, [
+    'outputDir', 'plugins', 'assets',
+  ]));
+
+  runtimeConfig.pluginConfigs = compiler.assets.runtimeConfigs;
+  runtimeConfig.pluginCount = compiler.assets.pluginScripts.length;
+
+  if (compiler.assets.hasInlinePlugins()) {
+    runtimeConfig.pluginCount += 1;
+  }
 
   console.log('Registered UI plugins:',
     compiler.assets.pluginScripts.map(function(filePath) {
@@ -130,6 +127,7 @@ function generateRuntimeConfigScript(compiler, config, database) {
       git: database.readmeGitStats
     };
   }
+
   if (database.footer) {
     runtimeConfig.footer = database.footer;
   }

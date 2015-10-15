@@ -5,6 +5,7 @@ var Icon = require('components/Icon');
 
 var Header = React.createClass({
   propTypes: {
+    anchorId: React.PropTypes.string,
     showEndpointPath: React.PropTypes.bool,
     isBeta: React.PropTypes.bool,
     tag: React.PropTypes.shape({
@@ -26,7 +27,7 @@ var Header = React.createClass({
     var { tag } = this.props;
 
     return (
-      <h2 className="api-endpoint__header markdown-text__heading">
+      <h2 id={this.props.anchorId} className="api-endpoint__header markdown-text__heading anchorable-heading">
         <div className="api-endpoint__header-label">
           {tag.text}
 
