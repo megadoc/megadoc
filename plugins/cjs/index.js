@@ -62,11 +62,6 @@ function createCJSPlugin(userConfig) {
           }
 
           database = _database;
-          database.__meta__ = {
-            routeName: config.routeName
-          };
-
-          console.log('Route name: %s (%d docs)', config.routeName, database.length);
 
           compiler.linkResolver.use(resolveLink.bind(null, database));
 
@@ -75,7 +70,7 @@ function createCJSPlugin(userConfig) {
       });
 
       compiler.on('index', function(registry, done) {
-        indexEntities(database).forEach(function(index) {
+        indexEntities(database, config.routeName).forEach(function(index) {
           registry.add(index.path, index.index);
         });
 

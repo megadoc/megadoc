@@ -129,7 +129,7 @@ function warnAboutUnknownContexts(registry) {
     var ctx = doc.nodeInfo.ctx;
 
     if (!ctx.type || ctx.type === K.TYPE_UNKNOWN) {
-      console.warn(
+      console.info(
         'Entity "%s" has no context. This probably means tinydoc does not know ' +
         'how to handle it yet. (Source: %s)',
         doc.id,

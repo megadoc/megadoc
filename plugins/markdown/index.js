@@ -31,9 +31,6 @@ function MarkdownPlugin(userConfig) {
           }
 
           database = _database;
-          database.__meta__ = {
-            routeName: config.name
-          };
 
           compiler.linkResolver.use(resolveLink.bind(null, database));
 
@@ -42,7 +39,7 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('index', function(registry, done) {
-        var indices = indexEntities(database, config);
+        var indices = indexEntities(database, config.routeName, config);
 
         Object.keys(indices).forEach(function(indexPath) {
           registry.add(indexPath, indices[indexPath]);

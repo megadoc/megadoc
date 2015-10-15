@@ -1,6 +1,6 @@
 var findWhere = require('lodash').findWhere;
 
-module.exports = function(docs) {
+module.exports = function(docs, routeName) {
   var indices = [];
 
   docs.forEach(function(doc) {
@@ -32,6 +32,7 @@ module.exports = function(docs) {
 
     if (index) {
       index.type = 'cjs';
+      index.routeName = routeName;
 
       doc.aliases.forEach(function(alias) {
         paths.push(alias);

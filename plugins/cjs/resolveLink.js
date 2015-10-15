@@ -77,14 +77,14 @@ function resolveLink(database, id, registry, currentModuleId) {
 
       return {
         // TODO: figure out routeName and actual path ...
-        href: database.__meta__.routeName + '/modules/' + encodeURIComponent(moduleId) + '/' + encodeURIComponent(entityId),
+        href: index.routeName + '/modules/' + encodeURIComponent(moduleId) + '/' + encodeURIComponent(entityId),
         title: title
       };
     }
     // a direct link to a module:
     else {
       return {
-        href: database.__meta__.routeName + '/modules/' + encodeURIComponent(doc.id),
+        href: index.routeName + '/modules/' + encodeURIComponent(doc.id),
         title: doc.name
       };
     }

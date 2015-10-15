@@ -2,7 +2,7 @@ var WebpackDevServer = require('webpack-dev-server');
 var webpack = require('webpack');
 var path = require('path');
 var config = require('./webpack.config');
-var ExternalsPlugin = require('./webpack/externals-plugin');
+var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 var fs = require('fs-extra');
 var _ = require('lodash');
 

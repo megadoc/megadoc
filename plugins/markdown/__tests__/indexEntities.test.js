@@ -4,7 +4,7 @@ var assert = require('assert');
 
 describe('markdown::indexEntities', function() {
   function createResolver(database, config) {
-    var resolver = new LinkResolver(indexEntities(database, config || {}));
+    var resolver = new LinkResolver(indexEntities(database, '', config || {}));
 
     resolver.use(function(id, registry) {
       var index = registry[id];

@@ -1,4 +1,4 @@
-module.exports = function(database, config) {
+module.exports = function(database, routeName, config) {
   var indices = {};
 
   database.forEach(function(article) {
@@ -6,7 +6,8 @@ module.exports = function(database, config) {
     var id = article.id;
     var index = {
       type: 'markdown',
-      articleId: id
+      articleId: id,
+      routeName: routeName
     };
 
     indices[filePath] = index;
