@@ -11,12 +11,14 @@ module.exports = function(routeName, config) {
     key: `${routeName}-all-articles`,
 
     component: React.createClass({
+      shouldComponentUpdate: function(nextProps, nextState) {
+        return false;
+      },
+
       render() {
         return (
           <AllArticles
-            activeArticleId={this.props.params.splat}
-            query={this.props.query}
-            articles={database.getArticles()}
+            routeName={routeName}
           />
         );
       }
@@ -28,13 +30,17 @@ module.exports = function(routeName, config) {
     component: React.createClass({
       render() {
         return (
-          <ClassBrowser
-            routeName={routeName}
-            articles={database.getArticles()}
-            folders={database.getFolders()}
-            activeArticleId={this.props.params.splat}
-            expanded={config.sidebarExpanded}
-          />
+          <div>
+            <h2>{config.title}</h2>
+
+            <ClassBrowser
+              routeName={routeName}
+              articles={database.getArticles()}
+              folders={database.getFolders()}
+              activeArticleId={decodeURIComponent(this.props.params.articleId)}
+              expanded={config.sidebarExpanded}
+            />
+          </div>
         );
       }
     }),

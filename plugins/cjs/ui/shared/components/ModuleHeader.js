@@ -1,17 +1,32 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
 const K = require('constants');
+const Router = require('core/Router');
+
+const { string, object, array, bool } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
   propTypes: {
-    doc: React.PropTypes.object,
-    commonPrefix: React.PropTypes.string,
-    moduleDocs: React.PropTypes.array,
-    showSourcePaths: React.PropTypes.bool,
+    routeName: string.isRequired,
+    doc: object,
+    commonPrefix: string,
+    moduleDocs: array,
+    showSourcePaths: bool,
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return false;
   },
 
   render() {
     const { doc, moduleDocs } = this.props;
+    const anchorId = Router.generateAnchorId({
+      routeName: `${this.props.routeName}.module`,
+      params: {
+        moduleId: doc.id
+      }
+    });
+
     let type;
 
     if (!doc.ctx) {
@@ -33,7 +48,7 @@ const ModuleHeader = React.createClass({
 
     return (
       <header>
-        <h1 className="class-view__header">
+        <h1 className="class-view__header" id={anchorId}>
           <span className="class-view__header-name">
             {doc.name}
           </span>

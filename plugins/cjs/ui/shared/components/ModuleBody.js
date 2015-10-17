@@ -29,25 +29,21 @@ function getRenderableType(doc, moduleDocs) {
   }
 }
 
-const { string, object, arrayOf } = React.PropTypes;
+const { string, object, arrayOf, bool } = React.PropTypes;
 
 const ModuleBody = React.createClass({
   propTypes: {
-    routeName: string,
-    focusedEntity: string,
+    routeName: string.isRequired,
     doc: object,
     moduleDocs: arrayOf(object),
-  },
-
-  getDefaultProps: function() {
-    return {
-      focusedEntity: null
-    };
+    focusedEntity: string,
   },
 
   render() {
     const { doc, moduleDocs } = this.props;
     const renderableType = getRenderableType(doc, moduleDocs);
+
+    console.debug('[ModuleBody] Rendering');
 
     return (
       <div>
@@ -177,7 +173,7 @@ const ModuleBody = React.createClass({
         key={path}
         typeInfo={tag.typeInfo}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         path={path}
         parentPath={this.props.doc.id}
         anchorId={this.generateAnchorId(path)}
@@ -210,7 +206,7 @@ const ModuleBody = React.createClass({
       <Doc
         key={path}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />
@@ -242,7 +238,7 @@ const ModuleBody = React.createClass({
       <Doc
         key={doc.id}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />
@@ -257,7 +253,14 @@ const ModuleBody = React.createClass({
         entity: path
       }
     });
-  }
+  },
+
+  getActiveEntityId() {
+    return (
+      this.props.focusedEntity ||
+      decodeURIComponent(Router.getParamItem('entity'))
+    );
+  },
 });
 
 module.exports = ModuleBody;

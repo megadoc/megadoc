@@ -1,27 +1,21 @@
-const React = require("react");
-const MarkdownText = require('components/MarkdownText');
-const scrollIntoView = require('utils/scrollIntoView');
+const React = require('react');
+const HighlightedText = require('components/HighlightedText');
+const Database = require('core/Database');
+const Router = require('core/Router');
 
 const { shape, object, bool } = React.PropTypes;
 
 const AllArticles = React.createClass({
-  componentDidMount() {
-    this.jumpIfNeeded();
-  },
-
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevProps.activeArticleId !== this.props.activeArticleId ||
-      prevProps.query.section !== this.props.query.section
-    ) {
-      this.jumpIfNeeded();
-    }
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return false;
   },
 
   render() {
+    const articles = Database.for(this.props.routeName).getArticles();
+
     return (
       <div>
-        {this.props.articles.map(this.renderArticle)}
+        {articles.map(this.renderArticle)}
       </div>
     );
   },
@@ -29,18 +23,20 @@ const AllArticles = React.createClass({
   renderArticle(article) {
     return (
       <div ref={article.id} key={article.id} className="doc-content">
-        <MarkdownText jumpy>{article.source}</MarkdownText>
+        <h1
+          id={Router.generateAnchorId({
+            routeName: `${this.props.routeName}.article`,
+            params: {
+              articleId: encodeURIComponent(article.id)
+            }
+          })}
+
+          children={article.title}
+        />
+
+        <HighlightedText>{article.source}</HighlightedText>
       </div>
     );
-  },
-
-
-  jumpIfNeeded() {
-    const { activeArticleId } = this.props;
-
-    if (activeArticleId && this.refs[activeArticleId] && !this.props.query.section) {
-      scrollIntoView(React.findDOMNode(this.refs[activeArticleId]));
-    }
   },
 
 });

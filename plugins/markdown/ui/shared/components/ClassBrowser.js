@@ -17,6 +17,9 @@ var MarkdownClassBrowser = React.createClass({
       if (props.activeArticleId) {
         return this.refs[props.activeArticleId];
       }
+      else {
+        return false;
+      }
     }, 50)
   ],
 

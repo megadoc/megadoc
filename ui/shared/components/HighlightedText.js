@@ -26,23 +26,24 @@ const HighlightedText = React.createClass({
   },
 
   componentDidMount: function () {
-    if (HighlightedText.isHighlightingEnabled()) {
-      this.highlightCode();
-    }
+    this.highlightCode();
   },
 
-  componentDidUpdate: function () {
-    if (HighlightedText.isHighlightingEnabled()) {
+  componentDidUpdate: function (prevProps) {
+    if (prevProps.children !== this.props.children) {
       this.highlightCode();
     }
   },
 
   highlightCode: function () {
-    const nodes = this.getDOMNode().querySelectorAll('pre');
+    if (HighlightedText.isHighlightingEnabled()) {
+      console.debug('Highlighting');
+      const nodes = this.getDOMNode().querySelectorAll('pre');
 
-    if (nodes.length > 0) {
-      for (let i = 0; i < nodes.length; i=i+1) {
-        hljs.highlightBlock(nodes[i]);
+      if (nodes.length > 0) {
+        for (let i = 0; i < nodes.length; i=i+1) {
+          hljs.highlightBlock(nodes[i]);
+        }
       }
     }
   },

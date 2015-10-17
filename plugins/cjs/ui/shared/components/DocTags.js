@@ -43,6 +43,10 @@ var DocTags = React.createClass({
     };
   },
 
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return false;
+  },
+
   render() {
     var paramTags = where(this.props.tags, { type: 'param' });
     var unhandledTags = this.props.tags.filter(function(tag) {

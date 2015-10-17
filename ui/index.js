@@ -6,7 +6,7 @@ var PluginManager = require('core/PluginManager');
 var EventEmitter = require('core/EventEmitter');
 var $ = require('jquery');
 var Storage = require('core/Storage');
-var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
+var { Link, Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
 var OutletManager = require('core/OutletManager');
 
@@ -26,11 +26,36 @@ var emitter = new EventEmitter([
   'started'
 ]);
 
+var HomeScreen = require('./screens/Home');
+
 OutletManager.add('SinglePageLayout::ContentPanel', {
-  component: require('./screens/Home'),
-  key: 'home'
+  key: 'home',
+  component: React.createClass({
+    render() {
+      return (
+        <div>
+          <header id="/" />
+          <HomeScreen />
+        </div>
+      );
+    }
+  })
 });
 
+OutletManager.add('SinglePageLayout::Sidebar', {
+  key: 'home',
+  component: React.createClass({
+    render() {
+      return (
+        <h1>
+          <Link to="home">
+            {config.title}
+          </Link>
+        </h1>
+      );
+    }
+  }),
+});
 
 emitter.on('pluginsLoaded', function start(registrar) {
   var emitStarted = function() {
@@ -46,11 +71,15 @@ emitter.on('pluginsLoaded', function start(registrar) {
       location: ReactRouter.HashLocation,
 
       routes: [
-        <Route name="root" path="/" handler={require('./screens/Root')}>
+        <Route
+          name="root"
+          path="/"
+          handler={require('./screens/Root')}
+          ignoreScrollBehavior={config.layout === 'single-page'}
+        >
           <DefaultRoute
             name="home"
             handler={require('./screens/Home')}
-            ignoreScrollBehavior
           />
 
           <Route

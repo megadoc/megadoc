@@ -42,6 +42,13 @@ var Doc = React.createClass({
     };
   },
 
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return (
+      nextState.collapsed !== this.state.collapsed ||
+      nextProps.expanded !== this.props.expanded
+    );
+  },
+
   render() {
     var isCollapsed = this.isCollapsed();
     var className = classSet({

@@ -3,12 +3,11 @@ var config = require('config');
 var HighlightedText = require('components/HighlightedText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
+var scrollToTop = require('utils/scrollToTop');
 
 var OutletManager = require('core/OutletManager');
 
 var Home = React.createClass({
-  displayName: "Home",
-
   statics: {
     willTransitionTo(transition) {
       if (config.home) {

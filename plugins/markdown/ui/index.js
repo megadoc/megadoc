@@ -1,4 +1,5 @@
 const createNavigationOutlet = require('./outlets/Navigation');
+const createSinglePageLayoutOutlet = require('./outlets/SinglePageLayout');
 const React = require('react');
 const Root = require('./screens/Root');
 const Database = require('core/Database');
@@ -63,4 +64,6 @@ function register(api, config) {
   if (config.title) {
     api.registerOutletElement('navigation', createNavigationOutlet(config));
   }
+
+  createSinglePageLayoutOutlet(routeName, config);
 }

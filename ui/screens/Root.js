@@ -53,11 +53,6 @@ const Root = React.createClass({
       return null;
     }
 
-    var className = classSet({
-      'root': true,
-      'root--with-two-column-layout': TwoColumnLayout.isActive(),
-    });
-
     const Layout = config.layout === 'single-page' ?
       SinglePageLayout :
       MultiPageLayout

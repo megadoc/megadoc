@@ -4,68 +4,76 @@ const ClassBrowser = require('components/ClassBrowser');
 const Outlet = require('components/Outlet');
 const ModuleBody = require('components/ModuleBody');
 const ModuleHeader = require('components/ModuleHeader');
-const jqScrollIntoView = require('jqScrollIntoView');
+
+const { shape, string } = React.PropTypes;
 
 module.exports = function createAllModulesComponent(routeName) {
   const database = Database.for(routeName);
+  const modules = database.getModules().map(function(doc) {
+    return {
+      doc: doc,
+      moduleDocs: database.getModuleEntities(doc.id)
+    };
+  });
+
+  function maybeUpdate(component, moduleId) {
+    if (component.refs[moduleId]) {
+      component.refs[moduleId].forceUpdate();
+    }
+  }
 
   return React.createClass({
     displayName: 'JSAllModules',
 
     propTypes: {
-      query: React.PropTypes.object,
+      params: shape({
+        moduleId: string,
+        entity: string,
+      }),
     },
 
-    componentDidMount: function() {
-      this.jumpIfNeeded();
-    },
-
-    componentDidUpdate: function(prevProps, prevState) {
-      if (
-        prevProps.params.moduleId !== this.props.params.moduleId ||
-        JSON.stringify(prevProps.query) !== JSON.stringify(this.props.query)
-      ) {
-        this.jumpIfNeeded();
+    shouldComponentUpdate: function(nextProps, nextState) {
+      if (nextProps.params.moduleId !== this.props.params.moduleId) {
+        maybeUpdate(this, this.props.params.moduleId);
+        maybeUpdate(this, nextProps.params.moduleId);
       }
-    },
-
-    jumpIfNeeded() {
-      const { moduleId } = this.props.params;
-
-      if (moduleId && this.refs[moduleId] && !this.props.query.entity) {
-        jqScrollIntoView(React.findDOMNode(this.refs[moduleId]));
+      else if (nextProps.params.entity !== this.props.params.entity) {
+        maybeUpdate(this, nextProps.params.moduleId);
       }
+
+      return false;
     },
 
     render() {
+      console.debug('Rendering');
+
       return (
         <div className="js-root">
           <div className="js-root__content">
-            {database.getModules().map(this.renderModule)}
+            {modules.map(this.renderModule)}
           </div>
         </div>
       );
     },
 
-    renderModule(doc) {
-      const moduleDocs = database.getModuleEntities(doc.id);
-
+    renderModule({ doc, moduleDocs }) {
       return (
         <div key={doc.id} className="class-view doc-content">
           <ModuleHeader
-            ref={doc.id}
+            routeName={routeName}
             doc={doc}
             moduleDocs={moduleDocs}
             showSourcePaths={false}
           />
 
           <ModuleBody
+            ref={doc.id}
             doc={doc}
+            routeName={routeName}
             moduleDocs={moduleDocs}
-            focusedEntity={this.props.params.moduleId === doc.id && this.props.query.entity}
           />
         </div>
       );
-    }
+    },
   });
 };
