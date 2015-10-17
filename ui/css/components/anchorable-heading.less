@@ -1,6 +1,15 @@
 .anchorable-heading {
   @offset: @banner-height + @banner-border-dim + @whitespace;
 
+  &__anchor {
+    position: relative;
+    top: -1 * @offset;
+
+    &:before {
+      content: '';
+    }
+  }
+
   &[id]:before {
     content: '';
     display: block;

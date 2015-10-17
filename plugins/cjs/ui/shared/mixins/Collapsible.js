@@ -17,8 +17,14 @@ var Collapsible = {
 
   getInitialState: function() {
     return {
-      collapsed: this.props.initiallyCollapsed
+      collapsed: false
     };
+  },
+
+  componentDidMount: function() {
+    if (this.props.initiallyCollapsed) {
+      this.setState({ collapsed: true });
+    }
   },
 
   expand() {

@@ -56,10 +56,13 @@ var Doc = React.createClass({
 
     return (
       <div className={className}>
+        {this.props.anchorId && (
+          <a name={this.props.anchorId} className="anchorable-heading__anchor" />
+        )}
+
         {this.props.withTitle && (
           <h4
-            id={this.props.anchorId}
-            className="anchorable-heading doc-entity__header collapsible-header"
+            className="doc-entity__header collapsible-header"
             onClick={this.toggleCollapsed}
           >
             {this.renderCollapser()}
