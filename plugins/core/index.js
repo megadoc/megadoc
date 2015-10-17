@@ -27,7 +27,7 @@ exports.run = function(compiler) {
 
   compiler.on('render', function(renderMarkdown, linkify, done) {
     if (config.readme) {
-      database.readme = renderMarkdown(
+      database.readme = renderMarkdown.withTOC(
         linkify(
           fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8')
         ), {

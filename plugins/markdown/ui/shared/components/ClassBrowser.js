@@ -142,7 +142,11 @@ var MarkdownClassBrowser = React.createClass({
     var className = "class-browser__sections-section";
     var sectionId = section.id;
 
-    if (section.level > 2) {
+    if (section.level === 1) {
+      return null;
+    }
+
+    else if (section.level > 2) {
       className += " class-browser__sections-section--indented";
     }
 
@@ -152,9 +156,9 @@ var MarkdownClassBrowser = React.createClass({
           to={`${this.props.routeName}.article.section`}
           params={{
             articleId: encodeURIComponent(article.id),
-            sectionId: encodeURIComponent(sectionId),
+            sectionId: encodeURIComponent(section.scopedId),
           }}
-          children={section.plainTitle}
+          children={section.text}
         />
       </li>
     );

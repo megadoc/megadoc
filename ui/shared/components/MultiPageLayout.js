@@ -3,6 +3,7 @@ const Banner = require('components/Banner');
 const Footer = require('components/Footer');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const classSet = require('utils/classSet');
+const scrollToTop = require('utils/scrollToTop');
 
 const { node } = React.PropTypes;
 
@@ -13,6 +14,7 @@ const MultiPageLayout = React.createClass({
 
   componentDidMount() {
     TwoColumnLayout.on('change', this.reload);
+    scrollToTop();
   },
 
   componentWillUnmount() {
@@ -22,6 +24,7 @@ const MultiPageLayout = React.createClass({
   render() {
     var className = classSet({
       'root': true,
+      'root--with-multi-page-layout': true,
       'root--with-two-column-layout': TwoColumnLayout.isActive()
     });
 

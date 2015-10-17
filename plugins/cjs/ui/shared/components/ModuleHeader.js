@@ -48,7 +48,7 @@ const ModuleHeader = React.createClass({
 
     return (
       <header>
-        <h1 className="class-view__header" id={anchorId}>
+        <h1 className="class-view__header markdown-text__heading" id={anchorId}>
           <span className="class-view__header-name">
             {doc.name}
           </span>
@@ -60,6 +60,13 @@ const ModuleHeader = React.createClass({
               <span>{type}</span>
             </Outlet>
           </span>
+
+          {anchorId && (
+            <a
+              href={'#'+anchorId}
+              className="markdown-text__heading-anchor icon icon-link"
+            />
+          )}
         </h1>
 
         {this.props.showSourcePaths && (

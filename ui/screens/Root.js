@@ -2,6 +2,7 @@ const React = require("react");
 const { RouteHandler } = require("react-router");
 const SinglePageLayout = require('components/SinglePageLayout');
 const MultiPageLayout = require('components/MultiPageLayout');
+const AppState = require('core/AppState');
 const Storage = require('core/Storage');
 const ColorSchemeManager = require('core/ColorSchemeManager');
 const config = require('config');
@@ -23,6 +24,8 @@ const Root = React.createClass({
   getInitialState: function() {
     return {
       started: false,
+      layoutChanged: false,
+      // layout: config.layout,
     };
   },
 
@@ -34,17 +37,31 @@ const Root = React.createClass({
     }
 
     Storage.on('change', this.reload);
+    AppState.on('change', this.reload);
+    AppState.on('layoutChange', this.trackLayoutChange);
 
     // we need the router to be running for LinkResolvers to register
     // themselves *before* we start rendering anything.
     this.setState({ started: true });
+  },
 
-    if (!config.useHashLocation) {
-      this.interceptInternalLinkClicks();
+  componentDidUpdate: function(prevProps, prevState) {
+    if (this.state.layoutChanged) {
+      // force the browser to (re)scroll to the proper location
+      setTimeout(() => {
+        const originalLocation = window.location.hash;
+
+        window.location.hash = '#/';
+        window.location.hash = originalLocation;
+      }, 0);
+
+      this.setState({ layoutChanged: false });
     }
   },
 
   componentWillUnmount: function() {
+    AppState.off('layoutChange', this.trackLayoutChange);
+    AppState.off('change', this.reload);
     Storage.off('change', this.reload);
   },
 
@@ -53,7 +70,7 @@ const Root = React.createClass({
       return null;
     }
 
-    const Layout = config.layout === 'single-page' ?
+    const Layout = AppState.getLayout() === 'single-page' ?
       SinglePageLayout :
       MultiPageLayout
     ;
@@ -69,14 +86,8 @@ const Root = React.createClass({
     this.forceUpdate();
   },
 
-  interceptInternalLinkClicks() {
-    $(document.body).on('click', 'a[data-internal="true"]', function(e) {
-      if (!e.ctrlKey && !e.metaKey) {
-        const href = $(e.target).attr('href');
-        e.preventDefault();
-        Router.transitionTo(href.replace(/^#/, ''));
-      }
-    });
+  trackLayoutChange() {
+    this.setState({ layoutChanged: true });
   }
 });
 

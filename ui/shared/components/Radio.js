@@ -11,11 +11,12 @@ const Radio = React.createClass({
 
   render() {
     return (
-      <label className="radio">
+      <label className={`${this.props.className || ''} radio`}>
         <input
           type="radio"
           className="radio__indicator"
           checked={this.props.checked}
+          name={this.props.name}
           value={this.props.value}
           onChange={this.props.onChange}
         />

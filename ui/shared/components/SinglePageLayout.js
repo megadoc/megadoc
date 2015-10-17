@@ -4,6 +4,7 @@ const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const config = require('config');
 const { Link } = require('react-router');
+const Footer = require('components/Footer');
 
 OutletManager.define('SinglePageLayout::Sidebar');
 OutletManager.define('SinglePageLayout::ContentPanel');
@@ -13,7 +14,7 @@ const SinglePageLayout = React.createClass({
     const internal = this.isInternalRoute(this.props.routes);
 
     return (
-      <div className="root single-page-layout">
+      <div className="root root--with-single-page-layout">
         <TwoColumnLayout>
           <TwoColumnLayout.LeftColumn>
             <div className="single-page-layout__sidebar">
@@ -40,6 +41,8 @@ const SinglePageLayout = React.createClass({
                   props={this.props}
                 />
               )}
+
+              <Footer />
             </div>
           </TwoColumnLayout.RightColumn>
         </TwoColumnLayout>

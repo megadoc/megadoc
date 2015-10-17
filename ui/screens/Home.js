@@ -20,7 +20,7 @@ var Home = React.createClass({
     return (
       <div className="doc-content">
         {config.readme ?
-          <HighlightedText>{config.readme.source}</HighlightedText> :
+          <HighlightedText>{config.readme.source.html}</HighlightedText> :
           <p>Welcome to <strong>tiny</strong>doc!</p>
         }
 

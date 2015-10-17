@@ -24,7 +24,7 @@ var EventEmitter = function(events) {
       var index = listeners[event].indexOf(callback);
 
       if (index > -1) {
-        listeners.splice(index, 1);
+        listeners[event].splice(index, 1);
       }
     },
 

@@ -9,6 +9,7 @@ var Storage = require('core/Storage');
 var { Link, Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
 var OutletManager = require('core/OutletManager');
+var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -26,36 +27,7 @@ var emitter = new EventEmitter([
   'started'
 ]);
 
-var HomeScreen = require('./screens/Home');
-
-OutletManager.add('SinglePageLayout::ContentPanel', {
-  key: 'home',
-  component: React.createClass({
-    render() {
-      return (
-        <div>
-          <header id="/" />
-          <HomeScreen />
-        </div>
-      );
-    }
-  })
-});
-
-OutletManager.add('SinglePageLayout::Sidebar', {
-  key: 'home',
-  component: React.createClass({
-    render() {
-      return (
-        <h1>
-          <Link to="home">
-            {config.title}
-          </Link>
-        </h1>
-      );
-    }
-  }),
-});
+SinglePageLayoutOutlet(config);
 
 emitter.on('pluginsLoaded', function start(registrar) {
   var emitStarted = function() {
@@ -75,7 +47,7 @@ emitter.on('pluginsLoaded', function start(registrar) {
           name="root"
           path="/"
           handler={require('./screens/Root')}
-          ignoreScrollBehavior={config.layout === 'single-page'}
+          ignoreScrollBehavior={true || config.layout === 'single-page'}
         >
           <DefaultRoute
             name="home"

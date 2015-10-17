@@ -1,9 +1,11 @@
 .markdown-text {
   &__heading-anchor {
     opacity: 0;
-    font-size: smaller;
+    font-size: 14px;
     transition: opacity 0.25s ease-out 0s;
     font-weight: normal;
+    vertical-align: middle;
+    padding: 0 0.5em;
 
     &:hover, &:active, &:focus {
       text-decoration: none;
@@ -23,7 +25,6 @@
 .schemable({
   .markdown-text {
     &__heading-anchor, &__heading-anchor:visited {
-      margin-left: 5px;
       color: @base1;
 
       .unmark-link-external();
