@@ -1,16 +1,20 @@
 const React = require('react');
-const OutletManager = require('core/OutletManager');
 const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const config = require('config');
-const { Link } = require('react-router');
+const Link = require('components/Link');
 const Footer = require('components/Footer');
 
-OutletManager.define('SinglePageLayout::Sidebar');
-OutletManager.define('SinglePageLayout::ContentPanel');
+const { arrayOf, shape, string, node } = React.PropTypes;
 
 const SinglePageLayout = React.createClass({
+  propTypes: {
+    routes: arrayOf(shape({ name: string })),
+    children: node,
+  },
+
   render() {
+    // TODO: this is really weird
     const internal = this.isInternalRoute(this.props.routes);
 
     return (

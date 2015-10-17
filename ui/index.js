@@ -2,11 +2,9 @@ var React = require('react');
 var ReactRouter = require('react-router');
 var Router = require('core/Router');
 var config = require('config');
-var PluginManager = require('core/PluginManager');
-var EventEmitter = require('core/EventEmitter');
-var $ = require('jquery');
+var createTinydoc = require('core/tinydoc');
 var Storage = require('core/Storage');
-var { Link, Route, DefaultRoute, NotFoundRoute } = ReactRouter;
+var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
 var OutletManager = require('core/OutletManager');
 var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
@@ -14,108 +12,65 @@ var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
-/**
- * @namespace tinydoc
- */
-let tinydoc = window.tinydoc = {
-  publicModules: require('../tmp/publicModules')
-};
-
-var emitter = new EventEmitter([
-  'pluginsLoaded',
-  'starting',
-  'started'
-]);
+OutletManager.define('navigation');
+OutletManager.define('SinglePageLayout::Sidebar');
+OutletManager.define('SinglePageLayout::ContentPanel');
 
 SinglePageLayoutOutlet(config);
 
-emitter.on('pluginsLoaded', function start(registrar) {
-  var emitStarted = function() {
-    emitter.emit('started');
-  };
+let tinydoc = window.tinydoc = createTinydoc(config);
 
+tinydoc.publicModules = require('../tmp/publicModules');
+
+tinydoc.onReady(function(registrar) {
   console.log('Ok, firing up.');
 
-  emitter.emit('starting');
+  var router = ReactRouter.create({
+    location: ReactRouter.HashLocation,
 
-  $(function() {
-    var router = ReactRouter.create({
-      location: ReactRouter.HashLocation,
+    routes: [
+      <Route
+        name="root"
+        path="/"
+        handler={require('./screens/Root')}
+        ignoreScrollBehavior={true || config.layout === 'single-page'}
+      >
+        <DefaultRoute
+          name="home"
+          handler={require('./screens/Home')}
+        />
 
-      routes: [
         <Route
-          name="root"
-          path="/"
-          handler={require('./screens/Root')}
-          ignoreScrollBehavior={true || config.layout === 'single-page'}
-        >
-          <DefaultRoute
-            name="home"
-            handler={require('./screens/Home')}
-          />
+          name="readme"
+          path="/readme*"
+          handler={require('./screens/Home')}
+          ignoreScrollBehavior
+        />
 
-          <Route
-            name="readme"
-            path="/readme*"
-            handler={require('./screens/Home')}
-            ignoreScrollBehavior
-          />
+        {registrar.getRouteMap()}
 
-          {registrar.getPluginRouteMap()}
+        <Route
+          name="settings"
+          path="/settings"
+          handler={require('./screens/Settings')}
+        />
 
-          <Route
-            name="settings"
-            path="/settings"
-            handler={require('./screens/Settings')}
-          />
+        <Route
+          name="404"
+          handler={require('./screens/NotFound')}
+        />
 
-          <Route
-            name="404"
-            handler={require('./screens/NotFound')}
-          />
+        <NotFoundRoute
+          name="not-found"
+          handler={require('./screens/NotFound')}
+        />
+      </Route>
+    ]
+  });
 
-          <NotFoundRoute
-            name="not-found"
-            handler={require('./screens/NotFound')}
-          />
-        </Route>
-      ]
-    });
+  Router.setInstance(router);
 
-    Router.setInstance(router);
-
-    router.run(function(Handler, state) {
-      React.render(<Handler onStart={emitStarted} {...state} />, document.body);
-    });
+  router.run(function(Handler, state) {
+    React.render(<Handler {...state} />, document.querySelector('#__app__'));
   });
 });
-
-OutletManager.define('navigation');
-
-var pluginMgr = new PluginManager(config.pluginCount, emitter);
-
-/**
- * @method tinydoc.use
- *
- * @param {Function} pluginEntryRunner
- *        The function that will register your plugin.
- *
- * @param {PluginRegistrar} pluginEntryRunner.api
- *        The plugin registration API you can use.
- */
-tinydoc.use = pluginMgr.use;
-tinydoc.getRuntimeConfigs = function(pluginId) {
-  return config.pluginConfigs[pluginId] || [];
-};
-
-tinydoc.seal = function() {
-  tinydoc.use = function() {
-    console.warn(
-      "You are attempting to call 'tinydoc.use()' after all plugins were " +
-      "loaded. This probably means you forgot to register your " +
-      "script as a plugin script."
-    );
-  }
-};
-
-tinydoc.pluginMgr = pluginMgr;

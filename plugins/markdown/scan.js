@@ -7,7 +7,6 @@ var where = require('lodash').where;
 var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
-var parseSections = require('./scan/parseSections');
 var Promise = require('bluebird');
 var normalizeHeading = require('../../lib/Renderer/Utils').normalizeHeading;
 var strHumanize = require('../../lib/utils/strHumanize');
@@ -47,7 +46,6 @@ function scan(config, utils, globalConfig, done) {
 
     entry.plainTitle = normalizeHeading(entry.title);
 
-    // entry.sections = parseSections(entry.source);
     entry.fileName = fileName;
     entry.folder = path.dirname(entry.filePath);
 

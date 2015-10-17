@@ -15,7 +15,7 @@ const DocGroup = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate: function(nextProps) {
     return this.props.children !== nextProps.children;
   },
 

@@ -43,7 +43,7 @@ var DocTags = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate: function() {
     return false;
   },
 

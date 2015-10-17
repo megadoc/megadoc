@@ -1,20 +1,21 @@
-var React = require("react");
-var { Link } = require('react-router');
-var Icon = require('components/Icon');
+const React = require('react');
+const Link = require('components/Link');
+const Icon = require('components/Icon');
+const { BannerItem } = require('components/Banner');
 
-module.exports = function createNavigationOutlet(routeName, label = 'JavaScripts', icon = null) {
+module.exports = function createNavigationOutlet(config) {
+  const { routeName, navigationLabel, icon } = config;
+
   return React.createClass({
     displayName: 'CJSNavigation',
 
-    statics: {
-      key: routeName
-    },
-
     render() {
       return (
-        <Link to={routeName}>
-          {icon && <Icon className={icon} />} {label}
-        </Link>
+        <BannerItem>
+          <Link to={routeName}>
+            {icon && <Icon className={icon} />} {navigationLabel}
+          </Link>
+        </BannerItem>
       );
     }
   });

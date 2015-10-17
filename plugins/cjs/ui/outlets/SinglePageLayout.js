@@ -1,11 +1,9 @@
 const React = require('react');
 const ClassBrowser = require('components/ClassBrowser');
 const OutletManager = require('core/OutletManager');
-// const Database = require('core/Database');
+const { shape, string } = React.PropTypes;
 
 module.exports = function(routeName, config) {
-  // const database = Database.for(routeName);
-
   OutletManager.add('SinglePageLayout::ContentPanel', {
     component: require('../screens/AllModules')(routeName),
     key: `${routeName}-all-modules`
@@ -14,6 +12,13 @@ module.exports = function(routeName, config) {
   OutletManager.add('SinglePageLayout::Sidebar', {
     key: `${routeName}-class-browser`,
     component: React.createClass({
+      propTypes: {
+        params: shape({
+          moduleId: string,
+          entity: string,
+        })
+      },
+
       render() {
         const { moduleId, entity } = this.props.params;
 

@@ -25,7 +25,7 @@ tinydoc.use(function CJSPlugin(api) {
 
     Database.createDatabase(config);
 
-    api.registerRoutes([
+    api.addRoutes([
       {
         name: routeName,
         path: '/' + routeName,
@@ -54,10 +54,10 @@ tinydoc.use(function CJSPlugin(api) {
       },
     ]);
 
-    api.registerOutletElement(
-      'navigation',
-      createNavigationOutlet(routeName, config.navigationLabel, config.icon)
-    );
+    OutletManager.add('navigation', {
+      key: routeName,
+      component: createNavigationOutlet(config)
+    });
 
     require('./outlets/SinglePageLayout')(routeName, config);
   });

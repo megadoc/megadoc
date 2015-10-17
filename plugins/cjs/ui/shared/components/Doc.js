@@ -28,6 +28,7 @@ var Doc = React.createClass({
     anchorId: string,
     doc: object.isRequired,
     collapsible: bool,
+    expanded: bool,
     withExamples: bool,
     withTitle: bool,
     withDescription: bool,

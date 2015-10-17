@@ -7,6 +7,8 @@ const Radio = React.createClass({
     value: string,
     onChange: func,
     children: any,
+    className: string,
+    name: string,
   },
 
   render() {

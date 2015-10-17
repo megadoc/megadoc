@@ -1,11 +1,14 @@
 const React = require('react');
 const HighlightedText = require('components/HighlightedText');
 const Database = require('core/Database');
-const Router = require('core/Router');
 
-const { shape, object, bool } = React.PropTypes;
+const { string } = React.PropTypes;
 
 const AllArticles = React.createClass({
+  propTypes: {
+    routeName: string,
+  },
+
   shouldComponentUpdate() {
     return false;
   },

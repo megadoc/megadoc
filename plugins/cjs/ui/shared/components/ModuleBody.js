@@ -29,7 +29,7 @@ function getRenderableType(doc, moduleDocs) {
   }
 }
 
-const { string, object, arrayOf, bool } = React.PropTypes;
+const { string, object, arrayOf } = React.PropTypes;
 
 const ModuleBody = React.createClass({
   propTypes: {

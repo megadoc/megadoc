@@ -1,6 +1,6 @@
 var React = require("react");
-var OutletManager = require('core/OutletManager');
 var Link = require("components/Link");
+var Outlet = require("components/Outlet");
 var config = require('config');
 var Icon = require('components/Icon');
 
@@ -22,6 +22,8 @@ var BannerItem = React.createClass({
 });
 
 var Banner = React.createClass({
+  statics: { BannerItem: BannerItem },
+
   propTypes: {
     children: React.PropTypes.any,
   },
@@ -47,7 +49,7 @@ var Banner = React.createClass({
           </h1>
 
           <nav className="banner__navigation">
-            {OutletManager.getElements('navigation').map(this.renderElement)}
+            <Outlet name="navigation" props={{}} />
 
             {config.showSettingsLinkInBanner && (
               <BannerItem key="settings">
@@ -63,7 +65,7 @@ var Banner = React.createClass({
   },
 
   renderElement(element) {
-    var Element = element;
+    var Element = element.component;
 
     return (
       <BannerItem key={element.key}>

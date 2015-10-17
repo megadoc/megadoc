@@ -3,6 +3,7 @@ const createSinglePageLayoutOutlet = require('./outlets/SinglePageLayout');
 const React = require('react');
 const Root = require('./screens/Root');
 const Database = require('core/Database');
+const OutletManager = require('core/OutletManager');
 const Storage = require('core/Storage');
 const K = require('constants');
 
@@ -21,7 +22,7 @@ function register(api, config) {
 
   Database.createDatabase(routeName, config);
 
-  api.registerRoutes([
+  api.addRoutes([
     {
       name: routeName,
       path: config.path || routeName,
@@ -62,7 +63,10 @@ function register(api, config) {
   ]);
 
   if (config.title) {
-    api.registerOutletElement('navigation', createNavigationOutlet(config));
+    OutletManager.add('navigation', {
+      key: config.routeName,
+      component: createNavigationOutlet(config)
+    });
   }
 
   createSinglePageLayoutOutlet(routeName, config);

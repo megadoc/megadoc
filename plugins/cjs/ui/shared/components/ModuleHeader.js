@@ -14,7 +14,7 @@ const ModuleHeader = React.createClass({
     showSourcePaths: bool,
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate: function() {
     return false;
   },
 

@@ -5,6 +5,10 @@ const OutletManager = require('core/OutletManager');
 const HomeScreen = require('../screens/Home');
 
 module.exports = function(config) {
+  const readmeSections = config.readme.source.toc.filter(function(section) {
+    return section.level === 2;
+  });
+
   OutletManager.add('SinglePageLayout::ContentPanel', {
     key: 'home',
     component: React.createClass({
@@ -33,24 +37,18 @@ module.exports = function(config) {
             </h1>
 
             <ul className="">
-              {config.readme.source.toc.map(this.renderSection)}
+              {readmeSections.map(this.renderSection)}
             </ul>
           </div>
         );
       },
 
       renderSection(section) {
-        if (section.level < 1 || section.level > 2) {
-          return null;
-        }
-
         return (
           <li key={section.id}>
             <Link
               to="readme"
-              params={{
-                splat: '/' + section.scopedId
-              }}
+              params={{ splat: '/' + section.scopedId }}
               children={section.text}
             />
           </li>

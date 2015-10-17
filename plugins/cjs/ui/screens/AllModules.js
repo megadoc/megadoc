@@ -1,7 +1,5 @@
 const React = require('react');
 const Database = require('core/Database');
-const ClassBrowser = require('components/ClassBrowser');
-const Outlet = require('components/Outlet');
 const ModuleBody = require('components/ModuleBody');
 const ModuleHeader = require('components/ModuleHeader');
 
@@ -32,7 +30,7 @@ module.exports = function createAllModulesComponent(routeName) {
       }),
     },
 
-    shouldComponentUpdate: function(nextProps, nextState) {
+    shouldComponentUpdate: function(nextProps) {
       if (nextProps.params.moduleId !== this.props.params.moduleId) {
         maybeUpdate(this, this.props.params.moduleId);
         maybeUpdate(this, nextProps.params.moduleId);
