@@ -82,23 +82,9 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
       var hasDocstring = path.value.leading;
       var hasNodeFreeDocstring = !path.value.leading && !path.value.trailing;
       var comment = path.value.value;
-      // var commentsPath = path.parentPath;
 
       if ((hasDocstring || hasNodeFreeDocstring) && comment[0] === '*') {
-        var contextPath;
-        // var commentCount = commentsPath.value.length;
-
-        // if (commentCount > 1 && path.name !== commentCount -1) {
-        //   contextPath = Utils.findAncestorPath(path, function(parentPath) {
-        //     return n.Program.check(parentPath.value);
-        //   });
-        // }
-        // else {
-        contextPath = path;
-        // }
-
-        // console.log('Found a possibly JSDoc comment:', comment);
-        if (!parser.parseComment(comment, contextPath, contextPath.node, config, filePath, absoluteFilePath)) {
+        if (!parser.parseComment(comment, path, path.node, config, filePath, absoluteFilePath)) {
           return false;
         }
       }
@@ -129,8 +115,10 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
             doc = parser.registry.get(name, filePath);
 
             if (doc) {
+              var modulePath = Utils.findNearestPathWithComments(doc.$path);
+
               doc.markAsExported();
-              parser.registry.trackModuleDocAtPath(doc, Utils.findNearestPathWithComments(doc.$path));
+              parser.registry.trackModuleDocAtPath(doc, modulePath);
             }
           }
           else {

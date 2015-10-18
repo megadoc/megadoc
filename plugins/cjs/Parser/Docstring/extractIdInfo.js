@@ -37,7 +37,7 @@ function extractIdInfo(tags) {
 
   var methodTag = findWhere(tags, { type: 'method' });
 
-  if (methodTag) {
+  if (methodTag && methodTag.typeInfo.name) {
     id = methodTag.typeInfo.name;
   }
 
