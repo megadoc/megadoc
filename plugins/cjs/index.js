@@ -28,6 +28,23 @@ function createCJSPlugin(userConfig) {
   return {
     name: 'CJSPlugin',
 
+    /**
+     * Add a custom-tag definition.
+     *
+     * @param {String} tagName
+     * @param {Object} definition
+     *
+     * @param {String[]} definition.attributes
+     *           A whitelist of all the custom attributes the tag defines.
+     *
+     *           Attempting to define an attribute that is not listed here
+     *           will raise an error.
+     *
+     * @param {Boolean} [definition.withTypeInfo=false]
+     *           Whether the tag is expected to have type info, like:
+     *
+     *               @tag {types} [name=defaultValue]
+     */
     defineCustomTag: function(tagName, definition) {
       assert(!parserConfig.customTags.hasOwnProperty(tagName),
         "Tag '" + tagName + "' already has a definition!"

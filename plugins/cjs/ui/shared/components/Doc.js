@@ -45,6 +45,7 @@ var Doc = React.createClass({
 
   shouldComponentUpdate: function(nextProps, nextState) {
     return (
+      nextProps.doc !== this.props.doc ||
       nextState.collapsed !== this.state.collapsed ||
       nextProps.expanded !== this.props.expanded
     );

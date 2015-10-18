@@ -38,7 +38,8 @@ config.plugins = [
     namespaceDirMap: {
       'lib': 'Core',
       'lib/utils': 'Core.Utils',
-      'plugins/cjs/Parser': 'Plugins.CJS.Parser'
+      'plugins/cjs/Parser': 'Plugins.CJS.Parser',
+      'ui/shared/core': 'UI.Core',
     }
   }),
 

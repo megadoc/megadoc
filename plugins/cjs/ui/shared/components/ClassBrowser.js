@@ -37,7 +37,7 @@ var ClassBrowser = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps, nextState) {
+  shouldComponentUpdate: function(nextProps) {
     return (
       nextProps.routeName !== this.props.routeName ||
       nextProps.activeModuleId !== this.props.activeModuleId ||
@@ -47,7 +47,6 @@ var ClassBrowser = React.createClass({
 
 
   render() {
-    console.log('[CJS::ClassBrowser] rendering...');
     const namespaces = Database.for(this.props.routeName).getNamespacedModules();
 
     return (
@@ -73,13 +72,26 @@ var ClassBrowser = React.createClass({
     }
 
     const shouldDisplayName = Database.for(this.props.routeName).hasNamespaces();
+    const nsModule = ns.module;
 
     return (
       <div key={ns.name} className="class-browser__category">
         {shouldDisplayName && (
           <h3 className="class-browser__category-name">
-            {ns.name}
+            {nsModule ? (
+              <Link
+                to={`${this.props.routeName}.module`}
+                params={{ moduleId: nsModule.id }}
+                children={ns.name}
+              />
+            ) : (
+              ns.name
+            )}
           </h3>
+        )}
+
+        {nsModule && this.props.activeModuleId === nsModule.id && (
+          this.renderModuleEntities(nsModule)
         )}
 
         {ns.modules.map(this.renderModule)}
@@ -88,6 +100,10 @@ var ClassBrowser = React.createClass({
   },
 
   renderModule(doc) {
+    if (doc.$isNamespaceModule) {
+      return null;
+    }
+
     const { routeName } = this.props;
     const { id } = doc;
     const isActive = this.props.activeModuleId === id;

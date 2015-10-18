@@ -79,57 +79,27 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
 
       parser.visitedComments.add(path);
 
+      var hasDocstring = path.value.leading;
+      var hasNodeFreeDocstring = !path.value.leading && !path.value.trailing;
       var comment = path.value.value;
-      var contextNode = path.node;
-      var docstring, nodeInfo, doc;
+      // var commentsPath = path.parentPath;
 
-      if (path.value.leading && comment[0] === '*') {
+      if ((hasDocstring || hasNodeFreeDocstring) && comment[0] === '*') {
+        var contextPath;
+        // var commentCount = commentsPath.value.length;
+
+        // if (commentCount > 1 && path.name !== commentCount -1) {
+        //   contextPath = Utils.findAncestorPath(path, function(parentPath) {
+        //     return n.Program.check(parentPath.value);
+        //   });
+        // }
+        // else {
+        contextPath = path;
+        // }
+
         // console.log('Found a possibly JSDoc comment:', comment);
-
-        docstring = new Docstring(
-          '/*' + comment + '*/',
-          config.customTags,
-          absoluteFilePath
-        );
-
-        if (docstring.isInternal()) {
+        if (!parser.parseComment(comment, contextPath, contextPath.node, config, filePath, absoluteFilePath)) {
           return false;
-        }
-        else if (docstring.doesLend()) {
-          parser.registry.trackLend(docstring.getLentTo(), path);
-        }
-
-        runAllSync(config.docstringProcessors, [ docstring ]);
-
-        nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
-
-        doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
-
-        docstring.tags.forEach(function(tag) {
-          runAllSync(config.tagProcessors, [ tag ]);
-        });
-
-        if (doc.id) {
-          if (!docstring.namespace) {
-            var implicitNamespace = config.namespaceDirMap[nodejsPath.dirname(filePath)];
-            if (implicitNamespace) {
-              docstring.namespace = implicitNamespace;
-            }
-          }
-
-          if (doc.isModule()) {
-            console.debug('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
-            parser.registry.addModuleDoc(doc, path);
-          }
-          else {
-            parser.registry.addEntityDoc(doc, path);
-
-            console.debug('\tFound an entity "%s" belonging to "%s" (source: %s)',
-              doc.id,
-              doc.getReceiver(),
-              nodeInfo.fileLoc
-            );
-          }
         }
       }
 
@@ -160,7 +130,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
 
             if (doc) {
               doc.markAsExported();
-              parser.registry.trackModuleDocAtPath(doc, doc.$path);
+              parser.registry.trackModuleDocAtPath(doc, Utils.findNearestPathWithComments(doc.$path));
             }
           }
           else {
@@ -189,6 +159,58 @@ Ppt.toJSON = function() {
   return this.registry.docs.map(function(doc) {
     return doc.toJSON();
   });
+};
+
+Ppt.parseComment = function(comment, path, contextNode, config, filePath, absoluteFilePath) {
+  var nodeInfo, doc;
+
+  var docstring = new Docstring('/*' + comment + '*/', config.customTags, absoluteFilePath);
+
+  if (docstring.isInternal()) {
+    return false;
+  }
+
+  if (docstring.doesLend()) {
+    this.registry.trackLend(docstring.getLentTo(), path);
+  }
+
+  runAllSync(config.docstringProcessors, [ docstring ]);
+
+  nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+
+  doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+
+  docstring.tags.forEach(function(tag) {
+    runAllSync(config.tagProcessors, [ tag ]);
+  });
+
+  if (doc.id) {
+    if (!docstring.namespace) {
+      var implicitNamespace = config.namespaceDirMap[nodejsPath.dirname(filePath)];
+      if (implicitNamespace) {
+        docstring.namespace = implicitNamespace;
+      }
+    }
+
+    if (doc.isModule()) {
+      var modulePath = Utils.findNearestPathWithComments(path);
+
+      // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
+
+      this.registry.addModuleDoc(doc, modulePath);
+    }
+    else {
+      this.registry.addEntityDoc(doc, path);
+
+      // console.log('\tFound an entity "%s" belonging to "%s" (source: %s)',
+      //   doc.id,
+      //   doc.getReceiver(),
+      //   nodeInfo.fileLoc
+      // );
+    }
+  }
+
+  return true;
 };
 
 module.exports = Parser;

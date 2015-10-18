@@ -5,7 +5,7 @@ const ModuleHeader = require('components/ModuleHeader');
 
 const { shape, string } = React.PropTypes;
 
-module.exports = function createAllModulesComponent(routeName) {
+module.exports = function createAllModulesComponent(routeName, config) {
   const database = Database.for(routeName);
 
   function maybeUpdate(component, moduleId) {
@@ -39,6 +39,12 @@ module.exports = function createAllModulesComponent(routeName) {
     render() {
       return (
         <div className="js-root js-all-modules">
+          {config.navigationLabel && (
+            <header className="js-all-modules__header">
+              {config.navigationLabel}
+            </header>
+          )}
+
           <div className="js-root__content">
             {database.getNamespacedModules().map(this.renderNamespace)}
           </div>
@@ -49,14 +55,21 @@ module.exports = function createAllModulesComponent(routeName) {
     renderNamespace(ns) {
       return (
         <div key={ns.name} className="js-all-modules__namespace">
-          <header className="js-all-modules__namespace-header">{ns.name}</header>
+          {database.hasNamespaces() && (
+            <header className="js-all-modules__namespace-header">{ns.name}</header>
+          )}
 
+          {ns.module && this.renderModule(ns.module, true)}
           {ns.modules.map(this.renderModule)}
         </div>
       )
     },
 
-    renderModule(doc) {
+    renderModule(doc, renderNamespaceModule = false) {
+      if (doc.$isNamespaceModule && renderNamespaceModule !== true) {
+        return null;
+      }
+
       const moduleDocs = database.getModuleEntities(doc.id);
 
       return (
@@ -65,7 +78,7 @@ module.exports = function createAllModulesComponent(routeName) {
             routeName={routeName}
             doc={doc}
             moduleDocs={moduleDocs}
-            showSourcePaths={false}
+            showSourcePaths
             showNamespace
             headerLevel="1"
           />

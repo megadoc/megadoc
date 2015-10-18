@@ -63,6 +63,8 @@ const Module = React.createClass({
           doc={doc}
           moduleDocs={moduleDocs}
           showSourcePaths={config.for(routeName).showSourcePaths}
+          showNamespace={config.for(routeName).showNamespaceInModuleHeader}
+          generateAnchor={false}
         />
 
         <ModuleBody

@@ -43,8 +43,8 @@ var DocTags = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function() {
-    return false;
+  shouldComponentUpdate: function(nextProps) {
+    return this.props.tags !== nextProps.tags;
   },
 
   render() {
@@ -64,7 +64,7 @@ var DocTags = React.createClass({
         </TagGroup>
 
         {this.props.withExamples && (
-          <TagGroup alwaysGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
+          <TagGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
             Examples
           </TagGroup>
         )}

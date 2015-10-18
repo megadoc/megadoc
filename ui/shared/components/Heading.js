@@ -1,7 +1,7 @@
 const React = require('react');
 const { omit } = require('lodash');
 
-const { string, node } = React.PropTypes;
+const { string } = React.PropTypes;
 
 const Heading = React.createClass({
   propTypes: {

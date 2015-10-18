@@ -1,12 +1,23 @@
 const React = require('react');
 const OutletManager = require('core/OutletManager');
-const { string, object, any } = React.PropTypes;
+const { string, object, any, bool } = React.PropTypes;
 
 function getRenderer(element) {
   return element.renderer || element.component;
 }
 
+/**
+ * @namespace UI.Components
+ *
+ * An outlet is a container element that allows you to render other components
+ * inside of it. These elements may be registered at boot-time, and they
+ * will be rendered in the correct place in the UI at the correct time.
+ */
 const Outlet = React.createClass({
+  statics: {
+    add: OutletManager.add,
+  },
+
   propTypes: {
     name: string.isRequired,
 
@@ -15,52 +26,57 @@ const Outlet = React.createClass({
 
     tagName: string,
     children: any,
+
+    alwaysRenderChildren: bool,
   },
 
   getDefaultProps: function() {
     return {
-      tagName: 'div'
+      tagName: 'div',
+      children: null,
+      alwaysRenderChildren: false,
     };
   },
 
   render() {
+    const { alwaysRenderChildren } = this.props;
     const Tag = this.props.tagName;
     const siblingProps = this.props.siblingProps || this.props.props;
 
     const prevSiblings = this.renderElements({
       elements: OutletManager.getPrevElements(this.props.name),
-      elementProps: siblingProps,
-      defaultRenderer: null
+      elementProps: siblingProps
     });
 
     const nextSiblings = this.renderElements({
       elements: OutletManager.getNextElements(this.props.name),
-      elementProps: siblingProps,
-      defaultRenderer: null
+      elementProps: siblingProps
     });
 
     const selfElements = this.renderElements({
       elements: OutletManager.getElements(this.props.name),
-      elementProps: this.props.props,
-      defaultRenderer: this.props.children
+      elementProps: this.props.props
     });
 
     if (prevSiblings || nextSiblings) {
       return (
         <Tag>
           {prevSiblings}
-          {selfElements}
+          {selfElements && selfElements}
+          {(!selfElements || alwaysRenderChildren) && this.props.children}
           {nextSiblings}
         </Tag>
       );
     }
+    else if (selfElements && alwaysRenderChildren) {
+      return <Tag>{selfElements}{this.props.children}</Tag>;
+    }
     else {
-      return selfElements;
+      return <Tag>{selfElements || this.props.children || null}</Tag>;
     }
   },
 
-  renderElements(context) {
-    const { elements, elementProps, defaultRenderer } = context;
+  renderElements({ elements, elementProps }) {
     const options = OutletManager.get(this.props.name).options;
 
     // if (process.env.NODE_ENV === 'development') {
@@ -74,22 +90,18 @@ const Outlet = React.createClass({
         return this.renderElement(el, elementProps);
       }
       else {
-        return defaultRenderer;
+        return null;
       }
     }
 
     if (elements.length === 0) {
-      return defaultRenderer || null;
+      return null;
     }
     else if (elements.length === 1) {
       return this.renderElement(elements[0], elementProps);
     }
     else {
-      return (
-        <div>
-          {elements.map(this.renderElementWithProps.bind(null, elementProps))}
-        </div>
-      );
+      return elements.map(this.renderElementWithProps.bind(null, elementProps));
     }
   },
 

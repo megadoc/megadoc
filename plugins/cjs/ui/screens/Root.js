@@ -12,6 +12,7 @@ module.exports = function createRoot(routeName) {
       query: React.PropTypes.object,
       params: React.PropTypes.shape({
         moduleId: React.PropTypes.string,
+        entity: React.PropTypes.string,
       })
     },
 
@@ -28,6 +29,7 @@ module.exports = function createRoot(routeName) {
             <ClassBrowser
               routeName={routeName}
               activeModuleId={this.props.params.moduleId}
+              activeEntityId={this.props.params.entity}
             />
           </LeftColumn>
 

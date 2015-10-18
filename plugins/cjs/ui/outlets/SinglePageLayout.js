@@ -7,7 +7,7 @@ module.exports = function(routeName, config) {
   const { navigationLabel } = config;
 
   OutletManager.add('SinglePageLayout::ContentPanel', {
-    component: require('../screens/AllModules')(routeName),
+    component: require('../screens/AllModules')(routeName, config),
     key: `${routeName}-all-modules`
   });
 

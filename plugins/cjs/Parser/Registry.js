@@ -33,11 +33,9 @@ Rpt.addModuleDoc = function(doc, path) {
 };
 
 Rpt.trackModuleDocAtPath = function(doc, path) {
-  var targetPath = Utils.findNearestPathWithComments(path);
-
-  if (targetPath) {
-    this.docPaths.set(targetPath, doc);
-    doc.$path = targetPath;
+  if (path) {
+    this.docPaths.set(path, doc);
+    doc.$path = path;
   }
 };
 
@@ -174,6 +172,12 @@ Rpt.findEnclosingDoc = function(startingPath, map) {
   });
 
   return doc;
+};
+
+Rpt.findExportedModule = function(filePath) {
+  return this.docs.filter(function(doc) {
+    return doc.isModule() && doc.filePath === filePath;
+  })[0];
 };
 
 Object.defineProperty(Rpt, 'size', {

@@ -1,13 +1,11 @@
 var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
-var merge = require('lodash').merge;
-var defaults = require('./config');
 var fs = require('fs');
 
 exports.name = 'CorePlugin';
 exports.run = function(compiler) {
-  var config = merge({}, defaults, compiler.config);
+  var config = compiler.config;
   var utils = compiler.utils;
   var database = {};
 

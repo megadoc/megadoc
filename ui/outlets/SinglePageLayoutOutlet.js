@@ -5,7 +5,8 @@ const OutletManager = require('core/OutletManager');
 const HomeScreen = require('../screens/Home');
 
 module.exports = function(config) {
-  const readmeSections = config.readme.source.toc.filter(function(section) {
+  const { readme } = config;
+  const readmeSections = readme && readme.source.toc.filter(function(section) {
     return section.level === 2;
   });
 
@@ -37,7 +38,7 @@ module.exports = function(config) {
             </h1>
 
             <ul className="">
-              {readmeSections.map(this.renderSection)}
+              {readme && readmeSections.map(this.renderSection)}
             </ul>
           </div>
         );

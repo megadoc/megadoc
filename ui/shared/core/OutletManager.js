@@ -4,8 +4,8 @@ const invariant = require('utils/invariant');
 let outlets = [];
 
 /**
- * @singleton
- * Layout outlets.
+ * This is the underlying module that allows you to register elements for
+ * [Outlet outlets]() and define them.
  */
 let OutletManager = exports;
 
@@ -27,7 +27,7 @@ let OutletManager = exports;
  * @throws {InvariantError}
  *         If a similar outlet with this name had already been defined.
  */
-exports.define = function(name, options = {}) {
+OutletManager.define = function(name, options = {}) {
   invariant(!findWhere(outlets, { name }),
     `Outlet ${name} had already been defined.`
   );
@@ -35,7 +35,7 @@ exports.define = function(name, options = {}) {
   outlets.push({ name, options, elements: [] });
 };
 
-exports.get = function(name) {
+OutletManager.get = function(name) {
   const outlet = findWhere(outlets, { name });
 
   invariant(!!outlet, `Unknown outlet ${name}.`);
@@ -43,8 +43,24 @@ exports.get = function(name) {
   return outlet;
 };
 
-exports.add = function(name, element) {
-  const outlet = this.get(name);
+/**
+ * Register an element to be rendered inside an [Outlet outlet]().
+ *
+ * @param {String} name
+ *        The outlet ID.
+ *
+ * @param {Object} element
+ *        A description of the element.
+ *
+ * @param {String} element.key
+ *        **REQUIRED** - a unique identifier for the component (within that
+ *        outlet.)
+ *
+ * @param {React.Class} element.component
+ *        **REQUIRED** - the component to render inside the outlet.
+ */
+OutletManager.add = function(name, element) {
+  const outlet = OutletManager.get(name);
 
   if (outlet.options.firstMatching) {
     invariant(element.match instanceof Function,
@@ -55,11 +71,11 @@ exports.add = function(name, element) {
   outlet.elements.push(element);
 };
 
-exports.getElements = function(name) {
-  return this.get(name).elements;
+OutletManager.getElements = function(name) {
+  return OutletManager.get(name).elements;
 };
 
-exports.getPrevElements = function(name) {
+OutletManager.getPrevElements = function(name) {
   return outlets.reduce(function(siblings, outlet) {
     outlet.elements.forEach(function(el) {
       if (el.position && el.position.before === name) {
@@ -71,7 +87,7 @@ exports.getPrevElements = function(name) {
   }, []);
 };
 
-exports.getNextElements = function(name) {
+OutletManager.getNextElements = function(name) {
   return outlets.reduce(function(siblings, outlet) {
     outlet.elements.forEach(function(el) {
       if (el.position && el.position.after === name) {
@@ -82,5 +98,3 @@ exports.getNextElements = function(name) {
     return siblings;
   }, []);
 };
-
-module.exports = OutletManager;

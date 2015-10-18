@@ -31,6 +31,10 @@ function getRenderableType(doc, moduleDocs) {
 
 const { string, object, arrayOf } = React.PropTypes;
 
+function isStaticProperty(scope) {
+  return [ K.SCOPE_PROTOTYPE, K.SCOPE_INSTANCE ].indexOf(scope) === -1;
+}
+
 const ModuleBody = React.createClass({
   propTypes: {
     routeName: string.isRequired,
@@ -65,14 +69,14 @@ const ModuleBody = React.createClass({
         {this.renderProperties(
           doc,
           moduleDocs,
-          (scope) => scope === K.SCOPE_INSTANCE,
+          (scope) => !isStaticProperty(scope),
           "Instance Properties"
         )}
 
         {this.renderProperties(
           doc,
           moduleDocs,
-          (scope) => scope !== K.SCOPE_INSTANCE,
+          isStaticProperty,
           "Properties"
         )}
 
@@ -102,8 +106,10 @@ const ModuleBody = React.createClass({
 
     return (
       <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
-        {tags.length > 0 && (
-          <DocGroup label="Examples">
+        {tags.length === 1 && (this.renderExampleTag(tags[0]))}
+
+        {tags.length > 1 && (
+          <DocGroup label="Examples" alwaysGroup={false}>
             {tags.map(this.renderExampleTag)}
           </DocGroup>
         )}

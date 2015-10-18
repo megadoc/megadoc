@@ -14,26 +14,33 @@ const ModuleHeader = React.createClass({
     moduleDocs: array,
     showSourcePaths: bool,
     headerLevel: string,
+    generateAnchor: bool,
+    showNamespace: bool,
   },
 
   getDefaultProps: function() {
     return {
-      headerLevel: '1'
+      headerLevel: '1',
+      generateAnchor: true,
     };
   },
 
-  shouldComponentUpdate: function() {
-    return false;
+  shouldComponentUpdate: function(prevProps) {
+    return prevProps.doc !== this.props.doc;
   },
 
   render() {
     const { doc, moduleDocs } = this.props;
-    const anchorId = Router.generateAnchorId({
-      routeName: `${this.props.routeName}.module`,
-      params: {
-        moduleId: doc.id
-      }
-    });
+    let anchorId;
+
+    if (this.props.generateAnchor) {
+      anchorId = Router.generateAnchorId({
+        routeName: `${this.props.routeName}.module`,
+        params: {
+          moduleId: doc.id
+        }
+      });
+    }
 
     let type;
 
@@ -60,6 +67,7 @@ const ModuleHeader = React.createClass({
           level="1"
           parentLevel={this.props.headerLevel}
           className="class-view__header markdown-text__heading"
+          title={this.props.showSourcePaths ? doc.filePath : undefined}
           id={anchorId}
         >
           <span className="class-view__header-name">
@@ -77,7 +85,7 @@ const ModuleHeader = React.createClass({
           {' '}
 
           <span className="class-view__header-type">
-            <Outlet name="CJS::ModuleHeader::Type" props={this.props}>
+            <Outlet name="CJS::ModuleHeader::Type" props={this.props} tagName="span">
               <span>{type}</span>
             </Outlet>
           </span>
@@ -89,12 +97,6 @@ const ModuleHeader = React.createClass({
             />
           )}
         </Heading>
-
-        {this.props.showSourcePaths && (
-          <div className="class-view__module-filepath type-mute">
-            {doc.filePath}
-          </div>
-        )}
       </header>
     );
   }

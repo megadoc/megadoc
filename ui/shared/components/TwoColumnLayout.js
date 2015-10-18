@@ -73,6 +73,7 @@ const TwoColumnLayout = React.createClass({
 
     emitter.on('resize', this.reloadOnResize);
     emitter.emit('change');
+    emitter.emit('resize');
   },
 
   componentWillUnmount() {

@@ -1,3 +1,8 @@
+/**
+ * @namespace UI.Core
+ *
+ * Routing APIs for the app.
+ */
 let Router = exports;
 let instance;
 
