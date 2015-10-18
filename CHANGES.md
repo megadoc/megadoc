@@ -1,5 +1,31 @@
 # Changelog
 
+## 3.1.0
+
+This patch introduces a Single-Page layout in which all the documents are 
+displayed in a single page. This is very useful for small projects that do not 
+need the navigation functionality in the regular, multi-page layout.
+
+One can toggle this layout by either specifying `--layout="single-page"` on 
+the command-line, or adding `layout: "single-page"` to the config file.
+
+Only the CJS and Markdown plugins currently support the single-page layout.
+
+**Changes**
+
+- many performance improvements that were necessary in order to support the single-page rendering
+- CJS: fixed an issue that was preventing the option `inferModuleIdFromFileName` from being respected
+- CJS: can now link to modules using their relative file path
+- CJS: instance and prototype properties are now displayed in the same group in the UI
+- Core: externals links were incorrectly being highlighted in the UI
+- fixed an issue with some markdown headings not being properly rendered to plain-text
+
+**(BREAKING) Internal changes**
+
+- tinydoc's plugin registrar API has changed:
+  + `registerRoutes` has been renamed to `addRoutes`
+  + `registerOutletElement` was dropped; use `Outlet.add` directly instead
+
 ## 3.0.0
 
 This release brings a whole lot of improvements to the robustness of tinydoc's parsers, the UI, and runtime performance since we now do all the content rendering at compile-time instead.

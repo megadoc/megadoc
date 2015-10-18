@@ -28,6 +28,7 @@ var Doc = React.createClass({
     anchorId: string,
     doc: object.isRequired,
     collapsible: bool,
+    expanded: bool,
     withExamples: bool,
     withTitle: bool,
     withDescription: bool,
@@ -40,6 +41,14 @@ var Doc = React.createClass({
       withDescription: true,
       withExamples: true
     };
+  },
+
+  shouldComponentUpdate: function(nextProps, nextState) {
+    return (
+      nextProps.doc !== this.props.doc ||
+      nextState.collapsed !== this.state.collapsed ||
+      nextProps.expanded !== this.props.expanded
+    );
   },
 
   render() {

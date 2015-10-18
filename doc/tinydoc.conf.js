@@ -18,10 +18,11 @@ config.plugins = [
 
     source: [
       'lib/**/*.js',
+      'plugins/core/**/*.js',
       'plugins/cjs/**/*.js',
-      'plugins/ui/**/*.js',
+      'plugins/markdown/**/*.js',
       'plugins/git/**/*.js',
-      'ui/app/**/*.js',
+      'ui/**/*.js',
     ],
 
     exclude: [
@@ -32,7 +33,14 @@ config.plugins = [
 
     inferModuleIdFromFileName: true,
 
-    useDirAsNamespace: false
+    useDirAsNamespace: false,
+
+    namespaceDirMap: {
+      'lib': 'Core',
+      'lib/utils': 'Core.Utils',
+      'plugins/cjs/Parser': 'Plugins.CJS.Parser',
+      'ui/shared/core': 'UI.Core',
+    }
   }),
 
   require('../plugins/markdown')({

@@ -1,17 +1,47 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
+const Heading = require('components/Heading');
 const K = require('constants');
+const Router = require('core/Router');
+
+const { string, object, array, bool } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
   propTypes: {
-    doc: React.PropTypes.object,
-    commonPrefix: React.PropTypes.string,
-    moduleDocs: React.PropTypes.array,
-    showSourcePaths: React.PropTypes.bool,
+    routeName: string.isRequired,
+    doc: object,
+    commonPrefix: string,
+    moduleDocs: array,
+    showSourcePaths: bool,
+    headerLevel: string,
+    generateAnchor: bool,
+    showNamespace: bool,
+  },
+
+  getDefaultProps: function() {
+    return {
+      headerLevel: '1',
+      generateAnchor: true,
+    };
+  },
+
+  shouldComponentUpdate: function(prevProps) {
+    return prevProps.doc !== this.props.doc;
   },
 
   render() {
     const { doc, moduleDocs } = this.props;
+    let anchorId;
+
+    if (this.props.generateAnchor) {
+      anchorId = Router.generateAnchorId({
+        routeName: `${this.props.routeName}.module`,
+        params: {
+          moduleId: doc.id
+        }
+      });
+    }
+
     let type;
 
     if (!doc.ctx) {
@@ -33,25 +63,40 @@ const ModuleHeader = React.createClass({
 
     return (
       <header>
-        <h1 className="class-view__header">
+        <Heading
+          level="1"
+          parentLevel={this.props.headerLevel}
+          className="class-view__header markdown-text__heading"
+          title={this.props.showSourcePaths ? doc.filePath : undefined}
+          id={anchorId}
+        >
           <span className="class-view__header-name">
             {doc.name}
           </span>
 
           {' '}
 
+          {this.props.showNamespace && doc.namespace && (
+            <span className="class-view__header-namespace">
+              {'{'}{doc.namespace}{'}'}
+            </span>
+          )}
+
+          {' '}
+
           <span className="class-view__header-type">
-            <Outlet name="CJS::ModuleHeader::Type" props={this.props}>
+            <Outlet name="CJS::ModuleHeader::Type" props={this.props} tagName="span">
               <span>{type}</span>
             </Outlet>
           </span>
-        </h1>
 
-        {this.props.showSourcePaths && (
-          <div className="class-view__module-filepath type-mute">
-            {doc.filePath}
-          </div>
-        )}
+          {anchorId && (
+            <a
+              href={'#'+anchorId}
+              className="markdown-text__heading-anchor icon icon-link"
+            />
+          )}
+        </Heading>
       </header>
     );
   }

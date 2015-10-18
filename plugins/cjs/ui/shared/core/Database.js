@@ -1,9 +1,35 @@
-const { where, findWhere } = require('lodash');
+const { where, findWhere, sortBy, groupBy } = require('lodash');
 
 let databases = {};
 
-function createDatabase(key, database) {
+function createDatabase(key, config) {
+  const { database } = config;
   const moduleDocs = where(database, { isModule: true });
+
+  const sortedModuleDocs = config.sortModulesAlphabetically ?
+    sortBy(moduleDocs, 'id') :
+    moduleDocs
+  ;
+
+  const namespaceModuleDocs = groupBy(sortedModuleDocs, 'namespace');
+
+  let namespaces = Object.keys(namespaceModuleDocs).map(function(ns) {
+    const hasNamespace = ns && ns !== 'undefined';
+    const nsModule = hasNamespace && findWhere(moduleDocs, { id: ns });
+
+    if (nsModule) {
+      nsModule.$isNamespaceModule = true;
+    }
+
+    return {
+      name: hasNamespace ? ns : '[General]',
+      sortableName: hasNamespace ? '0' + ns.toLowerCase() : '1',
+      module: nsModule,
+      modules: namespaceModuleDocs[ns]
+    };
+  });
+
+  namespaces = sortBy(namespaces, 'sortableName');
 
   let exports = {
     getKey() {
@@ -16,6 +42,14 @@ function createDatabase(key, database) {
 
     getModules() {
       return moduleDocs;
+    },
+
+    getNamespacedModules() {
+      return namespaces;
+    },
+
+    hasNamespaces() {
+      return namespaces.length > 1;
     },
 
     getModule(moduleId) {
@@ -51,7 +85,7 @@ module.exports = {
   createDatabase(config) {
     const key = config.routeName;
 
-    databases[key] = createDatabase(key, config.database);
+    databases[key] = createDatabase(key, config);
 
     return databases[key];
   },

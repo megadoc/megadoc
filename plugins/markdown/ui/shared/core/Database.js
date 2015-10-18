@@ -1,9 +1,8 @@
-const { assign, where, findWhere } = require('lodash');
+const { assign, where, findWhere, sortBy } = require('lodash');
 const strHumanize = require('tinydoc/lib/utils/strHumanize');
 
 function createDatabase(config) {
-  const articles = config.database;
-
+  let articles = sortBy(config.database, 'title');
   let folders = [];
 
   function createFolderConfig(folderPath) {
@@ -39,7 +38,23 @@ function createDatabase(config) {
 
   folders.forEach(function(folder) {
     folder.articles = where(articles, { folder: folder.path });
+
+    if (folder.series) {
+      folder.articles = sortBy(folder.articles, 'fileName');
+    }
+
+    // README always comes first
+    folder.articles = sortBy(folder.articles, function(a) {
+      if (a.fileName === 'README') {
+        return -1;
+      }
+      else {
+        return 1;
+      }
+    });
   });
+
+  folders = sortBy(folders, 'title');
 
   let exports = {
     getTitle() {

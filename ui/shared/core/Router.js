@@ -1,11 +1,17 @@
+/**
+ * @namespace UI.Core
+ *
+ * Routing APIs for the app.
+ */
+let Router = exports;
 let instance;
 
-exports.setInstance = function(_instance) {
+Router.setInstance = function(_instance) {
   instance = _instance;
 };
 
 if (process.env.NODE_ENV === 'development') {
-  exports.getInstance = function() {
+  Router.getInstance = function() {
     console.warn('You are using a development-only method.');
     return instance;
   };
@@ -18,7 +24,7 @@ if (process.env.NODE_ENV === 'development') {
  * @param  {Object} newQuery
  *         The query parameters.
  */
-exports.updateQuery = function(newQuery) {
+Router.updateQuery = function(newQuery) {
   var routes = instance.getCurrentRoutes();
   var currentRouteName = routes[routes.length-1].name;
   var query = instance.getCurrentQuery();
@@ -34,51 +40,53 @@ exports.updateQuery = function(newQuery) {
   instance.replaceWith(currentRouteName, instance.getCurrentParams(), query);
 };
 
-exports.goToNotFound = function() {
+Router.goToNotFound = function() {
   instance.replaceWith('404');
 };
 
-exports.transitionTo = function(path, params, query) {
+Router.transitionTo = function(path, params, query) {
   instance.transitionTo(path, params, query);
 };
 
-exports.replaceWith = function(path, params, query) {
+Router.replaceWith = function(path, params, query) {
   instance.replaceWith(path, params, query);
 };
 
-exports.getQueryItem = function(item) {
+Router.getQueryItem = function(item) {
   if (instance) {
     return instance.getCurrentQuery()[item];
   }
 };
 
-exports.makeHref = function(name, params, query) {
+Router.makeHref = function(name, params, query) {
   return instance.makeHref(name, params, query);
 };
 
-exports.generateAnchorId = function({ routeName, params }) {
+Router.generateAnchorId = function({ routeName, params }) {
   return instance.makeHref(routeName, Object.keys(params).reduce(function(encoded, key) {
     encoded[key] = encodeURIComponent(params[key]);
     return encoded;
   }, {})).replace(/^#/, '');
 };
 
-exports.getCurrentPath = function() {
+Router.getCurrentPath = function() {
   if (instance) {
     return instance.getCurrentPath();
   }
 };
 
-exports.isActive = function(routeName) {
+Router.isActive = function(routeName) {
   return instance && instance.isRunning && instance.isActive(routeName);
 };
 
-exports.isRunning = function() {
+Router.isRunning = function() {
   return instance && instance.isRunning;
 };
 
-exports.getParamItem = function(item) {
+Router.getParamItem = function(item) {
   if (instance) {
     return instance.getCurrentParams()[item];
   }
 };
+
+module.exports = Router;

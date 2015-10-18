@@ -69,4 +69,6 @@ module.exports = {
    * Whether to show the file path the module was defined in.
    */
   showSourcePaths: true,
+
+  sortModulesAlphabetically: true,
 };

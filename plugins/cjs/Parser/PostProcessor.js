@@ -62,7 +62,39 @@ function resolveReceiver(registry, doc) {
   // Note that this might still need alias-resolving.
   if (doc.docstring.hasMemberOf()) {
     receiver = doc.docstring.getExplicitReceiver();
-    doc.overrideReceiver(receiver);
+
+    if (receiver.match(/(.*)\.prototype$/)) {
+      doc.overrideReceiver(RegExp.$1);
+
+      doc.nodeInfo.addContextInfo({
+        scope: K.SCOPE_PROTOTYPE
+      });
+
+      // @method or @type ? we use that instead
+      if (doc.docstring.hasTypeOverride()) {
+        doc.nodeInfo.addContextInfo({
+          type: doc.docstring.getTypeOverride()
+        });
+      }
+
+      // For something like:
+      //
+      //     Object.defineProperty(someObj, 'someProp', {
+      //       /** @memberOf someObj */
+      //       get: function() {
+      //       }
+      //     })
+      //
+      // we don't want the context type to be function, because it isn't
+      else if (doc.docstring.hasTag('property')) {
+        doc.nodeInfo.addContextInfo({
+          type: K.TYPE_UNKNOWN
+        });
+      }
+    }
+    else {
+      doc.overrideReceiver(receiver);
+    }
   }
 
   // Resolve @lends
@@ -84,14 +116,31 @@ function resolveReceiver(registry, doc) {
     }
   }
   else {
-  // TODO: this too
-    actualReceiver = (
-      registry.findAliasedReceiver(doc.$path, receiver) ||
-      registry.findClosestModule(doc.$path)
-    );
+    //     var Something = exports;
+    //         ^^^^^^^^^
+    //
+    //     // ...
+    //
+    //     /** yep */
+    //     exports.something = function() {}
+    //     ^^^^^^^
+    if (receiver === 'exports') {
+      actualReceiver = registry.findExportedModule(doc.filePath);
 
-    if (actualReceiver) {
-      doc.overrideReceiver(actualReceiver);
+      if (actualReceiver) {
+        doc.overrideReceiver(actualReceiver.id);
+      }
+    }
+    else {
+      // TODO: this too
+      actualReceiver = (
+        registry.findAliasedReceiver(doc.$path, receiver) ||
+        registry.findClosestModule(doc.$path)
+      );
+
+      if (actualReceiver) {
+        doc.overrideReceiver(actualReceiver);
+      }
     }
   }
 }

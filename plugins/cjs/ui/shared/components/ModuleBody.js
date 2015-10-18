@@ -31,18 +31,16 @@ function getRenderableType(doc, moduleDocs) {
 
 const { string, object, arrayOf } = React.PropTypes;
 
+function isStaticProperty(scope) {
+  return [ K.SCOPE_PROTOTYPE, K.SCOPE_INSTANCE ].indexOf(scope) === -1;
+}
+
 const ModuleBody = React.createClass({
   propTypes: {
-    routeName: string,
-    focusedEntity: string,
+    routeName: string.isRequired,
     doc: object,
     moduleDocs: arrayOf(object),
-  },
-
-  getDefaultProps: function() {
-    return {
-      focusedEntity: null
-    };
+    focusedEntity: string,
   },
 
   render() {
@@ -71,14 +69,14 @@ const ModuleBody = React.createClass({
         {this.renderProperties(
           doc,
           moduleDocs,
-          (scope) => scope === K.SCOPE_INSTANCE,
+          (scope) => !isStaticProperty(scope),
           "Instance Properties"
         )}
 
         {this.renderProperties(
           doc,
           moduleDocs,
-          (scope) => scope !== K.SCOPE_INSTANCE,
+          isStaticProperty,
           "Properties"
         )}
 
@@ -108,8 +106,10 @@ const ModuleBody = React.createClass({
 
     return (
       <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
-        {tags.length > 0 && (
-          <DocGroup label="Examples">
+        {tags.length === 1 && (this.renderExampleTag(tags[0]))}
+
+        {tags.length > 1 && (
+          <DocGroup label="Examples" alwaysGroup={false}>
             {tags.map(this.renderExampleTag)}
           </DocGroup>
         )}
@@ -177,7 +177,7 @@ const ModuleBody = React.createClass({
         key={path}
         typeInfo={tag.typeInfo}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         path={path}
         parentPath={this.props.doc.id}
         anchorId={this.generateAnchorId(path)}
@@ -210,7 +210,7 @@ const ModuleBody = React.createClass({
       <Doc
         key={path}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />
@@ -242,7 +242,7 @@ const ModuleBody = React.createClass({
       <Doc
         key={doc.id}
         initiallyCollapsed
-        expanded={this.props.focusedEntity === path}
+        expanded={this.getActiveEntityId() === path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />
@@ -257,7 +257,14 @@ const ModuleBody = React.createClass({
         entity: path
       }
     });
-  }
+  },
+
+  getActiveEntityId() {
+    return (
+      this.props.focusedEntity ||
+      decodeURIComponent(Router.getParamItem('entity'))
+    );
+  },
 });
 
 module.exports = ModuleBody;

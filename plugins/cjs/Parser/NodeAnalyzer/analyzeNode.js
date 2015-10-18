@@ -222,10 +222,14 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
       info.id = lhs.property.name;
       info.markAsInstanceProperty();
     }
+    else {
+      info.id = lhs.property.name;
+      info.receiver = lhs.object.name;
+    }
   }
 
   if (!info.id) {
-    console.warn("Unrecognized ExpressionStatement '%s' => '%s' (Source: %s).",
+    console.info("Unrecognized ExpressionStatement '%s' => '%s' (Source: %s).",
       lhs ? lhs.type : expr.type,
       rhs ? rhs.type : expr.type,
       Utils.dumpLocation(node, filePath)

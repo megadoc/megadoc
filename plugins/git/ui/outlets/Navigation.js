@@ -1,24 +1,22 @@
-var React = require("react");
-var { Link } = require('react-router');
-var Icon = require('components/Icon');
-var config = require('config');
+const React = require("react");
+const { Link } = require('react-router');
+const Icon = require('components/Icon');
+const config = require('config');
+const { BannerItem } = require('components/Banner');
 
-var Navigation = React.createClass({
-  displayName: "Navigation",
-  statics: {
-    key: 'git'
-  },
-
+const GitNavigation = React.createClass({
   render() {
     const icon = config.navigationIcon;
     const label = config.navigationLabel;
 
     return (
-      <Link to="git">
-        {icon && <Icon className={icon} />} {label || 'Activity'}
-      </Link>
+      <BannerItem>
+        <Link to="git">
+          {icon && <Icon className={icon} />} {label || 'Activity'}
+        </Link>
+      </BannerItem>
     );
   }
 });
 
-module.exports = Navigation;
+module.exports = GitNavigation;

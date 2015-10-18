@@ -22,21 +22,22 @@ function isDisabled() {
   return !config.disqus || config.disqus.enabled === false;
 }
 
-// stolen from https://github.com/mzabriskie/react-disqus-thread because of the
+// Stolen from https://github.com/mzabriskie/react-disqus-thread because of the
 // (not merged as of yet) fix in
 // https://github.com/mzabriskie/react-disqus-thread/pull/9/files
+//
 var ReactDisqusThread = React.createClass({
   displayName: 'DisqusThread',
 
   propTypes: {
-    /**
+    /*
      * `shortname` tells the Disqus service your forum's shortname,
      * which is the unique identifier for your website as registered
      * on Disqus. If undefined , the Disqus embed will not load.
      */
     shortname: React.PropTypes.string.isRequired,
 
-    /**
+    /*
      * `identifier` tells the Disqus service how to identify the
      * current page. When the Disqus embed is loaded, the identifier
      * is used to look up the correct thread. If disqus_identifier
@@ -47,7 +48,7 @@ var ReactDisqusThread = React.createClass({
      */
     identifier: React.PropTypes.string,
 
-    /**
+    /*
      * `title` tells the Disqus service the title of the current page.
      * This is used when creating the thread on Disqus for the first time.
      * If undefined, Disqus will use the <title> attribute of the page.
@@ -55,7 +56,7 @@ var ReactDisqusThread = React.createClass({
      */
     title: React.PropTypes.string,
 
-    /**
+    /*
      * `url` tells the Disqus service the URL of the current page.
      * If undefined, Disqus will take the window.location.href.
      * This URL is used to look up or create a thread if disqus_identifier
@@ -64,7 +65,7 @@ var ReactDisqusThread = React.createClass({
      */
     url: React.PropTypes.string,
 
-    /**
+    /*
      * `categoryId` tells the Disqus service the category to be used for
      * the current page. This is used when creating the thread on Disqus
      * for the first time.
@@ -164,6 +165,11 @@ var ReactDisqusThread = React.createClass({
   }
 });
 
+/**
+ * @namespace UI.Components
+ *
+ * Renders a small [disqus](http://disqus.com) comment box.
+ */
 var Disqus = React.createClass({
   propTypes: {
     identifier: React.PropTypes.string,

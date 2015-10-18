@@ -69,6 +69,24 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
     assert.ok(docs[0].isModule, 'it marks the doc as module');
   });
 
+  it('var SomeModule = exports; variant 2', function() {
+    var docs = parseInline(function() {
+      // /**
+      //  * Let there be dragons.
+      //  */
+      // var DragonHunter = exports;
+      //
+      // /** hello */
+      // exports.capture = function() {
+      // };
+    });
+
+    assert.equal(docs.length, 2);
+    assert.ok(docs[0].isModule, 'it marks the doc as module');
+    assert.ok(docs[1].id, 'capture');
+    assert.ok(docs[1].receiver, 'DragonHunter');
+  });
+
   it('var SomeModule = exports; exports.something = something;', function() {
     var docs = parseInline(function() {
       // /**

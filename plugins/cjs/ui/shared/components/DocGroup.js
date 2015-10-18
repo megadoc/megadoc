@@ -15,6 +15,10 @@ const DocGroup = React.createClass({
     };
   },
 
+  shouldComponentUpdate: function(nextProps) {
+    return this.props.children !== nextProps.children;
+  },
+
   render() {
     const DOMTag = this.props.tagName;
 

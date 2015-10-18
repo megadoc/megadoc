@@ -35,6 +35,18 @@ function extractIdInfo(tags) {
     ;
   }
 
+  var methodTag = findWhere(tags, { type: 'method' });
+
+  if (methodTag && methodTag.typeInfo.name) {
+    id = methodTag.typeInfo.name;
+  }
+
+  var propertyTag = findWhere(tags, { type: 'property' });
+
+  if (propertyTag && propertyTag.typeInfo.name) {
+    id = propertyTag.typeInfo.name;
+  }
+
   return {
     id: id,
     namespace: namespace

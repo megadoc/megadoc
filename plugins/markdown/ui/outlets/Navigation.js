@@ -1,30 +1,27 @@
 const React = require('react');
-const { Link } = require('react-router');
+const Link = require('components/Link');
 const Icon = require('components/Icon');
+const { BannerItem } = require('components/Banner');
 
 module.exports = function createNavigationOutlet(config) {
-  const Navigation = React.createClass({
-    statics: {
-      key: config.routeName
-    },
+  const { routeName, icon, title } = config;
 
+  const MarkdownNavigation = React.createClass({
     render() {
-      if (config.navigationEntry === false) {
-        return null;
-      }
-
       return (
-        <Link to={config.routeName}>
-          {config.icon && [
-            <Icon key="icon" className={config.icon} />,
-            ' '
-          ]}
+        <BannerItem>
+          <Link to={routeName}>
+            {icon && [
+              <Icon key="icon" className={icon} />,
+              ' '
+            ]}
 
-          {config.title}
-        </Link>
+            {title}
+          </Link>
+        </BannerItem>
       );
     }
   });
 
-  return Navigation;
+  return MarkdownNavigation;
 };

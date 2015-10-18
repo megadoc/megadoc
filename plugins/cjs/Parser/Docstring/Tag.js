@@ -12,6 +12,13 @@ function renamePrimitiveType(type) {
   }
 }
 
+/**
+ * @namespace Plugins.CJS
+ *
+ * @param {Object} doxTag
+ * @param {Object} customTags
+ * @param {String} filePath
+ */
 function Tag(doxTag, customTags, filePath) {
   /**
    * @property {String}
@@ -94,6 +101,7 @@ function Tag(doxTag, customTags, filePath) {
     case 'return':
     case 'throws':
     case 'example':
+    case 'interface':
       this.typeInfo = parseProperty(doxTag.string);
 
       if (this.typeInfo.description) {
@@ -116,7 +124,13 @@ function Tag(doxTag, customTags, filePath) {
     // if it was marked @method, treat it as such (not stupid "property" type
     // on object modules)
     case 'method':
-      this.explicitType = 'function';
+      this.explicitType = K.TYPE_FUNCTION;
+      this.typeInfo = parseProperty(doxTag.string);
+
+      if (this.typeInfo.description) {
+        this.typeInfo.description = neutralizeWhitespace(this.typeInfo.description);
+      }
+
       break;
 
     case 'protected':

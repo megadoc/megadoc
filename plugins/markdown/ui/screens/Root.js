@@ -30,7 +30,6 @@ var MarkdownRoot = React.createClass({
           <ClassBrowser
             routeName={this.props.routeName}
             activeArticleId={decodeURIComponent(this.props.params.articleId)}
-            activeSectionId={decodeURIComponent(this.props.params.sectionId)}
           />
         </LeftColumn>
 

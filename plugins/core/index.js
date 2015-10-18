@@ -1,13 +1,11 @@
 var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var Promise = require('bluebird');
-var merge = require('lodash').merge;
-var defaults = require('./config');
 var fs = require('fs');
 
 exports.name = 'CorePlugin';
 exports.run = function(compiler) {
-  var config = merge({}, defaults, compiler.config);
+  var config = compiler.config;
   var utils = compiler.utils;
   var database = {};
 
@@ -27,7 +25,7 @@ exports.run = function(compiler) {
 
   compiler.on('render', function(renderMarkdown, linkify, done) {
     if (config.readme) {
-      database.readme = renderMarkdown(
+      database.readme = renderMarkdown.withTOC(
         linkify(
           fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8')
         ), {

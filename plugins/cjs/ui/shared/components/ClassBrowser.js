@@ -1,11 +1,11 @@
 const React = require("react");
-const { Link } = require('react-router');
+const Link = require('components/Link');
 const Database = require('core/Database');
 const classSet = require('utils/classSet');
 const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
-const { findWhere, sortBy, groupBy } = require('lodash');
+const { findWhere } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
@@ -18,60 +18,80 @@ var ClassBrowser = React.createClass({
       if (props.activeModuleId) {
         return this.refs[props.activeModuleId];
       }
+      else {
+        return false;
+      }
     }, 50)
   ],
 
   propTypes: {
-    routeName: React.PropTypes.string,
-    modules: React.PropTypes.array,
+    routeName: React.PropTypes.string.isRequired,
     activeModuleId: React.PropTypes.string,
+    activeEntityId: React.PropTypes.string,
+    withControls: React.PropTypes.bool,
   },
 
+  getDefaultProps: function() {
+    return {
+      withControls: true
+    };
+  },
+
+  shouldComponentUpdate: function(nextProps) {
+    return (
+      nextProps.routeName !== this.props.routeName ||
+      nextProps.activeModuleId !== this.props.activeModuleId ||
+      nextProps.activeEntityId !== this.props.activeEntityId
+    );
+  },
+
+
   render() {
-    let modules = Database.for(this.props.routeName).getModules();
-
-    modules = sortBy(modules, 'id');
-
-    var nsClasses = groupBy(modules, 'namespace');
-
-    var namespaces = Object.keys(nsClasses).map(function(ns) {
-      return {
-        name: ns === 'undefined' ? '[General]' : ns,
-        sortableName: ns === 'undefined' ? '1' : '0' + ns.toLowerCase(),
-        modules: nsClasses[ns]
-      };
-    });
-
-    namespaces = sortBy(namespaces, 'sortableName');
+    const namespaces = Database.for(this.props.routeName).getNamespacedModules();
 
     return (
       <nav className="class-browser__listing">
-        {namespaces.map((ns) => {
-          return this.renderNamespace(ns, namespaces.length > 1);
-        })}
+        {namespaces.map(this.renderNamespace)}
 
-        <div className="class-browser__controls">
-          <Checkbox
-            checked={!!Storage.get(PRIVATE_VISIBILITY_KEY)}
-            onChange={this.togglePrivateVisibility}
-            children="Show private"
-          />
-        </div>
+        {this.props.withControls && (
+          <div className="class-browser__controls">
+            <Checkbox
+              checked={!!Storage.get(PRIVATE_VISIBILITY_KEY)}
+              onChange={this.togglePrivateVisibility}
+              children="Show private"
+            />
+          </div>
+        )}
       </nav>
     );
   },
 
-  renderNamespace(ns, displayName = true) {
+  renderNamespace(ns) {
     if (ns.modules.length === 0) {
       return null;
     }
 
+    const shouldDisplayName = Database.for(this.props.routeName).hasNamespaces();
+    const nsModule = ns.module;
+
     return (
       <div key={ns.name} className="class-browser__category">
-        {displayName && (
+        {shouldDisplayName && (
           <h3 className="class-browser__category-name">
-            {ns.name}
+            {nsModule ? (
+              <Link
+                to={`${this.props.routeName}.module`}
+                params={{ moduleId: nsModule.id }}
+                children={ns.name}
+              />
+            ) : (
+              ns.name
+            )}
           </h3>
+        )}
+
+        {nsModule && this.props.activeModuleId === nsModule.id && (
+          this.renderModuleEntities(nsModule)
         )}
 
         {ns.modules.map(this.renderModule)}
@@ -80,7 +100,11 @@ var ClassBrowser = React.createClass({
   },
 
   renderModule(doc) {
-    const routeName = this.props.routeName;
+    if (doc.$isNamespaceModule) {
+      return null;
+    }
+
+    const { routeName } = this.props;
     const { id } = doc;
     const isActive = this.props.activeModuleId === id;
     const className = classSet({
@@ -99,7 +123,7 @@ var ClassBrowser = React.createClass({
         <Link
           ref={id}
           to={`${routeName}.module`}
-          params={{ moduleId: id }}
+          params={{ moduleId: encodeURIComponent(id) }}
           className="class-browser__entry-link"
         >
           {doc.name}
@@ -153,7 +177,7 @@ var ClassBrowser = React.createClass({
         <Link
           to={`${routeName}.module.entity`}
           params={{
-            moduleId: moduleDoc.id,
+            moduleId: encodeURIComponent(moduleDoc.id),
             entity: encodeURIComponent(entityPath)
           }}
           children={entityPath}

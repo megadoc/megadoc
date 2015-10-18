@@ -14,7 +14,7 @@ const Module = React.createClass({
     HasTitle(function() {
       var module = Database.for(this.props.routeName).getModule(this.props.params.moduleId);
       if (module) {
-        return `[JS] ${module.name}`;
+        return module.name;
       }
     })
   ],
@@ -59,16 +59,19 @@ const Module = React.createClass({
     return (
       <div className="class-view doc-content">
         <ModuleHeader
+          routeName={routeName}
           doc={doc}
           moduleDocs={moduleDocs}
           showSourcePaths={config.for(routeName).showSourcePaths}
+          showNamespace={config.for(routeName).showNamespaceInModuleHeader}
+          generateAnchor={false}
         />
 
         <ModuleBody
+          routeName={routeName}
           doc={doc}
           moduleDocs={moduleDocs}
           focusedEntity={decodeURIComponent(this.props.params.entity)}
-          routeName={routeName}
         />
 
         <Outlet

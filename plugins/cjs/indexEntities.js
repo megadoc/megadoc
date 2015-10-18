@@ -12,6 +12,7 @@ module.exports = function(docs, routeName) {
 
       paths.push(doc.id);
       paths.push(doc.name);
+      paths.push(doc.filePath);
     }
     else {
       var parentDoc = findWhere(docs, { id: doc.receiver });

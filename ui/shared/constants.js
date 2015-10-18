@@ -20,6 +20,11 @@ exports.AVAILABLE_SCHEME_NAMES = [
   'Solarized (dark)'
 ];
 
+exports.AVAILABLE_LAYOUTS = [
+  'single-page',
+  'multi-page',
+];
+
 exports.DEFAULT_SCHEME = 'plain';
 
 exports.CFG_COLOR_SCHEME = 'colorScheme';

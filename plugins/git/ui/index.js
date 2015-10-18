@@ -1,7 +1,8 @@
-var config = require('config');
+const config = require('config');
+const Outlet = require('components/Outlet');
 
 tinydoc.use(function GitPlugin(api) {
-  api.registerRoutes([
+  api.addRoutes([
     {
       name: 'git',
       path: config.routeName,
@@ -9,5 +10,8 @@ tinydoc.use(function GitPlugin(api) {
     }
   ]);
 
-  api.registerOutletElement('navigation', require('./outlets/Navigation'));
+  Outlet.add('navigation', {
+    key: 'git__navigation',
+    component: require('./outlets/Navigation')
+  });
 });

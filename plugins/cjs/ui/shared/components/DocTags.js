@@ -43,6 +43,10 @@ var DocTags = React.createClass({
     };
   },
 
+  shouldComponentUpdate: function(nextProps) {
+    return this.props.tags !== nextProps.tags;
+  },
+
   render() {
     var paramTags = where(this.props.tags, { type: 'param' });
     var unhandledTags = this.props.tags.filter(function(tag) {
@@ -60,7 +64,7 @@ var DocTags = React.createClass({
         </TagGroup>
 
         {this.props.withExamples && (
-          <TagGroup alwaysGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
+          <TagGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
             Examples
           </TagGroup>
         )}

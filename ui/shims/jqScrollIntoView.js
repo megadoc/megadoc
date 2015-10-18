@@ -2,6 +2,6 @@ const $ = require('jquery');
 
 require('imports?jQuery=jquery!../vendor/jquery.scrollintoview.js');
 
-module.exports = function(el, options) {
-  $(el).scrollintoview(options);
+module.exports = function(node, options) {
+  $(node).scrollintoview(options);
 };

@@ -22,8 +22,14 @@ var Collapsible = {
   },
 
   componentDidMount: function() {
-    if (this.props.initiallyCollapsed) {
+    if (this.props.initiallyCollapsed && !this.props.expanded) {
       this.setState({ collapsed: true });
+    }
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.expanded && this.state.collapsed) {
+      this.setState({ collapsed: false });
     }
   },
 

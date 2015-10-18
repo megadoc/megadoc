@@ -14,6 +14,7 @@ var defaults = {
   fullFolderTitles: true,
   fullFolderTitleDelimiter: ' - ',
   allowLeadingSlashInLinks: true,
+  generateMissingHeadings: true,
   discardIdPrefix: null
 };
 
@@ -50,9 +51,12 @@ function MarkdownPlugin(userConfig) {
 
       compiler.on('render', function(md, linkify, done) {
         database.forEach(function(doc) {
-          doc.source = md(linkify(doc.source), {
+          var compiled = md.withTOC(linkify(doc.source), {
             baseURL: '/' + config.routeName + '/' + encodeURIComponent(doc.id)
           });
+
+          doc.source = compiled.html;
+          doc.sections = compiled.toc;
         });
 
         done();

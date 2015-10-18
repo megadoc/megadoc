@@ -1,14 +1,10 @@
 const React = require("react");
 const { RouteHandler } = require("react-router");
-const Banner = require('components/Banner');
-const Footer = require('components/Footer');
-const TwoColumnLayout = require('components/TwoColumnLayout');
+const SinglePageLayout = require('components/SinglePageLayout');
+const MultiPageLayout = require('components/MultiPageLayout');
+const AppState = require('core/AppState');
 const Storage = require('core/Storage');
 const ColorSchemeManager = require('core/ColorSchemeManager');
-const classSet = require('utils/classSet');
-const config = require('config');
-const $ = require('jquery');
-const Router = require('core/Router');
 
 const Root = React.createClass({
   propTypes: {
@@ -24,7 +20,7 @@ const Root = React.createClass({
 
   getInitialState: function() {
     return {
-      started: false,
+      layoutChanged: false,
     };
   },
 
@@ -36,42 +32,40 @@ const Root = React.createClass({
     }
 
     Storage.on('change', this.reload);
-    TwoColumnLayout.on('change', this.reload);
+    AppState.on('change', this.reload);
+    AppState.on('layoutChange', this.trackLayoutChange);
+  },
 
-    // we need the router to be running for LinkResolvers to register
-    // themselves *before* we start rendering anything.
-    this.setState({ started: true });
+  componentDidUpdate: function() {
+    if (this.state.layoutChanged) {
+      // force the browser to (re)scroll to the proper location
+      setTimeout(() => {
+        const originalLocation = window.location.hash;
 
-    if (!config.useHashLocation) {
-      this.interceptInternalLinkClicks();
+        window.location.hash = '#/';
+        window.location.hash = originalLocation;
+      }, 0);
+
+      this.setState({ layoutChanged: false });
     }
   },
 
   componentWillUnmount: function() {
-    TwoColumnLayout.off('change', this.reload);
+    AppState.off('layoutChange', this.trackLayoutChange);
+    AppState.off('change', this.reload);
     Storage.off('change', this.reload);
   },
 
   render() {
-    if (!this.state.started) {
-      return null;
-    }
-
-    var className = classSet({
-      'root': true,
-      'root--with-two-column-layout': TwoColumnLayout.isActive(),
-    });
+    const Layout = AppState.getLayout() === 'single-page' ?
+      SinglePageLayout :
+      MultiPageLayout
+    ;
 
     return (
-      <div className={className}>
-        <Banner />
-
-        <div className="root__screen">
-          <RouteHandler onChange={this.reload} {...this.props} />
-        </div>
-
-        <Footer />
-      </div>
+      <Layout {...this.props}>
+        <RouteHandler onChange={this.reload} {...this.props} />
+      </Layout>
     );
   },
 
@@ -79,14 +73,8 @@ const Root = React.createClass({
     this.forceUpdate();
   },
 
-  interceptInternalLinkClicks() {
-    $(document.body).on('click', 'a[data-internal="true"]', function(e) {
-      if (!e.ctrlKey && !e.metaKey) {
-        const href = $(e.target).attr('href');
-        e.preventDefault();
-        Router.transitionTo(href.replace(/^#/, ''));
-      }
-    });
+  trackLayoutChange() {
+    this.setState({ layoutChanged: true });
   }
 });
 
