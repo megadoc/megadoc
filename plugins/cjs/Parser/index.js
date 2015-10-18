@@ -1,4 +1,5 @@
 var fs = require('fs');
+var nodejsPath = require('path');
 var recast = require('recast');
 var Utils = require('./Utils');
 var Doc = require('./Doc');
@@ -60,9 +61,11 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     'docstringProcessors',
     'tagProcessors',
     'customTags',
+    'namespaceDirMap',
   ]);
 
   config.tagProcessors = config.tagProcessors || [];
+  config.namespaceDirMap = config.namespaceDirMap || {};
 
   console.debug('\nParsing: %s', filePath);
   console.debug(Array(80).join('-'));
@@ -107,6 +110,13 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         });
 
         if (doc.id) {
+          if (!docstring.namespace) {
+            var implicitNamespace = config.namespaceDirMap[nodejsPath.dirname(filePath)];
+            if (implicitNamespace) {
+              docstring.namespace = implicitNamespace;
+            }
+          }
+
           if (doc.isModule()) {
             console.debug('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
             parser.registry.addModuleDoc(doc, path);

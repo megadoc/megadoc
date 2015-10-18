@@ -16,8 +16,9 @@ var defaults = require('./config');
 function createCJSPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
   var parserConfig = {
-    inferModuleIdFromFilename: config.inferModuleIdFromFilename,
+    inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
+    namespaceDirMap: config.namespaceDirMap,
     nodeAnalyzers: [],
     docstringProcessors: [],
     tagProcessors: [],

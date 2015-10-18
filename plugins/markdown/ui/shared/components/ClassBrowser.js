@@ -1,6 +1,5 @@
 const React = require("react");
-const { Link } = require('react-router');
-const { sortBy } = require('lodash');
+const Link = require('components/Link');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
 const Storage = require('core/Storage');
@@ -49,7 +48,7 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderGroupedEntries() {
-    const folders = sortBy(this.getFolders(), 'title');
+    const folders = this.getFolders();
 
     return (
       <div>
@@ -60,20 +59,6 @@ var MarkdownClassBrowser = React.createClass({
 
   renderFolder(folder) {
     let articles = folder.articles;
-
-    if (!folder.series) {
-      articles = sortBy(articles, 'title');
-    }
-
-    // README always comes first
-    articles = sortBy(articles, function(a) {
-      if (a.fileName === 'README') {
-        return -1;
-      }
-      else {
-        return 1;
-      }
-    });
 
     return (
       <div key={folder.path} className="class-browser__category">
@@ -89,7 +74,7 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   renderAllArticles() {
-    const articles = sortBy(this.getArticles(), 'title');
+    const articles = this.getArticles();
 
     return (
       <div>
@@ -118,7 +103,7 @@ var MarkdownClassBrowser = React.createClass({
           params={{ articleId: encodeURIComponent(id) }}
           className="class-browser__entry-link"
         >
-          {title}
+          {article.plainTitle}
 
           {article.git && isItemHot(article.git.lastCommittedAt) && (
             <HotItemIndicator />

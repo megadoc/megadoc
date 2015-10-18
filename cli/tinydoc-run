@@ -26,6 +26,7 @@ program
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
+  .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "debug", "info", "log", "warn", or "error"')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
   .option('-d, --debug', 'Shortcut for --log-level="debug"')
@@ -88,6 +89,10 @@ if (program.plugin.length > 0) {
     console.log('%d plugins were excluded.', config.plugins.length - activePlugins.length);
     config.plugins = activePlugins;
   }
+}
+
+if (program.layout) {
+  config.layout = program.layout;
 }
 
 tiny = tinydoc(config, {

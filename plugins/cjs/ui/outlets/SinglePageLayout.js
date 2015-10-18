@@ -4,6 +4,8 @@ const OutletManager = require('core/OutletManager');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(routeName, config) {
+  const { navigationLabel } = config;
+
   OutletManager.add('SinglePageLayout::ContentPanel', {
     component: require('../screens/AllModules')(routeName),
     key: `${routeName}-all-modules`
@@ -24,7 +26,7 @@ module.exports = function(routeName, config) {
 
         return (
           <div>
-            <h2>{config.navigationLabel}</h2>
+            {navigationLabel && <h2>{navigationLabel}</h2>}
 
             <ClassBrowser
               routeName={routeName}

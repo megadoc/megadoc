@@ -1,9 +1,25 @@
-const { where, findWhere } = require('lodash');
+const { where, findWhere, sortBy, groupBy } = require('lodash');
 
 let databases = {};
 
 function createDatabase(key, database) {
   const moduleDocs = where(database, { isModule: true });
+
+  const sortedModuleDocs = sortBy(moduleDocs, 'id');
+
+  const namespaceModuleDocs = groupBy(sortedModuleDocs, 'namespace');
+
+  let namespaces = Object.keys(namespaceModuleDocs).map(function(ns) {
+    const hasNamespace = ns && ns !== 'undefined';
+
+    return {
+      name: hasNamespace ? ns : '[General]',
+      sortableName: hasNamespace ? '0' + ns.toLowerCase() : '1',
+      modules: namespaceModuleDocs[ns]
+    };
+  });
+
+  namespaces = sortBy(namespaces, 'sortableName');
 
   let exports = {
     getKey() {
@@ -16,6 +32,14 @@ function createDatabase(key, database) {
 
     getModules() {
       return moduleDocs;
+    },
+
+    getNamespacedModules() {
+      return namespaces;
+    },
+
+    hasNamespaces() {
+      return namespaces.length > 1;
     },
 
     getModule(moduleId) {

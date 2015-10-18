@@ -34,8 +34,12 @@
 .schemable({
   .class-view {
     &__header {
+      &-namespace {
+        color: lighten(@base1, 25%);
+      }
+
       &-type {
-        color: @base1;
+        color: lighten(@base1, 25%);
       }
     }
   }

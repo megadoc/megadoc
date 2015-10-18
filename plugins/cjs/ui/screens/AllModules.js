@@ -7,12 +7,6 @@ const { shape, string } = React.PropTypes;
 
 module.exports = function createAllModulesComponent(routeName) {
   const database = Database.for(routeName);
-  const modules = database.getModules().map(function(doc) {
-    return {
-      doc: doc,
-      moduleDocs: database.getModuleEntities(doc.id)
-    };
-  });
 
   function maybeUpdate(component, moduleId) {
     if (component.refs[moduleId]) {
@@ -43,18 +37,28 @@ module.exports = function createAllModulesComponent(routeName) {
     },
 
     render() {
-      console.debug('Rendering');
-
       return (
-        <div className="js-root">
+        <div className="js-root js-all-modules">
           <div className="js-root__content">
-            {modules.map(this.renderModule)}
+            {database.getNamespacedModules().map(this.renderNamespace)}
           </div>
         </div>
       );
     },
 
-    renderModule({ doc, moduleDocs }) {
+    renderNamespace(ns) {
+      return (
+        <div key={ns.name} className="js-all-modules__namespace">
+          <header className="js-all-modules__namespace-header">{ns.name}</header>
+
+          {ns.modules.map(this.renderModule)}
+        </div>
+      )
+    },
+
+    renderModule(doc) {
+      const moduleDocs = database.getModuleEntities(doc.id);
+
       return (
         <div key={doc.id} className="class-view doc-content">
           <ModuleHeader
@@ -62,6 +66,8 @@ module.exports = function createAllModulesComponent(routeName) {
             doc={doc}
             moduleDocs={moduleDocs}
             showSourcePaths={false}
+            showNamespace
+            headerLevel="1"
           />
 
           <ModuleBody

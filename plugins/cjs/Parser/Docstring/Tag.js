@@ -12,6 +12,13 @@ function renamePrimitiveType(type) {
   }
 }
 
+/**
+ * @namespace Plugins.CJS
+ *
+ * @param {Object} doxTag
+ * @param {Object} customTags
+ * @param {String} filePath
+ */
 function Tag(doxTag, customTags, filePath) {
   /**
    * @property {String}

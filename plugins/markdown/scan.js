@@ -8,7 +8,7 @@ var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
 var Promise = require('bluebird');
-var normalizeHeading = require('../../lib/Renderer/Utils').normalizeHeading;
+var RendererUtils = require('../../lib/Renderer/Utils');
 var strHumanize = require('../../lib/utils/strHumanize');
 
 function scan(config, utils, globalConfig, done) {
@@ -34,7 +34,7 @@ function scan(config, utils, globalConfig, done) {
       .replace(/\W/g, '-')
     ;
 
-    entry.id = normalizeHeading(filePath.replace(commonPrefix, ''));
+    entry.id = RendererUtils.normalizeHeading(filePath.replace(commonPrefix, ''));
     entry.sortingId = entry.filePath;
 
     entry.title = parseTitle(entry.source);
@@ -44,7 +44,7 @@ function scan(config, utils, globalConfig, done) {
       entry.source = '# ' + entry.title + '\n\n' + entry.source;
     }
 
-    entry.plainTitle = normalizeHeading(entry.title);
+    entry.plainTitle = RendererUtils.renderText(entry.title);
 
     entry.fileName = fileName;
     entry.folder = path.dirname(entry.filePath);

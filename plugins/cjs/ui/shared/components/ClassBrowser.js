@@ -1,11 +1,11 @@
 const React = require("react");
-const { Link } = require('react-router');
+const Link = require('components/Link');
 const Database = require('core/Database');
 const classSet = require('utils/classSet');
 const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
-const { findWhere, sortBy, groupBy } = require('lodash');
+const { findWhere } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
@@ -31,87 +31,24 @@ var ClassBrowser = React.createClass({
     withControls: React.PropTypes.bool,
   },
 
-  getInitialState: function() {
-    return {
-      namespaces: null
-    };
-  },
-
   getDefaultProps: function() {
     return {
       withControls: true
     };
   },
 
-  componentDidMount: function() {
-    this.computeData();
-  },
-
   shouldComponentUpdate: function(nextProps, nextState) {
     return (
       nextProps.routeName !== this.props.routeName ||
       nextProps.activeModuleId !== this.props.activeModuleId ||
-      nextProps.activeEntityId !== this.props.activeEntityId ||
-      this.state.namespaces !== nextState.namespaces
+      nextProps.activeEntityId !== this.props.activeEntityId
     );
   },
 
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.routeName !== this.props.routeName) {
-      this.computeData();
-    }
-  },
-
-  computeData() {
-    console.log('[CJS::ClassBrowser] computing data...');
-
-    let modules = Database.for(this.props.routeName).getModules();
-
-    modules = sortBy(modules, 'id');
-
-    var nsClasses = groupBy(modules, 'namespace');
-
-    var namespaces = Object.keys(nsClasses).map(function(ns) {
-      return {
-        name: ns === 'undefined' ? '[General]' : ns,
-        sortableName: ns === 'undefined' ? '1' : '0' + ns.toLowerCase(),
-        modules: nsClasses[ns]
-      };
-    });
-
-    namespaces = sortBy(namespaces, 'sortableName');
-
-    this.setState({
-      namespaces
-    }, () => {
-      console.log('[CJS::ClassBrowser] \tdone.');
-    });
-  },
 
   render() {
-    if (!this.state.namespaces) {
-      console.log('[CJS::ClassBrowser] waiting for cache...');
-      return null;
-    }
-
     console.log('[CJS::ClassBrowser] rendering...');
-    const { namespaces } = this.state;
-
-    // let modules = Database.for(this.props.routeName).getModules();
-
-    // modules = sortBy(modules, 'id');
-
-    // var nsClasses = groupBy(modules, 'namespace');
-
-    // var namespaces = Object.keys(nsClasses).map(function(ns) {
-    //   return {
-    //     name: ns === 'undefined' ? '[General]' : ns,
-    //     sortableName: ns === 'undefined' ? '1' : '0' + ns.toLowerCase(),
-    //     modules: nsClasses[ns]
-    //   };
-    // });
-
-    // namespaces = sortBy(namespaces, 'sortableName');
+    const namespaces = Database.for(this.props.routeName).getNamespacedModules();
 
     return (
       <nav className="class-browser__listing">
@@ -135,7 +72,7 @@ var ClassBrowser = React.createClass({
       return null;
     }
 
-    const shouldDisplayName = this.state.namespaces.length > 1;
+    const shouldDisplayName = Database.for(this.props.routeName).hasNamespaces();
 
     return (
       <div key={ns.name} className="class-browser__category">

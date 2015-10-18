@@ -37,7 +37,6 @@ const HighlightedText = React.createClass({
 
   highlightCode: function () {
     if (HighlightedText.isHighlightingEnabled()) {
-      console.debug('Highlighting');
       const nodes = this.getDOMNode().querySelectorAll('pre');
 
       if (nodes.length > 0) {

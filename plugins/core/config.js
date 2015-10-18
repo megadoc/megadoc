@@ -4,6 +4,15 @@
  */
 module.exports = {
   /**
+   * @property {String} [assetRoot]
+   *
+   * Absolute path to the root directory from which all files should be located.
+   * This is automatically set to the directory containing tinydoc.conf.js when
+   * you run the compiler.
+   */
+  assetRoot: null,
+
+  /**
    * @property {String} outputDir
    *
    * Path to where the built assets (index.html and friends) will be saved to.
@@ -146,6 +155,8 @@ module.exports = {
   footer: 'Made with &#9829; using [tinydoc](https://github.com/tinydoc).',
 
   /**
+   * @property {Object} hotness
+   *
    * The "Hot Item" feature configuration.
    *
    * An item could be marked as "hot" if its last commit timestamp falls
@@ -155,7 +166,7 @@ module.exports = {
    */
   hotness: {
     /**
-     * @property {Number}
+     * @property {Number} hotness.count
      *
      * The number of [interval] (like days or weeks) that we should consider
      * an item to be hot.
@@ -163,7 +174,7 @@ module.exports = {
     count: 1,
 
     /**
-     * @property {days|weeks|months|years}
+     * @property {days|weeks|months|years} hotness.interval
      *
      * The actual interval. Works with @count defined above.
      */

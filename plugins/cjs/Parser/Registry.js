@@ -3,12 +3,21 @@ var Utils = require('./Utils');
 var K = require('./constants');
 var assert = require('assert');
 
+/**
+ * A registry of all the docs and their AST nodes and paths.
+ */
 function Registry() {
+  /**
+   * @property {Object[]} docs
+   *
+   * lololo
+   */
   this.docs = [];
   this.docPaths = new WeakMap();
   this.lends = new WeakMap();
 }
 
+/** @lends Registry.prototype */
 var Rpt = Registry.prototype;
 
 Rpt.addModuleDoc = function(doc, path) {

@@ -1,5 +1,6 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
+const Heading = require('components/Heading');
 const K = require('constants');
 const Router = require('core/Router');
 
@@ -12,6 +13,13 @@ const ModuleHeader = React.createClass({
     commonPrefix: string,
     moduleDocs: array,
     showSourcePaths: bool,
+    headerLevel: string,
+  },
+
+  getDefaultProps: function() {
+    return {
+      headerLevel: '1'
+    };
   },
 
   shouldComponentUpdate: function() {
@@ -48,10 +56,23 @@ const ModuleHeader = React.createClass({
 
     return (
       <header>
-        <h1 className="class-view__header markdown-text__heading" id={anchorId}>
+        <Heading
+          level="1"
+          parentLevel={this.props.headerLevel}
+          className="class-view__header markdown-text__heading"
+          id={anchorId}
+        >
           <span className="class-view__header-name">
             {doc.name}
           </span>
+
+          {' '}
+
+          {this.props.showNamespace && doc.namespace && (
+            <span className="class-view__header-namespace">
+              {'{'}{doc.namespace}{'}'}
+            </span>
+          )}
 
           {' '}
 
@@ -67,7 +88,7 @@ const ModuleHeader = React.createClass({
               className="markdown-text__heading-anchor icon icon-link"
             />
           )}
-        </h1>
+        </Heading>
 
         {this.props.showSourcePaths && (
           <div className="class-view__module-filepath type-mute">

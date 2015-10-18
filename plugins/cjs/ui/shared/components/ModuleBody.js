@@ -43,8 +43,6 @@ const ModuleBody = React.createClass({
     const { doc, moduleDocs } = this.props;
     const renderableType = getRenderableType(doc, moduleDocs);
 
-    console.debug('[ModuleBody] Rendering');
-
     return (
       <div>
         <HighlightedText>{doc.description}</HighlightedText>

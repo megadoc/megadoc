@@ -14,11 +14,19 @@ const AllArticles = React.createClass({
   },
 
   render() {
-    const articles = Database.for(this.props.routeName).getArticles();
+    const folders = Database.for(this.props.routeName).getFolders();
 
     return (
       <div>
-        {articles.map(this.renderArticle)}
+        {folders.map(this.renderFolder)}
+      </div>
+    );
+  },
+
+  renderFolder(folder) {
+    return (
+      <div key={folder.title}>
+        {folder.articles.map(this.renderArticle)}
       </div>
     );
   },
