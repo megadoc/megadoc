@@ -1,10 +1,11 @@
 const Storage = require('core/Storage');
 const K = require('constants');
+const Outlet = require('components/Outlet');
 
 Storage.register(K.CFG_CLASS_BROWSER_EXPAND_ALL, false);
 
 tinydoc.use(function YARDAPIPlugin(api) {
-  api.registerRoutes([
+  api.addRoutes([
     {
       name: 'api',
       path: 'api',
@@ -42,5 +43,8 @@ tinydoc.use(function YARDAPIPlugin(api) {
 
   ]);
 
-  api.registerOutletElement('navigation', require('./outlets/Navigation'));
+  Outlet.add('navigation', {
+    key: 'yard-api__navigation',
+    component: require('./outlets/Navigation')
+  });
 });

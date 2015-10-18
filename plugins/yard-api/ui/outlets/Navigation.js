@@ -1,18 +1,17 @@
-var React = require("react");
-var { Link } = require('react-router');
-var config = require('config');
-var Icon = require('components/Icon');
+const React = require("react");
+const { Link } = require('react-router');
+const config = require('config');
+const Icon = require('components/Icon');
+const { BannerItem } = require('components/Banner');
 
-var Navigation = React.createClass({
-  statics: {
-    key: 'api'
-  },
-
+const Navigation = React.createClass({
   render() {
     return (
-      <Link to="api">
-        {config.icon && <Icon className={config.icon} />} {config.navigationLabel || 'API'}
-      </Link>
+      <BannerItem>
+        <Link to="api">
+          {config.icon && <Icon className={config.icon} />} {config.navigationLabel || 'API'}
+        </Link>
+      </BannerItem>
     );
   }
 });
