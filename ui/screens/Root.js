@@ -1,5 +1,6 @@
 const React = require("react");
 const { RouteHandler } = require("react-router");
+const Outlet = require('components/Outlet');
 const SinglePageLayout = require('components/SinglePageLayout');
 const MultiPageLayout = require('components/MultiPageLayout');
 const AppState = require('core/AppState');
@@ -63,9 +64,11 @@ const Root = React.createClass({
     ;
 
     return (
-      <Layout {...this.props}>
-        <RouteHandler onChange={this.reload} {...this.props} />
-      </Layout>
+      <Outlet name="LayoutWrapper" props={{}} forwardChildren>
+        <Layout {...this.props}>
+          <RouteHandler onChange={this.reload} {...this.props} />
+        </Layout>
+      </Outlet>
     );
   },
 

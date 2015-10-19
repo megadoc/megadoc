@@ -36,7 +36,11 @@ module.exports = function(routeName, config) {
       render() {
         return (
           <div>
-            <h2>{config.title}</h2>
+            {config.title && (
+              <header className="single-page-layout__sidebar-header">
+                {config.title}
+              </header>
+            )}
 
             <ClassBrowser
               routeName={routeName}

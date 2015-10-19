@@ -25,8 +25,14 @@ function createCJSPlugin(userConfig) {
     postProcessors: [],
   };
 
+  assert(typeof config.routeName === 'string',
+    "You must specify a @routeName string to the CJS Plugin."
+  );
+
   return {
     name: 'CJSPlugin',
+
+    routeName: config.routeName,
 
     /**
      * Add a custom-tag definition.
@@ -71,7 +77,6 @@ function createCJSPlugin(userConfig) {
 
     run: function(compiler) {
       var database;
-
 
       compiler.on('scan', function(done) {
         scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _database) {

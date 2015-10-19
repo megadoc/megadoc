@@ -23,7 +23,8 @@ const HANDLED_TAGS = [
   'preserveOrder',
   'method',
   'namespace',
-  'type'
+  'type',
+  'property',
 ];
 
 var DocTags = React.createClass({

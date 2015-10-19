@@ -1,9 +1,10 @@
 const React = require('react');
 const Database = require('core/Database');
+const Outlet = require('components/Outlet');
 const ModuleBody = require('components/ModuleBody');
 const ModuleHeader = require('components/ModuleHeader');
 
-const { shape, string } = React.PropTypes;
+const { shape, string, object } = React.PropTypes;
 
 module.exports = function createAllModulesComponent(routeName, config) {
   const database = Database.for(routeName);
@@ -22,18 +23,30 @@ module.exports = function createAllModulesComponent(routeName, config) {
         moduleId: string,
         entity: string,
       }),
+      query: object,
     },
 
     shouldComponentUpdate: function(nextProps) {
-      if (nextProps.params.moduleId !== this.props.params.moduleId) {
+      if (nextProps.query !== this.props.query) {
         maybeUpdate(this, this.props.params.moduleId);
         maybeUpdate(this, nextProps.params.moduleId);
+
+        return true;
+      }
+      else if (nextProps.params.moduleId !== this.props.params.moduleId) {
+        maybeUpdate(this, this.props.params.moduleId);
+        maybeUpdate(this, nextProps.params.moduleId);
+
+        return false;
       }
       else if (nextProps.params.entity !== this.props.params.entity) {
         maybeUpdate(this, nextProps.params.moduleId);
-      }
 
-      return false;
+        return false;
+      }
+      else {
+        return false;
+      }
     },
 
     render() {
@@ -89,6 +102,18 @@ module.exports = function createAllModulesComponent(routeName, config) {
             routeName={routeName}
             moduleDocs={moduleDocs}
           />
+
+          <Outlet
+            name="CJS::ModuleBody"
+            props={{
+              routeName: routeName,
+              params: this.props.params,
+              query: this.props.query,
+              moduleDoc: doc,
+              moduleDocs: moduleDocs,
+            }}
+          />
+
         </div>
       );
     },

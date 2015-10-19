@@ -1,8 +1,9 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
 const Types = require('components/Tags/Types');
+const Doc = require('components/Doc');
 
-const { shape, string, arrayOf } = React.PropTypes;
+const { shape, string, arrayOf, object } = React.PropTypes;
 
 const PropertyTag = React.createClass({
   displayName: "PropertyTag",
@@ -14,7 +15,9 @@ const PropertyTag = React.createClass({
       name: string,
       defaultValue: string,
       description: string
-    })
+    }),
+
+    doc: object,
   },
 
   render() {
@@ -45,6 +48,14 @@ const PropertyTag = React.createClass({
           <p className="property-tag__default-value">
             Defaults to: <code>{typeInfo.defaultValue}</code>
           </p>
+        )}
+
+        {this.props.doc && typeInfo.types[0].toLowerCase() === 'function' && (
+          <Doc
+            withTitle={false}
+            collapsible={false}
+            doc={this.props.doc}
+          />
         )}
       </li>
     );

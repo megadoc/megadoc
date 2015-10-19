@@ -26,7 +26,11 @@ module.exports = function(routeName, config) {
 
         return (
           <div>
-            {navigationLabel && <h2>{navigationLabel}</h2>}
+            {navigationLabel && (
+              <header className="single-page-layout__sidebar-header">
+                {navigationLabel}
+              </header>
+            )}
 
             <ClassBrowser
               routeName={routeName}

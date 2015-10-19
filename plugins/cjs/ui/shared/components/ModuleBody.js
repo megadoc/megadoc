@@ -119,7 +119,11 @@ const ModuleBody = React.createClass({
 
   renderExampleTag(tag) {
     return (
-      <Outlet key={tag.string} name="CJS::ExampleTag" props={tag}>
+      <Outlet
+        key={tag.string}
+        name="CJS::ExampleTag"
+        props={{ tag, routeName: this.props.routeName }}
+      >
         <ExampleTag string={tag.string} typeInfo={tag.typeInfo} />
       </Outlet>
     );
@@ -172,6 +176,7 @@ const ModuleBody = React.createClass({
     const tag = findWhere(doc.tags, { type: 'property' });
     const path = doc.ctx.symbol + doc.id;
 
+
     return (
       <PropertyTag
         key={path}
@@ -181,6 +186,7 @@ const ModuleBody = React.createClass({
         path={path}
         parentPath={this.props.doc.id}
         anchorId={this.generateAnchorId(path)}
+        doc={doc}
       />
     );
   },

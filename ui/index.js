@@ -12,7 +12,9 @@ var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
-OutletManager.define('navigation');
+OutletManager.define('Navigation');
+OutletManager.define('LayoutWrapper');
+OutletManager.define('SinglePageLayout::Wrapper');
 OutletManager.define('SinglePageLayout::Sidebar');
 OutletManager.define('SinglePageLayout::ContentPanel');
 

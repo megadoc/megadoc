@@ -24,3 +24,23 @@
   }
 }
 
+.root--with-single-page-layout .anchorable-heading {
+  @offset: @whitespace;
+
+  &__anchor {
+    position: relative;
+    top: -1 * @offset;
+
+    &:before {
+      content: '';
+    }
+  }
+
+  &[id]:before {
+    content: '';
+    display: block;
+    margin-top: -1 * @offset;
+    padding-top: @offset;
+  }
+}
+

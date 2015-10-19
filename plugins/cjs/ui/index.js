@@ -54,7 +54,7 @@ tinydoc.use(function CJSPlugin(api) {
       },
     ]);
 
-    OutletManager.add('navigation', {
+    OutletManager.add('Navigation', {
       key: routeName,
       component: createNavigationOutlet(config)
     });

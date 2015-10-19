@@ -63,7 +63,7 @@ function register(api, config) {
   ]);
 
   if (config.title) {
-    OutletManager.add('navigation', {
+    OutletManager.add('Navigation', {
       key: config.routeName,
       component: createNavigationOutlet(config)
     });

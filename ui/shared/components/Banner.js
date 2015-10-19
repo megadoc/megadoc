@@ -21,24 +21,6 @@ var BannerItem = React.createClass({
   }
 });
 
-// if (config.showSettingsLinkInBanner) {
-//   Outlet.add('navigation', {
-//     key: 'settings',
-//     position: 'last',
-//     component: React.createClass({
-//       render() {
-//         return (
-//           <BannerItem key="settings">
-//             <Link to="settings">
-//               <Icon className="icon-cog" />
-//             </Link>
-//           </BannerItem>
-//         );
-//       }
-//     })
-//   });
-// }
-
 var Banner = React.createClass({
   statics: { BannerItem: BannerItem },
 
@@ -67,14 +49,15 @@ var Banner = React.createClass({
           </h1>
 
           <nav className="banner__navigation">
-            <Outlet name="navigation" props={{}} alwaysRenderChildren>
-              <BannerItem key="settings">
-                <Link to="settings">
-                  <Icon className="icon-cog" />
-                </Link>
-              </BannerItem>
+            <Outlet name="Navigation" props={{}} alwaysRenderChildren>
+              {config.showSettingsLinkInBanner && (
+                <BannerItem key="settings">
+                  <Link to="settings">
+                    <Icon className="icon-cog" />
+                  </Link>
+                </BannerItem>
+              )}
             </Outlet>
-
           </nav>
         </header>
       </div>

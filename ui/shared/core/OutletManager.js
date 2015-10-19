@@ -62,6 +62,14 @@ OutletManager.get = function(name) {
 OutletManager.add = function(name, element) {
   const outlet = OutletManager.get(name);
 
+  invariant(typeof element.key === 'string',
+    "You must specify a unique string key as @key for the outlet component."
+  );
+
+  invariant(typeof element.component === 'function',
+    "You must specify a React.Class as @component for the outlet component."
+  );
+
   if (outlet.options.firstMatching) {
     invariant(element.match instanceof Function,
       `You must define a #match function to inject into the outlet ${name}.`

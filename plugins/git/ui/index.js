@@ -10,7 +10,7 @@ tinydoc.use(function GitPlugin(api) {
     }
   ]);
 
-  Outlet.add('navigation', {
+  Outlet.add('Navigation', {
     key: 'git__navigation',
     component: require('./outlets/Navigation')
   });

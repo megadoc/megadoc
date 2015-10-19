@@ -27,8 +27,6 @@ const SinglePageLayout = React.createClass({
                 props={this.props}
               />
 
-              <hr />
-
               {config.allowUserSettings && (
                 <Link to="settings">Settings</Link>
               )}

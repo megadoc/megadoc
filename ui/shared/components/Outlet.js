@@ -28,6 +28,7 @@ const Outlet = React.createClass({
     children: any,
 
     alwaysRenderChildren: bool,
+    forwardChildren: bool,
   },
 
   getDefaultProps: function() {
@@ -107,6 +108,14 @@ const Outlet = React.createClass({
 
   renderElement(el, props) {
     const Renderer = getRenderer(el);
+
+    if (el.match && !el.match(props)) {
+      return null;
+    }
+
+    if (this.props.forwardChildren) {
+      props.children = this.props.children;
+    }
 
     return (
       <Renderer

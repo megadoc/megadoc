@@ -43,7 +43,7 @@ tinydoc.use(function YARDAPIPlugin(api) {
 
   ]);
 
-  Outlet.add('navigation', {
+  Outlet.add('Navigation', {
     key: 'yard-api__navigation',
     component: require('./outlets/Navigation')
   });

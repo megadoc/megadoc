@@ -30,7 +30,7 @@ module.exports = function(config) {
       render() {
         return (
           <div>
-            <h1>
+            <h1 className="single-page-layout__home-link">
               <Link to="home">
                 {config.title}
               </Link>
