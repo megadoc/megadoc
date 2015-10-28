@@ -31,6 +31,7 @@ module.exports = function createTinydoc(config) {
 
   function addRoutes(specs) {
     specs.forEach(function(spec) {
+      spec.ignoreScrollBehavior = spec.ignoreScrollBehavior !== false;
       // todo: validate spec
       routeSpecs.push(spec);
     });

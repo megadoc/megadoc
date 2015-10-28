@@ -19,7 +19,7 @@ var MarkdownClassBrowser = React.createClass({
       else {
         return false;
       }
-    }, 50)
+    }, -50)
   ],
 
   propTypes: {

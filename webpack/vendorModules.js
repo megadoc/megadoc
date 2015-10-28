@@ -3,6 +3,4 @@ module.exports = [
   'react-router',
   'lodash',
   'moment',
-  'jquery',
-  'jQueryUI'
 ];

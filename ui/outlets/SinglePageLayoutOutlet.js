@@ -16,7 +16,7 @@ module.exports = function(config) {
       render() {
         return (
           <div>
-            <header id="/" />
+            <header className="single-page-layout__root-link" id="/" />
             <HomeScreen />
           </div>
         );

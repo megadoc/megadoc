@@ -21,7 +21,7 @@ module.exports = {
    * own assets so that they're accessible relative from the index.html entry
    * file.
    */
-  outputDir: '${ROOT}/doc/www',
+  outputDir: 'doc/compiled',
 
   /**
    * @property {String}

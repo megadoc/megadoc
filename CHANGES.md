@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.2.0
+
+This patch was mainly concerned with file-size and run-time performance.
+
+- jQuery and jQueryUI dependencies were dropped
+- introduced a helper module for performing ScrollSpy functionality
+- now using an internal `scrollIntoView` implementation
+- now using an internal `resizable` implementation
+- a new component `CollapsibleGroup` was extracted from the CJS plugin and is now in core UI
+
 ## 3.1.0
 
 This patch introduces a Single-Page layout in which all the documents are 

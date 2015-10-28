@@ -21,7 +21,7 @@ var ClassBrowser = React.createClass({
       else {
         return false;
       }
-    }, 50)
+    }, -50, '.resizable-panel__content')
   ],
 
   propTypes: {

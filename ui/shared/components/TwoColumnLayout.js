@@ -2,7 +2,7 @@ const React = require('react');
 const findChildByType = require('utils/findChildByType');
 const EventEmitter = require('core/EventEmitter');
 const Storage = require('core/Storage');
-const $ = require('jQueryUI');
+const resizable = require('utils/resizable');
 const emitter = new EventEmitter([ 'change', 'resize' ]);
 const {
   CFG_SIDEBAR_WIDTH,
@@ -14,7 +14,8 @@ Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
 
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
-let sidebarWidth = Storage.get(CFG_SIDEBAR_WIDTH);
+let initialWidth = Storage.get(CFG_SIDEBAR_WIDTH);
+let sidebarWidth = initialWidth;
 let activeInstances = [];
 
 // so that we reset the sidebar width if storage was cleared
@@ -63,13 +64,10 @@ const TwoColumnLayout = React.createClass({
   componentDidMount() {
     activeInstances.push(1);
 
-    $(React.findDOMNode(this.refs.resizer))
-      .resizable({
-        handles: 'e'
-      })
-      .on('resize', this.updateSidebarWidth)
-      .on('resizestop', this.updateAndSaveSidebarWidth)
-    ;
+    this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
+      onResize: this.updateSidebarWidth,
+      onResizeStop: this.updateAndSaveSidebarWidth
+    });
 
     emitter.on('resize', this.reloadOnResize);
     emitter.emit('change');
@@ -77,7 +75,7 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentWillUnmount() {
-    $(React.findDOMNode(this.refs.resizer)).resizable('destroy');
+    this.resizableInstance.destroy();
 
     activeInstances.pop();
     emitter.emit('change');
@@ -90,7 +88,6 @@ const TwoColumnLayout = React.createClass({
     return (
       <div className="two-column-layout">
         <div
-          ref="resizer"
           className="two-column-layout__left"
           style={{ width: sidebarWidth }}
         >
@@ -98,6 +95,11 @@ const TwoColumnLayout = React.createClass({
             <div className="resizable-panel__content">
               {left}
             </div>
+
+            <div
+              ref="resizer"
+              className="ui-resizable-handle ui-resizable-e"
+            />
           </div>
         </div>
 
@@ -114,13 +116,13 @@ const TwoColumnLayout = React.createClass({
     this.forceUpdate();
   },
 
-  updateSidebarWidth(e, ui) {
-    sidebarWidth = Math.max(ui.size.width, MIN_SIDEBAR_WIDTH);
+  updateSidebarWidth(x) {
+    sidebarWidth = Math.max(initialWidth + x, MIN_SIDEBAR_WIDTH);
     emitter.emit('resize', sidebarWidth);
   },
 
-  updateAndSaveSidebarWidth(e, ui) {
-    this.updateSidebarWidth(e, ui);
+  updateAndSaveSidebarWidth() {
+    initialWidth = sidebarWidth;
     Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
   }
 });

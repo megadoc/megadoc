@@ -6,10 +6,13 @@ const MultiPageLayout = require('components/MultiPageLayout');
 const AppState = require('core/AppState');
 const Storage = require('core/Storage');
 const ColorSchemeManager = require('core/ColorSchemeManager');
+const ScrollSpy = require('core/ScrollSpy');
+const config = require('config');
 
 const Root = React.createClass({
   propTypes: {
-    onStart: React.PropTypes.func
+    onStart: React.PropTypes.func,
+    params: React.PropTypes.object,
   },
 
   getDefaultProps() {
@@ -35,6 +38,14 @@ const Root = React.createClass({
     Storage.on('change', this.reload);
     AppState.on('change', this.reload);
     AppState.on('layoutChange', this.trackLayoutChange);
+
+    if (config.scrollSpying) {
+      ScrollSpy.start();
+    }
+  },
+
+  shouldComponentUpdate: function(nextProps) {
+    return this.props.params !== nextProps.params;
   },
 
   componentDidUpdate: function() {
@@ -52,6 +63,10 @@ const Root = React.createClass({
   },
 
   componentWillUnmount: function() {
+    if (config.scrollSpying) {
+      ScrollSpy.stop();
+    }
+
     AppState.off('layoutChange', this.trackLayoutChange);
     AppState.off('change', this.reload);
     Storage.off('change', this.reload);

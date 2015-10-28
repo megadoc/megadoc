@@ -1,15 +1,20 @@
 const React = require('react');
-const jqScrollIntoView = require('jqScrollIntoView');
+const scrollIntoView = require('utils/scrollIntoView');
+const SIDEBAR_SELECTOR = '.resizable-panel__content';
 
-function BrowserJumperMixin(locateElement, offset) {
-  function jumpToEntity(component, props) {
+function JumperMixin(locateElement, offset, parentNodeSelector = SIDEBAR_SELECTOR) {
+  function jump(component, props) {
     const element = locateElement.call(component, props);
 
     if (element === false) {
       return false;
     }
     else if (element) {
-      jqScrollIntoView(React.findDOMNode(element), { offset });
+      scrollIntoView(
+        React.findDOMNode(element),
+        document.querySelector(parentNodeSelector),
+        offset
+      );
 
       return true;
     }
@@ -21,13 +26,15 @@ function BrowserJumperMixin(locateElement, offset) {
 
   return {
     componentDidMount: function() {
-      jumpToEntity(this, this.props);
+      jump(this, this.props);
     },
 
     componentDidUpdate: function() {
-      jumpToEntity(this, this.props);
+      jump(this, this.props);
     },
   };
 }
 
-module.exports = BrowserJumperMixin;
+JumperMixin.SIDEBAR_SELECTOR = SIDEBAR_SELECTOR;
+
+module.exports = JumperMixin;

@@ -4,6 +4,7 @@ const TwoColumnLayout = require('components/TwoColumnLayout');
 const config = require('config');
 const Link = require('components/Link');
 const Footer = require('components/Footer');
+const Heading = require('components/Heading');
 
 const { arrayOf, shape, string, node } = React.PropTypes;
 
@@ -11,6 +12,14 @@ const SinglePageLayout = React.createClass({
   propTypes: {
     routes: arrayOf(shape({ name: string })),
     children: node,
+  },
+
+  componentDidMount: function() {
+    Heading.setStartingLevel(2);
+  },
+
+  componentWillUnmount: function() {
+    Heading.restoreStartingLevel();
   },
 
   render() {

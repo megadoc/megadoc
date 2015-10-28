@@ -18,10 +18,7 @@ var Home = React.createClass({
   render() {
     return (
       <div className="doc-content">
-        {readme ?
-          <HighlightedText>{readme.source.html}</HighlightedText> :
-          <p>Welcome to <strong>tiny</strong>doc!</p>
-        }
+        {readme && <HighlightedText>{readme.source.html}</HighlightedText>}
 
         {readme && readme.git && config.gitStats && (
           <GitStats {...readme.git} />
