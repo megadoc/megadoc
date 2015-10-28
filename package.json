@@ -31,7 +31,6 @@
   "dependencies": {
     "babel-core": "5.3.3",
     "babel-loader": "5.0.0",
-    "bluebird": "^2.9.34",
     "classnames": "^2.1.5",
     "commander": "^2.8.1",
     "css-loader": "0.9.1",
@@ -71,6 +70,7 @@
     "karma-sourcemap-loader": "0.3.3",
     "karma-webpack": "^1.7.0",
     "mocha": "^2.3.3",
+    "multiline-slash": "^1.0.0",
     "react-hot-loader": "",
     "react-router": "",
     "recast": "^0.10.32",

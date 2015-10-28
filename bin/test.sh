@@ -5,7 +5,7 @@ if [ ! -d "./node_modules" ]; then
   exit 1
 fi
 
-./node_modules/mocha/bin/mocha \
+exec ./node_modules/mocha/bin/mocha \
   --reporter min \
   test/index.js \
   $(find {lib,plugins} -name '*.test.js' ! -path '*ui/*') \

@@ -26,6 +26,8 @@ function MarkdownPlugin(userConfig) {
       var database;
 
       compiler.on('scan', function(done) {
+        console.log('MARKDOWN[%s] SCANNING', config.routeName);
+
         scan(config, compiler.utils, compiler.config, function(err, _database) {
           if (err) {
             return done(err);
@@ -50,7 +52,11 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('render', function(md, linkify, done) {
+        console.log('RENDERING');
+
         database.forEach(function(doc) {
+          console.log('Compiling "%s"', doc.id);
+
           var compiled = md.withTOC(linkify(doc.source), {
             baseURL: '/' + config.routeName + '/' + encodeURIComponent(doc.id)
           });

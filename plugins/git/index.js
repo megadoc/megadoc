@@ -1,11 +1,13 @@
 var path = require('path');
+var fs = require('fs');
 var extend = require('lodash').extend;
 var parseLatestActivity = require('./parseLatestActivity');
 var render = require('./render');
 var parseHistory = require('./parseHistory');
 var console = require('../../lib/Logger')('git');
-var Promise = require('bluebird');
 var merge = require('lodash').merge;
+var runAll = require('../../lib/utils/runAll');
+var assert = require('assert');
 
 var defaults = require('./config');
 
@@ -19,21 +21,30 @@ function createGitPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
 
   return {
+    stats: stats,
+
     run: function(compiler) {
-      var gitRepository = compiler.config.gitRepository;
+      var gitRepository = config.repository || compiler.config.gitRepository;
+
+      assert(gitRepository,
+        "You must specify the path to the .git repository to parse."
+      );
+
+      assert(fs.existsSync(gitRepository) && fs.statSync(gitRepository).isDirectory(),
+        "The path you specified does not seem to point to a git repository directory."
+      );
 
       compiler.on('scan', function(done) {
-        console.log('analyzing commit history...');
+        runAll([ parseLatestActivity, parseHistory, ], [ gitRepository, config ], function(err, resultSet) {
+          if (err) {
+            return done(err);
+          }
 
-        Promise.all([
-          parseLatestActivity(gitRepository, config.recentCommits).then(function(commits) {
-            stats.recentCommits = commits;
-          }),
+          stats.recentCommits = resultSet[0];
+          stats.history = resultSet[1];
 
-          parseHistory(gitRepository, config).then(function(history) {
-            stats.history = history;
-          })
-        ]).then(function() { done(); }, done);
+          done();
+        });
       });
 
       compiler.on('render', function(md, linkify, done) {

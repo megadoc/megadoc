@@ -2,7 +2,6 @@ var log = require('git-log-parser');
 var console = require('../../lib/Logger')('git');
 var fs = require('fs');
 var path = require('path');
-var Promise = require('bluebird');
 
 function parseMailMap(rawMailMap) {
   // Braden Anderson <banderson@instructure.com> Braden Anderson <braden@instructure.com>
@@ -163,31 +162,30 @@ function analyze(commits, mailMap, teams) {
   return stats;
 }
 
-module.exports = function(repoPath, config) {
-  return new Promise(function(resolve, reject) {
-    var parse = log.parse({ 'use-mailmap': true }, { cwd: repoPath });
-    var commits = [];
+module.exports = function(repoPath, config, done) {
+  var parse = log.parse({ 'use-mailmap': true }, { cwd: repoPath });
+  var commits = [];
 
-    parse.on('data', function(commit) {
-      commits.push(commit);
-    });
+  parse.on('data', function(commit) {
+    commits.push(commit);
+  });
 
-    parse.on('end', function() {
-      var mailMapPath = path.resolve(repoPath.replace(/\.git$/, ''), '.mailmap');
-      var mailMap;
+  parse.on('end', function() {
+    var mailMapPath = path.resolve(repoPath.replace(/\.git$/, ''), '.mailmap');
+    var mailMap;
 
-      if (config.useMailMap && fs.existsSync(mailMapPath)) {
-        mailMap = parseMailMap(fs.readFileSync(mailMapPath, 'utf-8'));
-        console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
-      }
+    if (config.useMailMap && fs.existsSync(mailMapPath)) {
+      mailMap = parseMailMap(fs.readFileSync(mailMapPath, 'utf-8'));
+      console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
+    }
 
-      resolve(analyze(commits, mailMap, config.teams));
-    });
+    done(null, analyze(commits, mailMap, config.teams));
+  });
 
-    parse.on('close', function(exitCode, signal) {
-      if (exitCode !== 0) {
-        reject('git log parse failed mysteriously:', exitCode, signal);
-      }
-    });
+  parse.on('error', done);
+  parse.on('close', function(exitCode) {
+    if (exitCode !== 0) {
+      done('git log parse failed mysteriously with exit code ' + exitCode);
+    }
   });
 };

@@ -7,11 +7,10 @@ var where = require('lodash').where;
 var console = require('../../lib/Logger')('markdown');
 var parseGitStats = require('../../lib/utils/parseGitStats');
 var parseTitle = require('./scan/parseTitle');
-var Promise = require('bluebird');
 var RendererUtils = require('../../lib/Renderer/Utils');
 var strHumanize = require('../../lib/utils/strHumanize');
 
-function scan(config, utils, globalConfig, done) {
+module.exports = function scan(config, utils, globalConfig, done) {
   var files = utils.globAndFilter(config.source, config.exclude);
   var database = files.map(function(filePath) {
     return {
@@ -56,32 +55,26 @@ function scan(config, utils, globalConfig, done) {
 
   config.commonPrefix = commonPrefix;
 
-  var svc = Promise.resolve();
-
   if (config.gitStats) {
     console.log("Parsing git stats...");
 
     var filePaths = uniq(pluck(database, 'filePath'));
 
-    svc = parseGitStats(globalConfig.gitRepository, filePaths).then(function(stats) {
+    parseGitStats(globalConfig.gitRepository, filePaths, function(err, stats) {
+      if (err) {
+        return done(err);
+      }
+
       stats.forEach(function(fileStats) {
         where(database, { filePath: fileStats.filePath }).forEach(function(entry) {
           entry.git = fileStats;
         });
       });
+
+      done(null, database);
     });
   }
-
-  svc.then(function() { done(null, database); }, done);
-}
-
-module.exports = function(config, utils, globalConfig, done) {
-  scan(config, utils, globalConfig, function(err, database) {
-    if (err) {
-      done(err);
-    }
-    else {
-      done(null, database);
-    }
-  });
+  else {
+    done(null, database);
+  }
 };

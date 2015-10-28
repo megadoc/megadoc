@@ -41,7 +41,7 @@ var Collapsible = {
 
   renderCollapser() {
     if (this.isCollapsible()) {
-      return <Icon className="collapser icon-arrow-down" />;
+      return <Icon className="collapser collapsible__icon icon-arrow-down" />;
     }
     else {
       return null;

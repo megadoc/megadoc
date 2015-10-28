@@ -1,6 +1,5 @@
 var write = require('./write');
 var parseGitStats = require('../../lib/utils/parseGitStats');
-var Promise = require('bluebird');
 var fs = require('fs');
 
 exports.name = 'CorePlugin';
@@ -10,17 +9,21 @@ exports.run = function(compiler) {
   var database = {};
 
   compiler.on('scan', function(done) {
-    var svc = Promise.resolve();
-
     if (config.gitStats && config.readme) {
       var filePaths = [ utils.getAssetPath(config.readme) ];
 
-      svc = parseGitStats(config.gitRepository, filePaths).then(function(stats) {
+      parseGitStats(config.gitRepository, filePaths, function(err, stats) {
+        if (err) {
+          return done(err);
+        }
+
         database.readmeGitStats = stats[0];
+        done();
       });
     }
-
-    svc.then(function() { done(); }, done);
+    else {
+      done();
+    }
   });
 
   compiler.on('render', function(renderMarkdown, linkify, done) {
