@@ -201,4 +201,7 @@ module.exports = {
   launchExternalLinksInNewTabs: true,
 
   showSettingsLinkInBanner: true,
+
+  resizableSidebar: true,
+  collapsibleSidebar: false,
 };

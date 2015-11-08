@@ -5,9 +5,9 @@ const config = require('config');
 const Link = require('components/Link');
 const Footer = require('components/Footer');
 const Heading = require('components/Heading');
+const classSet = require('utils/classSet');
 
 const { arrayOf, shape, string, node } = React.PropTypes;
-
 const SinglePageLayout = React.createClass({
   propTypes: {
     routes: arrayOf(shape({ name: string })),
@@ -29,18 +29,7 @@ const SinglePageLayout = React.createClass({
     return (
       <div className="root root--with-single-page-layout">
         <TwoColumnLayout>
-          <TwoColumnLayout.LeftColumn>
-            <div className="single-page-layout__sidebar">
-              <Outlet
-                name="SinglePageLayout::Sidebar"
-                props={this.props}
-              />
-
-              {config.allowUserSettings && (
-                <Link to="settings">Settings</Link>
-              )}
-            </div>
-          </TwoColumnLayout.LeftColumn>
+          {this.renderSidebar()}
 
           <TwoColumnLayout.RightColumn>
             <div className="single-page-layout__content">
@@ -58,6 +47,27 @@ const SinglePageLayout = React.createClass({
           </TwoColumnLayout.RightColumn>
         </TwoColumnLayout>
       </div>
+    );
+  },
+
+  renderSidebar() {
+    const className = classSet({
+      "single-page-layout__sidebar": true
+    });
+
+    return (
+      <TwoColumnLayout.LeftColumn>
+        <div className={className}>
+          <Outlet
+            name="SinglePageLayout::Sidebar"
+            props={this.props}
+          />
+
+          {config.allowUserSettings && (
+            <Link to="settings">Settings</Link>
+          )}
+        </div>
+      </TwoColumnLayout.LeftColumn>
     );
   },
 

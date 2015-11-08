@@ -3,6 +3,10 @@ const findChildByType = require('utils/findChildByType');
 const EventEmitter = require('core/EventEmitter');
 const Storage = require('core/Storage');
 const resizable = require('utils/resizable');
+const classSet = require('utils/classSet');
+const config = require('config');
+const Icon = require('components/Icon');
+const Button = require('components/Button');
 const emitter = new EventEmitter([ 'change', 'resize' ]);
 const {
   CFG_SIDEBAR_WIDTH,
@@ -46,7 +50,7 @@ const RightColumn = React.createClass({
 const TwoColumnLayout = React.createClass({
   statics: {
     isActive() {
-      return activeInstances.length > 0;
+      return config.resizableSidebar && activeInstances.length > 0;
     },
 
     getSidebarWidth() {
@@ -61,13 +65,21 @@ const TwoColumnLayout = React.createClass({
     children: React.PropTypes.any,
   },
 
+  getInitialState: function() {
+    return {
+      sidebarCollapsed: false
+    };
+  },
+
   componentDidMount() {
     activeInstances.push(1);
 
-    this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
-      onResize: this.updateSidebarWidth,
-      onResizeStop: this.updateAndSaveSidebarWidth
-    });
+    if (config.resizableSidebar) {
+      this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
+        onResize: this.updateSidebarWidth,
+        onResizeStop: this.updateAndSaveSidebarWidth
+      });
+    }
 
     emitter.on('resize', this.reloadOnResize);
     emitter.emit('change');
@@ -75,7 +87,9 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentWillUnmount() {
-    this.resizableInstance.destroy();
+    if (config.resizableSidebar) {
+      this.resizableInstance.destroy();
+    }
 
     activeInstances.pop();
     emitter.emit('change');
@@ -85,13 +99,26 @@ const TwoColumnLayout = React.createClass({
     var left = findChildByType(this.props.children, LeftColumn);
     var right = findChildByType(this.props.children, RightColumn);
 
+    const leftClassName = classSet({
+      'two-column-layout__left': true,
+      'two-column-layout__left--collapsed': this.state.sidebarCollapsed
+    });
+
     return (
       <div className="two-column-layout">
         <div
-          className="two-column-layout__left"
-          style={{ width: sidebarWidth }}
+          className={leftClassName}
+          style={{ width: config.resizableSidebar ? sidebarWidth : null }}
         >
           <div className="resizable-panel">
+            {config.collapsibleSidebar && (
+              <Button
+                onClick={this.collapseSidebar}
+                className="two-column-layout__collapse-btn">
+                <Icon className="icon-menu" />
+              </Button>
+            )}
+
             <div className="resizable-panel__content">
               {left}
             </div>
@@ -105,7 +132,7 @@ const TwoColumnLayout = React.createClass({
 
         <div
           className="two-column-layout__right"
-          style={{ marginLeft: sidebarWidth }}
+          style={{ marginLeft: config.resizableSidebar ? sidebarWidth : null }}
           children={right}
         />
       </div>
@@ -124,6 +151,10 @@ const TwoColumnLayout = React.createClass({
   updateAndSaveSidebarWidth() {
     initialWidth = sidebarWidth;
     Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
+  },
+
+  collapseSidebar() {
+    this.setState({ sidebarCollapsed: !this.state.sidebarCollapsed });
   }
 });
 

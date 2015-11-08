@@ -1,7 +1,7 @@
 @font-face {
 	font-family: 'tinydoc';
 	src:url('fonts/tinydoc.eot');
-	src:url('fonts/tinydoc.eot?#iefix') format('embedded-opentype'),
+	src:url('fonts/tinydoc.eot#iefix') format('embedded-opentype'),
 		url('fonts/tinydoc.ttf') format('truetype'),
 		url('fonts/tinydoc.woff') format('woff'),
 		url('fonts/tinydoc.svg#tinydoc') format('svg');
@@ -23,6 +23,9 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-menu:before {
+	content: "\e900";
+}
 .icon-link-external:before {
 	content: "\e615";
 }
@@ -151,3 +154,4 @@
 .icon-arrow-down:before {
 	content: "\e603";
 }
+

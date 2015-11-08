@@ -1,6 +1,6 @@
 {
   "name": "tinydoc",
-  "version": "3.2.0",
+  "version": "3.2.2",
   "description": "Fast and sleek documentation generator.",
   "main": "index.js",
   "bin": {
