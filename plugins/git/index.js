@@ -2,9 +2,7 @@ var path = require('path');
 var fs = require('fs');
 var extend = require('lodash').extend;
 var parseLatestActivity = require('./parseLatestActivity');
-var render = require('./render');
 var parseHistory = require('./parseHistory');
-var console = require('../../lib/Logger')('git');
 var merge = require('lodash').merge;
 var runAll = require('../../lib/utils/runAll');
 var assert = require('assert');
@@ -48,7 +46,14 @@ function createGitPlugin(userConfig) {
       });
 
       compiler.on('render', function(md, linkify, done) {
-        render(stats, md, linkify);
+        stats.recentCommits.forEach(function(commit) {
+          commit.renderedSubject = md('**'+commit.subject+'**');
+          commit.renderedBody = commit.body && commit.body.length > 0 ?
+            md(commit.body) :
+            null
+          ;
+        });
+
         done();
       });
 

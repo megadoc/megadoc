@@ -1,7 +1,6 @@
 var TestUtils = require('../../../lib/TestUtils');
 var tinydocPluginGit = require('../');
 var assert = require('chai').assert;
-var multiline = require('multiline-slash');
 var path = require('path');
 
 describe('tinydoc-plugin-git', function() {
