@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.0.0
+
+Pulled out the plugins that were previously in core into their own packages:
+
+- `tinydoc/plugins/cjs` is now in `tinydoc-plugin-js`
+- `tinydoc/plugins/yard-api` is now in `tinydoc-plugin-yard-api`
+- `tinydoc/plugins/markdown` is now in `tinydoc-plugin-markdown`
+- `tinydoc/plugins/git` is now in `tinydoc-plugin-git`
+
 ## 3.2.0
 
 This patch was mainly concerned with file-size and run-time performance.

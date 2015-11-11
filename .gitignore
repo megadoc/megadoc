@@ -3,7 +3,6 @@
 /dist
 /tmp
 /.local.js
-/plugins/*/ui/dist
 
 # font stuff
 /ui/css/fonts/*.json

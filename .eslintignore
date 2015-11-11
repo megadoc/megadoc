@@ -1,6 +1,3 @@
-plugins/**/fixtures/*.js
-plugins/**/*.fixture.js
-
 dist
 doc/compiled
 

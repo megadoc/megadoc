@@ -42,5 +42,3 @@ tinydoc accepts plugins that can hook into the compilation of the docs. The comp
 The UI of tinydoc is written in [React](https://facebook.github.io/react/) and is also extensible through different means: outlets and full-fledged plugins.
 
 _TODO_: UI plugin guide.
-
-See the core plugins for guidance. The plugin implementations lives under `plugins/*/*` and their UIs are found under `plugins/*/ui`.
