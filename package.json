@@ -1,7 +1,7 @@
 {
   "name": "tinydoc",
   "version": "4.0.1",
-  "description": "Fast and sleek documentation generator.",
+  "description": "Fast and sleek and modular documentation generator.",
   "main": "lib/index.js",
   "bin": {
     "tinydoc": "./cli/tinydoc",
@@ -11,7 +11,7 @@
     "lint": "./node_modules/eslint/bin/eslint.js .",
     "test": "./node_modules/mocha/bin/mocha --reporter min -r test/index.js --recursive lib/**/*.test.js",
     "test-ui": "./node_modules/karma/bin/karma start --single-run",
-    "prepublish": "npm run lint && npm run test && npm run test-ui && npm run build",
+    "prepublish": "npm run lint && npm run test && npm run build",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
     "docs": "./cli/index.js --config=doc/tinydoc.conf.js"
