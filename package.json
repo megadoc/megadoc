@@ -14,7 +14,7 @@
     "prepublish": "npm run lint && npm run test && npm run build",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production ./node_modules/webpack/bin/webpack.js -p --display-chunks",
-    "docs": "./cli/index.js --config=doc/tinydoc.conf.js"
+    "docs": "./cli/tinydoc --config=doc/tinydoc.conf.js"
   },
   "repository": {
     "type": "git",
