@@ -15,6 +15,6 @@ before_script:
 
 script:
   - npm run prepublish # because we want build failures to count
-  - ./node_modules/.bin/jscover lib tmp/lib--instrumented
-  - ./node_modules/mocha/bin/mocha --reporter mocha-lcov-reporter --recursive tmp/lib--instrumented/**/*.test.js | ./node_modules/coveralls/bin/coveralls.js
+  - ./node_modules/.bin/istanbul cover --preserve-comments ./node_modules/mocha/bin/_mocha --report lcovonly -- lib/**/*.test.js
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - npm run test-ui -- --browsers Firefox
