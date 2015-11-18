@@ -8,25 +8,19 @@ var config = {
   useHashLocation: true,
   publicPath: '',
   stylesheet: 'doc/theme.less',
-  styleOverride: 'doc/theme-variables.less',
   disqus: false,
 };
 
 config.plugins = [
-  require('../plugins/cjs')({
+  require('tinydoc-plugin-js')({
     navigationLabel: 'API',
 
     source: [
       'lib/**/*.js',
-      'plugins/core/**/*.js',
-      'plugins/cjs/**/*.js',
-      'plugins/markdown/**/*.js',
-      'plugins/git/**/*.js',
       'ui/**/*.js',
     ],
 
     exclude: [
-      /plugins\/.*\/ui/,
       /\.test\.js$/,
       'ui/app/vendor',
     ],
@@ -38,15 +32,13 @@ config.plugins = [
     namespaceDirMap: {
       'lib': 'Core',
       'lib/utils': 'Core.Utils',
-      'plugins/cjs/Parser': 'Plugins.CJS.Parser',
       'ui/shared/core': 'UI.Core',
     }
   }),
 
-  require('../plugins/markdown')({
+  require('tinydoc-plugin-markdown')({
     source: [
-      'CHANGES.md',
-      'plugins/**/*.md'
+      'CHANGES.md'
     ]
   })
 ];

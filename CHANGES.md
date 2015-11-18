@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.0.1
+
+- `tinydoc-run` or `tinydoc run` binary was restored to just `tinydoc`
+- `tinydoc compile` is no longer a thing, use the `tinydoc-compile` binary directly instead
+
 ## 4.0.0
 
 Pulled out the plugins that were previously in core into their own packages:

@@ -1,10 +1,11 @@
 {
   "name": "tinydoc",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Fast and sleek documentation generator.",
   "main": "lib/index.js",
   "bin": {
-    "tinydoc": "./cli/tinydoc"
+    "tinydoc": "./cli/tinydoc",
+    "tinydoc-compile": "./cli/tinydoc-compile"
   },
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js .",
@@ -24,7 +25,7 @@
     "documentation"
   ],
   "author": "Ahmad Amireh",
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "bugs": {
     "url": "https://github.com/tinydoc/tinydoc/issues"
   },
@@ -36,33 +37,28 @@
     "commander": "^2.8.1",
     "css-loader": "0.9.1",
     "deep-get-set": "^0.1.1",
-    "dox": "0.7.0",
     "file-loader": "^0.8.4",
     "fs-extra": "0.18.0",
     "git-log-parser": "^1.1.0",
     "glob": "5.0.3",
-    "highlight.js": "^8.8.0",
     "htmlparser2": "^3.8.3",
     "imports-loader": "^0.6.4",
     "less": "2.3.1",
     "less-loader": "2.0.0",
     "lodash": "3.6.0",
     "marked": "0.3.3",
-    "md5": "^2.0.0",
     "normalize.css": "^3.0.3",
     "raw-loader": "^0.5.1",
     "react": "^0.13.3",
     "style-loader": "0.8.3",
     "url-loader": "0.5.5",
-    "weakmap": "0.0.6",
-    "weakset": "^0.2.1",
     "webpack": "^1.7.3"
   },
   "devDependencies": {
     "chai": "2.1.0",
     "eslint": "^1.4.3",
     "eslint-plugin-react": "^3.4.1",
-    "highlight.js": "^8.4.0",
+    "highlight.js": "^8.8.0",
     "json-loader": "0.5.1",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "0.1.7",
@@ -70,14 +66,16 @@
     "karma-mocha-reporter": "^1.1.1",
     "karma-sourcemap-loader": "0.3.3",
     "karma-webpack": "^1.7.0",
+    "md5": "^2.0.0",
     "mocha": "^2.3.3",
     "multiline-slash": "^1.0.0",
     "react-hot-loader": "",
     "react-router": "",
-    "recast": "^0.10.32",
     "serve-static": "^1.10.0",
     "sinon": "^1.17.1",
     "webpack-dev-middleware": "1.0.11",
-    "webpack-dev-server": "^1.7.0"
+    "webpack-dev-server": "^1.7.0",
+    "tinydoc-plugin-js": "4.x",
+    "tinydoc-plugin-markdown": "4.x"
   }
 }
