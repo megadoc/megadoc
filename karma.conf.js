@@ -1,5 +1,3 @@
-var webpackConfig = require('./webpack/common');
-
 module.exports = function(config) {
   config.set({
     frameworks: [ 'mocha' ],
@@ -38,19 +36,17 @@ module.exports = function(config) {
       }
     },
 
+    browserNoActivityTimeout: 30000,
+
     files: [
       'test/index.ui.js',
     ],
 
     preprocessors: {
-      'test/index.ui.js': [ 'webpack' ]
+      'test/index.ui.js': [ 'webpack', 'sourcemap' ]
     },
 
-    reporters: [ 'mocha' ],
-
-    mochaReporter: {
-      ignoreSkipped: true
-    },
+    reporters: [ 'dots' ],
 
     client: {
       captureConsole: true,
@@ -61,13 +57,9 @@ module.exports = function(config) {
       }
     },
 
-    webpack: webpackConfig(),
+    webpack: require('./webpack/common')(),
     webpackMiddleware: {
       noInfo: true
     }
   });
-
-  if (process.env.DEBUG) {
-    config.set({ logLevel: 'DEBUG' });
-  }
 };
