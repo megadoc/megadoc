@@ -5,6 +5,7 @@ node_modules
 karma.conf.js
 
 tmp
+coverage
 
 ui/tmp
 ui/css/fonts/**/*/demo.js

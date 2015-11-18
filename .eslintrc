@@ -57,7 +57,7 @@
     "no-dupe-keys": 2,
     "no-duplicate-case": 2,
     "no-empty": 2,
-    "no-extra-semi": 2,
+    "no-extra-semi": 0,
     "no-func-assign": 2,
     "no-inner-declarations": 2,
     "no-irregular-whitespace": 2,

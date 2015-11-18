@@ -1,6 +1,7 @@
 # tests
 __tests__
 
+/coverage
 /test
 /.local.js
 /ui/css/fonts/*.json
