@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js .",
-    "test": "./node_modules/mocha/bin/mocha --reporter min -r test/index.js --recursive lib/**/*.test.js",
+    "test": "./node_modules/mocha/bin/mocha --reporter min --recursive lib/**/*.test.js",
     "test-ui": "./node_modules/karma/bin/karma start --single-run",
     "prepublish": "npm run lint && npm run test && npm run build",
     "start": "./bin/devserver.sh",
@@ -56,9 +56,11 @@
   },
   "devDependencies": {
     "chai": "2.1.0",
+    "coveralls": "^2.11.4",
     "eslint": "^1.4.3",
     "eslint-plugin-react": "^3.4.1",
     "highlight.js": "^8.8.0",
+    "jscover": "^1.0.0",
     "json-loader": "0.5.1",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "0.1.7",
@@ -67,14 +69,15 @@
     "karma-webpack": "^1.7.0",
     "md5": "^2.0.0",
     "mocha": "^2.3.3",
+    "mocha-lcov-reporter": "^1.0.0",
     "multiline-slash": "^1.0.0",
     "react-hot-loader": "",
     "react-router": "",
     "serve-static": "^1.10.0",
     "sinon": "^1.17.1",
-    "webpack-dev-middleware": "1.0.11",
-    "webpack-dev-server": "^1.7.0",
     "tinydoc-plugin-js": "4.x",
-    "tinydoc-plugin-markdown": "4.x"
+    "tinydoc-plugin-markdown": "4.x",
+    "webpack-dev-middleware": "1.0.11",
+    "webpack-dev-server": "^1.7.0"
   }
 }

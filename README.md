@@ -1,5 +1,7 @@
 # tinydoc
 
+[![Build Status](https://travis-ci.org/tinydoc/tinydoc.svg)](https://travis-ci.org/tinydoc/tinydoc)
+
 tinydoc is a documentation generator that is able to scan, parse, and present documentation found in different sources in a coherent UI. Example sources are JavaScript modules, Markdown articles, and Rails APIs.
 
 ## Motivation

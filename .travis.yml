@@ -14,5 +14,8 @@ before_script:
   - npm install karma-firefox-launcher
 
 script:
+  - npm run jscover lib lib--instrumented
   - npm run prepublish # because we want build failures to count
+  - ./node_modules/.bin/jscover lib tmp/lib--instrumented
+  - ./node_modules/mocha/bin/mocha --reporter mocha-lcov-reporter --recursive tmp/lib--instrumented/**/*.test.js | ./node_modules/coveralls/bin/coveralls.js
   - npm run test-ui -- --browsers Firefox
