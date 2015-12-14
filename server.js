@@ -13,6 +13,7 @@ var contentBase = '/tmp/tinydoc';
 var server;
 var configFile = path.resolve(process.env.CONFIG_FILE);
 
+config.devtool = 'eval';
 config.entry = {
   main: [
     path.join(root, '.local.js'),
