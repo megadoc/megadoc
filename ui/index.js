@@ -52,6 +52,12 @@ tinydoc.onReady(function(registrar) {
         {registrar.getRouteMap()}
 
         <Route
+          name="search"
+          path="/search"
+          handler={require('./screens/Search')}
+        />
+
+        <Route
           name="settings"
           path="/settings"
           handler={require('./screens/Settings')}

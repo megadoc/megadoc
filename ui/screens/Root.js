@@ -8,6 +8,7 @@ const Storage = require('core/Storage');
 const ColorSchemeManager = require('core/ColorSchemeManager');
 const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
+const SpotlightManager = require('components/SpotlightManager');
 
 const Root = React.createClass({
   propTypes: {
@@ -81,6 +82,14 @@ const Root = React.createClass({
     return (
       <Outlet name="LayoutWrapper" props={{}} forwardChildren>
         <Layout {...this.props}>
+          {config.spotlight && (
+            <SpotlightManager
+              active={AppState.isSpotlightOpen()}
+              onOpen={AppState.openSpotlight}
+              onClose={AppState.closeSpotlight}
+            />
+          )}
+
           <RouteHandler onChange={this.reload} {...this.props} />
         </Layout>
       </Outlet>
@@ -93,7 +102,7 @@ const Root = React.createClass({
 
   trackLayoutChange() {
     this.setState({ layoutChanged: true });
-  }
+  },
 });
 
 module.exports = Root;

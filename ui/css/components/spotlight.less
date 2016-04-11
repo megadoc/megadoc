@@ -1,0 +1,85 @@
+.spotlight {
+  &__wrapper {
+    background: rgba(0,0,0,.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2000;
+    padding-top: 30vh;
+    font-family: Slack-Lato,appleLogo,sans-serif;
+  }
+
+  width: 460px;
+  display: block;
+  box-shadow: 0 1px 10px rgba(0,0,0,.5);
+  background: #fff;
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  margin: 0 auto;
+
+  &__input {
+    width: 100%;
+    max-width: 100%;
+    outline: 0;
+    line-height: normal;
+
+    font-size: 2rem;
+    font-family: appleLogo,sans-serif;
+    font-weight: 700;
+    padding: 1rem;
+    border: 1px solid #a0a0a2!important;
+    border-radius: 6px;
+    box-shadow: none!important;
+    color: #2c2d30;
+  }
+
+  &__results {
+    padding: 0;
+    margin: 0;
+    max-height: 30vh;
+    overflow: auto;
+
+    &:not(:empty) {
+      margin-top: 0.5rem;
+    }
+  }
+
+  &__result a {
+    display: block;
+    text-decoration: none;
+    border-radius: 6px;
+    padding: 0.1rem 0.5rem;
+  }
+
+  &__help {
+    margin: 0 0 .5rem;
+    color: #8b898f;
+    font-size: .7rem;
+    display: block;
+
+    &-entry {
+      display: inline-block;
+      margin-left: 0.25rem;
+    }
+  }
+}
+
+.schemable({
+  .spotlight {
+    &__highlighted-term {
+      background-color: @code;
+    }
+
+    &__result {
+      list-style: none;
+      color: @base0;
+
+      &--active a, a:hover, a:focus {
+        background: @link;
+        color: @base3;
+      }
+    }
+  }
+});

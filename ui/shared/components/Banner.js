@@ -3,6 +3,7 @@ var Link = require("components/Link");
 var Outlet = require("components/Outlet");
 var config = require('config');
 var Icon = require('components/Icon');
+const AppState = require('core/AppState');
 
 var BannerItem = React.createClass({
   propTypes: {
@@ -49,7 +50,13 @@ var Banner = React.createClass({
           </h1>
 
           <nav className="banner__navigation">
-            <Outlet name="Navigation" props={{}} alwaysRenderChildren>
+            {config.spotlight && (
+              <BannerItem key="spotlight" onClick={this.toggleSpotlight}>
+                <Icon className="icon-search" />
+              </BannerItem>
+            )}
+
+            <Outlet name="Navigation" props={{}} alwaysRenderChildren tagName="span">
               {config.showSettingsLinkInBanner && (
                 <BannerItem key="settings">
                   <Link to="settings">
@@ -62,6 +69,15 @@ var Banner = React.createClass({
         </header>
       </div>
     );
+  },
+
+  toggleSpotlight() {
+    if (AppState.isSpotlightOpen()) {
+      AppState.closeSpotlight();
+    }
+    else {
+      AppState.openSpotlight();
+    }
   }
 });
 

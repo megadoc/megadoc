@@ -5,6 +5,8 @@ exports.QUERY_ON = "1";
 exports.QUERY_OFF = undefined;
 
 exports.KC_RETURN = 13;
+exports.KC_K = 75;
+exports.KC_ESCAPE = 27;
 
 exports.AVAILABLE_SCHEMES = [
   'plain',
