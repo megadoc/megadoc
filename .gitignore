@@ -1,8 +1,19 @@
-/node_modules
+/.local.js
+
+/coverage
+/packages/*/coverage
 
 /dist
+/packages/*/dist
+
+/doc/compiled
+/packages/*/doc/compiled
+
+/node_modules
+/packages/*/node_modules
+
 /tmp
-/.local.js
+/packages/*/tmp
 
 # font stuff
 /ui/css/fonts/*.json
@@ -12,6 +23,5 @@ demo-files
 Read Me.txt
 selection.json
 
-/doc/compiled
-/npm-debug.log
-/coverage
+# runtime junk
+npm-debug.log

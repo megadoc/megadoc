@@ -1,17 +1,25 @@
 dist
+packages/*/dist
+
 doc/compiled
+packages/*/doc/compiled
 
 node_modules
+
 karma.conf.js
 
 tmp
+packages/*/tmp
+
 coverage
+packages/*/coverage
 
 ui/tmp
 ui/css/fonts/**/*/demo.js
 ui/vendor/**/*
 
 test/index.ui.js
+packages/*/test/index.ui.js
 
 **/*.tmpl.js
 **/dist/*.js

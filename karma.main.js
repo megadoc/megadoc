@@ -5,11 +5,11 @@ window.CONFIG = {
   pluginConfigs: {}
 };
 
-require('../ui');
+require('./ui');
 
 sinon.assert.expose(chai.assert, { prefix: "" });
 
-const CoreUITests = require.context('../ui', true, /.test.js$/);
+const CoreUITests = require.context('./ui', true, /.test.js$/);
 
 CoreUITests.keys().forEach(CoreUITests);
 

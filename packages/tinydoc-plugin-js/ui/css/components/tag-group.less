@@ -1,0 +1,41 @@
+.tag-group {
+  @spacing: @whitespace / 2;
+
+  margin: 1em 0;
+  padding: 0;
+
+  padding-left: 1em;
+
+  // OK, we want to cram things a bit so the whitespace doesn't get distracting
+  &__header {
+    margin: @spacing 0;
+    padding-bottom: @spacing;
+    font-weight: bold;
+  }
+
+  .param-tag, .return-tag, .throws-tag {
+    margin: @spacing 0;
+    margin-left: @spacing;
+  }
+
+  .markdown-text p {
+    margin: @spacing 0;
+  }
+
+  &--single-child {
+    list-style: none;
+  }
+}
+
+.schemable({
+  .tag-group--collapsed {
+    .tag-group__header {
+      border-bottom-color: transparent;
+      padding-bottom: 0;
+    }
+  }
+
+  .tag-group__header {
+    border-bottom: 1px solid @border-color;
+  }
+});

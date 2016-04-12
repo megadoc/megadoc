@@ -1,0 +1,47 @@
+.object-synopsis{
+  &__header {
+    padding: 1em 0;
+    position: relative; /* for the toggler btn */
+  }
+
+  &__header-text {
+    display: block;
+    width: 40%;
+    max-width: 260px;
+    text-align: right;
+  }
+
+  &__toggler {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    padding: 0;
+
+    background-color: transparent;
+    font-size: small;
+    position: absolute;
+    top: 50%;
+    right: 1em;
+    margin-top: -0.5em;
+    cursor: pointer;
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  &__toggler:hover {
+    text-decoration: underline;
+  }
+}
+
+.schemable({
+  .object-synopsis {
+    &__header {
+      background: @code;
+    }
+
+    &__toggler {
+      color: @link;
+    }
+  }
+});

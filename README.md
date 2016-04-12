@@ -49,6 +49,15 @@ The UI of tinydoc is written in [React](https://facebook.github.io/react/) and i
 
 _TODO_: UI plugin guide.
 
+## Hacking
+
+- official packages live under `/packages`
+
+### UI tests
+
+    npm run test:ui
+    npm run test:ui:packages
+
 ## License
 
 Copyright (C) 2015 Ahmad Amireh

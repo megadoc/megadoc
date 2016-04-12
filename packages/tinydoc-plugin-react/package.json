@@ -1,0 +1,34 @@
+{
+  "name": "tinydoc-plugin-react",
+  "version": "4.0.1",
+  "description": "Document React components and preview them in Tinydoc.",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "react",
+    "plugin"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "dependencies": {
+    "babel-core": "5.8.25",
+    "lodash": "3.x",
+    "recast": "0.10.33"
+  },
+  "peerDependencies": {
+    "tinydoc": "4.x",
+    "tinydoc-plugin-js": "4.x"
+  },
+  "devDependencies": {
+    "babel-loader": "^5.3.2",
+    "react": "^0.14.0"
+  }
+}

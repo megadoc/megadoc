@@ -1,0 +1,31 @@
+{
+  "name": "tinydoc-plugin-lua",
+  "version": "1.0.8",
+  "description": "A Lua documentation generator plugin for tinydoc.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "lua",
+    "documentation",
+    "docs"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "dependencies": {
+    "luaparse": "^0.2.0",
+    "tinydoc-docstring": "1.0.x",
+    "lodash": "^3.10.1"
+  },
+
+  "peerDependencies": {
+    "tinydoc": "4.x"
+  }
+}

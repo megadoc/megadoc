@@ -1,0 +1,86 @@
+.api-endpoint {
+  &__header {
+    padding-bottom: @whitespace;
+    margin-bottom: @whitespace;
+  }
+
+  &__header-path {
+    float: right;
+    font-size: 0.75em;
+    margin-top: 0.4em;
+  }
+
+  &__route {
+    font-family: monospace;
+  }
+
+  &__quicklinks {
+    padding: 0;
+    margin: 0;
+  }
+
+  &__quicklinks li {
+    list-style: none;
+    display: inline-block;
+    margin-right: 1em;
+    margin-bottom: 1em;
+  }
+
+  &__quicklinks li a {
+    display: block;
+    padding: 0.5em 1em;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 85%;
+  }
+
+  &__quicklinks li a:hover {
+    background-color: transparent;
+  }
+}
+
+.schemable({
+  .api-endpoint {
+    &__quicklinks li a {
+      background-color: @base2;
+    }
+
+    &__header {
+      border-bottom: 1px solid @border-color;
+    }
+
+    &__header-path {
+      color: @base1;
+    }
+
+    &__header-beta {
+      background-color: @base1;
+      color: @base3;
+
+      font-size: 0.75em;
+      display: inline-block;
+
+      padding: 0 @whitespace / 2;
+      margin-left: @whitespace / 2;
+    }
+
+    &__route {
+      font-size: 85%;
+      font-weight: normal;
+      font-family: Monaco, Consolas, Courier, monospace;
+      padding: 0.5em;
+      margin: 1em 0;
+      background: @code;
+
+      &-verb {
+        font-weight: bold;
+        color: @solarized-red;
+      }
+
+      &-dynamic-fragment {
+        color: @solarized-red;
+      }
+    }
+  }
+
+});

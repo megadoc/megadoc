@@ -1,10 +1,19 @@
-# tests
+/.local.js
+/.tinydoc
+/packages
+/node_modules
+
+/doc/compiled
+
 __tests__
 
 /coverage
-/test
-/.local.js
+
+/karma.conf.js
+/karma.main.js
+
 /ui/css/fonts/*.json
+
 *.zip
 demo.html
 demo-files

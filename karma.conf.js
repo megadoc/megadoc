@@ -39,11 +39,11 @@ module.exports = function(config) {
     browserNoActivityTimeout: 30000,
 
     files: [
-      'test/index.ui.js',
+      'karma.main.js',
     ],
 
     preprocessors: {
-      'test/index.ui.js': [ 'webpack', 'sourcemap' ]
+      'karma.main.js': [ 'webpack', 'sourcemap' ]
     },
 
     reporters: [ 'dots' ],

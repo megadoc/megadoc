@@ -1,0 +1,35 @@
+{
+  "name": "tinydoc-plugin-js",
+  "version": "4.0.3",
+  "description": "tinydoc plugin for JavaScript sources.",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "plugin",
+    "js",
+    "docs",
+    "documentation",
+    "generator",
+    "javascript"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "dependencies": {
+    "dox": "0.7.0",
+    "lodash": "3.6.0",
+    "weakmap": "0.0.6",
+    "weakset": "^0.2.1",
+    "recast": "0.10.43"
+  },
+  "peerDependencies": {
+    "tinydoc": "4.x"
+  }
+}

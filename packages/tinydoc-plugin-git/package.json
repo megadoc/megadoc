@@ -1,0 +1,33 @@
+{
+  "name": "tinydoc-plugin-git",
+  "version": "4.0.0",
+  "description": "Git stats collector for files parsed by tinydoc.",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "plugin",
+    "git",
+    "docs",
+    "documentation",
+    "generator"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+
+  "dependencies": {
+    "git-log-parser": "^1.1.0",
+    "lodash": "3.6.0"
+  },
+
+  "peerDependencies": {
+    "tinydoc": "4.x"
+  }
+}

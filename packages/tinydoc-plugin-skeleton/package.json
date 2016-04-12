@@ -1,0 +1,33 @@
+{
+  "name": "tinydoc-plugin-skeleton",
+  "version": "1.0.0",
+  "description": "A skeleton/starter plugin for tinydoc.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha --reporter min $(find lib -name '*.test.js')",
+    "build": "tinydoc-compile dist/tinydoc-plugin-skeleton.js ui/index.js --optimize",
+    "prepublish": "npm test && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "plugin",
+    "skeleton",
+    "documentation",
+    "generator"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "devDependencies": {
+    "mocha": "",
+    "chai": "",
+    "react": "0.14.x"
+  }
+}

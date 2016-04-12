@@ -1,0 +1,61 @@
+.class-view {
+  font-size: 0.85em;
+
+  &__method-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__header {
+    &-name {
+      vertical-align: top;
+    }
+
+    &-type {
+      font-size: 0.75em;
+      vertical-align: baseline;
+    }
+
+    .icon {
+      vertical-align: middle;
+    }
+  }
+
+  // &__module-filepath {
+  //   font-size: smaller;
+  //   position: absolute;
+  //   right: 0;
+  //   top: 0;
+  //   line-height: 42px;
+  // }
+
+  .root--with-single-page-layout & {
+    position: relative;
+  }
+
+  &__module-filepath {
+    position: relative;
+    top: -1.25em;
+    line-height: 0.5;
+    margin: 0;
+  }
+
+  .root--with-single-page-layout & + & {
+    margin-top: 3em;
+  }
+}
+
+.schemable({
+  .class-view {
+    &__header {
+      &-namespace {
+        color: lighten(@base1, 25%);
+      }
+
+      &-type {
+        color: lighten(@base1, 25%);
+      }
+    }
+  }
+});

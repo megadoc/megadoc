@@ -1,0 +1,75 @@
+.doc-entity {
+  @spacing: @whitespace / 2;
+  // font-size: 0.85em;
+
+  &.collapsible {
+    padding-left: 1.5em;
+  }
+
+  .collapsible__icon {
+    margin-left: -1.5em;
+  }
+
+  &__tags {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__modifier {
+    font-size: 0.75em;
+    padding: 0.25em 0.5em;
+    margin: 0 0.5em;
+  }
+
+  &__header {
+    margin-top: @spacing;
+    margin-bottom: @spacing;
+  }
+
+  &__name {
+    font-weight: bold;
+  }
+
+  &__method-params {
+    font-weight: normal;
+    // font-size: 0.875em;
+    font-family: Monospace, monospace, courier;
+  }
+
+  &__description.markdown-text p {
+    margin: @spacing 0;
+  }
+}
+
+.schemable({
+  .doc-entity {
+    &:not(:last-of-type) {
+      border-bottom: 1px solid @border-color;
+    }
+
+    &.collapsible--collapsed {
+      .doc-entity__description {
+        color: @base1;
+      }
+    }
+
+    &__name {
+      color: @accent;
+    }
+
+    &__method-params {
+      color: @base1;
+    }
+
+    &__modifier {
+      background: @base2;
+      color: @base1;
+    }
+
+    &__protected, &__private {
+      background: @base2;
+      color: @solarized-orange;
+    }
+  }
+});
