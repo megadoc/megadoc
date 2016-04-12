@@ -16,6 +16,14 @@ describe('CJS::Parser::Docstring::Tag::neutralizeWhitespace', function() {
       //          description.
     });
 
-    assert.equal(string, 'This\nis\na\nmultiline\ndescription.\n');
+    assert.equal(
+      string
+        // this silly hack is to work around istanbul's instrumentor /
+        // multiline-slash where when NOT instrumenting, we'll have a leading
+        // newline
+        .replace(/^\n{0,1}/, '')
+      ,
+      'This\nis\na\nmultiline\ndescription.\n'
+    );
   });
 });
