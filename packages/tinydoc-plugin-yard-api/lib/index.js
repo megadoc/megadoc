@@ -23,7 +23,7 @@ function YardAPIPlugin(userConfig) {
           }
 
           database = _database;
-          compiler.linkResolver.use(resolveLink.bind(null, 'api' /* TODO: configurable routeName */,  database));
+          compiler.linkResolver.use(resolveLink.bind(null, config.routeName,  database));
 
           done();
         });

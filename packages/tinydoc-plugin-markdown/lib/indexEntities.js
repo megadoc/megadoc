@@ -48,7 +48,8 @@ module.exports = function(database, routeName, config) {
     }
 
     tokens.link = {
-      href: '/' + routeName + '/' + encodeURIComponent(article.id)
+      href: '/' + routeName + '/' + encodeURIComponent(article.id),
+      context: config && config.corpusContext
     };
 
     return tokens;

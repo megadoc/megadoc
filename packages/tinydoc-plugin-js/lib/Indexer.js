@@ -52,7 +52,7 @@ exports.generateIndices = function(docs, routeName) {
   return indices;
 };
 
-exports.generateSearchTokens = function(database, registry) {
+exports.generateSearchTokens = function(database, registry, config) {
   var tokens = [];
 
   database.forEach(function(doc) {
@@ -72,13 +72,17 @@ exports.generateSearchTokens = function(database, registry) {
 
       if (parentDoc) {
         docTokens.$1 = [ parentDoc.id, doc.name ].join(doc.ctx.symbol);
-        docTokens.$2 = doc.ctx.symbol + doc.name;
       }
     }
 
     if (docTokens.$1) {
       var link = resolveLink(database, doc.id, registry);
-      docTokens.link = { href: '/' + link.href };
+
+      docTokens.link = {
+        href: '/' + link.href,
+        context: config && config.corpusContext
+      };
+
       tokens.push(docTokens);
     }
   });

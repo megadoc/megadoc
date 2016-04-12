@@ -15,7 +15,8 @@ var defaults = {
   fullFolderTitleDelimiter: ' - ',
   allowLeadingSlashInLinks: true,
   generateMissingHeadings: true,
-  discardIdPrefix: null
+  discardIdPrefix: null,
+  corpusContext: 'Articles'
 };
 
 function MarkdownPlugin(userConfig) {

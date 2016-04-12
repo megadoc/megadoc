@@ -55,7 +55,7 @@
 
   &__help {
     margin: 0 0 .5rem;
-    color: #8b898f;
+    color: @plain-spotlight__help;
     font-size: .7rem;
     display: block;
 
@@ -69,7 +69,9 @@
 .schemable({
   .spotlight {
     &__highlighted-term {
-      background-color: @code;
+      // background-color: @code;
+      // background: @link;
+      color: @accent;
     }
 
     &__result {
@@ -80,6 +82,18 @@
         background: @link;
         color: @base3;
       }
+
+      &--active .spotlight__highlighted-term,
+      a:hover .spotlight__highlighted-term,
+      a:focus .spotlight__highlighted-term {
+        background: @accent;
+        color: @base3;
+      }
+    }
+
+    &__result-context {
+      font-size: 0.75rem;
+      color: lighten(@plain-spotlight__help, 25%);
     }
   }
 });

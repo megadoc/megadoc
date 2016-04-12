@@ -17,8 +17,8 @@ config.devtool = 'eval';
 config.entry = {
   main: [
     path.join(root, '.local.js'),
-    'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://' + host + ':' + port,
+    // 'webpack/hot/dev-server',
+    // 'webpack-dev-server/client?http://' + host + ':' + port,
   ]
 };
 
@@ -28,7 +28,7 @@ config.plugins = [
     'process.env.CONFIG_FILE': JSON.stringify(configFile),
   }),
 
-  new webpack.HotModuleReplacementPlugin(),
+  // new webpack.HotModuleReplacementPlugin(),
 
   ExternalsPlugin
 ];
@@ -54,7 +54,7 @@ symlinkAllDirectories(path.dirname(configFile));
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,
   publicPath: config.output.publicPath,
-  hot: true,
+  // hot: true,
   quiet: false,
   noInfo: false,
   lazy: false,

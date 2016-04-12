@@ -73,4 +73,6 @@ module.exports = {
   sortModulesAlphabetically: true,
 
   verbose: false,
+
+  corpusContext: 'JS'
 };

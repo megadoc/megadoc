@@ -10,7 +10,7 @@ describe("Core::TokenSearcher", function() {
         { $1: 'Zoo' },
         { $1: 'Foo - Bar' },
       ],
-      expected: [ 2, 0 ],
+      expected: [ 2 ],
     },
 
     {
@@ -35,29 +35,71 @@ describe("Core::TokenSearcher", function() {
 
       expected: [ 2 ],
     },
+    {
+      term: 'cache',
+
+      tokens: [
+        { $1: 'Checkbox' },
+        { $1: 'Scheduler' },
+        { $2: '#isAttachedToDOM' },
+        { $1: 'SchemaPropTypes' },
+        { $2: 'checkAndSend' },
+        { $1: 'Data.Cache#unshiftInCollection' },
+        { $1: 'Data.Cache#addToCollection' },
+        { $1: 'Data.Cache#setCollection' },
+        { $1: 'Data.Cache' },
+      ],
+
+      strict: false,
+      expected: [ 8, 7,6,5 ],
+    },
+
+    {
+      term: 'conv',
+
+      tokens: [
+        { $2: '#hasConnectionError' },
+        { $2: '#unshiftInCollection' },
+        { $1: 'JavaScript Conventions - Introduction' },
+        { $1: 'JavaScript Conventions - Naming Conventions' },
+        { $1: 'JavaScript Conventions - Component Structure' },
+        { $1: 'JavaScript Conventions - Conditional Sub Rendering' },
+        { $2: '#getCollection' },
+        { $2: '#setCollection' },
+        { $2: '#addToCollection' },
+      ],
+
+      strict: true,
+      expected: [ 2, 3, 4, 5 ],
+      // $only: true
+    },
   ];
 
   samples.forEach(function(sample, index) {
-    it(sample.message || `searching for "${sample.term}" (sample #${index})`, function() {
+    const func = sample.$only ? it.only : it;
+    func(sample.message || `searching for "${sample.term}" (sample #${index})`, function() {
       assertRanked(
         Subject(sample.tokens).search(sample.term),
-        sample.expected.map(x => sample.tokens[x]['$1'])
+        sample.expected.map(x => sample.tokens[x]['$1'] || sample.tokens[x]['$2']),
+        sample.strict
       );
     });
   });
 
-  function assertRanked(results, expectedTokens) {
-    const actualTokens = results.map(x => x.item['$1']);
+  function assertRanked(results, expectedTokens, strict) {
+    const actualTokens = results.map(x => x.$1);
 
-    assert(results.length === expectedTokens.length,
-      `
-      Expected ${expectedTokens.length} tokens to be matched, not ${results.length}.
-      Expected:
-          ${expectedTokens.map(x => `\n        - ${x}`).join('')}
+    if (strict) {
+      assert(results.length === expectedTokens.length,
+        `
+        Expected ${expectedTokens.length} tokens to be matched, not ${results.length}.
+        Expected:
+            ${expectedTokens.map(x => `\n        - ${x}`).join('')}
 
-      Actual:
-          ${actualTokens.map(x => `\n        - ${x}`).join('')}
-    `);
+        Actual:
+            ${actualTokens.map(x => `\n        - ${x}`).join('')}
+      `);
+    }
 
     expectedTokens.forEach(function(expected, index) {
       const actual = actualTokens[index];

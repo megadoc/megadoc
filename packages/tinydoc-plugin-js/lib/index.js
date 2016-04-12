@@ -97,7 +97,7 @@ function createCJSPlugin(userConfig) {
           registry.add(index.path, index.index);
         });
 
-        Indexer.generateSearchTokens(database, registry).forEach(function(token) {
+        Indexer.generateSearchTokens(database, registry, config).forEach(function(token) {
           registry.addSearchToken(token);
         });
 

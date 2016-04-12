@@ -7,6 +7,10 @@ const { func, arrayOf, shape, string, } = React.PropTypes;
 const hasScrollIntoViewIfNeeded = typeof Element.prototype.scrollIntoViewIfNeeded === 'function';
 
 const Spotlight = React.createClass({
+  statics: {
+    MAX_RESULTS: 15
+  },
+
   propTypes: {
     onChange: func, // emitted when a document has been selected and jumped to
     corpus: arrayOf(shape({
@@ -88,9 +92,9 @@ const Spotlight = React.createClass({
     );
   },
 
-  renderResult(result, index) {
-    const token = result.item;
+  renderResult(token, index) {
     const href = token.link.href;
+    const text = token.$1;
 
     return (
       <li
@@ -101,19 +105,21 @@ const Spotlight = React.createClass({
         })
       }>
         <Link to={href} ref={`link__${index}`} onClick={this.props.onChange}>
-          {token['$1']}
+          {text} {token.link.context && (
+            <em className="spotlight__result-context">
+              {token.link.context}
+            </em>
+          )}
         </Link>
       </li>
     );
-
-    // {highlight(token[result.matches[0].key], result.matches[0].indices)}
   },
 
   search(e) {
     this.setState({
       cursor: 0,
       lastSearchTerm: e.target.value,
-      results: this.searcher.search(e.target.value)
+      results: this.searcher.search(e.target.value).slice(0, Spotlight.MAX_RESULTS)
     });
   },
 
