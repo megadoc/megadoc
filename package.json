@@ -11,12 +11,10 @@
     "build": "NODE_ENV=production webpack -p --display-chunks",
     "coverage": "COVERAGE=1 ./bin/test.sh",
     "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js",
-    "lint": "./bin/lint.sh",
-    "lint:ui": "./bin/lint-ui.sh",
-    "prepublish": "npm run lint && npm run lint:ui && npm run test && npm run test:ui && npm run build",
+    "lint": "./bin/lint.sh && ./bin/lint-ui.sh",
+    "prepublish": "npm run lint && npm run test && npm run build",
     "start": "./bin/devserver.sh",
-    "test": "./bin/test.sh",
-    "test:ui": "karma start --single-run"
+    "test": "./bin/test.sh && karma start --single-run"
   },
   "repository": {
     "type": "git",

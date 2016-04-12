@@ -5,7 +5,6 @@ var multiline = require('multiline-slash');
 var tinydoc = require('tinydoc');
 
 describe("[Integration] tinydoc-plugin-js", function() {
-  var database, registry, subject;
   var config;
 
   beforeEach(function() {
