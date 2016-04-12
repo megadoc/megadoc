@@ -163,7 +163,7 @@ function createReactPlugin(userConfig) {
       });
 
       compiler.assets.addPluginScript(
-        path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-react-ui.js')
+        path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-react.js')
       );
 
       compiler.assets.addStyleSheet(

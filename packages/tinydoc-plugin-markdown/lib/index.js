@@ -22,6 +22,7 @@ function MarkdownPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
 
   return {
+    name: 'MarkdownPlugin[' + config.routeName + ']',
     run: function(compiler) {
       var database;
 

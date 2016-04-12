@@ -76,7 +76,7 @@
     "md5": "^2.0.0",
     "mocha": "^2.3.3",
     "mocha-lcov-reporter": "^1.0.0",
-    "multiline-slash": "^1.0.0",
+    "multiline-slash": "2.0.0",
     "react-hot-loader": "",
     "react-router": "0.13.x",
     "serve-static": "^1.10.0",
