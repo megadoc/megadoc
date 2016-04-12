@@ -13,6 +13,12 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 script:
+  - PACKAGE=git ./bin/prepublish -S test -S lint
+  - PACKAGE=js ./bin/prepublish -S test -S lint
+  - PACKAGE=lua ./bin/prepublish -S test -S lint
+  - PACKAGE=markdown ./bin/prepublish -S test -S lint
+  - PACKAGE=react ./bin/prepublish -S test -S lint
+  - PACKAGE=yard-api ./bin/prepublish -S test -S lint
   - npm run lint
   - npm run lint:ui
   - npm run test
