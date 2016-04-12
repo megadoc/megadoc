@@ -42,7 +42,7 @@ describe('CJS::Parser - Prototypal modules', function() {
 
     assert.equal(docs.length, 2);
 
-    doc = findWhere(docs, { id: 'someMethod' });
+    doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
     assert.equal(doc.ctx.type, 'function');
@@ -64,7 +64,7 @@ describe('CJS::Parser - Prototypal modules', function() {
 
     assert.equal(docs.length, 2);
 
-    doc = findWhere(docs, { id: 'someProperty' });
+    doc = findWhere(docs, { id: 'DragonHunter@someProperty' });
 
     assert.ok(doc);
     assert.equal(doc.ctx.type, 'literal');

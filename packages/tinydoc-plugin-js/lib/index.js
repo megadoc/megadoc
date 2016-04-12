@@ -1,6 +1,6 @@
 var path = require('path');
 var scan = require('./scan');
-var indexEntities = require('./indexEntities');
+var Indexer = require('./Indexer');
 var resolveLink = require('./resolveLink');
 var generateStats = require('./generateStats');
 var render = require('./render');
@@ -93,8 +93,12 @@ function createCJSPlugin(userConfig) {
       });
 
       compiler.on('index', function(registry, done) {
-        indexEntities(database, config.routeName).forEach(function(index) {
+        Indexer.generateIndices(database, config.routeName).forEach(function(index) {
           registry.add(index.path, index.index);
+        });
+
+        Indexer.generateSearchTokens(database, registry).forEach(function(token) {
+          registry.addSearchToken(token);
         });
 
         done();

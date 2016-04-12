@@ -7,8 +7,8 @@ function TokenSearcher(tokens) {
     include: [ 'score', 'matches' ],
     keys: [
       { name: '$1', weight: 1, },
-      { name: '$2', weight: 1 / 2, },
-      { name: '$3', weight: 1 / 4, },
+      { name: '$2', weight: 1 / 8, },
+      { name: '$3', weight: 1 / 16, },
     ],
 
     getFn(obj, path) {

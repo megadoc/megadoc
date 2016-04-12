@@ -11,23 +11,26 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 install:
+  # skip the "prepublish" hook because we want finer control
   - npm install --ignore-scripts
-  - PACKAGE=git ./bin/prepublish.sh -S test -S lint
-  - PACKAGE=js ./bin/prepublish.sh -S test -S lint
-  - PACKAGE=lua ./bin/prepublish.sh -S test -S lint
-  - PACKAGE=markdown ./bin/prepublish.sh -S test -S lint
-  - PACKAGE=react ./bin/prepublish.sh -S test -S lint
-  - PACKAGE=yard-api ./bin/prepublish.sh -S test -S lint
+
+  # install npm dependencies for all packages and make sure they are compilable
+  - ./bin/prepublish.sh git       -S test -S lint
+  - ./bin/prepublish.sh js        -S test -S lint
+  - ./bin/prepublish.sh lua       -S test -S lint
+  - ./bin/prepublish.sh markdown  -S test -S lint
+  - ./bin/prepublish.sh react     -S test -S lint
+  - ./bin/prepublish.sh yard-api  -S test -S lint
 
 script:
-  - npm run lint
-  - npm run lint:ui
-  - npm run test
+  - ./bin/lint.sh
+  - ./bin/lint-ui.sh
+  - ./bin/test.sh
   # disabling this for now, something to do with:
   #     Error: Cannot find module "../tmp/publicModules"
   # - npm run test:ui -- --browsers Firefox
   - npm run build # build failures should count!
-  - npm run coverage
+  - COVERAGE=1 ./bin/test.sh
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

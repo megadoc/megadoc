@@ -3,6 +3,7 @@ const Spotlight = require('components/Spotlight');
 const contains = require('dom-contains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, } = React.PropTypes;
+const config = require('config');
 
 const SpotlightManager = React.createClass({
   propTypes: {
@@ -35,7 +36,10 @@ const SpotlightManager = React.createClass({
   render() {
     if (this.props.active) {
       return (
-        <Spotlight onChange={this.closeSpotlight} />
+        <Spotlight
+          corpus={config.corpus}
+          onChange={this.closeSpotlight}
+        />
       );
     }
     else {

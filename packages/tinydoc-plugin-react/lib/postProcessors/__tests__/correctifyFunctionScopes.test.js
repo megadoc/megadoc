@@ -36,6 +36,8 @@ describe('analyzeReactNode - statics', function() {
     var doc = findWhere(docs, { name: 'someFunction' });
 
     assert.equal(doc.ctx.scope, K.SCOPE_UNDEFINED);
+    assert.equal(doc.ctx.symbol, '.');
+    assert.equal(doc.id, 'Something.someFunction');
   });
 });
 
@@ -52,9 +54,10 @@ describe('analyzeReactNode - methods', function() {
 
     assert.equal(docs.length, 2);
 
-    var doc = findWhere(docs, { id: 'someMethod' });
+    var doc = findWhere(docs, { name: 'someMethod' });
 
     assert.equal(doc.ctx.type, 'function');
     assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
+    assert.equal(doc.id, 'Something#someMethod');
   });
 });

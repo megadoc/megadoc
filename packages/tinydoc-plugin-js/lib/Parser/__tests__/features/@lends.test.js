@@ -38,11 +38,11 @@ describe('CJS::Parser - @lends support', function() {
       assert.equal(doc.ctx.type, 'object');
     });
 
-    get('findAll', function(doc) {
+    get('DOMHelpers.findAll', function(doc) {
       assert.equal(doc.receiver, 'DOMHelpers');
     });
 
-    get('find', function(doc) {
+    get('DOMHelpers.find', function(doc) {
       assert.equal(doc.receiver, 'DOMHelpers');
     });
   });

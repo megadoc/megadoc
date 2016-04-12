@@ -24,4 +24,4 @@ if [ ! -d "./ui" ]; then
   exit 1
 fi
 
-node ./server.js
+exec node ./server.js

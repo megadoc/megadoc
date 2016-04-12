@@ -11,7 +11,13 @@ function isEntity(doc) {
 function isMethod(doc) {
   var ctx = doc.nodeInfo.ctx;
 
-  return ctx.type === K.TYPE_FUNCTION && (
+  return ctx.type === K.TYPE_FUNCTION && isObjectProperty(doc);
+}
+
+function isObjectProperty(doc) {
+  var ctx = doc.nodeInfo.ctx;
+
+  return (
     ctx.scope === K.SCOPE_FACTORY_EXPORTS ||
     ctx.scope === K.SCOPE_INSTANCE ||
     ctx.scope === K.SCOPE_PROTOTYPE
@@ -26,3 +32,4 @@ exports.isModule = isModule;
 exports.isEntity = isEntity;
 exports.isMethod = isMethod;
 exports.isStaticMethod = isStaticMethod;
+exports.isObjectProperty = isObjectProperty;

@@ -21,7 +21,7 @@ describe('CJS::Parser - @method tag', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].id, 'on');
+    assert.equal(docs[0].id, 'Compiler#on');
     assert.equal(docs[0].receiver, 'Compiler');
     assert.equal(docs[0].ctx.type, K.TYPE_FUNCTION);
   });
@@ -51,7 +51,7 @@ describe('CJS::Parser - @method tag', function() {
 
     assert.equal(docs.length, 3);
     assert.deepEqual(docs.map(function(d) { return d.id; }).sort(), [
-      'Compiler', 'off', 'on'
+      'Compiler', 'Compiler#off', 'Compiler#on'
     ]);
   });
 });

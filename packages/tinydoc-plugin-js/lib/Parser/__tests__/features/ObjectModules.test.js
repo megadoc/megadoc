@@ -17,8 +17,8 @@ describe('CJS::Parser - Object modules', function() {
     });
 
     assert.equal(docs.length, 2);
+    assert.equal(docs[1].id, 'DragonHunter.capture');
     assert.equal(docs[1].ctx.type, 'function');
-    assert.equal(docs[1].id, 'capture');
     assert.equal(docs[1].receiver, 'DragonHunter');
   });
 
@@ -61,6 +61,7 @@ describe('CJS::Parser - Object modules', function() {
 
   it('does not confuse tokens with ones defined in another file', function() {
     var docs = TestUtils.parseFiles([
+      // oh WTF? come on
       path.resolve(__dirname, '../../../config.js'),
       path.resolve(__dirname, '../../../Parser/NodeAnalyzer/analyzeNode.js'),
     ]);
@@ -68,10 +69,10 @@ describe('CJS::Parser - Object modules', function() {
     assert.ok(docs.length > 0);
 
     var doc = docs.filter(function(d) {
-      return d.id === 'analyzeNode';
+      return d.id === 'Plugins.CJS.Config@analyzeNode';
     })[0];
 
     assert.ok(doc);
-    assert.ok(!!doc.receiver);
+    assert.equal(doc.receiver, 'Plugins.CJS.Config');
   });
 });

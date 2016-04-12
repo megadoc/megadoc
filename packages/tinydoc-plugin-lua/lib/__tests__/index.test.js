@@ -8,7 +8,7 @@ describe('tinydoc-plugin-lua', function() {
   var plugin, getDatabase;
 
   function createInlineSource(contents) {
-    var filePath = TestUtils.createFile(multiline(contents), 'file.lua');
+    var filePath = TestUtils.createFile(multiline(contents), 'file.lua').path;
     plugin.configure({ source: [ filePath ] });
   }
 
@@ -22,7 +22,7 @@ describe('tinydoc-plugin-lua', function() {
   });
 
   afterEach(function() {
-    TestUtils.removeFiles();
+    TestUtils.clearCache();
   });
 
   describe('#scan', function() {

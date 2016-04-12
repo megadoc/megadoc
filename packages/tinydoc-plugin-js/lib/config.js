@@ -71,4 +71,6 @@ module.exports = {
   showSourcePaths: true,
 
   sortModulesAlphabetically: true,
+
+  verbose: false,
 };

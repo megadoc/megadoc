@@ -48,6 +48,7 @@ Doc.prototype.toJSON = function() {
 
   if (!doc.isModule) {
     doc.ctx.symbol = this.generateSymbol(doc.ctx.type);
+    doc.id = [ doc.receiver, doc.id ].join(doc.ctx.symbol);
     doc.path = [ doc.receiver, doc.name ].join(doc.ctx.symbol);
   }
   else {
@@ -116,14 +117,22 @@ Doc.prototype.generateSymbol = function(type) {
       }
       break;
 
-    case K.TYPE_OBJECT:
-    case K.TYPE_LITERAL:
-      symbol = '@';
+    default:
+      if (DocClassifier.isObjectProperty(this)) {
+        symbol = '@';
+      }
+      else {
+        symbol = '.';
+      }
       break;
   }
 
-  if (this.docstring.hasTag('property')) {
+  if (this.docstring.hasTag('property') && !this.docstring.hasTag('static')) {
     symbol = '@';
+  }
+
+  if (this.docstring.hasTag('property') && this.docstring.hasTag('static')) {
+    symbol = '.';
   }
 
   return symbol;

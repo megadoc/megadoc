@@ -1,14 +1,22 @@
 const React = require('react');
-const config = require('config');
 const { debounce } = require('lodash');
 const TokenSearcher = require('core/TokenSearcher');
 const Link = require('components/Link');
 const classSet = require('classnames');
-const { func, } = React.PropTypes;
+const { func, arrayOf, shape, string, } = React.PropTypes;
+const hasScrollIntoViewIfNeeded = typeof Element.prototype.scrollIntoViewIfNeeded === 'function';
 
 const Spotlight = React.createClass({
   propTypes: {
     onChange: func, // emitted when a document has been selected and jumped to
+    corpus: arrayOf(shape({
+      $1: string,
+      $2: string,
+      $3: string,
+      link: shape({
+        href: string,
+      })
+    })),
   },
 
   getInitialState() {
@@ -20,8 +28,14 @@ const Spotlight = React.createClass({
   },
 
   componentWillMount() {
-    this.searcher = TokenSearcher(config.registry.tokens);
+    this.searcher = TokenSearcher(this.props.corpus);
     this.debouncedSearch = debounce(this.searcher.search, 100);
+  },
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.cursor !== this.state.cursor) {
+      this.scrollSelectedIntoView();
+    }
   },
 
   render() {
@@ -62,7 +76,7 @@ const Spotlight = React.createClass({
             onKeyDown={this.navigate}
           />
 
-          <ul className="spotlight__results">
+          <ul className="spotlight__results" ref="scrollableWidget">
             {results.length === 0 && this.state.lastSearchTerm.length > 0 && (
               <li className="spotlight__result">Nothing matched your query. 😞</li>
             )}
@@ -76,18 +90,18 @@ const Spotlight = React.createClass({
 
   renderResult(result, index) {
     const token = result.item;
-    const url = token.link.url;
+    const href = token.link.href;
 
     return (
       <li
-        key={url}
+        key={href}
         className={classSet({
           "spotlight__result": true,
           "spotlight__result--active": this.state.cursor === index
         })
       }>
-        <Link to={url} ref={`link__${index}`}>
-          {token[result.matches[0].key]}
+        <Link to={href} ref={`link__${index}`} onClick={this.props.onChange}>
+          {token['$1']}
         </Link>
       </li>
     );
@@ -145,8 +159,18 @@ const Spotlight = React.createClass({
     });
   },
 
+  scrollSelectedIntoView() {
+    if (hasScrollIntoViewIfNeeded) {
+      this.getSelectedDOMNode().scrollIntoViewIfNeeded();
+    }
+  },
+
   activateSelected() {
-    React.findDOMNode(this.refs[`link__${this.state.cursor}`]).click();
+    this.getSelectedDOMNode().click();
+  },
+
+  getSelectedDOMNode() {
+    return React.findDOMNode(this.refs[`link__${this.state.cursor}`]);
   }
 });
 

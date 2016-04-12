@@ -1,5 +1,4 @@
 var resolveLink = require('../resolveLink');
-var indexEntities = require('../indexEntities');
 var assert = require('assert');
 var TestUtils = require('../Parser/TestUtils');
 
@@ -22,17 +21,7 @@ describe('cjs::resolveLink', function() {
     });
 
     database.__meta__ = { routeName: '' };
-
-    registry = {
-      get: function(id) {
-        return registry.entries[id];
-      },
-
-      entries: indexEntities(database).reduce(function(hsh, index) {
-        hsh[index.path] = index.index;
-        return hsh;
-      }, {})
-    };
+    registry = TestUtils.buildRegistry(database, '');
   });
 
   it('resolves ${NS}.${MODULE}', function() {

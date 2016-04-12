@@ -1,8 +1,32 @@
 #!/usr/bin/env bash
 
+# Ensure a plugin package is good for publishing.
+#
+# Usage:
+#
+#     $0 PACKAGE [-S "lint"|"test"|"build"[, -S ...]]
+#
+# This script will perform the following:
+#
+#   - install NPM packages and make sure they're up to date
+#   - (optional, -S lint to skip) lint the back-end and UI sources
+#   - (optional, -S test to skip) run the back-end tests
+#   - (optional, -S build to skip) compile the plugin's UI assets
+#
+# Environment variables:
+#
+#   - PACKAGE: the package, in case $1 is not passed
+
 if [ -z $PACKAGE ]; then
-  echo "Usage: $0 PACKAGE"
-  exit 1
+  if [ $# -gt 0 ]; then
+    PACKAGE=$1
+    shift
+  fi
+
+  if [ -z $PACKAGE ]; then
+    echo "Usage: $0 PACKAGE"
+    exit 1
+  fi
 fi
 
 [ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
@@ -50,15 +74,15 @@ function refresh_dependencies {
 }
 
 function lint_sources {
-  ./node_modules/.bin/eslint $PACKAGE_ROOT/lib
+  ./bin/lint.sh $PACKAGE
 }
 
 function lint_ui_sources {
-  ./node_modules/.bin/eslint -c .eslintrc -c .eslintrc--ui $PACKAGE_ROOT/ui
+  ./bin/lint-ui.sh $PACKAGE
 }
 
 function run_tests {
-  ./node_modules/.bin/mocha --reporter dot "${PACKAGE_ROOT}/lib/**/*.test.js"
+  ./bin/test.sh $PACKAGE --reporter dot
 }
 
 function build_assets {

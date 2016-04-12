@@ -8,15 +8,15 @@
     "tinydoc-compile": "./cli/tinydoc-compile"
   },
   "scripts": {
-    "lint": "eslint lib packages/*/lib",
-    "lint:ui": "eslint -c .eslintrc -c .eslintrc--ui ui packages/*/ui",
-    "test": "mocha 'lib/**/*.test.js' 'packages/*/lib/**/*.test.js'",
-    "test:ui": "karma start --single-run",
+    "build": "NODE_ENV=production webpack -p --display-chunks",
+    "coverage": "COVERAGE=1 ./bin/test.sh",
+    "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js",
+    "lint": "./bin/lint.sh",
+    "lint:ui": "./bin/lint-ui.sh",
     "prepublish": "npm run lint && npm run lint:ui && npm run test && npm run test:ui && npm run build",
     "start": "./bin/devserver.sh",
-    "build": "NODE_ENV=production webpack -p --display-chunks",
-    "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js",
-    "coverage": "istanbul cover --preserve-comments ./node_modules/mocha/bin/_mocha --report lcovonly -- 'lib/**/*.test.js' 'packages/*/lib/**/*.test.js'"
+    "test": "./bin/test.sh",
+    "test:ui": "karma start --single-run"
   },
   "repository": {
     "type": "git",
@@ -81,8 +81,6 @@
     "react-router": "0.13.x",
     "serve-static": "^1.10.0",
     "sinon": "^1.17.1",
-    "tinydoc-plugin-js": "4.x",
-    "tinydoc-plugin-markdown": "4.x",
     "webpack-dev-middleware": "1.0.11",
     "webpack-dev-server": "^1.7.0"
   }

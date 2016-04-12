@@ -9,7 +9,9 @@ module.exports = function scan(config, parserConfig, gitRepository, utils, done)
   var database;
   var files = utils.globAndFilter(config.source, config.exclude);
 
-  console.log('Parsing docs from %d files.', files.length);
+  if (config.verbose) {
+    console.log('tinydoc-plugin-js[%s]: Parsing docs from %d files.', config.routeName, files.length);
+  }
 
   var commonPrefix = findCommonPrefix(files, '/');
   var parser = new Parser();

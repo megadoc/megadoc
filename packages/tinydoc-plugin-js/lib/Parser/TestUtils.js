@@ -1,5 +1,7 @@
 var multiline = require('multiline-slash');
 var ASTParser = require('./');
+var Registry = require('tinydoc/lib/Registry');
+var Indexer = require('../Indexer');
 
 function parseInline(strGenerator, config, filePath) {
   var parser = new ASTParser();
@@ -21,6 +23,16 @@ function parseInline(strGenerator, config, filePath) {
 
   return database;
 }
+
+exports.buildRegistry = function(database, routeName) {
+  var registry = new Registry();
+
+  Indexer.generateIndices(database, routeName || 'test').forEach(function(index) {
+    registry.add(index.path, index.index);
+  });
+
+  return registry;
+};
 
 function parseFiles(filePaths, config, commonPrefix) {
   var parser = new ASTParser();

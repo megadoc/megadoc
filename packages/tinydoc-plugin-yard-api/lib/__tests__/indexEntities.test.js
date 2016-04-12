@@ -22,7 +22,7 @@ describe('yard-api::indexEntities', function() {
   var resolver = new LinkResolver(indexEntities(database, registry));
 
   resolver.use(function(id) {
-    var index = registry.toJSON()[id];
+    var index = registry.toJSON().indices[id];
 
     if (index) {
       var href;

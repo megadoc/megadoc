@@ -174,7 +174,7 @@ const ModuleBody = React.createClass({
 
   renderProperty(doc) {
     const tag = findWhere(doc.tags, { type: 'property' });
-    const path = doc.ctx.symbol + doc.id;
+    const path = doc.ctx.symbol + doc.name;
 
 
     return (
@@ -184,7 +184,7 @@ const ModuleBody = React.createClass({
         initiallyCollapsed
         expanded={this.getActiveEntityId() === path}
         path={path}
-        parentPath={this.props.doc.id}
+        parentPath={this.props.doc.name}
         anchorId={this.generateAnchorId(path)}
         doc={doc}
       />
@@ -210,7 +210,7 @@ const ModuleBody = React.createClass({
   },
 
   renderStaticMethod(doc) {
-    const path = doc.ctx.symbol + doc.id
+    const path = doc.ctx.symbol + doc.name;
 
     return (
       <Doc
@@ -242,7 +242,7 @@ const ModuleBody = React.createClass({
   },
 
   renderMethod(doc) {
-    const path = doc.ctx.symbol + doc.id;
+    const path = doc.ctx.symbol + doc.name;
 
     return (
       <Doc

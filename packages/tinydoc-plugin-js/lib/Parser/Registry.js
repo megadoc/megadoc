@@ -6,7 +6,7 @@ var assert = require('assert');
 /**
  * A registry of all the docs and their AST nodes and paths.
  */
-function Registry() {
+function Registry(x) {
   /**
    * @property {Object[]} docs
    *
