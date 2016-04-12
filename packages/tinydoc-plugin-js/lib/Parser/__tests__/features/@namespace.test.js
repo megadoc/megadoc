@@ -4,7 +4,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - @namespace support', function() {
   it('should include the namespace in the module id', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module
@@ -17,7 +17,7 @@ describe('CJS::Parser - @namespace support', function() {
   });
 
   it('should not include the namespace in a module name', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module
@@ -30,7 +30,7 @@ describe('CJS::Parser - @namespace support', function() {
   });
 
   it('should work with a nested namespace', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @namespace Core.Data
       //  * @module

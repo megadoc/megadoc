@@ -6,7 +6,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - @method tag', function() {
   it('it accepts a dynamically generated method', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       //  function Compiler() {
       //
@@ -27,7 +27,7 @@ describe('CJS::Parser - @method tag', function() {
   });
 
   it('it accepts multiple dynamically generated methods in the same docstring', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       //  function Compiler() {
       //

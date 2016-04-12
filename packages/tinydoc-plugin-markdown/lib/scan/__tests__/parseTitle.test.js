@@ -4,7 +4,7 @@ var multiline = require('multiline-slash');
 
 describe('markdown/scan/parseTitle', function() {
   it('should work', function() {
-    var fixture = multiline(function() {
+    var fixture = multiline(function() {;
       // # Testing CommonJS Modules
       //
       // Something.
@@ -16,7 +16,7 @@ describe('markdown/scan/parseTitle', function() {
   });
 
   it('should work with stroked headings', function() {
-    var fixture = multiline(function() {
+    var fixture = multiline(function() {;
       // Support Week
       // ============
       //

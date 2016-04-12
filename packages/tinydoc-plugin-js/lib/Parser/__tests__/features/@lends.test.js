@@ -5,7 +5,7 @@ var K = require('../../constants');
 
 describe('CJS::Parser - @lends support', function() {
   it('redirects all entities belonging to a @lends object into the specified receiver', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /**
       //  * Adooken.
       //  */
@@ -48,7 +48,7 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('correctly links entities defined using something like assign()', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -69,7 +69,7 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('correctly resolves a namespaced module', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /**
       //  * @namespace API
       //  * @module
@@ -93,7 +93,7 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('lends to a prototype', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // function DragonHunter() {}
       //

@@ -7,7 +7,7 @@ var parseInline = TestUtils.parseInline;
 describe('CJS::Parser - Function modules', function() {
   it('parses static methods', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {
       // };
@@ -29,7 +29,7 @@ describe('CJS::Parser - Function modules', function() {
 
   it('parses static properties', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {
       // };
@@ -51,7 +51,7 @@ describe('CJS::Parser - Function modules', function() {
 
   it('works with an unrecognized context node', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {
       // };

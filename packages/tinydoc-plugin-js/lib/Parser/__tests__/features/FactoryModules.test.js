@@ -7,7 +7,7 @@ var parseInline = TestUtils.parseInline;
 describe('CJS::Parser - Factory modules', function() {
   it('parses methods in a literal return object', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Let there be dragons.
       //  */
@@ -36,7 +36,7 @@ describe('CJS::Parser - Factory modules', function() {
 
   it('parses properties in a literal return object', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {
       //   return {
@@ -60,7 +60,7 @@ describe('CJS::Parser - Factory modules', function() {
 
   it('parses entities in a locally-scoped returned object', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** Let there be dragons. */
       // function DragonHunter() {
       //   let api = {};
@@ -97,7 +97,7 @@ describe('CJS::Parser - Factory modules', function() {
 
   it('parse static methods & properties', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {
       //   return {
@@ -145,7 +145,7 @@ describe('CJS::Parser - Factory modules', function() {
 
   it('works with a named function returned in a return literal', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Let there be dragons.
       //  */
@@ -169,7 +169,7 @@ describe('CJS::Parser - Factory modules', function() {
 
   it('works with an anonymous function returned in a return literal', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** Let there be dragons. */
       // var DragonHunter = function() {
       //   /** capture a dragon */
@@ -190,7 +190,7 @@ describe('CJS::Parser - Factory modules', function() {
   });
 
   it('works with an anonymous factory assigned to module.exports', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /**
       //  * A bunch of utilities for dealing with asset files.
       //  */
@@ -216,7 +216,7 @@ describe('CJS::Parser - Factory modules', function() {
   });
 
   it('works with a namespaced factory', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /**
       //  * @module
       //  * @namespace Core

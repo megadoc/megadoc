@@ -27,7 +27,7 @@ describe('tinydoc-plugin-lua', function() {
 
   describe('#scan', function() {
     it('works', function(done) {
-      createInlineSource(function() {
+      createInlineSource(function() {;
         // --- @module
         // function cli()
         // end
@@ -41,7 +41,7 @@ describe('tinydoc-plugin-lua', function() {
 
   describe('#index', function() {
     it('indexes modules', function(done) {
-      createInlineSource(function() {
+      createInlineSource(function() {;
         // --- @module
         // function cli()
         // end
@@ -58,7 +58,7 @@ describe('tinydoc-plugin-lua', function() {
     });
 
     it('indexes functions by #', function(done) {
-      createInlineSource(function() {
+      createInlineSource(function() {;
         // --- hello
         // function cli:hello()
         // end
@@ -75,7 +75,7 @@ describe('tinydoc-plugin-lua', function() {
 
   describe('#render', function() {
     beforeEach(function(done) {
-      createInlineSource(function() {
+      createInlineSource(function() {;
         // --- @module
         // function cli()
         // end

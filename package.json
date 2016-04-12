@@ -8,17 +8,15 @@
     "tinydoc-compile": "./cli/tinydoc-compile"
   },
   "scripts": {
-    "lint": "eslint lib",
-    "lint:packages": "eslint packages/*/lib",
-    "lint:ui": "eslint -c .eslintrc -c .eslintrc--ui ui",
-    "lint:ui:packages": "eslint -c .eslintrc -c .eslintrc--ui packages/*/ui",
-    "test": "mocha 'lib/**/*.test.js'",
-    "test:packages": "mocha 'packages/*/lib/**/*.test.js'",
+    "lint": "eslint lib packages/*/lib",
+    "lint:ui": "eslint -c .eslintrc -c .eslintrc--ui ui packages/*/ui",
+    "test": "mocha 'lib/**/*.test.js' 'packages/*/lib/**/*.test.js'",
     "test:ui": "karma start --single-run",
-    "prepublish": "npm run lint && npm run test && npm run build",
+    "prepublish": "npm run lint && npm run lint:ui && npm run test && npm run test:ui && npm run build",
     "start": "./bin/devserver.sh",
     "build": "NODE_ENV=production webpack -p --display-chunks",
-    "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js"
+    "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js",
+    "coverage": "istanbul cover --preserve-comments ./node_modules/mocha/bin/_mocha --report lcovonly -- 'lib/**/*.test.js' 'packages/*/lib/**/*.test.js'"
   },
   "repository": {
     "type": "git",
@@ -67,10 +65,11 @@
     "eslint-plugin-react": "^3.4.1",
     "highlight.js": "^8.8.0",
     "history": "1.17.0",
-    "istanbul": "^0.4.0",
+    "istanbul": "0.4.3",
     "json-loader": "0.5.1",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "0.1.7",
+    "karma-firefox-launcher": "0.1.7",
     "karma-mocha": "0.1.10",
     "karma-sourcemap-loader": "0.3.3",
     "karma-webpack": "^1.7.0",

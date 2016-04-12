@@ -7,7 +7,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser', function() {
   it('should ignore @internal docs', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @internal
       //  * Something.
@@ -23,7 +23,7 @@ describe('CJS::Parser', function() {
 
   describe('resolving identifiers', function() {
     it('resolves an Identifier to a function', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /** @module */
         // var DragonHunter = function() {
         //   var scan = function(a, b) {
@@ -47,7 +47,7 @@ describe('CJS::Parser', function() {
     });
 
     it('resolves an Identifier to a variable', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /** @module */
         // var DragonHunter = function() {
         //   var scan = 5;
@@ -72,7 +72,7 @@ describe('CJS::Parser', function() {
 
   describe('docstrings defined without nodes', function() {
     it('can parse a node-free docstring', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /** @module Something */
       });
 
@@ -83,7 +83,7 @@ describe('CJS::Parser', function() {
     });
 
     it.skip('correctly maps entities to a node-free @module docstring', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /** @module Something */
         //
         // /** weehee */

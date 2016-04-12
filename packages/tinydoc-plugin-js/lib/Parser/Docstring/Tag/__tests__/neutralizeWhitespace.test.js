@@ -8,7 +8,7 @@ var parse = function(strGenerator) {
 
 describe('CJS::Parser::Docstring::Tag::neutralizeWhitespace', function() {
   it('strips leading whitespace from description', function() {
-    var string = parse(function() {
+    var string = parse(function() {;
       //          This
       //          is
       //          a
@@ -16,6 +16,6 @@ describe('CJS::Parser::Docstring::Tag::neutralizeWhitespace', function() {
       //          description.
     });
 
-    assert.equal(string, '\nThis\nis\na\nmultiline\ndescription.\n');
+    assert.equal(string, 'This\nis\na\nmultiline\ndescription.\n');
   });
 });

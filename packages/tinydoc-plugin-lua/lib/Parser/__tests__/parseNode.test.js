@@ -36,7 +36,7 @@ function parseNode(str) {
 
 describe('Lua::Parser#parseNode', function() {
   it('understands a function', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // function do_something()
       // end
     });
@@ -45,7 +45,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands a self-bound function', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // function me:something()
       // end
     });
@@ -57,7 +57,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands a variable-bound function', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // function me.something()
       // end
     });
@@ -69,7 +69,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands a function assigned to a table property', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // me.something = function()
       // end
     });
@@ -81,7 +81,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands a local variable declaration', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local foo = 'bar'
     });
 
@@ -89,7 +89,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('ignores multiple local variable declarations', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local foo, _ = 'bar'
     });
 
@@ -97,7 +97,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands a global variable declaration', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // foo = 'bar'
     });
 
@@ -105,7 +105,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('ignores multiple variable declarations', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // foo, x = 'bar'
     });
 
@@ -113,7 +113,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands an inline table property', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local t = {
       //   foo = 'bar'
       // }
@@ -128,7 +128,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands an inline table function', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local t = {
       //   foo = function()
       //   end
@@ -144,7 +144,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands an assignment of a literal table property', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local t = {}
       //
       // t.foo = 'bar'
@@ -159,7 +159,7 @@ describe('Lua::Parser#parseNode', function() {
   });
 
   it('understands an assignment of a function table property', function() {
-    var nodeInfo = parseNode(function() {
+    var nodeInfo = parseNode(function() {;
       // local t = {}
       //
       // t.foo = function()

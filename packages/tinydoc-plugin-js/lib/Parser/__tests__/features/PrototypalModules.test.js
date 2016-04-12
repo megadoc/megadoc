@@ -7,7 +7,7 @@ var parseInline = TestUtils.parseInline;
 describe('CJS::Parser - Prototypal modules', function() {
   it('parses properties assigned to `this`', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // function DragonHunter() {
       //   /**
@@ -30,7 +30,7 @@ describe('CJS::Parser - Prototypal modules', function() {
 
   it('parses prototype methods', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // function DragonHunter() {}
       //
@@ -52,7 +52,7 @@ describe('CJS::Parser - Prototypal modules', function() {
 
   it('parses prototype properties', function() {
     var doc;
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // function DragonHunter() {}
       //

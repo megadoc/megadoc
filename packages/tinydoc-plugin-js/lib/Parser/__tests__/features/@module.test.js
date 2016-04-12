@@ -4,7 +4,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - @module support', function() {
   it('works with anything tagged as @module', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -17,7 +17,7 @@ describe('CJS::Parser - @module support', function() {
   });
 
   it('should use the overridden module Id as the module name', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @module Something
       //  */
@@ -29,7 +29,7 @@ describe('CJS::Parser - @module support', function() {
   });
 
   it('should work with imported modules using ES6 destructuring', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module
@@ -55,7 +55,7 @@ describe('CJS::Parser - @module support', function() {
 
   describe('@module with an inline namespace', function() {
     it('should use the overridden module Id as the module name', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /**
         //  * @module Core.Something
         //  */
@@ -69,7 +69,7 @@ describe('CJS::Parser - @module support', function() {
     });
 
     it('should work with a nested namespace', function() {
-      var docs = parseInline(function() {
+      var docs = parseInline(function() {;
         // /**
         //  * @module Core.Data.Something
         //  */

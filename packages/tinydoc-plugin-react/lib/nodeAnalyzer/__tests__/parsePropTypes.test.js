@@ -4,7 +4,7 @@ var TestUtils = require('../../TestUtils');
 describe('analyzeReactNode - propTypes', function() {
   describe('string and primitives', function() {
     it('works with "name: React.PropTypes.string"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -20,7 +20,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: React.PropTypes.string.isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -37,7 +37,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: string"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -53,7 +53,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: string.isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -71,7 +71,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('custom validators', function() {
     it('works with "name: function() {}"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -87,7 +87,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: () => {}"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -103,7 +103,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: function someNamedValidator() {}"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -121,7 +121,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('oneOfType', function() {
     it('works with "name: oneOfType([ string, number ])"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -144,7 +144,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "name: oneOfType([ string, number ]).isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -170,7 +170,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('oneOf', function() {
     it('works with "oneOf([ "a", 1 ])"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -191,7 +191,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "oneOf([ "a", 1 ]).isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -210,7 +210,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('shape', function() {
     it('works with "object: shape({ name: string, age: number })"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -234,7 +234,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with nested shapes', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -268,7 +268,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('arrayOf', function() {
     it('works with "arrayOf(string)"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -286,7 +286,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "arrayOf(string).isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -305,7 +305,7 @@ describe('analyzeReactNode - propTypes', function() {
 
   describe('instanceOf', function() {
     it('works with "instanceOf(Date)"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
@@ -322,7 +322,7 @@ describe('analyzeReactNode - propTypes', function() {
     });
 
     it('works with "instanceOf(Date).isRequired"', function() {
-      var docs = TestUtils.parse(function() {
+      var docs = TestUtils.parse(function() {;
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {

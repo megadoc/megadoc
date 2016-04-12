@@ -3,7 +3,7 @@ var TestUtils = require('../../TestUtils');
 
 describe('analyzeReactNode - statics', function() {
   it('should find and track a static property', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  var Something = React.createClass({
       //    statics: {

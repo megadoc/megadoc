@@ -7,7 +7,7 @@ describe('cjs::resolveLink', function() {
   var database, registry;
 
   before(function() {
-    database = TestUtils.parseInline(function() {
+    database = TestUtils.parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module

@@ -4,7 +4,7 @@ var K = require('../../constants');
 
 describe('CJS::Parser - @memberOf support', function() {
   it('correctly adjusts the receiver to the specified one', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -19,7 +19,7 @@ describe('CJS::Parser - @memberOf support', function() {
   });
 
   it('works with a Something.prototype', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -35,7 +35,7 @@ describe('CJS::Parser - @memberOf support', function() {
   });
 
   it('works with something like Object.defineProperty and @property', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -60,7 +60,7 @@ describe('CJS::Parser - @memberOf support', function() {
 
   context('when the specified receiver @lends to something else', function() {
     it('adjusts the receiver to whatever the receiver lent to', function() {
-      var docs = TestUtils.parseInline(function() {
+      var docs = TestUtils.parseInline(function() {;
         // /** @module */
         // var DragonHunter = {};
         //

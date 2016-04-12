@@ -5,7 +5,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - Object modules', function() {
   it('parses static functions', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -23,7 +23,7 @@ describe('CJS::Parser - Object modules', function() {
   });
 
   it('parses static properties', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //
@@ -41,7 +41,7 @@ describe('CJS::Parser - Object modules', function() {
   });
 
   it('parses static properties with an ObjectExpression value', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
       //

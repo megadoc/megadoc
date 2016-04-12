@@ -4,7 +4,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - CommonJS automatic module identification', function() {
   it('var SomeModule = function() {}; module.exports = SomeModule;', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Description of the module.
       //  *
@@ -21,7 +21,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('function SomeModule() {}; module.exports = SomeModule;', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Description of the module.
       //  *
@@ -39,7 +39,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('module.exports = function SomeModule() {};', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Description of the module.
       //  *
@@ -55,7 +55,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('var SomeModule = exports;', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Let there be dragons.
       //  */
@@ -70,7 +70,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('var SomeModule = exports; variant 2', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Let there be dragons.
       //  */
@@ -88,7 +88,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('var SomeModule = exports; exports.something = something;', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * Let there be dragons.
       //  */
@@ -109,7 +109,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('module.exports = {};', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @module SomeModule
       //  * Let there be dragons.
@@ -123,7 +123,7 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
   });
 
   it('@module should override function name', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /**
       //  * @module OverriddenName
       //  *

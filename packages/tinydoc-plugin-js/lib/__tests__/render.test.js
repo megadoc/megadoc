@@ -28,7 +28,7 @@ describe('cjs::render', function() {
   var renderMarkdown, linkify;
 
   beforeEach(function() {
-    database = TestUtils.parseInline(function() {
+    database = TestUtils.parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module

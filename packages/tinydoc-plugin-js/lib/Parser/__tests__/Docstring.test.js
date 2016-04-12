@@ -14,7 +14,7 @@ describe('CJS::Parser::Docstring', function() {
 describe('CJS::Parser::Docstring::Tag', function() {
   describe('@module', function() {
     it('parses the module path', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @module Dragon
         //  */
@@ -24,7 +24,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses "description" and omits the module path from it', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @module Dragon
         //  *
@@ -38,7 +38,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
   describe('@namespace', function() {
     it('parses', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @namespace Hairy
         //  */
@@ -48,7 +48,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses an inline namespace in a @module path', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @module Hairy.Dragon
         //  */
@@ -60,7 +60,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
   describe('@property', function() {
     it('parses a single type', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String}
         //  */
@@ -71,7 +71,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses multiple types', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String|Object}
         //  */
@@ -82,7 +82,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the name', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String} foo
         //  */
@@ -93,7 +93,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses an optional property', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String} [foo]
         //  */
@@ -105,7 +105,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the default value', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String} [foo='bar']
         //  */
@@ -116,7 +116,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the description', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String} foo
         //  *           Something.
@@ -128,7 +128,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('strips leading whitespace from description', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @property {String} foo
         //  *           This
@@ -148,7 +148,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
   describe('@return', function() {
     it('parses a single type', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @return {String}
         //  */
@@ -159,7 +159,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses multiple types', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @return {String|Object}
         //  */
@@ -170,7 +170,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the name', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @return {String} foo
         //  */
@@ -181,7 +181,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the description', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @return {String} foo
         //  *         Something.
@@ -193,7 +193,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('parses the description without a name', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @return {String}
         //  *         Something.
@@ -213,7 +213,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     };
 
     it('parses the example type', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @live_example {jsx}
         //  */
@@ -224,7 +224,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('accepts a custom processor', function(done) {
-      parse(function() {
+      parse(function() {;
         // /**
         //  * @live_example {jsx}
         //  */
@@ -240,7 +240,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('accepts custom attributes', function(done) {
-      parse(function() {
+      parse(function() {;
         // /**
         //  * @live_example {jsx}
         //  */
@@ -260,7 +260,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('whines if attempting to write to an unspecified attribute', function(done) {
-      parse(function() {
+      parse(function() {;
         // /**
         //  * @live_example {jsx}
         //  *
@@ -281,7 +281,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('serializes custom attributes', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @live_example {jsx}
         //  */
@@ -301,7 +301,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
   describe('neutralizing whitespace', function() {
     it('sample 1: an example with a name and code body', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @example A child screen
         //  *
@@ -331,7 +331,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('sample 2: with no name', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @example
         //  *
@@ -365,7 +365,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
 
     it('sample 3: example with code only', function() {
-      var docstring = parse(function() {
+      var docstring = parse(function() {;
         // /**
         //  * @example
         //  *

@@ -8,7 +8,7 @@ function parse(str) {
 
 describe('Lua::Parser', function() {
   it('should work', function() {
-    var docs = parse(function() {
+    var docs = parse(function() {;
       // --- @module foo
       // local foo = {}
     });
@@ -20,7 +20,7 @@ describe('Lua::Parser', function() {
   });
 
   it('parses a function parameter', function() {
-    var docs = parse(function() {
+    var docs = parse(function() {;
       // ---
       // --- @param {string} s
       // ---        Something.
@@ -37,7 +37,7 @@ describe('Lua::Parser', function() {
   });
 
   it('parses a function parameter', function() {
-    var docs = parse(function() {
+    var docs = parse(function() {;
       // ---
       // --- Sets the amount of space allocated to the argument keys and descriptions
       // --- in the help listing.
@@ -59,7 +59,7 @@ describe('Lua::Parser', function() {
     assert.equal(docs[0].id, 'set_colsz')
     assert.deepEqual(
       docs[0].description.trim(),
-      multiline(function() {
+      multiline(function() {;
         // Sets the amount of space allocated to the argument keys and descriptions
         // in the help listing.
         //

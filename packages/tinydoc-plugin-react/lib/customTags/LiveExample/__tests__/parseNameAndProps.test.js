@@ -8,7 +8,7 @@ function parse(strGenerator) {
 
 describe('LiveExample::parseNameAndProps', function() {
   it('works with no props', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <Button />
     });
 
@@ -17,7 +17,7 @@ describe('LiveExample::parseNameAndProps', function() {
   });
 
   it('works with a regular React.DOM component', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <div />
     });
 
@@ -26,7 +26,7 @@ describe('LiveExample::parseNameAndProps', function() {
   });
 
   it('works with a prop', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <Button title="Click me" />
     });
 
@@ -36,7 +36,7 @@ describe('LiveExample::parseNameAndProps', function() {
   });
 
   it('works with children', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <Button>Click me</Button>
     });
 
@@ -45,7 +45,7 @@ describe('LiveExample::parseNameAndProps', function() {
   });
 
   it('works with multiple children', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <Button>
       //   <span>Click</span>
       //   <span>me</span>
@@ -57,7 +57,7 @@ describe('LiveExample::parseNameAndProps', function() {
   });
 
   it('works with a function prop', function() {
-    var info = parse(function() {
+    var info = parse(function() {;
       // <Button onChange={() => console.log("hi")} />
     });
 

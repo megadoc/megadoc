@@ -3,7 +3,7 @@ var TestUtils = require('../../TestUtils');
 
 describe('analyzeReactNode', function() {
   it('should mark a component', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  var Something = React.createClass({
       //  });
@@ -14,7 +14,7 @@ describe('analyzeReactNode', function() {
   });
 
   it('should mark a component with a displayName', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  module.exports = React.createClass({
       //    displayName: "SomeComponent"

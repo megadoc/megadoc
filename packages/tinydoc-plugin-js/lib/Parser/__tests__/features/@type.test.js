@@ -4,7 +4,7 @@ var assert = require('assert');
 
 describe('CJS::Parser - @type support', function() {
   it('respects the @type specified even if no context was generated', function() {
-    var docs = TestUtils.parseInline(function() {
+    var docs = TestUtils.parseInline(function() {;
       // /**
       //  * @module flushPromiseQueue
       //  * @type {Function}

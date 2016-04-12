@@ -13,7 +13,7 @@ function parse(strGenerator) {
 describe('CJS::Parser::Registry', function() {
   describe('#findClosestModule', function() {
     it('should work', function() {
-      var parser = parse(function() {
+      var parser = parse(function() {;
         // /**
         //  * @module
         //  */

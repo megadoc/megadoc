@@ -11,7 +11,7 @@ describe('CJS::Parser::Utils', function() {
 
   describe('.flattenNodePath', function() {
     it('works with properties assigned to `prototype`', function() {
-      var ast = parse(function() {
+      var ast = parse(function() {;
         // SomeModule.prototype.someProperty = 'a';
       });
 
@@ -24,7 +24,7 @@ describe('CJS::Parser::Utils', function() {
     });
 
     it('works with functions assigned to `prototype`', function() {
-      var ast = parse(function() {
+      var ast = parse(function() {;
         // SomeModule.prototype.someFunc = function() {};
       });
 
@@ -39,7 +39,7 @@ describe('CJS::Parser::Utils', function() {
 
   describe('.findAncestorPath', function() {
     it('works', function() {
-      var ast = parse(function() {
+      var ast = parse(function() {;
         // function SomeModule() {
         //   return {
         //     obj: {}
@@ -65,7 +65,7 @@ describe('CJS::Parser::Utils', function() {
     });
 
     it('ignores sibling paths', function() {
-      var ast = parse(function() {
+      var ast = parse(function() {;
         // function SomeModule() {
         // }
         //
@@ -92,7 +92,7 @@ describe('CJS::Parser::Utils', function() {
 
   describe('.resolveIdentifierInScope', function() {
     it('works', function() {
-      var ast = parse(function() {
+      var ast = parse(function() {;
         // function SomeModule() {
         //   function fn() {}
         //

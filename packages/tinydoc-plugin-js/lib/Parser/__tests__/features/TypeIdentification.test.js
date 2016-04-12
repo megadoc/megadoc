@@ -5,7 +5,7 @@ var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - Type Identification', function() {
   it('marks `var SomeModule = {};` as an `object`', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
     });
@@ -15,7 +15,7 @@ describe('CJS::Parser - Type Identification', function() {
   });
 
   it('marks `var SomeModule = function {};` as a `function`', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // var DragonHunter = function() {};
     });
@@ -25,7 +25,7 @@ describe('CJS::Parser - Type Identification', function() {
   });
 
   it('marks `function SomeModule() {}` as a `function`', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // function DragonHunter() {}
     });
@@ -35,7 +35,7 @@ describe('CJS::Parser - Type Identification', function() {
   });
 
   it('marks `class SomeModule {}` as a `class`', function() {
-    var docs = parseInline(function() {
+    var docs = parseInline(function() {;
       // /** @module */
       // class DragonHunter {
       // }

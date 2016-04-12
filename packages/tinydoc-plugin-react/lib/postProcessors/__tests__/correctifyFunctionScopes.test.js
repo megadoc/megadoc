@@ -5,7 +5,7 @@ var findWhere = require('lodash').findWhere;
 
 describe('analyzeReactNode - statics', function() {
   it('should find and track a static property', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  var Something = React.createClass({
       //    statics: {
@@ -21,7 +21,7 @@ describe('analyzeReactNode - statics', function() {
   });
 
   it('should correctify the scope of documented static methods', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  var Something = React.createClass({
       //    statics: {
@@ -41,7 +41,7 @@ describe('analyzeReactNode - statics', function() {
 
 describe('analyzeReactNode - methods', function() {
   it('should correctify the scope of an instance method', function() {
-    var docs = TestUtils.parse(function() {
+    var docs = TestUtils.parse(function() {;
       // /** @module Some component. */
       //  var Something = React.createClass({
       //    /** Do something. */
