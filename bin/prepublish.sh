@@ -14,6 +14,7 @@ fi
 
 PACKAGE_NAME="tinydoc-plugin-${PACKAGE}"
 PACKAGE_ROOT="packages/${PACKAGE_NAME}"
+IGNORED=()
 
 if [ ! -d "${PACKAGE_ROOT}" ]; then
   echo "${PACKAGE_NAME} is not a valid tinydoc plugin package."
@@ -73,8 +74,6 @@ function build_assets {
 
 echo "Preparing \"${PACKAGE_NAME}\" for publishing... hang on tight."
 echo "---------------------------------------------------------------"
-
-IGNORED=()
 
 while getopts ":S:" opt; do
   case $opt in

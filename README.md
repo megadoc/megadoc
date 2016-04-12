@@ -1,6 +1,6 @@
 # tinydoc
 
-[![Build Status](https://travis-ci.org/tinydoc/tinydoc.svg)](https://travis-ci.org/tinydoc/tinydoc)
+[![Build Status](https://travis-ci.org/tinydoc/tinydoc.svg)](https://travis-ci.org/tinydoc/tinydoc) [![Coverage Status](https://coveralls.io/repos/github/tinydoc/tinydoc/badge.svg?branch=master)](https://coveralls.io/github/tinydoc/tinydoc?branch=master)
 
 tinydoc is a documentation generator that is able to scan, parse, and present documentation found in different sources in a coherent UI. Example sources are JavaScript modules, Markdown articles, and Rails APIs.
 
