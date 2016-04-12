@@ -57,7 +57,11 @@ module.exports = function(config) {
       }
     },
 
-    webpack: require('./webpack/common')(),
+    webpack: require('./webpack/common')({
+      plugins: [
+        require('./webpack/ExternalsPlugin'),
+      ]
+    }),
     webpackMiddleware: {
       noInfo: true
     }

@@ -54,10 +54,6 @@ describe("CJS::Indexer", function() {
         assert.include(subject[1], { $1: 'Core.Cache#add' });
       });
 
-      it('uses the entity symbol and name (for symbol-jump behavior)', function() {
-        assert.include(subject[1], { $2: '#add' });
-      });
-
       it('generates the proper link', function() {
         assert.include(subject[1].link, {
           href: '/js-test/modules/Core.Cache/%23add'

@@ -19,7 +19,7 @@ describe('yard-api::indexEntities', function() {
     }]
   }];
 
-  var resolver = new LinkResolver(indexEntities(database, registry));
+  var resolver = new LinkResolver(indexEntities(database, registry, { routeName: 'api' }));
 
   resolver.use(function(id) {
     var index = registry.toJSON().indices[id];

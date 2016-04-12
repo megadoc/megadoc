@@ -1,5 +1,4 @@
 // const Fuse = require('fuse.js');
-// const fuzzy = require('utils/fuzzy');
 const fuzzaldrin = require('fuzzaldrin-plus');
 
 function TokenSearcherFuzzaldrin(tokens) {

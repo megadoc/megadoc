@@ -25,9 +25,7 @@ script:
   - ./bin/lint.sh
   - ./bin/lint-ui.sh
   - ./bin/test.sh
-  # disabling this for now, something to do with:
-  #     Error: Cannot find module "../tmp/publicModules"
-  # - npm run test:ui -- --browsers Firefox
+  - npm run test:ui -- --browsers Firefox
   - npm run build # build failures should count!
   - COVERAGE=1 ./bin/test.sh
 

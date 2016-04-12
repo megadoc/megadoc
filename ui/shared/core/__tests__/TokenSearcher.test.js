@@ -1,5 +1,6 @@
 const Subject = require("../TokenSearcher");
 const { assert } = require('chai');
+const { assign } = require('lodash');
 
 describe("Core::TokenSearcher", function() {
   const samples = [
@@ -79,7 +80,7 @@ describe("Core::TokenSearcher", function() {
     const func = sample.$only ? it.only : it;
     func(sample.message || `searching for "${sample.term}" (sample #${index})`, function() {
       assertRanked(
-        Subject(sample.tokens).search(sample.term),
+        Subject(sample.tokens.map(x => assign({}, x, { link: { href: x.$1 || x.$2 } }))).search(sample.term),
         sample.expected.map(x => sample.tokens[x]['$1'] || sample.tokens[x]['$2']),
         sample.strict
       );
