@@ -3,7 +3,6 @@ const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const config = require('config');
 const Link = require('components/Link');
-const Footer = require('components/Footer');
 const Heading = require('components/Heading');
 const classSet = require('utils/classSet');
 

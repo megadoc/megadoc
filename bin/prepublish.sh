@@ -36,13 +36,18 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-PACKAGE_NAME="tinydoc-plugin-${PACKAGE}"
+PACKAGE_NAME="${PACKAGE}"
 PACKAGE_ROOT="packages/${PACKAGE_NAME}"
 IGNORED=()
 
 if [ ! -d "${PACKAGE_ROOT}" ]; then
-  echo "${PACKAGE_NAME} is not a valid tinydoc plugin package."
-  exit 1
+  PACKAGE_NAME="tinydoc-plugin-${PACKAGE}"
+  PACKAGE_ROOT="packages/${PACKAGE_NAME}"
+
+  if [ ! -d "${PACKAGE_ROOT}" ]; then
+    echo "${PACKAGE_NAME} is not a valid tinydoc plugin package."
+    exit 1
+  fi
 fi
 
 function run_task {

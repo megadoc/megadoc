@@ -21,6 +21,7 @@ Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
 let initialWidth = Storage.get(CFG_SIDEBAR_WIDTH);
 let sidebarWidth = initialWidth;
 let activeInstances = [];
+let inverted;
 
 // so that we reset the sidebar width if storage was cleared
 Storage.on('change', function() {
@@ -58,7 +59,9 @@ const TwoColumnLayout = React.createClass({
     },
 
     on: emitter.on,
-    off: emitter.off
+    off: emitter.off,
+
+    invert() { inverted = true; }
   },
 
   propTypes: {
@@ -105,7 +108,7 @@ const TwoColumnLayout = React.createClass({
     });
 
     return (
-      <div className="two-column-layout">
+      <div className={classSet({ "two-column-layout": true, "two-column-layout--inverted": inverted })}>
         <div
           className={leftClassName}
           style={{ width: config.resizableSidebar ? sidebarWidth : null }}
@@ -132,7 +135,9 @@ const TwoColumnLayout = React.createClass({
 
         <div
           className="two-column-layout__right"
-          style={{ marginLeft: config.resizableSidebar ? sidebarWidth : null }}
+          style={{
+            [inverted ? 'marginRight' : 'marginLeft']: config.resizableSidebar ? sidebarWidth : null
+          }}
           children={right}
         />
       </div>

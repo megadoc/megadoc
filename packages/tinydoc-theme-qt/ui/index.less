@@ -1,0 +1,174 @@
+@import "~helpers";
+
+@spacing: 30px;
+
+body.plain {
+  background: #eee;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 300;
+}
+
+.root {
+  padding-bottom: @spacing;
+
+  &__screen {
+    margin-top: 90px;
+
+    .doc-content {
+      background: white;
+      padding: @spacing;
+
+      h1 {
+        margin-top: 0;
+      }
+    }
+  }
+  &__footer {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.schemable({
+  .banner {
+    &__navigation-item a.active {
+      border-bottom-width: 0;
+      color: @accent;
+    }
+  }
+
+  .two-column-layout {
+    &__left {
+      margin-top: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      vertical-align: top;
+      display: inline-block;
+      background: transparent;
+
+      .resizable-panel__content {
+        position: static;
+        padding: @spacing;
+        background: white;
+        margin-bottom: @spacing;
+      }
+
+      .ui-resizable-handle {
+        display: none;
+      }
+    }
+
+    &__right {
+      top: 0;
+      padding: 0 @spacing 0 0;
+      margin-bottom: @spacing;
+      position: relative;
+      vertical-align: top;
+
+      &:before {
+        display: block;
+        content: '';
+        background: white;
+        position: absolute;
+        z-index: -1;
+        top: 0px;
+        right: @spacing;
+        bottom: 0;
+        left: 0;
+      }
+    }
+  }
+
+  .collapser {
+    color: lighten(@base1, 15%);
+  }
+
+  .class-browser__category {
+    margin-bottom: 2em;
+  }
+
+  .class-browser__category-name {
+    border-bottom: none;
+    padding-bottom: 1em;
+    margin: 0;
+    color: @base1;
+    font-weight: 400;
+  }
+
+  .class-browser__entry-link {
+    margin-bottom: 0.5em;
+  }
+});
+
+.collapsible {
+  .collapser.icon {
+    right: 0;
+  }
+
+  &:not(&--collapsed) {
+    > .collapsible-header .collapser {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-header:hover .collapser {
+      transform: none;
+    }
+  }
+
+  &--collapsed .collapser {
+    transform: none;
+  }
+}
+
+.doc-entity {
+  &.collapsible {
+    padding-left: 0;
+  }
+
+  .collapsible__icon {
+    margin-left: 0;
+  }
+}
+
+
+.schemable({
+  .doc-entity {
+    &:not(:last-of-type) {
+      border-bottom: none;
+      margin-bottom: 2em;
+    }
+  }
+});
+
+.schemable({
+  .property-tag__name, .param-tag__name, .return-tag__name {
+    color: inherit;
+  }
+});
+
+.tag-group {
+  list-style: none;
+  padding-left: 0;
+
+  // OK, we want to cram things a bit so the whitespace doesn't get distracting
+  &__header {
+    margin: 1em 0;
+    padding-bottom: 1em;
+  }
+
+  .param-tag, .return-tag, .throws-tag {
+    margin: 1em 0;
+  }
+
+  .markdown-text p, .highlighted-text p {
+    margin: 1em 0;
+  }
+
+  &--single-child {
+    list-style: none;
+  }
+}

@@ -37,12 +37,6 @@ const Tooltip = React.createClass({
   computePositions(targetNode) {
     const bbox = targetNode.getBoundingClientRect();
     let { top, left } = bbox;
-    // const top = targetNode.offsetTop + targetNode.offsetHeight + 6;
-    // const left = targetNode.offsetLeft;
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-    const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
-    // top += scrollTop;
-    // left += scrollLeft;
     top += bbox.height
 
     if (top !== this.state.top || left !== this.state.left) {

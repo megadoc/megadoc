@@ -21,16 +21,14 @@
 
   &__quicklinks li {
     list-style: none;
-    display: inline-block;
-    margin-right: 1em;
-    margin-bottom: 1em;
+    display: block;
+    padding: 0;
   }
 
   &__quicklinks li a {
     display: block;
-    padding: 0.5em 1em;
-    text-decoration: none;
-    border-radius: 3px;
+    padding: 0.5em 0;
+    line-height: 1.3;
     font-size: 85%;
   }
 
@@ -42,7 +40,7 @@
 .schemable({
   .api-endpoint {
     &__quicklinks li a {
-      background-color: @base2;
+      // background-color: @base2;
     }
 
     &__header {

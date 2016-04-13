@@ -10,7 +10,6 @@ const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
 const TooltipManager = require('components/TooltipManager');
-const Footer = require('components/Footer');
 
 const Root = React.createClass({
   propTypes: {

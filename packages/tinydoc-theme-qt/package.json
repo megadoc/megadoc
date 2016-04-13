@@ -2,10 +2,7 @@
   "name": "tinydoc-theme-qt",
   "version": "1.0.0",
   "description": "A theme for tinydoc after Qt documentation pages.",
-  "main": "index.js",
-  "scripts": {
-    "test": "mocha"
-  },
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/tinydoc/tinydoc-theme-qt.git"

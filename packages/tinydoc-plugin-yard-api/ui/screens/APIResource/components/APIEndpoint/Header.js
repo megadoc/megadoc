@@ -12,8 +12,6 @@ var Header = React.createClass({
       text: React.PropTypes.string,
     }),
     path: React.PropTypes.string,
-    resourceId: React.PropTypes.string,
-    scopedId: React.PropTypes.string,
   },
 
   getDefaultProps: function() {
@@ -47,9 +45,7 @@ var Header = React.createClass({
 
           <Link
             className="markdown-text__heading-anchor"
-            to="api.resource"
-            params={{ resourceId: this.props.resourceId }}
-            query={{ endpoint: this.props.scopedId }}
+            to={this.props.anchorId}
             children={(<Icon className="icon-link" />)}
           />
         </div>

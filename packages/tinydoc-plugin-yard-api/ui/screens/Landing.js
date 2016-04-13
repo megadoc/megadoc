@@ -3,7 +3,7 @@ var React = require('react');
 var Index = React.createClass({
   render() {
     return (
-      <div>
+      <div className="doc-content">
         Welcome to the API docs!
       </div>
     );

@@ -7,7 +7,7 @@ var fs = require('fs-extra');
 var _ = require('lodash');
 
 var root = path.resolve(__dirname);
-var host = process.env.HOST || '0.0.0.0';
+var host = process.env.HOST || 'localhost';
 var port = process.env.PORT || '8942';
 var contentBase = '/tmp/tinydoc';
 var server;
@@ -16,9 +16,10 @@ var configFile = path.resolve(process.env.CONFIG_FILE);
 config.devtool = 'eval';
 config.entry = {
   main: [
+    'webpack-dev-server/client?http://' + host + ':' + port,
+    'webpack/hot/dev-server',
+
     path.join(root, '.local.js'),
-    // 'webpack/hot/dev-server',
-    // 'webpack-dev-server/client?http://' + host + ':' + port,
   ]
 };
 
@@ -28,12 +29,13 @@ config.plugins = [
     'process.env.CONFIG_FILE': JSON.stringify(configFile),
   }),
 
-  // new webpack.HotModuleReplacementPlugin(),
+  new webpack.HotModuleReplacementPlugin(),
 
   ExternalsPlugin
 ];
 
 config.resolve.alias['tinydoc-ui'] = path.join(root, 'ui', 'shared');
+config.module.noParse.push(process.env.CONFIG_FILE);
 
 if (fs.existsSync(contentBase)) {
   fs.removeSync(contentBase);
@@ -45,7 +47,10 @@ fs.writeFileSync(
   _.template(fs.readFileSync(path.join(root, 'ui/index.tmpl.html')), 'utf-8')({
     title: 'tinydoc--dev',
     metaDescription: '',
-    scripts: [ 'main.js' ]
+    scripts: [
+      // 'webpack-dev-server/client?http://' + host + ':' + port,
+      'main.js'
+    ]
   })
 );
 
@@ -54,11 +59,11 @@ symlinkAllDirectories(path.dirname(configFile));
 server = new WebpackDevServer(webpack(config), {
   contentBase: contentBase,
   publicPath: config.output.publicPath,
-  // hot: true,
+  hot: true,
   quiet: false,
   noInfo: false,
   lazy: false,
-  inline: true,
+  inline: false,
   stats: { colors: true },
   historyApiFallback: true,
 });

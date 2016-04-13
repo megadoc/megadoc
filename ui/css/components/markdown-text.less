@@ -2,10 +2,10 @@
   &__heading-anchor {
     opacity: 0;
     font-size: 14px;
-    transition: opacity 0.25s ease-out 0s;
+    transition: opacity 0.45s ease-out 0s;
     font-weight: normal;
-    vertical-align: middle;
     padding: 0 0.5em;
+    position: absolute;
 
     &:hover, &:active, &:focus {
       text-decoration: none;
@@ -18,6 +18,14 @@
   &__heading:hover {
     .markdown-text__heading-anchor {
       opacity: 1;
+    }
+  }
+
+  &.anchorable-heading {
+    pointer-events: none;
+
+    .markdown-text__heading-title, .markdown-text__heading-anchor {
+      pointer-events: initial;
     }
   }
 }

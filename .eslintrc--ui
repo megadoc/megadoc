@@ -19,6 +19,7 @@
     "templateStrings": true,
     "destructuring": true,
     "objectLiteralShorthandMethods": true,
+    "objectLiteralComputedProperties": true,
     "spread": true,
     "restParams": true,
     "jsx": true,

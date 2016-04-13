@@ -33,7 +33,11 @@ const Landing = React.createClass({
       );
     }
     else {
-      return (<div>Nothing to see here, move along!</div>);
+      return (
+        <div className="doc-content">
+          Nothing to see here, move along!
+        </div>
+      );
     }
   }
 });

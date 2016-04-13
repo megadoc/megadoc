@@ -3,7 +3,7 @@ var React = require('react');
 var Browser = React.createClass({
   render() {
     return (
-      <div>
+      <div className="doc-content">
         Hi! Is JavaScript time!
       </div>
     );

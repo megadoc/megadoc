@@ -74,8 +74,6 @@ const APIEndpoint = React.createClass({
           path={endpoint.id}
           tag={apiTag}
           isBeta={!!findWhere(endpoint.tags, { tag_name: 'beta' })}
-          resourceId={this.props.resourceId}
-          scopedId={endpoint.scoped_id}
           anchorId={this.props.anchorId}
         />
 
