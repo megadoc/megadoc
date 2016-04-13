@@ -1,7 +1,8 @@
-var Parser = require('./lib/Parser');
-var defaults = require('./defaults');
+var Parser = require('./Parser');
+var defaults = require('./config');
 var path = require('path');
 var merge = require('lodash').merge;
+var root = path.resolve(__dirname, '..');
 
 module.exports = function LuaPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
@@ -63,6 +64,14 @@ module.exports = function LuaPlugin(userConfig) {
         done();
       });
 
+      compiler.on('generateStats', function(stats, done) {
+        stats['lua:' + config.routeName] = {
+          moduleCount: database.length
+        };
+
+        done();
+      });
+
       compiler.on('write', function(done) {
         compiler.assets.addPluginRuntimeConfig('lua', {
           routeName: config.routeName,
@@ -71,8 +80,8 @@ module.exports = function LuaPlugin(userConfig) {
           database: database
         });
 
-        compiler.assets.addStyleSheet(path.resolve(__dirname, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript(path.resolve(__dirname, 'dist', 'tinydoc-plugin-lua.js'));
+        compiler.assets.addStyleSheet(path.join(root, 'ui', 'css', 'index.less'));
+        compiler.assets.addPluginScript(path.join(root, 'dist', 'tinydoc-plugin-lua.js'));
         done();
       });
 

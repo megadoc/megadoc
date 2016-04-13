@@ -1,5 +1,5 @@
 var TestUtils = require('tinydoc/lib/TestUtils');
-var tinydocPluginLua = require('../../');
+var tinydocPluginLua = require('../');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
 

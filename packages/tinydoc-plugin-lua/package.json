@@ -2,7 +2,7 @@
   "name": "tinydoc-plugin-lua",
   "version": "5.0.0",
   "description": "A Lua documentation generator plugin for tinydoc.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
