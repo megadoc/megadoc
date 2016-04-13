@@ -9,10 +9,10 @@ describe("[Integration] tinydoc-plugin-js", function() {
 
   beforeEach(function() {
     config = TinyTestUtils.generateTestConfig({
-      verbose: true,
+      verbose: false,
       plugins: [
         Subject({
-          verbose: true,
+          verbose: false,
           routeName: 'js-test',
           source: TinyTestUtils.tempPath('lib/**/*.js')
         })

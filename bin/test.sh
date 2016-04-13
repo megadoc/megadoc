@@ -24,7 +24,10 @@ export NODE_PATH="./packages:${NODE_PATH}"
 SOURCE_DIRS=""
 
 if [ -z $PACKAGE ]; then
-  PACKAGE=$1
+  if [ "$1" != "--" ]; then
+    PACKAGE=$1
+  fi
+
   shift
 fi
 

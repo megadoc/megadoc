@@ -24,10 +24,5 @@
   "bugs": {
     "url": "https://github.com/tinydoc/tinydoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc#readme",
-  "devDependencies": {
-    "mocha": "",
-    "chai": "",
-    "react": "0.14.x"
-  }
+  "homepage": "https://github.com/tinydoc/tinydoc#readme"
 }

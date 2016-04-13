@@ -12,6 +12,7 @@ before_script:
 install:
   # skip the "prepublish" hook because we want finer control
   - npm install --ignore-scripts
+  - npm run build # build failures should count!
 
   # install npm dependencies for all packages and make sure they are compilable
   - ./bin/prepublish.sh git       -S test -S lint
@@ -26,7 +27,6 @@ script:
   - ./bin/lint-ui.sh
   - ./bin/test.sh
   - npm run test:ui -- --browsers Firefox
-  - npm run build # build failures should count!
   - COVERAGE=1 ./bin/test.sh
 
 after_success:

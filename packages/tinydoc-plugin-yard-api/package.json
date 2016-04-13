@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-yard-api",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "A YARD-API/Rails documentation generator plugin for tinydoc.",
   "main": "lib/index.js",
   "repository": {
@@ -29,6 +29,6 @@
   },
 
   "peerDependencies": {
-    "tinydoc": "4.x"
+    "tinydoc": "5.x"
   }
 }

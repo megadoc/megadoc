@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-git",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Git stats collector for files parsed by tinydoc.",
   "main": "lib/index.js",
   "repository": {
@@ -21,13 +21,12 @@
     "url": "https://github.com/tinydoc/tinydoc/issues"
   },
   "homepage": "https://github.com/tinydoc/tinydoc#readme",
-
   "dependencies": {
-    "git-log-parser": "^1.1.0",
-    "lodash": "3.6.0"
+    "async": "2.0.0-rc.3",
+    "git-log-parser": "1.1.0",
+    "lodash": "3.10.1"
   },
-
   "peerDependencies": {
-    "tinydoc": "4.x"
+    "tinydoc": "5.x"
   }
 }

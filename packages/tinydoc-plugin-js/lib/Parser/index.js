@@ -11,7 +11,7 @@ var WeakSet = require('weakset');
 var pick = require('lodash').pick;
 var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
 
-var runAllSync = require('tinydoc/lib/utils/runAllSync');
+var runAllSync = require('../utils/runAllSync');
 
 var n = recast.types.namedTypes;
 
@@ -161,14 +161,14 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
     this.registry.trackLend(docstring.getLentTo(), path);
   }
 
-  runAllSync(config.docstringProcessors, [ docstring ]);
+  runAllSync(config.docstringProcessors || [], [ docstring ]);
 
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
 
   doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
 
   docstring.tags.forEach(function(tag) {
-    runAllSync(config.tagProcessors, [ tag ]);
+    runAllSync(config.tagProcessors || [], [ tag ]);
   });
 
   if (doc.id) {

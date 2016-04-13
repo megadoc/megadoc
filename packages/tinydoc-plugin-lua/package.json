@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-lua",
-  "version": "1.0.8",
+  "version": "5.0.0",
   "description": "A Lua documentation generator plugin for tinydoc.",
   "main": "index.js",
   "repository": {
@@ -26,6 +26,6 @@
   },
 
   "peerDependencies": {
-    "tinydoc": "4.x"
+    "tinydoc": "5.x"
   }
 }

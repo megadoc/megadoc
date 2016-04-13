@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-markdown",
-  "version": "4.0.1",
+  "version": "5.0.0",
   "description": "Markdown documentation generator for tinydoc.",
   "main": "lib/index.js",
   "repository": {
@@ -26,6 +26,6 @@
   },
 
   "peerDependencies": {
-    "tinydoc": "4.x"
+    "tinydoc": "5.x"
   }
 }

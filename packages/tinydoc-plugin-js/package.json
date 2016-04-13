@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-plugin-js",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "tinydoc plugin for JavaScript sources.",
   "main": "lib/index.js",
   "repository": {
@@ -24,12 +24,12 @@
   "homepage": "https://github.com/tinydoc/tinydoc#readme",
   "dependencies": {
     "dox": "0.7.0",
-    "lodash": "3.6.0",
+    "lodash": "3.10.1",
+    "recast": "0.10.43",
     "weakmap": "0.0.6",
-    "weakset": "^0.2.1",
-    "recast": "0.10.43"
+    "weakset": "0.2.1"
   },
   "peerDependencies": {
-    "tinydoc": "4.x"
+    "tinydoc": "5.x"
   }
 }

@@ -4,7 +4,8 @@ var extend = require('lodash').extend;
 var parseLatestActivity = require('./parseLatestActivity');
 var parseHistory = require('./parseHistory');
 var merge = require('lodash').merge;
-var runAll = require('tinydoc/lib/utils/runAll');
+var partial = require('lodash').partial;
+var async = require('async');
 var assert = require('assert');
 
 var defaults = require('./config');
@@ -33,7 +34,10 @@ function createGitPlugin(userConfig) {
       );
 
       compiler.on('scan', function(done) {
-        runAll([ parseLatestActivity, parseHistory, ], [ gitRepository, config ], function(err, resultSet) {
+        async.parallel([
+          partial(parseLatestActivity, gitRepository, config),
+          partial(parseHistory, gitRepository, config),
+        ], function(err, resultSet) {
           if (err) {
             return done(err);
           }
