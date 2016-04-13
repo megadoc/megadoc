@@ -16,7 +16,37 @@ var defaults = require('./config');
  * @param {Config} userConfig
  */
 function createGitPlugin(userConfig) {
-  var stats = {};
+  var stats = {
+    // recentCommits: arrayOf(shape({
+    // })),
+    //
+    // history: shape({
+    //   commitCount: number,
+    //
+    //   people: shape({
+    //     $NAME: shape({
+    //       commitCount: number,
+    //       email: string,
+    //       firstCommitAt: number,
+    //       lastCommitAt: number,
+    //       name: string,
+    //       reviewCount: number,
+    //       superStarIndex: number
+    //     })
+    //   }),
+    //
+    //   teams: arrayOf(shape({
+    //     age: number,
+    //     commitCount: number,
+    //     firstCommitAt: number,
+    //     lastCommitAt: number,
+    //     memberCount: number,
+    //     name: string,
+    //     reviewCount: number,
+    //   }))
+    // })
+  };
+
   var config = merge({}, defaults, userConfig);
 
   return {
@@ -57,6 +87,17 @@ function createGitPlugin(userConfig) {
             null
           ;
         });
+
+        done();
+      });
+
+      compiler.on('generateStats', function(compilerStats, done) {
+        compilerStats['git:' + config.routeName] = {
+          teamCount: stats.history.teams.length,
+          peopleCount: Object.keys(stats.history.people).length,
+          totalCommitCount: stats.history.commitCount,
+          recentCommitCount: stats.recentCommits.length,
+        };
 
         done();
       });

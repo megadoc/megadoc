@@ -1,10 +1,12 @@
 var resolveLink = require('./resolveLink');
+var generateURL = require('./generateURL');
 
-exports.generateIndices = function(docs, routeName) {
+exports.generateIndices = function(database, registry, config) {
   var indices = [];
+  var routeName = config.routeName;
 
-  docs.forEach(function(doc) {
-    var index;
+  database.forEach(function(doc) {
+    var index, parentDoc;
     var paths = [];
 
     if (doc.isModule) {
@@ -15,7 +17,7 @@ exports.generateIndices = function(docs, routeName) {
       paths.push(doc.filePath);
     }
     else {
-      var parentDoc = docs.filter(function(x) { return x.id === doc.receiver; })[0];
+      parentDoc = database.filter(function(x) { return x.id === doc.receiver; })[0];
 
       if (!parentDoc) {
         console.warn('Unable to find parent "%s" for entity "%s"', doc.receiver, doc.id);
@@ -34,6 +36,7 @@ exports.generateIndices = function(docs, routeName) {
     if (index) {
       index.type = 'cjs';
       index.routeName = routeName;
+      index.link = generateURL(doc, parentDoc, config.routeName);
 
       doc.aliases.forEach(function(alias) {
         paths.push(alias);

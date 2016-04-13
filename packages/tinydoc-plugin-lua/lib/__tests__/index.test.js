@@ -7,6 +7,8 @@ describe('tinydoc-plugin-lua', function() {
   var compiler;
   var plugin, getDatabase;
 
+  TestUtils.IntegrationSuite(this);
+
   function createInlineSource(contents) {
     var filePath = TestUtils.createFile(multiline(contents), 'file.lua').path;
     plugin.configure({ source: [ filePath ] });
@@ -21,10 +23,6 @@ describe('tinydoc-plugin-lua', function() {
     getDatabase = plugin.run(compiler);
   });
 
-  afterEach(function() {
-    TestUtils.clearCache();
-  });
-
   describe('#scan', function() {
     it('works', function(done) {
       createInlineSource(function() {;
@@ -33,9 +31,13 @@ describe('tinydoc-plugin-lua', function() {
         // end
       });
 
-      compiler.run({ scan: true }, done);
+      compiler.run({ scan: true }, function(err) {
+        if (err) return done(err);
 
-      assert.equal(getDatabase().length, 1);
+        assert.equal(getDatabase().length, 1);
+
+        done();
+      });
     });
   });
 
@@ -47,14 +49,18 @@ describe('tinydoc-plugin-lua', function() {
         // end
       });
 
-      compiler.run({ scan: true, index: true }, done);
+      compiler.run({ scan: true, index: true }, function(err) {
+        if (err) return done(err);
 
-      assert.equal(getDatabase().length, 1);
-      assert.equal(compiler.registry.size, 3);
+        assert.equal(getDatabase().length, 1);
+        assert.equal(compiler.registry.size, 3);
 
-      assert.ok(compiler.registry.get('cli'));
-      assert.ok(compiler.registry.get('file.lua'));
-      assert.ok(compiler.registry.get('/file.lua'));
+        assert.ok(compiler.registry.get('cli'));
+        assert.ok(compiler.registry.get('file.lua'));
+        assert.ok(compiler.registry.get('/file.lua'));
+
+        done();
+      });
     });
 
     it('indexes functions by #', function(done) {
@@ -64,12 +70,15 @@ describe('tinydoc-plugin-lua', function() {
         // end
       });
 
-      compiler.run({ scan: true, index: true }, done);
+      compiler.run({ scan: true, index: true }, function(err) {
+        if (err) return done(err);
 
-      assert.equal(getDatabase().length, 1);
-      assert.equal(compiler.registry.size, 1);
+        assert.equal(getDatabase().length, 1);
+        assert.equal(compiler.registry.size, 1);
 
-      assert.ok(compiler.registry.get('cli#hello'))
+        assert.ok(compiler.registry.get('cli#hello'))
+        done();
+      });
     });
   });
 

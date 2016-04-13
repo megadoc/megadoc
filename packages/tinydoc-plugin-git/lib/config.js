@@ -20,6 +20,8 @@ module.exports = {
   navigationIcon: null,
   navigationLabel: 'Activity',
 
+  repository: null,
+
   /**
    * @property {Object}
    *
@@ -42,5 +44,7 @@ module.exports = {
      * @property {Function}
      */
     transform: null
-  }
+  },
+
+  verbose: true
 };

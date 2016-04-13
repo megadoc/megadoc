@@ -62,7 +62,8 @@ function analyzeTeams(people, teams) {
   });
 }
 
-function analyze(commits, mailMap, teams) {
+function analyze(commits, mailMap, config) {
+  var teams = config.teams;
   var stats = {
     commitCount: commits.length,
     people: {},
@@ -103,7 +104,9 @@ function analyze(commits, mailMap, teams) {
     return person;
   }
 
-  console.log('Parsing stats from ' + commits.length + ' commits.');
+  if (config.verbose) {
+    console.log('Parsing stats from ' + commits.length + ' commits.');
+  }
 
   commits.forEach(function(commit) {
     var committer = getPersonRecord(commit.author.email, commit.author.name);
@@ -176,7 +179,7 @@ module.exports = function(repoPath, config, done) {
       console.log('Will be using the git .mailmap:', JSON.stringify(mailMap));
     }
 
-    done(null, analyze(commits, mailMap, config.teams));
+    done(null, analyze(commits, mailMap, config));
   });
 
   parse.on('error', done);

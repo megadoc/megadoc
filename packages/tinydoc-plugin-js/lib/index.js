@@ -93,7 +93,7 @@ function createCJSPlugin(userConfig) {
       });
 
       compiler.on('index', function(registry, done) {
-        Indexer.generateIndices(database, config.routeName).forEach(function(index) {
+        Indexer.generateIndices(database, registry, config).forEach(function(index) {
           registry.add(index.path, index.index);
         });
 
@@ -110,7 +110,7 @@ function createCJSPlugin(userConfig) {
       });
 
       compiler.on('generateStats', function(stats, done) {
-        stats[config.routeName] = generateStats(database);
+        stats['js:' + config.routeName] = generateStats(database);
         done();
       });
 

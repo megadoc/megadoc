@@ -5,6 +5,8 @@ var multiline = require('multiline-slash');
 var tinydoc = require('tinydoc');
 
 describe("[Integration] tinydoc-plugin-js", function() {
+  TinyTestUtils.IntegrationSuite(this);
+
   var config;
 
   beforeEach(function() {
@@ -57,9 +59,9 @@ describe("[Integration] tinydoc-plugin-js", function() {
     tiny.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['js-test'].count, 3);
-      assert.equal(stats['js-test'].modules.count, 2);
-      assert.equal(stats['js-test'].entities.count, 1);
+      assert.equal(stats['js:js-test'].count, 3);
+      assert.equal(stats['js:js-test'].modules.count, 2);
+      assert.equal(stats['js:js-test'].entities.count, 1);
 
       done();
     });

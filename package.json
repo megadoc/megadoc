@@ -58,7 +58,7 @@
     "webpack": "^1.7.3"
   },
   "devDependencies": {
-    "chai": "2.1.0",
+    "chai": "3.5.0",
     "coveralls": "^2.11.4",
     "eslint": "^1.4.3",
     "eslint-plugin-react": "^3.4.1",

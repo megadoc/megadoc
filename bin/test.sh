@@ -49,5 +49,5 @@ if [ "${COVERAGE}" == "1" ]; then
     --report html \
     ./node_modules/mocha/bin/_mocha -- "${SOURCE_DIRS}/**/*.test.js"
 else
-  exec ./node_modules/.bin/mocha "${SOURCE_DIRS}/**/*.test.js" $@
+  exec ./node_modules/.bin/mocha $@ "${SOURCE_DIRS}/**/*.test.js"
 fi

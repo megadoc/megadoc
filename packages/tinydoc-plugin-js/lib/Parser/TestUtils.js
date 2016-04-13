@@ -27,7 +27,7 @@ function parseInline(strGenerator, config, filePath) {
 exports.buildRegistry = function(database, routeName) {
   var registry = new Registry();
 
-  Indexer.generateIndices(database, routeName || 'test').forEach(function(index) {
+  Indexer.generateIndices(database, registry, { routeName: routeName || 'test' }).forEach(function(index) {
     registry.add(index.path, index.index);
   });
 
