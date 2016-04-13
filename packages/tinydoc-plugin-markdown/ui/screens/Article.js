@@ -6,6 +6,7 @@ const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
 const Router = require('core/Router');
 const Database = require('core/Database');
+const Footer = require('components/Footer');
 
 const { shape, bool, string } = React.PropTypes;
 
@@ -13,7 +14,8 @@ const Article = React.createClass({
   propTypes: {
     routeName: string,
     config: shape({
-      gitStats: bool
+      gitStats: bool,
+      displayFooter: bool,
     })
   },
 
@@ -58,6 +60,7 @@ const Article = React.createClass({
         )}
 
         <Disqus identifier={article.id} title={article.title} />
+        {this.props.config.displayFooter && (<Footer />)}
       </div>
     );
   }

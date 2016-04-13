@@ -7,11 +7,19 @@ const buildRouteMap = require('utils/buildRouteMap');
 module.exports = function createTinydoc(config) {
   let exports = {};
   let routeSpecs = [];
+  let previewHandlers = [];
   let callbacks = [];
   let ran = 0;
   let state = {
     getRouteMap() {
       return buildRouteMap(routeSpecs);
+    }
+  };
+
+  const pluginAPI = {
+    addRoutes,
+    registerPreviewHandler(fn) {
+      previewHandlers.push(fn);
     }
   };
 
@@ -50,7 +58,7 @@ module.exports = function createTinydoc(config) {
     try {
       console.log('Loading %s.', plugin.name);
 
-      plugin({ addRoutes });
+      plugin(pluginAPI);
     }
     catch (e) {
       console.error('A plugin (%s) failed to load, it will be ignored.', plugin.name);
@@ -67,6 +75,10 @@ module.exports = function createTinydoc(config) {
 
   exports.getRuntimeConfigs = function(pluginId) {
     return config.pluginConfigs[pluginId] || [];
+  };
+
+  exports.getPreviewHandlers = function() {
+    return previewHandlers;
   };
 
   exports.onReady = function(callback) {

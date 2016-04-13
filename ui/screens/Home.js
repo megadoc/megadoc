@@ -3,6 +3,7 @@ var config = require('config');
 var HighlightedText = require('components/HighlightedText');
 var GitStats = require('components/GitStats');
 var Disqus = require('components/Disqus');
+var Footer = require('components/Footer');
 
 const { readme } = config;
 
@@ -26,6 +27,10 @@ var Home = React.createClass({
 
         {readme && (
           <Disqus identifier={readme.filePath} title="README" />
+        )}
+
+        {config.displayFooterInHomePage && (
+          <Footer />
         )}
       </div>
     );

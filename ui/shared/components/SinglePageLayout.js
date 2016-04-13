@@ -41,8 +41,6 @@ const SinglePageLayout = React.createClass({
                   props={this.props}
                 />
               )}
-
-              <Footer />
             </div>
           </TwoColumnLayout.RightColumn>
         </TwoColumnLayout>

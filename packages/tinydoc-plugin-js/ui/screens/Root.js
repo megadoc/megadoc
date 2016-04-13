@@ -3,6 +3,7 @@ var ClassBrowser = require('components/ClassBrowser');
 var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
+const Footer = require('components/Footer');
 
 module.exports = function createRoot(routeName) {
   return React.createClass({
@@ -34,7 +35,9 @@ module.exports = function createRoot(routeName) {
           </LeftColumn>
 
           <RightColumn>
-            <RouteHandler routeName={routeName} {...this.props} />
+            <div>
+              <RouteHandler routeName={routeName} {...this.props} />
+            </div>
           </RightColumn>
 
         </TwoColumnLayout>

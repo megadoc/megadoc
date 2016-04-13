@@ -3,7 +3,6 @@ var ClassBrowser = require('components/ClassBrowser');
 var { RouteHandler } = require('react-router');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
-
 const { string, shape } = React.PropTypes;
 
 var MarkdownRoot = React.createClass({

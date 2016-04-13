@@ -1,0 +1,26 @@
+{
+  "name": "tinydoc-theme-gitbooks",
+  "version": "1.0.0",
+  "description": "A theme for tinydoc after gitbooks.io pages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc-theme-gitbooks.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "theme",
+    "gitbooks",
+    "documentation",
+    "generator"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc-theme-gitbooks/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc-theme-gitbooks#readme"
+}

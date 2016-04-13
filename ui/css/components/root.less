@@ -5,40 +5,23 @@
   }
 
   &__footer {
-    position: absolute;
-    bottom: 0;
     margin: 1em 0;
     padding: 1em 0;
-    font-size: 0.85em;
-    text-align: center;
-
-    right: 0;
-    left: 0;
-  }
-
-  &--with-two-column-layout &__footer {
-    left: @sidebar-width + @whitespace;
-    width: 880px - @whitespace;
+    font-size: 0.75rem;
   }
 }
 
 .widescreen({
-  .root__screen, .root__footer {
+  .root__screen {
     width: @content-widescreen-width;
     margin-left: auto;
     margin-right: auto;
-  }
-
-  .root {
-    &--with-two-column-layout &__footer {
-      width: @content-widescreen-width - @sidebar-width - @whitespace;
-    }
   }
 });
 
 .schemable({
   .root__footer {
-    border-top: 3px solid @base2;
+    border-top: 1px solid @base2;
     color: @base1;
   }
 });

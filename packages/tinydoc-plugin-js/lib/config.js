@@ -74,5 +74,7 @@ module.exports = {
 
   verbose: false,
 
-  corpusContext: 'JS'
+  corpusContext: 'JS',
+
+  displayFooter: false,
 };

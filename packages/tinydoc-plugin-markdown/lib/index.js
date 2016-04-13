@@ -3,21 +3,7 @@ var scan = require('./scan');
 var indexEntities = require('./indexEntities');
 var resolveLink = require('./resolveLink');
 var merge = require('lodash').merge;
-
-var defaults = {
-  gitStats: false,
-  routeName: 'articles',
-  title: 'Articles',
-  source: [ 'doc/**/*.md' ],
-  icon: null,
-  exclude: [],
-  fullFolderTitles: true,
-  fullFolderTitleDelimiter: ' - ',
-  allowLeadingSlashInLinks: true,
-  generateMissingHeadings: true,
-  discardIdPrefix: null,
-  corpusContext: 'Articles'
-};
+var defaults = require('./config');
 
 function MarkdownPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);

@@ -1,6 +1,7 @@
 const React = require('react');
 const Article = require('./Article');
 const Database = require('core/Database');
+const Footer = require('components/Footer');
 
 const { string, shape } = React.PropTypes;
 
@@ -19,10 +20,16 @@ const Landing = React.createClass({
 
     if (homePage) {
       return (
-        <Article
-          {...this.props}
-          params={{ articleId: homePageId }}
-        />
+        <div>
+          <Article
+            {...this.props}
+            params={{ articleId: homePageId }}
+          />
+
+          {this.props.config.displayFooterInHomePage && (
+            <Footer />
+          )}
+        </div>
       );
     }
     else {

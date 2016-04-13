@@ -15,7 +15,13 @@ const Tooltip = React.createClass({
   },
 
   componentDidMount() {
-    this.computePositions();
+    this.computePositions(this.props.target);
+  },
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.target !== this.props.target) {
+      this.computePositions(nextProps.target);
+    }
   },
 
   render() {
@@ -28,13 +34,20 @@ const Tooltip = React.createClass({
     );
   },
 
-  computePositions() {
-    const targetNode = this.props.target;
+  computePositions(targetNode) {
+    const bbox = targetNode.getBoundingClientRect();
+    let { top, left } = bbox;
+    // const top = targetNode.offsetTop + targetNode.offsetHeight + 6;
+    // const left = targetNode.offsetLeft;
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft;
+    // top += scrollTop;
+    // left += scrollLeft;
+    top += bbox.height
 
-    this.setState({
-      top: targetNode.offsetTop + targetNode.offsetHeight + 6,
-      left: targetNode.offsetLeft,
-    });
+    if (top !== this.state.top || left !== this.state.left) {
+      this.setState({ top, left, });
+    }
   }
 });
 

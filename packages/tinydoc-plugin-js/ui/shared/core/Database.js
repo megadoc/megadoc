@@ -66,6 +66,10 @@ function createDatabase(key, config) {
 
       return where(database, { receiver: moduleDoc.id });
     },
+
+    getEntityByPath(path) {
+      return findWhere(database, { path });
+    }
   };
 
   // we'll need this for @preserveOrder support

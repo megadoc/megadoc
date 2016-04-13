@@ -2,6 +2,7 @@ const React = require('react');
 const domContains = require('dom-contains');
 const config = require('config');
 const Tooltip = require('components/Tooltip');
+const { debounce } = require('lodash');
 
 const TooltipManager = React.createClass({
   getInitialState() {
@@ -11,13 +12,16 @@ const TooltipManager = React.createClass({
   },
 
   componentDidMount() {
-    window.addEventListener('mouseover', this.showTooltip, false);
-    window.addEventListener('mouseout', this.hideTooltip, false);
+    this.debouncedShowTooltip = debounce(this.showTooltip, 10);
+    this.debouncedHideTooltip = debounce(this.hideTooltip, 10);
+
+    window.addEventListener('mouseover', this.debouncedShowTooltip, false);
+    window.addEventListener('mouseout', this.debouncedHideTooltip, false);
   },
 
   componentWillUnmount: function() {
-    window.removeEventListener('mouseout', this.hideTooltip, false);
-    window.removeEventListener('mouseover', this.showTooltip, false);
+    window.removeEventListener('mouseout', this.debouncedHideTooltip, false);
+    window.removeEventListener('mouseover', this.debouncedShowTooltip, false);
   },
 
   render() {
@@ -26,6 +30,10 @@ const TooltipManager = React.createClass({
     }
 
     const content = getContentForElement(this.state.element);
+
+    if (!content) {
+      return null;
+    }
 
     return (
       <Tooltip target={this.state.element}>
@@ -36,19 +44,22 @@ const TooltipManager = React.createClass({
 
   showTooltip(e) {
     if (isApplicable(this.getContainerDOMNode(), e.target)) {
-      this.setState({ element: e.target });
-      console.log('showing tooltip for!', e.target);
+      if (this.state.element !== e.target) {
+        this.setState({ element: e.target });
+      }
+    }
+    else if (e.target === React.findDOMNode(this)) {
+      return;
+    }
+    else if (this.state.element) {
+      this.setState({ element: null });
     }
   },
 
   hideTooltip(e) {
     if (e.target === this.state.element) {
       this.setState({ element: null });
-      return;
     }
-    // if (isApplicable(this.getContainerDOMNode(), e.target)) {
-    //   console.log('hiding tooltip for!', e.target);
-    // }
   },
 
   getContainerDOMNode() {
@@ -69,22 +80,16 @@ function isApplicable(containerNode, node) {
 }
 
 function getContentForElement(el) {
-  const href = el.href.replace(/^#?/, '');
-  const token = config.corpus.filter(function(x) {
-    return x.link.href === href;
-  })[0];
+  let content;
 
+  const href = decodeURIComponent( el.href.replace(/^[^#]*#/, '') );
 
-  if (token) {
-    const plugin = config.pluginConfigs.filter(x => x.corpusContext === token.link.context)[0];
-    const doc = plugin.database.filter(x => x.href === href)[0];
+  tinydoc.getPreviewHandlers().some(function(fn) {
+    content = fn(href);
+    return !!content;
+  });
 
-    if (doc) {
-      console.log('found matching document!', doc);
-    }
-  }
-
-  return 'stub';
+  return content;
 }
 
 module.exports = TooltipManager;

@@ -38,6 +38,7 @@ module.exports = function scan(config, utils, globalConfig, done) {
     entry.sortingId = entry.filePath;
 
     entry.title = parseTitle(entry.source);
+    entry.wordCount = entry.source.split(/\s+/).length;
 
     if (config.generateMissingHeadings && !entry.title) {
       entry.title = strHumanize(fileName);
@@ -52,6 +53,7 @@ module.exports = function scan(config, utils, globalConfig, done) {
     if (config.discardIdPrefix) {
       entry.id = entry.id.replace(config.discardIdPrefix, '');
     }
+
   });
 
   config.commonPrefix = commonPrefix;

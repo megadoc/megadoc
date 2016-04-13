@@ -1,0 +1,26 @@
+{
+  "name": "tinydoc-theme-qt",
+  "version": "1.0.0",
+  "description": "A theme for tinydoc after Qt documentation pages.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/tinydoc/tinydoc-theme-qt.git"
+  },
+  "keywords": [
+    "tinydoc",
+    "theme",
+    "qt",
+    "documentation",
+    "generator"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tinydoc/tinydoc-theme-qt/issues"
+  },
+  "homepage": "https://github.com/tinydoc/tinydoc-theme-qt#readme"
+}

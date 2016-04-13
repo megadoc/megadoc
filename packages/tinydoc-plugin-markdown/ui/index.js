@@ -6,6 +6,7 @@ const Database = require('core/Database');
 const OutletManager = require('core/OutletManager');
 const Storage = require('core/Storage');
 const K = require('constants');
+const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
@@ -19,8 +20,7 @@ tinydoc.use(function MarkdownPlugin(api) {
 
 function register(api, config) {
   const { routeName } = config;
-
-  Database.createDatabase(routeName, config);
+  const database = Database.createDatabase(routeName, config);
 
   api.addRoutes([
     {
@@ -61,6 +61,8 @@ function register(api, config) {
       ignoreScrollBehavior: true,
     }
   ]);
+
+  api.registerPreviewHandler(PreviewHandler(config, database));
 
   if (config.title) {
     OutletManager.add('Navigation', {

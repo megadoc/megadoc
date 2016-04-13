@@ -1,6 +1,5 @@
 const React = require("react");
 const Banner = require('components/Banner');
-const Footer = require('components/Footer');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const classSet = require('utils/classSet');
 const scrollToTop = require('utils/scrollToTop');
@@ -35,8 +34,6 @@ const MultiPageLayout = React.createClass({
         <div className="root__screen">
           {this.props.children}
         </div>
-
-        <Footer />
       </div>
     );
   },

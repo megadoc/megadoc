@@ -3,6 +3,7 @@ const Storage = require('core/Storage');
 const K = require('constants');
 const createNavigationOutlet = require('./outlets/Navigation');
 const OutletManager = require('core/OutletManager');
+const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
@@ -23,7 +24,7 @@ tinydoc.use(function CJSPlugin(api) {
   configs.forEach(function(config) {
     const { routeName } = config;
 
-    Database.createDatabase(config);
+    const database = Database.createDatabase(config);
 
     api.addRoutes([
       {
@@ -53,6 +54,8 @@ tinydoc.use(function CJSPlugin(api) {
         ignoreScrollBehavior: true
       },
     ]);
+
+    api.registerPreviewHandler(PreviewHandler(config, database));
 
     OutletManager.add('Navigation', {
       key: routeName,

@@ -10,6 +10,7 @@ const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
 const TooltipManager = require('components/TooltipManager');
+const Footer = require('components/Footer');
 
 const Root = React.createClass({
   propTypes: {
@@ -82,6 +83,10 @@ const Root = React.createClass({
 
     return (
       <Outlet name="LayoutWrapper" props={{}} forwardChildren>
+        {config.tooltipPreviews && (
+          <TooltipManager />
+        )}
+
         <Layout {...this.props}>
           {config.spotlight && (
             <SpotlightManager
@@ -89,10 +94,6 @@ const Root = React.createClass({
               onOpen={AppState.openSpotlight}
               onClose={AppState.closeSpotlight}
             />
-          )}
-
-          {config.tooltipPreviews && (
-            <TooltipManager />
           )}
 
           <RouteHandler onChange={this.reload} {...this.props} />

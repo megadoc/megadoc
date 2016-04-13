@@ -1,8 +1,31 @@
 .schemable({
   .tooltip {
-    position: absolute;
-    padding: 1em;
+    position: fixed;
+    padding: 0 0.5rem;
     border: 1px solid @border-color;
     background: @base2;
+    font-size: 0.75rem;
+    max-width: 240px;
+    z-index: 10;
+    max-height: 30vh;
+    overflow: hidden;
+
+    &:after {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 90%;
+      // height: 3em;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-image: linear-gradient(to bottom, fade(@base2, 20%), @base2);
+    }
+
+    &__title {
+      font-size: 0.7rem;
+      margin: 0.5rem 0;
+      font-style: italic;
+    }
   }
 });

@@ -1,28 +1,16 @@
 const React = require('react');
 const config = require('config');
 const MarkdownText = require('components/MarkdownText');
-const TwoColumnLayout = require('components/TwoColumnLayout');
 
 const Footer = React.createClass({
-  componentDidMount: function() {
-    TwoColumnLayout.on('resize', this.resize);
-  },
-
-  render: function() {
+  render() {
     return (
-      <div
-        className="root__footer"
-        style={{ left: TwoColumnLayout.getSidebarWidth() }}
-      >
+      <div className="root__footer">
         <MarkdownText>
           {config.footer}
         </MarkdownText>
       </div>
     );
-  },
-
-  resize() {
-    this.forceUpdate();
   }
 });
 
