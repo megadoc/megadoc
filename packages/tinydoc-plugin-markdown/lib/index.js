@@ -85,6 +85,14 @@ function MarkdownPlugin(userConfig) {
 
         done();
       });
+
+      compiler.on('generateStats', function(stats, done) {
+        stats['markdown:' + config.routeName] = {
+          count: database.length
+        };
+
+        done();
+      });
     }
   };
 }
