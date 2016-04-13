@@ -33,21 +33,21 @@ fi
 
 if [ -z $PACKAGE ]; then
   SOURCE_DIRS="{lib,packages/*/lib}"
-elif [ -d "packages/${PACKAGE}" ]; then
-  SOURCE_DIRS="packages/${PACKAGE}/lib"
-elif [ -d "packages/tinydoc-plugin-${PACKAGE}" ]; then
-  SOURCE_DIRS="packages/tinydoc-plugin-${PACKAGE}/lib"
 else
-  echo "Invalid package '${PACKAGE}'."
-  exit 1
+  if [ -d "packages/${PACKAGE}" ]; then
+    SOURCE_DIRS="packages/${PACKAGE}/lib"
+  elif [ -d "packages/tinydoc-plugin-${PACKAGE}" ]; then
+    SOURCE_DIRS="packages/tinydoc-plugin-${PACKAGE}/lib"
+  else
+    echo "Invalid package '${PACKAGE}'."
+    exit 1
+  fi
+
+  stat $SOURCE_DIRS/**/*.test.js &> /dev/null || {
+    echo "No tests were found matching the pattern '${SOURCE_DIRS}/**/*.test.js' - nothing to do."
+    exit 0
+  }
 fi
-
-SOURCES="${SOURCE_DIRS}/**/*.test.js"
-
-stat "${SOURCES}" &> /dev/null || {
-  echo "No tests were found matching the pattern '${SOURCES}' - nothing to do."
-  exit 0
-}
 
 if [ "${COVERAGE}" == "1" ]; then
   ./node_modules/.bin/istanbul cover \
