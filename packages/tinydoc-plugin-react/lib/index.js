@@ -106,6 +106,8 @@ function createReactPlugin(userConfig) {
     resolveComponentName: config.resolveComponentName
   });
 
+  var liveExampleCount = 0;
+
   assert(typeof config.routeName === 'string');
 
   function install(cjsPlugin) {
@@ -120,7 +122,11 @@ function createReactPlugin(userConfig) {
       trackComponentsWithoutLiveExamples(database, liveExampleProcessor.trackComponent);
     });
 
-    cjsPlugin.addTagProcessor(liveExampleProcessor.process);
+    cjsPlugin.addTagProcessor(function(tag) {
+      if (liveExampleProcessor.process(tag)) {
+        liveExampleCount += 1;
+      }
+    });
   }
 
   exports.run = function(compiler) {
@@ -187,6 +193,15 @@ function createReactPlugin(userConfig) {
         compiler.assets.addPluginRuntimeConfig('react', runtimeConfig);
         done();
       }
+    });
+
+    compiler.on('generateStats', function(stats, done) {
+      stats['react:' + config.routeName] = {
+        componentCount: liveExampleProcessor.getComponents().length,
+        liveExampleCount: liveExampleCount
+      };
+
+      done();
     });
   };
 

@@ -55,6 +55,21 @@ function YardAPIPlugin(userConfig) {
 
         done();
       });
+
+      compiler.on('generateStats', function(stats, done) {
+        stats['yard-api:' + config.routeName] = {
+          apiCount: database.length,
+          objectCount: database.reduce(function(acc, doc) {
+            return acc + doc.objects.length
+          }, 0),
+
+          endpointCount: database.reduce(function(acc, doc) {
+            return acc + doc.endpoints.length
+          }, 0),
+        };
+
+        done();
+      });
     }
   };
 }

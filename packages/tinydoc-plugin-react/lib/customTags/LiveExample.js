@@ -50,6 +50,8 @@ module.exports = function createLiveExampleTagProcessor(config) {
     tag.sourceCode = sourceCode;
     tag.elementName = elementInfo.name;
     tag.elementProps = elementInfo.props;
+
+    return true;
   };
 
   exports.getComponents = function() {
