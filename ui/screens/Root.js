@@ -9,6 +9,7 @@ const ColorSchemeManager = require('core/ColorSchemeManager');
 const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
+const TooltipManager = require('components/TooltipManager');
 
 const Root = React.createClass({
   propTypes: {
@@ -88,6 +89,10 @@ const Root = React.createClass({
               onOpen={AppState.openSpotlight}
               onClose={AppState.closeSpotlight}
             />
+          )}
+
+          {config.tooltipPreviews && (
+            <TooltipManager />
           )}
 
           <RouteHandler onChange={this.reload} {...this.props} />
