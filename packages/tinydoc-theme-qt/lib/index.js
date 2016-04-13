@@ -6,6 +6,7 @@ module.exports = function() {
     run: function(compiler) {
       compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.join(root, 'ui/index.less'));
+        compiler.assets.addStyleOverrides(require('../ui/overrides'));
         compiler.assets.addPluginScript(path.join(root, 'dist/tinydoc-theme-qt.js'));
 
         done();

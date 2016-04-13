@@ -42,6 +42,13 @@ else
   exit 1
 fi
 
+SOURCES="${SOURCE_DIRS}/**/*.test.js"
+
+stat "${SOURCES}" &> /dev/null || {
+  echo "No tests were found matching the pattern '${SOURCES}' - nothing to do."
+  exit 0
+}
+
 if [ "${COVERAGE}" == "1" ]; then
   ./node_modules/.bin/istanbul cover \
     --preserve-comments \

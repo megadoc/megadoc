@@ -91,6 +91,11 @@ function run_tests {
 }
 
 function build_assets {
+  if [ ! -f $PACKAGE_ROOT/ui/index.js ]; then
+    echo "Package has no UI assets to compile - nothing to do!"
+    return 0
+  fi
+
   if [ -d $PACKAGE_ROOT/dist ]; then
     echo "Cleaning previous build artifacts..."
     rm -r $PACKAGE_ROOT/dist
@@ -122,8 +127,6 @@ function shouldRun() {
     return 0
   fi
 }
-
-echo "Skipping ${IGNORED}"
 
 run_task refresh_dependencies
 
