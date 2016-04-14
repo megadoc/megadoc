@@ -66,4 +66,40 @@ describe("[Integration] tinydoc-plugin-js", function() {
       done();
     });
   });
+
+  describe('@config.readme', function() {
+    it('renders a README file', function(done) {
+      TinyTestUtils.createFile(multiline(function() {;
+        // # Hello JS plugin!
+        //
+        // Welcome.
+      }, true), 'doc/README.md');
+
+      config.plugins = [
+        Subject({
+          verbose: false,
+          routeName: 'js-test',
+          source: TinyTestUtils.tempPath('lib/**/*.js'),
+          readme: 'doc/README.md'
+        })
+      ];
+
+      var tiny = tinydoc(config, {
+        scan: true,
+        write: true,
+        index: true,
+        render: true,
+        stats: true,
+        purge: true
+      });
+
+      tiny.run(function(err, stats) {
+        if (err) { return done(err); }
+
+        assert.ok(stats['js:test'].hasReadme);
+
+        done();
+      });
+    });
+  });
 });
