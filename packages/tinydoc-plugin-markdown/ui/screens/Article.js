@@ -4,6 +4,7 @@ const GitStats = require('components/GitStats');
 const Disqus = require('components/Disqus');
 const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
+const HasMetaDescription = require('mixins/HasMetaDescription');
 const Router = require('core/Router');
 const Database = require('core/Database');
 const Footer = require('components/Footer');
@@ -25,6 +26,14 @@ const Article = React.createClass({
 
       if (article) {
         return article.title;
+      }
+    }),
+
+    HasMetaDescription(function() {
+      const article = Database.for(this.props.routeName).get(this.getArticleId());
+
+      if (article) {
+        return article.summary;
       }
     })
   ],

@@ -9,6 +9,7 @@ var BannerItem = React.createClass({
   propTypes: {
     children: React.PropTypes.any,
     onClick: React.PropTypes.func,
+    title: React.PropTypes.string,
   },
 
   render() {
@@ -17,6 +18,7 @@ var BannerItem = React.createClass({
         className="banner__navigation-item"
         children={this.props.children}
         onClick={this.props.onClick}
+        title={this.props.title}
       />
     );
   }
@@ -51,7 +53,11 @@ var Banner = React.createClass({
 
           <nav className="banner__navigation">
             {config.spotlight && (
-              <BannerItem key="spotlight" onClick={this.toggleSpotlight}>
+              <BannerItem
+                key="spotlight"
+                onClick={this.toggleSpotlight}
+                title="Or Ctrl+K for quick-jumping hotness!"
+              >
                 <Icon className="icon-search" />
               </BannerItem>
             )}
