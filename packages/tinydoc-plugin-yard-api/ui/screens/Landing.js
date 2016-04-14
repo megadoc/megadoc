@@ -1,6 +1,11 @@
 var React = require('react');
+const scrollToTop = require('utils/scrollToTop');
 
 var Index = React.createClass({
+  componentDidMount() {
+    scrollToTop();
+  },
+
   render() {
     return (
       <div className="doc-content">

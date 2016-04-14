@@ -1,19 +1,23 @@
-var React = require("react");
-var config = require('config');
-var HighlightedText = require('components/HighlightedText');
-var GitStats = require('components/GitStats');
-var Disqus = require('components/Disqus');
-var Footer = require('components/Footer');
-
+const React = require("react");
+const config = require('config');
+const HighlightedText = require('components/HighlightedText');
+const GitStats = require('components/GitStats');
+const Disqus = require('components/Disqus');
+const Footer = require('components/Footer');
+const scrollToTop = require('utils/scrollToTop');
 const { readme } = config;
 
-var Home = React.createClass({
+const Home = React.createClass({
   statics: {
     willTransitionTo(transition) {
       if (config.home) {
         transition.redirect(config.home);
       }
     }
+  },
+
+  componentDidMount() {
+    scrollToTop();
   },
 
   render() {

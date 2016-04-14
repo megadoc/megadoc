@@ -1,6 +1,11 @@
-var React = require('react');
+const React = require('react');
+const scrollToTop = require('utils/scrollToTop');
 
-var Browser = React.createClass({
+const Landing = React.createClass({
+  componentDidMount() {
+    scrollToTop();
+  },
+
   render() {
     return (
       <div className="doc-content">
@@ -10,4 +15,4 @@ var Browser = React.createClass({
   }
 });
 
-module.exports = Browser;
+module.exports = Landing;

@@ -90,6 +90,8 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentWillUnmount() {
+    emitter.off('resize', this.reloadOnResize);
+
     if (config.resizableSidebar) {
       this.resizableInstance.destroy();
     }

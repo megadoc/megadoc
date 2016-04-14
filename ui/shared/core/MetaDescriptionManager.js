@@ -1,5 +1,4 @@
 const invariant = require('utils/invariant');
-const config = require('config');
 
 /**
  * @namespace UI.Core
@@ -13,7 +12,7 @@ const config = require('config');
  * @return {Object} titleMgr
  */
 function MetaDescriptionManager(generate) {
-  let previousValue; // we'll track it on the first call to #update()
+  const originalValue = getMetaDescription() || ''; // we'll track it on the first call to #update()
 
   invariant(generate instanceof Function,
     `You must provide a meta description generator function to MetaDescriptionManager, got ${typeof generate}.`
@@ -31,10 +30,6 @@ function MetaDescriptionManager(generate) {
       const newValue = generate.apply(null, arguments);
 
       if (newValue && newValue !== getMetaDescription()) {
-        if (!previousValue) { // track the "anchor" title if we haven't yet
-          previousValue = getMetaDescription();
-        }
-
         setMetaDescription(newValue);
 
         return true;
@@ -53,10 +48,8 @@ function MetaDescriptionManager(generate) {
      *         Whether there were any restorations to apply to the title.
      */
     restore() {
-      if (previousValue && previousValue !== getMetaDescription()) {
-        setTimeout(function() {
-          setMetaDescription(previousValue);
-        }, MetaDescriptionManager.TIMEOUT);
+      if (originalValue !== getMetaDescription()) {
+        setMetaDescription(originalValue);
 
         return true;
       }
@@ -71,7 +64,5 @@ function getMetaDescription() {
 function setMetaDescription(value) {
   document.querySelector('meta[name="description"]').content = value;
 }
-
-MetaDescriptionManager.TIMEOUT = 2;
 
 module.exports = MetaDescriptionManager;
