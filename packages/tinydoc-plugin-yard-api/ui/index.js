@@ -1,11 +1,9 @@
 const Storage = require('core/Storage');
 const K = require('constants');
-const Outlet = require('components/Outlet');
 
 Storage.register(K.CFG_CLASS_BROWSER_EXPAND_ALL, false);
 
-Outlet.define('yard-api::Landing');
-
+tinydoc.outlets.define('yard-api::Landing');
 tinydoc.use('yard-api', function YARDAPIPlugin(api, configs) {
   const config = configs[0]; // TODO multiple route names
   const baseURL = config.routeName;
@@ -14,7 +12,6 @@ tinydoc.use('yard-api', function YARDAPIPlugin(api, configs) {
     {
       name: 'yard-api',
       path: baseURL,
-      handler: require('./screens/Root')
     },
 
     {
@@ -47,8 +44,5 @@ tinydoc.use('yard-api', function YARDAPIPlugin(api, configs) {
     },
   ]);
 
-  Outlet.add('Navigation', {
-    key: 'yard-api__navigation',
-    component: require('./outlets/Navigation')
-  });
+  require('./outlets/MultiPageLayout')(api, config);
 });

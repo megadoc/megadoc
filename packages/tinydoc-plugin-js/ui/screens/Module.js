@@ -8,7 +8,6 @@ const config = require('config');
 const Router = require('core/Router');
 const Outlet = require('components/Outlet');
 const scrollToTop = require('utils/scrollToTop');
-const Footer = require('components/Footer');
 
 const Module = React.createClass({
   mixins: [
@@ -90,8 +89,6 @@ const Module = React.createClass({
         {config.for(routeName).gitStats && (
           <GitStats {...doc.git} />
         )}
-
-        {config.for(routeName).displayFooter && (<Footer />)}
       </div>
     );
   }

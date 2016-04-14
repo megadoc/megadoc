@@ -1,9 +1,10 @@
 @import "~helpers";
 
 @spacing: 30px;
+@background: #eee;
 
 body.plain {
-  background: #eee;
+  background: @background;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
@@ -12,31 +13,37 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .root {
-  padding-bottom: @spacing;
-
   &__screen {
     margin-top: 90px;
 
     .doc-content {
       background: white;
       padding: @spacing;
+      margin-bottom: @spacing;
 
       h1 {
         margin-top: 0;
       }
     }
   }
-  &__footer {
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
 }
 
 .schemable({
+  .root__footer {
+    margin-top: @spacing;
+    margin-bottom: @spacing;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top: none;
+  }
+
+  .banner-wrapper {
+    border-bottom-color: @background;
+  }
+
   .banner {
     &__navigation-item a.active {
       border-bottom-width: 0;
-      color: @accent;
     }
   }
 
@@ -68,18 +75,6 @@ h1, h2, h3, h4, h5, h6 {
       margin-bottom: @spacing;
       position: relative;
       vertical-align: top;
-
-      &:before {
-        display: block;
-        content: '';
-        background: white;
-        position: absolute;
-        z-index: -1;
-        top: 0px;
-        right: @spacing;
-        bottom: 0;
-        left: 0;
-      }
     }
   }
 

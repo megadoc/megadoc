@@ -66,6 +66,14 @@ Router.refresh = function() {
   instance.refresh();
 };
 
+Router.refreshScroll = function() {
+  // force the browser to (re)scroll to the proper location
+  const originalLocation = window.location.hash;
+
+  window.location.hash = '#/';
+  window.location.hash = originalLocation;
+};
+
 Router.generateAnchorId = function({ routeName, params }) {
   return instance.makeHref(routeName, Object.keys(params).reduce(function(encoded, key) {
     encoded[key] = encodeURIComponent(params[key]);

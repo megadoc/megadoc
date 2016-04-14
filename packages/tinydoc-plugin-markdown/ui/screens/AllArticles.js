@@ -1,6 +1,6 @@
 const React = require('react');
 const HighlightedText = require('components/HighlightedText');
-const Database = require('core/Database');
+const Database = require('../Database');
 
 const { string } = React.PropTypes;
 

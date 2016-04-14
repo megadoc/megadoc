@@ -7,7 +7,7 @@ const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const { ROOT_FOLDER_ID } = require('constants');
 const isItemHot = require('utils/isItemHot');
 const JumperMixin = require('mixins/JumperMixin');
-const Database = require('core/Database');
+const Database = require('../Database');
 
 var MarkdownClassBrowser = React.createClass({
   mixins: [

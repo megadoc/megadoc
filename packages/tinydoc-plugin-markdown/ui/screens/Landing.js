@@ -1,6 +1,6 @@
 const React = require('react');
 const Article = require('./Article');
-const Database = require('core/Database');
+const Database = require('../Database');
 const Footer = require('components/Footer');
 const scrollToTop = require('utils/scrollToTop');
 

@@ -3,8 +3,9 @@
   top: 0;
   left: 0;
   right: 0;
-  height: @banner-height;
+  height: @banner-height + @banner-border-dim;
   z-index: 3;
+  border-bottom: @banner-border-dim solid transparent;
 }
 
 .banner {
@@ -12,7 +13,6 @@
   margin: 0 auto;
   position: relative;
   line-height: @banner-height;
-  border-bottom: @banner-border-dim solid transparent;
 
   &__logo {
     margin: 0;
@@ -52,8 +52,6 @@
     a {
       display: block;
       padding: 0 1em;
-      // border-left: @banner-border-dim solid transparent;
-      // border-right: @banner-border-dim solid transparent;
 
       &.active, &:hover {
         text-decoration: none;
@@ -74,9 +72,6 @@
 
   .banner-wrapper {
     background: @base3;
-  }
-
-  .banner {
     border-bottom-color: @base2;
   }
 
@@ -89,11 +84,7 @@
 
     &.active {
       color: @accent;
-      // background: @base3;
-      // border-left:  @banner-border-dim solid @border-color;
-      // border-right: @banner-border-dim solid @border-color;
       border-bottom: 3px solid @accent;
-      // box-shadow: 0 -0px 0 0px @accent inset;
     }
   }
 });

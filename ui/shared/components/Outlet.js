@@ -1,6 +1,6 @@
 const React = require('react');
 const OutletManager = require('core/OutletManager');
-const { string, object, any, bool } = React.PropTypes;
+const { string, object, any, bool, func, } = React.PropTypes;
 
 function getRenderer(element) {
   return element.renderer || element.component;
@@ -22,7 +22,7 @@ const Outlet = React.createClass({
   propTypes: {
     name: string.isRequired,
 
-    props: object.isRequired,
+    props: object,
     siblingProps: object,
 
     tagName: string,
@@ -30,10 +30,13 @@ const Outlet = React.createClass({
 
     alwaysRenderChildren: bool,
     forwardChildren: bool,
+
+    fnRenderElement: func,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
+      props: {},
       tagName: 'div',
       children: null,
       alwaysRenderChildren: false,
@@ -60,22 +63,27 @@ const Outlet = React.createClass({
       elementProps: this.props.props
     });
 
-    if (prevSiblings || nextSiblings) {
-      return (
-        <Tag>
-          {prevSiblings}
-          {selfElements && selfElements}
-          {(!selfElements || alwaysRenderChildren) && this.props.children}
-          {nextSiblings}
-        </Tag>
-      );
+    const hasSelfElements = [].concat(selfElements || []).filter(x => !!x).length > 0;
+
+    const stack = [];
+
+    if (prevSiblings) {
+      stack.push(prevSiblings);
     }
-    else if (selfElements && alwaysRenderChildren) {
-      return <Tag>{selfElements}{this.props.children}</Tag>;
+
+    if (selfElements) {
+      stack.push(selfElements);
     }
-    else {
-      return <Tag>{selfElements || this.props.children || null}</Tag>;
+
+    if (!hasSelfElements || alwaysRenderChildren) {
+      stack.push(this.props.children);
     }
+
+    if (nextSiblings) {
+      stack.push(nextSiblings);
+    }
+
+    return <Tag>{stack}</Tag>;
   },
 
   renderElements({ elements, elementProps }) {
@@ -108,7 +116,7 @@ const Outlet = React.createClass({
   },
 
   renderElement(el, props) {
-    const Renderer = getRenderer(el);
+    const Component = getRenderer(el);
 
     if (el.match && !el.match(props)) {
       return null;
@@ -118,12 +126,14 @@ const Outlet = React.createClass({
       props.children = this.props.children;
     }
 
-    return (
-      <Renderer
-        key={el.key || Renderer.getKey && Renderer.getKey(props.props)}
-        {...props}
-      />
-    );
+    const key = el.key || Component.getKey && Component.getKey(props.props);
+
+    if (this.props.fnRenderElement) {
+      return this.props.fnRenderElement(key, props, Component);
+    }
+    else {
+      return <Component key={key} {...props} />;
+    }
   },
 
   renderElementWithProps(props, el) {

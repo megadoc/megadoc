@@ -6,7 +6,7 @@ const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
 const HasMetaDescription = require('mixins/HasMetaDescription');
 const Router = require('core/Router');
-const Database = require('core/Database');
+const Database = require('../Database');
 const Footer = require('components/Footer');
 
 const { shape, bool, string } = React.PropTypes;

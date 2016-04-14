@@ -1,8 +1,8 @@
 const React = require('react');
-const Database = require('core/Database');
+const Database = require('../Database');
 const OutletManager = require('core/OutletManager');
 const AllArticles = require('../screens/AllArticles');
-const ClassBrowser = require('components/ClassBrowser');
+const ClassBrowser = require('../components/ClassBrowser');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(routeName, config) {

@@ -12,16 +12,19 @@ var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
-OutletManager.define('Navigation');
 OutletManager.define('LayoutWrapper');
+OutletManager.define('Layout');
 OutletManager.define('SinglePageLayout::Wrapper');
 OutletManager.define('SinglePageLayout::Sidebar');
 OutletManager.define('SinglePageLayout::ContentPanel');
 
 SinglePageLayoutOutlet(config);
 
-let tinydoc = window.tinydoc = createTinydoc(config);
+const tinydoc = window.tinydoc = createTinydoc(config);
 
+// expose this to plugins so that we can move to a non-global version in the
+// future
+tinydoc.outlets = OutletManager;
 tinydoc.publicModules = require('../tmp/publicModules');
 
 tinydoc.onReady(function(registrar) {
@@ -40,13 +43,6 @@ tinydoc.onReady(function(registrar) {
         <DefaultRoute
           name="home"
           handler={require('./screens/Home')}
-        />
-
-        <Route
-          name="readme"
-          path="/readme*"
-          handler={require('./screens/Home')}
-          ignoreScrollBehavior
         />
 
         {registrar.getRouteMap()}

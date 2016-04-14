@@ -1,28 +1,17 @@
 #!/usr/bin/env bash
 
-# Lint the back-end source files for a package or all packages.
-#
-# Usage:
-#
-#     $0 [PACKAGE]
-#
-# Environment variables:
-#
-#   - PACKAGE: the package, in case $1 is not passed
+# Prepublish EVERYTHING; the core package and all official packages, running
+# their lints, tests, and compiling their assets.
 
-PACKAGES=$(
-  (cd packages/ && find ./ -maxdepth 1 -type d -name 'tinydoc-*') |
-  sort |
-  sed 's/\.\///'
-)
+set -e
 
-for pkg in $PACKAGES; do
+npm run prepublish
+
+for pkg in $(find packages -maxdepth 1 -type d -name 'tinydoc-*' | sort | sed 's/packages\///')
+do
   if [ $pkg == "tinydoc-plugin-skeleton" ]; then
     continue
   fi
 
-  ./bin/prepublish.sh $pkg $@ || {
-    echo "${pkg} failed to build - aborting."
-    exit 1
-  }
+  ./bin/prepublish.sh $pkg $@
 done

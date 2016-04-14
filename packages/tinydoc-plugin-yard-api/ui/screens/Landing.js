@@ -1,6 +1,7 @@
 const React = require('react');
 const scrollToTop = require('utils/scrollToTop');
 const Outlet = require('components/Outlet');
+const Document = require('components/Document');
 const { string } = React.PropTypes;
 
 const Landing = React.createClass({
@@ -14,14 +15,9 @@ const Landing = React.createClass({
 
   render() {
     return (
-      <div className="doc-content">
-        <Outlet
-          name="yard-api::Landing"
-          props={{ url: `/${this.props.baseURL}` }}
-        >
-          <div>Welcome to the API docs!</div>
-        </Outlet>
-      </div>
+      <Outlet name="yard-api::Landing" props={{ url: `/${this.props.baseURL}` }}>
+        <Document>Welcome to the API docs!</Document>
+      </Outlet>
     );
   }
 });

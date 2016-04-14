@@ -2,6 +2,7 @@ var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
 var assign = require('lodash').assign;
+var parseGitStats = require('tinydoc/lib/utils/parseGitStats');
 
 /**
  * @module tinydoc-plugin-static.Config
@@ -26,6 +27,10 @@ var defaults = {
    * @property {Boolean}
    */
   anchorableHeadings: false,
+
+  gitStats: true,
+
+  disqusShortname: null,
 };
 
 module.exports = function(userConfig) {
@@ -46,11 +51,28 @@ module.exports = function(userConfig) {
 
     run: function(compiler) {
       var compiledFile;
+      var gitStats;
+      var filePath = compiler.utils.getAssetPath(config.source);
+
+      compiler.on('scan', function(done) {
+        if (config.gitStats) {
+          parseGitStats(compiler.config.gitRepository, [ filePath ], function(err, stats) {
+            if (err) {
+              return done(err);
+            }
+
+            gitStats = stats[0];
+
+            done();
+          });
+        }
+        else {
+          done();
+        }
+      });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
-        compiledFile = renderMarkdown.withTOC(linkify(
-          fs.readFileSync(compiler.utils.getAssetPath(config.source), 'utf-8')
-        ), {
+        compiledFile = renderMarkdown.withTOC(linkify(fs.readFileSync(filePath, 'utf-8')), {
           anchorableHeadings: config.anchorableHeadings,
           baseURL: config.url
         });
@@ -64,7 +86,11 @@ module.exports = function(userConfig) {
         compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-static', {
           url: config.url,
           outlet: config.outlet,
+          anchorableHeadings: config.anchorableHeadings,
+          disqus: config.disqusShortname,
+          gitStats: gitStats,
           file: compiledFile,
+          filePath: filePath,
         });
       });
     }

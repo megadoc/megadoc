@@ -1,7 +1,6 @@
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const createNavigationOutlet = require('./outlets/Navigation');
 const OutletManager = require('core/OutletManager');
 const PreviewHandler = require('./PreviewHandler');
 
@@ -14,9 +13,7 @@ OutletManager.define('CJS::Tag');
 OutletManager.define('CJS::ExampleTags');
 OutletManager.define('CJS::ExampleTag', { firstMatching: true });
 
-tinydoc.use(function CJSPlugin(api) {
-  const configs = tinydoc.getRuntimeConfigs('cjs');
-
+tinydoc.use('cjs', function CJSPlugin(api, configs) {
   configs.forEach(function(config) {
     const { routeName } = config;
 
@@ -26,7 +23,7 @@ tinydoc.use(function CJSPlugin(api) {
       {
         name: routeName,
         path: '/' + routeName,
-        handler: require('./screens/Root')(routeName)
+        // handler: require('./screens/Root')(routeName)
       },
 
       {
@@ -53,11 +50,7 @@ tinydoc.use(function CJSPlugin(api) {
 
     api.registerPreviewHandler(PreviewHandler(config, database));
 
-    OutletManager.add('Navigation', {
-      key: routeName,
-      component: createNavigationOutlet(config)
-    });
-
+    require('./outlets/MultiPageLayout')(routeName, config);
     require('./outlets/SinglePageLayout')(routeName, config);
   });
 });

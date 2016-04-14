@@ -62,7 +62,16 @@ var Banner = React.createClass({
               </BannerItem>
             )}
 
-            <Outlet name="Navigation" props={{}} alwaysRenderChildren tagName="span">
+            <Outlet
+              name="MultiPageLayout::Banner"
+              alwaysRenderChildren
+              tagName="span"
+              fnRenderElement={(key, props, Type) => (
+                <BannerItem key={key}>
+                  <Type {...props} />
+                </BannerItem>
+              )}
+            >
               {config.showSettingsLinkInBanner && (
                 <BannerItem key="settings">
                   <Link to="settings">

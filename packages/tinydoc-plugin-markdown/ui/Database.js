@@ -1,5 +1,5 @@
 const { assign, where, findWhere, sortBy } = require('lodash');
-const strHumanize = require('../../../lib/utils/strHumanize');
+const strHumanize = require('../lib/utils/strHumanize');
 
 function createDatabase(config) {
   let articles = sortBy(config.database, 'title');

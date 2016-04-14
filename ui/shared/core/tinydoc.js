@@ -1,4 +1,5 @@
 const buildRouteMap = require('utils/buildRouteMap');
+const Outlet = require('components/Outlet');
 
 /**
  * @module tinydoc
@@ -17,6 +18,7 @@ module.exports = function createTinydoc(config) {
   };
 
   const pluginAPI = {
+    outlets: Outlet,
     addRoutes,
     registerPreviewHandler(fn) {
       previewHandlers.push(fn);
@@ -55,6 +57,19 @@ module.exports = function createTinydoc(config) {
    *        The plugin registration API you can use.
    */
   exports.use = function(pluginName, plugin) {
+    var newSignature = arguments.length === 2;
+
+    setTimeout(function() {
+      if (newSignature) {
+        use(pluginName, plugin);
+      }
+      else {
+        use(pluginName);
+      }
+    }, 0);
+  };
+
+  function use(pluginName, plugin) {
     var args = [];
 
     if (arguments.length === 1) {

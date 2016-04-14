@@ -32,6 +32,10 @@ OutletManager.define = function(name, options = {}) {
     `Outlet ${name} had already been defined.`
   );
 
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug('Outlet defined: "%s"', name);
+  }
+
   outlets.push({ name, options, elements: [] });
 };
 

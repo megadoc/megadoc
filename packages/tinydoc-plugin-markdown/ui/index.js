@@ -1,9 +1,4 @@
-const createNavigationOutlet = require('./outlets/Navigation');
-const createSinglePageLayoutOutlet = require('./outlets/SinglePageLayout');
-const React = require('react');
-const Root = require('./screens/Root');
-const Database = require('core/Database');
-const OutletManager = require('core/OutletManager');
+const Database = require('./Database');
 const Storage = require('core/Storage');
 const K = require('constants');
 const PreviewHandler = require('./PreviewHandler');
@@ -25,18 +20,7 @@ function register(api, config) {
   api.addRoutes([
     {
       name: routeName,
-      path: config.path || routeName,
-      handler: React.createClass({
-        render() {
-          return (
-            <Root
-              config={config}
-              routeName={routeName}
-              {...this.props}
-            />
-          );
-        }
-      })
+      path: config.path || routeName
     },
 
     {
@@ -64,12 +48,6 @@ function register(api, config) {
 
   api.registerPreviewHandler(PreviewHandler(config, database));
 
-  if (config.title) {
-    OutletManager.add('Navigation', {
-      key: config.routeName,
-      component: createNavigationOutlet(config)
-    });
-  }
-
-  createSinglePageLayoutOutlet(routeName, config);
+  require('./outlets/MultiPageLayout')(api, config);
+  require('./outlets/SinglePageLayout')(routeName, config);
 }
