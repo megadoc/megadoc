@@ -75,7 +75,7 @@ var APIResource = React.createClass({
     return (
       <li key={endpoint.id}>
         <Link
-          to="api.resource.endpoint"
+          to="yard-api.resource.endpoint"
           params={{
             resourceId: this.props.params.resourceId,
             endpointId: endpoint.scoped_id
@@ -93,7 +93,7 @@ var APIResource = React.createClass({
         object={object}
         anchorId={
           Router.generateAnchorId({
-            routeName: "api.resource.object",
+            routeName: "yard-api.resource.object",
             params: {
               resourceId: this.props.params.resourceId,
               objectId: object.scoped_id
@@ -111,7 +111,7 @@ var APIResource = React.createClass({
         resourceId={this.props.params.resourceId}
         anchorId={
           Router.generateAnchorId({
-            routeName: "api.resource.endpoint",
+            routeName: "yard-api.resource.endpoint",
             params: {
               resourceId: this.props.params.resourceId,
               endpointId: endpoint.scoped_id

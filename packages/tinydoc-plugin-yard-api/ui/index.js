@@ -4,43 +4,47 @@ const Outlet = require('components/Outlet');
 
 Storage.register(K.CFG_CLASS_BROWSER_EXPAND_ALL, false);
 
-tinydoc.use(function YARDAPIPlugin(api) {
+Outlet.define('yard-api::Landing');
+
+tinydoc.use('yard-api', function YARDAPIPlugin(api, configs) {
+  const config = configs[0]; // TODO multiple route names
+  const baseURL = config.routeName;
+
   api.addRoutes([
     {
-      name: 'api',
-      path: 'api',
+      name: 'yard-api',
+      path: baseURL,
       handler: require('./screens/Root')
     },
 
     {
-      name: 'api.landing',
+      name: 'yard-api.landing',
       default: true,
       handler: require('./screens/Landing'),
-      parent: 'api'
+      parent: 'yard-api'
     },
 
     {
-      name: 'api.resource',
+      name: 'yard-api.resource',
       handler: require('./screens/APIResource'),
-      parent: 'api',
+      parent: 'yard-api',
       path: 'resources/:resourceId',
       ignoreScrollBehavior: true,
     },
 
     {
-      name: 'api.resource.object',
-      parent: 'api.resource',
+      name: 'yard-api.resource.object',
+      parent: 'yard-api.resource',
       path: 'objects/:objectId',
       ignoreScrollBehavior: true,
     },
 
     {
-      name: 'api.resource.endpoint',
-      parent: 'api.resource',
+      name: 'yard-api.resource.endpoint',
+      parent: 'yard-api.resource',
       path: 'endpoints/:endpointId',
       ignoreScrollBehavior: true,
     },
-
   ]);
 
   Outlet.add('Navigation', {

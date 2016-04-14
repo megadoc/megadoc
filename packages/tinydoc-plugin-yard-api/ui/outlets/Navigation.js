@@ -8,7 +8,7 @@ const Navigation = React.createClass({
   render() {
     return (
       <BannerItem>
-        <Link to="api">
+        <Link to="yard-api">
           {config.icon && <Icon className={config.icon} />} {config.navigationLabel || 'API'}
         </Link>
       </BannerItem>

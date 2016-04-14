@@ -54,11 +54,22 @@ module.exports = function createTinydoc(config) {
    * @param {PluginRegistrar} pluginEntryRunner.api
    *        The plugin registration API you can use.
    */
-  exports.use = function(plugin) {
+  exports.use = function(pluginName, plugin) {
+    var args = [];
+
+    if (arguments.length === 1) {
+      plugin = pluginName;
+      pluginName = plugin.name;
+      args = [ pluginAPI ];
+    }
+    else {
+      args = [ pluginAPI, exports.getRuntimeConfigs(pluginName) ];
+    }
+
     try {
       console.log('Loading %s.', plugin.name);
 
-      plugin(pluginAPI);
+      plugin.apply(null, args);
     }
     catch (e) {
       console.error('A plugin (%s) failed to load, it will be ignored.', plugin.name);

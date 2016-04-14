@@ -1,7 +1,13 @@
-var React = require('react');
+const React = require('react');
 const scrollToTop = require('utils/scrollToTop');
+const Outlet = require('components/Outlet');
+const { string } = React.PropTypes;
 
-var Index = React.createClass({
+const Landing = React.createClass({
+  propTypes: {
+    baseURL: string,
+  },
+
   componentDidMount() {
     scrollToTop();
   },
@@ -9,10 +15,15 @@ var Index = React.createClass({
   render() {
     return (
       <div className="doc-content">
-        Welcome to the API docs!
+        <Outlet
+          name="yard-api::Landing"
+          props={{ url: `/${this.props.baseURL}` }}
+        >
+          <div>Welcome to the API docs!</div>
+        </Outlet>
       </div>
     );
   }
 });
 
-module.exports = Index;
+module.exports = Landing;

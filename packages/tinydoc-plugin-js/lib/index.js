@@ -7,7 +7,6 @@ var render = require('./render');
 var merge = require('lodash').merge;
 var assert = require('assert');
 var defaults = require('./config');
-var fs = require('fs');
 
 /**
  * @namespace Plugins.CJS
@@ -25,8 +24,6 @@ function createCJSPlugin(userConfig) {
     tagProcessors: [],
     postProcessors: [],
   };
-
-  var compiledReadme;
 
   assert(typeof config.routeName === 'string',
     "You must specify a @routeName string to the CJS Plugin."
@@ -110,24 +107,11 @@ function createCJSPlugin(userConfig) {
       compiler.on('render', function(renderMarkdown, linkify, done) {
         render(database, renderMarkdown, linkify);
 
-        if (config.readme) {
-          console.log('compiling readme!')
-          compiledReadme = renderMarkdown.withTOC(
-            linkify(
-              fs.readFileSync(compiler.utils.getAssetPath(config.readme), 'utf-8')
-            ), {
-              baseURL: '/' + config.routeName
-            }
-          );
-          console.log('readme compiled!', compiledReadme)
-        }
-
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
         stats['js:' + config.routeName] = generateStats(database);
-        stats['js:' + config.routeName].hasReadme = !!compiledReadme;
 
         done();
       });
@@ -142,8 +126,7 @@ function createCJSPlugin(userConfig) {
         );
 
         compiler.assets.addPluginRuntimeConfig('cjs', merge({}, config, {
-          database: database,
-          readme: compiledReadme
+          database: database
         }));
 
         done();

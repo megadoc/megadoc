@@ -4,6 +4,7 @@ var { RouteHandler } = require('react-router');
 var Database = require('core/Database');
 var TwoColumnLayout = require('components/TwoColumnLayout');
 var { LeftColumn, RightColumn } = TwoColumnLayout;
+const config = require('config');
 
 var YARDAPIRoot = React.createClass({
   propTypes: {
@@ -24,7 +25,7 @@ var YARDAPIRoot = React.createClass({
 
         <RightColumn>
           <div className="yard-api-root__content">
-            <RouteHandler {...this.props} />
+            <RouteHandler baseURL={config.routeName} {...this.props} />
           </div>
         </RightColumn>
       </TwoColumnLayout>

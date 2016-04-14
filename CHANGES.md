@@ -1,5 +1,31 @@
 # Changelog
 
+## 5.0.0
+
+- Markdown renderer now accepts a `anchorableHeadings: Boolean` option that
+  controls whether the `<h{1..4} />` tags should have anchors. This affects
+  the `renderMarkdown` routines passed to the `render` phase plugins.
+- `tinydoc-plugin-static` for rendering static files at arbitrary URL
+
+**`tinydoc.use()` signature change**
+
+The new signature is:
+
+    `tinydoc.use(String, Function) -> void`
+
+And the function will be passed two arguments, the first is the plugin API,
+and the second is the runtime configs registered for that plugin. This is for
+convenience instead of having to reach out to `tinydoc.getRuntimeConfigs(...)`
+and is (currently) backwards compatible.
+
+**tinydoc-plugin-js**
+
+- now accepts a static file into the landing page under the outlet `CJS::Landing`, useful for rendering READMEs
+
+**tinydoc-plugin-yard-api**
+
+- now accepts a static file into the landing page under the outlet `yard-api::Landing`
+
 ## 4.0.1
 
 - `tinydoc-run` or `tinydoc run` binary was restored to just `tinydoc`

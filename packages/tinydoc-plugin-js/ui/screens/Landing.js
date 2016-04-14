@@ -1,7 +1,6 @@
 const React = require('react');
 const scrollToTop = require('utils/scrollToTop');
-const config = require('config');
-const HighlightedText = require('components/HighlightedText');
+const Outlet = require('components/Outlet');
 
 const Landing = React.createClass({
   propTypes: {
@@ -13,14 +12,14 @@ const Landing = React.createClass({
   },
 
   render() {
-    const thisConfig = config.for(this.props.routeName);
-    const { readme } = thisConfig;
-
     return (
       <div className="doc-content">
-        {readme && <HighlightedText>{readme.html}</HighlightedText>}
-
-        {!readme && <p>Hi! Is JavaScript time!</p>}
+        <Outlet
+          name="CJS::Landing"
+          props={{ url: `/${this.props.routeName}` }}
+        >
+          <div>Hi! Is JavaScript time!</div>
+        </Outlet>
       </div>
     );
   }
