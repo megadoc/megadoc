@@ -91,7 +91,7 @@ if (program.layout) {
   config.layout = program.layout;
 }
 
-console.log('tinydoc: version %s', pkg.version);
+console.log('version %s', pkg.version);
 
 tiny = tinydoc(config, {
   scan: program.scan !== false,

@@ -2,7 +2,7 @@ const React = require('react');
 const Outlet = require('components/Outlet');
 const StaticFile = require('./components/StaticFile');
 
-tinydoc.use('tinydoc-plugin-static', function(api, configs) {
+tinydoc.use('tinydoc-plugin-static', function TinydocStaticPlugin(api, configs) {
   configs.forEach(function(config) {
     const displayName = config.url.trim()
       .replace(/\W+/g, '-')

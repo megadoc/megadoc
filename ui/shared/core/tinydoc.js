@@ -92,7 +92,7 @@ module.exports = function createTinydoc(config) {
     }
     finally {
       if (++ran === config.pluginCount) {
-        console.log('All plugins have been loaded, no more may be loaded from now on.');
+        console.log('All %d/%d plugins have been loaded, no more may be loaded from now on.', ran, config.pluginCount);
 
         seal();
       }
@@ -105,6 +105,10 @@ module.exports = function createTinydoc(config) {
 
   exports.getPreviewHandlers = function() {
     return previewHandlers;
+  };
+
+  exports.isPluginEnabled = function(name) {
+    return (config.pluginConfigs[name] || []).length > 0;
   };
 
   exports.onReady = function(callback) {

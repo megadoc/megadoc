@@ -1,10 +1,12 @@
 const React = require('react');
 const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
-const config = require('config');
+const config = require('../config');
 const Link = require('components/Link');
 const Heading = require('components/Heading');
+const Footer = require('components/Footer');
 const classSet = require('utils/classSet');
+const RouteHandler = require('components/RouteHandler');
 
 const { arrayOf, shape, string, node } = React.PropTypes;
 const SinglePageLayout = React.createClass({
@@ -31,15 +33,19 @@ const SinglePageLayout = React.createClass({
           {this.renderSidebar()}
 
           <TwoColumnLayout.RightColumn>
-            <div className="single-page-layout__content">
-              {internal && this.props.children}
+            <div>
+              <div className="single-page-layout__content">
+                {internal && this.props.children}
 
-              {!internal && (
-                <Outlet
-                  name="SinglePageLayout::ContentPanel"
-                  props={this.props}
-                />
-              )}
+                {!internal && (
+                  <Outlet name="SinglePageLayout::ContentPanel" props={this.props}>
+                    <RouteHandler />
+                  </Outlet>
+                )}
+
+              </div>
+
+              <Footer />
             </div>
           </TwoColumnLayout.RightColumn>
         </TwoColumnLayout>

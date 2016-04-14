@@ -12,14 +12,14 @@
 #   - COVERAGE: when set to "1", istanbul will run mocha to generate a coverage
 #     report under /coverage
 
-# This hack is very convenient to play around node require paths where our
-# packages most usually require "tinydoc" and other core plugins as
-# peerDependencies but they won't (and shouldn't) be installed locally.
-#
-# What this will do is that it will make node resolve those packages from
-# /packages and it will work for the core library because we created a fake
-# package inside /packages/tinydoc to this end.
-export NODE_PATH="./packages:${NODE_PATH}"
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "$0: Must be run from tinydoc root.";
+  exit 1
+fi
+
+source "./bin/_local-node-requires.sh"
 
 SOURCE_DIRS=""
 

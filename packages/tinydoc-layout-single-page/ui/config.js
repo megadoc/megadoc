@@ -1,0 +1,1 @@
+module.exports = tinydoc.getRuntimeConfigs('tinydoc-layout-single-page')[0];

@@ -1,0 +1,58 @@
+@import "~helpers";
+
+.schemable({
+  .root--with-multi-page-layout .root__screen {
+    margin-top: 90px;
+
+    .doc-content {
+      background: white;
+      padding: @spacing;
+      margin-bottom: @spacing;
+
+      h1 {
+        margin-top: 0;
+      }
+    }
+  }
+
+  .root--with-multi-page-layout {
+    .banner-wrapper {
+      border-bottom-color: @background;
+    }
+
+    .banner__navigation-item a.active {
+      border-bottom-width: 0;
+    }
+
+    .two-column-layout {
+      &__left {
+        margin-top: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        vertical-align: top;
+        display: inline-block;
+        background: transparent;
+
+        .resizable-panel__content {
+          position: static;
+          padding: @spacing;
+          background: white;
+          margin-bottom: @spacing;
+        }
+
+        .ui-resizable-handle {
+          display: none;
+        }
+      }
+
+      &__right {
+        top: 0;
+        padding: 0 @spacing 0 0;
+        margin-bottom: @spacing;
+        position: relative;
+        vertical-align: top;
+      }
+    }
+  }
+});

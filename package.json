@@ -10,7 +10,7 @@
   "scripts": {
     "build": "NODE_ENV=production webpack -p --display-chunks",
     "coverage": "COVERAGE=1 ./bin/test.sh",
-    "doc": "./cli/tinydoc --config=doc/tinydoc.conf.js",
+    "doc": "./bin/docs.sh",
     "lint": "./bin/lint.sh && ./bin/lint-ui.sh",
     "prepublish": "npm run lint && npm run test && npm run build",
     "start": "./bin/devserver.sh",

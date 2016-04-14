@@ -1,4 +1,6 @@
 @import "~helpers";
+@import "./css/qt--multi-page-layout";
+@import "./css/qt--single-page-layout";
 
 @spacing: 30px;
 @background: #eee;
@@ -12,22 +14,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
 }
 
-.root {
-  &__screen {
-    margin-top: 90px;
-
-    .doc-content {
-      background: white;
-      padding: @spacing;
-      margin-bottom: @spacing;
-
-      h1 {
-        margin-top: 0;
-      }
-    }
-  }
-}
-
 .schemable({
   .root__footer {
     margin-top: @spacing;
@@ -35,47 +21,7 @@ h1, h2, h3, h4, h5, h6 {
     padding-top: 0;
     padding-bottom: 0;
     border-top: none;
-  }
-
-  .banner-wrapper {
-    border-bottom-color: @background;
-  }
-
-  .banner {
-    &__navigation-item a.active {
-      border-bottom-width: 0;
-    }
-  }
-
-  .two-column-layout {
-    &__left {
-      margin-top: 0;
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      vertical-align: top;
-      display: inline-block;
-      background: transparent;
-
-      .resizable-panel__content {
-        position: static;
-        padding: @spacing;
-        background: white;
-        margin-bottom: @spacing;
-      }
-
-      .ui-resizable-handle {
-        display: none;
-      }
-    }
-
-    &__right {
-      top: 0;
-      padding: 0 @spacing 0 0;
-      margin-bottom: @spacing;
-      position: relative;
-      vertical-align: top;
-    }
+    text-align: center;
   }
 
   .collapser {

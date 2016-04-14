@@ -17,6 +17,13 @@
 #
 #   - PACKAGE: the package, in case $1 is not passed
 
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "$0: Must be run from tinydoc root.";
+  exit 1
+fi
+
 if [ -z $PACKAGE ]; then
   if [ $# -gt 0 ]; then
     PACKAGE=$1
@@ -27,13 +34,6 @@ if [ -z $PACKAGE ]; then
     echo "Usage: $0 PACKAGE"
     exit 1
   fi
-fi
-
-[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
-
-if [ $? -ne 0 ]; then
-  echo "$0: Must be run from tinydoc root.";
-  exit 1
 fi
 
 PACKAGE_NAME="${PACKAGE}"

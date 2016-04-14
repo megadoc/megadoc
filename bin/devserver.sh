@@ -10,6 +10,13 @@
 # To generate the needed config.js, run ./cli/index.js and look for that file
 # in the outputDir.
 
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "$0: Must be run from tinydoc root.";
+  exit 1
+fi
+
 export NODE_ENV="development"
 export VERBOSE=1
 export CONFIG_FILE=$1

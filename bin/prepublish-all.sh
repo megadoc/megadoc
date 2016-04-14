@@ -5,6 +5,13 @@
 
 set -e
 
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
+
+if [ $? -ne 0 ]; then
+  echo "$0: Must be run from tinydoc root.";
+  exit 1
+fi
+
 npm run prepublish
 
 for pkg in $(find packages -maxdepth 1 -type d -name 'tinydoc-*' | sort | sed 's/packages\///')

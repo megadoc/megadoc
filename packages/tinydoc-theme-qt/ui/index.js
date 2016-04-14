@@ -1,5 +1,7 @@
 const TwoColumnLayout = require('components/TwoColumnLayout');
 
 tinydoc.use(function() {
-  TwoColumnLayout.invert();
+  if (tinydoc.isPluginEnabled('tinydoc-layout-multi-page')) {
+    TwoColumnLayout.invert();
+  }
 });

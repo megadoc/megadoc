@@ -12,23 +12,22 @@ var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
-OutletManager.define('LayoutWrapper');
-OutletManager.define('Layout');
-OutletManager.define('SinglePageLayout::Wrapper');
-OutletManager.define('SinglePageLayout::Sidebar');
-OutletManager.define('SinglePageLayout::ContentPanel');
-
-SinglePageLayoutOutlet(config);
-
 const tinydoc = window.tinydoc = createTinydoc(config);
+
+console.log('tinydoc: version %s', config.version);
+
+tinydoc.publicModules = require('../tmp/publicModules');
 
 // expose this to plugins so that we can move to a non-global version in the
 // future
 tinydoc.outlets = OutletManager;
-tinydoc.publicModules = require('../tmp/publicModules');
+tinydoc.outlets.define('LayoutWrapper');
+tinydoc.outlets.define('Layout');
 
 tinydoc.onReady(function(registrar) {
   console.log('Ok, firing up.');
+
+  SinglePageLayoutOutlet(tinydoc, config);
 
   var router = ReactRouter.create({
     location: ReactRouter.HashLocation,

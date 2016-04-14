@@ -3,8 +3,9 @@ var config = {
   assetRoot: path.resolve(__dirname, '..'),
 
   title: 'tinydoc',
+  home: '/readme',
   outputDir: 'doc/compiled',
-  readme: 'README.md',
+  // readme: 'README.md',
   useHashLocation: true,
   publicPath: '',
   stylesheet: 'doc/theme.less',
@@ -18,6 +19,8 @@ config.plugins = [
     source: [
       'lib/**/*.js',
       'ui/**/*.js',
+      'packages/(?!tinydoc)/lib/**/*.js',
+      'packages/(?!tinydoc)/ui/**/*.js',
     ],
 
     exclude: [
@@ -40,7 +43,16 @@ config.plugins = [
     source: [
       'CHANGES.md'
     ]
-  })
+  }),
+
+  require('tinydoc-plugin-static')({
+    url: '/readme',
+    source: 'README.md',
+    anchorableHeadings: true,
+  }),
+
+  require('tinydoc-layout-single-page')({}),
+  require('tinydoc-theme-qt')({}),
 ];
 
 module.exports = config;

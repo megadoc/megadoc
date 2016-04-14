@@ -42,7 +42,7 @@ OutletManager.define = function(name, options = {}) {
 OutletManager.get = function(name) {
   const outlet = findWhere(outlets, { name });
 
-  invariant(!!outlet, `Unknown outlet ${name}.`);
+  // invariant(!!outlet, `Unknown outlet ${name}.`);
 
   return outlet;
 };
@@ -65,6 +65,8 @@ OutletManager.get = function(name) {
  */
 OutletManager.add = function(name, element) {
   const outlet = OutletManager.get(name);
+
+  if (!outlet) { return; }
 
   invariant(typeof element.key === 'string',
     "You must specify a unique string key as @key for the outlet component."

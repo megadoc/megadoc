@@ -23,19 +23,6 @@ const Home = React.createClass({
   render() {
     return (
       <div className="doc-content">
-        {readme && <HighlightedText>{readme.source.html}</HighlightedText>}
-
-        {readme && readme.git && config.gitStats && (
-          <GitStats {...readme.git} />
-        )}
-
-        {readme && (
-          <Disqus identifier={readme.filePath} title="README" />
-        )}
-
-        {config.displayFooterInHomePage && (
-          <Footer />
-        )}
       </div>
     );
   }
