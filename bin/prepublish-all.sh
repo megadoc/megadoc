@@ -5,12 +5,10 @@
 
 set -e
 
-[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
-
-if [ $? -ne 0 ]; then
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null || {
   echo "$0: Must be run from tinydoc root.";
   exit 1
-fi
+}
 
 npm run prepublish
 

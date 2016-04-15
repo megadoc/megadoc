@@ -22,12 +22,14 @@ module.exports = function(userConfig) {
         }
       });
 
-      compiler.on('write', function() {
+      compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.join(root, 'ui/css/index.less'));
         compiler.assets.addPluginScript(path.join(root, 'dist/tinydoc-plugin-reference-graph.js'));
         compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-reference-graph', {
           database: database
         });
+
+        done();
       });
     }
   }

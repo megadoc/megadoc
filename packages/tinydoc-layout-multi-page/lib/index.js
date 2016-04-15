@@ -5,8 +5,10 @@ module.exports = function() {
     name: 'tinydoc-layout-multi-page',
 
     run: function(compiler) {
-      compiler.on('write', function() {
+      compiler.on('write', function(done) {
         compiler.assets.addPluginScript(path.resolve(__dirname, '../dist/tinydoc-layout-multi-page.js'));
+
+        done();
       });
     }
   };

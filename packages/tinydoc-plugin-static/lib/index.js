@@ -51,7 +51,7 @@ module.exports = function(userConfig) {
         done();
       });
 
-      compiler.on('write', function() {
+      compiler.on('write', function(done) {
         compiler.assets.addPluginScript(path.resolve(__dirname, '../dist/tinydoc-plugin-static.js'));
 
         compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-static', {
@@ -64,6 +64,8 @@ module.exports = function(userConfig) {
           file: compiledFile,
           filePath: filePath,
         });
+
+        done();
       });
     }
   };

@@ -12,12 +12,10 @@
 #   - COVERAGE: when set to "1", istanbul will run mocha to generate a coverage
 #     report under /coverage
 
-[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null
-
-if [ $? -ne 0 ]; then
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null || {
   echo "$0: Must be run from tinydoc root.";
   exit 1
-fi
+}
 
 source "./bin/_local-node-requires.sh"
 
