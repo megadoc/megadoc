@@ -16,6 +16,7 @@ function getRenderer(element) {
 const Outlet = React.createClass({
   statics: {
     add: OutletManager.add,
+    has: OutletManager.has,
     define: OutletManager.define,
   },
 

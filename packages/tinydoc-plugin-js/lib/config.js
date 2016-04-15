@@ -77,4 +77,6 @@ module.exports = {
   corpusContext: 'JS',
 
   displayFooter: false,
+
+  alias: {}
 };

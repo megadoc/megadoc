@@ -22,6 +22,7 @@ function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
   this.name = this.generateName();
   this.filePath = filePath;
   this.absoluteFilePath = absoluteFilePath;
+  this.customAliases = [];
 
   return this;
 }
@@ -39,7 +40,7 @@ Doc.prototype.toJSON = function() {
     return tag.type === 'alias';
   }).map(function(tag) {
     return tag.alias;
-  });
+  }).concat(this.customAliases);
 
   // support for explicit typing using tags like @method or @type
   if (this.docstring.hasTypeOverride()) {
@@ -174,6 +175,10 @@ Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
   if (propertyTag && !propertyTag.typeInfo.name) {
     propertyTag.typeInfo.name = name;
   }
+};
+
+Doc.prototype.addAlias = function(name) {
+  this.customAliases.push(name);
 };
 
 module.exports = Doc;

@@ -20,6 +20,7 @@ function createCJSPlugin(userConfig) {
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
+    alias: config.alias,
     nodeAnalyzers: [],
     docstringProcessors: [],
     tagProcessors: [],

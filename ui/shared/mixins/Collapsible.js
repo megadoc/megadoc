@@ -31,6 +31,9 @@ var Collapsible = {
     if (nextProps.expanded && this.state.collapsed) {
       this.setState({ collapsed: false });
     }
+    else if (this.props.initiallyCollapsed && !nextProps.initiallyCollapsed) {
+      this.setState({ collapsed: false });
+    }
   },
 
   expand() {

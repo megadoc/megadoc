@@ -1,14 +1,17 @@
 const React = require('react');
 const ClassBrowser = require('components/ClassBrowser');
-const Outlet = require('components/Outlet');
 const Link = require('components/Link');
 const Icon = require('components/Icon');
 const { shape, string } = React.PropTypes;
 
-module.exports = function(routeName, config) {
-  const { navigationLabel, icon } = config;
+module.exports = function(api, config) {
+  const { navigationLabel, icon, routeName } = config;
 
-  Outlet.add('MultiPageLayout::Banner', {
+  if (!api.outlets.has('MultiPageLayout::Banner')) {
+    return;
+  }
+
+  api.outlets.add('MultiPageLayout::Banner', {
     key: routeName,
 
     component: React.createClass({
@@ -24,7 +27,7 @@ module.exports = function(routeName, config) {
     })
   });
 
-  Outlet.add('MultiPageLayout::Content', {
+  api.outlets.add('MultiPageLayout::Content', {
     key: routeName,
 
     match(props) { return props.path.match(`^/${routeName}`); },
@@ -32,7 +35,7 @@ module.exports = function(routeName, config) {
     component: require('../screens/Root')(routeName),
   });
 
-  Outlet.add('MultiPageLayout::Sidebar', {
+  api.outlets.add('MultiPageLayout::Sidebar', {
     key: routeName,
 
     match(props) { return props.path.match(`^/${routeName}`); },

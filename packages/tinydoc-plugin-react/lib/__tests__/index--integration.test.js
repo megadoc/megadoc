@@ -73,8 +73,8 @@ describe("[Integration] tinydoc-plugin-react", function() {
     tiny.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['react:test'].componentCount, 2);
-      assert.equal(stats['react:test'].liveExampleCount, 1);
+      assert.equal(stats['tinydoc-plugin-react:test'].componentCount, 2);
+      assert.equal(stats['tinydoc-plugin-react:test'].liveExampleCount, 1);
 
       done();
     });

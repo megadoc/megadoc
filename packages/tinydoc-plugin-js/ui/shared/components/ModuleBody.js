@@ -181,8 +181,7 @@ const ModuleBody = React.createClass({
       <PropertyTag
         key={path}
         typeInfo={tag.typeInfo}
-        initiallyCollapsed
-        expanded={this.getActiveEntityId() === path}
+        initiallyCollapsed={this.getActiveEntityId() !== path}
         path={path}
         parentPath={this.props.doc.name}
         anchorId={this.generateAnchorId(path)}
@@ -215,8 +214,7 @@ const ModuleBody = React.createClass({
     return (
       <Doc
         key={path}
-        initiallyCollapsed
-        expanded={this.getActiveEntityId() === path}
+        initiallyCollapsed={this.getActiveEntityId() !== path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />
@@ -247,8 +245,7 @@ const ModuleBody = React.createClass({
     return (
       <Doc
         key={doc.id}
-        initiallyCollapsed
-        expanded={this.getActiveEntityId() === path}
+        initiallyCollapsed={this.getActiveEntityId() !== path}
         doc={doc}
         anchorId={this.generateAnchorId(path)}
       />

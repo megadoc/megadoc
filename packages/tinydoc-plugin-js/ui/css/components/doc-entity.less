@@ -40,6 +40,14 @@
   &__description.markdown-text p {
     margin: @spacing 0;
   }
+
+  &__anchor {
+    visibility: hidden;
+  }
+
+  &__header:hover &__anchor {
+    visibility: visible;
+  }
 }
 
 .schemable({
@@ -70,6 +78,14 @@
     &__protected, &__private {
       background: @base2;
       color: @solarized-orange;
+    }
+
+    &__anchor, &__anchor:visited {
+      color: inherit;
+      margin-left: -1.4em;
+      padding-right: 0.4em;
+      font-size: 1em;
+      text-decoration: none;
     }
   }
 });

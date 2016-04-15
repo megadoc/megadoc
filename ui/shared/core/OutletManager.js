@@ -42,9 +42,13 @@ OutletManager.define = function(name, options = {}) {
 OutletManager.get = function(name) {
   const outlet = findWhere(outlets, { name });
 
-  // invariant(!!outlet, `Unknown outlet ${name}.`);
+  invariant(!!outlet, `Unknown outlet ${name}.`);
 
   return outlet;
+};
+
+OutletManager.has = function(name) {
+  return !!findWhere(outlets, { name });
 };
 
 /**

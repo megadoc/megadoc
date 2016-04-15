@@ -61,6 +61,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     'tagProcessors',
     'customTags',
     'namespaceDirMap',
+    'alias',
   ]);
 
   config.tagProcessors = config.tagProcessors || [];
@@ -166,6 +167,10 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
 
   doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+
+  if (doc.id in config.alias) {
+    config.alias[doc.id].forEach(doc.addAlias.bind(doc));
+  }
 
   docstring.tags.forEach(function(tag) {
     runAllSync(config.tagProcessors || [], [ tag ]);

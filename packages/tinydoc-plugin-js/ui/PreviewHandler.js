@@ -8,6 +8,11 @@ module.exports = function(config, database) {
       const moduleId = RegExp.$1;
       const entityName = RegExp.$2;
 
+      // forget it if we're on that module page!
+      if (location.hash.match(RegExp(config.routeName + '/modules/' + moduleId))) {
+        return;
+      }
+
       if (entityName && entityName.length) {
         const doc = database.getEntityByPath(moduleId + entityName);
 

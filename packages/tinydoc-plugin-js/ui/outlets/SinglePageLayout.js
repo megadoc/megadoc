@@ -1,17 +1,20 @@
 const React = require('react');
 const ClassBrowser = require('components/ClassBrowser');
-const OutletManager = require('core/OutletManager');
 const { shape, string } = React.PropTypes;
 
-module.exports = function(routeName, config) {
-  const { navigationLabel } = config;
+module.exports = function(api, config) {
+  const { routeName, navigationLabel } = config;
 
-  OutletManager.add('SinglePageLayout::ContentPanel', {
+  if (!api.outlets.has('SinglePageLayout::ContentPanel')) {
+    return;
+  }
+
+  api.outlets.add('SinglePageLayout::ContentPanel', {
     component: require('../screens/AllModules')(routeName, config),
     key: `${routeName}-all-modules`
   });
 
-  OutletManager.add('SinglePageLayout::Sidebar', {
+  api.outlets.add('SinglePageLayout::Sidebar', {
     key: `${routeName}-class-browser`,
     component: React.createClass({
       propTypes: {

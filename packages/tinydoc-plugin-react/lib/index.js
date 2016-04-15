@@ -179,6 +179,7 @@ function createReactPlugin(userConfig) {
       if (config.compile) {
         config.compile(compiler, liveExampleProcessor.getComponents(), function(err/*, filePath*/) {
           if (err) {
+            console.warn('react: custom compiler failed!!!');
             return done(err);
           }
 
@@ -190,13 +191,13 @@ function createReactPlugin(userConfig) {
       }
 
       function saveRuntimeConfigAndFinish() {
-        compiler.assets.addPluginRuntimeConfig('react', runtimeConfig);
+        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-react', runtimeConfig);
         done();
       }
     });
 
     compiler.on('generateStats', function(stats, done) {
-      stats['react:' + config.routeName] = {
+      stats['tinydoc-plugin-react:' + config.routeName] = {
         componentCount: liveExampleProcessor.getComponents().length,
         liveExampleCount: liveExampleCount
       };

@@ -2,15 +2,14 @@ const React = require('react');
 const Router = require('core/Router');
 const Editor = require('./Editor');
 const LiveExampleTag = require('./LiveExampleTag');
-const OutletManager = require('core/OutletManager');
 const Link = require('components/Link');
 const { object, shape, string, bool } = React.PropTypes;
 
-tinydoc.use(function ReactPlugin(/*api*/) {
-  tinydoc.getRuntimeConfigs('react').forEach(function(config) {
+tinydoc.use('tinydoc-plugin-react', function ReactPlugin(api, configs) {
+  configs.forEach(function(config) {
     const { routeName } = config;
 
-    OutletManager.add('CJS::ExampleTag', {
+    api.outlets.add('CJS::ExampleTag', {
       key: `${routeName}__jsx-example-tag`,
 
       match: function(props) {
@@ -31,7 +30,7 @@ tinydoc.use(function ReactPlugin(/*api*/) {
       })
     });
 
-    OutletManager.add('CJS::ModuleHeader::Type', {
+    api.outlets.add('CJS::ModuleHeader::Type', {
       key: `${routeName}__react-component-type`,
 
       match: function(props) {
@@ -70,7 +69,7 @@ tinydoc.use(function ReactPlugin(/*api*/) {
       })
     });
 
-    OutletManager.add('CJS::ModuleBody', {
+    api.outlets.add('CJS::ModuleBody', {
       key: `${routeName}__jsx-editor`,
 
 

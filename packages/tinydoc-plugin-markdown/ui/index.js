@@ -50,5 +50,5 @@ function register(api, config) {
   api.registerPreviewHandler(PreviewHandler(config, database));
 
   require('./outlets/MultiPageLayout')(api, config);
-  require('./outlets/SinglePageLayout')(routeName, config);
+  require('./outlets/SinglePageLayout')(api, config);
 }

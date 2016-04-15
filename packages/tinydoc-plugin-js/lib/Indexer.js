@@ -27,8 +27,12 @@ exports.generateIndices = function(database, registry, config) {
           parent: parentDoc.id
         };
 
-        paths.push([ parentDoc.id, doc.name ].join(doc.ctx.symbol));
-        paths.push([ parentDoc.name, doc.name ].join(doc.ctx.symbol));
+        [
+          parentDoc.id,
+          parentDoc.name
+        ].concat(parentDoc.aliases).forEach(function(name) {
+          paths.push([ name, doc.name ].join(doc.ctx.symbol));
+        });
       }
     }
 

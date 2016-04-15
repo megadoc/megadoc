@@ -5,7 +5,7 @@ var multiline = require('multiline-slash');
 function parse(strGenerator) {
   var parser = new Parser();
 
-  parser.parseString(multiline(strGenerator), {}, '');
+  parser.parseString(multiline(strGenerator), { alias: {} }, '');
 
   return parser;
 }

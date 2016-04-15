@@ -9,6 +9,7 @@ function parseInline(strGenerator, config, filePath) {
   var database;
 
   config = config || {};
+  config.alias = config.alias || {};
 
   parser.parseString(body, config, filePath || '__test__');
   parser.seal();
@@ -39,6 +40,7 @@ function parseFiles(filePaths, config, commonPrefix) {
   var database;
 
   config = config || {};
+  config.alias = config.alias || {};
 
   filePaths.forEach(function(filePath) {
     parser.parseFile(filePath, config || {}, commonPrefix);

@@ -33,6 +33,7 @@ var Doc = React.createClass({
     withTitle: bool,
     withDescription: bool,
     withAdditionalResources: bool,
+    initiallyCollapsed: bool,
   },
 
   getDefaultProps: function() {
@@ -47,7 +48,8 @@ var Doc = React.createClass({
     return (
       nextProps.doc !== this.props.doc ||
       nextState.collapsed !== this.state.collapsed ||
-      nextProps.expanded !== this.props.expanded
+      nextProps.expanded !== this.props.expanded ||
+      nextProps.initiallyCollapsed !== this.props.initiallyCollapsed
     );
   },
 
@@ -71,10 +73,12 @@ var Doc = React.createClass({
 
         {this.props.withTitle && (
           <h4
-            className="doc-entity__header collapsible-header"
+            className="doc-entity__header collapsible-header anchorable-heading"
             onClick={this.toggleCollapsed}
           >
             {this.renderCollapser()}
+
+            <a className="doc-entity__anchor icon icon-link" href={'#/' + doc.href} />
 
             <span className="doc-entity__name">
               {doc.name}
@@ -111,7 +115,7 @@ var Doc = React.createClass({
         )}
 
         <div className="doc-entity__description">
-          {this.props.withDescription && description && isCollapsed && (
+          {false && this.props.withDescription && description && isCollapsed && (
             <p>{summary}...</p>
           )}
 

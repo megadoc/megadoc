@@ -1,14 +1,18 @@
 const React = require('react');
 const Database = require('../Database');
-const OutletManager = require('core/OutletManager');
 const AllArticles = require('../screens/AllArticles');
 const ClassBrowser = require('../components/ClassBrowser');
 const { shape, string } = React.PropTypes;
 
-module.exports = function(routeName, config) {
+module.exports = function(api, config) {
+  const { routeName } = config;
   const database = Database.for(routeName);
 
-  OutletManager.add('SinglePageLayout::ContentPanel', {
+  if (!api.outlets.has('SinglePageLayout::ContentPanel')) {
+    return;
+  }
+
+  api.outlets.add('SinglePageLayout::ContentPanel', {
     key: `${routeName}-all-articles`,
 
     component: React.createClass({
@@ -24,7 +28,7 @@ module.exports = function(routeName, config) {
     }),
   });
 
-  OutletManager.add('SinglePageLayout::Sidebar', {
+  api.outlets.add('SinglePageLayout::Sidebar', {
     key: `${routeName}-class-browser`,
     component: React.createClass({
       propTypes: {

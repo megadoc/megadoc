@@ -50,7 +50,7 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
 
     api.registerPreviewHandler(PreviewHandler(config, database));
 
-    require('./outlets/MultiPageLayout')(routeName, config);
-    require('./outlets/SinglePageLayout')(routeName, config);
+    require('./outlets/MultiPageLayout')(api, config);
+    require('./outlets/SinglePageLayout')(api, config);
   });
 });
