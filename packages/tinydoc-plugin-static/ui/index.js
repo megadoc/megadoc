@@ -2,7 +2,7 @@ const React = require('react');
 const Outlet = require('components/Outlet');
 const StaticFile = require('./components/StaticFile');
 
-tinydoc.use('tinydoc-plugin-static', function TinydocStaticPlugin(api, configs) {
+tinydoc.use('tinydoc-plugin-static', function StaticPlugin(api, configs) {
   configs.forEach(function(config) {
     const displayName = config.url.trim()
       .replace(/\W+/g, '-')
@@ -19,7 +19,9 @@ tinydoc.use('tinydoc-plugin-static', function TinydocStaticPlugin(api, configs) 
     if (config.outlet) {
       Outlet.add(config.outlet, {
         key: `static.${config.url}`,
-        match(context) { return context.url === config.url; },
+        match: !tinydoc.isPluginEnabled('tinydoc-layout-single-page') && function(context) {
+          return context.url === config.url;
+        },
         component
       });
     }

@@ -1,7 +1,7 @@
 const TwoColumnLayout = require('components/TwoColumnLayout');
 
-tinydoc.use(function() {
-  if (tinydoc.isPluginEnabled('tinydoc-layout-multi-page')) {
+tinydoc.use('tinydoc-theme-qt', function ThemeQt(api, configs) {
+  if (configs.some(x => x.invertedSidebar)) {
     TwoColumnLayout.invert();
   }
 });

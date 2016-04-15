@@ -3,10 +3,12 @@ const HighlightedText = require('components/HighlightedText');
 const Disqus = require('components/Disqus');
 const GitStats = require('components/GitStats');
 const Document = require('components/Document');
+const scrollToTop = require('utils/scrollToTop');
 const { shape, string, arrayOf, number, object, bool, } = React.PropTypes;
 
 const StaticFile = React.createClass({
   propTypes: {
+    scrollToTop: bool,
     gitStats: object,
     disqusShortname: bool,
     filePath: string,
@@ -20,6 +22,12 @@ const StaticFile = React.createClass({
         text: string,
       }))
     }),
+  },
+
+  componentDidMount() {
+    if (this.props.scrollToTop) {
+      scrollToTop();
+    }
   },
 
   render() {

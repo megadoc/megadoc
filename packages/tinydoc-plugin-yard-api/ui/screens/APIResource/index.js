@@ -6,6 +6,7 @@ var APIObject = require('./components/APIObject');
 var APIEndpoint = require('./components/APIEndpoint');
 var { Link } = require('react-router');
 var HasTitle = require('mixins/HasTitle');
+const scrollToTop = require('utils/scrollToTop');
 
 var APIResource = React.createClass({
   mixins: [
@@ -27,6 +28,16 @@ var APIResource = React.createClass({
       endpoint: React.PropTypes.string,
       object: React.PropTypes.string,
     })
+  },
+
+  componentDidMount() {
+    scrollToTop();
+  },
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.params.resourceId !== this.props.params.resourceId) {
+      scrollToTop();
+    }
   },
 
   render() {

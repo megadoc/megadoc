@@ -39,16 +39,17 @@ config.plugins = [
     }
   }),
 
+  require('tinydoc-plugin-static')({
+    url: '/readme',
+    outlet: 'SinglePageLayout::ContentPanel',
+    source: 'README.md',
+    anchorableHeadings: true,
+  }),
+
   require('tinydoc-plugin-markdown')({
     source: [
       'CHANGES.md'
     ]
-  }),
-
-  require('tinydoc-plugin-static')({
-    url: '/readme',
-    source: 'README.md',
-    anchorableHeadings: true,
   }),
 
   require('tinydoc-layout-single-page')({}),

@@ -20,5 +20,7 @@ do
     continue
   fi
 
-  ./bin/prepublish.sh $pkg $@
+  # prepublish a single package but skip its tests/lints since we already do
+  # them implicitly in `npm run publish`...
+  ./bin/prepublish.sh $pkg -S lint -S test
 done

@@ -4,7 +4,7 @@ Outlet.define('MultiPageLayout::Banner');
 Outlet.define('MultiPageLayout::Content');
 Outlet.define('MultiPageLayout::Sidebar');
 
-tinydoc.use(function() {
+tinydoc.use(function MultiPageLayout() {
   Outlet.add('Layout', {
     key: 'MultiPageLayout',
     component: require('./components/MultiPageLayout')

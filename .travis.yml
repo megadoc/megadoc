@@ -12,14 +12,33 @@ before_script:
 install:
   # skip the "prepublish" hook because we want finer control
   - npm install --ignore-scripts
+  - npm link
   - npm run build # build failures should count!
 
   # install npm dependencies for all packages and make sure they are compilable
+  - (cd packages/git; npm link tinydoc)
   - ./bin/prepublish.sh git       -S test -S lint
+
+  # tinydoc-plugin-js:
+  # we need to link it as well because tinydoc-plugin-react depends on it:
+  - (cd packages/git; npm link tinydoc)
   - ./bin/prepublish.sh js        -S test -S lint
+  - (cd packages/tinydoc-plugin-js; npm link)
+
+  # tinydoc-plugin-lua:
+  - (cd packages/git; npm link tinydoc)
   - ./bin/prepublish.sh lua       -S test -S lint
+
+  # tinydoc-plugin-markdown:
+  - (cd packages/git; npm link tinydoc)
   - ./bin/prepublish.sh markdown  -S test -S lint
+
+  # tinydoc-plugin-react:
+  - (cd packages/git; npm link tinydoc; npm link tinydoc-plugin-js)
   - ./bin/prepublish.sh react     -S test -S lint
+
+  # tinydoc-plugin-yard-api:
+  - (cd packages/git; npm link tinydoc)
   - ./bin/prepublish.sh yard-api  -S test -S lint
 
 script:

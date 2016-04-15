@@ -48,10 +48,16 @@
 
       &__right {
         top: 0;
-        padding: 0 @spacing 0 0;
+        padding: 0 0 0 @spacing;
         margin-bottom: @spacing;
         position: relative;
         vertical-align: top;
+      }
+    }
+
+    .two-column-layout--inverted {
+      .two-column-layout__right {
+        padding: 0 @spacing 0 0;
       }
     }
   }

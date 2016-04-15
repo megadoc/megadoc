@@ -7,7 +7,6 @@ var Storage = require('core/Storage');
 var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
 var K = require('constants');
 var OutletManager = require('core/OutletManager');
-var SinglePageLayoutOutlet = require('./outlets/SinglePageLayoutOutlet');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -26,8 +25,6 @@ tinydoc.outlets.define('Layout');
 
 tinydoc.onReady(function(registrar) {
   console.log('Ok, firing up.');
-
-  SinglePageLayoutOutlet(tinydoc, config);
 
   var router = ReactRouter.create({
     location: ReactRouter.HashLocation,

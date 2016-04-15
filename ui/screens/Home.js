@@ -1,11 +1,6 @@
 const React = require("react");
 const config = require('config');
-const HighlightedText = require('components/HighlightedText');
-const GitStats = require('components/GitStats');
-const Disqus = require('components/Disqus');
-const Footer = require('components/Footer');
 const scrollToTop = require('utils/scrollToTop');
-const { readme } = config;
 
 const Home = React.createClass({
   statics: {

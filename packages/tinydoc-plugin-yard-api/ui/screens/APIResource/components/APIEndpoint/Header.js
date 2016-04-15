@@ -27,7 +27,15 @@ var Header = React.createClass({
     return (
       <h2 id={this.props.anchorId} className="api-endpoint__header markdown-text__heading anchorable-heading">
         <div className="api-endpoint__header-label">
-          {tag.text}
+          <Link
+            className="markdown-text__heading-anchor"
+            to={this.props.anchorId}
+            children={(<Icon className="icon-link" />)}
+          />
+
+          <span className="markdown-text__heading-title">
+            {tag.text}
+          </span>
 
           {this.props.isBeta && (
             <span className="api-endpoint__header-beta">
@@ -40,14 +48,6 @@ var Header = React.createClass({
               {this.props.path}
             </div>
           )}
-
-          {' '}
-
-          <Link
-            className="markdown-text__heading-anchor"
-            to={this.props.anchorId}
-            children={(<Icon className="icon-link" />)}
-          />
         </div>
       </h2>
     );
