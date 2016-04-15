@@ -12,7 +12,7 @@ before_script:
 install:
   # skip the "prepublish" hook because we want finer control
   - npm install --ignore-scripts
-  - npm link
+  - npm link --ignore-scripts
   - npm run build # build failures should count!
 
   # install npm dependencies for all packages and make sure they are compilable
