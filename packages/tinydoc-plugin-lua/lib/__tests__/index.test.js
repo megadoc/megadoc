@@ -112,7 +112,7 @@ describe('tinydoc-plugin-lua', function() {
     });
 
     it('resolves a link to functions within the current module', function() {
-      assert.deepEqual(compiler.linkResolver.lookup('#hello', 'cli'), {
+      assert.deepEqual(compiler.linkResolver.lookup('#hello', { context: 'cli' }), {
         title: '#hello',
         href: 'lua/cli/%23hello'
       });

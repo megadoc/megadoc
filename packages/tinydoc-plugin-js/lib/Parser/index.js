@@ -184,7 +184,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
 
       // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
 
-      this.registry.addModuleDoc(doc, modulePath);
+      this.registry.addModuleDoc(doc, modulePath, filePath);
     }
     else {
       this.registry.addEntityDoc(doc, path);

@@ -10,9 +10,9 @@ var SeeTag = React.createClass({
 
   render() {
     return (
-      <p className="see-tag">
-        See also: <MarkdownText tagName="span">{this.props.string}</MarkdownText>
-      </p>
+      <li className="see-tag">
+        <MarkdownText tagName="span">{this.props.string}</MarkdownText>
+      </li>
     );
   }
 });

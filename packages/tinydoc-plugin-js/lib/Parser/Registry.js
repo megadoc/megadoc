@@ -20,13 +20,16 @@ function Registry() {
 /** @lends Registry.prototype */
 var Rpt = Registry.prototype;
 
-Rpt.addModuleDoc = function(doc, path) {
+Rpt.addModuleDoc = function(doc, path, filePath) {
   this.trackModuleDocAtPath(doc, path);
 
   assert(!!doc.id, "A document must have an id!");
 
   if (this.get(doc.id)) {
-    console.warn('You are attempting to overwrite an existing doc entry! This is very bad.', doc.id);
+    console.warn('You are attempting to overwrite an existing doc entry! This is very bad.',
+      doc.id,
+      filePath + ':' + path.node.loc.start.line
+    );
   }
 
   this.docs.push(doc);

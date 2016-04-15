@@ -2,14 +2,16 @@ var path = require('path');
 var scan = require('./scan');
 var indexEntities = require('./indexEntities');
 var resolveLink = require('./resolveLink');
-var merge = require('lodash').merge;
+var assign = require('lodash').assign;
 var defaults = require('./config');
 
 function MarkdownPlugin(userConfig) {
-  var config = merge({}, defaults, userConfig);
+  var config = assign({}, defaults, userConfig);
 
   return {
-    name: 'MarkdownPlugin[' + config.routeName + ']',
+    name: 'tinydoc-plugin-markdown',
+    id: config.routeName,
+
     run: function(compiler) {
       var database;
 
@@ -21,7 +23,11 @@ function MarkdownPlugin(userConfig) {
             return done(err);
           }
 
-          database = _database;
+          database = _database.map(function(doc) {
+            return assign({}, doc, {
+              href: config.routeName + '/' + encodeURIComponent(doc.id)
+            });
+          });
 
           compiler.linkResolver.use(resolveLink.bind(null, database));
 
@@ -45,8 +51,14 @@ function MarkdownPlugin(userConfig) {
 
       compiler.on('render', function(md, linkify, done) {
         database.forEach(function(doc) {
-          var compiled = md.withTOC(linkify(doc.source), {
-            baseURL: '/' + config.routeName + '/' + encodeURIComponent(doc.id)
+          var compiled = md.withTOC(linkify({
+            text: doc.source,
+            source: {
+              href: doc.href,
+              title: doc.plainTitle,
+            }
+          }), {
+            baseURL: '/' + doc.href
           });
 
           doc.source = compiled.html;
@@ -57,7 +69,7 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('write', function(done) {
-        var runtimeConfig = merge({}, config, { database: database });
+        var runtimeConfig = assign({}, config, { database: database });
 
         compiler.assets.addStyleSheet(
           path.resolve(__dirname, '..', 'ui', 'css', 'index.less')

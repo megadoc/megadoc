@@ -64,7 +64,6 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderExamples(doc)}
-        {this.renderAdditionalResources(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
         {this.renderProperties(
           doc,
@@ -81,6 +80,7 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderMethods(doc, moduleDocs)}
+        {this.renderAdditionalResources(doc)}
       </div>
     );
   },
@@ -137,7 +137,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Additional resources" className="class-view__sees">
+      <DocGroup label="Additional resources" className="class-view__sees" tagName="ul">
         {tags.map(this.renderSeeTag)}
       </DocGroup>
     );

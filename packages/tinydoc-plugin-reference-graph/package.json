@@ -1,7 +1,7 @@
 {
-  "name": "tinydoc-plugin-skeleton",
-  "version": "1.0.0",
-  "description": "A skeleton/starter plugin for tinydoc.",
+  "name": "tinydoc-plugin-reference-graph",
+  "version": "5.0.0",
+  "description": "A plugin for generating call and reference graph for documents scanned by tinydoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
@@ -10,7 +10,9 @@
   "keywords": [
     "tinydoc",
     "plugin",
-    "skeleton",
+    "reference",
+    "graph",
+    "static analysis",
     "documentation",
     "generator"
   ],

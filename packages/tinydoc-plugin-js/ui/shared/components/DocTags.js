@@ -75,7 +75,7 @@ var DocTags = React.createClass({
         </TagGroup>
 
         {this.props.withAdditionalResources && (
-          <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag}>
+          <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag} tagName="ul">
             Additional resources
           </TagGroup>
         )}

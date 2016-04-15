@@ -5,6 +5,7 @@ var resolveLink = require('./resolveLink');
 var generateStats = require('./generateStats');
 var render = require('./render');
 var merge = require('lodash').merge;
+var assign = require('lodash').assign;
 var assert = require('assert');
 var defaults = require('./config');
 
@@ -26,11 +27,12 @@ function createCJSPlugin(userConfig) {
   };
 
   assert(typeof config.routeName === 'string',
-    "You must specify a @routeName string to the CJS Plugin."
+    "You must specify a @routeName string to the tinydoc-plugin-js plugin."
   );
 
-  return {
-    name: 'CJSPlugin',
+  var plugin = {
+    name: 'tinydoc-plugin-js',
+    id: config.routeName,
 
     routeName: config.routeName,
 
@@ -84,7 +86,13 @@ function createCJSPlugin(userConfig) {
             return done(err);
           }
 
-          database = _database;
+          database = _database.map(function(doc) {
+            return assign({}, doc, {
+              href: doc.isModule ?
+                plugin.id + '/modules/' + encodeURIComponent(doc.id) :
+                plugin.id + '/modules/' + encodeURIComponent(doc.receiver) + '/' + encodeURIComponent(doc.ctx.symbol + doc.name)
+            });
+          });
 
           compiler.linkResolver.use(resolveLink.bind(null, database));
 
@@ -122,10 +130,10 @@ function createCJSPlugin(userConfig) {
         );
 
         compiler.assets.addPluginScript(
-          path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-js.js')
+          path.resolve(__dirname, '..', 'dist', plugin.name + '.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig('cjs', merge({}, config, {
+        compiler.assets.addPluginRuntimeConfig(plugin.name, merge({}, config, {
           database: database
         }));
 
@@ -133,6 +141,8 @@ function createCJSPlugin(userConfig) {
       });
     }
   };
+
+  return plugin;
 }
 
 module.exports = createCJSPlugin;

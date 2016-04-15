@@ -1,4 +1,3 @@
-var resolveLink = require('./resolveLink');
 var generateURL = require('./generateURL');
 
 exports.generateIndices = function(database, registry, config) {
@@ -79,10 +78,8 @@ exports.generateSearchTokens = function(database, registry, config) {
     }
 
     if (docTokens.$1) {
-      var link = resolveLink(database, doc.id, registry);
-
       docTokens.link = {
-        href: '/' + link.href,
+        href: '/' + doc.href,
         context: config && config.corpusContext
       };
 

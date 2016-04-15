@@ -83,6 +83,7 @@ const Module = React.createClass({
             moduleId: moduleId,
             moduleDoc: doc,
             moduleDocs: moduleDocs,
+            document: doc,
           }}
         />
 

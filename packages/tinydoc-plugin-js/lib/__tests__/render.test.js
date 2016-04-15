@@ -52,23 +52,23 @@ describe('cjs::render', function() {
     });
 
     renderMarkdown = getSandbox().stub().returnsArg(0);
-    linkify = getSandbox().stub().returnsArg(0);
+    linkify = getSandbox().spy(function(x) { return x.text; });
 
     render(database, renderMarkdown, linkify);
   });
 
   it('renders doc.description', function() {
-    assert.calledWith(linkify, 'A _storage_ module.', 'Core.Cache');
+    assert.calledWith(linkify, sinon.match({ text: 'A _storage_ module.', context: 'Core.Cache' }));
     assert.calledWith(renderMarkdown, 'A _storage_ module.');
   });
 
   it('renders doc.tags.[].typeInfo.string', function() {
-    assert.calledWith(linkify, 'A _unique_ record identifier.\n', 'Core.Cache');
+    assert.calledWith(linkify, sinon.match({ text: 'A _unique_ record identifier.\n', context: 'Core.Cache' }));
     assert.calledWith(renderMarkdown, 'A _unique_ record identifier.\n');
   });
 
   it('renders the "string" of an @example tag', function() {
-    assert.calledWith(linkify, '\nHello!', 'Core.Cache');
+    assert.calledWith(linkify, sinon.match({ text: '\nHello!', context: 'Core.Cache' }));
     assert.calledWith(renderMarkdown, '\nHello!');
   });
 });

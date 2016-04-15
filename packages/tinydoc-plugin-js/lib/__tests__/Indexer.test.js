@@ -21,7 +21,10 @@ describe("CJS::Indexer", function() {
         //  */
         // Cache.prototype.add = function() {
         // };
-      }, {}, '__test__/core/Cache.js');
+      }, {}, '__test__/core/Cache.js').map(function(doc, index) {
+        doc.href = 'doc' + (index+1);
+        return doc;
+      });
 
       registry = TestUtils.buildRegistry(database, 'js-test');
       subject = Subject.generateSearchTokens(database, registry);
@@ -38,7 +41,7 @@ describe("CJS::Indexer", function() {
 
       it('generates the proper link', function() {
         assert.include(subject[0].link, {
-          href: '/js-test/modules/Core.Cache'
+          href: '/doc1'
         });
       });
     });
@@ -56,7 +59,7 @@ describe("CJS::Indexer", function() {
 
       it('generates the proper link', function() {
         assert.include(subject[1].link, {
-          href: '/js-test/modules/Core.Cache/%23add'
+          href: '/doc2'
         });
       });
     });

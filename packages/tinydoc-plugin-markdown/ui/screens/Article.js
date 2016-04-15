@@ -7,7 +7,8 @@ const HasTitle = require('mixins/HasTitle');
 const HasMetaDescription = require('mixins/HasMetaDescription');
 const Router = require('core/Router');
 const Database = require('../Database');
-const Footer = require('components/Footer');
+const Document = require('components/Document');
+const Outlet = require('components/Outlet');
 
 const { shape, bool, string } = React.PropTypes;
 
@@ -61,16 +62,20 @@ const Article = React.createClass({
     }
 
     return (
-      <div className="doc-content">
+      <Document>
         <HighlightedText>{article.source}</HighlightedText>
+
+        <Outlet
+          name="Markdown::Document"
+          props={{ document: article }}
+        />
 
         {this.props.config.gitStats && (
           <GitStats {...article.git} />
         )}
 
         <Disqus identifier={article.id} title={article.title} />
-        {this.props.config.displayFooter && (<Footer />)}
-      </div>
+      </Document>
     );
   }
 });

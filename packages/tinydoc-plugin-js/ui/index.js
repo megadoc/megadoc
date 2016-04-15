@@ -13,7 +13,7 @@ OutletManager.define('CJS::Tag');
 OutletManager.define('CJS::ExampleTags');
 OutletManager.define('CJS::ExampleTag', { firstMatching: true });
 
-tinydoc.use('cjs', function CJSPlugin(api, configs) {
+tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
   configs.forEach(function(config) {
     const { routeName } = config;
 

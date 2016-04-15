@@ -42,7 +42,7 @@ function getIndex(database, id, registry, currentModuleId) {
 }
 
 function resolveLink(database, id, registry, currentModuleId) {
-  var moduleId, entityId, title, doc, parentDoc;
+  var title, doc, parentDoc;
 
   // registry index, we'll need this to look up the proper doc(s)
   var index = getIndex(database, id, registry, currentModuleId);
@@ -63,9 +63,6 @@ function resolveLink(database, id, registry, currentModuleId) {
         "Expected to find a module doc by the id '" + index.parent + "'"
       );
 
-      moduleId = parentDoc.id;
-      entityId = doc.ctx.symbol + doc.name;
-
       // if we are in the same module, just use the entity's name and its
       // symbol - no need for the full ID.
       if (currentModuleId === parentDoc.id) {
@@ -76,15 +73,14 @@ function resolveLink(database, id, registry, currentModuleId) {
       }
 
       return {
-        // TODO: figure out routeName and actual path ...
-        href: index.routeName + '/modules/' + encodeURIComponent(moduleId) + '/' + encodeURIComponent(entityId),
+        href: doc.href,
         title: title
       };
     }
     // a direct link to a module:
     else {
       return {
-        href: index.routeName + '/modules/' + encodeURIComponent(doc.id),
+        href: doc.href,
         title: doc.name
       };
     }

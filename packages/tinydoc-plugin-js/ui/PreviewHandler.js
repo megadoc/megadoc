@@ -21,7 +21,7 @@ module.exports = function(config, database) {
               {doc.id} (<strong>{doc.ctx.type}</strong>)
             </div>
 
-            <div dangerouslySetInnerHTML={{__html: doc.description }} />
+            <p children={doc.summary} />
           </div>
         );
       }
@@ -38,8 +38,7 @@ module.exports = function(config, database) {
               {doc.id} (<strong>{doc.ctx.type}</strong>)
             </div>
 
-            <div dangerouslySetInnerHTML={{__html: doc.description }}>
-            </div>
+            <p children={doc.summary} />
           </div>
         );
       }

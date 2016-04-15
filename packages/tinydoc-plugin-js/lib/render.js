@@ -1,30 +1,47 @@
-var htmlToText = require('tinydoc/lib/utils/htmlToText');
+var RendererUtils = require('tinydoc/lib/Renderer/Utils');
 
 module.exports = function(database, md, linkify) {
   database.forEach(function(doc) {
     var moduleId = doc.isModule ? doc.id : doc.receiver;
+    var linkSource = { href: doc.href, title: doc.id };
 
     if (doc.description) {
-      doc.summary = htmlToText(
-        md(doc.description.split('\n')[0].substr(0, 120))
+      doc.summary = RendererUtils.sanitize(
+        RendererUtils.extractSummary(doc.description)
       );
 
-      doc.description = md(linkify(doc.description, moduleId));
+      doc.description = md(linkify({
+        text: doc.description,
+        context: moduleId,
+        source: linkSource,
+      }));
     }
 
     if (doc.tags) {
       doc.tags.forEach(function(tag) {
         if (tag.typeInfo.description) {
-          tag.typeInfo.description = md(linkify(tag.typeInfo.description, moduleId));
+          tag.typeInfo.description = md(linkify({
+            text: tag.typeInfo.description,
+            context: moduleId,
+            source: linkSource,
+          }));
         }
 
         if (tag.type === 'example') {
-          tag.string = md(linkify(tag.string, moduleId));
+          tag.string = md(linkify({
+            text: tag.string,
+            context: moduleId,
+            source: linkSource,
+          }));
         }
 
         else if (tag.type === 'see') {
           tag.string = md(
-            linkify('['+tag.string.trim()+']()', moduleId),
+            linkify({
+              text: '['+tag.string.trim()+']()',
+              context: moduleId,
+              source: linkSource,
+            }),
             { trimHTML: true }
           );
         }
@@ -39,7 +56,12 @@ module.exports = function(database, md, linkify) {
           }
 
           var linkedStr = md(
-            linkify('['+typeStr+']()', moduleId, { strict: false }),
+            linkify({
+              text: '['+typeStr+']()',
+              context: moduleId,
+              source: linkSource,
+              options: { strict: false }
+            }),
             { trimHTML: true }
           );
 

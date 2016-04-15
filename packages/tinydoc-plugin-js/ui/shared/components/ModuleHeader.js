@@ -70,7 +70,14 @@ const ModuleHeader = React.createClass({
           title={this.props.showSourcePaths ? doc.filePath : undefined}
           id={anchorId}
         >
-          <span className="class-view__header-name">
+          {anchorId && (
+            <a
+              href={'#'+anchorId}
+              className="markdown-text__heading-anchor icon icon-link"
+            />
+          )}
+
+          <span className="class-view__header-name markdown-text__heading-title">
             {doc.name}
           </span>
 
@@ -89,13 +96,6 @@ const ModuleHeader = React.createClass({
               <span>{type}</span>
             </Outlet>
           </span>
-
-          {anchorId && (
-            <a
-              href={'#'+anchorId}
-              className="markdown-text__heading-anchor icon icon-link"
-            />
-          )}
         </Heading>
       </header>
     );

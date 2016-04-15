@@ -5,6 +5,7 @@ const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
+tinydoc.outlets.define('Markdown::Document');
 tinydoc.use(function MarkdownPlugin(api) {
   const configs = tinydoc.getRuntimeConfigs('markdown');
 

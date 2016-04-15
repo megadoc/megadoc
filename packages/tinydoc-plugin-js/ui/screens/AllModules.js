@@ -111,6 +111,7 @@ module.exports = function createAllModulesComponent(routeName, config) {
               query: this.props.query,
               moduleDoc: doc,
               moduleDocs: moduleDocs,
+              document: doc,
             }}
           />
 

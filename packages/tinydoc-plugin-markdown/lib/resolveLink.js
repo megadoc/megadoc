@@ -13,7 +13,7 @@ module.exports = function(database, id, registry) {
     );
 
     return {
-      href: index.routeName + '/' + encodeURIComponent(article.id),
+      href: article.href,
       title: article.title
     };
   }
