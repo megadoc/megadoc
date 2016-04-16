@@ -28,7 +28,15 @@ const APIObject = React.createClass({
 
     return (
       <div className="object-synopsis">
-        <h3 id={this.props.anchorId} className="object-synopsis__header anchorable-heading">
+        <a
+          name={this.props.anchorId}
+          style={{
+            position: 'absolute',
+            marginTop: '-65px',
+          }}
+        />
+
+        <h3 className="object-synopsis__header anchorable-heading">
           <span className="object-synopsis__header-text">{apiObject.title}</span>
           <button className="object-synopsis__toggler" onClick={this.toggle}>
             {this.state.expanded ? 'Hide' : 'Show'}

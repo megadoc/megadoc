@@ -22,10 +22,18 @@
 
     .banner__logo a, .banner__navigation-item a {
       font-weight: normal;
+
+      &, &:visited {
+        color: @link;
+      }
     }
 
     .banner__navigation-item a.active {
       border-bottom-width: 0;
+
+      &, &:visited {
+        color: @accent;
+      }
     }
 
     .two-column-layout {

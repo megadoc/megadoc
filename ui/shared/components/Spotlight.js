@@ -181,6 +181,7 @@ const Spotlight = React.createClass({
 
   navigate(e) {
     const { keyCode } = e;
+    const superKey = e.ctrlKey || e.metaKey;
 
     if (keyCode === 40) { // KC_DOWN_ARROW
       e.preventDefault();
@@ -190,11 +191,11 @@ const Spotlight = React.createClass({
       e.preventDefault();
       this.selectPrev();
     }
-    else if (keyCode === 35) { // KC_END
+    else if (keyCode === 35 && superKey) { // KC_END
       e.preventDefault();
       this.selectLast();
     }
-    else if (keyCode === 36) { // KC_HOME
+    else if (keyCode === 36 && superKey) { // KC_HOME
       e.preventDefault();
       this.selectFirst();
     }

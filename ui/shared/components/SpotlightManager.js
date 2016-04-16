@@ -71,9 +71,9 @@ const SpotlightManager = React.createClass({
 
   handleGlobalKeybindings(e) {
     const keyName = String.fromCharCode(e.which).toLowerCase();
-    const metaPressed = e.ctrlKey || e.metaKey;
+    const superKey = e.ctrlKey || e.metaKey;
 
-    if (keyName === 'k' && metaPressed) {
+    if (keyName === 'k' && superKey) {
       e.preventDefault();
 
       if (this.props.active) {
@@ -83,7 +83,7 @@ const SpotlightManager = React.createClass({
         this.openSpotlight();
       }
     }
-    else if (e.which === 190 /*.*/ && metaPressed && !this.props.active) {
+    else if (e.which === 190 /*.*/ && superKey && !this.props.active) {
       e.preventDefault();
 
       this.setState({ openedInSymbolMode: true }, () => {

@@ -78,9 +78,16 @@
       list-style: none;
       color: @base0;
 
+      a:visited {
+        color: @link;
+      }
+
       &--active a, a:hover, a:focus {
         background: @link;
-        color: @base3;
+
+        &, &:visited {
+          color: @base3;
+        }
       }
 
       &--active .spotlight__highlighted-term,
