@@ -67,13 +67,18 @@ function run_task {
 }
 
 function refresh_dependencies {
-  [ -f $PACKAGE_ROOT/package.json ] && (
-    cd $PACKAGE_ROOT;
-    echo "Ensuring dependencies are not out-of-date...";
-    npm install --ignore-scripts &&
-    npm prune &&
-    npm dedupe
-  )
+  [ -f $PACKAGE_ROOT/package.json ] && {
+    cd $PACKAGE_ROOT
+    echo "Ensuring dependencies are not out-of-date..."
+
+    npm install --ignore-scripts && {
+      # this is causing issues on travis, i think it's the dedupe...
+      if [ -z $TRAVIS_BUILD ]; then
+        echo "Pruning and deduping..."
+        npm prune && npm dedupe
+      fi
+    }
+  }
 }
 
 function lint_sources {
