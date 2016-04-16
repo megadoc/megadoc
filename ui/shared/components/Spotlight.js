@@ -180,15 +180,25 @@ const Spotlight = React.createClass({
   },
 
   navigate(e) {
-    if (e.keyCode === 40) {
+    const { keyCode } = e;
+
+    if (keyCode === 40) { // KC_DOWN_ARROW
       e.preventDefault();
       this.selectNext();
     }
-    else if (e.keyCode === 38) {
+    else if (keyCode === 38) { // KC_UP_ARROW
       e.preventDefault();
       this.selectPrev();
     }
-    else if (e.keyCode === 9) {
+    else if (keyCode === 35) { // KC_END
+      e.preventDefault();
+      this.selectLast();
+    }
+    else if (keyCode === 36) { // KC_HOME
+      e.preventDefault();
+      this.selectFirst();
+    }
+    else if (keyCode === 9) { // KC_TAB
       e.preventDefault();
 
       if (e.shiftKey) {
@@ -198,7 +208,7 @@ const Spotlight = React.createClass({
         this.selectNext();
       }
     }
-    else if (e.keyCode === 13) {
+    else if (keyCode === 13) { // KC_RETURN
       e.preventDefault();
       this.activateSelected();
 
@@ -208,30 +218,42 @@ const Spotlight = React.createClass({
     }
   },
 
+  selectFirst() {
+    const results = this.getNavigatableResults();
+
+    if (results.length) {
+      this.updateCursor(0);
+    }
+  },
+
   selectNext() {
     const results = this.getNavigatableResults();
 
-    if (results.length === 0) {
-      return;
+    if (results.length) {
+      this.updateCursor(this.state.cursor < results.length -1 ?
+        this.state.cursor + 1 :
+        0
+      );
     }
-
-    this.updateCursor(this.state.cursor < results.length -1 ?
-      this.state.cursor + 1 :
-      0
-    );
   },
 
   selectPrev() {
     const results = this.getNavigatableResults();
 
-    if (results.length === 0) {
-      return;
+    if (results.length) {
+      this.updateCursor(this.state.cursor > 0 ?
+        this.state.cursor - 1 :
+        results.length - 1
+      );
     }
+  },
 
-    this.updateCursor(this.state.cursor > 0 ?
-      this.state.cursor - 1 :
-      results.length - 1
-    );
+  selectLast() {
+    const results = this.getNavigatableResults();
+
+    if (results.length) {
+      this.updateCursor(results.length - 1);
+    }
   },
 
   updateCursor(newCursor) {
