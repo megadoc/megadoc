@@ -46,7 +46,7 @@ const Spotlight = React.createClass({
       const node = React.findDOMNode(this.refs.editingWidget);
 
       node.value = '@';
-      this.search({ target: node });
+      this.search('@');
     }
   },
 
@@ -66,6 +66,7 @@ const Spotlight = React.createClass({
     const { results } = this.state;
     const inSymbolMode = this.state.lastSearchTerm.match(/^@/);
     const showAllSymbols = this.state.lastSearchTerm === '@';
+    const displayableResults = this.getNavigatableResults();
 
     return (
       <div className="spotlight__wrapper">
@@ -116,15 +117,20 @@ const Spotlight = React.createClass({
               </li>
             )}
 
-            {showAllSymbols && this.props.symbols &&
-              this.props.symbols.map(this.renderResult)
-            }
-
-            {!showAllSymbols && results.map(this.renderResult)}
+            {displayableResults.map(this.renderResult)}
           </ul>
         </div>
       </div>
     );
+  },
+
+  getNavigatableResults() {
+    if (this.state.lastSearchTerm === '@') {
+      return this.props.symbols || [];
+    }
+    else {
+      return this.state.results;
+    }
   },
 
   renderResult(token, index) {
@@ -153,20 +159,14 @@ const Spotlight = React.createClass({
   },
 
   buildSymbolSearcher(symbols) {
-    if (symbols) {
-      this.symbolSearcher = TokenSearcher(symbols);
-    }
-    else {
-      this.symbolSearcher = null;
-    }
+    this.symbolSearcher = symbols ? TokenSearcher(symbols) : null;
   },
 
   proxyToDebouncedSearch(e) {
-    this.debouncedSearch({ target: { value: e.target.value } });
+    this.debouncedSearch(e.target.value);
   },
 
-  search(e) {
-    const term = e.target.value;
+  search(term) {
     const results = term.match(/^@/) && this.symbolSearcher ?
       this.symbolSearcher.search(term.slice(1)) :
       this.corpusSearcher.search(term).slice(0, Spotlight.MAX_RESULTS)
@@ -209,34 +209,53 @@ const Spotlight = React.createClass({
   },
 
   selectNext() {
-    this.setState({
-      cursor: this.state.cursor < this.state.results.length -1 ? this.state.cursor + 1 : 0
-    });
+    const results = this.getNavigatableResults();
 
+    if (results.length === 0) {
+      return;
+    }
+
+    this.updateCursor(this.state.cursor < results.length -1 ?
+      this.state.cursor + 1 :
+      0
+    );
   },
 
   selectPrev() {
-    const { cursor } = this.state;
-    const nextCursor = cursor > 0 ?
-      cursor - 1 :
-      Math.max(this.state.results.length + 1, 1) - 1
-    ;
+    const results = this.getNavigatableResults();
 
-    console.debug('going to previous from %d to %d', cursor, nextCursor)
+    if (results.length === 0) {
+      return;
+    }
 
-    this.setState({
-      cursor: nextCursor
-    });
+    this.updateCursor(this.state.cursor > 0 ?
+      this.state.cursor - 1 :
+      results.length - 1
+    );
+  },
+
+  updateCursor(newCursor) {
+    if (this.state.cursor !== newCursor) {
+      this.setState({ cursor: newCursor });
+    }
   },
 
   scrollSelectedIntoView() {
     if (hasScrollIntoViewIfNeeded) {
-      this.getSelectedDOMNode().scrollIntoViewIfNeeded();
+      const selectedNode = this.getSelectedDOMNode();
+
+      if (selectedNode) {
+        selectedNode.scrollIntoViewIfNeeded();
+      }
     }
   },
 
   activateSelected() {
-    this.getSelectedDOMNode().click();
+    const selectedNode = this.getSelectedDOMNode();
+
+    if (selectedNode) {
+      selectedNode.click();
+    }
   },
 
   getSelectedDOMNode() {
