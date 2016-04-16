@@ -58,12 +58,12 @@ var Doc = React.createClass({
     var className = classSet({
       'doc-entity': true,
       'collapsible': !!this.props.collapsible,
+      'collapsible--expanded': !isCollapsed,
       'collapsible--collapsed': isCollapsed,
     });
 
     const { doc } = this.props;
     const description = doc.description;
-    const summary = doc.summary;
 
     return (
       <div className={className}>
@@ -77,8 +77,6 @@ var Doc = React.createClass({
             onClick={this.toggleCollapsed}
           >
             {this.renderCollapser()}
-
-            <a className="doc-entity__anchor icon icon-link" href={'#/' + doc.href} />
 
             <span className="doc-entity__name">
               {doc.name}
@@ -110,15 +108,14 @@ var Doc = React.createClass({
               {doc.tags.some((t) => t.type === 'async') && (
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
+
+              <a className="doc-entity__anchor icon icon-link" href={'#/' + doc.href} />
+
             </span>
           </h4>
         )}
 
         <div className="doc-entity__description">
-          {false && this.props.withDescription && description && isCollapsed && (
-            <p>{summary}...</p>
-          )}
-
           {this.props.withDescription && description && !isCollapsed && (
             <HighlightedText>
               {description}

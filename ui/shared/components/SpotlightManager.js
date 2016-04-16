@@ -12,6 +12,12 @@ const SpotlightManager = React.createClass({
     onClose: func.isRequired,
   },
 
+  getInitialState() {
+    return {
+      openedInSymbolMode: false
+    };
+  },
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleGlobalKeybindings, true);
 
@@ -20,12 +26,16 @@ const SpotlightManager = React.createClass({
     }
   },
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (!prevProps.active && this.props.active) {
       this.closeSpotlightOnExternalClicks();
     }
     else if (prevProps.active && !this.props.active) {
       this.stopClosingSpotlightOnExternalClicks();
+    }
+
+    if (prevState.openedInSymbolMode) {
+      this.setState({ openedInSymbolMode: false });
     }
   },
 
@@ -35,10 +45,14 @@ const SpotlightManager = React.createClass({
 
   render() {
     if (this.props.active) {
+      const symbols = getSymbolsForDocument(location.hash.replace(/^#/, ''));
+
       return (
         <Spotlight
+          startInSymbolMode={this.state.openedInSymbolMode}
           corpus={config.corpus}
-          onChange={this.closeSpotlight}
+          symbols={symbols}
+          onActivate={this.closeSpotlight}
         />
       );
     }
@@ -57,8 +71,9 @@ const SpotlightManager = React.createClass({
 
   handleGlobalKeybindings(e) {
     const keyName = String.fromCharCode(e.which).toLowerCase();
+    const metaPressed = e.ctrlKey || e.metaKey;
 
-    if (keyName === 'k' && e.ctrlKey) {
+    if (keyName === 'k' && metaPressed) {
       e.preventDefault();
 
       if (this.props.active) {
@@ -67,6 +82,13 @@ const SpotlightManager = React.createClass({
       else {
         this.openSpotlight();
       }
+    }
+    else if (e.which === 190 /*.*/ && metaPressed && !this.props.active) {
+      e.preventDefault();
+
+      this.setState({ openedInSymbolMode: true }, () => {
+        this.openSpotlight();
+      });
     }
     else if (e.which === KC_ESCAPE) {
       e.preventDefault();
@@ -87,7 +109,18 @@ const SpotlightManager = React.createClass({
     if (contains(e.target, React.findDOMNode(this))) {
       this.closeSpotlight();
     }
-  }
+  },
 });
+
+function getSymbolsForDocument(documentUID) {
+  let symbols;
+
+  tinydoc.getSymbolIndexers().some(function(fn) {
+    symbols = fn(documentUID);
+    return !!symbols;
+  });
+
+  return symbols;
+}
 
 module.exports = SpotlightManager;

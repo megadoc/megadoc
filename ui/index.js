@@ -4,7 +4,7 @@ var Router = require('core/Router');
 var config = require('config');
 var createTinydoc = require('core/tinydoc');
 var Storage = require('core/Storage');
-var { Route, DefaultRoute, NotFoundRoute } = ReactRouter;
+var { Route, NotFoundRoute, Redirect } = ReactRouter;
 var K = require('constants');
 var OutletManager = require('core/OutletManager');
 
@@ -34,36 +34,16 @@ tinydoc.onReady(function(registrar) {
         name="root"
         path="/"
         handler={require('./screens/Root')}
-        ignoreScrollBehavior={true || config.layout === 'single-page'}
+        ignoreScrollBehavior
       >
-        <DefaultRoute
-          name="home"
-          handler={require('./screens/Home')}
-        />
+        {config.home && <Redirect from="/" to={config.home} />}
+
+        <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
+        <Route name="404" handler={require('./screens/NotFound')} />
+
+        <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
 
         {registrar.getRouteMap()}
-
-        <Route
-          name="search"
-          path="/search"
-          handler={require('./screens/Search')}
-        />
-
-        <Route
-          name="settings"
-          path="/settings"
-          handler={require('./screens/Settings')}
-        />
-
-        <Route
-          name="404"
-          handler={require('./screens/NotFound')}
-        />
-
-        <NotFoundRoute
-          name="not-found"
-          handler={require('./screens/NotFound')}
-        />
       </Route>
     ]
   });

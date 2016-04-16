@@ -36,7 +36,7 @@ var Banner = React.createClass({
       <div className="banner-wrapper">
         <header className="banner">
           <h1 className="banner__logo">
-            <Link to="home">
+            <Link to="/">
               {config.title || 'tinydoc'}
             </Link>
 
@@ -56,7 +56,7 @@ var Banner = React.createClass({
               <BannerItem
                 key="spotlight"
                 onClick={this.toggleSpotlight}
-                title="Or Ctrl+K for quick-jumping hotness!"
+                title="Quick-Jump (Ctrl+K or CMD+K)"
               >
                 <Icon className="icon-search" />
               </BannerItem>

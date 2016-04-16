@@ -3,8 +3,17 @@ const { debounce } = require('lodash');
 const TokenSearcher = require('core/TokenSearcher');
 const Link = require('components/Link');
 const classSet = require('classnames');
-const { func, arrayOf, shape, string, } = React.PropTypes;
+const { func, arrayOf, shape, string, bool, } = React.PropTypes;
 const hasScrollIntoViewIfNeeded = typeof Element.prototype.scrollIntoViewIfNeeded === 'function';
+
+const TokensPropType = arrayOf(shape({
+  $1: string,
+  $2: string,
+  $3: string,
+  link: shape({
+    href: string,
+  })
+}));
 
 const Spotlight = React.createClass({
   statics: {
@@ -12,15 +21,10 @@ const Spotlight = React.createClass({
   },
 
   propTypes: {
-    onChange: func, // emitted when a document has been selected and jumped to
-    corpus: arrayOf(shape({
-      $1: string,
-      $2: string,
-      $3: string,
-      link: shape({
-        href: string,
-      })
-    })),
+    onActivate: func, // emitted when a document has been selected and jumped to
+    corpus: TokensPropType,
+    symbols: TokensPropType,
+    startInSymbolMode: bool,
   },
 
   getInitialState() {
@@ -32,8 +36,24 @@ const Spotlight = React.createClass({
   },
 
   componentWillMount() {
-    this.searcher = TokenSearcher(this.props.corpus);
-    this.debouncedSearch = debounce(this.searcher.search, 100);
+    this.debouncedSearch = debounce(this.search, 13);
+    this.corpusSearcher = TokenSearcher(this.props.corpus);
+    this.buildSymbolSearcher(this.props.symbols);
+  },
+
+  componentDidMount() {
+    if (this.props.startInSymbolMode) {
+      const node = React.findDOMNode(this.refs.editingWidget);
+
+      node.value = '@';
+      this.search({ target: node });
+    }
+  },
+
+  componentWillUpdate(nextProps) {
+    if (nextProps.symbols !== this.props.symbols) {
+      this.buildSymbolSearcher(nextProps.symbols);
+    }
   },
 
   componentDidUpdate(prevProps, prevState) {
@@ -44,13 +64,15 @@ const Spotlight = React.createClass({
 
   render() {
     const { results } = this.state;
+    const inSymbolMode = this.state.lastSearchTerm.match(/^@/);
+    const showAllSymbols = this.state.lastSearchTerm === '@';
 
     return (
       <div className="spotlight__wrapper">
         <div className="spotlight">
           <div className="spotlight__help">
             <span>
-              Jump to a document
+              {inSymbolMode ? 'Jump to a symbol' : 'Jump to a document'}
             </span>
 
             <div className="float--right">
@@ -75,17 +97,30 @@ const Spotlight = React.createClass({
           <input
             autoFocus
             type="text"
-            onChange={this.search}
+            onChange={this.proxyToDebouncedSearch}
             className="spotlight__input"
             onKeyDown={this.navigate}
+            ref="editingWidget"
           />
 
           <ul className="spotlight__results" ref="scrollableWidget">
-            {results.length === 0 && this.state.lastSearchTerm.length > 0 && (
-              <li className="spotlight__result">Nothing matched your query. 😞</li>
+            {!showAllSymbols && results.length === 0 && this.state.lastSearchTerm.length > 0 && (
+              <li className="spotlight__result">
+                Nothing matched your query. 😞
+              </li>
             )}
 
-            {results.map(this.renderResult)}
+            {showAllSymbols && (this.props.symbols || []).length === 0 && (
+              <li className="spotlight__result">
+                No symbols were found for this document. 😞
+              </li>
+            )}
+
+            {showAllSymbols && this.props.symbols &&
+              this.props.symbols.map(this.renderResult)
+            }
+
+            {!showAllSymbols && results.map(this.renderResult)}
           </ul>
         </div>
       </div>
@@ -104,8 +139,10 @@ const Spotlight = React.createClass({
           "spotlight__result--active": this.state.cursor === index
         })
       }>
-        <Link to={href} ref={`link__${index}`} onClick={this.props.onChange}>
-          {text} {token.link.context && (
+        <Link to={href} ref={`link__${index}`} onClick={this.props.onActivate}>
+          <span dangerouslySetInnerHTML={{__html:
+            text.replace(/^(\s+)/, x => Array(x.length+1).join('&nbsp;&nbsp;'))
+          }} /> {token.link.context && (
             <em className="spotlight__result-context">
               {token.link.context}
             </em>
@@ -115,11 +152,30 @@ const Spotlight = React.createClass({
     );
   },
 
+  buildSymbolSearcher(symbols) {
+    if (symbols) {
+      this.symbolSearcher = TokenSearcher(symbols);
+    }
+    else {
+      this.symbolSearcher = null;
+    }
+  },
+
+  proxyToDebouncedSearch(e) {
+    this.debouncedSearch({ target: { value: e.target.value } });
+  },
+
   search(e) {
+    const term = e.target.value;
+    const results = term.match(/^@/) && this.symbolSearcher ?
+      this.symbolSearcher.search(term.slice(1)) :
+      this.corpusSearcher.search(term).slice(0, Spotlight.MAX_RESULTS)
+    ;
+
     this.setState({
       cursor: 0,
-      lastSearchTerm: e.target.value,
-      results: this.searcher.search(e.target.value).slice(0, Spotlight.MAX_RESULTS)
+      lastSearchTerm: term,
+      results: results
     });
   },
 
@@ -146,22 +202,30 @@ const Spotlight = React.createClass({
       e.preventDefault();
       this.activateSelected();
 
-      if (this.props.onChange) {
-        this.props.onChange();
+      if (this.props.onActivate) {
+        this.props.onActivate();
       }
     }
   },
 
   selectNext() {
     this.setState({
-      cursor: this.state.cursor === this.state.results.length - 1 ? 0 : this.state.cursor + 1
+      cursor: this.state.cursor < this.state.results.length -1 ? this.state.cursor + 1 : 0
     });
 
   },
 
   selectPrev() {
+    const { cursor } = this.state;
+    const nextCursor = cursor > 0 ?
+      cursor - 1 :
+      Math.max(this.state.results.length + 1, 1) - 1
+    ;
+
+    console.debug('going to previous from %d to %d', cursor, nextCursor)
+
     this.setState({
-      cursor: this.state.cursor === 0 ? this.state.results.length - 1 : this.state.cursor - 1
+      cursor: nextCursor
     });
   },
 
@@ -177,7 +241,7 @@ const Spotlight = React.createClass({
 
   getSelectedDOMNode() {
     return React.findDOMNode(this.refs[`link__${this.state.cursor}`]);
-  }
+  },
 });
 
 // function highlight(term, matches) {

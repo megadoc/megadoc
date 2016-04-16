@@ -2,16 +2,20 @@
 @import "./css/qt--multi-page-layout";
 @import "./css/qt--single-page-layout";
 
-@spacing: 30px;
-@background: #eee;
+@spacing: 2em;
+@background: @plain-base02;
 
 body.plain {
   background: @background;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
   font-weight: 300;
+}
+
+h4, h5, h6 {
+  font-weight: 700;
 }
 
 .schemable({
@@ -75,16 +79,10 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-
 .schemable({
   .doc-entity {
     &:not(:last-of-type) {
       border-bottom: none;
-      margin-bottom: 2em;
-    }
-
-    &.collapsible--collapsed {
-      margin-bottom: 1em;
     }
   }
 });

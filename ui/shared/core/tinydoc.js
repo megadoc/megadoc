@@ -9,6 +9,7 @@ module.exports = function createTinydoc(config) {
   let exports = {};
   let routeSpecs = [];
   let previewHandlers = [];
+  let symbolIndexers = [];
   let callbacks = [];
   let ran = 0;
   let state = {
@@ -22,6 +23,10 @@ module.exports = function createTinydoc(config) {
     addRoutes,
     registerPreviewHandler(fn) {
       previewHandlers.push(fn);
+    },
+
+    registerSymbolIndexer(fn) {
+      symbolIndexers.push(fn);
     }
   };
 
@@ -105,6 +110,10 @@ module.exports = function createTinydoc(config) {
 
   exports.getPreviewHandlers = function() {
     return previewHandlers;
+  };
+
+  exports.getSymbolIndexers = function() {
+    return symbolIndexers;
   };
 
   exports.isPluginEnabled = function(name) {

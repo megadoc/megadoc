@@ -32,10 +32,42 @@
     .tag-group__header {
       border-bottom-color: transparent;
       padding-bottom: 0;
+      font-style: italic;
     }
   }
 
   .tag-group__header {
     border-bottom: 1px solid @border-color;
+    color: @base1;
+    font-weight: normal;
+  }
+
+  .tag-group--tabular {
+    tr, td {
+      border: none;
+      background-color: transparent;
+      padding: 0;
+    }
+
+    // some spacing between consecutive tags
+    tr:not(:last-of-type) td {
+      padding-bottom: 1em;
+    }
+
+    td {
+      vertical-align: top;
+    }
+
+    .tag-group__primary-column {
+      text-align: right;
+
+      &:not(:empty) {
+        padding-right: 1em;
+      }
+
+      code {
+        background-color: transparent;
+      }
+    }
   }
 });

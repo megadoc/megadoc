@@ -31,7 +31,7 @@ const Root = React.createClass({
       ScrollSpy.start();
     }
 
-    Router.refreshScroll();
+    setTimeout(Router.refreshScroll, 1);
   },
 
   shouldComponentUpdate(nextProps) {

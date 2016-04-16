@@ -44,5 +44,6 @@ tinydoc.use('yard-api', function YARDAPIPlugin(api, configs) {
     },
   ]);
 
+  require('./SymbolIndexer')(api, config);
   require('./outlets/MultiPageLayout')(api, config);
 });

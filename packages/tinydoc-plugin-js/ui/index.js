@@ -49,6 +49,7 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
     ]);
 
     api.registerPreviewHandler(PreviewHandler(config, database));
+    require('./SymbolIndexer')(api, config);
 
     require('./outlets/MultiPageLayout')(api, config);
     require('./outlets/SinglePageLayout')(api, config);

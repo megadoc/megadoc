@@ -49,6 +49,7 @@ function register(api, config) {
 
   api.registerPreviewHandler(PreviewHandler(config, database));
 
+  require('./SymbolIndexer')(api, config);
   require('./outlets/MultiPageLayout')(api, config);
   require('./outlets/SinglePageLayout')(api, config);
 }

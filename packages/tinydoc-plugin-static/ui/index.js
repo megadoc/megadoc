@@ -1,9 +1,12 @@
 const React = require('react');
 const Outlet = require('components/Outlet');
 const StaticFile = require('./components/StaticFile');
+const SymbolIndexer = require('./SymbolIndexer');
 
 tinydoc.use('tinydoc-plugin-static', function StaticPlugin(api, configs) {
   configs.forEach(function(config) {
+    SymbolIndexer(api, config);
+
     const displayName = config.url.trim()
       .replace(/\W+/g, '-')
       .replace(/^\-|\-$/g, '')
@@ -29,7 +32,7 @@ tinydoc.use('tinydoc-plugin-static', function StaticPlugin(api, configs) {
       api.addRoutes([
         {
           name: `static.${displayName}`,
-          path: config.url + config.anchorableHeadings ? '*' : '',
+          path: `${config.url}${config.anchorableHeadings ? '*' : ''}`,
           handler: component
         }
       ]);

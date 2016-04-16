@@ -5,6 +5,7 @@ var ParamTag = require('./Tags/ParamTag');
 var SeeTag = require('./Tags/SeeTag');
 var ThrowsTag = require('./Tags/ThrowsTag');
 var ReturnTag = require('./Tags/ReturnTag');
+var TabularTagGroup = require('./TabularTagGroup');
 var { where } = require('lodash');
 
 const HANDLED_TAGS = [
@@ -56,13 +57,13 @@ var DocTags = React.createClass({
 
     return (
       <div className="doc-entity__tags">
-        <TagGroup alwaysGroup tagName="ol" tags={paramTags} renderer={ParamTag}>
+        <TabularTagGroup alwaysGroup tagName="div" tags={paramTags} renderer={ParamTag}>
           Parameters ({paramTags.length})
-        </TagGroup>
+        </TabularTagGroup>
 
-        <TagGroup alwaysGroup tagName="ol" tags={this.props.tags} tagType="return" renderer={ReturnTag}>
-          Returns
-        </TagGroup>
+        <TabularTagGroup alwaysGroup tagName="div" tags={this.props.tags} tagType="return" renderer={ReturnTag}>
+          Return Values
+        </TabularTagGroup>
 
         {this.props.withExamples && (
           <TagGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
@@ -76,7 +77,7 @@ var DocTags = React.createClass({
 
         {this.props.withAdditionalResources && (
           <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag} tagName="ul">
-            Additional resources
+            Suggested Reading
           </TagGroup>
         )}
 
