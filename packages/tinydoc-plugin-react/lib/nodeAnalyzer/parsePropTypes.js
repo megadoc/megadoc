@@ -1,18 +1,17 @@
-var recast = require('recast');
-var n = recast.types.namedTypes;
+var t = require('babel-types');
 
 function parsePropTypes(node, filePath) {
   var propTypes = [];
   var propTypesNode = node.properties.filter(function(propNode) {
     return (
-      n.Property.check(propNode) &&
-      n.Identifier.check(propNode.key) &&
+      t.isObjectProperty(propNode) &&
+      t.isIdentifier(propNode.key) &&
       propNode.key.name === 'propTypes'
     );
   })[0];
 
   if (propTypesNode) {
-    if (n.ObjectExpression.check(propTypesNode.value)) {
+    if (t.isObjectExpression(propTypesNode.value)) {
       propTypesNode.value.properties.forEach(function(propNode) {
         var typeInfo = extractPropInfo(propNode);
 
@@ -36,12 +35,12 @@ function parsePropTypes(node, filePath) {
 function extractPropInfo(node) {
   var value = node.value;
 
-  if (n.MemberExpression.check(node.value)) {
+  if (t.isMemberExpression(node.value)) {
     //     propTypes: {
     //       name: React.PropTypes.string.isRequired
     //       ^^^^                  ^^^^^^ ^^^^^^^^^^
     //     }
-    if (n.MemberExpression.check(value.object) && n.Identifier.check(value.property) && value.property.name === 'isRequired') {
+    if (t.isMemberExpression(value.object) && t.isIdentifier(value.property) && value.property.name === 'isRequired') {
       return { type: value.object.property.name, isRequired: true };
     }
 
@@ -49,7 +48,7 @@ function extractPropInfo(node) {
     //      name: React.PropTypes.string
     //      ^^^^                  ^^^^^^
     //    }
-    else if (n.Identifier.check(value.object) && n.Identifier.check(value.property)) {
+    else if (t.isIdentifier(value.object) && t.isIdentifier(value.property)) {
       if (value.property.name === 'isRequired') {
         return { type: value.object.name, isRequired: true };
       }
@@ -61,7 +60,7 @@ function extractPropInfo(node) {
     //      id: oneOfType([ number, string ]).isRequired
     //          ^^^^^^^^^                     ^^^^^^^^^^
     //    }
-    else if (n.CallExpression.check(value.object) && n.Identifier.check(value.property)) {
+    else if (t.isCallExpression(value.object) && t.isIdentifier(value.property)) {
       var typeInfo = parseCallExpression(value.object)
 
       if (value.property.name === 'isRequired') {
@@ -75,43 +74,54 @@ function extractPropInfo(node) {
     }
   }
   // { name: React.PropTypes.oneOfType }
-  else if (n.MemberExpression.check(node)) {
+  else if (t.isMemberExpression(node)) {
     return { type: node.property.name }; // TODO: isRequired support?
   }
   //    propTypes: {
   //      name: string
   //      ^^^^^ ^^^^^^
   //    }
-  else if (n.Identifier.check(node.value)) {
+  else if (t.isIdentifier(node.value)) {
     return { type: node.value.name };
   }
   //    propTypes: {
   //      name: oneOf()
   //            ^^^^^
   //    }
-  else if (n.Identifier.check(node)) {
+  else if (t.isIdentifier(node)) {
     return { type: node.name };
   }
   //    propTypes: {
   //      age: oneOf([ 1, 2 ])
   //                   ^
   //    }
-  else if (n.Literal.check(node)) {
+  else if (t.isLiteral(node)) {
     return { type: 'literal', value: node.value };
-  }
-  //    propTypes: {
-  //      name: function someNamedProp() {}
-  //      ^^^^           ^^^^^^^^^^^^^
-  //    }
-  else if (n.FunctionExpression.check(node.value) && n.Identifier.check(node.value.id)) {
-    return { type: node.value.id.name };
   }
   //    propTypes: {
   //      name: function() {}
   //      ^^^^
   //    }
-  else if (n.FunctionExpression.check(node.value) || n.ArrowFunctionExpression.check(node.value)) {
+  else if (t.isFunctionExpression(node.value) || t.isArrowFunctionExpression(node.value)) {
+    // console.log('hello!', node.value)
+
+    // this is some weird babel-exclusive thing where (i believe) an anonymous
+    // function assigned to an ObjectProperty ends up having an implicit name
+    // inferred from that property key identifier...
+    //
+    // in that case, we don't actually want to consider it as a custom propType
+    if (t.isIdentifier(node.value.id) && node.value.id.name !== node.key.name) {
+      return { type: node.value.id.name };
+    }
+
     return { type: 'custom' };
+  }
+  //    propTypes: {
+  //      name: function someNamedProp() {}
+  //      ^^^^           ^^^^^^^^^^^^^
+  //    }
+  else if (t.isFunctionExpression(node.value) && t.isIdentifier(node.value.id)) {
+    return { type: node.value.id.name };
   }
   //    propTypes: {
   //      count: oneOfType([ number, string ])
@@ -119,13 +129,13 @@ function extractPropInfo(node) {
   //      count: shape({})
   //      // etc.
   //    }
-  else if (n.CallExpression.check(node.value)) {
+  else if (t.isCallExpression(node.value)) {
     return parseCallExpression(node.value);
   }
-  else if (n.ArrayExpression.check(node)) {
+  else if (t.isArrayExpression(node)) {
     return node.elements.map(extractPropInfo);
   }
-  else if (n.ObjectExpression.check(node)) {
+  else if (t.isObjectExpression(node)) {
     return node.properties.map(function(propNode) {
       var info = extractPropInfo(propNode);
       info.name = propNode.key.name;

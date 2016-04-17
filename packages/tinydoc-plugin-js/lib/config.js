@@ -78,5 +78,10 @@ module.exports = {
 
   displayFooter: false,
 
-  alias: {}
+  alias: {},
+
+  parse: null,
+  parserOptions: null,
+
+  namespaceDirMap: {},
 };

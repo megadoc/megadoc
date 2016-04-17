@@ -1,26 +1,32 @@
 var K = require('../constants');
-var recast = require('recast');
-var n = recast.types.namedTypes;
+var t = require('babel-types');
 
 module.exports = function generateContext(contextNode) {
   var ctx;
 
-  if (n.FunctionExpression.check(contextNode) || n.FunctionDeclaration.check(contextNode)) {
+  if (
+    t.isFunctionExpression(contextNode) ||
+    t.isFunctionDeclaration(contextNode) ||
+    t.isObjectMethod(contextNode)
+  ) {
     ctx = parseFunctionExpression(contextNode);
   }
-  else if (n.VariableDeclarator.check(contextNode)) {
+  else if (t.isVariableDeclarator(contextNode)) {
     return generateContext(contextNode.init);
   }
-  else if (n.Literal.check(contextNode)) {
+  else if (t.isVariableDeclaration(contextNode)) {
+    return generateContext(contextNode.declarations[0]);
+  }
+  else if (t.isLiteral(contextNode)) {
     ctx = parseLiteral(contextNode);
   }
-  else if (n.ObjectExpression.check(contextNode)) {
+  else if (t.isObjectExpression(contextNode)) {
     ctx = parseObjectExpression(contextNode);
   }
-  else if (n.ArrayExpression.check(contextNode)) {
+  else if (t.isArrayExpression(contextNode)) {
     ctx = parseArrayExpression(contextNode);
   }
-  else if (n.ClassDeclaration.check(contextNode)) {
+  else if (t.isClassDeclaration(contextNode)) {
     ctx = { type: K.TYPE_CLASS }; // TODO
   }
 
@@ -28,10 +34,10 @@ module.exports = function generateContext(contextNode) {
 };
 
 function castExpressionValue(expr) {
-  if (n.ArrayExpression.check(expr)) {
+  if (t.isArrayExpression(expr)) {
     return expr.elements.map(castExpressionValue);
   }
-  else if (n.Literal.check(expr)) {
+  else if (t.isLiteral(expr)) {
     return expr.value;
   }
 }

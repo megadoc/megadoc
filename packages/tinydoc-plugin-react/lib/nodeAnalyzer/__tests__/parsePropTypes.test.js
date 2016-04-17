@@ -75,14 +75,14 @@ describe('analyzeReactNode - propTypes', function() {
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
-        //      name: function() {}
+        //      someProp: function() {}
         //    }
         //  });
       });
 
       assert.equal(docs.length, 1);
       assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
+      assert.equal(docs[0].ctx.propTypes[0].name, 'someProp');
       assert.equal(docs[0].ctx.propTypes[0].type, 'custom');
     });
 
@@ -91,14 +91,14 @@ describe('analyzeReactNode - propTypes', function() {
         // /** @module */
         //  var Something = React.createClass({
         //    propTypes: {
-        //      name: () => {}
+        //      someProp: () => {}
         //    }
         //  });
       });
 
       assert.equal(docs.length, 1);
       assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
+      assert.equal(docs[0].ctx.propTypes[0].name, 'someProp');
       assert.equal(docs[0].ctx.propTypes[0].type, 'custom');
     });
 

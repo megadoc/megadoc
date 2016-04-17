@@ -30,7 +30,9 @@ module.exports = function(api, config) {
   api.outlets.add('MultiPageLayout::Content', {
     key: routeName,
 
-    match(props) { return props.path.match(`^/${routeName}`); },
+    match(props) {
+      return props.path.match(`^/${routeName}($|/)`);
+    },
 
     component: require('../screens/Root')(routeName),
   });
@@ -38,7 +40,7 @@ module.exports = function(api, config) {
   api.outlets.add('MultiPageLayout::Sidebar', {
     key: routeName,
 
-    match(props) { return props.path.match(`^/${routeName}`); },
+    match(props) { return props.path.match(`^/${routeName}($|/)`); },
 
     component: React.createClass({
       propTypes: {

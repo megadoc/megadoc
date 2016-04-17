@@ -1,17 +1,16 @@
 var nodejsPath = require('path');
-var recast = require('recast');
-var n = recast.types.namedTypes;
+var t = require('babel-types');
 
 var Utils = exports;
 
 Utils.isModuleExports = function(node) {
   return (
-    n.MemberExpression.check(node.left)
+    t.isMemberExpression(node.left)
     && node.left.object.name === 'module'
     && node.left.property.name === 'exports'
     && (
-      n.Identifier.check(node.right)
-      || n.FunctionExpression.check(node.right)
+      t.isIdentifier(node.right)
+      || t.isFunctionExpression(node.right)
     )
   );
 };
@@ -20,24 +19,24 @@ Utils.isExports = function(node) {
   var decl = node.declarations[0];
 
   return (
-        n.Identifier.check(decl.id)
-    &&  n.Identifier.check(decl.init)
+        t.isIdentifier(decl.id)
+    &&  t.isIdentifier(decl.init)
     &&  decl.init.name === 'exports'
   );
 };
 
 Utils.isPrototypeProperty = function(node) {
   return (
-    n.MemberExpression.check(node)
-    && n.MemberExpression.check(node.object)
-    && n.Identifier.check(node.object.object)
-    && n.Identifier.check(node.object.property)
+    t.isMemberExpression(node)
+    && t.isMemberExpression(node.object)
+    && t.isIdentifier(node.object.object)
+    && t.isIdentifier(node.object.property)
     && node.object.property.name === 'prototype'
   );
 };
 
 Utils.isInstanceEntity = function(node) {
-  return n.ThisExpression.check(node);
+  return t.isThisExpression(node);
 };
 
 Utils.isFactoryModuleReturnEntity = function(node, startingPath, registry) {
@@ -57,7 +56,7 @@ Utils.isFactoryModuleReturnEntity = function(node, startingPath, registry) {
 Utils.getVariableNameFromModuleExports = function(node) {
   var name;
 
-  if (n.FunctionExpression.check(node.right) && n.Identifier.check(node.right.id)) {
+  if (t.isFunctionExpression(node.right) && t.isIdentifier(node.right.id)) {
     name = node.right.id.name;
   }
   else {
@@ -76,11 +75,11 @@ Utils.flattenNodePath = function(node, fragments) {
     fragments = [];
   }
 
-  if (n.Identifier.check(node.object) && n.Identifier.check(node.property)) {
+  if (t.isIdentifier(node.object) && t.isIdentifier(node.property)) {
     fragments.push(node.object.name);
     fragments.push(node.property.name);
   }
-  else if (n.MemberExpression.check(node.object)) {
+  else if (t.isMemberExpression(node.object)) {
     Utils.flattenNodePath(node.object, fragments);
   }
 
@@ -90,11 +89,11 @@ Utils.flattenNodePath = function(node, fragments) {
 Utils.findAncestorPath = function(startingPath, cond) {
   var path = startingPath;
 
-  while ((path = path.parentPath)) {
+  do {
     if (cond(path)) {
       return path;
     }
-  }
+  } while ((path = path.parentPath));
 };
 
 Utils.findScope = function(path) {
@@ -109,7 +108,8 @@ Utils.findScope = function(path) {
 
 Utils.findNearestPathWithComments = function(startingPath) {
   return Utils.findAncestorPath(startingPath, function(path) {
-    return Boolean(path.value.comments);
+    // return Boolean(path.value.comments);
+    return Boolean(path.node.leadingComments);
   });
 };
 
@@ -131,10 +131,17 @@ Utils.findIdentifierInScope = function(identifierName, path) {
   var currentScope = Utils.findScope(path);
 
   if (currentScope) {
-    var targetScope = currentScope.lookup(identifierName);
+    var targetScope = currentScope.getBinding(identifierName);
 
-    if (targetScope) {
-      return targetScope.getBindings()[identifierName][0];
-    }
+    // for (var x in currentScope) {
+    //   if (typeof currentScope[x] === 'function')
+    //     console.log('#' + x);
+    // }
+    return targetScope && targetScope.path;
+    // console.log(targetScope)
+    // if (targetScope) {
+    //   console.log(targetScope)
+    //   return targetScope.getBinding(identifierName)[0];
+    // }
   }
 };

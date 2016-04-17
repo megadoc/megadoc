@@ -21,9 +21,12 @@ describe('CJS::Parser - @method tag', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].id, 'Compiler#on');
-    assert.equal(docs[0].receiver, 'Compiler');
-    assert.equal(docs[0].ctx.type, K.TYPE_FUNCTION);
+    var doc = docs.filter(function(x) { return x.name === 'on' })[0];
+
+    assert.ok(doc);
+    assert.equal(doc.id, 'Compiler#on');
+    assert.equal(doc.receiver, 'Compiler');
+    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
   });
 
   it('it accepts multiple dynamically generated methods in the same docstring', function() {

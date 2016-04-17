@@ -15,12 +15,16 @@ describe('CJS::Parser: customAnalyzer support', function() {
       //
       // module.exports = SomeComponent;
     }, {
+      parserOptions: {
+        plugins: [ 'babel-plugin-syntax-jsx' ],
+      },
+
       nodeAnalyzers: [
-        function(n, node, path, nodeInfo) {
-          if (n.VariableDeclaration.check(node)) {
+        function(t, node, path, nodeInfo) {
+          if (t.isVariableDeclaration(node)) {
             var decl = node.declarations[0];
 
-            if (n.CallExpression.check(decl.init) && n.MemberExpression.check(decl.init.callee)) {
+            if (t.isCallExpression(decl.init) && t.isMemberExpression(decl.init.callee)) {
               var callee = decl.init.callee;
 
               if (callee.object.name === 'React' && callee.property.name === 'createClass') {

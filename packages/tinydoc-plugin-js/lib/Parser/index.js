@@ -1,6 +1,6 @@
 var fs = require('fs');
+var assert = require('assert');
 var nodejsPath = require('path');
-var recast = require('recast');
 var Utils = require('./Utils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
@@ -9,11 +9,12 @@ var PostProcessor = require('./PostProcessor');
 var NodeAnalyzer = require('./NodeAnalyzer');
 var WeakSet = require('weakset');
 var pick = require('lodash').pick;
+var assign = require('lodash').assign;
 var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
+var babel = require('babel-core');
+var t = require('babel-types');
 
 var runAllSync = require('../utils/runAllSync');
-
-var n = recast.types.namedTypes;
 
 function Parser() {
   this.registry = new Registry();
@@ -47,7 +48,20 @@ Ppt.parseFile = function(filePath, config, commonPrefix) {
 
 Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   if (str.length > 0) {
-    this.ast = recast.parse(str);
+    if (config.parse) {
+      this.ast = config.parse(str, filePath, absoluteFilePath);
+    }
+    else {
+      this.ast = babel.transform(str, assign({
+        filenameRelative: filePath,
+        filename: absoluteFilePath,
+        code: false,
+        ast: true,
+        babelrc: true,
+        comments: true
+      }, config.parserOptions)).ast;
+    }
+
     this.walk(this.ast, config, filePath, absoluteFilePath);
   }
 };
@@ -64,35 +78,58 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     'alias',
   ]);
 
+  Object.keys(config.alias).forEach(function(key) {
+    assert(Array.isArray(config.alias[key]),
+      "tinydoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
+      " be an array, got '" + typeof config.alias[key] + "'."
+    );
+    config.alias[key].forEach(function(value) {
+      assert(typeof value === 'string',
+        "tinydoc-plugin-js: OptionError: expected alias entry to be a string " +
+        ", not '" + typeof value + "' (key '" + key + "')"
+      );
+    });
+  });
+
   config.tagProcessors = config.tagProcessors || [];
   config.namespaceDirMap = config.namespaceDirMap || {};
 
   debuglog('\nParsing: %s', filePath);
   debuglog(Array(80).join('-'));
 
-  recast.visit(ast, {
-    visitComment: function(path) {
-      if (parser.visitedComments.has(path)) {
-        // console.log('Comment walker: already seen this node, ignoring.');
-        return false;
+  babel.traverse(ast, {
+    enter: function(path) {
+      var commentPool;
+
+      if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
+        commentPool = path.node.innerComments;
       }
 
-      parser.visitedComments.add(path);
+      else if (path.node.leadingComments && path.node.leadingComments.length) {
+        commentPool = path.node.leadingComments;
+      }
 
-      var hasDocstring = path.value.leading;
-      var hasNodeFreeDocstring = !path.value.leading && !path.value.trailing;
-      var comment = path.value.value;
-
-      if ((hasDocstring || hasNodeFreeDocstring) && comment[0] === '*') {
-        if (!parser.parseComment(comment, path, path.node, config, filePath, absoluteFilePath)) {
+      if (commentPool) {
+        if (parser.visitedComments.has(path)) {
+          // console.log('Comment walker: already seen this node, ignoring.');
           return false;
         }
-      }
 
-      this.traverse(path);
+        parser.visitedComments.add(path);
+
+        commentPool.forEach(function(commentNode) {
+          var comment = commentNode.value;
+
+          if (comment[0] === '*') {
+            if (!parser.parseComment(comment, path, path.node, config, filePath, absoluteFilePath)) {
+              return false;
+            }
+          }
+        });
+      }
     },
 
-    visitExpressionStatement: function(path) {
+    ExpressionStatement: function(path) {
       var node = path.node;
       var doc, name;
 
@@ -100,7 +137,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         this.visit(path.get('comments'));
       }
 
-      if (n.AssignmentExpression.check(node.expression)) {
+      if (t.isAssignmentExpression(node.expression)) {
         var expr = node.expression;
 
         // module.exports = Something;
@@ -129,12 +166,10 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
               Utils.dumpLocation(expr, filePath)
             );
 
-            debuglog('Offending code block:\n%s', recast.print(expr).code);
+            debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
           }
         }
       }
-
-      this.traverse(path);
     },
   });
 };
@@ -162,13 +197,24 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
     this.registry.trackLend(docstring.getLentTo(), path);
   }
 
+  // if (!docstring.namespace) {
+  //   var dirName = nodejsPath.dirname(filePath);
+
+  //   Object.keys(config.namespaceDirMap).some(function(pattern) {
+  //     if (dirName.match(pattern)) {
+  //       docstring.overrideNamespace(config.namespaceDirMap[pattern]);
+  //       return true;
+  //     }
+  //   });
+  // }
+
   runAllSync(config.docstringProcessors || [], [ docstring ]);
 
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
 
   doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
 
-  if (doc.id in config.alias) {
+  if (config.alias.hasOwnProperty(doc.id)) {
     config.alias[doc.id].forEach(doc.addAlias.bind(doc));
   }
 
@@ -177,13 +223,6 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   });
 
   if (doc.id) {
-    if (!docstring.namespace) {
-      var implicitNamespace = config.namespaceDirMap[nodejsPath.dirname(filePath)];
-      if (implicitNamespace) {
-        docstring.namespace = implicitNamespace;
-      }
-    }
-
     if (doc.isModule()) {
       var modulePath = Utils.findNearestPathWithComments(path);
 

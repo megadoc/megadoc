@@ -1,19 +1,18 @@
-var recast = require('recast');
-var n = recast.types.namedTypes;
+var t = require('babel-types');
 
 function parseStatics(node) {
   var statics = [];
 
   var staticsNode = node.properties.filter(function(propNode) {
     return (
-      n.Property.check(propNode) &&
-      n.Identifier.check(propNode.key) &&
+      t.isObjectProperty(propNode) &&
+      t.isIdentifier(propNode.key) &&
       propNode.key.name === 'statics'
     );
   })[0];
 
   if (staticsNode) {
-    if (n.ObjectExpression.check(staticsNode.value)) {
+    if (t.isObjectExpression(staticsNode.value)) {
       staticsNode.value.properties.forEach(function(staticNode) {
         statics.push(staticNode.key.name);
       })

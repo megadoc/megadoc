@@ -1,14 +1,13 @@
-var recast = require('recast');
 var babel = require('babel-core');
-var b = recast.types.builders;
-var n = recast.types.namedTypes;
+var t = require('babel-types');
+var generate = require('babel-generator')['default'];
 
 module.exports = function(srcCode) {
   var compiled = babel.transform(srcCode, {
     comments: false,
     code: false,
     ast: true,
-    blacklist: ["useStrict"],
+    presets: [ 'react' ]
   });
 
   // args are what's passed to React.createElement():
@@ -26,26 +25,30 @@ module.exports = function(srcCode) {
     var children = args.slice(2);
 
     propNodes.push(
-      b.property(
-        'init',
-        b.identifier('children'),
-        children.length === 1 ? children[0] : b.arrayExpression(children)
+      t.objectProperty(
+        t.identifier('children'),
+        children.length === 1 ? children[0] : t.arrayExpression(children)
       )
     );
   }
 
-  var propsExpr = b.objectExpression(propNodes);
+  var propsExpr = t.objectExpression(propNodes);
   var name;
 
-  if (n.Identifier.check(args[0])) {
+  if (t.isIdentifier(args[0])) {
     name = args[0].name;
   }
-  else if (n.Literal.check(args[0])) {
+  else if (t.isLiteral(args[0])) {
     name = args[0].value;
   }
 
   return {
     name: name,
-    props: recast.print(propsExpr).code
+    props: generate(propsExpr, {
+      comments: false,
+      compact: true,
+      quotes: 'double',
+      retainLines: false,
+    }).code
   };
 };

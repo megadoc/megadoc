@@ -21,6 +21,8 @@ function createCJSPlugin(userConfig) {
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
     alias: config.alias,
+    parse: config.parse,
+    parserOptions: config.parserOptions,
     nodeAnalyzers: [],
     docstringProcessors: [],
     tagProcessors: [],

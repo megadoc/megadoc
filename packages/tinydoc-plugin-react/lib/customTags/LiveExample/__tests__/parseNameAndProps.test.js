@@ -32,7 +32,7 @@ describe('LiveExample::parseNameAndProps', function() {
 
 
     assert.equal(info.name, 'Button');
-    assert.ok(info.props.match('title: "Click me"'));
+    assert.ok(info.props.match('title:"Click me"'));
   });
 
   it('works with children', function() {
@@ -41,7 +41,7 @@ describe('LiveExample::parseNameAndProps', function() {
     });
 
     assert.equal(info.name, 'Button');
-    assert.ok(info.props.match('children: "Click me"'));
+    assert.ok(info.props.match('children:"Click me"'));
   });
 
   it('works with multiple children', function() {
@@ -53,7 +53,13 @@ describe('LiveExample::parseNameAndProps', function() {
     });
 
     assert.equal(info.name, 'Button');
-    assert.ok(info.props.match('children: \\[\\s+React.createElement\\("span"'));
+    assert.equal(
+      info.props,
+      '{children:[' +
+        'React.createElement("span",null,"Click"),' +
+        'React.createElement("span",null,"me")' +
+      ']}'
+    );
   });
 
   it('works with a function prop', function() {
@@ -62,6 +68,6 @@ describe('LiveExample::parseNameAndProps', function() {
     });
 
     assert.equal(info.name, 'Button');
-    assert.ok(info.props.match('onChange: function'));
+    assert.equal(info.props, '{onChange:() => console.log("hi")}');
   });
 });

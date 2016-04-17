@@ -2,10 +2,8 @@ var Utils = require('../Utils');
 var NodeInfo = require('./NodeInfo');
 var K = require('../constants');
 var generateContext = require('./generateContext');
-var recast = require('recast');
 var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
-
-var n = recast.types.namedTypes;
+var t = require('babel-types');
 
 function analyzeNode(node, path, filePath, config) {
   var info = new NodeInfo(node, filePath);
@@ -21,11 +19,11 @@ function analyzeNode(node, path, filePath, config) {
   //     };
   //
   //     module.exports = SomeModule;
-  if (n.VariableDeclaration.check(node)) {
+  if (t.isVariableDeclaration(node)) {
     analyzeVariableDeclaration(node, path, info);
   }
 
-  else if (n.ExpressionStatement.check(node)) {
+  else if (t.isExpressionStatement(node)) {
     analyzeExpressionStatement(node, path, info, filePath, config);
   }
   // a plain named function:
@@ -34,19 +32,19 @@ function analyzeNode(node, path, filePath, config) {
   //      * Something.
   //      */
   //     function SomeModule() {}
-  else if (n.FunctionDeclaration.check(node) && n.Identifier.check(node.id)) {
+  else if (t.isFunctionDeclaration(node) && t.isIdentifier(node.id)) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
-  else if (n.FunctionExpression.check(node)) {
+  else if (t.isFunctionExpression(node)) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
-  else if (n.ClassDeclaration.check(node)) {
+  else if (t.isClassDeclaration(node)) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
-  else if (n.Property.check(node)) {
+  else if (t.isObjectProperty(node)) {
     analyzeProperty(node, path, info, filePath, config);
   }
   // Factory returns:
@@ -54,8 +52,12 @@ function analyzeNode(node, path, filePath, config) {
   //     function someFactory() {
   //       return function processor() {};
   //     }
-  else if (n.ReturnStatement.check(node)) {
+  else if (t.isReturnStatement(node)) {
     analyzeReturnStatement(node, path, info);
+  }
+  else if (t.isObjectMethod(node)) {
+    info.id = node.key.name;
+    info.$contextNode = node;
   }
 
   if (info.id) {
@@ -76,7 +78,7 @@ function analyzeVariableDeclaration(node, path, info) {
   //     var Something = SomeFunc();
   //     var Something = {};
   //     var Something = ...;
-  if (n.Identifier.check(decl.id)) {
+  if (t.isIdentifier(decl.id)) {
     info.id = decl.id.name;
     info.$contextNode = decl.init;
   }
@@ -88,8 +90,8 @@ function analyzeVariableDeclaration(node, path, info) {
   //     var { entity } = require('SomeModule');
   //
   // This will be supported only if there's 1 key being destructured.
-  else if (n.ObjectPattern.check(decl.id)) {
-    if (decl.id.properties.length === 1 && n.Property.check(decl.id.properties[0])) {
+  else if (t.isObjectPattern(decl.id)) {
+    if (decl.id.properties.length === 1 && t.isObjectProperty(decl.id.properties[0])) {
       var prop = decl.id.properties[0];
 
       // We'll use prop.value so that we map to the correct variable if it
@@ -99,7 +101,7 @@ function analyzeVariableDeclaration(node, path, info) {
       //      * @module SomeModulEntity
       //      */
       //     var { entity: SomeModulEntity } = require('SomeModule');
-      if (n.Identifier.check(prop.value)) {
+      if (t.isIdentifier(prop.value)) {
         info.id = prop.value.name;
       }
 
@@ -124,13 +126,13 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   var rhs = expr.right;
 
   // Properties assigned to some object.
-  if (n.MemberExpression.check(lhs) && n.Literal.check(rhs)) {
+  if (t.isMemberExpression(lhs) && t.isLiteral(rhs)) {
     info.$contextNode = rhs;
 
     // Static properties:
     //
     //     SomeModule.foo = 'a';
-    if (n.Identifier.check(lhs.object) && n.Identifier.check(lhs.property)) {
+    if (t.isIdentifier(lhs.object) && t.isIdentifier(lhs.property)) {
       info.type = 'property';
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
@@ -139,7 +141,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     // Properties assigned to `this`:
     //
     //     this.foo = 'a';
-    else if (n.ThisExpression.check(lhs.object) && n.Identifier.check(lhs.property)) {
+    else if (t.isThisExpression(lhs.object) && t.isIdentifier(lhs.property)) {
       info.id = lhs.property.name;
       info.markAsInstanceProperty();
       // no way to know the receiver now, we'll resolve later
@@ -155,13 +157,13 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   }
 
   // Functions assigned to a property.
-  else if (n.MemberExpression.check(lhs) && n.FunctionExpression.check(rhs)) {
+  else if (t.isMemberExpression(lhs) && t.isFunctionExpression(rhs)) {
     info.$contextNode = rhs;
 
     // CommonJS special scenario: a named function assigned to `module.exports`
     //
     //     module.exports = function namedFunction() {};
-    if (Utils.isModuleExports(expr) && n.Identifier.check(rhs.id)) {
+    if (Utils.isModuleExports(expr) && t.isIdentifier(rhs.id)) {
       info.id = rhs.id.name;
     }
     // Unnamed CommonJS module.exports:
@@ -173,7 +175,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     // A function assigned to some object property:
     //
     //     SomeModule.someFunction = function() {};
-    else if (n.Identifier.check(lhs.object) && n.Identifier.check(lhs.property)) {
+    else if (t.isIdentifier(lhs.object) && t.isIdentifier(lhs.property)) {
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
     }
@@ -193,13 +195,13 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   }
 
   // Objects assigned to a property.
-  else if (n.MemberExpression.check(lhs) && n.ObjectExpression.check(rhs)) {
+  else if (t.isMemberExpression(lhs) && t.isObjectExpression(rhs)) {
     info.$contextNode = rhs;
 
     // An object assigned to some object property:
     //
     //     SomeModule.someProperty = {};
-    if (n.Identifier.check(lhs.object) && n.Identifier.check(lhs.property)) {
+    if (t.isIdentifier(lhs.object) && t.isIdentifier(lhs.property)) {
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
     }
@@ -207,17 +209,17 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     // For functions assigned to an object's prototype:
     //
     //     SomeModule.prototype.someFunction = function() {};
-    else if (n.MemberExpression.check(lhs.object) && n.Identifier.check(lhs.property)) {
+    else if (t.isMemberExpression(lhs.object) && t.isIdentifier(lhs.property)) {
       info.id = lhs.property.name;
       info.receiver = Utils.flattenNodePath(lhs.object);
     }
   }
-  else if (n.MemberExpression.check(lhs)) {
+  else if (t.isMemberExpression(lhs)) {
     // Properties assigned to `this`:
     //
     //     this.foo = something;
     //     this.foo = new Something();
-    if (n.ThisExpression.check(lhs.object)) {
+    if (t.isThisExpression(lhs.object)) {
       info.id = lhs.property.name;
       info.markAsInstanceProperty();
     }
@@ -244,18 +246,18 @@ function analyzeProperty(node, path, info) {
   //     var obj = {
   //       someFunc: fn // <--
   //     };
-  if (n.Identifier.check(node.key) && n.Identifier.check(node.value)) {
+  if (t.isIdentifier(node.key) && t.isIdentifier(node.value)) {
     var identifierPath = Utils.findIdentifierInScope(node.value.name, path);
     if (identifierPath) {
       info.id = node.key.name;
       info.$contextNode = identifierPath.parentPath.node;
     }
   }
-  else if (n.Identifier.check(node.key)) {
+  else if (t.isIdentifier(node.key)) {
     info.id = node.key.name;
     info.$contextNode = node.value;
   }
-  else if (n.Literal.check(node.key)) {
+  else if (t.isLiteral(node.key)) {
     info.id = node.key.value;
     info.$contextNode = node.value;
   }
@@ -266,10 +268,10 @@ function analyzeProperty(node, path, info) {
 }
 
 function analyzeReturnStatement(node, path, info) {
-  if (n.FunctionExpression.check(node.argument)) {
+  if (t.isFunctionExpression(node.argument)) {
     info.$contextNode = node.argument;
 
-    if (n.Identifier.check(node.argument.id)) {
+    if (t.isIdentifier(node.argument.id)) {
       info.id = node.argument.id.name;
     }
     else {
@@ -280,8 +282,8 @@ function analyzeReturnStatement(node, path, info) {
 
 function isPrototypeProperty(lhs) {
   return (
-    n.MemberExpression.check(lhs.object) &&
-    n.Identifier.check(lhs.property) &&
+    t.isMemberExpression(lhs.object) &&
+    t.isIdentifier(lhs.property) &&
     lhs.object.property.name === 'prototype'
   );
 }
