@@ -17,7 +17,9 @@
   exit 1
 }
 
-source "./bin/_local-node-requires.sh"
+source "./bin/_helpers.sh"
+
+nodejs_use_local_packages
 
 SOURCE_DIRS=""
 

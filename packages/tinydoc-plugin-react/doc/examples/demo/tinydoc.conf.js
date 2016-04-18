@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var jsPlugin = require('tinydoc/plugins/cjs')({
+var jsPlugin = require('tinydoc-plugin-js')({
   navigationLabel: 'Demo',
   routeName: 'demo',
 
@@ -27,7 +27,7 @@ var reactPlugin = require('../../../lib')({
       },
 
       module: {
-        loaders: [{ test: /\.js$/, loader: 'babel-loader' }]
+        loaders: [{ test: /\.js$/, loader: 'babel?presets[]=react' }]
       }
     }, done);
   }

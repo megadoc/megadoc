@@ -22,6 +22,8 @@
   exit 1
 }
 
+source "bin/_helpers.sh"
+
 if [ -z $PACKAGE ]; then
   if [ $# -gt 0 ]; then
     PACKAGE=$1
@@ -47,24 +49,6 @@ if [ ! -d "${PACKAGE_ROOT}" ]; then
     exit 1
   fi
 fi
-
-function run_task {
-  task=$@
-  echo -e "\n[$task] STARTING $(date)"
-
-  $task 2>&1 | while IFS="" read line; do echo -e "[$task] $line"; done
-
-  exit_status=${PIPESTATUS[0]}
-
-  if [[ $exit_status != 0 ]]; then
-    echo -e "[$task] \033[31mFAILED!\033[0m (exit code $exit_status)"
-    exit 1
-  else
-    echo -e "[$task] \033[32mOK\033[0m"
-  fi
-
-  echo -e "[$task] FINISHED $(date)\n"
-}
 
 function refresh_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {

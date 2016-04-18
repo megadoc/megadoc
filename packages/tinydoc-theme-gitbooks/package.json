@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-theme-gitbooks",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "description": "A theme for tinydoc after gitbooks.io pages.",
   "main": "index.js",
   "scripts": {
@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/tinydoc/tinydoc-theme-gitbooks/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc-theme-gitbooks#readme"
+  "homepage": "https://github.com/tinydoc/tinydoc-theme-gitbooks#readme",
+  "peerDependencies": {
+    "tinydoc": "5.x"
+  }
 }
