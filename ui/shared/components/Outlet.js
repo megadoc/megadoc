@@ -33,6 +33,7 @@ const Outlet = React.createClass({
     forwardChildren: bool,
 
     fnRenderElement: func,
+    fnRenderDefaultChild: func,
   },
 
   getDefaultProps() {
@@ -82,6 +83,10 @@ const Outlet = React.createClass({
 
     if (nextSiblings) {
       stack.push(nextSiblings);
+    }
+
+    if (this.props.fnRenderDefaultChild && stack.filter(x => !!x).length === 0) {
+      stack.push(this.props.fnRenderDefaultChild(this.props.props));
     }
 
     return <Tag>{stack}</Tag>;

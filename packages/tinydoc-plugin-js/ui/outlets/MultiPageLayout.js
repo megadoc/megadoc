@@ -1,31 +1,13 @@
 const React = require('react');
 const ClassBrowser = require('components/ClassBrowser');
-const Link = require('components/Link');
-const Icon = require('components/Icon');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(api, config) {
-  const { navigationLabel, icon, routeName } = config;
+  const { routeName } = config;
 
   if (!api.outlets.has('MultiPageLayout::Banner')) {
     return;
   }
-
-  api.outlets.add('MultiPageLayout::Banner', {
-    key: routeName,
-
-    component: React.createClass({
-      displayName: 'CJSNavigation',
-
-      render() {
-        return (
-          <Link to={routeName}>
-            {icon && <Icon className={icon} />} {navigationLabel}
-          </Link>
-        );
-      }
-    })
-  });
 
   api.outlets.add('MultiPageLayout::Content', {
     key: routeName,

@@ -1,5 +1,5 @@
 /**
- * @module Plugins.Git.Config
+ * @module Config
  * @preserveOrder
  */
 module.exports = {

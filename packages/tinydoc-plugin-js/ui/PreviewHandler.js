@@ -13,40 +13,30 @@ module.exports = function(config, database) {
         return;
       }
 
+      let doc;
+
       if (entityName && entityName.length) {
-        const doc = database.getEntityByPath(moduleId + entityName);
-
-        if (!doc) {
-          return;
-        }
-
-        return (
-          <div>
-            <div className="tooltip__title">
-              {doc.id} (<strong>{doc.ctx.type}</strong>)
-            </div>
-
-            <p children={doc.summary} />
-          </div>
-        );
+        doc = database.getEntityByPath(moduleId + entityName);
       }
       else {
-        const doc = database.getModule(moduleId);
+        doc = database.getModule(moduleId);
+      }
 
-        if (!doc) {
-          return;
-        }
-
-        return (
-          <div>
-            <div className="tooltip__title">
-              {doc.id} (<strong>{doc.ctx.type}</strong>)
-            </div>
-
-            <p children={doc.summary} />
-          </div>
-        );
+      if (doc) {
+        return render(doc);
       }
     }
   };
+
+  function render(doc) {
+    return (
+      <div>
+        <div className="tooltip__title">
+          {doc.id} (<strong>{doc.ctx.type}</strong> in {config.corpusContext})
+        </div>
+
+        <p children={doc.summary} />
+      </div>
+    );
+  }
 }

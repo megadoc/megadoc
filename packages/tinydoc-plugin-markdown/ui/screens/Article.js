@@ -17,7 +17,6 @@ const Article = React.createClass({
     routeName: string,
     config: shape({
       gitStats: bool,
-      displayFooter: bool,
     })
   },
 

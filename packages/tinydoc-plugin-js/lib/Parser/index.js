@@ -197,17 +197,6 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
     this.registry.trackLend(docstring.getLentTo(), path);
   }
 
-  // if (!docstring.namespace) {
-  //   var dirName = nodejsPath.dirname(filePath);
-
-  //   Object.keys(config.namespaceDirMap).some(function(pattern) {
-  //     if (dirName.match(pattern)) {
-  //       docstring.overrideNamespace(config.namespaceDirMap[pattern]);
-  //       return true;
-  //     }
-  //   });
-  // }
-
   runAllSync(config.docstringProcessors || [], [ docstring ]);
 
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
@@ -225,6 +214,21 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   if (doc.id) {
     if (doc.isModule()) {
       var modulePath = Utils.findNearestPathWithComments(path);
+
+      if (!docstring.namespace) {
+        var dirName = nodejsPath.dirname(filePath);
+
+        Object.keys(config.namespaceDirMap).some(function(pattern) {
+          if (dirName.match(pattern)) {
+            // gotta <3 mutable state.. :)
+            docstring.overrideNamespace(config.namespaceDirMap[pattern]);
+            doc.id = doc.generateId();
+            doc.name = doc.generateName();
+
+            return true;
+          }
+        });
+      }
 
       // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
 

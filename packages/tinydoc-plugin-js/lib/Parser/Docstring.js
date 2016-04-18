@@ -1,14 +1,13 @@
 var dox = require('dox');
 var assert = require('assert');
 var _ = require('lodash');
+var K = require('./constants');
 var Tag = require('./Docstring/Tag');
 var extractIdInfo = require('./Docstring/extractIdInfo');
 var collectDescription = require('./Docstring/collectDescription');
 var findWhere = _.findWhere;
 
 /**
- * @namespace Plugins.CJS
- *
  * An object representing a JSDoc comment (parsed using dox).
  *
  * @param {String} comment
@@ -22,6 +21,7 @@ function Docstring(comment, customTags, filePath) {
     'Dox should not extract more than 1 doc from an expression.'
   );
 
+  this._doxDocs = doxDocs;
   this.tags = doxDocs[0].tags.map(function(doxTag) {
     return new Tag(doxTag, customTags, filePath);
   });
@@ -112,6 +112,18 @@ Dpt.getTypeOverride = function() {
   return this.tags.filter(function(tag) {
     return !!tag.explicitType;
   })[0].explicitType;
+};
+
+Dpt.overrideNamespace = function(namespace) {
+  var oldNamespace = this.namespace;
+
+  this.namespace = namespace;
+
+  if (oldNamespace && this.id) {
+    this.id = this.id.replace(oldNamespace + K.NAMESPACE_SEP, '');
+  }
+
+  // this will FUBAR if we have @namespace tags ...
 };
 
 module.exports = Docstring;

@@ -25,16 +25,27 @@ module.exports = function scan(config, utils, globalConfig, done) {
   database.forEach(function(entry) {
     var fileName;
     var filePath = entry.filePath;
+    var extName = path.extname(entry.filePath);
 
     entry.filePath = utils.getRelativeAssetPath(filePath);
 
     fileName = entry.filePath.split('/');
-    fileName = fileName[fileName.length-1]
-      .replace(/\.[\w]{1,3}$/, '')
+    fileName = path.basename(filePath)
+      .replace(extName, '')
       .replace(/\W/g, '-')
     ;
 
-    entry.id = RendererUtils.normalizeHeading(filePath.replace(commonPrefix, ''));
+    if (config.discardFileExtension) {
+      entry.id = RendererUtils.normalizeHeading(
+        filePath
+          .replace(extName, '')
+          .replace(commonPrefix, '')
+      );
+    }
+    else {
+      entry.id = RendererUtils.normalizeHeading(filePath.replace(commonPrefix, ''));
+    }
+
     entry.sortingId = entry.filePath;
 
     entry.title = parseTitle(entry.source);
@@ -54,7 +65,6 @@ module.exports = function scan(config, utils, globalConfig, done) {
     if (config.discardIdPrefix) {
       entry.id = entry.id.replace(config.discardIdPrefix, '');
     }
-
   });
 
   config.commonPrefix = commonPrefix;

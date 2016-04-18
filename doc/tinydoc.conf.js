@@ -10,25 +10,25 @@ var config = {
   publicPath: '',
   stylesheet: 'doc/theme.less',
   disqus: false,
+  showSettingsLinkInBanner: false,
 };
 
 config.plugins = [
   require('tinydoc-plugin-js')({
-    navigationLabel: 'API',
+    routeName: 'dev/api',
+    // navigationLabel: 'API',
 
     source: [
       'lib/**/*.js',
       'ui/**/*.js',
-      'packages/(?!tinydoc)/lib/**/*.js',
-      'packages/(?!tinydoc)/ui/**/*.js',
+      // 'packages/(?!tinydoc)/lib/**/*.js',
+      // 'packages/(?!tinydoc)/ui/**/*.js',
     ],
 
     exclude: [
       /\.test\.js$/,
       'ui/app/vendor',
     ],
-
-    inferModuleIdFromFileName: true,
 
     useDirAsNamespace: false,
 
@@ -41,19 +41,168 @@ config.plugins = [
 
   require('tinydoc-plugin-static')({
     url: '/readme',
-    outlet: 'SinglePageLayout::ContentPanel',
     source: 'README.md',
     anchorableHeadings: true,
   }),
 
+  require('tinydoc-plugin-static')({
+    source: 'CHANGES.md',
+    url: '/changes',
+    anchorableHeadings: true
+  }),
+
+  // @url: /dev/plugins
   require('tinydoc-plugin-markdown')({
-    source: [
-      'CHANGES.md'
+    routeName: 'dev/plugins',
+    source: [ 'doc/plugins/**/*.md' ],
+    title: false,
+    fullFolderTitles: false,
+    discardFileExtension: true,
+    corpusContext: 'Plugins',
+  }),
+
+  // @url: /usage
+  require('tinydoc-plugin-markdown')({
+    routeName: 'usage',
+    source: [ 'doc/usage/**/*.md' ],
+    title: false,
+    fullFolderTitles: false,
+    discardFileExtension: true,
+    corpusContext: 'Usage',
+  }),
+
+  require('tinydoc-layout-multi-page')({
+    bannerLinks: [
+      {
+        text: 'Usage',
+        href: '/usage/readme',
+      },
+
+      {
+        text: 'Plugins',
+        href: '/plugins',
+        links: [
+          {
+            text: 'Git',
+            href: '/plugins/tinydoc-plugin-git',
+          },
+
+          {
+            text: 'JavaScript',
+            href: '/plugins/tinydoc-plugin-js',
+          },
+          {
+            text: 'JavaScript React',
+            href: '/plugins/tinydoc-plugin-react',
+          },
+
+          {
+            text: 'Markdown',
+            href: '/plugins/tinydoc-plugin-markdown',
+          },
+
+          {
+            text: 'Lua',
+            href: '/plugins/tinydoc-plugin-lua',
+          },
+
+          {
+            text: 'Static',
+            href: '/plugins/tinydoc-plugin-static',
+          },
+
+          {
+            text: 'YARD-API',
+            href: '/plugins/tinydoc-plugin-yard-api',
+          },
+
+          {
+            text: 'Reference Graph',
+            href: '/plugins/tinydoc-plugin-reference-graph',
+          },
+
+          {
+            text: 'Layout - Single-Page',
+            href: '/plugins/tinydoc-layout-single-page',
+          },
+
+          {
+            text: 'Layout - Multi-Page',
+            href: '/plugins/tinydoc-layout-multi-page',
+          },
+
+          {
+            text: 'Theme - Qt',
+            href: '/plugins/tinydoc-theme-qt',
+          },
+
+          {
+            text: 'Theme - gitbooks.io',
+            href: '/plugins/tinydoc-theme-qt',
+          },
+        ]
+      },
+
+      {
+        text: 'Developers',
+        links: [
+          {
+            text: 'Plugins',
+            href: '/dev/plugins/readme',
+          },
+
+          {
+            text: 'API',
+            href: '/dev/api',
+          },
+        ]
+      },
+
+      {
+        text: 'Changes',
+        href: '/changes',
+      },
+
     ]
   }),
 
-  require('tinydoc-layout-single-page')({}),
   require('tinydoc-theme-qt')({}),
 ];
+
+[
+  'tinydoc-layout-multi-page',
+  'tinydoc-layout-single-page',
+  'tinydoc-plugin-git',
+  'tinydoc-plugin-js',
+  'tinydoc-plugin-lua',
+  'tinydoc-plugin-markdown',
+  'tinydoc-plugin-react',
+  'tinydoc-plugin-reference-graph',
+  'tinydoc-plugin-static',
+  'tinydoc-plugin-yard-api',
+  'tinydoc-theme-gitbooks',
+  'tinydoc-theme-qt',
+].forEach(function(pluginName) {
+  config.plugins.push(require('tinydoc-plugin-js')({
+    routeName: 'plugins/' + pluginName,
+    corpusContext: pluginName,
+    useDirAsNamespace: false,
+    inferModuleIdFromFileName: true,
+
+    source: [
+      'packages/' + pluginName + '/lib/**/*.js',
+      'packages/' + pluginName + '/ui/**/*.js',
+    ],
+
+    exclude: [ /\.test\.js$/, /vendor/ ],
+  }));
+
+  config.plugins.push(require('tinydoc-plugin-static')({
+    source: 'packages/' + pluginName + '/README.md',
+    url: '/plugins/' + pluginName,
+    outlet: 'CJS::Landing',
+    anchorableHeadings: false
+  }));
+})
 
 module.exports = config;

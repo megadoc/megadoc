@@ -1,34 +1,20 @@
-var React = require("react");
-var Link = require("components/Link");
-var Outlet = require("components/Outlet");
-var config = require('config');
-var Icon = require('components/Icon');
+const React = require("react");
+const Link = require("components/Link");
+const Outlet = require("components/Outlet");
+const config = require('config');
+const Icon = require('components/Icon');
 const AppState = require('core/AppState');
+const { string, any, arrayOf, object, } = React.PropTypes;
+const BannerItem = require('./BannerItem');
+const BannerMenu = require('./BannerMenu');
 
-var BannerItem = React.createClass({
-  propTypes: {
-    children: React.PropTypes.any,
-    onClick: React.PropTypes.func,
-    title: React.PropTypes.string,
-  },
-
-  render() {
-    return (
-      <div
-        className="banner__navigation-item"
-        children={this.props.children}
-        onClick={this.props.onClick}
-        title={this.props.title}
-      />
-    );
-  }
-});
-
-var Banner = React.createClass({
+const Banner = React.createClass({
   statics: { BannerItem: BannerItem },
 
   propTypes: {
-    children: React.PropTypes.any,
+    children: any,
+    currentPath: string,
+    links: arrayOf(object),
   },
 
   render() {
@@ -79,10 +65,28 @@ var Banner = React.createClass({
                   </Link>
                 </BannerItem>
               )}
+
+              {this.props.links.map(this.renderLink)}
             </Outlet>
           </nav>
         </header>
       </div>
+    );
+  },
+
+  renderLink(link) {
+    if (link.links) {
+      return (
+        <BannerItem key={link.text}>
+          <BannerMenu currentPath={this.props.currentPath} {...link} />
+        </BannerItem>
+      );
+    }
+
+    return (
+      <BannerItem key={link.text}>
+        <Link to={link.href}>{link.text}</Link>
+      </BannerItem>
     );
   },
 

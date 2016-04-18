@@ -7,8 +7,6 @@ var assert = require('assert');
 var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
 
 /**
- * @namespace Plugins.CJS
- *
  * @param {Docstring} docstring
  * @param {NodeInfo} nodeInfo
  * @param {String} filePath

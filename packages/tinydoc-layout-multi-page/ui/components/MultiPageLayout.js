@@ -7,11 +7,20 @@ const OutletManager = require('core/OutletManager');
 const classSet = require('utils/classSet');
 const RouteHandler = require('components/RouteHandler');
 
-const { node } = React.PropTypes;
+const { node, shape, string, arrayOf, array, } = React.PropTypes;
+const Link = shape({
+  text: string,
+  href: string,
+  links: array
+});
 
 const MultiPageLayout = React.createClass({
   propTypes: {
-    children: node
+    children: node,
+    path: string,
+    config: shape({
+      bannerLinks: arrayOf(Link)
+    })
   },
 
   render() {
@@ -29,7 +38,10 @@ const MultiPageLayout = React.createClass({
 
     return (
       <div className={className}>
-        <Banner />
+        <Banner
+          links={this.props.config.bannerLinks}
+          currentPath={this.props.path}
+        />
 
         <div className="root__screen">
           {hasSidebarElements ?
@@ -78,4 +90,10 @@ const MultiPageLayout = React.createClass({
   },
 });
 
-module.exports = MultiPageLayout;
+module.exports = function(config) {
+  return React.createClass({
+    render() {
+      return <MultiPageLayout {...this.props} config={config} />
+    }
+  });
+};

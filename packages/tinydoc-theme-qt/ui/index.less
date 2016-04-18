@@ -18,9 +18,10 @@ h4, h5, h6 {
   font-weight: 700;
 }
 
+
 .schemable({
-  a:visited {
-    color: lighten(@link, 15%);
+  a:visited:not(.active) {
+    color: lighten(@plain-link, 15%);
   }
 
   .root__footer {
@@ -37,7 +38,11 @@ h4, h5, h6 {
   }
 
   .class-browser__category {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
+
+  }
+  .class-browser__category + .class-browser__category {
+    margin-top: 1.75em;
   }
 
   .class-browser__category-name {

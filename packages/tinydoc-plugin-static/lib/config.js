@@ -1,5 +1,5 @@
 /**
- * @module tinydoc-plugin-static.Config
+ * @module Config
  */
 module.exports = {
   /**

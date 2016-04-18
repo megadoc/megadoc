@@ -2,8 +2,6 @@ var K = require('../constants');
 var assign = require('lodash').assign;
 
 /**
- * @namespace Plugins.CJS
- *
  * @param {recast.ast} node
  *        The AST node we represent.
  *

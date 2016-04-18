@@ -181,6 +181,7 @@ var ClassBrowser = React.createClass({
             entity: encodeURIComponent(entityPath)
           }}
           children={entityPath}
+          title={entityPath}
         />
       </li>
     );

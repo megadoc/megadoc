@@ -1,5 +1,5 @@
 /**
- * @module Plugins.CJS.Config
+ * @module Config
  * @preserveOrder
  */
 module.exports = {
@@ -9,12 +9,6 @@ module.exports = {
    *           A value of `"js"` would make the modules available at `/js`.
    */
   routeName: 'js',
-
-  /**
-   * @property {String}
-   *           Text to use for the navigation link.
-   */
-  navigationLabel: 'JavaScripts',
 
   /**
    * @property {String[]} source
@@ -75,8 +69,6 @@ module.exports = {
   verbose: false,
 
   corpusContext: 'JS',
-
-  displayFooter: false,
 
   alias: {},
 
