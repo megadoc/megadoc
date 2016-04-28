@@ -34,6 +34,6 @@
     "tinydoc": "5.x"
   },
   "devDependencies": {
-    "babel-plugin-syntax-jsx": "6.5.0"
+    "babel-preset-react": "6.5.0"
   }
 }

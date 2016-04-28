@@ -16,7 +16,7 @@ describe('CJS::Parser: customAnalyzer support', function() {
       // module.exports = SomeComponent;
     }, {
       parserOptions: {
-        plugins: [ 'babel-plugin-syntax-jsx' ],
+        presets: [ 'react' ],
       },
 
       nodeAnalyzers: [
