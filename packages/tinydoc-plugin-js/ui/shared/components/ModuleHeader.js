@@ -92,7 +92,12 @@ const ModuleHeader = React.createClass({
           {' '}
 
           <span className="class-view__header-type">
-            <Outlet name="CJS::ModuleHeader::Type" props={this.props} tagName="span">
+            <Outlet
+              name="CJS::ModuleHeader::Type"
+              tagName="span"
+              firstMatchingElement
+              elementProps={this.props}
+            >
               <span>{type}</span>
             </Outlet>
           </span>

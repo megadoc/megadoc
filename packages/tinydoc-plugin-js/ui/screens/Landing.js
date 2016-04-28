@@ -16,9 +16,11 @@ const Landing = React.createClass({
     return (
       <Outlet
         name="CJS::Landing"
-        props={{ url: `/${this.props.routeName}` }}
-        fnRenderDefaultChild={this.renderBlankLanding}
-      />
+        firstMatchingElement
+        elementProps={{ url: `/${this.props.routeName}` }}
+      >
+        {this.renderBlankLanding()}
+      </Outlet>
     );
   },
 

@@ -3,7 +3,6 @@ const Banner = require('./Banner');
 const Footer = require('components/Footer');
 const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
-const OutletManager = require('core/OutletManager');
 const classSet = require('utils/classSet');
 const RouteHandler = require('components/RouteHandler');
 
@@ -24,11 +23,10 @@ const MultiPageLayout = React.createClass({
   },
 
   render() {
-    const hasSidebarElements = OutletManager
-      .getElements('MultiPageLayout::Sidebar')
-      .filter(x => x.match(this.props))
-      .length > 0
-    ;
+    const hasSidebarElements = Outlet.hasMatchingElements({
+      name: 'MultiPageLayout::Sidebar',
+      elementProps: this.props
+    });
 
     const className = classSet({
       'root': true,
@@ -58,12 +56,12 @@ const MultiPageLayout = React.createClass({
     return (
       <TwoColumnLayout>
         <TwoColumnLayout.LeftColumn>
-          <Outlet name="MultiPageLayout::Sidebar" props={this.props} />
+          <Outlet name="MultiPageLayout::Sidebar" elementProps={this.props} />
         </TwoColumnLayout.LeftColumn>
 
         <TwoColumnLayout.RightColumn>
           <div>
-            <Outlet name="MultiPageLayout::Content" props={this.props}>
+            <Outlet name="MultiPageLayout::Content" elementProps={this.props}>
               <RouteHandler />
             </Outlet>
 
@@ -76,7 +74,7 @@ const MultiPageLayout = React.createClass({
 
   renderSingleColumnLayout() {
     return (
-      <Outlet name="MultiPageLayout::Content" props={this.props}>
+      <Outlet name="MultiPageLayout::Content" elementProps={this.props}>
         <div>
           <RouteHandler />
           <Footer />

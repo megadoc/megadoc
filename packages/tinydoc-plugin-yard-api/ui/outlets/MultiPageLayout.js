@@ -1,6 +1,5 @@
 const React = require('react');
 const Database = require('core/Database');
-const Outlet = require('components/Outlet');
 const ClassBrowser = require('components/ClassBrowser');
 const RouteHandler = require('components/RouteHandler');
 const Icon = require('components/Icon');
@@ -9,7 +8,7 @@ const Link = require('components/Link');
 module.exports = function(api, config) {
   const baseURL = config.routeName;
 
-  Outlet.add('MultiPageLayout::Banner', {
+  api.outlets.add('MultiPageLayout::Banner', {
     key: 'yard-api__navigation',
     component: React.createClass({
       displayName: 'YARDApiNavigation',
@@ -24,7 +23,7 @@ module.exports = function(api, config) {
     })
   });
 
-  Outlet.add('MultiPageLayout::Sidebar', {
+  api.outlets.add('MultiPageLayout::Sidebar', {
     key: 'yard-api__navigation',
     match(props) { return props.path.match(`^/${baseURL}`);  },
     component: React.createClass({
@@ -47,7 +46,7 @@ module.exports = function(api, config) {
     })
   });
 
-  Outlet.add('MultiPageLayout::Content', {
+  api.outlets.add('MultiPageLayout::Content', {
     key: 'yard-api',
     match(props) { return props.path.match(`^/${baseURL}`);  },
     component: React.createClass({

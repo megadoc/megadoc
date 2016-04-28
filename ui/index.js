@@ -6,7 +6,6 @@ var createTinydoc = require('core/tinydoc');
 var Storage = require('core/Storage');
 var { Route, NotFoundRoute, Redirect } = ReactRouter;
 var K = require('constants');
-var OutletManager = require('core/OutletManager');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -19,7 +18,7 @@ tinydoc.publicModules = require('../tmp/publicModules');
 
 // expose this to plugins so that we can move to a non-global version in the
 // future
-tinydoc.outlets = OutletManager;
+tinydoc.outlets = require('components/Outlet');
 tinydoc.outlets.define('LayoutWrapper');
 tinydoc.outlets.define('Layout');
 

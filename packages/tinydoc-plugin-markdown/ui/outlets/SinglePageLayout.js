@@ -8,10 +8,6 @@ module.exports = function(api, config) {
   const { routeName } = config;
   const database = Database.for(routeName);
 
-  if (!api.outlets.has('SinglePageLayout::ContentPanel')) {
-    return;
-  }
-
   api.outlets.add('SinglePageLayout::ContentPanel', {
     key: `${routeName}-all-articles`,
 

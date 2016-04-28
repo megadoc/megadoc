@@ -105,7 +105,7 @@ const ModuleBody = React.createClass({
     const tags = where(doc.tags, { type: 'example' });
 
     return (
-      <Outlet name="CJS::ExampleTags" siblingProps={{ tags: doc.tags }} props={{tags}}>
+      <Outlet name="CJS::ExampleTags" elementProps={{tags}}>
         {tags.length === 1 && (this.renderExampleTag(tags[0]))}
 
         {tags.length > 1 && (
@@ -122,7 +122,8 @@ const ModuleBody = React.createClass({
       <Outlet
         key={tag.string}
         name="CJS::ExampleTag"
-        props={{ tag, routeName: this.props.routeName }}
+        elementProps={{ tag, routeName: this.props.routeName }}
+        firstMatchingElement
       >
         <ExampleTag string={tag.string} typeInfo={tag.typeInfo} />
       </Outlet>

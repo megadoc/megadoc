@@ -5,10 +5,6 @@ const { shape, string } = React.PropTypes;
 module.exports = function(api, config) {
   const { routeName } = config;
 
-  if (!api.outlets.has('MultiPageLayout::Banner')) {
-    return;
-  }
-
   api.outlets.add('MultiPageLayout::Content', {
     key: routeName,
 

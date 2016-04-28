@@ -15,7 +15,7 @@ const Landing = React.createClass({
 
   render() {
     return (
-      <Outlet name="yard-api::Landing" props={{ url: `/${this.props.baseURL}` }}>
+      <Outlet name="yard-api::Landing" elementProps={{ url: `/${this.props.baseURL}` }}>
         <Document>Welcome to the API docs!</Document>
       </Outlet>
     );

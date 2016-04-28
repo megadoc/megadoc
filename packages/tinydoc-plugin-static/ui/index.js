@@ -1,5 +1,4 @@
 const React = require('react');
-const Outlet = require('components/Outlet');
 const StaticFile = require('./components/StaticFile');
 const SymbolIndexer = require('./SymbolIndexer');
 
@@ -20,7 +19,7 @@ tinydoc.use('tinydoc-plugin-static', function StaticPlugin(api, configs) {
     });
 
     if (config.outlet) {
-      Outlet.add(config.outlet, {
+      tinydoc.outlets.add(config.outlet, {
         key: `static.${config.url}`,
         match: !tinydoc.isPluginEnabled('tinydoc-layout-single-page') && function(context) {
           return context.url === config.url;

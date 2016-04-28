@@ -66,7 +66,7 @@ const Article = React.createClass({
 
         <Outlet
           name="Markdown::Document"
-          props={{ document: article }}
+          elementProps={{ document: article }}
         />
 
         {this.props.config.gitStats && (

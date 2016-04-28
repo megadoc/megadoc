@@ -24,6 +24,7 @@ module.exports = function(userConfig) {
       var compiledFile;
       var gitStats;
       var filePath = compiler.utils.getAssetPath(config.source);
+      var format = config.format || inferFormat(filePath);
 
       compiler.on('scan', function(done) {
         if (config.gitStats) {
@@ -43,10 +44,20 @@ module.exports = function(userConfig) {
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
-        compiledFile = renderMarkdown.withTOC(linkify(fs.readFileSync(filePath, 'utf-8')), {
-          anchorableHeadings: config.anchorableHeadings,
-          baseURL: config.url
-        });
+        var fileContents = fs.readFileSync(filePath, 'utf-8');
+
+        if (format === 'html') {
+          compiledFile = {
+            html: fileContents,
+            toc: []
+          };
+        }
+        else {
+          compiledFile = renderMarkdown.withTOC(linkify(fileContents), {
+            anchorableHeadings: config.anchorableHeadings,
+            baseURL: config.url,
+          });
+        }
 
         done();
       });
@@ -63,6 +74,7 @@ module.exports = function(userConfig) {
           gitStats: gitStats,
           file: compiledFile,
           filePath: filePath,
+          format: format
         });
 
         done();
@@ -70,3 +82,7 @@ module.exports = function(userConfig) {
     }
   };
 };
+
+function inferFormat(filePath) {
+  return path.extname(filePath).replace(/^\./, '');
+}

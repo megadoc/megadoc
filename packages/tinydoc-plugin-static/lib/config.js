@@ -27,4 +27,8 @@ module.exports = {
   disqusShortname: null,
 
   scrollToTop: true,
+
+  escapeHTML: true,
+
+  format: null,
 };

@@ -5,10 +5,6 @@ const { shape, string } = React.PropTypes;
 module.exports = function(api, config) {
   const { routeName } = config;
 
-  if (!api.outlets.has('SinglePageLayout::ContentPanel')) {
-    return;
-  }
-
   api.outlets.add('SinglePageLayout::ContentPanel', {
     component: require('../screens/AllModules')(routeName, config),
     key: `${routeName}-all-modules`
