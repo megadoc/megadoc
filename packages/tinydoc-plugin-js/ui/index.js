@@ -1,17 +1,16 @@
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const OutletManager = require('core/OutletManager');
 const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
-OutletManager.define('CJS::Landing', { firstMatching: true });
-OutletManager.define('CJS::ModuleBody');
-OutletManager.define('CJS::ModuleHeader::Type', { firstMatching: true });
-OutletManager.define('CJS::Tag');
-OutletManager.define('CJS::ExampleTags');
-OutletManager.define('CJS::ExampleTag', { firstMatching: true });
+tinydoc.outlets.define('CJS::Landing');
+tinydoc.outlets.define('CJS::ModuleBody');
+tinydoc.outlets.define('CJS::ModuleHeader::Type');
+tinydoc.outlets.define('CJS::Tag');
+tinydoc.outlets.define('CJS::ExampleTags');
+tinydoc.outlets.define('CJS::ExampleTag');
 
 tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
   configs.forEach(function(config) {

@@ -25,6 +25,39 @@
   &__motto {
     font-size: 0.85em;
   }
+
+  &__menu {
+    padding: 0 0 0 1em;
+    position: relative;
+    border-left: 3px solid transparent;
+  }
+
+  .banner__navigation-item .banner__menu-title a {
+    padding-left: 0;
+    padding-right: 0;
+    text-align: left;
+  }
+
+  &__menu-title {
+    display: block;
+  }
+
+  &__menu-list {
+    position: absolute;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    min-width: 100%;
+  }
+
+  &__menu-list-item a {
+    margin: 0;
+    padding: 0 0;
+    line-height: 3em;
+    text-align: left;
+    white-space: nowrap;
+  }
 }
 
 .widescreen({
@@ -86,5 +119,35 @@
       color: @accent;
       border-bottom: 3px solid @accent;
     }
+  }
+
+  .banner__menu {
+    &--open {
+      border-left-color: @base2;
+    }
+  }
+
+  .banner__menu .banner__menu-title {
+    color: @link;
+  }
+
+  .banner__menu--active .banner__menu-title {
+    color: @accent;
+  }
+
+  .banner__menu-list {
+    background: @base3;
+    border-bottom: 3px solid @base2;
+    margin-top: 0;
+    margin-left: -3px;
+  }
+
+  .banner__menu-list-item a {
+    border-left: 3px solid @base2;
+  }
+
+  .banner__menu-list-item a:hover,
+  .banner__menu-list-item a.active {
+    border-left-color: @accent;
   }
 });

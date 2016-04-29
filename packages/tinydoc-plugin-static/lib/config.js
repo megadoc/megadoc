@@ -1,5 +1,5 @@
 /**
- * @module tinydoc-plugin-static.Config
+ * @module Config
  */
 module.exports = {
   /**
@@ -27,4 +27,8 @@ module.exports = {
   disqusShortname: null,
 
   scrollToTop: true,
+
+  escapeHTML: true,
+
+  format: null,
 };

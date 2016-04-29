@@ -6,10 +6,6 @@ const ClassBrowser = require('../components/ClassBrowser');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(api, config) {
-  if (!api.outlets.has('MultiPageLayout::Content')) {
-    return;
-  }
-
   api.outlets.add('MultiPageLayout::Content', {
     key: config.routeName,
     match(props) { return props.path.match(`^/${config.routeName}`); },

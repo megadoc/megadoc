@@ -69,10 +69,10 @@ describe('CJS::Parser - Object modules', function() {
     assert.ok(docs.length > 0);
 
     var doc = docs.filter(function(d) {
-      return d.id === 'Plugins.CJS.Config@analyzeNode';
+      return d.id === 'Config@analyzeNode';
     })[0];
 
     assert.ok(doc);
-    assert.equal(doc.receiver, 'Plugins.CJS.Config');
+    assert.equal(doc.receiver, 'Config');
   });
 });

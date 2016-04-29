@@ -1,5 +1,4 @@
 const React = require('react');
-const Outlet = require('components/Outlet');
 const AllModules = require('./screens/AllModules');
 const Browser = require('./components/Browser');
 const { shape, } = React.PropTypes;
@@ -22,7 +21,7 @@ tinydoc.use(function(api) {
       }
     ]);
 
-    Outlet.add('SinglePageLayout::ContentPanel', {
+    api.outlets.add('SinglePageLayout::ContentPanel', {
       key: `${routeName}--modules`,
       component: React.createClass({
         render() {
@@ -31,7 +30,7 @@ tinydoc.use(function(api) {
       })
     });
 
-    Outlet.add('SinglePageLayout::Sidebar', {
+    api.outlets.add('SinglePageLayout::Sidebar', {
       key: `${routeName}--browser`,
       component: React.createClass({
         propTypes: {

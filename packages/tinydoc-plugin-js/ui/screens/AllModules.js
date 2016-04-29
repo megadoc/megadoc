@@ -105,7 +105,7 @@ module.exports = function createAllModulesComponent(routeName, config) {
 
           <Outlet
             name="CJS::ModuleBody"
-            props={{
+            elementProps={{
               routeName: routeName,
               params: this.props.params,
               query: this.props.query,

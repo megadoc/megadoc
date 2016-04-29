@@ -93,7 +93,7 @@ Rpt.get = function(id, filePath) {
 Rpt.findClosestModule = function(path) {
   var receiverDoc = this.findEnclosingDoc(path, this.docPaths);
 
-  if (receiverDoc) {
+  if (receiverDoc && receiverDoc.isModule()) {
     return receiverDoc.id;
   }
 };

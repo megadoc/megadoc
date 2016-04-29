@@ -4,7 +4,7 @@ const Disqus = require('components/Disqus');
 const GitStats = require('components/GitStats');
 const Document = require('components/Document');
 const scrollToTop = require('utils/scrollToTop');
-const { shape, string, arrayOf, number, object, bool, } = React.PropTypes;
+const { shape, string, arrayOf, number, object, bool, oneOf, } = React.PropTypes;
 
 const StaticFile = React.createClass({
   propTypes: {
@@ -12,6 +12,7 @@ const StaticFile = React.createClass({
     gitStats: object,
     disqusShortname: bool,
     filePath: string,
+    format: oneOf([ 'md', 'html' ]),
     file: shape({
       html: string,
       toc: arrayOf(shape({
@@ -33,7 +34,7 @@ const StaticFile = React.createClass({
   render() {
     return (
       <Document>
-        <HighlightedText children={this.props.file.html} />
+        {this.renderContent(this.props.format, this.props.file.html)}
 
         {this.props.gitStats && (
           <GitStats {...this.props.gitStats} />
@@ -48,6 +49,14 @@ const StaticFile = React.createClass({
 
       </Document>
     );
+  },
+
+  renderContent(format, content) {
+    if (format === 'html') {
+      return <div dangerouslySetInnerHTML={{__html: content}} />;
+    }
+
+    return <HighlightedText children={this.props.file.html} />;
   }
 });
 

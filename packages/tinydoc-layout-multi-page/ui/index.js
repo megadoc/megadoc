@@ -1,12 +1,10 @@
-const Outlet = require('components/Outlet');
+tinydoc.outlets.define('MultiPageLayout::Banner');
+tinydoc.outlets.define('MultiPageLayout::Content');
+tinydoc.outlets.define('MultiPageLayout::Sidebar');
 
-Outlet.define('MultiPageLayout::Banner');
-Outlet.define('MultiPageLayout::Content');
-Outlet.define('MultiPageLayout::Sidebar');
-
-tinydoc.use(function MultiPageLayout() {
-  Outlet.add('Layout', {
+tinydoc.use('tinydoc-layout-multi-page', function MultiPageLayout(api, configs) {
+  tinydoc.outlets.add('Layout', {
     key: 'MultiPageLayout',
-    component: require('./components/MultiPageLayout')
+    component: require('./components/MultiPageLayout')(configs[0])
   })
 });

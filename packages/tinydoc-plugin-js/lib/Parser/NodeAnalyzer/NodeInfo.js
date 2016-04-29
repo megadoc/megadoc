@@ -2,17 +2,17 @@ var K = require('../constants');
 var assign = require('lodash').assign;
 
 /**
- * @namespace Plugins.CJS
- *
  * @param {recast.ast} node
  *        The AST node we represent.
  *
  * @param {String} filePath
  */
 function NodeInfo(node, filePath) {
+  var loc = getLocation(node);
+
   this.id = undefined;
   this.receiver = undefined;
-  this.loc = { start: node.loc.start, end: node.loc.end };
+  this.loc = { start: loc.start, end: loc.end };
   this.fileLoc = filePath + ':' + this.loc.start.line;
   this.filePath = filePath;
   this.ctx = {
@@ -90,4 +90,12 @@ NodeInfo.prototype.isPrototypeEntity = function() {
 //   }
 // };
 
+function getLocation(node) {
+  if ('VariableDeclaration' === node.type) {
+    return node.declarations[0].init.loc || { start: {}, end: {} };
+  }
+  else {
+    return node.loc || { start: {}, end: {} };
+  }
+}
 module.exports = NodeInfo;

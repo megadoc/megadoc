@@ -5,6 +5,8 @@
   exit 1
 }
 
-source "./bin/_local-node-requires.sh"
+source "./bin/_helpers.sh"
+
+nodejs_use_local_packages
 
 exec ./cli/tinydoc --config=doc/tinydoc.conf.js $@

@@ -3,11 +3,7 @@ const ClassBrowser = require('components/ClassBrowser');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(api, config) {
-  const { routeName, navigationLabel } = config;
-
-  if (!api.outlets.has('SinglePageLayout::ContentPanel')) {
-    return;
-  }
+  const { routeName } = config;
 
   api.outlets.add('SinglePageLayout::ContentPanel', {
     component: require('../screens/AllModules')(routeName, config),
@@ -29,12 +25,6 @@ module.exports = function(api, config) {
 
         return (
           <div>
-            {navigationLabel && (
-              <header className="single-page-layout__sidebar-header">
-                {navigationLabel}
-              </header>
-            )}
-
             <ClassBrowser
               routeName={routeName}
               activeModuleId={moduleId && decodeURIComponent(moduleId)}

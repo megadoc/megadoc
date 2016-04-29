@@ -1,6 +1,6 @@
 {
   "name": "tinydoc-theme-qt",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "description": "A theme for tinydoc after Qt documentation pages.",
   "main": "lib/index.js",
   "repository": {
@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/tinydoc/tinydoc-theme-qt/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc-theme-qt#readme"
+  "homepage": "https://github.com/tinydoc/tinydoc-theme-qt#readme",
+  "peerDependencies": {
+    "tinydoc": "5.x"
+  }
 }

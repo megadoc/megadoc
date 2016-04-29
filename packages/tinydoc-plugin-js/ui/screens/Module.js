@@ -76,7 +76,7 @@ const Module = React.createClass({
 
         <Outlet
           name="CJS::ModuleBody"
-          props={{
+          elementProps={{
             routeName: routeName,
             params: this.props.params,
             query: this.props.query,

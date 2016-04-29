@@ -10,9 +10,7 @@ var assert = require('assert');
 var defaults = require('./config');
 
 /**
- * @namespace Plugins.CJS
- *
- * @param {Plugins.CJS.Config} userConfig
+ * @param {Config} userConfig
  */
 function createCJSPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
@@ -21,6 +19,8 @@ function createCJSPlugin(userConfig) {
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
     alias: config.alias,
+    parse: config.parse,
+    parserOptions: config.parserOptions,
     nodeAnalyzers: [],
     docstringProcessors: [],
     tagProcessors: [],

@@ -1,12 +1,13 @@
+var t = require('babel-types');
 var parsePropTypes = require('./parsePropTypes');
 var parseStatics = require('./parseStatics');
 var parseDisplayName = require('./parseDisplayName');
 
 function analyzeReactNode(n, node, path, nodeInfo) {
-  if (n.VariableDeclaration.check(node)) {
+  if (t.isVariableDeclaration(node)) {
     analyzeCallExpression(n, node.declarations[0].init, path, nodeInfo);
   }
-  else if (n.ExpressionStatement.check(node) && n.AssignmentExpression.check(node.expression)) {
+  else if (t.isExpressionStatement(node) && t.isAssignmentExpression(node.expression)) {
     analyzeCallExpression(n, node.expression.right, path, nodeInfo);
   }
 
@@ -18,7 +19,7 @@ function analyzeReactNode(n, node, path, nodeInfo) {
 }
 
 function analyzeCallExpression(n, node, path, nodeInfo) {
-  if (n.CallExpression.check(node) && n.MemberExpression.check(node.callee)) {
+  if (t.isCallExpression(node) && t.isMemberExpression(node.callee)) {
     var callee = node.callee;
 
     if (callee.object.name === 'React' && callee.property.name === 'createClass') {

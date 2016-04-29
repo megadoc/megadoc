@@ -10,7 +10,6 @@ module.exports = {
   allowLeadingSlashInLinks: true,
   generateMissingHeadings: true,
   discardIdPrefix: null,
+  discardFileExtension: false,
   corpusContext: 'Articles',
-  displayFooter: false,
-  displayFooterInHomePage: true,
 };

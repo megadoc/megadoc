@@ -17,7 +17,6 @@ const Article = React.createClass({
     routeName: string,
     config: shape({
       gitStats: bool,
-      displayFooter: bool,
     })
   },
 
@@ -67,7 +66,7 @@ const Article = React.createClass({
 
         <Outlet
           name="Markdown::Document"
-          props={{ document: article }}
+          elementProps={{ document: article }}
         />
 
         {this.props.config.gitStats && (

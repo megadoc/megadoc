@@ -1,12 +1,15 @@
 var Utils = require('../Utils');
-var recast = require('recast');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
-var n = recast.types.namedTypes;
+var babel = require('babel-core');
+var t = require('babel-types');
 
 describe('CJS::Parser::Utils', function() {
   function parse(strGenerator) {
-    return recast.parse(multiline(strGenerator));
+    return babel.transform(multiline(strGenerator), {
+      code: false,
+      ast: true
+    }).ast;
   }
 
   describe('.flattenNodePath', function() {
@@ -15,8 +18,8 @@ describe('CJS::Parser::Utils', function() {
         // SomeModule.prototype.someProperty = 'a';
       });
 
-      recast.visit(ast, {
-        visitMemberExpression: function(path) {
+      babel.traverse(ast, {
+        MemberExpression: function(path) {
           assert.equal(Utils.flattenNodePath(path.node), 'SomeModule.prototype');
           return false;
         }
@@ -28,8 +31,8 @@ describe('CJS::Parser::Utils', function() {
         // SomeModule.prototype.someFunc = function() {};
       });
 
-      recast.visit(ast, {
-        visitMemberExpression: function(path) {
+      babel.traverse(ast, {
+        MemberExpression: function(path) {
           assert.equal(Utils.flattenNodePath(path.node), 'SomeModule.prototype');
           return false;
         }
@@ -47,12 +50,12 @@ describe('CJS::Parser::Utils', function() {
         // }
       });
 
-      recast.visit(ast, {
-        visitProperty: function(path) {
+      babel.traverse(ast, {
+        Property: function(path) {
           var ancestorPath = Utils.findAncestorPath(path, function(parentPath) {
             return (
               parentPath.node &&
-              n.FunctionDeclaration.check(parentPath.node)
+              t.isFunctionDeclaration(parentPath.node)
             );
           });
 
@@ -73,12 +76,12 @@ describe('CJS::Parser::Utils', function() {
         // };
       });
 
-      recast.visit(ast, {
-        visitMemberExpression: function(path) {
+      babel.traverse(ast, {
+        MemberExpression: function(path) {
           var ancestorPath = Utils.findAncestorPath(path, function(parentPath) {
             return (
               parentPath.node &&
-              n.FunctionDeclaration.check(parentPath.node)
+              t.isFunctionDeclaration(parentPath.node)
             );
           });
 
@@ -102,15 +105,15 @@ describe('CJS::Parser::Utils', function() {
         // }
       });
 
-      recast.visit(ast, {
-        visitProperty: function(path) {
+      babel.traverse(ast, {
+        Property: function(path) {
           var targetPath = Utils.findIdentifierInScope(
             path.node.value.name,
             path
           );
 
           assert.ok(targetPath);
-          assert.equal(targetPath.node.name, 'fn');
+          assert.equal(targetPath.node.id.name, 'fn');
 
           return false;
         }

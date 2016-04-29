@@ -59,7 +59,7 @@ const Root = React.createClass({
           />
         )}
 
-        <Outlet name="Layout" props={this.props} />
+        <Outlet name="Layout" elementProps={this.props} />
       </Outlet>
     );
   },

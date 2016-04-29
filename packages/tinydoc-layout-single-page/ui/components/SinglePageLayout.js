@@ -38,7 +38,7 @@ const SinglePageLayout = React.createClass({
                 {internal && this.props.children}
 
                 {!internal && (
-                  <Outlet name="SinglePageLayout::ContentPanel" props={this.props}>
+                  <Outlet name="SinglePageLayout::ContentPanel" elementProps={this.props}>
                     <RouteHandler />
                   </Outlet>
                 )}
@@ -63,7 +63,7 @@ const SinglePageLayout = React.createClass({
         <div className={className}>
           <Outlet
             name="SinglePageLayout::Sidebar"
-            props={this.props}
+            elementProps={this.props}
           />
 
           {config.allowUserSettings && (

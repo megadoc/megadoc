@@ -1,36 +1,16 @@
 const React = require('react');
 const ClassBrowser = require('components/ClassBrowser');
-const Link = require('components/Link');
-const Icon = require('components/Icon');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(api, config) {
-  const { navigationLabel, icon, routeName } = config;
-
-  if (!api.outlets.has('MultiPageLayout::Banner')) {
-    return;
-  }
-
-  api.outlets.add('MultiPageLayout::Banner', {
-    key: routeName,
-
-    component: React.createClass({
-      displayName: 'CJSNavigation',
-
-      render() {
-        return (
-          <Link to={routeName}>
-            {icon && <Icon className={icon} />} {navigationLabel}
-          </Link>
-        );
-      }
-    })
-  });
+  const { routeName } = config;
 
   api.outlets.add('MultiPageLayout::Content', {
     key: routeName,
 
-    match(props) { return props.path.match(`^/${routeName}`); },
+    match(props) {
+      return props.path.match(`^/${routeName}($|/)`);
+    },
 
     component: require('../screens/Root')(routeName),
   });
@@ -38,7 +18,7 @@ module.exports = function(api, config) {
   api.outlets.add('MultiPageLayout::Sidebar', {
     key: routeName,
 
-    match(props) { return props.path.match(`^/${routeName}`); },
+    match(props) { return props.path.match(`^/${routeName}($|/)`); },
 
     component: React.createClass({
       propTypes: {

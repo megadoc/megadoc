@@ -5,26 +5,116 @@
 - Markdown renderer now accepts a `anchorableHeadings: Boolean` option that
   controls whether the `<h{1..4} />` tags should have anchors. This affects
   the `renderMarkdown` routines passed to the `render` phase plugins.
-- `tinydoc-plugin-static` for rendering static files at arbitrary URL
+- layout capabilities are no longer in core, instead we have two primary layout
+  plugins; read more about this below
+- a few of the compiler phases are now _parallelized_ which should greatly speed the compilation up if you're using many plugins
 
-**`tinydoc.use()` signature change**
+### New Feature - Spotlight
+
+Spotlight is here! All the indexed documents have a chance to enter the Spotlight (engaged using `Ctrl+K` or `CMD+K`) and allow the user to quickly find the document they're looking for, or other related documents thanks to the [fuzzy search algorithm](https://github.com/jeancroy/fuzzaldrin-plus) it utilizes.
+
+The Spotlight can operate in two useful modes:
+
+- "Jump-to-Document" mode (default) in which the _corpus_ is composed of all the documents in the database
+- "Jump-to-Symbol" mode, engaged by typing `@` as the first character of the query, or by using `Ctrl+.` or `CMD+.`, in which the corpus is the set of entities for that document (what this means depends on the document type; for a markdown article, this would be the headings, for a JS module, this would be its functions/properties, etc.)
+
+The Spotlight also sports an intuitive keyboard navigation interface.
+
+Currently supported plugins:
+
+- [tinydoc-plugin-js]()
+- [tinydoc-plugin-markdown]()
+- [tinydoc-plugin-react]()
+- [tinydoc-plugin-yard-api]()
+
+### New Feature - Preview Tooltips
+
+Anytime you're hovering over a link to an internal document, tinydoc will now show a small tooltip that gives the reader a brief description of that document.
+
+Very helpful for the times when you are not yet ready to leave the document you're currently reading, but have no idea what the referenced document is.
+
+Currently supported plugins:
+
+- [tinydoc-plugin-js]()
+- [tinydoc-plugin-markdown]()
+- [tinydoc-plugin-react]()
+- [tinydoc-plugin-yard-api]()
+
+### New Plugin - [tinydoc-plugin-static]()
+
+A new plugin for rendering static files at arbitrary URLs. Useful for rendering
+landing pages for other plugins, like js/markdown/API.
+
+### New Plugin - [tinydoc-layout-single-page]()
+
+A plugin for rendering all the content in a single page. Useful for small
+projects orlibraries that consist of a bunch of files and a single API
+reference.
+
+Navigation is done using a static/fixed sidebar to the left.
+
+### New Plugin - [tinydoc-layout-multi-page]()
+
+A plugin for rendering content in multiple pages. Primary navigation is 
+achieved using a banner on the top, which supports arbitrary links and menus
+of links, and sub-navigation using a sidebar.
+
+### New Plugin - [tinydoc-theme-qt]()
+
+A new theme plugin that mimics [Qt docs](http://doc.qt.io). Very nice looking
+for multi-page layouts.
+
+### New Plugin - [tinydoc-plugin-reference-graph]()
+
+This plugin will build an internal graph of all the inter-document links in the database. When viewing a document, a list of external documents that talk about the current one will be displayed. This helps the reader find related articles and explore the document database.
+
+Currently supported plugins:
+
+- [tinydoc-plugin-js]()
+- [tinydoc-plugin-markdown]()
+- [tinydoc-plugin-react]()
+
+### Plugin API changes
+
+**[tinydoc.use]() signature change**
 
 The new signature is:
 
-    `tinydoc.use(String, Function) -> void`
+    tinydoc.use(String, Function) -> void
 
 And the function will be passed two arguments, the first is the plugin API,
 and the second is the runtime configs registered for that plugin. This is for
 convenience instead of having to reach out to `tinydoc.getRuntimeConfigs(...)`
 and is (currently) backwards compatible.
 
-**tinydoc-plugin-js**
+### Plugin Changes
 
-- now accepts a static file into the landing page under the outlet `CJS::Landing`, useful for rendering READMEs
+#### [tinydoc-plugin-js]()
 
-**tinydoc-plugin-yard-api**
+- now using [babeljs](https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md) instead of recast for parsing code
+- now supports an outlet `CJS::Landing` for rendering custom landing content
+- the plugin no longer defines any links in the banner, hence the config parameters `config.navigationLabel` and `config.icon` were dropped. Instead, use the layout for defining links.
+- Spotlight support for indexing modules and their properties, static methods and instance methods
+- Tooltip Preview support for modules and all their entities. The tooltips should the document's type, its summary, and its corpus context.
+- some style updates for better readability, especially when method parameters are involved
+- interoperability with `tinydoc-plugin-reference-graph` for generating a "Related Documents" list for modules
+- new config param, `alias: Object<String,Array.<String>>` that supports explicit aliasing of modules. Very useful when you do not control the source code for those modules, or do not want to change it.
 
-- now accepts a static file into the landing page under the outlet `yard-api::Landing`
+#### [tinydoc-plugin-react]()
+
+- now using [babeljs](https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md) instead of recast for parsing code
+
+#### [tinydoc-plugin-yard-api]()
+
+- now supports an outlet `yard-api::Landing` for rendering custom landing content
+- fixed a styling issue when scrolling or using anchors to API objects that caused the heading of those objects to be outside of the visible viewport
+
+#### [tinydoc-plugin-markdown]()
+
+- the `<meta name="description">` is now modified to reflect the current article's summary. Very link when you're linking to tinydoc documents in Slack or such that utilize the meta of the document when displaying those links.
+- Spotlight support for indexing articles and their headings
+- Spotlight Symbol-Jumping support for scanning and jumping between sections of the current article quickly
+- Tooltip Preview support: the name of the article plus an estimated reading time in minutes
 
 ## 4.0.1
 
