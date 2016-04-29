@@ -115,7 +115,7 @@ function shouldRun() {
   fi
 }
 
-run_task refresh_dependencies
+shouldRun "update" && run_task refresh_dependencies
 
 shouldRun "lint" && run_task lint_sources && run_task lint_ui_sources
 shouldRun "test" && run_task run_tests
