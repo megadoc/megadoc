@@ -5,6 +5,8 @@ var TinyTestUtils = require('tinydoc/lib/TestUtils');
 var multiline = require('multiline-slash');
 
 describe('CJS::Parser - @memberOf support', function() {
+  this.timeout(20000);
+
   it('correctly adjusts the receiver to the specified one', function() {
     var docs = TestUtils.parseInline(function() {;
       // /** @module */
