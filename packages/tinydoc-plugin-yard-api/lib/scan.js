@@ -1,7 +1,7 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var glob = require('glob');
-var assign = require('tinydoc/lib/utils/Object.assign');
+var assign = require('object-assign');
 
 function generateDocs(config, globalConfig, done) {
   var env = config.env || {};

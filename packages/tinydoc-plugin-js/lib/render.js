@@ -1,4 +1,4 @@
-var RendererUtils = require('tinydoc/lib/Renderer/Utils');
+var RendererUtils = require('tinydoc/lib/RendererUtils');
 
 module.exports = function(database, md, linkify) {
   database.forEach(function(doc) {
@@ -6,7 +6,7 @@ module.exports = function(database, md, linkify) {
     var linkSource = { href: doc.href, title: doc.id };
 
     if (doc.description) {
-      doc.summary = RendererUtils.sanitize(
+      doc.summary = RendererUtils.htmlToText(
         RendererUtils.extractSummary(doc.description)
       );
 
