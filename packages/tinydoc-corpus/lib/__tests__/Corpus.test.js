@@ -1,11 +1,11 @@
 require('../../');
 
-const Subject = require("../Corpus");
-const { builders: b } = require('../CorpusTypes');
-const { assert } = require('chai');
+var Subject = require("../Corpus");
+var b = require('../CorpusTypes').builders;
+var assert = require('chai').assert;
 
 describe('Corpus', function() {
-  let subject;
+  var subject;
 
   beforeEach(function() {
     subject = Subject();
@@ -15,7 +15,7 @@ describe('Corpus', function() {
   });
 
   it('lets me add a namespace', function() {
-    const ns = b.namespace({
+    var ns = b.namespace({
       id: 'JS',
       corpusContext: 'JavaScripts',
       documents: []
@@ -27,7 +27,7 @@ describe('Corpus', function() {
   });
 
   it('tracks documents within a namespace', function() {
-    const ns = b.namespace({
+    var ns = b.namespace({
       id: 'JS',
       corpusContext: 'JavaScripts',
       documents: [
@@ -45,7 +45,7 @@ describe('Corpus', function() {
   });
 
   it('allows me to customize the namespace symbol', function() {
-    const ns = b.namespace({
+    var ns = b.namespace({
       id: 'API',
       symbol: '::',
       corpusContext: 'Rails API',
@@ -155,7 +155,7 @@ describe('Corpus', function() {
       );
     });
 
-    const specs = [
+    [
       { ctx: "JS/Core.X@name"     , link: "X"               , res: "JS/Core.X" },
       { ctx: "JS/Core.X@name"     , link: "JS/X"            , res: "JS/X" },
       { ctx: "JS/Core.X@name"     , link: "MD/X"            , res: "MD/X" },
@@ -175,8 +175,9 @@ describe('Corpus', function() {
       { ctx: "MD/Y"             , link: "X"            , res: "MD/X" },
     ].forEach(function(spec) {
       var fn = spec.only ? it.only : it;
-      fn(`resolves '${spec.res}' from '${spec.ctx}' using '${spec.link}'`, function() {
-        const document = subject.resolve({
+
+      fn("resolves '" + spec.res + "' from '" + spec.ctx + "' using '" + spec.link + "'", function() {
+        var document = subject.resolve({
           text: spec.link,
           contextNode: subject.get(spec.ctx)
         });
