@@ -155,6 +155,11 @@ config.plugins = [
             text: 'API',
             href: '/dev/api',
           },
+
+          {
+            text: 'Corpus',
+            href: '/dev/corpus',
+          },
         ]
       },
 
@@ -167,6 +172,27 @@ config.plugins = [
   }),
 
   require('tinydoc-theme-qt')({}),
+
+  require('tinydoc-plugin-static')({
+    source: 'packages/tinydoc-corpus/README.md',
+    url: '/dev/corpus',
+    outlet: 'CJS::Landing',
+    anchorableHeadings: false
+  }),
+
+  require('tinydoc-plugin-js')({
+    routeName: 'dev/corpus',
+    corpusContext: 'Corpus',
+    useDirAsNamespace: false,
+    inferModuleIdFromFileName: true,
+
+    source: [
+      'packages/tinydoc-corpus/defs/*.js',
+      'packages/tinydoc-corpus/lib/**/*.js',
+    ],
+
+    exclude: [ /\.test\.js$/ ],
+  })
 ];
 
 [
