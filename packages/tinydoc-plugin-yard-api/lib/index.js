@@ -1,5 +1,5 @@
 var path = require('path');
-var assign = require('tinydoc/lib/utils/Object.assign');
+var assign = require('object-assign');
 var scan = require('./scan');
 var indexEntities = require('./indexEntities');
 var resolveLink = require('./resolveLink');

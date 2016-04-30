@@ -3,7 +3,7 @@
 var program = require('commander');
 var fs = require('fs-extra');
 var path = require('path');
-var deep = require('deep-get-set');
+var set = require('lodash').set;
 var pkg = require('../package');
 var tinydoc = require('..');
 var Logger = require('../lib/Logger');
@@ -69,7 +69,7 @@ program.override.forEach(function(override) {
   var key = fragments[0];
   var value = JSON.parse(fragments[1]);
 
-  deep(config, key, value);
+  set(config, key, value);
 
   console.log('Overridden "%s" with "%s"', key, value);
 });

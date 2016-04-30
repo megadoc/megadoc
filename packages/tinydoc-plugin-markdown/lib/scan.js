@@ -3,7 +3,7 @@ var path = require('path');
 
 var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
 var parseGitStats = require('tinydoc/lib/utils/parseGitStats');
-var RendererUtils = require('tinydoc/lib/Renderer/Utils');
+var RendererUtils = require('tinydoc/lib/RendererUtils');
 
 var parseTitle = require('./scan/parseTitle');
 var strHumanize = require('./utils/strHumanize');
@@ -57,7 +57,7 @@ module.exports = function scan(config, utils, globalConfig, done) {
       entry.source = '# ' + entry.title + '\n\n' + entry.source;
     }
 
-    entry.plainTitle = RendererUtils.renderText(entry.title);
+    entry.plainTitle = RendererUtils.markdownToText(entry.title);
 
     entry.fileName = fileName;
     entry.folder = path.dirname(entry.filePath);
