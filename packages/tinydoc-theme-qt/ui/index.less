@@ -90,6 +90,15 @@ h4, h5, h6 {
 
 .schemable({
   .doc-entity {
+    &__name {
+      max-width: 100%;
+      overflow: hidden;
+      display: block;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      margin-right: 1em;
+    }
+
     &:not(:last-of-type) {
       border-bottom: none;
     }

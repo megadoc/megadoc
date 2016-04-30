@@ -1,8 +1,8 @@
 require('../../');
 
-const assert = require('chai').assert;
-const Subject = require("../CorpusTypes");
-const b = Subject.builders;
+var assert = require('chai').assert;
+var Subject = require("../CorpusTypes");
+var b = Subject.builders;
 
 describe("CorpusTypes", function() {
 
@@ -108,7 +108,7 @@ describe("CorpusTypes", function() {
 });
 
 function benchmark(options, fn) {
-  const startTime = new Date();
+  var startTime = new Date();
   var i;
 
   if (options.log !== false) {
@@ -119,8 +119,8 @@ function benchmark(options, fn) {
     fn();
   }
 
-  const endTime = new Date();
-  const delta = endTime - startTime;
+  var endTime = new Date();
+  var delta = endTime - startTime;
 
   if (options.log !== false) {
     console.log('Benchmark: %d iterations complete in %d ms', options.times, delta);
