@@ -7,7 +7,7 @@ const ColorSchemeManager = require('core/ColorSchemeManager');
 const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
-const TooltipManager = require('components/TooltipManager');
+const Inspector = require('components/Inspector');
 
 const Root = React.createClass({
   propTypes: {
@@ -50,7 +50,7 @@ const Root = React.createClass({
   render() {
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
-        {config.tooltipPreviews && (<TooltipManager />)}
+        {config.tooltipPreviews && (<Inspector />)}
         {config.spotlight && (
           <SpotlightManager
             active={AppState.isSpotlightOpen()}

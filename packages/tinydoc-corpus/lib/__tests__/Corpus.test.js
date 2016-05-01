@@ -76,6 +76,40 @@ describe('Corpus', function() {
     }, "IntegrityViolation: expected node to reference a parentNode.");
   });
 
+  describe('serialization', function() {
+    it('flattens the database', function() {
+      subject.add(b.namespace({
+        id: 'API',
+        documents: [
+          b.document({
+            id: 'Users',
+            entities: [
+              b.documentEntity({
+                id: 'add'
+              })
+            ]
+          })
+        ]
+      }));
+
+      var dump = subject.toJSON();
+
+      assert.equal(Object.keys(dump).length, 3);
+      assert.equal(dump['API'].parentNode, undefined,
+        "it does not serialize the root corpus node"
+      );
+
+      assert.equal(dump['API/Users'].parentNode, 'API');
+      assert.equal(dump['API/Users'].entities[0], 'API/Usersadd',
+        "it swaps entities with their UIDs"
+      );
+
+      assert.equal(dump['API/Usersadd'].parentNode, 'API/Users',
+        "it swaps parentNode values with the UID"
+      );
+    });
+  });
+
   describe('resolving', function() {
     beforeEach(function() {
       subject.add(

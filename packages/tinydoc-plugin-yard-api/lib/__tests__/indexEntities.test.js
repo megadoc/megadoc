@@ -1,7 +1,8 @@
-var LinkResolver = require('tinydoc/lib/LinkResolver');
+var LinkResolver = require('tinydoc/lib/HTMLSerializer__LinkResolver');
 var Registry = require('tinydoc/lib/Registry');
 var indexEntities = require('../indexEntities');
 var assert = require('assert');
+var Corpus = require('tinydoc-corpus').Corpus;
 
 describe('yard-api::indexEntities', function() {
   var registry = new Registry();
@@ -19,7 +20,7 @@ describe('yard-api::indexEntities', function() {
     }]
   }];
 
-  var resolver = new LinkResolver(indexEntities(database, registry, { routeName: 'api' }));
+  var resolver = new LinkResolver(indexEntities(database, registry, { routeName: 'api' }), Corpus());
 
   resolver.use(function(id) {
     var index = registry.toJSON().indices[id];
@@ -28,13 +29,13 @@ describe('yard-api::indexEntities', function() {
       var href;
 
       if (index.objectId) {
-        href = index.resourceId + '::' + index.objectId;
+        href = '/' + index.resourceId + '::' + index.objectId;
       }
       else if (index.endpointId) {
-        href = index.resourceId + '#' + index.endpointId;
+        href = '/' + index.resourceId + '#' + index.endpointId;
       }
       else {
-        href = index.resourceId;
+        href = '/' + index.resourceId;
       }
 
       return {

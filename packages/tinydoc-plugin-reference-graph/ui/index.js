@@ -1,6 +1,6 @@
 const RelatedDocuments = require('./components/RelatedDocuments');
 
-tinydoc.use('tinydoc-plugin-reference-graph', function(api, configs) {
+tinydoc.use('tinydoc-plugin-reference-graph', function ReferenceGraph(api, configs) {
   const component = RelatedDocuments(configs[0]);
 
   tinydoc.outlets.add('CJS::ModuleBody', {

@@ -222,3 +222,9 @@ A sample AST for the example above:
   }
 };
 ```
+
+## TODO
+
+- resolving by filepath
+- customizing the index fields (e.g. for JS's @alias tag support)
+- resolved link title should be tuned based on the contextNode's scope - private scopes should not use the FQN-index and so on

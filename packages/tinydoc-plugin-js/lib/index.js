@@ -1,19 +1,21 @@
 var path = require('path');
 var scan = require('./scan');
-var Indexer = require('./Indexer');
-var resolveLink = require('./resolveLink');
 var generateStats = require('./generateStats');
 var render = require('./render');
-var merge = require('lodash').merge;
 var assign = require('lodash').assign;
 var assert = require('assert');
 var defaults = require('./config');
+var RendererUtils = require('tinydoc/lib/RendererUtils');
+var CorpusTypes = require('tinydoc-corpus').Types;
+var b = CorpusTypes.builders;
+var K = require('./Parser/constants');
+var reduceDocuments = require('./CorpusReducer');
 
 /**
  * @param {Config} userConfig
  */
 function createCJSPlugin(userConfig) {
-  var config = merge({}, defaults, userConfig);
+  var config = assign({}, defaults, userConfig);
   var parserConfig = {
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
@@ -87,30 +89,17 @@ function createCJSPlugin(userConfig) {
             return done(err);
           }
 
-          database = _database.map(function(doc) {
-            return assign({}, doc, {
-              href: doc.isModule ?
-                plugin.id + '/modules/' + encodeURIComponent(doc.id) :
-                plugin.id + '/modules/' + encodeURIComponent(doc.receiver) + '/' + encodeURIComponent(doc.ctx.symbol + doc.name)
-            });
+          database = reduceDocuments({
+            documents: _database,
+            namespaceId: config.routeName,
+            namespaceTitle: config.corpusContext,
+            baseURL: config.routeName
           });
 
-          compiler.linkResolver.use(resolveLink.bind(null, database));
+          compiler.corpus.add(database);
 
           done();
         });
-      });
-
-      compiler.on('index', function(registry, done) {
-        Indexer.generateIndices(database, registry, config).forEach(function(index) {
-          registry.add(index.path, index.index);
-        });
-
-        Indexer.generateSearchTokens(database, registry, config).forEach(function(token) {
-          registry.addSearchToken(token);
-        });
-
-        done();
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
@@ -134,9 +123,7 @@ function createCJSPlugin(userConfig) {
           path.resolve(__dirname, '..', 'dist', plugin.name + '.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig(plugin.name, merge({}, config, {
-          database: database
-        }));
+        compiler.assets.addPluginRuntimeConfig(plugin.name, config);
 
         done();
       });

@@ -2,6 +2,7 @@ var resolveLink = require('./CorpusResolver');
 var buildIndices = require('./CorpusIndexer');
 var b = require('./CorpusTypes').builders;
 var assert = require('assert');
+var assign = require('object-assign');
 
 /**
  * The Corpus public API.
@@ -29,8 +30,9 @@ function Corpus() {
    * Resolve a link to a document.
    *
    * @param {Object} anchor
-   * @param {T.Node} anchor.contextNode
-   *        The UID of the contextNode we're resolving from.
+   * @param {T.Node} [anchor.contextNode]
+   *        The contextNode we're resolving from. Defaults to the root corpus
+   *        node.
    *
    * @param {String} anchor.text
    *        The term to use for looking up the document.
@@ -42,7 +44,10 @@ function Corpus() {
       return nodes[anchor.text];
     }
 
-    return resolveLink(anchor);
+    return resolveLink(anchor.contextNode ? anchor : {
+      text: anchor.text,
+      contextNode: corpusNode
+    });
   };
 
   /**
@@ -53,6 +58,13 @@ function Corpus() {
   };
 
   exports.add = add;
+
+  exports.toJSON = function() {
+    return Object.keys(nodes).reduce(function(map, uid) {
+      map[uid] = flattenNodeAndChildren(nodes[uid]);
+      return map;
+    }, {});
+  };
 
   /**
    * @lends Corpus
@@ -126,6 +138,33 @@ function UID(sourceNode) {
   } while ((node = node.parentNode));
 
   return fragments.join('');
+}
+
+function flattenNodeAndChildren(node) {
+  var clone = flattenNode(assign({}, node));
+
+  if (node.documents) {
+    clone.documents = node.documents.map(getUID);
+  }
+
+  if (node.entities) {
+    clone.entities = node.entities.map(getUID);
+  }
+
+  return clone;
+}
+
+function flattenNode(node) {
+  if (node.parentNode) {
+    return assign({}, node, { parentNode: node.parentNode.uid });
+  }
+  else {
+    return node;
+  }
+}
+
+function getUID(node) {
+  return node.uid;
 }
 
 module.exports = Corpus;

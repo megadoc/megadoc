@@ -28,7 +28,7 @@ Rpt.addModuleDoc = function(doc, path, filePath) {
   if (this.get(doc.id)) {
     console.warn('You are attempting to overwrite an existing doc entry! This is very bad.',
       doc.id,
-      filePath + ':' + path.node.loc.start.line
+      filePath + ':' + Utils.getLocation(path.node).start.line
     );
   }
 

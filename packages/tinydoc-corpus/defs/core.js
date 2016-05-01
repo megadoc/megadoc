@@ -2,6 +2,7 @@ var CorpusTypes = require('../lib/CorpusTypes');
 var def = CorpusTypes.def;
 var or = CorpusTypes.or;
 var array = CorpusTypes.array;
+var t = CorpusTypes.builtInTypes;
 
 /**
  * @module T.Corpus
@@ -17,9 +18,9 @@ def("Corpus", {
  */
 def("Namespace", {
   fields: {
-    id: String,
-    symbol: or(String, null), // defaults to "/"
-    corpusContext: or(String, null),
+    id: t.string,
+    symbol: or(t.string, null), // defaults to "/"
+    corpusContext: or(t.string, null),
     documents: or(array("Document"), null),
     parentNode: "Corpus"
   }
@@ -30,12 +31,11 @@ def("Namespace", {
  */
 def("Node", {
   fields: {
-    id: String,
-    href: or(String, null),
-    title: or(String, null),
-    summary: or(String, null),
-    filePath: or(String, null),
-    properties: or(array("Property"), null)
+    id: t.string,
+    href: or(t.string, null),
+    title: or(t.string, null),
+    filePath: or(t.string, null),
+    properties: or(array("Property"), t.object, null)
   }
 });
 
@@ -46,7 +46,7 @@ def("Node", {
 def("Document", {
   base: "Node",
   fields: {
-    symbol: or(String, null),
+    symbol: or(t.string, null),
     parentNode: or("Namespace", "Document"),
     documents: or(array("Document"), null),
     entities: or(array("DocumentEntity"), null),
@@ -54,7 +54,7 @@ def("Document", {
 });
 
 /**
- * @module T.Document
+ * @module T.DocumentEntity
  * @mixes T.Node
  */
 def("DocumentEntity", { // terminal
@@ -68,9 +68,8 @@ def("DocumentEntity", { // terminal
  * @module T.Property
  */
 def("Property", {
-  build: [ 'key', 'value' ],
   fields: {
-    key: String,
-    value: or(String, Number, Boolean, RegExp, Array, Object, null)
+    key: t.string,
+    value: or(t.string, t.number, t.boolean, t.regExp, t.array, t.object, null)
   }
 });

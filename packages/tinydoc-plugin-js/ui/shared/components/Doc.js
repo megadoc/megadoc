@@ -110,8 +110,7 @@ var Doc = React.createClass({
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
 
-              <a className="doc-entity__anchor icon icon-link" href={'#/' + doc.href} />
-
+              <a className="doc-entity__anchor icon icon-link" href={'#' + doc.href} />
             </span>
           </h4>
         )}

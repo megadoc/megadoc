@@ -2,6 +2,7 @@ var assert = require('assert');
 var typeDefs = {};
 var typeCheckers = {};
 var builders = {};
+var builtInTypes = {};
 var assign = require('lodash').assign;
 var uniq = require('lodash').uniq;
 var camelizeCache = {};
@@ -129,6 +130,9 @@ function createTypeChecker(type) {
     else if (typeof type === 'string') {
       return checkCustomType(type, x);
     }
+    else if (typeof type === 'function') {
+      return type(x);
+    }
     else {
       return checkPrimitiveType(type, x);
     }
@@ -138,7 +142,17 @@ function createTypeChecker(type) {
 function checkPrimitiveType(type, x) {
   var expectedType = type.name;
 
-  if (!x || x.constructor !== type) {
+  var valid = (
+    !!x &&
+    (
+      (x.constructor && x.constructor === type) ||
+      (x.constructor && x.constructor.name === expectedType) ||
+      typeof x === type ||
+      x instanceof type
+    )
+  );
+
+  if (!valid) {
     return "Expected a value of type '" + expectedType + "', not '" + getTypeOf(x) + "'."
   }
 }
@@ -251,7 +265,6 @@ function getTypeName(x) {
     return x.typeNames;
   }
   else {
-    console.log('unknown type!', typeof x, x)
     return String(x);
   }
 }
@@ -263,8 +276,46 @@ function getTypeOf(x) {
   return (x && x.constructor) ? x.constructor.name : typeof x;
 }
 
+builtInTypes["string"] = BuiltInTypeChecker('String', function(x) {
+  return typeof x === 'string';
+});
+
+builtInTypes["number"] = BuiltInTypeChecker('Number', function(x) {
+  return typeof x === 'number';
+});
+
+builtInTypes["boolean"] = BuiltInTypeChecker('Boolean', function(x) {
+  return typeof x === 'boolean';
+});
+
+builtInTypes["regExp"] = BuiltInTypeChecker('RegExp', function(x) {
+  return x instanceof RegExp;
+});
+
+builtInTypes["null"] = BuiltInTypeChecker('null', function(x) {
+  return x === null;
+});
+
+builtInTypes["array"] = BuiltInTypeChecker('Array', function(x) {
+  return Array.isArray(x);
+});
+
+builtInTypes["object"] = BuiltInTypeChecker('Object', function(x) {
+  return typeof x === 'object' && x !== null;
+});
+
+function BuiltInTypeChecker(typeName, f) {
+  return function(x) {
+    if (!f(x)) {
+      return "Expected a value of type '" + typeName + "', not '" + getTypeOf(x) + "'";
+    }
+  };
+}
+
 exports.builders = builders;
 exports.def = def;
 exports.array = array;
 exports.or = or;
 exports.finalize = finalize;
+exports.builtInTypes = builtInTypes;
+exports.types = builtInTypes;

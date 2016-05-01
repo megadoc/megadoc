@@ -1,4 +1,12 @@
+var assert = require('assert');
+
 module.exports = function resolve(anchor, options, _visited) {
+  assert(anchor && typeof anchor.text === 'string',
+    "ArgumentError: resolve request requires a 'text' term to resolve.");
+
+  assert(anchor && anchor.contextNode && typeof anchor.contextNode === 'object',
+    "ArgumentError: resolve request requires a contextNode to resolve from.");
+
   var targetNode;
   var term = anchor.text;
   var contextNode = anchor.contextNode;
@@ -21,6 +29,8 @@ module.exports = function resolve(anchor, options, _visited) {
 
     return resolve({ contextNode: parentNode, text: term }, options, visited);
   }
+
+  return targetNode;
 
   function searchInBranch(node) {
     var result;
@@ -99,8 +109,6 @@ module.exports = function resolve(anchor, options, _visited) {
   function hasVisited(node) {
     return node.uid in visited;
   }
-
-  return targetNode;
 };
 
 function isLeaf(node) {

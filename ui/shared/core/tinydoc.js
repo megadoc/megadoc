@@ -1,5 +1,6 @@
 const buildRouteMap = require('utils/buildRouteMap');
 const Outlet = require('components/Outlet');
+const CorpusAPI = require('./CorpusAPI');
 
 /**
  * @module tinydoc
@@ -21,6 +22,7 @@ module.exports = function createTinydoc(config) {
   const pluginAPI = {
     outlets: Outlet,
     addRoutes,
+
     registerPreviewHandler(fn) {
       previewHandlers.push(fn);
     },
@@ -87,7 +89,7 @@ module.exports = function createTinydoc(config) {
     }
 
     try {
-      console.log('Loading %s.', plugin.name);
+      console.log('Loading "%s".', plugin.name);
 
       plugin.apply(null, args);
     }
@@ -96,6 +98,8 @@ module.exports = function createTinydoc(config) {
       console.error(e.stack || e);
     }
     finally {
+      console.log('Plugin "%s" has been loaded - %d remain.', plugin.name, config.pluginCount - ran);
+
       if (++ran === config.pluginCount) {
         console.log('All %d/%d plugins have been loaded, no more may be loaded from now on.', ran, config.pluginCount);
 
@@ -128,6 +132,25 @@ module.exports = function createTinydoc(config) {
       callbacks.push(callback);
     }
   };
+
+  exports.getDatabase = function(namespaceId) {
+    return Object.keys(CONFIG.database)
+      .filter(function(uid) { return uid.indexOf(namespaceId) === 0; })
+      .map(function(uid) {
+        return CONFIG.database[uid];
+      })
+    ;
+  };
+
+  exports.getCorpus = function() {
+    return CONFIG.database;
+  };
+
+  /**
+   * @property {UI.Corpus}
+   *           The Corpus API for plugins to use.
+   */
+  exports.corpus = CorpusAPI(CONFIG.database);
 
   return exports;
 };

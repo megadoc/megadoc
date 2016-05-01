@@ -5,4 +5,6 @@ var CorpusTypes = require('./lib/CorpusTypes');
 
 CorpusTypes.finalize();
 
-module.exports = Corpus;
+exports.Corpus = Corpus;
+exports.Types = CorpusTypes;
+exports.builders = CorpusTypes.builders;

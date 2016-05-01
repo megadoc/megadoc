@@ -3,20 +3,25 @@ require('../../');
 var assert = require('chai').assert;
 var Subject = require("../CorpusTypes");
 var b = Subject.builders;
+var t = Subject.builtInTypes;
 
 describe("CorpusTypes", function() {
 
   describe('type checkers', function() {
     it('works with primitive types [String]', function() {
-      b.property({
-        key: 'foo',
-        value: 'bar'
+      Subject.def("Foo", {
+        fields: {
+          summary: t.string
+        }
       });
 
+      Subject.finalize();
+
+      b.foo({ summary: 'bar' });
+
       assert.throws(function() {
-        b.property({
-          key: 5,
-          value: 'bar'
+        b.foo({
+          summary: 5
         });
       }, "TypeError: Expected a value of type 'String', not 'Number'");
     });
@@ -40,7 +45,7 @@ describe("CorpusTypes", function() {
     it('works with an array of types [array(...)]', function() {
       Subject.def("Foo", {
         fields: {
-          id: Subject.array("Property", String, null)
+          id: Subject.array("Property", t.string, null)
         }
       });
 
@@ -58,7 +63,7 @@ describe("CorpusTypes", function() {
     it('works with union types [or(...)]', function() {
       Subject.def("Foo", {
         fields: {
-          id: Subject.or(String, Number, null)
+          id: Subject.or(t.string, t.number, null)
         }
       });
 

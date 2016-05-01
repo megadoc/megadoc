@@ -1,19 +1,34 @@
 var RendererUtils = require('tinydoc/lib/RendererUtils');
 
-module.exports = function(database, md, linkify) {
-  database.forEach(function(doc) {
-    var moduleId = doc.isModule ? doc.id : doc.receiver;
-    var linkSource = { href: doc.href, title: doc.id };
+module.exports = function(namespaceNode, md, linkify) {
+  namespaceNode.documents.forEach(visitNode);
+
+  function visitNode(node) {
+    if (node.properties) {
+      renderDocument(node);
+    }
+
+    if (node.entities) {
+      node.entities.forEach(visitNode)
+    }
+
+    if (node.documents) {
+      node.documents.forEach(visitNode)
+    }
+  }
+
+  function renderDocument(node) {
+    var doc = node.properties;
+    var moduleId = node.uid;
 
     if (doc.description) {
-      doc.summary = RendererUtils.htmlToText(
-        RendererUtils.extractSummary(doc.description)
-      );
+      doc.summary = RendererUtils.extractSummary(doc.description, {
+        plainText: true
+      });
 
       doc.description = md(linkify({
         text: doc.description,
-        context: moduleId,
-        source: linkSource,
+        contextNode: node,
       }));
     }
 
@@ -22,16 +37,14 @@ module.exports = function(database, md, linkify) {
         if (tag.typeInfo.description) {
           tag.typeInfo.description = md(linkify({
             text: tag.typeInfo.description,
-            context: moduleId,
-            source: linkSource,
+            contextNode: node,
           }));
         }
 
         if (tag.type === 'example') {
           tag.string = md(linkify({
             text: tag.string,
-            context: moduleId,
-            source: linkSource,
+            contextNode: node,
           }));
         }
 
@@ -39,8 +52,7 @@ module.exports = function(database, md, linkify) {
           tag.string = md(
             linkify({
               text: '['+tag.string.trim()+']()',
-              context: moduleId,
-              source: linkSource,
+              contextNode: node,
             }),
             { trimHTML: true }
           );
@@ -58,8 +70,7 @@ module.exports = function(database, md, linkify) {
           var linkedStr = md(
             linkify({
               text: '['+typeStr+']()',
-              context: moduleId,
-              source: linkSource,
+              contextNode: node,
               options: { strict: false }
             }),
             { trimHTML: true }
@@ -73,5 +84,6 @@ module.exports = function(database, md, linkify) {
         });
       });
     }
-  });
+
+  }
 };

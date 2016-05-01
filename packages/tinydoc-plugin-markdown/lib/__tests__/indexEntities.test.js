@@ -1,17 +1,18 @@
-var LinkResolver = require('tinydoc/lib/LinkResolver');
+var LinkResolver = require('tinydoc/lib/HTMLSerializer__LinkResolver');
 var indexEntities = require('../indexEntities');
 var assert = require('assert');
+var Corpus = require('tinydoc-corpus').Corpus;
 
 describe('markdown::indexEntities', function() {
   function createResolver(database, config) {
     var indices = indexEntities(database, '', config || {}).indices;
-    var resolver = new LinkResolver(indices);
+    var resolver = new LinkResolver(indices, Corpus());
 
     resolver.use(function(id, registry) {
       var index = registry[id];
 
       if (index) {
-        return { href: index.articleId, title: index.articleId };
+        return { href: '/' + index.articleId, title: index.articleId };
       }
     });
 

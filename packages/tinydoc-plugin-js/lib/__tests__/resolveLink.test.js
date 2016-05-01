@@ -1,12 +1,13 @@
-var resolveLink = require('../resolveLink');
-var assert = require('assert');
+var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
+var reduceDocuments = require('../CorpusReducer');
+var Corpus = require('tinydoc-corpus').Corpus;
 
 describe('cjs::resolveLink', function() {
-  var database, registry;
+  var corpus;
 
   before(function() {
-    database = TestUtils.parseInline(function() {;
+    var documents = TestUtils.parseInline(function() {;
       // /**
       //  * @namespace Core
       //  * @module
@@ -20,53 +21,53 @@ describe('cjs::resolveLink', function() {
       // };
     });
 
-    database.__meta__ = { routeName: '' };
-    registry = TestUtils.buildRegistry(database, '');
+    corpus = Corpus();
+    corpus.add(reduceDocuments({
+      documents: documents,
+      baseURL: '/',
+      namespaceId: 'test'
+    }));
   });
 
-  it('resolves ${NS}.${MODULE}', function() {
-    var link = resolveLink(database, 'Core.Cache', registry);
+  function subject(text) {
+    return corpus.resolve({ text: text });
+  }
 
-    assert.ok(link);
-    assert.equal(link.title, 'Cache');
+  it('resolves ${NS}.${MODULE}', function() {
+    assert.ok(subject('Core.Cache'));
   });
 
   it('resolves ${MODULE}', function() {
-    var link = resolveLink(database, 'Cache', registry);
-
-    assert.ok(link);
-    assert.equal(link.title, 'Cache');
+    assert.ok(subject('Core.Cache'));
   });
 
   it('resolves ${NS}.${MODULE}${SYM}${ENTITY}', function() {
-    var link = resolveLink(database, 'Core.Cache#add', registry);
-
-    assert.ok(link);
-    assert.equal(link.title, 'Cache#add');
+    assert.ok(subject('Core.Cache#add'));
   });
 
   it('resolves ${MODULE}${SYM}${ENTITY}', function() {
-    var link = resolveLink(database, 'Cache#add', registry);
-
-    assert.ok(link);
-    assert.equal(link.title, 'Cache#add');
+    assert.ok(subject('Cache#add'));
   });
 
   context('Given a currentModuleId', function() {
     it('resolves ${SYM}${ENTITY}', function() {
-      var link = resolveLink(database, '#add', registry, 'Core.Cache');
-
-      assert.ok(link);
+      assert.notOk(subject('#add'));
+      assert.ok(corpus.resolve({
+        text: '#add',
+        contextNode: subject('Core.Cache')
+      }));
     });
 
-    it('strips ${MODULE} from title if it is the same module', function() {
-      var link = resolveLink(database, 'Cache#add', registry, 'Core.Cache');
-      assert.equal(link.title, '#add');
+    // this is no longer applicable...
+    it.skip('strips ${MODULE} from title if it is the same module', function() {
+      // var link = resolveLink(database, 'Cache#add', registry, 'Core.Cache');
+      // assert.equal(link.title, '#add');
     });
 
-    it('does not strip ${MODULE} from title if it is a different module', function() {
-      var link = resolveLink(database, 'Cache#add', registry, 'Something');
-      assert.equal(link.title, 'Cache#add');
+    // this is no longer applicable...
+    it.skip('does not strip ${MODULE} from title if it is a different module', function() {
+      // var link = resolveLink(database, 'Cache#add', registry, 'Something');
+      // assert.equal(link.title, 'Cache#add');
     });
   });
 });
