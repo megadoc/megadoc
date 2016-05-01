@@ -134,23 +134,23 @@ module.exports = function createTinydoc(config) {
   };
 
   exports.getDatabase = function(namespaceId) {
-    return Object.keys(CONFIG.database)
+    return Object.keys(config.database)
       .filter(function(uid) { return uid.indexOf(namespaceId) === 0; })
       .map(function(uid) {
-        return CONFIG.database[uid];
+        return config.database[uid];
       })
     ;
   };
 
   exports.getCorpus = function() {
-    return CONFIG.database;
+    return config.database;
   };
 
   /**
    * @property {UI.Corpus}
    *           The Corpus API for plugins to use.
    */
-  exports.corpus = CorpusAPI(CONFIG.database);
+  exports.corpus = CorpusAPI(config.database || []);
 
   return exports;
 };

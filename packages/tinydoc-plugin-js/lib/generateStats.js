@@ -32,9 +32,12 @@ module.exports = function(database) {
     inc(stats.modules.types, doc && doc.ctx ? doc.ctx.type : K.TYPE_UNKNOWN);
 
     (documentNode.entities || []).forEach(function(entityNode) {
+      var entityDoc = entityNode.properties;
+
       stats.entities.count += 1;
       stats.count += 1;
-      inc(stats.entities.scopes, doc && doc.ctx.scope || 'unscoped');
+
+      inc(stats.entities.scopes, entityDoc.ctx && entityDoc.ctx.scope || 'unscoped');
     });
 
     documentNode.documents.forEach(statDoc);

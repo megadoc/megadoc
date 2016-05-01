@@ -19,7 +19,6 @@ module.exports = function(namespaceNode, md, linkify) {
 
   function renderDocument(node) {
     var doc = node.properties;
-    var moduleId = node.uid;
 
     if (doc.description) {
       doc.summary = RendererUtils.extractSummary(doc.description, {

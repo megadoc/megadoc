@@ -139,6 +139,6 @@ function legacy__getSymbolsForDocumentByURI(uri) {
   });
 
   return symbols;
- }
+}
 
 module.exports = SpotlightManager;

@@ -5,10 +5,6 @@ var render = require('./render');
 var assign = require('lodash').assign;
 var assert = require('assert');
 var defaults = require('./config');
-var RendererUtils = require('tinydoc/lib/RendererUtils');
-var CorpusTypes = require('tinydoc-corpus').Types;
-var b = CorpusTypes.builders;
-var K = require('./Parser/constants');
 var reduceDocuments = require('./CorpusReducer');
 
 /**
@@ -82,24 +78,31 @@ function createCJSPlugin(userConfig) {
 
     run: function(compiler) {
       var database;
+      var documents;
 
       compiler.on('scan', function(done) {
-        scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _database) {
+        scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _documents) {
           if (err) {
             return done(err);
           }
 
-          database = reduceDocuments({
-            documents: _database,
-            namespaceId: config.routeName,
-            namespaceTitle: config.corpusContext,
-            baseURL: config.routeName
-          });
-
-          compiler.corpus.add(database);
+          documents = _documents;
 
           done();
         });
+      });
+
+      compiler.on('index', function(_registry, done) {
+        database = reduceDocuments({
+          documents: documents,
+          namespaceId: config.routeName,
+          namespaceTitle: config.corpusContext,
+          baseURL: config.routeName
+        });
+
+        compiler.corpus.add(database);
+
+        done();
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {

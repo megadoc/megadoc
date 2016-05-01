@@ -26,7 +26,7 @@ module.exports = function CorpusAPI(corpus) {
   };
 
   exports.get = function(uid) {
-    return nodes[uid];
+    return corpus[uid];
   };
 
   exports.getByURI = function(uri) {
