@@ -4,5 +4,8 @@
   "description": "",
   "main": "index.js",
   "author": "Ahmad Amireh",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "object-assign": "4.0.1"
+  }
 }
