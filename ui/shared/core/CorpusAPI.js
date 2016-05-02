@@ -78,13 +78,18 @@ module.exports = function CorpusAPI(corpus) {
   function buildDocumentSearchIndex() {
     return Object.keys(corpus).filter(uid => !!corpus[uid].href).map(uid => {
       const node = corpus[uid];
+      const namespaceNode = getNamespaceOfDocument(uid);
+
+      if (!namespaceNode) {
+        console.warn(`CorpusIntegrityError: Document '${uid}' has no namespace!`);
+      }
 
       return {
         $1: node.title,
         $2: node.filePath,
         link: {
           href: node.href,
-          context: getNamespaceOfDocument(uid).corpusContext
+          context: namespaceNode && namespaceNode.corpusContext
         }
       }
     });

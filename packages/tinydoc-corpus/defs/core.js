@@ -34,6 +34,7 @@ def("Node", {
     id: t.string,
     href: or(t.string, null),
     title: or(t.string, null),
+    summary: or(t.string, null),
     filePath: or(t.string, null),
     properties: or(array("Property"), t.object, null)
   }

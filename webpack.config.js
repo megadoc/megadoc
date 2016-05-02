@@ -12,7 +12,7 @@ var config = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    libraryTarget: 'this',
+    libraryTarget: 'var',
     jsonpFunction: 'webpackJsonp_tinydoc'
   },
 

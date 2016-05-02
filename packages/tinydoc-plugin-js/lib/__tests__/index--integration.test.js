@@ -5,7 +5,7 @@ var multiline = require('multiline-slash');
 var tinydoc = require('tinydoc');
 
 describe("[Integration] tinydoc-plugin-js", function() {
-  TinyTestUtils.IntegrationSuite(this);
+  TinyTestUtils.IntegrationSuite(this, 5000);
 
   var config;
 
@@ -47,6 +47,27 @@ describe("[Integration] tinydoc-plugin-js", function() {
   });
 
   it('works', function(done) {
+    var tiny = tinydoc(config, {
+      scan: true,
+      write: true,
+      index: true,
+      render: true,
+      stats: true,
+      purge: true
+    });
+
+    tiny.run(function(err, stats) {
+      if (err) { return done(err); }
+
+      assert.equal(stats['js:test'].count, 3);
+      assert.equal(stats['js:test'].modules.count, 2);
+      assert.equal(stats['js:test'].entities.count, 1);
+
+      done();
+    });
+  });
+
+  it.only('works with file serializing', function(done) {
     var tiny = tinydoc(config, {
       scan: true,
       write: true,
