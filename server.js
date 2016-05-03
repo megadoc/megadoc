@@ -1,93 +1,108 @@
-var WebpackDevServer = require('webpack-dev-server');
+var connect = require('connect');
+var serveStatic = require('serve-static');
+var modRewrite = require('connect-modrewrite');
 var webpack = require('webpack');
 var path = require('path');
 var config = require('./webpack.config');
 var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 var fs = require('fs-extra');
-var _ = require('lodash');
+var http = require('http')
 
-var root = path.resolve(__dirname);
-var host = process.env.HOST || 'localhost';
-var port = process.env.PORT || '8942';
-var contentBase = '/tmp/tinydoc';
-var server;
+var CONTENT_HOST = process.env.HOST || '0.0.0.0';
+var CONTENT_PORT = process.env.PORT || '8942';
+
 var configFile = path.resolve(process.env.CONFIG_FILE);
+var contentBase = path.dirname(configFile);
 
-config.devtool = 'eval';
-config.entry = {
-  main: [
-    'webpack-dev-server/client?http://' + host + ':' + port,
-    'webpack/hot/dev-server',
+global.window = {};
 
-    path.join(root, '.local.js'),
-  ]
-};
+require(configFile);
 
-config.plugins = [
-  new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-    'process.env.CONFIG_FILE': JSON.stringify(configFile),
-  }),
+var pluginNames = ['tinydoc'].concat(global.window.CONFIG.pluginNames || []);
 
-  new webpack.HotModuleReplacementPlugin(),
-
-  ExternalsPlugin
-];
-
-config.resolve.alias['tinydoc-ui'] = path.join(root, 'ui', 'shared');
-config.module.noParse.push(process.env.CONFIG_FILE);
-
-if (fs.existsSync(contentBase)) {
-  fs.removeSync(contentBase);
-}
-
-fs.ensureDirSync(contentBase);
-fs.writeFileSync(
-  contentBase + '/index.html',
-  _.template(fs.readFileSync(path.join(root, 'ui/index.tmpl.html')), 'utf-8')({
-    title: 'tinydoc--dev',
-    metaDescription: '',
-    scripts: [
-      // 'webpack-dev-server/client?http://' + host + ':' + port,
-      'main.js'
-    ]
-  })
-);
-
-symlinkAllDirectories(path.dirname(configFile));
-
-server = new WebpackDevServer(webpack(config), {
-  contentBase: contentBase,
-  publicPath: config.output.publicPath,
-  hot: true,
-  quiet: false,
-  noInfo: false,
-  lazy: false,
-  inline: false,
-  stats: { colors: true },
-  historyApiFallback: true,
-});
-
-server.listen(port, host, function(err) {
-  if (err) {
-    console.error(err);
-    return;
+start(CONTENT_HOST, CONTENT_PORT, function(connectError) {
+  if (connectError) {
+    throw connectError;
   }
 
-  console.log('Hot server listening at ' + host +':'+ port);
+  console.log('Hot server listening at "http://%s:%s"', CONTENT_HOST, CONTENT_PORT);
 });
 
-// =--------------------------------------------------------------------------=
-function symlinkAllDirectories(baseDir) {
-  fs.readdirSync(baseDir)
-    .filter(function(file) {
-      return fs.statSync(path.join(baseDir, file)).isDirectory();
-    })
-    .forEach(function(dir) {
-      fs.symlinkSync(
-        path.join(baseDir, dir),
-        path.join(contentBase, dir)
-      );
-    })
-  ;
+function start(host, port, done) {
+  var app = connect();
+  var compiler;
+
+  config.devtool = 'eval';
+  config.output = {
+    path: path.resolve(__dirname, 'tmp/devserver'),
+    publicPath: '/',
+    filename: 'tinydoc.js'
+  };
+
+  config.entry = {
+    tinydoc: [
+      'webpack-hot-middleware/client',
+    ].concat(generatePluginEntry(pluginNames)),
+  };
+
+  console.log(config.entry);
+
+  config.plugins = [
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.CONFIG_FILE': JSON.stringify(configFile),
+    }),
+
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+
+    ExternalsPlugin
+  ];
+
+  compiler = webpack(config);
+
+  app.use(require('webpack-dev-middleware')(compiler, {
+    contentBase: contentBase,
+    publicPath: '/',
+    hot: false,
+    quiet: false,
+    noInfo: true,
+    lazy: false,
+    inline: false,
+    watchDelay: 300,
+    stats: { colors: true },
+    historyApiFallback: false,
+  }));
+
+  app.use(require('webpack-hot-middleware')(compiler));
+
+  app.use(modRewrite([
+    '^/(tinydoc__vendor|styles).js$ - [G]',
+    '^/plugins/(' + pluginNames.join('|') + ').js$ - [G]',
+  ]));
+
+  app.use(serveStatic(contentBase, { etag: false }));
+
+  http.createServer(app).listen(port, host, done);
+}
+
+function generatePluginEntry() {
+  var basePath = path.resolve(__dirname, 'packages');
+
+  return pluginNames.reduce(function(list, name) {
+    trackFileIfExists('ui/index.js');
+    trackFileIfExists('ui/index.less');
+    trackFileIfExists('ui/css/index.less');
+
+    function trackFileIfExists(fileName) {
+      var filePath = path.join(basePath, name, fileName);
+
+      if (fs.existsSync(filePath)) {
+        list.push( filePath );
+      }
+    }
+
+    return list;
+  }, []);
 }

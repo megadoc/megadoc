@@ -46,7 +46,7 @@ module.exports = function reduceDocuments(options) {
   function reduceModuleDocument(doc) {
     return b.document({
       id: doc.name,
-      href: URI(doc),
+      href: DocumentURI(doc),
       title: doc.path,
       filePath: doc.absoluteFilePath,
       properties: doc,
@@ -55,25 +55,27 @@ module.exports = function reduceDocuments(options) {
       }).map(reduceModuleDocument),
       entities: rawDocuments.filter(function(x) {
         return !x.isModule && x.receiver === doc.id;
-      }).map(reduceEntityDocument)
+      }).map(reduceEntityDocument.bind(null, doc))
     });
   }
 
-  function reduceEntityDocument(doc) {
+  function reduceEntityDocument(parentDoc, doc) {
     return b.documentEntity({
       id: doc.ctx.symbol + doc.name,
-      href: URI(doc),
+      href: DocumentURI(doc, parentDoc),
       title: doc.path,
       filePath: doc.absoluteFilePath,
       properties: doc,
     });
   }
 
-  function URI(doc) {
-    return doc.isModule ?
-      ensureLeadingSlash(options.baseURL) + '/modules/' + encodeURIComponent(doc.id) :
-      ensureLeadingSlash(options.baseURL) + '/modules/' + encodeURIComponent(doc.receiver) + '/' + encodeURIComponent(doc.ctx.symbol + doc.name)
-    ;
+  function DocumentURI(doc, parentDoc) {
+    if (parentDoc) {
+      return DocumentURI(parentDoc) + '#' + encodeURIComponent(doc.ctx.symbol + doc.name);
+    }
+    else {
+      return ensureLeadingSlash(options.baseURL) + '/modules/' + encodeURIComponent(doc.id);
+    }
   }
 
   return database;

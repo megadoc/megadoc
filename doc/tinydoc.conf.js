@@ -40,12 +40,14 @@ config.plugins = [
   }),
 
   require('tinydoc-plugin-static')({
+    title: 'README',
     url: '/readme',
     source: 'README.md',
     anchorableHeadings: true,
   }),
 
   require('tinydoc-plugin-static')({
+    title: 'Changes',
     source: 'CHANGES.md',
     url: '/changes',
     anchorableHeadings: true
@@ -174,6 +176,7 @@ config.plugins = [
   require('tinydoc-theme-qt')({}),
 
   require('tinydoc-plugin-static')({
+    title: 'Corpus',
     source: 'packages/tinydoc-corpus/README.md',
     url: '/dev/corpus',
     outlet: 'CJS::Landing',
@@ -224,6 +227,7 @@ config.plugins = [
   }));
 
   config.plugins.push(require('tinydoc-plugin-static')({
+    title: pluginName,
     source: 'packages/' + pluginName + '/README.md',
     url: '/plugins/' + pluginName,
     outlet: 'CJS::Landing',

@@ -10,7 +10,9 @@ set -e
   exit 1
 }
 
-npm run prepublish
+if [ -z $SKIP_SELF_PREPUBLISH ]; then # for travis
+  npm run prepublish
+fi
 
 for pkg in $(find packages -maxdepth 1 -type d -name 'tinydoc-*' | sort | sed 's/packages\///')
 do

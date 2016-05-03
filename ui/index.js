@@ -38,24 +38,38 @@ tinydoc.onReady(function(registrar) {
       <Route name="404" handler={require('./screens/NotFound')} />
 
       <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
-
       {registrar.getRouteMap()}
     </Route>
   ];
 
-  const location = config.$static ? new ReactRouter.StaticLocation('/') : ReactRouter.HashLocation;
+  const location = config.$static ? new ReactRouter.StaticLocation('/') : require('./CustomLocation');
   const router = ReactRouter.create({
     location,
     routes
   });
+
   const container = document.querySelector('#__app__');
+
+  const { makePath } = router;
+  const { emittedFileExtension } = config;
+
+  router.makePath = function appendFileExtensionToURLIfNeeded() {
+    const url = makePath.apply(router, arguments);
+
+    if (emittedFileExtension.length && !url.match(config.emittedFileExtension + '$')) {
+      return url + config.emittedFileExtension;
+    }
+    else {
+      return url;
+    }
+  };
 
   Router.setInstance(router);
 
   if (config.$static) {
     config.$static.readyCallback({
       render(href, done) {
-        location.path = href;
+        location.path = href.replace(/\.html$/, '');
 
         router.run(function(Handler, state) {
           done(React.renderToString(<Handler {...state} />));
@@ -65,15 +79,6 @@ tinydoc.onReady(function(registrar) {
 
   }
   else {
-    if (window.location.pathname.match(/([^\/]+)\.html$/) && RegExp.$1 !== 'index') {
-      const documentPath = window.location.pathname
-        .replace(config.assetRoot + '/' + config.outputDir, '')
-        .replace(/\.html$/, '')
-      ;
-
-      window.location.hash = '#' + documentPath;
-    }
-
     router.run(function(Handler, state) {
       React.render(<Handler {...state} />, container);
     });

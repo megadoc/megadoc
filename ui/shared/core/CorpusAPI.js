@@ -81,7 +81,7 @@ module.exports = function CorpusAPI(corpus) {
       const namespaceNode = getNamespaceOfDocument(uid);
 
       if (!namespaceNode) {
-        console.warn(`CorpusIntegrityError: Document '${uid}' has no namespace!`);
+        // console.warn(`CorpusIntegrityError: Document '${uid}' has no namespace!`);
       }
 
       return {

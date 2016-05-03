@@ -50,6 +50,10 @@ function Corpus() {
     });
   };
 
+  exports.getRootNode = function() {
+    return corpusNode;
+  };
+
   /**
    * @private
    */

@@ -27,10 +27,7 @@ describe('markdown::indexEntities', function() {
       }
     ]);
 
-    assert.equal(
-      resolver.linkify('[doc/guides/00-candy.md]()'),
-      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-    );
+    assert.ok(resolver.lookup('doc/guides/00-candy.md'));
   });
 
   it('indexes & resolves ${ID}', function() {
@@ -41,10 +38,7 @@ describe('markdown::indexEntities', function() {
       }
     ]);
 
-    assert.equal(
-      resolver.linkify('[doc/guides/candy.md]()'),
-      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-    );
+    assert.ok(resolver.lookup('doc/guides/candy.md'));
   });
 
   context('when config.allowLeadingSlashInLinks is on', function() {
@@ -56,10 +50,7 @@ describe('markdown::indexEntities', function() {
         }
       ], { allowLeadingSlashInLinks: true });
 
-      assert.equal(
-        resolver.linkify('[/doc/guides/candy.md]()'),
-        '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-      );
+      assert.ok(resolver.lookup('/doc/guides/candy.md'));
     });
   });
 });

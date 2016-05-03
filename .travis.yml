@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "stable"
-  - "4.1"
+  - "current"
+  - "5.10.0"
+  - "4.4.3"
   - "0.12"
 
 before_script:
@@ -14,56 +15,13 @@ install:
   - npm install --ignore-scripts
   - npm link --ignore-scripts
   - npm run build # build failures should count!
-
-  # install npm dependencies for all packages and make sure they are compilable
-  - (cd packages/tinydoc-layout-multi-page; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-layout-multi-page -S test -S lint
-
-  - (cd packages/tinydoc-layout-single-page; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-layout-single-page -S test -S lint
-
-  - (cd packages/tinydoc-plugin-git; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-git -S test -S lint
-
-  # tinydoc-plugin-js:
-  # we need to link it as well because tinydoc-plugin-react depends on it:
-  - (cd packages/tinydoc-plugin-js; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-js -S test -S lint
-  - (cd packages/tinydoc-plugin-js; npm link)
-
-  # tinydoc-plugin-lua:
-  - (cd packages/tinydoc-plugin-lua; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-lua -S test -S lint
-
-  # tinydoc-plugin-markdown:
-  - (cd packages/tinydoc-plugin-markdown; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-markdown -S test -S lint
-
-  # tinydoc-plugin-react:
-  - (cd packages/tinydoc-plugin-react; npm link tinydoc; npm link tinydoc-plugin-js)
-  - ./bin/prepublish.sh tinydoc-plugin-react -S test -S lint
-
-  # tinydoc-plugin-reference-graph:
-  - (cd packages/tinydoc-plugin-reference-graph; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-reference-graph -S test -S lint
-
-  # tinydoc-plugin-static:
-  - (cd packages/tinydoc-plugin-static; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-static -S test -S lint
-
-  # tinydoc-plugin-yard-api:
-  - (cd packages/tinydoc-plugin-yard-api; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-plugin-yard-api -S test -S lint
-
-  # tinydoc-theme-qt:
-  - (cd packages/tinydoc-theme-qt; npm link tinydoc)
-  - ./bin/prepublish.sh tinydoc-theme-qt -S test -S lint
+  - SKIP_SELF_PREPUBLISH=1 PRELINK=1 ./bin/prepublish-all.sh
 
 script:
   - ./bin/lint.sh
   - ./bin/lint-ui.sh
   - COVERAGE=1 ./bin/test.sh
-  - ./node_modules/.bin/karma start --single-run --browsers Firefox
+  - ./bin/test-ui.sh --single-run --browsers Firefox
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

@@ -67,7 +67,8 @@ describe("[Integration] tinydoc-plugin-js", function() {
     });
   });
 
-  it.only('works with file serializing', function(done) {
+  it('works with file serializing', function(done) {
+    config.emitFiles = true;
     var tiny = tinydoc(config, {
       scan: true,
       write: true,

@@ -3,6 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var parseGitStats = require('tinydoc/lib/utils/parseGitStats');
 var defaults = require('./config');
+var b = require('tinydoc-corpus').Types.builders;
 
 module.exports = function(userConfig) {
   return {
@@ -41,6 +42,24 @@ module.exports = function(userConfig) {
         else {
           done();
         }
+      });
+
+      compiler.on('index', function(_registry, done) {
+        compiler.corpus.add(
+          b.namespace({
+            id: config.url.replace(/\//g, '-'),
+            corpusContext: config.corpusContext || config.title,
+            documents: [
+              b.document({
+                id: config.source,
+                href: config.url,
+                title: config.title || config
+              })
+            ]
+          })
+        );
+
+        done();
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {

@@ -46,23 +46,14 @@ describe('yard-api::indexEntities', function() {
   });
 
   it('indexes & resolves an API resource', function() {
-    assert.equal(
-      resolver.linkify('[api_users]()'),
-      '[foobar](tiny://#/api_users)'
-    );
+    assert.ok(resolver.lookup('api_users'));
   });
 
   it('indexes & resolves an API resource endpoint', function() {
-    assert.equal(
-      resolver.linkify('[Api::Admin::UsersController#create]()'),
-      '[foobar](tiny://#/api_users#api_admin_users_controller_create)'
-    );
+    assert.ok(resolver.lookup('Api::Admin::UsersController#create'));
   });
 
   it('indexes & resolves an API resource object', function() {
-    assert.equal(
-      resolver.linkify('[Api::Admin::UsersController::UserRequest]()'),
-      '[foobar](tiny://#/api_users::api_admin_users_controller_user_request)'
-    );
+    assert.ok(resolver.lookup('Api::Admin::UsersController::UserRequest'));
   });
 });
