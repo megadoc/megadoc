@@ -168,8 +168,9 @@ function checkUnionType(type, x) {
 function checkCustomType(type, x) {
   var typeConstructor = builders[camelize(type)];
   var expectedType = typeConstructor.name;
+  var descendants = exports.getTypeDescendants(expectedType);
 
-  if (!x || x.constructor !== typeConstructor) {
+  if (!x || descendants.indexOf(x.constructor.name) === -1) {
     return "Expected a value of type '" + expectedType + "', not '" + (getTypeOf(x)) + "'."
   }
 }
@@ -187,8 +188,8 @@ function checkArrayType(type, x) {
   x.some(function(y, index) {
     if (!checkUnionType(type, y)) {
       error = (
-        'Expected value at [' + index + '] to be of one of the types [ ' +
-        type.typeNames + ' ], not \'' + getTypeOf(y) + '\''
+        'Expected value at [' + index + '] to be of one of the types { ' +
+        type.typeNames + ' }, not \'' + getTypeOf(y) + '\''
       );
 
       return true;
@@ -216,11 +217,15 @@ function camelize(str, lowerFirst) {
 
 function array() {
   var valueTypes = [].slice.call(arguments);
+  var typeNames = valueTypes.map(getTypeName).join(' | ');
 
   return {
     type: 'array',
     types: valueTypes.map(createTypeChecker),
-    typeNames: 'Array.<' + valueTypes.map(getTypeName).join(' | ') + '>',
+    typeNames: typeNames,
+    toString: function() {
+      return 'Array.<' + typeNames + '>';
+    }
   };
 }
 
@@ -300,9 +305,13 @@ builtInTypes["array"] = BuiltInTypeChecker('Array', function(x) {
   return Array.isArray(x);
 });
 
+builtInTypes["arrayOfType"] = array;
+builtInTypes["oneOfType"] = or;
+
 builtInTypes["object"] = BuiltInTypeChecker('Object', function(x) {
   return typeof x === 'object' && x !== null;
 });
+
 
 function BuiltInTypeChecker(typeName, f) {
   return function(x) {
@@ -319,3 +328,30 @@ exports.or = or;
 exports.finalize = finalize;
 exports.builtInTypes = builtInTypes;
 exports.types = builtInTypes;
+exports.isTypeKnown = function(typeName) {
+  return typeName in typeDefs;
+};
+
+exports.getTypeChain = function(typeName) {
+  // TODO: optimize/cache
+
+  var typeDef = typeDefs[typeName];
+  var ancestors = [ typeName ];
+
+  while (typeDef) {
+    if (typeDef.base) {
+      ancestors.unshift(typeDef.base);
+    }
+
+    typeDef = typeDefs[typeDef.base];
+  };
+
+  return ancestors;
+};
+
+exports.getTypeDescendants = function(typeName) {
+  // TODO: optimize/cache
+  return Object.keys(typeDefs).filter(function(thisTypeName) {
+    return exports.getTypeChain(thisTypeName).indexOf(typeName) > -1;
+  });
+};

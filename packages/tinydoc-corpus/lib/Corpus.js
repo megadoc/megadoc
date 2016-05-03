@@ -1,8 +1,9 @@
+var assert = require('assert');
 var resolveLink = require('./CorpusResolver');
 var buildIndices = require('./CorpusIndexer');
-var b = require('./CorpusTypes').builders;
-var assert = require('assert');
+var Types = require('./CorpusTypes');
 var assign = require('object-assign');
+var b = Types.builders;
 
 /**
  * The Corpus public API.
@@ -11,8 +12,22 @@ function Corpus() {
   var exports = {};
   var nodes = {};
   var corpusNode = b.corpus({
+    meta: {},
     namespaces: []
   });
+
+  var visitors = {};
+
+  exports.visit = function(visitor) {
+    Object.keys(visitor).forEach(function(typeName) {
+      assert(Types.isTypeKnown(typeName),
+        "ArgumentError: a visitor was defined for an unknown node type '" + typeName + "'."
+      );
+
+      visitors[typeName] = visitors[typeName] || [];
+      visitors[typeName].push(visitor[typeName]);
+    });
+  };
 
   /**
    * Retrieve a document AST node by its UID.
@@ -57,8 +72,11 @@ function Corpus() {
   /**
    * @private
    */
-  exports.dumpPaths = function() {
-    return Object.keys(nodes);
+  exports.dump = function() {
+    return {
+      uids: Object.keys(nodes),
+      visitors: visitors
+    };
   };
 
   exports.add = add;
@@ -100,7 +118,6 @@ function Corpus() {
       corpusNode.namespaces.push(node);
 
       node.parentNode = corpusNode;
-      node.symbol = node.symbol || '/';
     }
     else {
       assert(node.parentNode,
@@ -108,10 +125,24 @@ function Corpus() {
       );
     }
 
+    if (node.type === 'Namespace' || node.type === 'Document') {
+      node.symbol = node.hasOwnProperty('symbol') ? node.symbol : '/';
+    }
+
+    if (!node.meta) {
+      node.meta = {};
+    }
+
     node.uid = UID(node);
     node.indices = buildIndices(node);
 
     nodes[node.uid] = node;
+
+    Types.getTypeChain(node.type).forEach(function(typeName) {
+      if (typeName in visitors) {
+        visitors[typeName].forEach(function(fn) { fn(node); });
+      }
+    });
 
     if (node.documents) { // Namespace | Document
       node.documents.forEach(add);
@@ -123,6 +154,14 @@ function Corpus() {
   }
 
   return exports;
+};
+
+Corpus.attachNode = function(key, parentNode, node) {
+  parentNode[key].push(node);
+
+  node.parentNode = parentNode;
+
+  return node;
 };
 
 function UID(sourceNode) {
@@ -170,6 +209,7 @@ function flattenNode(node) {
 function getUID(node) {
   return node.uid;
 }
+
 
 module.exports = Corpus;
 

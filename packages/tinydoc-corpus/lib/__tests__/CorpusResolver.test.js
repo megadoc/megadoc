@@ -59,6 +59,7 @@ describe('CorpusResolver', function() {
               b.document({
                 id: 'X',
                 filePath: '/js/lib/core/X.js',
+                symbol: '',
                 entities: [
                   b.documentEntity({
                     id: '@name'
@@ -73,6 +74,7 @@ describe('CorpusResolver', function() {
               b.document({
                 id: 'Y',
                 filePath: '/js/lib/core/Y.js',
+                symbol: '',
                 entities: [
                   b.documentEntity({
                     id: '@name'

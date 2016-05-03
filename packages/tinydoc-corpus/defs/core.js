@@ -9,6 +9,7 @@ var t = CorpusTypes.builtInTypes;
  */
 def("Corpus", {
   fields: {
+    meta: t.object,
     namespaces: array("Namespace")
   }
 });
@@ -21,8 +22,9 @@ def("Namespace", {
     id: t.string,
     symbol: or(t.string, null), // defaults to "/"
     corpusContext: or(t.string, null),
-    documents: or(array("Document"), null),
-    parentNode: "Corpus"
+    documents: or(array("Node"), null),
+    meta: or(t.object, null),
+    parentNode: "Corpus",
   }
 });
 
@@ -36,7 +38,9 @@ def("Node", {
     title: or(t.string, null),
     summary: or(t.string, null),
     filePath: or(t.string, null),
-    properties: or(array("Property"), t.object, null)
+    meta: or(t.object, null),
+    properties: or(array("Property"), t.object, null),
+    parentNode: or("Namespace", "Node")
   }
 });
 
@@ -47,7 +51,7 @@ def("Node", {
 def("Document", {
   base: "Node",
   fields: {
-    symbol: or(t.string, null),
+    symbol: or(t.string, null), // defaults to "/"
     parentNode: or("Namespace", "Document"),
     documents: or(array("Document"), null),
     entities: or(array("DocumentEntity"), null),

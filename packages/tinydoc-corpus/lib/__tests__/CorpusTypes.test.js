@@ -42,6 +42,34 @@ describe("CorpusTypes", function() {
       }, "TypeError: Expected a value of type 'Property', not 'String'");
     });
 
+    it('accepts a child class', function() {
+      Subject.def("XNode", {
+        fields: {
+          id: t.string
+        }
+      });
+
+      Subject.def("XNodeChild", {
+        base: "XNode",
+        fields: {
+        }
+      });
+
+      Subject.def("XNamespace", {
+        fields: {
+          children: t.arrayOfType("XNode")
+        }
+      });
+
+      Subject.finalize();
+
+      b.xNamespace({
+        children: [
+          b.xNodeChild({ id: "foo" })
+        ]
+      });
+    });
+
     it('works with an array of types [array(...)]', function() {
       Subject.def("Foo", {
         fields: {
@@ -108,6 +136,22 @@ describe("CorpusTypes", function() {
       assert.equal(b.literal('foo').value, 'foo');
       assert.equal(b.property(b.literal('foo'), 'bar').key.value, 'foo');
       assert.equal(b.property(b.literal('foo'), 'bar').value, 'bar');
+    });
+  });
+
+  describe('.getTypeChain', function() {
+    it('works', function() {
+      Subject.def("Foo", {
+        fields: {}
+      });
+
+      Subject.def("Bar", {
+        base: "Foo",
+        fields: {}
+      });
+
+      assert.deepEqual(Subject.getTypeChain('Foo'), [ 'Foo' ]);
+      assert.deepEqual(Subject.getTypeChain('Bar'), [ 'Foo', 'Bar' ]);
     });
   });
 });
