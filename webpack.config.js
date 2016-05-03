@@ -5,19 +5,19 @@ var nodeEnv = process.env.NODE_ENV || 'development';
 
 var config = {
   entry: {
-    main: path.resolve(__dirname, 'ui/index.js'),
-    vendor: require('./webpack/vendorModules')
+    tinydoc: path.resolve(__dirname, 'ui/index.js'),
+    tinydoc__vendor: require('./webpack/vendorModules')
   },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
-    libraryTarget: 'this',
+    libraryTarget: 'var',
     jsonpFunction: 'webpackJsonp_tinydoc'
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js'),
+    new webpack.optimize.CommonsChunkPlugin('tinydoc__vendor', 'tinydoc__vendor.js'),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({

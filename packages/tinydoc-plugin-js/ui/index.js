@@ -1,7 +1,7 @@
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const PreviewHandler = require('./PreviewHandler');
+// const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 
@@ -16,7 +16,7 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
   configs.forEach(function(config) {
     const { routeName } = config;
 
-    const database = Database.createDatabase(config);
+    Database.createDatabase(config);
 
     api.addRoutes([
       {
@@ -47,9 +47,11 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
       },
     ]);
 
-    api.registerPreviewHandler(PreviewHandler(config, database));
-    require('./SymbolIndexer')(api, config);
+    // api.inspector.use(config.routeName, PreviewHandler);
+    // api.registerPreviewHandler(PreviewHandler(config, database));
+    // require('./SymbolIndexer')(api, config);
 
+    require('./outlets/InspectorOutlet')(api, config);
     require('./outlets/MultiPageLayout')(api, config);
     require('./outlets/SinglePageLayout')(api, config);
   });

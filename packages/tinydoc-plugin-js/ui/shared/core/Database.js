@@ -3,7 +3,12 @@ const { where, findWhere, sortBy, groupBy } = require('lodash');
 let databases = {};
 
 function createDatabase(key, config) {
-  const { database } = config;
+  const database = tinydoc.getDatabase(key)
+    .filter(node => node.type !== 'Namespace' && node.properties)
+    .map(node => node.properties)
+  ;
+
+  // const { database } = config;
   const moduleDocs = where(database, { isModule: true });
 
   const sortedModuleDocs = config.sortModulesAlphabetically ?

@@ -11,7 +11,7 @@ function inc(set, key) {
 module.exports = function(database) {
   var stats = {};
 
-  stats.count = database.length;
+  stats.count = 0;
   stats.modules = {
     count: 0,
     types: {}
@@ -22,16 +22,26 @@ module.exports = function(database) {
     scopes: {}
   };
 
-  database.forEach(function(doc) {
-    if (doc.isModule) {
-      stats.modules.count += 1;
-      inc(stats.modules.types, doc.ctx ? doc.ctx.type : K.TYPE_UNKNOWN);
-    }
-    else {
+  database.documents.forEach(statDoc);
+
+  function statDoc(documentNode) {
+    var doc = documentNode.properties;
+
+    stats.modules.count += doc ? 1 : 0;
+    stats.count += doc ? 1 : 0;
+    inc(stats.modules.types, doc && doc.ctx ? doc.ctx.type : K.TYPE_UNKNOWN);
+
+    (documentNode.entities || []).forEach(function(entityNode) {
+      var entityDoc = entityNode.properties;
+
       stats.entities.count += 1;
-      inc(stats.entities.scopes, doc.ctx.scope || 'unscoped');
-    }
-  });
+      stats.count += 1;
+
+      inc(stats.entities.scopes, entityDoc.ctx && entityDoc.ctx.scope || 'unscoped');
+    });
+
+    documentNode.documents.forEach(statDoc);
+  }
 
   return stats;
 };

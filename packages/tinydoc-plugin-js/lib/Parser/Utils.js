@@ -145,3 +145,12 @@ Utils.findIdentifierInScope = function(identifierName, path) {
     // }
   }
 };
+
+Utils.getLocation = function(node) {
+  if ('VariableDeclaration' === node.type) {
+    return node.declarations[0].init.loc || { start: {}, end: {} };
+  }
+  else {
+    return node.loc || { start: {}, end: {} };
+  }
+};

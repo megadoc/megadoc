@@ -1,17 +1,18 @@
-var LinkResolver = require('tinydoc/lib/LinkResolver');
+var LinkResolver = require('tinydoc/lib/HTMLSerializer__LinkResolver');
 var indexEntities = require('../indexEntities');
 var assert = require('assert');
+var Corpus = require('tinydoc-corpus').Corpus;
 
 describe('markdown::indexEntities', function() {
   function createResolver(database, config) {
     var indices = indexEntities(database, '', config || {}).indices;
-    var resolver = new LinkResolver(indices);
+    var resolver = new LinkResolver(indices, Corpus());
 
     resolver.use(function(id, registry) {
       var index = registry[id];
 
       if (index) {
-        return { href: index.articleId, title: index.articleId };
+        return { href: '/' + index.articleId, title: index.articleId };
       }
     });
 
@@ -26,10 +27,7 @@ describe('markdown::indexEntities', function() {
       }
     ]);
 
-    assert.equal(
-      resolver.linkify('[doc/guides/00-candy.md]()'),
-      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-    );
+    assert.ok(resolver.lookup('doc/guides/00-candy.md'));
   });
 
   it('indexes & resolves ${ID}', function() {
@@ -40,10 +38,7 @@ describe('markdown::indexEntities', function() {
       }
     ]);
 
-    assert.equal(
-      resolver.linkify('[doc/guides/candy.md]()'),
-      '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-    );
+    assert.ok(resolver.lookup('doc/guides/candy.md'));
   });
 
   context('when config.allowLeadingSlashInLinks is on', function() {
@@ -55,10 +50,7 @@ describe('markdown::indexEntities', function() {
         }
       ], { allowLeadingSlashInLinks: true });
 
-      assert.equal(
-        resolver.linkify('[/doc/guides/candy.md]()'),
-        '[doc/guides/candy.md](tiny://#/doc/guides/candy.md)'
-      );
+      assert.ok(resolver.lookup('/doc/guides/candy.md'));
     });
   });
 });

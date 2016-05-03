@@ -75,6 +75,7 @@ var Doc = React.createClass({
           <h4
             className="doc-entity__header collapsible-header anchorable-heading"
             onClick={this.toggleCollapsed}
+            title={doc.name}
           >
             {this.renderCollapser()}
 
@@ -109,8 +110,7 @@ var Doc = React.createClass({
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
 
-              <a className="doc-entity__anchor icon icon-link" href={'#/' + doc.href} />
-
+              <a className="doc-entity__anchor icon icon-link" href={'#' + doc.href} />
             </span>
           </h4>
         )}

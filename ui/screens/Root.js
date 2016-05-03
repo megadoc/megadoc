@@ -7,7 +7,7 @@ const ColorSchemeManager = require('core/ColorSchemeManager');
 const ScrollSpy = require('core/ScrollSpy');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
-const TooltipManager = require('components/TooltipManager');
+const Inspector = require('components/Inspector');
 
 const Root = React.createClass({
   propTypes: {
@@ -32,6 +32,7 @@ const Root = React.createClass({
     }
 
     setTimeout(Router.refreshScroll, 1);
+    window.addEventListener('click', this.handleInternalLink, false);
   },
 
   shouldComponentUpdate(nextProps) {
@@ -39,6 +40,8 @@ const Root = React.createClass({
   },
 
   componentWillUnmount() {
+    window.removeEventListener('click', this.handleInternalLink, false);
+
     if (config.scrollSpying) {
       ScrollSpy.stop();
     }
@@ -50,7 +53,7 @@ const Root = React.createClass({
   render() {
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
-        {config.tooltipPreviews && (<TooltipManager />)}
+        {config.tooltipPreviews && (<Inspector />)}
         {config.spotlight && (
           <SpotlightManager
             active={AppState.isSpotlightOpen()}
@@ -67,6 +70,27 @@ const Root = React.createClass({
   reload() {
     this.forceUpdate();
   },
+
+  handleInternalLink(e) {
+    if (
+      e.target.tagName === 'A'
+      && e.target.href.indexOf(location.origin) === 0
+      && isLeftClickEvent(e)
+      && !isModifiedEvent(e)
+    ) {
+      e.preventDefault();
+
+      Router.transitionTo(e.target.href.replace(location.origin, ''));
+    }
+  }
 });
+
+function isLeftClickEvent(event) {
+  return event.button === 0;
+}
+
+function isModifiedEvent(event) {
+  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
+}
 
 module.exports = Root;

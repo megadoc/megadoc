@@ -1,5 +1,27 @@
 # Changelog
 
+## 6.0.0
+
+This is a very exciting release; a new model for representing the documents rendered by tinydoc is introduced called the [Corpus](). This model enables
+us to analyze the database in a source-agnostic manner and provide many 
+features out-of-the-box such as automatic indexing, URI generation, and more!
+
+Probably the more exciting part is that we're now able to pre-render the 
+documents to raw .html files, resulting in a greater level of accessibility 
+and runtime performance.
+
+- (semver-minor) Now using [urijs](https://github.com/medialize/URI.js/) for manipulating URIs
+- (semver-major) Generated URLs to internal documents are now relative
+- (semver-minor) A suffix may be appended to document URLs, like `.html`, see [Core.Config.format]()
+- (semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See [Core.Config.emitFiles]() and [Core.Config.emittedFileExtension]()
+- (semver-minor) runtime config now contains a `pluginNames` list of the registered plugin names (inferred from the distributable JS files)
+- (semver-major) [tinydoc-plugin-static]() now requires a `title` config item
+- (semver-minor) [tinydoc-plugin-static]() now integrates with the corpus for indexing
+- (semver-major) [tinydoc-plugin-js](): links to document entities are now represented as a hash-tag following the document's URI
+- (semver-patch) `bin/devserver.sh` has been modified to use [connect](https://github.com/senchalabs/connect) with [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware) for local development. Also, `/.local` file support has been dropped; the server will now automatically resolve which plugins to use and use the local versions of them
+- (semver-patch) introduced a few localized hacks to react-router to make it ignore any suffixes in links (file extension)
+- (semver-major) [tinydoc-ui](): no longer using the HashLocation
+
 ## 5.0.0
 
 - Markdown renderer now accepts a `anchorableHeadings: Boolean` option that

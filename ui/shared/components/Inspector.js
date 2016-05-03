@@ -2,7 +2,9 @@ const React = require('react');
 const domContains = require('dom-contains');
 const config = require('config');
 const Tooltip = require('components/Tooltip');
+const Outlet = require('components/Outlet');
 const { debounce } = require('lodash');
+const { hasMatchingElements } = Outlet;
 
 const TooltipManager = React.createClass({
   getInitialState() {
@@ -29,7 +31,7 @@ const TooltipManager = React.createClass({
       return null;
     }
 
-    const content = getContentForElement(this.state.element);
+    const content = inspectElement(this.state.element);
 
     if (!content) {
       return null;
@@ -39,7 +41,7 @@ const TooltipManager = React.createClass({
       <Tooltip target={this.state.element}>
         {content}
       </Tooltip>
-    )
+    );
   },
 
   showTooltip(e) {
@@ -66,7 +68,7 @@ const TooltipManager = React.createClass({
     return config.layout === 'single-page' ?
       document.querySelector('.single-page-layout__content') :
       document.querySelector('.two-column-layout__right') ||
-      document.querySelector('.root')
+      document.querySelector('.root__screen')
     ;
   },
 
@@ -79,9 +81,26 @@ function isApplicable(containerNode, node) {
   );
 }
 
-function getContentForElement(el) {
-  let content;
+function inspectElement(el) {
+  const { corpus } = tinydoc;
+  const documentNode = corpus.getByURI(el.href.replace(/^[^#]*#/, ''));
 
+  if (documentNode) {
+    const context = {
+      documentNode,
+      namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode.uid),
+    };
+
+    if (hasMatchingElements({ name: 'Inspector', elementProps: context })) {
+      return <Outlet name="Inspector" elementProps={context} />;
+    }
+  }
+
+  return legacy__inspectElement(el);
+}
+
+function legacy__inspectElement(el) {
+  let content;
   const href = decodeURIComponent( el.href.replace(/^[^#]*#/, '') );
 
   tinydoc.getPreviewHandlers().some(function(fn) {
@@ -91,5 +110,6 @@ function getContentForElement(el) {
 
   return content;
 }
+
 
 module.exports = TooltipManager;

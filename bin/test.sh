@@ -32,7 +32,7 @@ if [ -z $PACKAGE ]; then
 fi
 
 if [ -z $PACKAGE ]; then
-  SOURCE_DIRS="{lib,packages/*/lib}"
+  SOURCE_DIRS="packages/*/lib"
 else
   if [ -d "packages/${PACKAGE}" ]; then
     SOURCE_DIRS="packages/${PACKAGE}/lib"

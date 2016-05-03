@@ -18,6 +18,13 @@ const SpotlightManager = React.createClass({
     };
   },
 
+  componentWillMount() {
+    // backwards compatibility with non-corpus indices
+    this.combinedCorpus = tinydoc.corpus.getDocumentSearchIndex().concat(
+      config.corpus
+    );
+  },
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleGlobalKeybindings, true);
 
@@ -45,12 +52,12 @@ const SpotlightManager = React.createClass({
 
   render() {
     if (this.props.active) {
-      const symbols = getSymbolsForDocument(location.hash.replace(/^#/, ''));
+      const symbols = getSymbolsForDocumentByURI(location.hash.replace(/^#/, ''));
 
       return (
         <Spotlight
           startInSymbolMode={this.state.openedInSymbolMode}
-          corpus={config.corpus}
+          corpus={this.combinedCorpus}
           symbols={symbols}
           onActivate={this.closeSpotlight}
         />
@@ -112,11 +119,22 @@ const SpotlightManager = React.createClass({
   },
 });
 
-function getSymbolsForDocument(documentUID) {
+function getSymbolsForDocumentByURI(uri) {
+  const documentNode = tinydoc.corpus.getByURI(uri);
+
+  if (documentNode) {
+    return tinydoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
+  }
+  else {
+    return legacy__getSymbolsForDocumentByURI(uri);
+  }
+}
+
+function legacy__getSymbolsForDocumentByURI(uri) {
   let symbols;
 
   tinydoc.getSymbolIndexers().some(function(fn) {
-    symbols = fn(documentUID);
+    symbols = fn(uri);
     return !!symbols;
   });
 

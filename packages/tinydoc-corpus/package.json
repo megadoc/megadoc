@@ -1,0 +1,11 @@
+{
+  "name": "tinydoc-corpus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "dependencies": {
+    "object-assign": "4.0.1"
+  }
+}

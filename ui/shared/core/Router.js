@@ -66,15 +66,20 @@ Router.refresh = function() {
   instance.refresh();
 };
 
+// force the browser to (re)scroll to the proper location
 Router.refreshScroll = function() {
-  // force the browser to (re)scroll to the proper location
-  const originalLocation = window.location.hash;
-
-  window.location.hash = '#/';
-  window.location.hash = originalLocation;
+  console.warn(
+    'Deprecated: Router.refreshScroll() is no longer a thing since we do not ' +
+    ' use the HashLocation anymore.'
+  );
 };
 
 Router.generateAnchorId = function({ routeName, params }) {
+  console.warn(
+    'Deprecated: Router.generateAnchorId() should no longer be used as the ' +
+    'URIs are resolved at compile-time.'
+  );
+
   return instance.makeHref(routeName, Object.keys(params).reduce(function(encoded, key) {
     encoded[key] = encodeURIComponent(params[key]);
     return encoded;

@@ -1,5 +1,6 @@
 dist
 packages/*/dist
+packages/tinydoc/ui
 
 doc/compiled
 packages/*/doc/compiled
@@ -12,14 +13,8 @@ tmp
 packages/*/tmp
 
 coverage
-packages/*/coverage
 
-ui/tmp
 ui/css/fonts/**/*/demo.js
 ui/vendor/**/*
 
-test/index.ui.js
-packages/*/test/index.ui.js
-
 **/*.tmpl.js
-**/dist/*.js

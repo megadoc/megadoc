@@ -57,17 +57,20 @@
     "react": "^0.13.3",
     "react-transclusion": "1.0.0-1",
     "style-loader": "0.13.1",
+    "urijs": "1.18.0",
     "url-loader": "0.5.7",
     "webpack": "1.12.15"
   },
   "devDependencies": {
     "chai": "3.5.0",
+    "connect": "3.4.1",
+    "connect-modrewrite": "0.9.0",
     "coveralls": "^2.11.4",
     "eslint": "^1.4.3",
     "eslint-plugin-react": "^3.4.1",
     "highlight.js": "^8.8.0",
     "history": "1.17.0",
-    "istanbul": "0.4.3",
+    "istanbul": "^1.0.0-alpha.2",
     "json-loader": "0.5.1",
     "karma": "^0.13.10",
     "karma-chrome-launcher": "0.1.7",
@@ -83,6 +86,9 @@
     "serve-static": "^1.10.0",
     "sinon": "^1.17.1",
     "webpack-dev-middleware": "1.6.1",
-    "webpack-dev-server": "1.14.1"
+    "webpack-hot-middleware": "2.10.0"
+  },
+  "optionalDependencies": {
+    "jsdom": "8.5.0"
   }
 }

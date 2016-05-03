@@ -50,6 +50,18 @@ if [ ! -d "${PACKAGE_ROOT}" ]; then
   fi
 fi
 
+function link_local_dependencies {
+  [ -f $PACKAGE_ROOT/package.json ] && {
+    cd $PACKAGE_ROOT
+    PEER_DEPS=$(node -e 'console.log(Object.keys(require("./package").peerDependencies || {}).join("\n"))')
+
+    for dep in $PEER_DEPS; do
+      echo "Linking local version of '${dep}'..."
+      npm link --ignore-scripts "../${dep}"
+    done
+  }
+}
+
 function refresh_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
     cd $PACKAGE_ROOT
@@ -60,6 +72,10 @@ function refresh_dependencies {
       if [ -z $TRAVIS_BUILD ]; then
         echo "Pruning and deduping..."
         npm prune && npm dedupe
+      fi
+
+      if [ "${PRELINK}" == "1" ]; then
+        npm link --ignore-scripts
       fi
     }
   }
@@ -115,8 +131,11 @@ function shouldRun() {
   fi
 }
 
-shouldRun "update" && run_task refresh_dependencies
+if [ "${PRELINK}" == "1" ]; then
+  run_task link_local_dependencies
+fi
 
+shouldRun "update" && run_task refresh_dependencies
 shouldRun "lint" && run_task lint_sources && run_task lint_ui_sources
 shouldRun "test" && run_task run_tests
 shouldRun "build" && run_task build_assets

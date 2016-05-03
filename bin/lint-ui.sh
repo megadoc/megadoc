@@ -23,7 +23,7 @@ if [ -z $PACKAGE ]; then
 fi
 
 if [ -z $PACKAGE ]; then
-  SOURCES=("ui" packages/*/ui)
+  SOURCES=(packages/*/ui)
 elif [ -d "packages/${PACKAGE}" ]; then
   SOURCES=("packages/${PACKAGE}/ui")
 elif [ -d "packages/tinydoc-plugin-${PACKAGE}" ]; then

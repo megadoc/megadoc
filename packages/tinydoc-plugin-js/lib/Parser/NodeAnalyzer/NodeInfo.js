@@ -1,5 +1,6 @@
 var K = require('../constants');
 var assign = require('lodash').assign;
+var getLocation = require('../Utils').getLocation;
 
 /**
  * @param {recast.ast} node
@@ -90,12 +91,4 @@ NodeInfo.prototype.isPrototypeEntity = function() {
 //   }
 // };
 
-function getLocation(node) {
-  if ('VariableDeclaration' === node.type) {
-    return node.declarations[0].init.loc || { start: {}, end: {} };
-  }
-  else {
-    return node.loc || { start: {}, end: {} };
-  }
-}
 module.exports = NodeInfo;

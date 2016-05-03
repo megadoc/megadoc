@@ -25,31 +25,64 @@ tinydoc.outlets.define('Layout');
 tinydoc.onReady(function(registrar) {
   console.log('Ok, firing up.');
 
-  var router = ReactRouter.create({
-    location: ReactRouter.HashLocation,
+  const routes = [
+    <Route
+      name="root"
+      path="/"
+      handler={require('./screens/Root')}
+      ignoreScrollBehavior
+    >
+      {config.home && <Redirect from="/" to={config.home} />}
 
-    routes: [
-      <Route
-        name="root"
-        path="/"
-        handler={require('./screens/Root')}
-        ignoreScrollBehavior
-      >
-        {config.home && <Redirect from="/" to={config.home} />}
+      <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
+      <Route name="404" handler={require('./screens/NotFound')} />
 
-        <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
-        <Route name="404" handler={require('./screens/NotFound')} />
+      <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
+      {registrar.getRouteMap()}
+    </Route>
+  ];
 
-        <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
-
-        {registrar.getRouteMap()}
-      </Route>
-    ]
+  const location = config.$static ? new ReactRouter.StaticLocation('/') : require('./CustomLocation');
+  const router = ReactRouter.create({
+    location,
+    routes
   });
+
+  const container = document.querySelector('#__app__');
+
+  const { makePath } = router;
+  const { emittedFileExtension } = config;
+
+  router.makePath = function appendFileExtensionToURLIfNeeded() {
+    const url = makePath.apply(router, arguments);
+
+    if (emittedFileExtension.length && !url.match(config.emittedFileExtension + '$')) {
+      return url + config.emittedFileExtension;
+    }
+    else {
+      return url;
+    }
+  };
 
   Router.setInstance(router);
 
-  router.run(function(Handler, state) {
-    React.render(<Handler {...state} />, document.querySelector('#__app__'));
-  });
+  if (config.$static) {
+    config.$static.readyCallback({
+      render(href, done) {
+        location.path = href.replace(/\.html$/, '');
+
+        router.run(function(Handler, state) {
+          done(React.renderToString(<Handler {...state} />));
+        });
+      }
+    });
+
+  }
+  else {
+    router.run(function(Handler, state) {
+      React.render(<Handler {...state} />, container);
+    });
+  }
 });
+
+module.exports = tinydoc;

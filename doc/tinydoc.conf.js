@@ -40,12 +40,14 @@ config.plugins = [
   }),
 
   require('tinydoc-plugin-static')({
+    title: 'README',
     url: '/readme',
     source: 'README.md',
     anchorableHeadings: true,
   }),
 
   require('tinydoc-plugin-static')({
+    title: 'Changes',
     source: 'CHANGES.md',
     url: '/changes',
     anchorableHeadings: true
@@ -155,6 +157,11 @@ config.plugins = [
             text: 'API',
             href: '/dev/api',
           },
+
+          {
+            text: 'Corpus',
+            href: '/dev/corpus',
+          },
         ]
       },
 
@@ -167,6 +174,28 @@ config.plugins = [
   }),
 
   require('tinydoc-theme-qt')({}),
+
+  require('tinydoc-plugin-static')({
+    title: 'Corpus',
+    source: 'packages/tinydoc-corpus/README.md',
+    url: '/dev/corpus',
+    outlet: 'CJS::Landing',
+    anchorableHeadings: false
+  }),
+
+  require('tinydoc-plugin-js')({
+    routeName: 'dev/corpus',
+    corpusContext: 'Corpus',
+    useDirAsNamespace: false,
+    inferModuleIdFromFileName: true,
+
+    source: [
+      'packages/tinydoc-corpus/defs/*.js',
+      'packages/tinydoc-corpus/lib/**/*.js',
+    ],
+
+    exclude: [ /\.test\.js$/ ],
+  })
 ];
 
 [
@@ -198,6 +227,7 @@ config.plugins = [
   }));
 
   config.plugins.push(require('tinydoc-plugin-static')({
+    title: pluginName,
     source: 'packages/' + pluginName + '/README.md',
     url: '/plugins/' + pluginName,
     outlet: 'CJS::Landing',
