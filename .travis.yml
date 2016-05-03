@@ -1,7 +1,8 @@
+sudo: false
 language: node_js
 node_js:
-  - "current"
-  - "5.10.0"
+  - "stable"
+  - "5.11.0"
   - "4.4.3"
   - "0.12"
 
@@ -28,3 +29,7 @@ after_success:
 
 env:
   - TINYDOC_TEST_TIMEOUT=60000 TRAVIS_BUILD=1
+
+cache:
+  directories:
+    - node_modules
