@@ -51,9 +51,11 @@ module.exports = function(userConfig) {
             corpusContext: config.corpusContext || config.title,
             documents: [
               b.document({
+                meta: {
+                  href: config.url,
+                },
                 id: config.source,
-                href: config.url,
-                title: config.title || config
+                title: config.title
               })
             ]
           })

@@ -25,13 +25,17 @@ module.exports = function CorpusAPI(corpus) {
     return documentEntitySearchIndex[uid];
   };
 
+  exports.getCatalogue = function(id) {
+    return Object.keys(corpus).filter(x => x.indexOf(id + '/') === 0).map(getByUID);
+  };
+
   exports.get = function(uid) {
     return corpus[uid];
   };
 
   exports.getByURI = function(uri) {
     for (let uid in corpus) {
-      if (corpus[uid].href === uri) {
+      if (getHref(corpus[uid]) === uri) {
         return corpus[uid];
       }
     }
@@ -76,7 +80,7 @@ module.exports = function CorpusAPI(corpus) {
   }
 
   function buildDocumentSearchIndex() {
-    return Object.keys(corpus).filter(uid => !!corpus[uid].href).map(uid => {
+    return Object.keys(corpus).filter(uid => !!getHref(corpus[uid])).map(uid => {
       const node = corpus[uid];
       const namespaceNode = getNamespaceOfDocument(uid);
 
@@ -88,7 +92,7 @@ module.exports = function CorpusAPI(corpus) {
         $1: node.title,
         $2: node.filePath,
         link: {
-          href: node.href,
+          href: getHref(node),
           context: namespaceNode && namespaceNode.corpusContext
         }
       }
@@ -97,7 +101,7 @@ module.exports = function CorpusAPI(corpus) {
 
   function buildDocumentEntitySearchIndex() {
     return Object.keys(corpus)
-      .filter(uid => !!corpus[uid].href && corpus[uid].type === 'Document')
+      .filter(uid => !!getHref(corpus[uid]) && corpus[uid].type === 'Document')
       .reduce((map, uid) => {
         const node = getByUID(uid);
 
@@ -105,11 +109,11 @@ module.exports = function CorpusAPI(corpus) {
           map[uid] = [];
         }
         else {
-          map[uid] = node.entities.map(getByUID).filter(x => x.href).map(x => {
+          map[uid] = node.entities.map(getByUID).filter(getHref).map(x => {
             return {
               $1: getPrivateIndex(x),
               link: {
-                href: x.href
+                href: getHref(x)
               }
             };
           });
@@ -122,3 +126,7 @@ module.exports = function CorpusAPI(corpus) {
 
   return exports;
 };
+
+function getHref(node) {
+  return node.meta.href;
+}

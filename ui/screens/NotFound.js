@@ -1,13 +1,12 @@
-var React = require("react");
+const React = require("react");
+const NotFound = require('components/NotFound');
 
-var NotFound = React.createClass({
-  displayName: "NotFound",
-
+const NotFoundScreen = React.createClass({
   render() {
     return (
-      <div>404</div>
+      <NotFound />
     );
   }
 });
 
-module.exports = NotFound;
+module.exports = NotFoundScreen;

@@ -16,7 +16,7 @@ describe("[Integration] tinydoc-plugin-js", function() {
         Subject({
           verbose: false,
           routeName: 'test',
-          source: TinyTestUtils.tempPath('lib/**/*.js')
+          source: 'lib/**/*.js'
         })
       ]
     });
@@ -69,6 +69,8 @@ describe("[Integration] tinydoc-plugin-js", function() {
 
   it('works with file serializing', function(done) {
     config.emitFiles = true;
+    config.plugins.push(require('tinydoc-layout-multi-page')({}));
+
     var tiny = tinydoc(config, {
       scan: true,
       write: true,

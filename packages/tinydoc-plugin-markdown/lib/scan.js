@@ -50,7 +50,9 @@ module.exports = function scan(config, utils, globalConfig, done) {
 
     entry.title = parseTitle(entry.source);
     entry.wordCount = entry.source.split(/\s+/).length;
-    entry.summary = RendererUtils.extractSummary(entry.source);
+    entry.summary = RendererUtils.extractSummary(entry.source, {
+      plainText: true
+    });
 
     if (config.generateMissingHeadings && !entry.title) {
       entry.title = strHumanize(fileName);

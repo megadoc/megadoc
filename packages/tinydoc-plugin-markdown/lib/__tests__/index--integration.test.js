@@ -3,6 +3,7 @@ var assert = require('chai').assert;
 var TinyTestUtils = require('tinydoc/lib/TestUtils');
 var tinydoc = require('tinydoc');
 var multiline = require('multiline-slash');
+var assign = require('lodash').assign;
 
 describe("[Integration] tinydoc-plugin-markdown", function() {
   TinyTestUtils.IntegrationSuite(this);
@@ -16,7 +17,7 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
         Subject({
           verbose: false,
           routeName: 'test',
-          source: TinyTestUtils.tempPath('lib/**/*.md')
+          source: 'lib/**/*.md'
         })
       ]
     });
@@ -48,7 +49,31 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
     tiny.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['markdown:test'].count, 2);
+      assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
+
+      done();
+    });
+  });
+
+  it('works with emitting files', function(done) {
+    var tiny = tinydoc(assign(config, {
+      emitFiles: true,
+      plugins: config.plugins.concat([
+        require('tinydoc-layout-multi-page')({})
+      ])
+    }), {
+      scan: true,
+      write: true,
+      index: true,
+      render: true,
+      stats: true,
+      purge: true
+    });
+
+    tiny.run(function(err, stats) {
+      if (err) { return done(err); }
+
+      assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
 
       done();
     });

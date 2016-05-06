@@ -1,9 +1,8 @@
 var path = require('path');
 var scan = require('./scan');
-var indexEntities = require('./indexEntities');
-var resolveLink = require('./resolveLink');
 var assign = require('lodash').assign;
 var defaults = require('./config');
+var b = require('tinydoc-corpus').Types.builders;
 
 function MarkdownPlugin(userConfig) {
   var config = assign({}, defaults, userConfig);
@@ -16,35 +15,44 @@ function MarkdownPlugin(userConfig) {
       var database;
 
       compiler.on('scan', function(done) {
-        console.log('MARKDOWN[%s] SCANNING', config.routeName);
-
         scan(config, compiler.utils, compiler.config, function(err, _database) {
           if (err) {
             return done(err);
           }
 
-          database = _database.map(function(doc) {
-            return assign({}, doc, {
-              href: config.routeName + '/' + encodeURIComponent(doc.id)
-            });
-          });
-
-          compiler.linkResolver.use(resolveLink.bind(null, database));
+          database = _database;
 
           done();
         });
       });
 
       compiler.on('index', function(registry, done) {
-        var result = indexEntities(database, config.routeName, config);
+        var namespace = b.namespace({
+          id: config.routeName,
+          corpusContext: config.corpusContext,
+          documents: database.map(function(doc) {
+            // omg omg, we're rendering everything twice now
+            var compiled = compiler.renderer.withTOC(doc.source);
 
-        Object.keys(result.indices).forEach(function(indexPath) {
-          registry.add(indexPath, result.indices[indexPath]);
+            // TODO: b.markdownDocument
+            return b.document({
+              id: doc.id,
+              title: doc.plainTitle,
+              summary: doc.summary,
+              filePath: doc.filePath,
+              properties: doc,
+              entities: compiled.toc.map(function(section) {
+                return b.documentEntity({
+                  id: section.scopedId,
+                  title: section.text,
+                  properties: section
+                })
+              })
+            })
+          })
         });
 
-        result.searchTokens.forEach(function(token) {
-          registry.addSearchToken(token);
-        });
+        compiler.corpus.add(namespace);
 
         done();
       });
@@ -69,7 +77,7 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('write', function(done) {
-        var runtimeConfig = assign({}, config, { database: database });
+        var runtimeConfig = config;
 
         compiler.assets.addStyleSheet(
           path.resolve(__dirname, '..', 'ui', 'css', 'index.less')
@@ -79,13 +87,13 @@ function MarkdownPlugin(userConfig) {
           path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-markdown.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig('markdown', runtimeConfig);
+        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-markdown', runtimeConfig);
 
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
-        stats['markdown:' + config.routeName] = {
+        stats['tinydoc-plugin-markdown:' + config.routeName] = {
           count: database.length
         };
 

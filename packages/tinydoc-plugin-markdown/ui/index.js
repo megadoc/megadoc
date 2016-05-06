@@ -7,7 +7,7 @@ Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydoc.outlets.define('Markdown::Document');
 tinydoc.use(function MarkdownPlugin(api) {
-  const configs = tinydoc.getRuntimeConfigs('markdown');
+  const configs = tinydoc.getRuntimeConfigs('tinydoc-plugin-markdown');
 
   configs.forEach(function(config) {
     register(api, config);
@@ -16,7 +16,7 @@ tinydoc.use(function MarkdownPlugin(api) {
 
 function register(api, config) {
   const { routeName } = config;
-  const database = Database.createDatabase(routeName, config);
+  const database = Database.createDatabase(api, routeName, config);
 
   api.addRoutes([
     {
@@ -47,9 +47,9 @@ function register(api, config) {
     }
   ]);
 
-  api.registerPreviewHandler(PreviewHandler(config, database));
+  // api.registerPreviewHandler(PreviewHandler(config, database));
 
-  require('./SymbolIndexer')(api, config);
+  // require('./SymbolIndexer')(api, config);
   require('./outlets/MultiPageLayout')(api, config);
   require('./outlets/SinglePageLayout')(api, config);
 }

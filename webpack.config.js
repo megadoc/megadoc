@@ -2,22 +2,24 @@ var path = require('path');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
 var nodeEnv = process.env.NODE_ENV || 'development';
+var K = require('./lib/HTMLSerializer__constants');
+var entry = {};
+
+entry[K.MAIN_BUNDLE] = path.resolve(__dirname, 'ui/index.js');
+entry[K.VENDOR_BUNDLE] = require('./webpack/vendorModules');
 
 var config = {
-  entry: {
-    tinydoc: path.resolve(__dirname, 'ui/index.js'),
-    tinydoc__vendor: require('./webpack/vendorModules')
-  },
+  entry: entry,
 
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: K.BUNDLE_DIR,
     filename: '[name].js',
     libraryTarget: 'var',
     jsonpFunction: 'webpackJsonp_tinydoc'
   },
 
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin('tinydoc__vendor', 'tinydoc__vendor.js'),
+    new webpack.optimize.CommonsChunkPlugin(K.VENDOR_BUNDLE, K.VENDOR_BUNDLE + '.js'),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({

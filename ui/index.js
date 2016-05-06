@@ -6,6 +6,7 @@ var createTinydoc = require('core/tinydoc');
 var Storage = require('core/Storage');
 var { Route, NotFoundRoute, Redirect } = ReactRouter;
 var K = require('constants');
+var DocumentURI = require('core/DocumentURI');
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
 Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
@@ -35,7 +36,7 @@ tinydoc.onReady(function(registrar) {
       {config.home && <Redirect from="/" to={config.home} />}
 
       <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
-      <Route name="404" handler={require('./screens/NotFound')} />
+      <Route name="404" path="/404" handler={require('./screens/NotFound')} />
 
       <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
       {registrar.getRouteMap()}
@@ -50,30 +51,43 @@ tinydoc.onReady(function(registrar) {
 
   const container = document.querySelector('#__app__');
 
-  const { makePath } = router;
-  const { emittedFileExtension } = config;
+  // const { makePath } = router;
+  // const { emittedFileExtension } = config;
+  // const regexpFileExtension = new RegExp(config.emittedFileExtension + '$');
 
-  router.makePath = function appendFileExtensionToURLIfNeeded() {
-    const url = makePath.apply(router, arguments);
+  // router.makePath = function appendFileExtensionToURLIfNeeded() {
+  //   const url = makePath.apply(router, arguments);
 
-    if (emittedFileExtension.length && !url.match(config.emittedFileExtension + '$')) {
-      return url + config.emittedFileExtension;
-    }
-    else {
-      return url;
-    }
-  };
+  //   if (emittedFileExtension.length && !url.match(regexpFileExtension)) {
+  //     return url + config.emittedFileExtension;
+  //   }
+  //   else {
+  //     return url;
+  //   }
+  // };
 
   Router.setInstance(router);
 
   if (config.$static) {
     config.$static.readyCallback({
       render(href, done) {
-        location.path = href.replace(/\.html$/, '');
+        location.path = href;
 
         router.run(function(Handler, state) {
-          done(React.renderToString(<Handler {...state} />));
+          if (process.env.DEBUG) {
+            console.log('[DEBUG] Rendered using:', state.routes[state.routes.length-1].name);
+          }
+
+          if (state.routes.length && state.routes[state.routes.length-1].name === 'not-found') {
+            return done(404);
+          }
+
+          done(null, React.renderToString(<Handler {...state} />));
         });
+      },
+
+      dumpRoutes: function() {
+        return dumpRoute(router.routes[0]);
       }
     });
 
@@ -86,3 +100,11 @@ tinydoc.onReady(function(registrar) {
 });
 
 module.exports = tinydoc;
+
+function dumpRoute(route) {
+  return {
+    path: route.path,
+    name: route.name,
+    children: (route.childRoutes || []).map(dumpRoute)
+  };
+}

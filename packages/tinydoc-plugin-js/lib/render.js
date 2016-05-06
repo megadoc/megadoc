@@ -1,17 +1,9 @@
-var RendererUtils = require('tinydoc/lib/RendererUtils');
-
 module.exports = function(namespaceNode, md, linkify) {
   namespaceNode.documents.forEach(visitNode);
 
   function visitNode(node) {
 
     if (node.properties) {
-      if (node.properties.description) {
-        node.summary = RendererUtils.extractSummary(node.properties.description, {
-          plainText: true
-        });
-      }
-
       renderDocument(node);
     }
 

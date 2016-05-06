@@ -1,6 +1,8 @@
+var Corpus = require('tinydoc-corpus').Corpus;
 var CorpusTypes = require('tinydoc-corpus').Types;
 var b = CorpusTypes.builders;
 var K = require('./Parser/constants');
+var RendererUtils = require('tinydoc/lib/RendererUtils');
 
 module.exports = function reduceDocuments(options) {
   var rawDocuments = options.documents;
@@ -10,45 +12,47 @@ module.exports = function reduceDocuments(options) {
   ;
 
   var namespaces = {};
-  var database = b.namespace({
+  var bank = b.namespace({
     id: options.namespaceId,
     corpusContext: options.namespaceTitle,
+    meta: {
+      href: '/' + options.namespaceId + '/modules',
+    },
     documents: [],
   });
 
   documents.forEach(function(x) {
-    var nsId = x.properties.namespace;
-    var nsNode;
+    var namespaceId = x.properties.namespace;
+    var namespace;
 
-    if (nsId) {
-      nsNode = namespaces[nsId];
+    if (namespaceId) {
+      namespace = namespaces[namespaceId];
 
-      if (!nsNode) {
-        nsNode = namespaces[nsId] = b.document({
-          id: nsId,
+      if (!namespace) {
+        namespace = namespaces[namespaceId] = b.document({
+          id: namespaceId,
           symbol: K.NAMESPACE_SEP,
           documents: [],
-          parentNode: database
+          parentNode: bank
         });
 
-        database.documents.push(nsNode)
+        bank.documents.push(namespace)
       }
 
-      x.parentNode = nsNode;
-      nsNode.documents.push(x);
+      Corpus.attachNode('documents', namespace, x);
     }
     else {
-      x.parentNode = database;
-      database.documents.push(x);
+      Corpus.attachNode('documents', bank, x);
     }
   });
 
   function reduceModuleDocument(doc) {
     return b.document({
       id: doc.name,
-      href: DocumentURI(doc),
       title: doc.path,
+      summary: generateSummary(doc),
       filePath: doc.absoluteFilePath,
+      symbol: '',
       properties: doc,
       documents: rawDocuments.filter(function(x) {
         return x.isModule && x.receiver === doc.id;
@@ -62,25 +66,20 @@ module.exports = function reduceDocuments(options) {
   function reduceEntityDocument(parentDoc, doc) {
     return b.documentEntity({
       id: doc.ctx.symbol + doc.name,
-      href: DocumentURI(doc, parentDoc),
       title: doc.path,
+      summary: generateSummary(doc),
       filePath: doc.absoluteFilePath,
       properties: doc,
     });
   }
 
-  function DocumentURI(doc, parentDoc) {
-    if (parentDoc) {
-      return DocumentURI(parentDoc) + '#' + encodeURIComponent(doc.ctx.symbol + doc.name);
-    }
-    else {
-      return ensureLeadingSlash(options.baseURL) + '/modules/' + encodeURIComponent(doc.id);
-    }
-  }
-
-  return database;
+  return bank;
 };
 
-function ensureLeadingSlash(s) {
-  return s[0] === '/' ? s : '/' + s;
+function generateSummary(doc) {
+  if (doc.description) {
+    return RendererUtils.extractSummary(doc.description, {
+      plainText: true
+    });
+  }
 }

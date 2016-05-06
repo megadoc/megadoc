@@ -5,10 +5,10 @@ const Disqus = require('components/Disqus');
 const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
 const HasMetaDescription = require('mixins/HasMetaDescription');
-const Router = require('core/Router');
 const Database = require('../Database');
 const Document = require('components/Document');
 const Outlet = require('components/Outlet');
+const NotFound = require('components/NotFound');
 
 const { shape, bool, string } = React.PropTypes;
 
@@ -56,8 +56,7 @@ const Article = React.createClass({
     const article = Database.for(this.props.routeName).get(this.getArticleId());
 
     if (!article) {
-      Router.goToNotFound();
-      return null;
+      return <NotFound />;
     }
 
     return (

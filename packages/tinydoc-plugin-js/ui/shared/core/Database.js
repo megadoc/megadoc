@@ -3,7 +3,7 @@ const { where, findWhere, sortBy, groupBy } = require('lodash');
 let databases = {};
 
 function createDatabase(key, config) {
-  const database = tinydoc.getDatabase(key)
+  const database = tinydoc.corpus.getCatalogue(key)
     .filter(node => node.type !== 'Namespace' && node.properties)
     .map(node => node.properties)
   ;

@@ -40,10 +40,6 @@ Router.updateQuery = function(newQuery) {
   instance.replaceWith(currentRouteName, instance.getCurrentParams(), query);
 };
 
-Router.goToNotFound = function() {
-  instance.replaceWith('404');
-};
-
 Router.transitionTo = function(path, params, query) {
   instance.transitionTo(path, params, query);
 };

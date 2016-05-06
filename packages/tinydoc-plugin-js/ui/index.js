@@ -21,7 +21,7 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
     api.addRoutes([
       {
         name: routeName,
-        path: '/' + routeName,
+        path: routeName,
         // handler: require('./screens/Root')(routeName)
       },
 

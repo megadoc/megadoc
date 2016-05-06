@@ -4,8 +4,8 @@ const ModuleBody = require('components/ModuleBody');
 const HasTitle = require('mixins/HasTitle');
 const ModuleHeader = require('components/ModuleHeader');
 const GitStats = require('components/GitStats');
+const NotFound = require('components/NotFound');
 const config = require('config');
-const Router = require('core/Router');
 const Outlet = require('components/Outlet');
 const scrollToTop = require('utils/scrollToTop');
 
@@ -45,8 +45,7 @@ const Module = React.createClass({
     const doc = Database.for(routeName).getModule(moduleId);
 
     if (!doc) {
-      Router.goToNotFound();
-      return null;
+      return <NotFound />;
     }
 
     const moduleDocs = Database.for(routeName).getModuleEntities(moduleId);

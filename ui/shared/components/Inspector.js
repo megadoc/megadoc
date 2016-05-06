@@ -3,6 +3,7 @@ const domContains = require('dom-contains');
 const config = require('config');
 const Tooltip = require('components/Tooltip');
 const Outlet = require('components/Outlet');
+const DocumentURI = require('core/DocumentURI');
 const { debounce } = require('lodash');
 const { hasMatchingElements } = Outlet;
 
@@ -83,7 +84,15 @@ function isApplicable(containerNode, node) {
 
 function inspectElement(el) {
   const { corpus } = tinydoc;
-  const documentNode = corpus.getByURI(el.href.replace(/^[^#]*#/, ''));
+  const href = decodeURIComponent(
+    DocumentURI.withoutExtension(
+      el.href
+        .replace(location.origin, '')
+        .replace(/^#/, '')
+    )
+  );
+
+  const documentNode = corpus.getByURI(href);
 
   if (documentNode) {
     const context = {
@@ -96,12 +105,11 @@ function inspectElement(el) {
     }
   }
 
-  return legacy__inspectElement(el);
+  return legacy__inspectElement(href);
 }
 
-function legacy__inspectElement(el) {
+function legacy__inspectElement(href) {
   let content;
-  const href = decodeURIComponent( el.href.replace(/^[^#]*#/, '') );
 
   tinydoc.getPreviewHandlers().some(function(fn) {
     content = fn(href);

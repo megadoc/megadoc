@@ -1,8 +1,18 @@
 const { assign, where, findWhere, sortBy } = require('lodash');
 const strHumanize = require('../lib/utils/strHumanize');
 
-function createDatabase(config) {
-  let articles = sortBy(config.database, 'title');
+function createDatabase(api, config) {
+  const documents = api.corpus.getCatalogue(config.routeName)
+    .filter(function(node) {
+      return node.type === 'Document';
+    }).map(function(node) {
+      return node.properties;
+    })
+  ;
+
+  window.documents = documents;
+
+  let articles = sortBy(documents, 'title');
   let folders = [];
 
   // TODO: can we please do this at compile-time instead??
@@ -31,7 +41,7 @@ function createDatabase(config) {
   }
 
   // generate folders
-  config.database.forEach((article) => {
+  documents.forEach((article) => {
     if (!findWhere(folders, { path: article.folder })) {
       folders.push(createFolderConfig(article.folder));
     }
@@ -81,8 +91,8 @@ function createDatabase(config) {
 let databases = [];
 
 module.exports = {
-  createDatabase(key, config) {
-    const database = createDatabase(config);
+  createDatabase(api, key, config) {
+    const database = createDatabase(api, config);
 
     databases[key] = database;
 
