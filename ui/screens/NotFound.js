@@ -3,9 +3,7 @@ const NotFound = require('components/NotFound');
 
 const NotFoundScreen = React.createClass({
   render() {
-    return (
-      <NotFound />
-    );
+    return tinydoc.renderDocument('/'+this.props.params.splat) || <NotFound />
   }
 });
 

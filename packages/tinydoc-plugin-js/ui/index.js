@@ -1,6 +1,8 @@
 const Database = require('core/Database');
 const Storage = require('core/Storage');
 const K = require('constants');
+const React = require('react');
+const Module = require('components/Module');
 // const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
@@ -18,34 +20,36 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
 
     Database.createDatabase(config);
 
-    api.addRoutes([
-      {
-        name: routeName,
-        path: routeName,
-        // handler: require('./screens/Root')(routeName)
-      },
+    api.registerDocumentHandler(config.routeName, renderDocument);
 
-      {
-        default: true,
-        name: `${routeName}.landing`,
-        handler: require('./screens/Landing'),
-        parent: routeName
-      },
+    // api.addRoutes([
+    //   {
+    //     name: routeName,
+    //     path: routeName,
+    //     // handler: require('./screens/Root')(routeName)
+    //   },
 
-      {
-        name: `${routeName}.module`,
-        path: ':moduleId',
-        handler: require('./screens/Module'),
-        parent: routeName,
-        ignoreScrollBehavior: true
-      },
-      {
-        name: `${routeName}.module.entity`,
-        parent: `${routeName}.module`,
-        path: ':entity',
-        ignoreScrollBehavior: true
-      },
-    ]);
+    //   {
+    //     default: true,
+    //     name: `${routeName}.landing`,
+    //     handler: require('./screens/Landing'),
+    //     parent: routeName
+    //   },
+
+    //   {
+    //     name: `${routeName}.module`,
+    //     path: ':moduleId',
+    //     handler: require('./screens/Module'),
+    //     parent: routeName,
+    //     ignoreScrollBehavior: true
+    //   },
+    //   {
+    //     name: `${routeName}.module.entity`,
+    //     parent: `${routeName}.module`,
+    //     path: ':entity',
+    //     ignoreScrollBehavior: true
+    //   },
+    // ]);
 
     // api.inspector.use(config.routeName, PreviewHandler);
     // api.registerPreviewHandler(PreviewHandler(config, database));
@@ -56,3 +60,12 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
     require('./outlets/SinglePageLayout')(api, config);
   });
 });
+
+function renderDocument(documentNode, namespaceNode) {
+  return (
+    <Module
+      documentNode={documentNode}
+      namespaceNode={namespaceNode}
+    />
+  );
+}

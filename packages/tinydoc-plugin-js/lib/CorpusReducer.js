@@ -16,6 +16,7 @@ module.exports = function reduceDocuments(options) {
     id: options.namespaceId,
     corpusContext: options.namespaceTitle,
     documents: [],
+    config: options.config
   });
 
   documents.forEach(function(x) {

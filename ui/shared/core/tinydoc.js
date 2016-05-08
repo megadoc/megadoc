@@ -1,6 +1,7 @@
 const buildRouteMap = require('utils/buildRouteMap');
 const Outlet = require('components/Outlet');
 const CorpusAPI = require('./CorpusAPI');
+const invariant = require('utils/invariant');
 
 /**
  * @module tinydoc
@@ -12,6 +13,7 @@ module.exports = function createTinydoc(config) {
   let routeSpecs = [];
   let previewHandlers = [];
   let symbolIndexers = [];
+  const documentHandlers = {};
   let callbacks = [];
   let ran = 0;
   let state = {
@@ -31,6 +33,14 @@ module.exports = function createTinydoc(config) {
 
     registerSymbolIndexer(fn) {
       symbolIndexers.push(fn);
+    },
+
+    registerDocumentHandler(namespaceId, fn) {
+      invariant(!documentHandlers[namespaceId],
+        `A document handler for the namespace '${namespaceId}' already exists!`
+      );
+
+      documentHandlers[namespaceId] = fn;
     }
   };
 
@@ -137,6 +147,20 @@ module.exports = function createTinydoc(config) {
 
   exports.getCorpus = function() {
     return config.database;
+  };
+
+  exports.renderDocument = function(href) {
+    const node = corpusAPI.getByURI(href);
+
+    if (node) {
+      const nsNode = corpusAPI.getNamespaceOfDocument(node.uid);
+
+      if (nsNode) {
+        if (documentHandlers[nsNode.id]) {
+          return documentHandlers[nsNode.id](node, nsNode);
+        }
+      }
+    }
   };
 
   /**

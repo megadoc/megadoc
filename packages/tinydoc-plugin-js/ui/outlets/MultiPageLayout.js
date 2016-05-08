@@ -5,15 +5,15 @@ const { shape, string } = React.PropTypes;
 module.exports = function(api, config) {
   const { routeName } = config;
 
-  api.outlets.add('MultiPageLayout::Content', {
-    key: routeName,
+  // api.outlets.add('MultiPageLayout::Content', {
+  //   key: routeName,
 
-    match(props) {
-      return props.path.match(`^/${routeName}($|/)`);
-    },
+  //   match(props) {
+  //     return props.path.match(`^/${routeName}($|/)`);
+  //   },
 
-    component: require('../screens/Root')(routeName),
-  });
+  //   component: require('../screens/Root')(routeName),
+  // });
 
   api.outlets.add('MultiPageLayout::Sidebar', {
     key: routeName,

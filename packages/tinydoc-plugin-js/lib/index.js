@@ -97,7 +97,8 @@ function createCJSPlugin(userConfig) {
           documents: documents,
           namespaceId: config.routeName,
           namespaceTitle: config.corpusContext,
-          baseURL: config.routeName
+          baseURL: config.routeName,
+          config: config
         });
 
         compiler.corpus.add(database);

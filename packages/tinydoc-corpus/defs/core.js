@@ -24,6 +24,7 @@ def("Namespace", {
     corpusContext: or(t.string, null),
     documents: or(array("Node"), null),
     meta: or(t.object, null),
+    config: or(t.object, null),
     parentNode: "Corpus",
   }
 });
