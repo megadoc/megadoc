@@ -1,13 +1,19 @@
 const config = require('config');
 const extension = config.emittedFileExtension || '';
 const RE = extension.length > 0 && new RegExp(extension + '$');
+const URIjs = require('urijs');
 
 exports.withExtension = function(uri) {
   if (config.useHashLocation) {
     return uri;
   }
   else {
-    return uri + extension;
+    if (!uri.match(RE)) {
+      return uri + extension;
+    }
+    else {
+      return uri;
+    }
   }
 };
 

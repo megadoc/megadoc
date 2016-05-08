@@ -10,6 +10,7 @@ const K = require('constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
 const JumperMixin = require('mixins/JumperMixin');
 const orderAwareSort = require('utils/orderAwareSort');
+const { object, bool, string, } = React.PropTypes;
 
 var ClassBrowser = React.createClass({
   mixins: [
@@ -24,9 +25,10 @@ var ClassBrowser = React.createClass({
   ],
 
   propTypes: {
-    activeModuleId: React.PropTypes.string,
-    activeEntityId: React.PropTypes.string,
-    withControls: React.PropTypes.bool,
+    activeModuleId: string,
+    activeEntityId: string,
+    withControls: bool,
+    namespaceNode: object,
   },
 
   getDefaultProps: function() {
@@ -120,7 +122,6 @@ var ClassBrowser = React.createClass({
 
   renderModule(docNode) {
     const doc = docNode.properties;
-    const { routeName } = this.props;
     const { id } = doc;
     const isActive = this.props.activeModuleId === docNode.id;
     const className = classSet({
@@ -161,7 +162,6 @@ var ClassBrowser = React.createClass({
     }
 
     const moduleDoc = documentNode.properties;
-    const docs = documentNode.entities.map(x => x.properties);
     const methodDocs = documentNode.entities.filter(function(x) {
       return x.properties.ctx.type === K.TYPE_FUNCTION;
     });

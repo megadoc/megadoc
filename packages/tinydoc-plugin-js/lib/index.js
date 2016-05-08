@@ -127,7 +127,7 @@ function createCJSPlugin(userConfig) {
           path.resolve(__dirname, '..', 'dist', plugin.name + '.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig(plugin.name, config);
+        // compiler.assets.addPluginRuntimeConfig(plugin.name, config);
 
         done();
       });

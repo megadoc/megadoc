@@ -66,13 +66,13 @@ Router.refresh = function() {
 
 // force the browser to (re)scroll to the proper location
 Router.refreshScroll = function() {
-  // if (config.useHashLocation) {
-    // force the browser to (re)scroll to the proper location
-    const originalLocation = window.location.hash;
+  // force the browser to (re)scroll to the proper location
+  const originalLocation = window.location.hash;
 
+  if (originalLocation && originalLocation.length > 0) {
     window.location.hash = '#/';
     window.location.hash = originalLocation;
-  // }
+  }
 };
 
 Router.generateAnchorId = function({ routeName, params }) {

@@ -1,10 +1,6 @@
 const LocationActions = require('react-router/lib/actions/LocationActions');
 const History = require('react-router/lib/History');
-const config = require('config');
-const RE_REMOVE_EXTENSION = (config.emittedFileExtension || '').length > 0 ?
-  new RegExp(config.emittedFileExtension + '$') :
-  null
-;
+const DocumentURI = require('core/DocumentURI');
 
 var _listeners = [];
 var _isListening = false;
@@ -59,12 +55,7 @@ var TinydocLocation = {
   getCurrentPath: function getCurrentPath() {
     const path = decodeURI(window.location.pathname + window.location.search);
 
-    if (RE_REMOVE_EXTENSION) {
-      return path.replace(RE_REMOVE_EXTENSION, '');
-    }
-    else {
-      return path;
-    }
+    return DocumentURI.withoutExtension(path);
   },
 
   toString: function toString() {

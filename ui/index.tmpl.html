@@ -6,9 +6,13 @@
     <meta name="description" content="<%= _.escape(metaDescription || '') %>" />
 
     <title><%= _.escape(title || '') %></title>
+
+    <% _.forEach(styleSheets, function(styleSheet) { %>
+    <link rel="stylesheet" href="<%- styleSheet %>" />
+    <% }); %>
   </head>
 
-  <body>
+  <body class="body--themed">
     <div id="__app__">
       <% if (contents) { %>
         <%= contents %>
@@ -18,7 +22,6 @@
         </div>
       <% } %>
     </div>
-
     <% _.forEach(scripts, function(script) { %>
     <script type="text/javascript" src="<%- script %>"></script>
     <% }); %>

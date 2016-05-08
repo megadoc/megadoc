@@ -3,6 +3,7 @@ var assert = require('chai').assert;
 var TinyTestUtils = require('tinydoc/lib/TestUtils');
 var multiline = require('multiline-slash');
 var tinydoc = require('tinydoc');
+var fs = require('fs');
 
 describe("[Integration] tinydoc-plugin-js", function() {
   TinyTestUtils.IntegrationSuite(this, 5000);
@@ -69,7 +70,7 @@ describe("[Integration] tinydoc-plugin-js", function() {
 
   it('works with file serializing', function(done) {
     config.emitFiles = true;
-    config.plugins.push(require('tinydoc-layout-multi-page')({}));
+    config.useHashLocation = false;
 
     var tiny = tinydoc(config, {
       scan: true,
@@ -87,7 +88,17 @@ describe("[Integration] tinydoc-plugin-js", function() {
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);
 
+      assertFileWasRendered('test/Store.html');
+
       done();
     });
   });
+
+  function assertFileWasRendered(fileName) {
+    assert.ok(fs.existsSync(TinyTestUtils.tempPath('doc/compiled' + fileName)));
+    assert.notOk(
+      fs.readFileSync(TinyTestUtils.tempPath('doc/compiled' + fileName), 'utf-8').match(/404/),
+      "It did not 404"
+    );
+  }
 });

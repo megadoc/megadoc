@@ -3,12 +3,12 @@ const Outlet = require('components/Outlet');
 const AppState = require('core/AppState');
 const Storage = require('core/Storage');
 const Router = require('core/Router');
-const ColorSchemeManager = require('core/ColorSchemeManager');
-const ScrollSpy = require('core/ScrollSpy');
 const DocumentURI = require('core/DocumentURI');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
 const Inspector = require('components/Inspector');
+const Layout = require('../components/Layout');
+const ScrollSpy = require('../components/ScrollSpy');
 
 const Root = React.createClass({
   propTypes: {
@@ -23,14 +23,8 @@ const Root = React.createClass({
   },
 
   componentDidMount() {
-    ColorSchemeManager.load();
-
     Storage.on('change', this.reload);
     AppState.on('change', this.reload);
-
-    if (config.scrollSpying) {
-      ScrollSpy.start();
-    }
 
     if (config.useHashLocation) {
       setTimeout(Router.refreshScroll, 1);
@@ -49,10 +43,6 @@ const Root = React.createClass({
       window.removeEventListener('click', this.handleInternalLink, false);
     }
 
-    if (config.scrollSpying) {
-      ScrollSpy.stop();
-    }
-
     AppState.off('change', this.reload);
     Storage.off('change', this.reload);
   },
@@ -69,7 +59,11 @@ const Root = React.createClass({
           />
         )}
 
-        <Outlet name="Layout" elementProps={this.props} />
+        {config.scrollSpying && (
+          <ScrollSpy />
+        )}
+
+        <Layout config={config.layoutOptions} {...this.props} />
       </Outlet>
     );
   },

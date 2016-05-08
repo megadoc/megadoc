@@ -15,7 +15,7 @@ tinydoc.use(function MarkdownPlugin(api) {
 
 function register(api, config) {
   const { routeName } = config;
-  const database = Database.createDatabase(api, routeName, config);
+  Database.createDatabase(api, routeName, config);
 
   api.addRoutes([
     {

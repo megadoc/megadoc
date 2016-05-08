@@ -2,7 +2,6 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
 const K = require('constants');
-const Router = require('core/Router');
 
 const { string, object, array, bool } = React.PropTypes;
 

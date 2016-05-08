@@ -1,13 +1,33 @@
+const React = require("react");
 const Router = require('core/Router');
 const { filter } = Array.prototype;
 
-exports.start = function() {
-  window.addEventListener('scroll', focusClosestHeading, false);
-};
+const ScrollSpy = React.createClass({
+  getDefaultProps() {
+    return {
+      query: {},
+      params: {}
+    };
+  },
 
-exports.stop = function() {
-  window.removeEventListener('scroll', focusClosestHeading, false);
-};
+  componentDidMount() {
+    window.addEventListener('scroll', focusClosestHeading, false);
+  },
+
+  shouldComponentUpdate() {
+    return false;
+  },
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', focusClosestHeading, false);
+  },
+
+  render() {
+    return null;
+  },
+});
+
+module.exports = ScrollSpy;
 
 function focusClosestHeading() {
   const nodes = filter.call(document.querySelectorAll('[id]'), function(node) {

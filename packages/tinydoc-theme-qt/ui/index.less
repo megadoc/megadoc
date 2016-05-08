@@ -5,11 +5,6 @@
 @spacing: 2em;
 @background: @plain-base02;
 
-body.plain {
-  background: @background;
-  font-family: "Open Sans", Arial, Helvetica, sans-serif;
-}
-
 h1, h2, h3 {
   font-weight: 700;
 }
@@ -20,6 +15,9 @@ h4, h5, h6 {
 
 
 .schemable({
+  background: @background;
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+
   a:visited:not(.active) {
     color: lighten(@plain-link, 15%);
   }

@@ -43,7 +43,7 @@ module.exports = function reduceDocuments(options) {
           documentTypes: [ 'Document', 'DocumentEntity' ],
           layout: [
             {
-              name: 'Layout::ContentPanel',
+              name: 'Layout::Content',
               children: [{ name: 'CJS::Module' }]
             },
             {

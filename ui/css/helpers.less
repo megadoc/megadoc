@@ -31,7 +31,7 @@
 }
 
 .schemable(@rules) {
-  body.plain {
+  body.body--themed {
     @base0: @plain-base0;
     @base1: @plain-base01;
     @base2: @plain-base02;
@@ -40,45 +40,6 @@
     @code: @plain-code;
     @border-color: @plain-border-color;
     @link: @plain-link;
-
-    @rules();
-  }
-
-  body.steel {
-    @base0:         @steel-base0;
-    @base1:         @steel-base1;
-    @base2:         @steel-base2;
-    @base3:         @steel-base3;
-    @accent:        @steel-accent;
-    @code:          @steel-code;
-    @border-color:  @steel-border-color;
-    @link:          @steel-link;
-
-    @rules();
-  }
-
-  body.solarized--light {
-    @base0: @solarized-base00;
-    @base1: @solarized-base1;
-    @base2: @solarized-base2;
-    @base3: @solarized-base3;
-    @accent: @solarized-cyan;
-    @code: @base2;
-    @border-color: @base2;
-    @link: @solarized-blue;
-
-    @rules();
-  }
-
-  body.solarized--dark  {
-    @base0: @solarized-base0;
-    @base1: @solarized-base01;
-    @base2: @solarized-base02;
-    @base3: @solarized-base03;
-    @accent: @solarized-cyan;
-    @code: @base2;
-    @border-color: @base2;
-    @link: @solarized-blue;
 
     @rules();
   }

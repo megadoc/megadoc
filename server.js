@@ -85,7 +85,7 @@ function start(host, port, done) {
   app.use(require('webpack-hot-middleware')(compiler));
 
   app.use(modRewrite([
-    '^/(tinydoc__vendor|styles).js$ - [G]',
+    '^/(tinydoc__vendor.js|styles.css)$ - [G]',
     '^/plugins/(' + pluginNames.join('|') + ').js$ - [G]',
   ]));
 

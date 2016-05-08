@@ -1,5 +1,4 @@
 var React = require('react');
-var ColorSchemeSwitcher = require("components/ColorSchemeSwitcher");
 var Checkbox = require("components/Checkbox");
 var Radio = require("components/Radio");
 var Storage = require('core/Storage');
@@ -20,14 +19,6 @@ var Settings = React.createClass({
             Enable syntax highlighting
           </Checkbox>
         </p>
-
-        <fieldset>
-          <legend><strong>Accessibility: Color Scheme</strong></legend>
-
-          <p>Choose your preferred color palette for easier reading.</p>
-
-          <ColorSchemeSwitcher />
-        </fieldset>
 
         <fieldset>
           <legend><strong>Layout</strong></legend>

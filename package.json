@@ -40,6 +40,7 @@
     "commander": "^2.8.1",
     "css-loader": "0.23.1",
     "dom-contains": "^0.2.0",
+    "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "0.8.5",
     "fs-extra": "0.18.0",
     "fuzzaldrin-plus": "^0.3.1",

@@ -62,7 +62,7 @@ const Module = React.createClass({
         />
 
         {config.gitStats && (
-          <GitStats {...doc.git} />
+          <GitStats {...moduleDoc.git} />
         )}
       </div>
     );

@@ -1,13 +1,12 @@
 const React = require("react");
 const Banner = require('./Banner');
-const Footer = require('components/Footer');
 const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const classSet = require('utils/classSet');
 const NotFound = require('components/NotFound');
 const DocumentURI = require('core/DocumentURI');
 
-const { node, shape, string, arrayOf, array, } = React.PropTypes;
+const { node, shape, string, arrayOf, array, object, } = React.PropTypes;
 const Link = shape({
   text: string,
   href: string,
@@ -18,16 +17,25 @@ const Layout = React.createClass({
   propTypes: {
     children: node,
     path: string,
+    pathname: string,
+    params: object, // DEPRECATED
+    query: object, // DEPRECATED
     config: shape({
       bannerLinks: arrayOf(Link)
     })
   },
 
+  getDefaultProps() {
+    return {
+      config: {
+        bannerLinks: []
+      }
+    };
+  },
+
   render() {
-    const documentNode = tinydoc.corpus.getByURI(
-      DocumentURI.withExtension(this.props.pathname) +
-      location.hash
-    );
+    const documentHref = DocumentURI.withExtension(this.props.pathname) + window.location.hash;
+    const documentNode = tinydoc.corpus.getByURI(documentHref);
 
     const namespaceNode = tinydoc.corpus.getNamespaceOfDocument(documentNode);
     const layout = getLayoutForDocument(documentNode, namespaceNode) || getDefaultLayout();
@@ -39,6 +47,10 @@ const Layout = React.createClass({
       'root--with-multi-page-layout': true,
       'root--with-two-column-layout': hasSidebarElements
     });
+
+    if (!documentNode) {
+      console.warn("Unable to find a document at the URI:", documentHref);
+    }
 
     const ctx = {
       layout,
@@ -131,14 +143,14 @@ const Layout = React.createClass({
 
 module.exports = Layout;
 
-function getLayoutForDocument(node, namespaceNode) {
+function getLayoutForDocument(documentNode, namespaceNode) {
   if (!namespaceNode) {
     return null;
   }
 
   if (namespaceNode.meta.defaultLayouts) {
     const entry = namespaceNode.meta.defaultLayouts
-      .filter(x => x.documentTypes.indexOf(node.type) > -1)[0]
+      .filter(x => x.documentTypes.indexOf(documentNode.type) > -1)[0]
     ;
 
     if (entry) {
