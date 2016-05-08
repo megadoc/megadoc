@@ -67,7 +67,11 @@ module.exports = function CorpusAPI(shallowCorpus) {
   exports.getNamespaceOfDocument = getNamespaceOfDocument;
 
   function getNamespaceOfDocument(uid) {
-    let node = getByUID(uid);
+    let node = typeof uid === 'string' ? getByUID(uid) : uid;
+
+    if (!node) {
+      return null;
+    }
 
     while (node.type !== 'Namespace' && node.parentNode) {
       node = node.parentNode;

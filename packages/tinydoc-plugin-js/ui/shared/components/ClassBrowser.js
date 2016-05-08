@@ -1,6 +1,5 @@
 const React = require("react");
 const Link = require('components/Link');
-const Database = require('core/Database');
 const classSet = require('utils/classSet');
 const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
@@ -25,7 +24,6 @@ var ClassBrowser = React.createClass({
   ],
 
   propTypes: {
-    routeName: React.PropTypes.string.isRequired,
     activeModuleId: React.PropTypes.string,
     activeEntityId: React.PropTypes.string,
     withControls: React.PropTypes.bool,
@@ -39,14 +37,13 @@ var ClassBrowser = React.createClass({
 
   shouldComponentUpdate: function(nextProps) {
     return (
-      nextProps.routeName !== this.props.routeName ||
       nextProps.activeModuleId !== this.props.activeModuleId ||
       nextProps.activeEntityId !== this.props.activeEntityId
     );
   },
 
   render() {
-    const rootDocuments = tinydoc.corpus.get(this.props.routeName).documents;
+    const rootDocuments = this.props.namespaceNode.documents;
     const genericNamespace = {
       id: '__general__',
       title: '[General]',

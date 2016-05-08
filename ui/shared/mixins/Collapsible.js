@@ -23,7 +23,9 @@ var Collapsible = {
 
   componentDidMount: function() {
     if (this.props.initiallyCollapsed && !this.props.expanded) {
-      this.setState({ collapsed: true });
+      setTimeout(() => {
+        this.setState({ collapsed: true });
+      }, 0);
     }
   },
 

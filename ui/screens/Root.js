@@ -5,6 +5,7 @@ const Storage = require('core/Storage');
 const Router = require('core/Router');
 const ColorSchemeManager = require('core/ColorSchemeManager');
 const ScrollSpy = require('core/ScrollSpy');
+const DocumentURI = require('core/DocumentURI');
 const config = require('config');
 const SpotlightManager = require('components/SpotlightManager');
 const Inspector = require('components/Inspector');
@@ -84,9 +85,15 @@ const Root = React.createClass({
       && isLeftClickEvent(e)
       && !isModifiedEvent(e)
     ) {
+      e.stopPropagation();
       e.preventDefault();
 
-      Router.transitionTo(e.target.href.replace(location.origin, ''));
+      const destination = e.target.href.replace(location.origin, '');
+      Router.transitionTo(destination);
+
+      if (destination.indexOf('#')) {
+        Router.refreshScroll();
+      }
     }
   }
 });

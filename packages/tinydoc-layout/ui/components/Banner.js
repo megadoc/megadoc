@@ -4,6 +4,7 @@ const Outlet = require("components/Outlet");
 const config = require('config');
 const Icon = require('components/Icon');
 const AppState = require('core/AppState');
+const DocumentURI = require('core/DocumentURI');
 const { string, any, arrayOf, object, } = React.PropTypes;
 const BannerItem = require('./BannerItem');
 const BannerMenu = require('./BannerMenu');
@@ -85,7 +86,7 @@ const Banner = React.createClass({
 
     return (
       <BannerItem key={link.text}>
-        <Link to={link.href}>{link.text}</Link>
+        <Link to={DocumentURI.withExtension(link.href)}>{link.text}</Link>
       </BannerItem>
     );
   },

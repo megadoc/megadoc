@@ -4,6 +4,7 @@ const contains = require('dom-contains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, } = React.PropTypes;
 const config = require('config');
+const { sortBy } = require('lodash');
 
 const SpotlightManager = React.createClass({
   propTypes: {
@@ -52,13 +53,13 @@ const SpotlightManager = React.createClass({
 
   render() {
     if (this.props.active) {
-      const symbols = getSymbolsForDocumentByURI(location.hash.replace(/^#/, ''));
+      const symbols = getSymbolsForDocumentByURI(location.pathname);
 
       return (
         <Spotlight
           startInSymbolMode={this.state.openedInSymbolMode}
           corpus={this.combinedCorpus}
-          symbols={symbols}
+          symbols={sortBy(symbols, '$1')}
           onActivate={this.closeSpotlight}
         />
       );

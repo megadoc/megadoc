@@ -20,10 +20,11 @@ const Module = React.createClass({
   render() {
     const { documentNode, namespaceNode } = this.props;
     const { config } = namespaceNode;
-    const doc = documentNode.properties;
-    const moduleDocs = documentNode.entities.map(x => x.properties);
+    const moduleNode = documentNode.type === 'DocumentEntity' ? documentNode.parentNode : documentNode;
+    const moduleDoc = moduleNode.properties;
+    const moduleDocs = moduleNode.entities.map(x => x.properties);
     const legacyParams = {
-      moduleId: documentNode.type === 'DocumentEntity' ? documentNode.parentNode.id : documentNode.id,
+      moduleId: moduleNode.id,
       entity: documentNode.type === 'DocumentEntity' ? documentNode.id : undefined,
     };
 
@@ -31,8 +32,8 @@ const Module = React.createClass({
       <div className="class-view doc-content">
         <ModuleHeader
           routeName={config.routeName}
-          documentNode={documentNode}
-          doc={doc}
+          documentNode={moduleNode}
+          doc={moduleDoc}
           moduleDocs={moduleDocs}
           showSourcePaths={config.showSourcePaths}
           showNamespace={config.showNamespaceInModuleHeader}
@@ -41,8 +42,8 @@ const Module = React.createClass({
 
         <ModuleBody
           routeName={config.routeName}
-          documentNode={documentNode}
-          doc={doc}
+          documentNode={moduleNode}
+          doc={moduleDoc}
           moduleDocs={moduleDocs}
           focusedEntity={documentNode.type === 'DocumentEntity' ? documentNode.id : undefined}
         />
@@ -54,9 +55,9 @@ const Module = React.createClass({
             params: legacyParams,
             query: {},
             moduleId: legacyParams.moduleId,
-            moduleDoc: doc,
+            moduleDoc: moduleDoc,
             moduleDocs: moduleDocs,
-            document: doc,
+            document: moduleDoc,
           }}
         />
 

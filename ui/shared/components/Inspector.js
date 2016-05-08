@@ -84,20 +84,13 @@ function isApplicable(containerNode, node) {
 
 function inspectElement(el) {
   const { corpus } = tinydoc;
-  const href = decodeURIComponent(
-    DocumentURI.withoutExtension(
-      el.href
-        .replace(location.origin, '')
-        .replace(/^#/, '')
-    )
-  );
-
+  const href = decodeURIComponent(el.href.replace(location.origin, ''));
   const documentNode = corpus.getByURI(href);
 
   if (documentNode) {
     const context = {
       documentNode,
-      namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode.uid),
+      namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode),
     };
 
     if (hasMatchingElements({ name: 'Inspector', elementProps: context })) {

@@ -6,9 +6,7 @@ const createTinydoc = require('core/tinydoc');
 const Storage = require('core/Storage');
 const { Route, NotFoundRoute, Redirect } = ReactRouter;
 const K = require('constants');
-const DocumentURI = require('core/DocumentURI');
 const CustomLocation = require('./CustomLocation');
-const RRPathUtils = require('react-router/lib/PathUtils');
 const tinydoc = window.tinydoc = createTinydoc(config);
 
 console.log('tinydoc: version %s', config.version);
@@ -24,45 +22,47 @@ tinydoc.outlets = require('components/Outlet');
 tinydoc.outlets.define('LayoutWrapper');
 tinydoc.outlets.define('Layout');
 
-tinydoc.onReady(function(registrar) {
-  console.log('Ok, firing up.');
+tinydoc.start = function() {
+  tinydoc.onReady(function(registrar) {
+    console.log('Ok, firing up.');
 
-  const routes = RouteMap(config, registrar);
-  const location = Location(config);
-  const router = HijackedRouter(config, { location, routes });
+    const routes = RouteMap(config, registrar);
+    const location = Location(config);
+    const router = HijackedRouter(config, { location, routes });
 
-  Router.setInstance(router);
+    Router.setInstance(router);
 
-  if (config.$static) {
-    config.$static.readyCallback({
-      render(href, done) {
-        location.path = href;
+    if (config.$static) {
+      config.$static.readyCallback({
+        render(href, done) {
+          location.path = href;
 
-        router.run(function(Handler, state) {
-          if (process.env.DEBUG) {
-            console.log('[DEBUG] Rendered using:', state.routes[state.routes.length-1].name);
-          }
+          router.run(function(Handler, state) {
+            if (process.env.DEBUG) {
+              console.log('[DEBUG] Rendered using:', state.routes[state.routes.length-1].name);
+            }
 
-          if (state.routes.length && state.routes[state.routes.length-1].name === 'not-found') {
-            return done(404);
-          }
+            // if (state.routes.length && state.routes[state.routes.length-1].name === 'not-found') {
+            //   return done(404);
+            // }
 
-          done(null, React.renderToString(<Handler {...state} />));
-        });
-      },
+            done(null, React.renderToString(<Handler {...state} />));
+          });
+        },
 
-      dumpRoutes: function() {
-        return dumpRoute(router.routes[0]);
-      }
-    });
+        dumpRoutes: function() {
+          return dumpRoute(router.routes[0]);
+        }
+      });
 
-  }
-  else {
-    router.run(function(Handler, state) {
-      React.render(<Handler {...state} />, document.querySelector('#__app__'));
-    });
-  }
-});
+    }
+    else {
+      router.run(function(Handler, state) {
+        React.render(<Handler {...state} />, document.querySelector('#__app__'));
+      });
+    }
+  });
+};
 
 module.exports = tinydoc;
 
@@ -107,14 +107,14 @@ function RouteMap(config, registrar) {
 
 function HijackedRouter(config, options) {
   const router = ReactRouter.create(options);
-  const { makePath } = router;
+  // const { makePath } = router;
 
-  if (!config.useHashLocation) {
-    router.makePath = function stripFileExtensionFromURL() {
-      const url = makePath.apply(router, arguments);
-      return DocumentURI.withoutExtension(url);
-    };
-  }
+  // if (!config.useHashLocation) {
+  //   router.makePath = function stripFileExtensionFromURL() {
+  //     const url = makePath.apply(router, arguments);
+  //     return DocumentURI.withoutExtension(url);
+  //   };
+  // }
 
   return router;
 }

@@ -1,7 +1,8 @@
-var React = require("react");
-var Link = require("components/Link");
-var Icon = require('components/Icon');
+const React = require("react");
+const Link = require("components/Link");
+const Icon = require('components/Icon');
 const classSet = require('utils/classSet');
+const DocumentURI = require('core/DocumentURI');
 const { string, oneOf, arrayOf, shape, } = React.PropTypes;
 
 const BannerMenu = React.createClass({
@@ -78,7 +79,7 @@ const BannerMenu = React.createClass({
   renderLink(link) {
     return (
       <li key={link.href} className="banner__menu-list-item">
-        <Link to={link.href}>{link.text}</Link>
+        <Link to={DocumentURI.withExtension(link.href)}>{link.text}</Link>
       </li>
     );
   },

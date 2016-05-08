@@ -3,11 +3,6 @@ var extend = require('lodash').extend;
 var root = path.resolve(__dirname, '..');
 
 var nodeEnv = process.env.NODE_ENV;
-var jsLoaders = [ 'babel-loader' ];
-
-if (process.env.NODE_ENV === 'development') {
-  jsLoaders.push('react-hot');
-}
 
 var baseConfig = {
   devtool: nodeEnv === 'production' ? null : 'eval',
@@ -52,13 +47,14 @@ var baseConfig = {
 
     loaders: [
       {
+        id: 'js-loaders',
         test: /\.js$/,
         exclude: [
           /\.tmpl\.js$/,
           /ui\/vendor/,
           /node_modules/
         ],
-        loader: jsLoaders.join('!')
+        loaders: [ 'babel' ]
       },
 
       {

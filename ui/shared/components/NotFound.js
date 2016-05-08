@@ -6,7 +6,10 @@ const NotFound = React.createClass({
 
   render() {
     return (
-      <div>404</div>
+      <div className="four-oh-four">
+        <h1>404</h1>
+        <p>We're sorry, but we think there's a very good chance you've hit the void!</p>
+      </div>
     );
   }
 });

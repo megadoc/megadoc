@@ -22,5 +22,8 @@
     <% _.forEach(scripts, function(script) { %>
     <script type="text/javascript" src="<%- script %>"></script>
     <% }); %>
+    <script type="text/javascript">
+      tinydoc.start();
+    </script>
   </body>
 </html>

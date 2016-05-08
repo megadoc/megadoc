@@ -16,7 +16,44 @@ module.exports = function reduceDocuments(options) {
     id: options.namespaceId,
     corpusContext: options.namespaceTitle,
     documents: [],
-    config: options.config
+    config: options.config,
+    meta: {
+      outlets: [
+        {
+          name: 'CJS::Module',
+          options: {},
+        },
+        {
+          name: 'CJS::ClassBrowser',
+          options: {},
+        }
+      ],
+
+      defaultLayouts: [
+        {
+          documentTypes: [ 'Namespace' ],
+          layout: [
+            {
+              name: 'Layout::Sidebar',
+              children: [{ name: 'CJS::ClassBrowser' }]
+            }
+          ]
+        },
+        {
+          documentTypes: [ 'Document', 'DocumentEntity' ],
+          layout: [
+            {
+              name: 'Layout::ContentPanel',
+              children: [{ name: 'CJS::Module' }]
+            },
+            {
+              name: 'Layout::Sidebar',
+              children: [{ name: 'CJS::ClassBrowser' }]
+            }
+          ]
+        }
+      ]
+    }
   });
 
   documents.forEach(function(x) {
@@ -32,6 +69,7 @@ module.exports = function reduceDocuments(options) {
           title: namespaceId,
           symbol: K.NAMESPACE_SEP,
           documents: [],
+          entities: [],
         });
 
         Corpus.attachNode('documents', bank, namespace);

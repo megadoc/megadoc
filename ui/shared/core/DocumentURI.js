@@ -3,11 +3,16 @@ const extension = config.emittedFileExtension || '';
 const RE = extension.length > 0 && new RegExp(extension + '$');
 
 exports.withExtension = function(uri) {
-  return uri + extension;
+  if (config.useHashLocation) {
+    return uri;
+  }
+  else {
+    return uri + extension;
+  }
 };
 
 exports.withoutExtension = function(uri) {
-  if (RE) {
+  if (!config.useHashLocation && RE) {
     return uri.replace(RE, '');
   }
   else {

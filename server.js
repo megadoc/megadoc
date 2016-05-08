@@ -45,6 +45,13 @@ function start(host, port, done) {
     ].concat(generatePluginEntry(pluginNames)),
   };
 
+  config.module.loaders.some(function(loader) {
+    if (loader.id === 'js-loaders') {
+      loader.loaders.push('react-hot');
+      return true;
+    }
+  });
+
   console.log(config.entry);
 
   config.plugins = [
