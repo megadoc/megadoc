@@ -15,9 +15,6 @@ module.exports = function reduceDocuments(options) {
   var bank = b.namespace({
     id: options.namespaceId,
     corpusContext: options.namespaceTitle,
-    meta: {
-      href: '/' + options.namespaceId + '/modules',
-    },
     documents: [],
   });
 
@@ -31,19 +28,16 @@ module.exports = function reduceDocuments(options) {
       if (!namespace) {
         namespace = namespaces[namespaceId] = b.document({
           id: namespaceId,
+          title: namespaceId,
           symbol: K.NAMESPACE_SEP,
           documents: [],
-          parentNode: bank
         });
 
-        bank.documents.push(namespace)
+        Corpus.attachNode('documents', bank, namespace);
       }
+    }
 
-      Corpus.attachNode('documents', namespace, x);
-    }
-    else {
-      Corpus.attachNode('documents', bank, x);
-    }
+    Corpus.attachNode('documents', namespace || bank, x);
   });
 
   function reduceModuleDocument(doc) {

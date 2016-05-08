@@ -1,3 +1,5 @@
+const config = require('config');
+
 /**
  * @namespace UI.Core
  *
@@ -64,10 +66,13 @@ Router.refresh = function() {
 
 // force the browser to (re)scroll to the proper location
 Router.refreshScroll = function() {
-  console.warn(
-    'Deprecated: Router.refreshScroll() is no longer a thing since we do not ' +
-    ' use the HashLocation anymore.'
-  );
+  if (config.useHashLocation) {
+    // force the browser to (re)scroll to the proper location
+    const originalLocation = window.location.hash;
+
+    window.location.hash = '#/';
+    window.location.hash = originalLocation;
+  }
 };
 
 Router.generateAnchorId = function({ routeName, params }) {

@@ -34,7 +34,7 @@ tinydoc.use('tinydoc-plugin-js', function CJSPlugin(api, configs) {
 
       {
         name: `${routeName}.module`,
-        path: 'modules/:moduleId',
+        path: ':moduleId',
         handler: require('./screens/Module'),
         parent: routeName,
         ignoreScrollBehavior: true

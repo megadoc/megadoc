@@ -31,8 +31,12 @@ const Root = React.createClass({
       ScrollSpy.start();
     }
 
-    setTimeout(Router.refreshScroll, 1);
-    window.addEventListener('click', this.handleInternalLink, false);
+    if (config.useHashLocation) {
+      setTimeout(Router.refreshScroll, 1);
+    }
+    else {
+      window.addEventListener('click', this.handleInternalLink, false);
+    }
   },
 
   shouldComponentUpdate(nextProps) {
@@ -40,7 +44,9 @@ const Root = React.createClass({
   },
 
   componentWillUnmount() {
-    window.removeEventListener('click', this.handleInternalLink, false);
+    if (!config.useHashLocation) {
+      window.removeEventListener('click', this.handleInternalLink, false);
+    }
 
     if (config.scrollSpying) {
       ScrollSpy.stop();

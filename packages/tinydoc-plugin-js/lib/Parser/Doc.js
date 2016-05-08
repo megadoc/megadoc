@@ -54,6 +54,14 @@ Doc.prototype.toJSON = function() {
     doc.path = doc.id;
   }
 
+  // we'll need this for @preserveOrder support
+  if (doc.loc) {
+    doc.line = doc.loc.start.line;
+    doc.tags.forEach(function(tag) {
+      tag.line = doc.line;
+    });
+  }
+
   this.useSourceNameWhereNeeded(doc.name, doc);
 
   return doc;

@@ -10,6 +10,7 @@ const ModuleHeader = React.createClass({
   propTypes: {
     routeName: string.isRequired,
     doc: object,
+    documentNode: object,
     commonPrefix: string,
     moduleDocs: array,
     showSourcePaths: bool,
@@ -31,15 +32,10 @@ const ModuleHeader = React.createClass({
 
   render() {
     const { doc, moduleDocs } = this.props;
-    let anchorId;
+    let anchor;
 
     if (this.props.generateAnchor) {
-      anchorId = Router.generateAnchorId({
-        routeName: `${this.props.routeName}.module`,
-        params: {
-          moduleId: doc.id
-        }
-      });
+      anchor = this.props.documentNode.meta.anchor;
     }
 
     let type;
@@ -68,11 +64,11 @@ const ModuleHeader = React.createClass({
           parentLevel={this.props.headerLevel}
           className="class-view__header markdown-text__heading"
           title={this.props.showSourcePaths ? doc.filePath : undefined}
-          id={anchorId}
+          id={anchor}
         >
-          {anchorId && (
+          {anchor && (
             <a
-              href={'#'+anchorId}
+              href={'#'+anchor}
               className="markdown-text__heading-anchor icon icon-link"
             />
           )}

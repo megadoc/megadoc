@@ -1,7 +1,6 @@
 const Database = require('./Database');
 const Storage = require('core/Storage');
 const K = require('constants');
-const PreviewHandler = require('./PreviewHandler');
 
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
@@ -47,9 +46,6 @@ function register(api, config) {
     }
   ]);
 
-  // api.registerPreviewHandler(PreviewHandler(config, database));
-
-  // require('./SymbolIndexer')(api, config);
   require('./outlets/MultiPageLayout')(api, config);
   require('./outlets/SinglePageLayout')(api, config);
 }

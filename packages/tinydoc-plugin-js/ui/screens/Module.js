@@ -42,23 +42,20 @@ const Module = React.createClass({
   render() {
     const { routeName } = this.props;
     const { moduleId } = this.props.params;
-    const doc = Database.for(routeName).getModule(moduleId);
+    const documentNode = Database.for(routeName).getModule(moduleId);
 
-    if (!doc) {
+    if (!documentNode) {
       return <NotFound />;
     }
 
-    const moduleDocs = Database.for(routeName).getModuleEntities(moduleId);
-
-    if (process.env.NODE_ENV === 'development') {
-      window.currentModule = doc;
-      window.currentModuleDocs = moduleDocs;
-    }
+    const doc = documentNode.properties;
+    const moduleDocs = documentNode.entities.map(x => x.properties);
 
     return (
       <div className="class-view doc-content">
         <ModuleHeader
           routeName={routeName}
+          documentNode={documentNode}
           doc={doc}
           moduleDocs={moduleDocs}
           showSourcePaths={config.for(routeName).showSourcePaths}
@@ -68,6 +65,7 @@ const Module = React.createClass({
 
         <ModuleBody
           routeName={routeName}
+          documentNode={documentNode}
           doc={doc}
           moduleDocs={moduleDocs}
           focusedEntity={decodeURIComponent(this.props.params.entity)}

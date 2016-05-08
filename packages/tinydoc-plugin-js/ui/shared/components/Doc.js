@@ -1,31 +1,16 @@
-var React = require("react");
-var classSet = require('utils/classSet');
-var HighlightedText = require('components/HighlightedText');
-var DocTags = require('components/DocTags');
-var Types = require('components/Tags/Types');
-var Collapsible = require('mixins/Collapsible');
-
-function params(tags) {
-  return tags.filter(function(tag){
-    return tag.type === 'param' && tag.typeInfo.name.indexOf('.') === -1;
-  }).map(function(param){
-    return param.typeInfo.name + ': ' + param.typeInfo.types.join('|');
-  }).join(', ');
-}
-
-function isFunction(doc) {
-  return doc.ctx.type === 'function';
-}
-
+const React = require("react");
+const classSet = require('utils/classSet');
+const HighlightedText = require('components/HighlightedText');
+const DocTags = require('components/DocTags');
+const Types = require('components/Tags/Types');
+const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
 
-var Doc = React.createClass({
-  displayName: "Doc",
-
+const Doc = React.createClass({
   mixins: [ Collapsible ],
 
   propTypes: {
-    anchorId: string,
+    anchor: string,
     doc: object.isRequired,
     collapsible: bool,
     expanded: bool,
@@ -62,18 +47,24 @@ var Doc = React.createClass({
       'collapsible--collapsed': isCollapsed,
     });
 
-    const { doc } = this.props;
+    const { doc, anchor } = this.props;
     const description = doc.description;
 
     return (
       <div className={className}>
-        {this.props.anchorId && (
-          <a name={this.props.anchorId} className="anchorable-heading__anchor" />
+        {anchor && (
+          <a name={anchor} className="anchorable-heading__anchor" />
         )}
 
         {this.props.withTitle && (
           <h4
-            className="doc-entity__header collapsible-header anchorable-heading"
+            className={
+              classSet({
+                "doc-entity__header": true,
+                "collapsible-header": true,
+                "anchorable-heading": !!anchor
+              })
+            }
             onClick={this.toggleCollapsed}
             title={doc.name}
           >
@@ -110,7 +101,12 @@ var Doc = React.createClass({
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
 
-              <a className="doc-entity__anchor icon icon-link" href={'#' + doc.href} />
+              {anchor && (
+                <a
+                  className="doc-entity__anchor icon icon-link"
+                  href={`#${anchor}`}
+                />
+              )}
             </span>
           </h4>
         )}
@@ -149,5 +145,17 @@ var Doc = React.createClass({
     );
   }
 });
+
+function params(tags) {
+  return tags.filter(function(tag){
+    return tag.type === 'param' && tag.typeInfo.name.indexOf('.') === -1;
+  }).map(function(param){
+    return param.typeInfo.name + ': ' + param.typeInfo.types.join('|');
+  }).join(', ');
+}
+
+function isFunction(doc) {
+  return doc.ctx.type === 'function';
+}
 
 module.exports = Doc;

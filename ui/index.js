@@ -1,19 +1,20 @@
-var React = require('react');
-var ReactRouter = require('react-router');
-var Router = require('core/Router');
-var config = require('config');
-var createTinydoc = require('core/tinydoc');
-var Storage = require('core/Storage');
-var { Route, NotFoundRoute, Redirect } = ReactRouter;
-var K = require('constants');
-var DocumentURI = require('core/DocumentURI');
-
-Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
-Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
-
+const React = require('react');
+const ReactRouter = require('react-router');
+const Router = require('core/Router');
+const config = require('config');
+const createTinydoc = require('core/tinydoc');
+const Storage = require('core/Storage');
+const { Route, NotFoundRoute, Redirect } = ReactRouter;
+const K = require('constants');
+const DocumentURI = require('core/DocumentURI');
+const CustomLocation = require('./CustomLocation');
+const RRPathUtils = require('react-router/lib/PathUtils');
 const tinydoc = window.tinydoc = createTinydoc(config);
 
 console.log('tinydoc: version %s', config.version);
+
+Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
+Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
 tinydoc.publicModules = require('../tmp/publicModules');
 
@@ -26,45 +27,9 @@ tinydoc.outlets.define('Layout');
 tinydoc.onReady(function(registrar) {
   console.log('Ok, firing up.');
 
-  const routes = [
-    <Route
-      name="root"
-      path="/"
-      handler={require('./screens/Root')}
-      ignoreScrollBehavior
-    >
-      {config.home && <Redirect from="/" to={config.home} />}
-
-      <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
-      <Route name="404" path="/404" handler={require('./screens/NotFound')} />
-
-      <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
-      {registrar.getRouteMap()}
-    </Route>
-  ];
-
-  const location = config.$static ? new ReactRouter.StaticLocation('/') : require('./CustomLocation');
-  const router = ReactRouter.create({
-    location,
-    routes
-  });
-
-  const container = document.querySelector('#__app__');
-
-  // const { makePath } = router;
-  // const { emittedFileExtension } = config;
-  // const regexpFileExtension = new RegExp(config.emittedFileExtension + '$');
-
-  // router.makePath = function appendFileExtensionToURLIfNeeded() {
-  //   const url = makePath.apply(router, arguments);
-
-  //   if (emittedFileExtension.length && !url.match(regexpFileExtension)) {
-  //     return url + config.emittedFileExtension;
-  //   }
-  //   else {
-  //     return url;
-  //   }
-  // };
+  const routes = RouteMap(config, registrar);
+  const location = Location(config);
+  const router = HijackedRouter(config, { location, routes });
 
   Router.setInstance(router);
 
@@ -94,7 +59,7 @@ tinydoc.onReady(function(registrar) {
   }
   else {
     router.run(function(Handler, state) {
-      React.render(<Handler {...state} />, container);
+      React.render(<Handler {...state} />, document.querySelector('#__app__'));
     });
   }
 });
@@ -107,4 +72,49 @@ function dumpRoute(route) {
     name: route.name,
     children: (route.childRoutes || []).map(dumpRoute)
   };
+}
+
+function Location(config) {
+  if (config.$static) {
+    return new ReactRouter.StaticLocation('/');
+  }
+  else if (config.useHashLocation) {
+    return ReactRouter.HashLocation;
+  }
+  else {
+    return CustomLocation;
+  }
+}
+
+function RouteMap(config, registrar) {
+  return (
+    <Route
+      name="root"
+      path="/"
+      handler={require('./screens/Root')}
+      ignoreScrollBehavior
+    >
+      {config.home && <Redirect from="/" to={config.home} />}
+
+      <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
+      <Route name="404" path="/404" handler={require('./screens/NotFound')} />
+
+      <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
+      {registrar.getRouteMap()}
+    </Route>
+  );
+}
+
+function HijackedRouter(config, options) {
+  const router = ReactRouter.create(options);
+  const { makePath } = router;
+
+  if (!config.useHashLocation) {
+    router.makePath = function stripFileExtensionFromURL() {
+      const url = makePath.apply(router, arguments);
+      return DocumentURI.withoutExtension(url);
+    };
+  }
+
+  return router;
 }

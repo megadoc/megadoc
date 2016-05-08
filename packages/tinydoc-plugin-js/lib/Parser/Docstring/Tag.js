@@ -109,13 +109,15 @@ function Tag(doxTag, customTags, filePath) {
       break;
 
     case 'type':
-      console.assert(doxTag.types.length === 1,
-        "Expected @type tag to contain only a single type, but it contained %d.",
-        doxTag.types.length
-      );
+      // console.assert(doxTag.types.length === 1,
+      //   "Expected @type tag to contain only a single type, but it contained %d.",
+      //   doxTag.types.length
+      // );
 
-      this.explicitType = renamePrimitiveType(doxTag.types[0].trim());
-      this.string = this.string.replace('{'+doxTag.types[0]+'}', '');
+      if (doxTag.types.length === 1) {
+        this.explicitType = renamePrimitiveType(doxTag.types[0].trim());
+        this.string = this.string.replace('{'+doxTag.types[0]+'}', '');
+      }
 
       break;
 

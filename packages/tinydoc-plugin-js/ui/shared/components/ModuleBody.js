@@ -11,33 +11,12 @@ const orderAwareSort = require('utils/orderAwareSort');
 const DocClassifier = require('core/DocClassifier');
 const Router = require('core/Router');
 const K = require('constants');
-
-function getRenderableType(doc, moduleDocs) {
-  if (doc.ctx.type === K.TYPE_FUNCTION) {
-    if (moduleDocs.some(DocClassifier.isFactoryExports)) {
-      return K.TYPE_FACTORY;
-    }
-    else if (moduleDocs.some(DocClassifier.isClassEntity)) {
-      return K.TYPE_CLASS;
-    }
-    else {
-      return K.TYPE_FUNCTION;
-    }
-  }
-  else {
-    return K.TYPE_OBJECT;
-  }
-}
-
 const { string, object, arrayOf } = React.PropTypes;
-
-function isStaticProperty(scope) {
-  return [ K.SCOPE_PROTOTYPE, K.SCOPE_INSTANCE ].indexOf(scope) === -1;
-}
 
 const ModuleBody = React.createClass({
   propTypes: {
     routeName: string.isRequired,
+    documentNode: object,
     doc: object,
     moduleDocs: arrayOf(object),
     focusedEntity: string,
@@ -185,7 +164,7 @@ const ModuleBody = React.createClass({
         initiallyCollapsed={this.getActiveEntityId() !== path}
         path={path}
         parentPath={this.props.doc.name}
-        anchorId={this.generateAnchorId(path)}
+        anchor={this.getEntityAnchor(path)}
         doc={doc}
       />
     );
@@ -217,7 +196,7 @@ const ModuleBody = React.createClass({
         key={path}
         initiallyCollapsed={this.getActiveEntityId() !== path}
         doc={doc}
-        anchorId={this.generateAnchorId(path)}
+        anchor={this.getEntityAnchor(path)}
       />
     );
   },
@@ -248,19 +227,13 @@ const ModuleBody = React.createClass({
         key={doc.id}
         initiallyCollapsed={this.getActiveEntityId() !== path}
         doc={doc}
-        anchorId={this.generateAnchorId(path)}
+        anchor={this.getEntityAnchor(path)}
       />
     );
   },
 
-  generateAnchorId(path) {
-    return Router.generateAnchorId({
-      routeName: `${this.props.routeName}.module.entity`,
-      params: {
-        moduleId: this.props.doc.id,
-        entity: path
-      }
-    });
+  getEntityAnchor(path) {
+    return this.props.documentNode.entities.filter(x => x.id === path)[0].meta.anchor;
   },
 
   getActiveEntityId() {
@@ -270,5 +243,27 @@ const ModuleBody = React.createClass({
     );
   },
 });
+
+function getRenderableType(doc, moduleDocs) {
+  if (doc.ctx.type === K.TYPE_FUNCTION) {
+    if (moduleDocs.some(DocClassifier.isFactoryExports)) {
+      return K.TYPE_FACTORY;
+    }
+    else if (moduleDocs.some(DocClassifier.isClassEntity)) {
+      return K.TYPE_CLASS;
+    }
+    else {
+      return K.TYPE_FUNCTION;
+    }
+  }
+  else {
+    return K.TYPE_OBJECT;
+  }
+}
+
+
+function isStaticProperty(scope) {
+  return [ K.SCOPE_PROTOTYPE, K.SCOPE_INSTANCE ].indexOf(scope) === -1;
+}
 
 module.exports = ModuleBody;

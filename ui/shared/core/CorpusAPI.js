@@ -1,11 +1,14 @@
+const { assign } = require('lodash');
+
 /**
  * @module UI.Corpus
  *
  * To access these APIs from within your plugins, use the global instance found
  * at [tinydoc@corpus `window.tinydoc.corpus`]().
  */
-module.exports = function CorpusAPI(corpus) {
+module.exports = function CorpusAPI(shallowCorpus) {
   const exports = {};
+  const corpus = CorpusTree(shallowCorpus);
   const documentSearchIndex = buildDocumentSearchIndex();
   const documentEntitySearchIndex = buildDocumentEntitySearchIndex();
 
@@ -109,7 +112,7 @@ module.exports = function CorpusAPI(corpus) {
           map[uid] = [];
         }
         else {
-          map[uid] = node.entities.map(getByUID).filter(getHref).map(x => {
+          map[uid] = node.entities.filter(getHref).map(x => {
             return {
               $1: getPrivateIndex(x),
               link: {
@@ -129,4 +132,66 @@ module.exports = function CorpusAPI(corpus) {
 
 function getHref(node) {
   return node.meta.href;
+}
+
+function CorpusTree(corpus) {
+  const corpusTree = Object.keys(corpus).reduce(function(map, uid) {
+    map[uid] = discardChildReferences( assign({}, corpus[uid]) );
+
+    return map;
+  }, {});
+
+  Object.keys(corpusTree).forEach(reduceNode);
+
+  return corpusTree;
+
+  function reduceNode(uid) {
+    const node = corpusTree[uid];
+
+    if (typeof node.parentNode === 'string') {
+      attach(node, corpusTree[node.parentNode]);
+    }
+  }
+
+  function attach(node, parentNode) {
+    let set;
+
+    // TODO: this needs to be generalized
+    if (parentNode.type === 'Namespace') {
+      if (node.type === 'Document') {
+        set = 'documents';
+      }
+    }
+    else if (parentNode.type === 'Document') {
+      if (node.type === 'DocumentEntity') {
+        set = 'entities';
+      }
+      else if (node.type === 'Document') {
+        set = 'documents';
+      }
+    }
+
+    if (set) {
+      parentNode[set].push(node);
+      node.parentNode = parentNode;
+    }
+    else {
+      console.warn("Unable to attach corpus node of type '%s' to parent node of type '%s'",
+        node.type,
+        parentNode.type
+      );
+    }
+  }
+
+  function discardChildReferences(node) {
+    if (node.type === 'Namespace') {
+      node.documents = [];
+    }
+    else if (node.type === 'Document') {
+      node.documents = [];
+      node.entities = [];
+    }
+
+    return node;
+  }
 }
