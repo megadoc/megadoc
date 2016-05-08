@@ -1,7 +1,7 @@
 const React = require('react');
 const { instanceOf, node, } = React.PropTypes;
 
-const Tooltip = React.createClass({
+const InspectorTooltip = React.createClass({
   propTypes: {
     target: instanceOf(Element).isRequired,
     children: node.isRequired,
@@ -45,4 +45,4 @@ const Tooltip = React.createClass({
   }
 });
 
-module.exports = Tooltip;
+module.exports = InspectorTooltip;

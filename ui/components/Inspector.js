@@ -1,13 +1,13 @@
 const React = require('react');
 const domContains = require('dom-contains');
 const config = require('config');
-const Tooltip = require('components/Tooltip');
+const Tooltip = require('./InspectorTooltip');
 const Outlet = require('components/Outlet');
 const DocumentURI = require('core/DocumentURI');
 const { debounce } = require('lodash');
 const { hasMatchingElements } = Outlet;
 
-const TooltipManager = React.createClass({
+const Inspector = React.createClass({
   getInitialState() {
     return {
       element: null
@@ -113,4 +113,4 @@ function legacy__inspectElement(href) {
 }
 
 
-module.exports = TooltipManager;
+module.exports = Inspector;

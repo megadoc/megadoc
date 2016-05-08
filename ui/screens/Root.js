@@ -5,8 +5,8 @@ const Storage = require('core/Storage');
 const Router = require('core/Router');
 const DocumentURI = require('core/DocumentURI');
 const config = require('config');
-const SpotlightManager = require('components/SpotlightManager');
-const Inspector = require('components/Inspector');
+const SpotlightManager = require('../components/SpotlightManager');
+const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
 

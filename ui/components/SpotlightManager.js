@@ -1,5 +1,5 @@
 const React = require('react');
-const Spotlight = require('components/Spotlight');
+const Spotlight = require('./Spotlight');
 const contains = require('dom-contains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, } = React.PropTypes;
