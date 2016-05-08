@@ -1,46 +1,5 @@
-.markdown-text {
-  &__heading.anchorable-heading {
-    position: relative;
-    pointer-events: none;
-
-    .markdown-text__heading-title,
-    .markdown-text__heading-anchor {
-      pointer-events: initial;
-    }
-  }
-
-  &__heading-anchor {
-    opacity: 0;
-    font-size: 14px;
-    transition: opacity 0.45s ease-out 0s;
-    font-weight: normal;
-    margin-left: -18px;
-    vertical-align: middle;
-    padding-right: 4px;
-
-    &:hover, &:active, &:focus {
-      text-decoration: none;
-      font-weight: normal;
-      opacity: 1;
-      outline: none;
-    }
-  }
-
-  &__heading:hover {
-    .markdown-text__heading-anchor {
-      opacity: 1;
-    }
-  }
-}
-
 .schemable({
   .markdown-text {
-    &__heading-anchor, &__heading-anchor:visited {
-      color: @base1;
-
-      .unmark-link-external();
-    }
-
     h1, h2, h3 {
       padding-bottom: @whitespace/2;
       border-bottom: 1px solid @border-color;

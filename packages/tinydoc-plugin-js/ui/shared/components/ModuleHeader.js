@@ -1,6 +1,7 @@
 const React = require("react");
 const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
+const HeadingAnchor = require('components/HeadingAnchor');
 const K = require('constants');
 
 const { string, object, array, bool } = React.PropTypes;
@@ -61,20 +62,16 @@ const ModuleHeader = React.createClass({
         <Heading
           level="1"
           parentLevel={this.props.headerLevel}
-          className="class-view__header markdown-text__heading"
+          className="class-view__header anchorable-heading"
           title={this.props.showSourcePaths ? doc.filePath : undefined}
           id={anchor}
         >
-          {anchor && (
-            <a
-              href={'#'+anchor}
-              className="markdown-text__heading-anchor icon icon-link"
-            />
-          )}
+          {anchor && <HeadingAnchor.Anchor href={anchor} />}
+          {anchor && <HeadingAnchor.Link href={anchor} />}
 
-          <span className="class-view__header-name markdown-text__heading-title">
+          <HeadingAnchor.Text className="class-view__header-name">
             {doc.name}
-          </span>
+          </HeadingAnchor.Text>
 
           {' '}
 

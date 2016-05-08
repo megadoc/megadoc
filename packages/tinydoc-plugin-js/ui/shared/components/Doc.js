@@ -5,6 +5,7 @@ const DocTags = require('components/DocTags');
 const Types = require('components/Tags/Types');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
+const HeadingAnchor = require('components/HeadingAnchor');
 
 const Doc = React.createClass({
   mixins: [ Collapsible ],
@@ -53,7 +54,7 @@ const Doc = React.createClass({
     return (
       <div className={className}>
         {anchor && (
-          <a name={anchor} className="anchorable-heading__anchor" />
+          <HeadingAnchor.Anchor href={anchor} />
         )}
 
         {this.props.withTitle && (
@@ -102,10 +103,7 @@ const Doc = React.createClass({
               )}
 
               {anchor && (
-                <a
-                  className="doc-entity__anchor icon icon-link"
-                  href={`#${anchor}`}
-                />
+                <HeadingAnchor.Link href={anchor} trailing />
               )}
             </span>
           </h4>

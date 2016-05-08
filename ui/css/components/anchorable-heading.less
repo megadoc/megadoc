@@ -1,3 +1,39 @@
+.anchorable-heading {
+  position: relative;
+  // pointer-events: none;
+
+  // &__link, &__text {
+  //   pointer-events: initial;
+  // }
+
+  &__link {
+    font-size: 14px;
+    font-weight: normal;
+    margin-left: -18px;
+    vertical-align: middle;
+    padding-right: 4px;
+    visibility: hidden;
+
+    &:hover, &:active, &:focus {
+      text-decoration: none;
+      font-weight: normal;
+      outline: none;
+    }
+
+    &--trailing {
+      margin-left: 1em;
+      padding-right: 0.4em;
+      font-size: 1em;
+      text-decoration: none;
+      vertical-align: middle;
+    }
+  }
+
+  &:hover &__link {
+    visibility: visible;
+  }
+}
+
 .root--with-multi-page-layout .anchorable-heading {
   @offset: @banner-height + @banner-border-dim + @whitespace;
 
@@ -45,3 +81,9 @@
   }
 }
 
+.schemable({
+  .anchorable-heading__link {
+    color: @base1 !important;
+    .unmark-link-external()
+  }
+});

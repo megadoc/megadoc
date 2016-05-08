@@ -95,7 +95,7 @@ const Layout = React.createClass({
 
         <TwoColumnLayout.RightColumn>
           <div>
-            {this.renderElements(ctx, 'Layout::ContentPanel')}
+            {this.renderElements(ctx, 'Layout::Content')}
           </div>
         </TwoColumnLayout.RightColumn>
       </TwoColumnLayout>
@@ -105,7 +105,7 @@ const Layout = React.createClass({
   renderSingleColumnLayout(ctx) {
     return (
       <div>
-        {this.renderElements(ctx, 'Layout::ContentPanel')}
+        {this.renderElements(ctx, 'Layout::Content')}
       </div>
     );
   },
@@ -162,7 +162,7 @@ function getLayoutForDocument(documentNode, namespaceNode) {
 function getDefaultLayout() {
   return [
     {
-      name: 'Layout::ContentPanel',
+      name: 'Layout::Content',
       children: null
     }
   ];
