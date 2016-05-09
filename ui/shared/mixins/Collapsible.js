@@ -4,36 +4,23 @@ var Icon = require('components/Icon');
 var Collapsible = {
   propTypes: {
     collapsible: React.PropTypes.bool,
-    initiallyCollapsed: React.PropTypes.bool,
     expanded: React.PropTypes.bool,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       collapsible: true,
-      initiallyCollapsed: false
     };
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
       collapsed: false
     };
   },
 
-  componentDidMount: function() {
-    if (this.props.initiallyCollapsed && !this.props.expanded) {
-      setTimeout(() => {
-        this.setState({ collapsed: true });
-      }, 0);
-    }
-  },
-
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.expanded && this.state.collapsed) {
-      this.setState({ collapsed: false });
-    }
-    else if (this.props.initiallyCollapsed && !nextProps.initiallyCollapsed) {
       this.setState({ collapsed: false });
     }
   },

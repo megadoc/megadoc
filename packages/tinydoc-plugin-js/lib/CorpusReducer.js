@@ -69,7 +69,7 @@ module.exports = function reduceDocuments(options) {
           title: namespaceId,
           symbol: K.NAMESPACE_SEP,
           documents: [],
-          entities: [],
+          entities: []
         });
 
         Corpus.attachNode('documents', bank, namespace);

@@ -51,6 +51,7 @@ var DocTags = React.createClass({
 
   render() {
     var paramTags = where(this.props.tags, { type: 'param' });
+    var returnTags = where(this.props.tags, { type: 'return' });
     var unhandledTags = this.props.tags.filter(function(tag) {
       return HANDLED_TAGS.indexOf(tag.type) === -1;
     });
@@ -61,8 +62,8 @@ var DocTags = React.createClass({
           Parameters ({paramTags.length})
         </TabularTagGroup>
 
-        <TabularTagGroup alwaysGroup tagName="div" tags={this.props.tags} tagType="return" renderer={ReturnTag}>
-          Return Values
+        <TabularTagGroup alwaysGroup tagName="div" tags={returnTags} tagType="return" renderer={ReturnTag}>
+          {returnTags.length > 1 ? 'Return Values' : 'Return Value'}
         </TabularTagGroup>
 
         {this.props.withExamples && (

@@ -63,14 +63,10 @@ var baseConfig = {
       },
 
       {
+        id: 'less-loaders',
         test: /\.less$/,
         loader: 'style-loader!css-loader?importLoaders=1!less-loader'
       },
-
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader?importLoaders=1'
-      }
     ]
   }
 };

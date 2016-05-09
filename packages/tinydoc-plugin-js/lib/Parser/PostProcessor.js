@@ -1,13 +1,38 @@
+var path = require('path');
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var Utils = require('./Utils');
 var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
 
-exports.run = function(registry) {
+exports.run = function(registry, config) {
   var docs = registry.docs;
   var initialCount = docs.length;
 
   debuglog('Post-processing %d docs.', docs.length);
+
+  if (config.namespaceDirMap) {
+    var namespaceDirMap = Object.keys(config.namespaceDirMap);
+
+    docs.filter(DocClassifier.isModule).forEach(function(doc) {
+      var docstring = doc.docstring;
+      var filePath = doc.filePath;
+
+      if (!docstring.namespace) {
+        var dirName = path.dirname(filePath);
+
+        namespaceDirMap.some(function(pattern) {
+          if (dirName.match(pattern)) {
+            // gotta <3 mutable state.. :)
+            docstring.overrideNamespace(config.namespaceDirMap[pattern]);
+            doc.id = doc.generateId();
+            doc.name = doc.generateName();
+
+            return true;
+          }
+        });
+      }
+    });
+  }
 
   docs.filter(DocClassifier.isEntity).forEach(function(doc) {
     resolveReceiver(registry, doc);

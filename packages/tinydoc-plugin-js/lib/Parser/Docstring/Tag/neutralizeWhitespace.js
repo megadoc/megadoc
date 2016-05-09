@@ -1,6 +1,10 @@
 var CODE_BLOCK_PADDING = 4;
 
 module.exports = function(src) {
+  if (!src) {
+    return;
+  }
+
   var lines = src.split('\n');
 
   var padding;

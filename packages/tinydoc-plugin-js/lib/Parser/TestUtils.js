@@ -10,7 +10,7 @@ function parseInline(strGenerator, config, filePath) {
   config.alias = config.alias || {};
 
   parser.parseString(body, config, filePath || '__test__');
-  parser.seal();
+  parser.seal(config);
 
   database = parser.toJSON();
 
@@ -34,7 +34,7 @@ function parseFiles(filePaths, config, commonPrefix) {
     parser.parseFile(filePath, config || {}, commonPrefix);
   });
 
-  parser.seal();
+  parser.seal(config);
   database = parser.toJSON();
 
   if (config.postProcessors) {

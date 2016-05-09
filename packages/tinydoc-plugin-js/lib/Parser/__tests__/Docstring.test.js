@@ -12,6 +12,18 @@ describe('CJS::Parser::Docstring', function() {
 });
 
 describe('CJS::Parser::Docstring::Tag', function() {
+  it('parses inline "description"', function() {
+    var docstring = parse(function() {;
+      // /**
+      //  * @param {String} name this is a description
+      //  */
+      //  function(name) {}
+    });
+
+    assert.equal(docstring.tags[0].typeInfo.name, 'name');
+    assert.equal(docstring.tags[0].typeInfo.description, 'this is a description');
+  });
+
   describe('@module', function() {
     it('parses the module path', function() {
       var docstring = parse(function() {;
@@ -178,6 +190,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(docstring.tags.length, 1);
       assert.equal(docstring.tags[0].typeInfo.name, 'foo');
+      assert.equal(docstring.tags[0].typeInfo.description, undefined);
     });
 
     it('parses the description', function() {
@@ -189,6 +202,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
       });
 
       assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].typeInfo.name, 'foo');
       assert.equal(docstring.tags[0].typeInfo.description, 'Something.');
     });
 
@@ -201,6 +215,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
       });
 
       assert.equal(docstring.tags.length, 1);
+      assert.equal(docstring.tags[0].typeInfo.name, undefined);
       assert.equal(docstring.tags[0].typeInfo.description, 'Something.');
     });
   });
@@ -217,7 +232,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         // /**
         //  * @live_example {jsx}
         //  */
-      }, customTags);
+      }, { customTags: customTags });
 
       assert.equal(docstring.tags.length, 1);
       assert.deepEqual(docstring.tags[0].typeInfo.types, [ 'jsx' ]);
@@ -229,11 +244,13 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  * @live_example {jsx}
         //  */
       }, {
-        live_example: {
-          withTypeInfo: true,
-          process: function(tag) {
-            assert.ok(tag);
-            done();
+        customTags: {
+          live_example: {
+            withTypeInfo: true,
+            process: function(tag) {
+              assert.ok(tag);
+              done();
+            }
           }
         }
       });
@@ -245,15 +262,17 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  * @live_example {jsx}
         //  */
       }, {
-        live_example: {
-          withTypeInfo: true,
-          attributes: [ 'width' ],
-          process: function(tag) {
-            assert.doesNotThrow(function() {
-              tag.setCustomAttribute('width', 240);
-            });
+        customTags: {
+          live_example: {
+            withTypeInfo: true,
+            attributes: [ 'width' ],
+            process: function(tag) {
+              assert.doesNotThrow(function() {
+                tag.setCustomAttribute('width', 240);
+              });
 
-            done();
+              done();
+            }
           }
         }
       });
@@ -267,14 +286,16 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  *     <Button />
         //  */
       }, {
-        live_example: {
-          withTypeInfo: true,
-          process: function(tag) {
-            assert.throws(function() {
-              tag.setCustomAttribute('foo', 'bar');
-            }, /Unrecognized custom attribute/);
+        customTags: {
+          live_example: {
+            withTypeInfo: true,
+            process: function(tag) {
+              assert.throws(function() {
+                tag.setCustomAttribute('foo', 'bar');
+              }, /Unrecognized custom attribute/);
 
-            done();
+              done();
+            }
           }
         }
       });
@@ -286,11 +307,13 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  * @live_example {jsx}
         //  */
       }, {
-        live_example: {
-          withTypeInfo: true,
-          attributes: [ 'width' ],
-          process: function(tag) {
-            tag.setCustomAttribute('width', 240);
+        customTags: {
+          live_example: {
+            withTypeInfo: true,
+            attributes: [ 'width' ],
+            process: function(tag) {
+              tag.setCustomAttribute('width', 240);
+            }
           }
         }
       });

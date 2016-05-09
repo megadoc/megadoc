@@ -95,9 +95,9 @@ describe("[Integration] tinydoc-plugin-js", function() {
   });
 
   function assertFileWasRendered(fileName) {
-    assert.ok(fs.existsSync(TinyTestUtils.tempPath('doc/compiled' + fileName)));
+    assert.ok(fs.existsSync(TinyTestUtils.tempPath('doc/compiled/' + fileName)));
     assert.notOk(
-      fs.readFileSync(TinyTestUtils.tempPath('doc/compiled' + fileName), 'utf-8').match(/404/),
+      fs.readFileSync(TinyTestUtils.tempPath('doc/compiled/' + fileName), 'utf-8').match(/404/),
       "It did not 404"
     );
   }

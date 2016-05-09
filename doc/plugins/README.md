@@ -43,3 +43,23 @@ compiler.on('write', function(done) {
   done();
 });
 ```
+
+## Overriding style variables
+
+You must define a file at `ui/styleOverrides.json` and register it with the
+compiler HTML asset registry:
+
+```javascript
+// @file: my-plugin/lib/index.js
+compiler.on('write', function(done) {
+  compiler.assets.addStyleOverrides(require('../ui/styleOverrides'));
+});
+```
+
+The file is a strict JSON map of variable names and their values. For example:
+
+```json
+{
+  "accent": "#ff0000"
+}
+```

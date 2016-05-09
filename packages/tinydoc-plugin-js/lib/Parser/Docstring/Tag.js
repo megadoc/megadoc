@@ -1,28 +1,29 @@
 var parseProperty = require('./Tag/parseProperty');
+var extractDefaultValue = require('./Tag/extractDefaultValue');
 var neutralizeWhitespace = require('./Tag/neutralizeWhitespace');
 var K = require('../constants');
 var assert = require('assert');
 
-function renamePrimitiveType(type) {
-  if (type === 'Function') {
-    return 'function';
-  }
-  else {
-    return type;
-  }
-}
+var TypeAliases = {
+  'returns': 'return'
+};
 
 /**
  * @param {Object} doxTag
- * @param {Object} customTags
+ * @param {Object} options
+ * @param {Object} options.customTags
+ * @param {Boolean} [options.namedReturnTags=true]
+ *
  * @param {String} filePath
  */
-function Tag(doxTag, customTags, filePath) {
+function Tag(doxTag, options, filePath) {
+  var customTags = options.customTags;
+
   /**
    * @property {String}
    *           The type of this tag. This is always present.
    */
-  this.type = doxTag.type;
+  this.type = TypeAliases[doxTag.type] || doxTag.type;
 
   /**
    * @property {String}
@@ -93,17 +94,19 @@ function Tag(doxTag, customTags, filePath) {
     types: []
   };
 
-  switch(doxTag.type) {
+  switch(this.type) {
     case 'property':
     case 'param':
     case 'return':
     case 'throws':
     case 'example':
     case 'interface':
-      this.typeInfo = parseProperty(doxTag.string);
+      this.typeInfo = TypeInfo(doxTag);
 
-      if (this.typeInfo.description) {
-        this.typeInfo.description = neutralizeWhitespace(this.typeInfo.description);
+      // fixup for return tags when we're not expecting them to be named
+      if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
+        this.typeInfo.description = this.typeInfo.name + ' ' + this.typeInfo.description;
+        this.typeInfo.name = undefined;
       }
 
       break;
@@ -125,11 +128,7 @@ function Tag(doxTag, customTags, filePath) {
     // on object modules)
     case 'method':
       this.explicitType = K.TYPE_FUNCTION;
-      this.typeInfo = parseProperty(doxTag.string);
-
-      if (this.typeInfo.description) {
-        this.typeInfo.description = neutralizeWhitespace(this.typeInfo.description);
-      }
+      this.typeInfo = TypeInfo(doxTag);
 
       break;
 
@@ -189,7 +188,7 @@ Tag.prototype.useCustomTagDefinition = function(doxTag, customTag, filePath) {
   var customAttributes = customTag.attributes || [];
 
   if (customTag.withTypeInfo) {
-    this.typeInfo = parseProperty(doxTag.string);
+    this.typeInfo = TypeInfo(doxTag);
   }
 
   if (customTag.process instanceof Function) {
@@ -213,3 +212,37 @@ function createCustomTagAPI(tag, attrWhitelist) {
 }
 
 module.exports = Tag;
+
+function renamePrimitiveType(type) {
+  if (type === 'Function') {
+    return 'function';
+  }
+  else {
+    return type;
+  }
+}
+
+function TypeInfo(doxTag) {
+  var typeInfo = parseProperty(doxTag.string);
+
+  if (typeInfo.description) {
+    typeInfo.description = neutralizeWhitespace(typeInfo.description);
+  }
+
+  if (typeInfo.name) {
+    if (doxTag.name && doxTag.name !== typeInfo.name) {
+      typeInfo.name = doxTag.name;
+      typeInfo.description = doxTag.description;
+    }
+
+    var nameFragments = extractDefaultValue(typeInfo.name);
+
+    if (nameFragments) {
+      typeInfo.name = nameFragments.name;
+      typeInfo.defaultValue = nameFragments.defaultValue;
+    }
+  }
+
+
+  return typeInfo;
+}

@@ -19,7 +19,6 @@ const Doc = React.createClass({
     withTitle: bool,
     withDescription: bool,
     withAdditionalResources: bool,
-    initiallyCollapsed: bool,
   },
 
   getDefaultProps: function() {
@@ -34,8 +33,7 @@ const Doc = React.createClass({
     return (
       nextProps.doc !== this.props.doc ||
       nextState.collapsed !== this.state.collapsed ||
-      nextProps.expanded !== this.props.expanded ||
-      nextProps.initiallyCollapsed !== this.props.initiallyCollapsed
+      nextProps.expanded !== this.props.expanded
     );
   },
 
@@ -53,10 +51,6 @@ const Doc = React.createClass({
 
     return (
       <div className={className}>
-        {anchor && (
-          <HeadingAnchor.Anchor href={anchor} />
-        )}
-
         {this.props.withTitle && (
           <h4
             className={
@@ -70,8 +64,10 @@ const Doc = React.createClass({
             title={doc.name}
           >
             {this.renderCollapser()}
+            {anchor && <HeadingAnchor.Anchor href={anchor} />}
+            {anchor && <HeadingAnchor.Link href={anchor} />}
 
-            <span className="doc-entity__name">
+            <HeadingAnchor.Text className="doc-entity__name">
               {doc.name}
 
               {isFunction(doc) && (
@@ -101,11 +97,7 @@ const Doc = React.createClass({
               {doc.tags.some((t) => t.type === 'async') && (
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
-
-              {anchor && (
-                <HeadingAnchor.Link href={anchor} trailing />
-              )}
-            </span>
+            </HeadingAnchor.Text>
           </h4>
         )}
 

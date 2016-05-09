@@ -76,4 +76,6 @@ module.exports = {
   parserOptions: null,
 
   namespaceDirMap: {},
+
+  namedReturnTags: true,
 };

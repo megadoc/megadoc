@@ -21,10 +21,10 @@ function parseProperty(docstring) {
           typeStr = '';
           state = STATE_PARSING_TYPE;
         }
-        else if (char === '\n') {
+        else if (/\s/.test(char)) {
           state = STATE_PARSING_DESCRIPTION;
         }
-        else if (char !== ' ') {
+        else {
           nameStr = char;
           state = STATE_PARSING_NAME;
         }
@@ -36,7 +36,7 @@ function parseProperty(docstring) {
           state = STATE_PARSING_NAME;
           nameStr = '';
         }
-        else if (char !== '{') {
+        else {
           typeStr += char;
         }
 

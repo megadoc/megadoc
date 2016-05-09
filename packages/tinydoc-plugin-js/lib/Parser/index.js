@@ -1,6 +1,5 @@
 var fs = require('fs');
 var assert = require('assert');
-var nodejsPath = require('path');
 var Utils = require('./Utils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
@@ -76,6 +75,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     'customTags',
     'namespaceDirMap',
     'alias',
+    'namedReturnTags',
   ]);
 
   Object.keys(config.alias).forEach(function(key) {
@@ -174,8 +174,8 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
   });
 };
 
-Ppt.seal = function() {
-  PostProcessor.run(this.registry);
+Ppt.seal = function(config) {
+  PostProcessor.run(this.registry, config);
 };
 
 Ppt.toJSON = function() {
@@ -187,7 +187,7 @@ Ppt.toJSON = function() {
 Ppt.parseComment = function(comment, path, contextNode, config, filePath, absoluteFilePath) {
   var nodeInfo, doc;
 
-  var docstring = new Docstring('/*' + comment + '*/', config.customTags, absoluteFilePath);
+  var docstring = new Docstring('/*' + comment + '*/', config, absoluteFilePath);
 
   if (docstring.isInternal()) {
     return false;
@@ -214,21 +214,6 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   if (doc.id) {
     if (doc.isModule()) {
       var modulePath = Utils.findNearestPathWithComments(path);
-
-      if (!docstring.namespace) {
-        var dirName = nodejsPath.dirname(filePath);
-
-        Object.keys(config.namespaceDirMap).some(function(pattern) {
-          if (dirName.match(pattern)) {
-            // gotta <3 mutable state.. :)
-            docstring.overrideNamespace(config.namespaceDirMap[pattern]);
-            doc.id = doc.generateId();
-            doc.name = doc.generateName();
-
-            return true;
-          }
-        });
-      }
 
       // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
 

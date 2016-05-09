@@ -19,6 +19,7 @@ function createCJSPlugin(userConfig) {
     alias: config.alias,
     parse: config.parse,
     parserOptions: config.parserOptions,
+    namedReturnTags: config.namedReturnTags,
     nodeAnalyzers: [],
     docstringProcessors: [],
     tagProcessors: [],
@@ -81,7 +82,13 @@ function createCJSPlugin(userConfig) {
       var documents;
 
       compiler.on('scan', function(done) {
-        scan(config, parserConfig, compiler.config.gitRepository, compiler.utils, function(err, _documents) {
+        scan({
+          config: config,
+          parserConfig: parserConfig,
+          gitRepository: compiler.config.gitRepository,
+          utils: compiler.utils,
+          assetRoot: compiler.config.assetRoot,
+        }, function(err, _documents) {
           if (err) {
             return done(err);
           }

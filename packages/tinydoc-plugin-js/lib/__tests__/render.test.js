@@ -74,11 +74,11 @@ describe('cjs::render', function() {
 
   it('renders doc.tags.[].typeInfo.string', function() {
     assert.calledWith(linkify, sinon.match({
-      text: 'A _unique_ record identifier.\n',
+      text: 'A _unique_ record identifier.',
       contextNode: sinon.match({ id: '#add' })
     }));
 
-    assert.calledWith(renderMarkdown, 'A _unique_ record identifier.\n');
+    assert.calledWith(renderMarkdown, 'A _unique_ record identifier.');
   });
 
   it('renders the "string" of an @example tag', function() {

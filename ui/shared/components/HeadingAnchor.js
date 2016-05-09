@@ -47,7 +47,11 @@ exports.Link = React.createClass({
     });
 
     return (
-      <a className={className} href={`#${this.props.href}`} />
+      <a className={className} href={`#${this.props.href}`} onClick={intercept} />
     );
   }
 });
+
+function intercept(e) {
+  e.stopPropagation();
+}

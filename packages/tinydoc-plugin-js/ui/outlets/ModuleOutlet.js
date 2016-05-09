@@ -12,13 +12,15 @@ module.exports = function(api) {
       },
 
       render() {
+        if (!this.props.documentNode.properties) {
+          return null;
+        }
+
         return (
-          <div>
-            <Module
-              namespaceNode={this.props.namespaceNode}
-              documentNode={this.props.documentNode}
-            />
-          </div>
+          <Module
+            namespaceNode={this.props.namespaceNode}
+            documentNode={this.props.documentNode}
+          />
         );
       }
     }),
