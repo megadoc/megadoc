@@ -14,7 +14,7 @@ module.exports = function reduceDocuments(options) {
   var namespaces = {};
   var bank = b.namespace({
     id: options.namespaceId,
-    corpusContext: options.namespaceTitle,
+    title: options.namespaceTitle,
     documents: [],
     config: options.config,
     meta: {
@@ -69,7 +69,8 @@ module.exports = function reduceDocuments(options) {
           title: namespaceId,
           symbol: K.NAMESPACE_SEP,
           documents: [],
-          entities: []
+          entities: [],
+          meta: {}
         });
 
         Corpus.attachNode('documents', bank, namespace);

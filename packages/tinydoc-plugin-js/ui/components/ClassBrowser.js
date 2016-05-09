@@ -49,7 +49,8 @@ var ClassBrowser = React.createClass({
     const genericNamespace = {
       id: '__general__',
       title: '[General]',
-      documents: []
+      documents: [],
+      meta: {}
     };
 
     const namespaces = rootDocuments.reduce(function(list, node) {
@@ -94,7 +95,7 @@ var ClassBrowser = React.createClass({
       return null;
     }
 
-    const hasSelfDocument = !!ns.properties;
+    const hasSelfDocument = ns.id !== '__general__' && (ns.properties || tinydoc.hasCustomLayoutForDocument(ns));
 
     return (
       <div key={ns.id} className="class-browser__category">

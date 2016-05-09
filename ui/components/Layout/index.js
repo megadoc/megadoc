@@ -14,6 +14,11 @@ const Link = shape({
 });
 
 const Layout = React.createClass({
+  statics: {
+    getDefaultLayoutForDocument,
+    getLayoutForDocument,
+  },
+
   propTypes: {
     children: node,
     path: string,
@@ -28,7 +33,8 @@ const Layout = React.createClass({
   getDefaultProps() {
     return {
       config: {
-        bannerLinks: []
+        bannerLinks: [],
+        layouts: []
       }
     };
   },
@@ -38,7 +44,11 @@ const Layout = React.createClass({
     const documentNode = tinydoc.corpus.getByURI(documentHref);
 
     const namespaceNode = tinydoc.corpus.getNamespaceOfDocument(documentNode);
-    const layout = getLayoutForDocument(documentNode, namespaceNode) || getDefaultLayout();
+    const layout = (
+      getLayoutForDocument(documentNode, this.props.config.layouts) ||
+      getDefaultLayoutForDocument(documentNode, namespaceNode) ||
+      getDefaultLayout()
+    );
 
     const hasSidebarElements = layout.some(x => x.name === 'Layout::Sidebar');
 
@@ -119,6 +129,18 @@ const Layout = React.createClass({
 
     const children = [].concat(outletSpec.children);
 
+    children.forEach(function({ name }) {
+      if (!Outlet.isDefined(name)) {
+        console.warn(
+          "Outlet '%s' has not been defined, this is most likely " +
+          "a configuration error. Please verify the outlet name is correct.",
+          name
+        );
+      }
+    })
+
+    console.debug('rendering outlets:', children.map(x => x.name))
+
     return children.map(x => {
       return (
         <Outlet
@@ -143,19 +165,35 @@ const Layout = React.createClass({
 
 module.exports = Layout;
 
-function getLayoutForDocument(documentNode, namespaceNode) {
+function getDefaultLayoutForDocument(documentNode, namespaceNode) {
   if (!namespaceNode) {
     return null;
   }
 
   if (namespaceNode.meta.defaultLayouts) {
-    const entry = namespaceNode.meta.defaultLayouts
-      .filter(x => x.documentTypes.indexOf(documentNode.type) > -1)[0]
-    ;
+    return getLayoutForDocument(documentNode, namespaceNode.meta.defaultLayouts);
+  }
+}
 
-    if (entry) {
-      return entry.layout;
-    }
+function getLayoutForDocument(documentNode, layouts) {
+  const entry = layouts.filter(x => {
+    return (
+      (
+        x.documentTypes &&
+        x.documentTypes.indexOf(documentNode.type) > -1
+      ) ||
+      (
+        x.documentUID === documentNode.uid
+      ) ||
+      (
+        x.documentUIDs &&
+        x.documentUIDs.indexOf(documentNode.uid) > -1
+      )
+    );
+  })[0];
+
+  if (entry) {
+    return entry.layout;
   }
 }
 

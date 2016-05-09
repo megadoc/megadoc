@@ -1,5 +1,6 @@
 const buildRouteMap = require('utils/buildRouteMap');
 const Outlet = require('components/Outlet');
+const Layout = require('../../components/Layout');
 const CorpusAPI = require('./CorpusAPI');
 const invariant = require('utils/invariant');
 
@@ -168,6 +169,10 @@ module.exports = function createTinydoc(config) {
    *           The Corpus API for plugins to use.
    */
   exports.corpus = corpusAPI;
+
+  exports.hasCustomLayoutForDocument = function(node) {
+    return !!Layout.getLayoutForDocument(node, config.layoutOptions.layouts || []);
+  };
 
   return exports;
 };

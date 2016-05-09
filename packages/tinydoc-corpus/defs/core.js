@@ -20,8 +20,8 @@ def("Corpus", {
 def("Namespace", {
   fields: {
     id: t.string,
+    title: or(t.string, null),
     symbol: or(t.string, null), // defaults to "/"
-    corpusContext: or(t.string, null),
     documents: or(array("Node"), null),
     meta: or(t.object, null),
     config: or(t.object, null),

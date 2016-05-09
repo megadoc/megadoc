@@ -8,34 +8,35 @@ const { string, object, array, bool } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
   propTypes: {
-    routeName: string.isRequired,
-    doc: object,
     documentNode: object,
-    commonPrefix: string,
-    moduleDocs: array,
     showSourcePaths: bool,
     headerLevel: string,
     generateAnchor: bool,
     showNamespace: bool,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       headerLevel: '1',
       generateAnchor: true,
     };
   },
 
-  shouldComponentUpdate: function(prevProps) {
-    return prevProps.doc !== this.props.doc;
+  shouldComponentUpdate(prevProps) {
+    return prevProps.documentNode !== this.props.documentNode;
   },
 
   render() {
-    const { doc, moduleDocs } = this.props;
     let anchor;
 
+    const { documentNode } = this.props;
+    const doc = documentNode.properties || {
+      name: documentNode.title,
+      ctx: { type: K.TYPE_UNKNOWN }
+    };
+
     if (this.props.generateAnchor) {
-      anchor = this.props.documentNode.meta.anchor;
+      anchor = documentNode.meta.anchor;
     }
 
     let type;
@@ -44,14 +45,17 @@ const ModuleHeader = React.createClass({
       return <header>Unsupported Entity</header>;
     }
 
-    if (moduleDocs.some((d) => d.ctx.scope === K.SCOPE_PROTOTYPE))  {
+    if (documentNode.type !== 'Namespace' && documentNode.entities.some(n => n.properties.ctx.scope === K.SCOPE_PROTOTYPE))  {
       type = 'Class';
     }
-    else if (moduleDocs.some((d) => d.ctx.scope === K.SCOPE_FACTORY_EXPORTS))  {
+    else if (documentNode.type !== 'Namespace' && documentNode.entities.some(n => n.properties.ctx.scope === K.SCOPE_FACTORY_EXPORTS))  {
       type = 'Factory';
     }
     else if (doc.ctx.type === K.TYPE_FUNCTION) {
       type = 'Function';
+    }
+    else if (!documentNode.properties) {
+      type = 'Namespace';
     }
     else {
       type = 'Object';
