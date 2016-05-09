@@ -1,23 +1,30 @@
 @import "~helpers";
 @import "./css/qt--multi-page-layout";
 @import "./css/qt--single-page-layout";
+@import "./css/qt-js";
 
 @spacing: 2em;
 @background: @plain-base02;
 
+body {
+  font-size: 100%;
+}
+
 h1, h2, h3 {
-  font-weight: 700;
+  font-weight: 300;
 }
 
 h4, h5, h6 {
   font-weight: 700;
 }
 
+a, a.active {
+  font-weight: normal;
+}
 
 .schemable({
   background: @background;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
-
   a:visited:not(.active) {
     color: lighten(@plain-link, 15%);
   }
