@@ -1,5 +1,5 @@
 const React = require('react');
-const ClassBrowser = require('components/ClassBrowser');
+const ClassBrowser = require('../components/ClassBrowser');
 const { object, } = React.PropTypes;
 
 module.exports = function(api) {

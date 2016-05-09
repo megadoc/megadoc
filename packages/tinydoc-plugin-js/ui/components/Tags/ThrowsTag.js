@@ -1,6 +1,6 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
-const Types = require('components/Tags/Types');
+const TypeNames = require('./TypeNames');
 
 const { shape, string, arrayOf } = React.PropTypes;
 
@@ -16,7 +16,7 @@ const ThrowsTag = React.createClass({
     return (
       <li className="throws-tag">
         <p className="inline-block">
-          <Types types={this.props.typeInfo.types} />
+          <TypeNames types={this.props.typeInfo.types} />
         </p>
 
         {' - '}

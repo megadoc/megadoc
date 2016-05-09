@@ -1,16 +1,16 @@
-const React = require("react");
+const React = require('react');
+const { findWhere, where } = require("lodash");
 const Outlet = require('components/Outlet');
 const HighlightedText = require('components/HighlightedText');
-const Doc = require('components/Doc');
-const SeeTag = require('components/Tags/SeeTag');
-const DocGroup = require('components/DocGroup');
-const PropertyTag = require('components/Tags/PropertyTag');
-const { findWhere, where } = require("lodash");
-const ExampleTag = require('components/Tags/ExampleTag');
-const orderAwareSort = require('utils/orderAwareSort');
-const DocClassifier = require('core/DocClassifier');
+const Doc = require('./Doc');
+const SeeTag = require('./Tags/SeeTag');
+const DocGroup = require('./DocGroup');
+const PropertyTag = require('./Tags/PropertyTag');
+const ExampleTag = require('./Tags/ExampleTag');
+const orderAwareSort = require('../utils/orderAwareSort');
+const DocClassifier = require('../utils/DocClassifier');
 const Router = require('core/Router');
-const K = require('constants');
+const K = require('../constants');
 const { string, object, arrayOf } = React.PropTypes;
 
 const ModuleBody = React.createClass({

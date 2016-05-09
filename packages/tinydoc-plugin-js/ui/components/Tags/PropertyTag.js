@@ -1,7 +1,7 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
-const Types = require('components/Tags/Types');
-const Doc = require('components/Doc');
+const TypeNames = require('./TypeNames');
+const Doc = require('../Doc');
 
 const { shape, string, arrayOf, object } = React.PropTypes;
 
@@ -35,7 +35,7 @@ const PropertyTag = React.createClass({
 
           {': '}
 
-          <Types types={typeInfo.types} />
+          <TypeNames types={typeInfo.types} />
         </header>
 
         {typeInfo.description && (

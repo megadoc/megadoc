@@ -1,5 +1,5 @@
 const React = require('react');
-const Module = require('components/Module');
+const Module = require('../components/Module');
 const { object, } = React.PropTypes;
 
 module.exports = function(api) {

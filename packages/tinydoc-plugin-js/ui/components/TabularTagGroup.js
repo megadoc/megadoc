@@ -2,7 +2,7 @@ var React = require('react');
 var { where } = require('lodash');
 var Collapsible = require('mixins/Collapsible');
 var classSet = require('utils/classSet');
-var Types = require('components/Tags/Types');
+var TypeNames = require('./Tags/TypeNames');
 var HighlightedText = require('components/HighlightedText');
 
 var TabularTagGroup = React.createClass({
@@ -90,7 +90,7 @@ var TabularTagGroup = React.createClass({
         <td>
           {typeInfo.types.length > 0 && (
             <code className="param-tag__types">
-              <Types types={typeInfo.types} />
+              <TypeNames types={typeInfo.types} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">

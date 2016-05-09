@@ -2,7 +2,7 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
 const HeadingAnchor = require('components/HeadingAnchor');
-const K = require('constants');
+const K = require('../constants');
 
 const { string, object, array, bool } = React.PropTypes;
 

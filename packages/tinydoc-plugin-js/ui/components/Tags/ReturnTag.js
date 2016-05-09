@@ -1,6 +1,6 @@
 var React = require("react");
 var HighlightedText = require('components/HighlightedText');
-var Types = require('components/Tags/Types');
+var TypeNames = require('./TypeNames');
 
 var ReturnTag = React.createClass({
   displayName: "ReturnTag",
@@ -40,7 +40,7 @@ var ReturnTag = React.createClass({
             <code className="return-tag__types">
               {hasName && ': '}
 
-              <Types types={typeInfo.types} />
+              <TypeNames types={typeInfo.types} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">

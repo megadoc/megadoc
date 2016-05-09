@@ -1,5 +1,5 @@
 const React = require('react');
-const K = require('constants');
+const K = require('../constants');
 const { shape, string } = React.PropTypes;
 
 module.exports = function(api, config) {

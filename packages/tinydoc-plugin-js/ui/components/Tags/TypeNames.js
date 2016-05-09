@@ -1,6 +1,6 @@
 const React = require('react');
 
-const Types = React.createClass({
+const TypeNames = React.createClass({
   propTypes: {
     types: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
   },
@@ -16,4 +16,4 @@ const Types = React.createClass({
   }
 });
 
-module.exports = Types;
+module.exports = TypeNames;

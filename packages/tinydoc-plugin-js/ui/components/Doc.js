@@ -1,8 +1,8 @@
-const React = require("react");
+const React = require('react');
 const classSet = require('utils/classSet');
 const HighlightedText = require('components/HighlightedText');
-const DocTags = require('components/DocTags');
-const Types = require('components/Tags/Types');
+const DocTags = require('./DocTags');
+const TypeNames = require('./Tags/TypeNames');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
 const HeadingAnchor = require('components/HeadingAnchor');
@@ -138,7 +138,7 @@ const Doc = React.createClass({
     return (
       <span className="doc-entity__method-params">
         {' -> '}
-        <Types types={tag.typeInfo.types} />
+        <TypeNames types={tag.typeInfo.types} />
       </span>
     );
   }

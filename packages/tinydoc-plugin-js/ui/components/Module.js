@@ -1,7 +1,7 @@
 const React = require('react');
-const ModuleBody = require('components/ModuleBody');
+const ModuleBody = require('./ModuleBody');
 const HasTitle = require('mixins/HasTitle');
-const ModuleHeader = require('components/ModuleHeader');
+const ModuleHeader = require('./ModuleHeader');
 const GitStats = require('components/GitStats');
 const Outlet = require('components/Outlet');
 

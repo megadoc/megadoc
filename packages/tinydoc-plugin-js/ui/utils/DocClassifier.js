@@ -1,12 +1,4 @@
-var K = require('constants');
-
-function isModule(doc) {
-  return doc.isModule();
-}
-
-function isEntity(doc) {
-  return !doc.isModule();
-}
+var K = require('../constants');
 
 function isMethod(doc) {
   var ctx = doc.ctx;
@@ -33,8 +25,6 @@ function isStaticMethod(doc) {
   return doc.ctx.type === 'function' && !isMethod(doc);
 }
 
-exports.isModule = isModule;
-exports.isEntity = isEntity;
 exports.isMethod = isMethod;
 exports.isStaticMethod = isStaticMethod;
 exports.isFactoryExports = isFactoryExports;

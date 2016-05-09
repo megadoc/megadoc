@@ -6,10 +6,10 @@ const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
 const { findWhere, sortBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
-const K = require('constants');
+const K = require('../constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
 const JumperMixin = require('mixins/JumperMixin');
-const orderAwareSort = require('utils/orderAwareSort');
+const orderAwareSort = require('../utils/orderAwareSort');
 const { object, bool, string, } = React.PropTypes;
 
 var ClassBrowser = React.createClass({
