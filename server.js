@@ -7,6 +7,7 @@ var config = require('./webpack.config');
 var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 var fs = require('fs-extra');
 var http = require('http')
+var assign = require('lodash').assign;
 
 var CONTENT_HOST = process.env.HOST || '0.0.0.0';
 var CONTENT_PORT = process.env.PORT || '8942';
@@ -48,6 +49,23 @@ function start(host, port, done) {
   config.module.loaders.some(function(loader) {
     if (loader.id === 'js-loaders') {
       loader.loaders.push('react-hot');
+      return true;
+    }
+  });
+
+  config.module.loaders.some(function(loader) {
+    if (loader.id === 'less-loaders') {
+      delete loader.loader;
+      delete loader.query;
+
+      loader.loaders = [
+        'style',
+        'css?importLoaders=1',
+        'less?' + JSON.stringify({
+          modifyVars: getStyleOverrides(pluginNames)
+        })
+      ];
+
       return true;
     }
   });
@@ -112,4 +130,18 @@ function generatePluginEntry() {
 
     return list;
   }, []);
+}
+
+function getStyleOverrides() {
+  var basePath = path.resolve(__dirname, 'packages');
+
+  return pluginNames.reduce(function(map, name) {
+    var filePath = path.join(basePath, name, 'ui/styleOverrides.json');
+
+    if (fs.existsSync(filePath)) {
+      assign(map, require(filePath));
+    }
+
+    return map;
+  }, {});
 }
