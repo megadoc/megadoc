@@ -98,7 +98,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <div key={id} ref={id}>
         <Link
-          to={`${this.props.routeName}.article`}
+          to={`${this.getRouteName()}.article`}
           params={{ articleId: encodeURIComponent(id) }}
           className="class-browser__entry-link"
         >
@@ -137,7 +137,7 @@ var MarkdownClassBrowser = React.createClass({
     return (
       <li key={sectionId} className={className}>
         <Link
-          to={`${this.props.routeName}.article.section`}
+          to={`${this.getRouteName()}.article.section`}
           params={{
             articleId: encodeURIComponent(article.id),
             sectionId: encodeURIComponent(section.scopedId),
@@ -165,17 +165,21 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   getFolders() {
-    return Database.for(this.props.routeName).getFolders();
+    return Database.for(this.getRouteName()).getFolders();
   },
 
   getArticles() {
-    return Database.for(this.props.routeName).getArticles();
+    return Database.for(this.getRouteName()).getArticles();
   },
 
   hasFolders() {
     return this.getFolders().filter(function(folderId) {
       return folderId !== ROOT_FOLDER_ID && folderId !== '.';
     }).length > 0;
+  },
+
+  getRouteName() {
+    return this.props.namespaceNode.id;
   }
 });
 

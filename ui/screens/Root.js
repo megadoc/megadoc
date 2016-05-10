@@ -2,7 +2,6 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const AppState = require('core/AppState');
 const Storage = require('core/Storage');
-const Router = require('core/Router');
 const DocumentURI = require('core/DocumentURI');
 const config = require('config');
 const SpotlightManager = require('../components/SpotlightManager');
@@ -42,6 +41,11 @@ const Root = React.createClass({
   },
 
   render() {
+    console.log("Pathname = '%s', DPathname = '%s'",
+      this.getPathName(),
+      DocumentURI.getCurrentPathName()
+    );
+
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
         {config.tooltipPreviews && (<Inspector />)}
@@ -57,7 +61,12 @@ const Root = React.createClass({
           <ScrollSpy />
         )}
 
-        <Layout config={config.layoutOptions} {...this.props} />
+        <Layout
+          {...config.layoutOptions}
+          pathname={this.getPathName()}
+          query={this.props.query /* TODO: deprecate */}
+          {...this.resolveCurrentDocument()}
+        />
       </Outlet>
     );
   },
@@ -70,6 +79,25 @@ const Root = React.createClass({
     if (e.target.tagName === 'A' && e.target.href.indexOf(location.origin) === 0) {
       navigate(e, e.target);
     }
+  },
+
+  resolveCurrentDocument() {
+    const href = this.getPathName();
+    const documentNode = tinydoc.corpus.getByURI(href);
+
+    if (documentNode) {
+      return {
+        documentNode,
+        namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode)
+      };
+    }
+    else {
+      console.warn("Unable to find a document at the URI '%s' (from '%s')", href, this.props.pathname);
+    }
+  },
+
+  getPathName() {
+    return DocumentURI(DocumentURI.withExtension(this.props.pathname)) + window.location.hash;
   }
 });
 

@@ -6,8 +6,8 @@ const Icon = require('components/Icon');
 const AppState = require('core/AppState');
 const DocumentURI = require('core/DocumentURI');
 const { string, any, arrayOf, object, } = React.PropTypes;
-const BannerItem = require('./BannerItem');
-const BannerMenu = require('./BannerMenu');
+const BannerItem = require('./Layout__BannerItem');
+const BannerMenu = require('./Layout__BannerMenu');
 
 const Banner = React.createClass({
   statics: { BannerItem: BannerItem },

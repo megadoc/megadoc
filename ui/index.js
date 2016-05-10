@@ -41,8 +41,8 @@ tinydoc.start = function(options = {}) {
     if (config.$static) {
       config.$static.readyCallback({
         render(href, done) {
-          location.path = href.indexOf('/index') === 0 ? '/' : href;
-          // location.path = href;
+          // location.path = href.indexOf('/index') === 0 ? '/' : href;
+          location.path = href;
 
           router.run(function(Handler, state) {
             if (process.env.DEBUG) {

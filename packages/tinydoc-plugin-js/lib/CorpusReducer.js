@@ -33,21 +33,21 @@ module.exports = function reduceDocuments(options) {
 
       defaultLayouts: [
         {
-          documentTypes: [ 'Namespace' ],
-          layout: [
+          match: { by: 'type', on: 'Namespace' },
+          regions: [
             {
               name: 'Layout::Sidebar',
-              children: [{ name: 'CJS::ClassBrowser' }]
+              outlets: [{ name: 'CJS::ClassBrowser' }]
             }
           ]
         },
         {
-          documentTypes: [ 'Document', 'DocumentEntity' ],
-          layout: [
+          match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
+          regions: [
             {
               name: 'Layout::Content',
               options: { framed: true },
-              children: [
+              outlets: [
                 { name: 'CJS::ModuleHeader' },
                 { name: 'CJS::ModuleIndex' },
                 { name: 'CJS::ModuleBody' },
@@ -55,7 +55,7 @@ module.exports = function reduceDocuments(options) {
             },
             {
               name: 'Layout::Sidebar',
-              children: [{ name: 'CJS::ClassBrowser' }]
+              outlets: [{ name: 'CJS::ClassBrowser' }]
             }
           ]
         }
