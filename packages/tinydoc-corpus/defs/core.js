@@ -20,11 +20,13 @@ def("Corpus", {
 def("Namespace", {
   fields: {
     id: t.string,
+    name: t.string,
     title: or(t.string, null),
     symbol: or(t.string, null), // defaults to "/"
-    documents: or(array("Node"), null),
+    indexFields: or(array(t.string), null),
     meta: or(t.object, null),
     config: or(t.object, null),
+    documents: or(array("Node"), null),
     parentNode: "Corpus",
   }
 });

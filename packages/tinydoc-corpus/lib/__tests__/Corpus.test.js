@@ -17,7 +17,8 @@ describe('Corpus', function() {
   it('lets me add a namespace', function() {
     var ns = b.namespace({
       id: 'JS',
-      corpusContext: 'JavaScripts',
+      name: 'test-plugin',
+      title: 'JavaScripts',
       documents: []
     });
 
@@ -29,7 +30,8 @@ describe('Corpus', function() {
   it('tracks documents within a namespace', function() {
     var ns = b.namespace({
       id: 'JS',
-      corpusContext: 'JavaScripts',
+      name: 'test-plugin',
+      title: 'JavaScripts',
       documents: [
         b.document({
           id: 'Cache',
@@ -47,8 +49,9 @@ describe('Corpus', function() {
   it('allows me to customize the namespace symbol', function() {
     var ns = b.namespace({
       id: 'API',
+      name: 'test-plugin',
       symbol: '::',
-      corpusContext: 'Rails API',
+      title: 'Rails API',
       documents: [
         b.document({
           id: 'Users'
@@ -63,10 +66,10 @@ describe('Corpus', function() {
   });
 
   it('borks if the namespace id is taken', function() {
-    subject.add(b.namespace({ id: 'foo' }));
+    subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
 
     assert.throws(function() {
-      subject.add(b.namespace({ id: 'foo' }));
+      subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
     }, "IntegrityViolation: a namespace with the id 'foo' already exists.");
   });
 
@@ -80,6 +83,7 @@ describe('Corpus', function() {
     it('flattens the database', function() {
       subject.add(b.namespace({
         id: 'API',
+        name: 'test-plugin',
         documents: [
           b.document({
             id: 'Users',
@@ -118,7 +122,7 @@ describe('Corpus', function() {
         }
       });
 
-      subject.add(b.namespace({ id: 'foo' }));
+      subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
       assert.equal(subject.get('foo').href, 'hadouken');
     });
 
@@ -134,7 +138,9 @@ describe('Corpus', function() {
       });
 
       subject.add(
-        b.namespace({ id: 'foo',
+        b.namespace({
+          id: 'foo',
+          name: 'test-plugin',
           documents: [ b.document({ id: 'bar' }) ]
         })
       );
@@ -155,6 +161,7 @@ describe('Corpus', function() {
       subject.add(
         b.namespace({
           id: 'foo',
+          name: 'test-plugin',
           documents: [
             b.node({
               id: 'bar'
@@ -180,6 +187,7 @@ describe('Corpus', function() {
       subject.add(
         b.namespace({
           id: 'foo',
+          name: 'test-plugin',
           documents: [
             b.document({
               id: 'bar',

@@ -17,6 +17,16 @@ module.exports = function buildIndices(node) {
     indices[ancestors.map(identifyNode).join('')] = ancestors.length;
   } while ((anchorNode = anchorNode.parentNode));
 
+  if (anchorNode.indexFields && node.properties) {
+    anchorNode.indexFields.forEach(function(field) {
+      var values = [].concat(node.properties[field] || []);
+
+      values.forEach(function(index) {
+        indices[index] = ancestors.length;
+      });
+    });
+  }
+
   return indices;
 
   function identifyNode(x, i) {

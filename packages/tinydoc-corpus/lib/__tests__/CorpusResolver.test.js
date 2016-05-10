@@ -12,7 +12,8 @@ describe('CorpusResolver', function() {
     subject.add(
       b.namespace({
         id: 'MD',
-        corpusContext: 'Articles',
+        name: 'test-plugin',
+        title: 'Articles',
         documents: [
           b.document({
             id: 'X',
@@ -38,7 +39,8 @@ describe('CorpusResolver', function() {
     subject.add(
       b.namespace({
         id: 'JS',
-        corpusContext: 'JavaScripts',
+        name: 'test-plugin',
+        title: 'JavaScripts',
         documents: [
           b.document({
             id: 'X',
