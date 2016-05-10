@@ -1,2 +1,0 @@
-# tinydoc-layout-single-page
-
