@@ -87,6 +87,7 @@ function inspectElement(el) {
   const href = decodeURIComponent(el.href.replace(location.origin, ''));
   const documentNode = corpus.getByURI(href);
 
+
   if (documentNode) {
     const context = {
       documentNode,

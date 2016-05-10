@@ -58,9 +58,7 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
   it('works with emitting files', function(done) {
     var tiny = tinydoc(assign(config, {
       emitFiles: true,
-      plugins: config.plugins.concat([
-        require('tinydoc-layout-multi-page')({})
-      ])
+      useHashLocation: false,
     }), {
       scan: true,
       write: true,

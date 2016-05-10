@@ -122,7 +122,7 @@ module.exports = function createTinydoc(config) {
   };
 
   exports.getRuntimeConfigs = function(pluginId) {
-    return config.pluginConfigs[pluginId] || [];
+    return corpusAPI.getNamespacesForPlugin(pluginId).map(x => x.config);
   };
 
   exports.getPreviewHandlers = function() {
@@ -173,6 +173,15 @@ module.exports = function createTinydoc(config) {
   exports.hasCustomLayoutForDocument = function(node) {
     return !!Layout.getLayoutForDocument(node, config.layoutOptions.layouts || []);
   };
+
+  exports.getRelativeFilePath = function(filePath) {
+    if (filePath.indexOf(config.assetRoot) === 0) {
+      return filePath.slice(config.assetRoot.length + 1);
+    }
+    else {
+      return filePath;
+    }
+  }
 
   return exports;
 };

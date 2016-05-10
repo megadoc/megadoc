@@ -1,22 +1,16 @@
 .schemable({
   .doc-group__header {
-    margin: 2em 0 1em;
+    margin: 2em 0 1.5em;
     border-bottom-width: 0;
+    padding-bottom: 0;
   }
 
   .doc-entity.collapsible {
     border-left-width: 0;
   }
 
-  .doc-entity {
-    // font-size: 0.85em;
-  }
-
-  .doc-entity__name {
-    font-size: 1.25em;
-    font-weight: 300;
-    border-bottom: 1px solid @base2;
-    padding-bottom: 0.5em;
+  .doc-entity:not(:last-of-type) {
+    border-bottom: none;
   }
 
   .doc-entity {
@@ -27,11 +21,80 @@
     margin-top: 2em;
   }
 
-  .tag-group__header {
-    border-bottom: none;
-    padding-bottom: 0;
-    // font-family: Monospace, monospace;
-    letter-spacing: 1.5px;
-    // font-size: 1em;
+  .doc-entity__header {
+    border-bottom: 1px solid @base2;
+    padding-bottom: 0.5em;
+    padding-right: 1em;
+  }
+
+  .doc-entity__name {
+    display: inline-block;
+    vertical-align: top;
+    line-height: 1.56em;
+    font-size: 1.25em;
+    font-weight: 300;
+    width: 100%;
+    word-break: break-all;
+  }
+
+  .doc-entity__name-fragment {
+    color: @base0;
+  }
+
+  .tag-group {
+    list-style: none;
+    padding-left: 0;
+
+    // OK, we want to cram things a bit so the whitespace doesn't get distracting
+    &__header {
+      margin: 1em 0;
+      border-bottom: none;
+      padding-bottom: 0;
+      letter-spacing: 1.5px;
+    }
+
+    .param-tag, .return-tag, .throws-tag {
+      margin: 1em 0;
+    }
+
+    .markdown-text p, .highlighted-text p {
+      margin: 1em 0;
+    }
+
+    &--single-child {
+      list-style: none;
+    }
+  }
+
+  .js-doc-entity__property-tags {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .js-document-index {
+    table td {
+      padding: 0.25em 0.75em;
+    }
+
+    &__entity-name.active {
+      font-weight: bold;
+    }
+  }
+
+  .property-tag__name, .param-tag__name, .return-tag__name {
+    color: inherit;
+  }
+
+  .class-view__module-filepath {
+    color: @base1;
+    font-style: italic;
+    font-size: 0.85em;
+  }
+
+  .doc-entity__function-signature {
+    em {
+      color: @accent;
+      font-style: normal;
+    }
   }
 });

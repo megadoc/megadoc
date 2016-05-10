@@ -11,6 +11,19 @@ module.exports = function CorpusAPI(shallowCorpus) {
   const corpus = CorpusTree(shallowCorpus);
   const documentSearchIndex = buildDocumentSearchIndex();
   const documentEntitySearchIndex = buildDocumentEntitySearchIndex();
+  const pluginNamespaces = Object.keys(corpus).reduce((map, x) => {
+    const node = getByUID(x);
+
+    if (node.type === 'Namespace') {
+      if (!map[node.pluginName]) {
+        map[node.pluginName] = [];
+      }
+
+      map[node.pluginName].push(node);
+    }
+
+    return map;
+  }, {});
 
   exports.getDocumentSearchIndex = function() {
     return documentSearchIndex;
@@ -30,6 +43,10 @@ module.exports = function CorpusAPI(shallowCorpus) {
 
   exports.getCatalogue = function(id) {
     return Object.keys(corpus).filter(x => x.indexOf(id + '/') === 0).map(getByUID);
+  };
+
+  exports.getNamespacesForPlugin = function(pluginName) {
+    return pluginNamespaces[pluginName] || [];
   };
 
   exports.get = function(uid) {

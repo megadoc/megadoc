@@ -11,18 +11,6 @@ tinydoc.outlets.add('CJS::NamespaceIndex', {
     },
 
     render() {
-      const { documentNode } = this.props;
-
-      // if (documentNode.type !== 'Document') {
-      //   console.warn(
-      //     "Invalid document '%s' passed to the CJS::NamespaceIndex outlet; " +
-      //     "expected a namespace or a module.",
-      //     documentNode.uid
-      //   );
-
-      //   return null;
-      // }
-
       return (
         <NamespaceIndex {...this.props} />
       );

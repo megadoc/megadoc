@@ -14,9 +14,11 @@ module.exports = function reduceDocuments(options) {
   var namespaces = {};
   var bank = b.namespace({
     id: options.namespaceId,
+    name: 'tinydoc-plugin-js',
     title: options.namespaceTitle,
     documents: [],
     config: options.config,
+    indexFields: [ 'aliases' ],
     meta: {
       outlets: [
         {
@@ -44,7 +46,12 @@ module.exports = function reduceDocuments(options) {
           layout: [
             {
               name: 'Layout::Content',
-              children: [{ name: 'CJS::Module' }]
+              options: { framed: true },
+              children: [
+                { name: 'CJS::ModuleHeader' },
+                { name: 'CJS::ModuleIndex' },
+                { name: 'CJS::ModuleBody' },
+              ]
             },
             {
               name: 'Layout::Sidebar',

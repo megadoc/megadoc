@@ -4,6 +4,7 @@ const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const classSet = require('utils/classSet');
 const NotFound = require('components/NotFound');
+const Document = require('components/Document');
 const DocumentURI = require('core/DocumentURI');
 
 const { node, shape, string, arrayOf, array, object, } = React.PropTypes;
@@ -45,7 +46,7 @@ const Layout = React.createClass({
 
     const namespaceNode = tinydoc.corpus.getNamespaceOfDocument(documentNode);
     const layout = (
-      getLayoutForDocument(documentNode, this.props.config.layouts) ||
+      getLayoutForDocument(documentNode, this.props.config.layouts || []) ||
       getDefaultLayoutForDocument(documentNode, namespaceNode) ||
       getDefaultLayout()
     );
@@ -72,7 +73,7 @@ const Layout = React.createClass({
     return (
       <div className={className}>
         <Banner
-          links={this.props.config.bannerLinks}
+          links={this.props.config.bannerLinks || []}
           currentPath={this.props.path}
         />
 
@@ -95,6 +96,8 @@ const Layout = React.createClass({
   },
 
   renderTwoColumnLayout(ctx) {
+    const ContentTag = this.getContentOutletTag(ctx.layout);
+
     return (
       <TwoColumnLayout>
         <TwoColumnLayout.LeftColumn>
@@ -104,19 +107,21 @@ const Layout = React.createClass({
         </TwoColumnLayout.LeftColumn>
 
         <TwoColumnLayout.RightColumn>
-          <div>
+          <ContentTag>
             {this.renderElements(ctx, 'Layout::Content')}
-          </div>
+          </ContentTag>
         </TwoColumnLayout.RightColumn>
       </TwoColumnLayout>
     );
   },
 
   renderSingleColumnLayout(ctx) {
+    const ContentTag = this.getContentOutletTag(ctx.layout);
+
     return (
-      <div>
+      <ContentTag>
         {this.renderElements(ctx, 'Layout::Content')}
-      </div>
+      </ContentTag>
     );
   },
 
@@ -139,8 +144,6 @@ const Layout = React.createClass({
       }
     })
 
-    console.debug('rendering outlets:', children.map(x => x.name))
-
     return children.map(x => {
       return (
         <Outlet
@@ -156,6 +159,18 @@ const Layout = React.createClass({
         />
       );
     })
+  },
+
+  getContentOutletTag(layout) {
+    const spec = layout.filter(x => x.name === 'Layout::Content')[0];
+
+    if (spec) {
+      if (spec.options && spec.options.framed) {
+        return Document;
+      }
+    }
+
+    return 'div';
   },
 
   reload() {
@@ -176,6 +191,10 @@ function getDefaultLayoutForDocument(documentNode, namespaceNode) {
 }
 
 function getLayoutForDocument(documentNode, layouts) {
+  if (!documentNode || !layouts) {
+    return null;
+  }
+
   const entry = layouts.filter(x => {
     return (
       (

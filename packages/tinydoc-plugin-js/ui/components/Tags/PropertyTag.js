@@ -1,5 +1,6 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
+const HeadingAnchor = require('components/HeadingAnchor');
 const TypeNames = require('./TypeNames');
 const Doc = require('../Doc');
 
@@ -9,7 +10,7 @@ const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
-    anchorId: string,
+    anchor: string,
     typeInfo: shape({
       types: arrayOf(string),
       name: string,
@@ -21,26 +22,27 @@ const PropertyTag = React.createClass({
   },
 
   render() {
-    const { typeInfo } = this.props;
+    const { typeInfo, doc } = this.props;
+    const description = typeInfo.description || doc.description;
 
     return (
       <li className="property-tag">
-        <header
-          id={this.props.anchorId}
-          className="property-tag__header anchorable-heading"
-        >
+        <header className="property-tag__header anchorable-heading">
+          <HeadingAnchor.Anchor href={this.props.anchor} />
+          <HeadingAnchor.Link href={this.props.anchor} />
+
           <span className="property-tag__name">
-            <code>{typeInfo.name}</code>
+            {typeInfo.name || doc.name}
           </span>
 
           {': '}
 
-          <TypeNames types={typeInfo.types} />
+          <code><TypeNames types={typeInfo.types} /></code>
         </header>
 
-        {typeInfo.description && (
+        {description && (
           <HighlightedText className="property-tag__description">
-            {typeInfo.description}
+            {description}
           </HighlightedText>
         )}
 

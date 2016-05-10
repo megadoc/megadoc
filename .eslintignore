@@ -1,6 +1,7 @@
 dist
 packages/*/dist
 packages/tinydoc/ui
+packages/interface-builder
 
 doc/compiled
 packages/*/doc/compiled

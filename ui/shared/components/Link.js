@@ -1,8 +1,14 @@
 const React = require('react');
 const Router = require('core/Router');
 const DocumentURI = require('core/DocumentURI');
+const classSet = require('utils/classSet');
+const { string, } = React.PropTypes;
 
 const Link = React.createClass({
+  propTypes: {
+    className: string,
+  },
+
   render() {
     const path = this.props.to.split('#')[0];
     const isActive = (
@@ -18,7 +24,7 @@ const Link = React.createClass({
         href={this.props.to}
         onClick={this.navigate}
         children={this.props.children}
-        className={isActive ? 'active' : undefined}
+        className={classSet(this.props.className, { 'active' : isActive })}
       />
     );
   },

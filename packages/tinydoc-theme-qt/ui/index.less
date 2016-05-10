@@ -101,45 +101,17 @@ a, a.active {
 }
 
 .schemable({
-  .doc-entity {
-    &__name {
-      max-width: 100%;
-      overflow: hidden;
-      display: block;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      margin-right: 1em;
-    }
+  table {
+    tr {
+      border-top-color: @base2;
 
-    &:not(:last-of-type) {
-      border-bottom: none;
-    }
-  }
+      &:nth-child(2n) {
+        background-color: white;
+      }
 
-  .property-tag__name, .param-tag__name, .return-tag__name {
-    color: inherit;
+      td {
+        border-color: @base2;
+      }
+    }
   }
 });
-
-.tag-group {
-  list-style: none;
-  padding-left: 0;
-
-  // OK, we want to cram things a bit so the whitespace doesn't get distracting
-  &__header {
-    margin: 1em 0;
-    padding-bottom: 1em;
-  }
-
-  .param-tag, .return-tag, .throws-tag {
-    margin: 1em 0;
-  }
-
-  .markdown-text p, .highlighted-text p {
-    margin: 1em 0;
-  }
-
-  &--single-child {
-    list-style: none;
-  }
-}

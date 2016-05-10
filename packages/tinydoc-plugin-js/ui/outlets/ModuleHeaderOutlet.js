@@ -1,6 +1,6 @@
 const React = require('react');
 const ModuleHeader = require('../components/ModuleHeader');
-const { object, } = React.PropTypes;
+const { object, shape, bool, } = React.PropTypes;
 
 tinydoc.outlets.add('CJS::ModuleHeader', {
   key: 'CJS::ModuleHeader',
@@ -8,6 +8,10 @@ tinydoc.outlets.add('CJS::ModuleHeader', {
     propTypes: {
       documentNode: object,
       namespaceNode: object,
+      $outletOptions: shape({
+        showFilePath: bool,
+        showSummary: bool,
+      })
     },
 
     render() {
@@ -18,10 +22,22 @@ tinydoc.outlets.add('CJS::ModuleHeader', {
       ;
 
       return (
-        <ModuleHeader
-          {...this.props.$outletOptions}
-          documentNode={moduleNode}
-        />
+        <div className="js-module-header-outlet">
+          <ModuleHeader
+            documentNode={moduleNode}
+            generateAnchor={false}
+          />
+
+          {this.props.$outletOptions.showFilePath !== false && documentNode.filePath && (
+            <p className="class-view__module-filepath">
+              Defined in: {tinydoc.getRelativeFilePath(documentNode.filePath)}
+            </p>
+          )}
+
+          {this.props.$outletOptions.showSummary !== false && moduleNode.summary && (
+            <p>{moduleNode.summary}</p>
+          )}
+        </div>
       );
     }
   }),

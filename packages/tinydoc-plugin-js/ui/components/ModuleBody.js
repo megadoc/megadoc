@@ -9,13 +9,11 @@ const PropertyTag = require('./Tags/PropertyTag');
 const ExampleTag = require('./Tags/ExampleTag');
 const orderAwareSort = require('../utils/orderAwareSort');
 const DocClassifier = require('../utils/DocClassifier');
-const Router = require('core/Router');
 const K = require('../constants');
 const { string, object, arrayOf } = React.PropTypes;
 
 const ModuleBody = React.createClass({
   propTypes: {
-    routeName: string.isRequired,
     documentNode: object,
     doc: object,
     moduleDocs: arrayOf(object),
@@ -23,22 +21,32 @@ const ModuleBody = React.createClass({
   },
 
   render() {
-    const { doc, moduleDocs } = this.props;
-    const renderableType = getRenderableType(doc, moduleDocs);
+    const { documentNode } = this.props;
+    const doc = documentNode.properties;
+    const moduleDocs = documentNode.entities.map(x => x.properties);
+    const renderableType = DocClassifier.getDisplayType(documentNode);
 
     return (
       <div>
-        <HighlightedText>{doc.description}</HighlightedText>
+        {hasDetailedDescription(documentNode) && [
+          <h2 key="description-header" className="doc-group__header">
+            Detailed Description
+          </h2>,
 
-        {renderableType === K.TYPE_FACTORY && (
-          this.renderConstructor(doc, "Instance Constructor")
+          <HighlightedText key="description">
+            {doc.description}
+          </HighlightedText>
+        ]}
+
+        {renderableType === 'Factory' && (
+          this.renderConstructor(doc, "Instance Constructor Documentation")
         )}
 
-        {renderableType === K.TYPE_CLASS && (
-          this.renderConstructor(doc, "Constructor")
+        {renderableType === 'Class' && (
+          this.renderConstructor(doc, "Constructor Documentation")
         )}
 
-        {renderableType === K.TYPE_FUNCTION && (
+        {renderableType === 'Function' && (
           this.renderConstructor(doc, "Signature")
         )}
 
@@ -48,14 +56,14 @@ const ModuleBody = React.createClass({
           doc,
           moduleDocs,
           (scope) => !isStaticProperty(scope),
-          "Instance Properties"
+          "Instance Property Documentation"
         )}
 
         {this.renderProperties(
           doc,
           moduleDocs,
           isStaticProperty,
-          "Properties"
+          "Static Property Documentation"
         )}
 
         {this.renderMethods(doc, moduleDocs)}
@@ -101,7 +109,10 @@ const ModuleBody = React.createClass({
       <Outlet
         key={tag.string}
         name="CJS::ExampleTag"
-        elementProps={{ tag, routeName: this.props.routeName }}
+        elementProps={{
+          tag,
+          documentNode: this.props.documentNode
+        }}
         firstMatchingElement
       >
         <ExampleTag string={tag.string} typeInfo={tag.typeInfo} />
@@ -133,9 +144,13 @@ const ModuleBody = React.createClass({
     const propertyDocs = orderAwareSort(
       doc,
       moduleDocs.filter(function(entityDoc) {
+
         return (
           (scope ? scope(entityDoc.ctx.scope) : true) &&
-          where(entityDoc.tags, { type: 'property' }).length > 0
+          (
+            entityDoc.ctx.type === K.TYPE_LITERAL ||
+            entityDoc.tags.some(x => x.type === 'property')
+          )
         );
       }),
       'id'
@@ -146,24 +161,28 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label={title} tagName="ul">
+      <DocGroup label={title} tagName="ul" className="js-doc-entity__property-tags">
         {propertyDocs.map(this.renderProperty)}
       </DocGroup>
     );
   },
 
   renderProperty(doc) {
-    const tag = findWhere(doc.tags, { type: 'property' });
-    const path = doc.ctx.symbol + doc.name;
-
+    const tag = (
+      findWhere(doc.tags, { type: 'property' }) ||
+      findWhere(doc.tags, { type: 'type' }) || {
+        typeInfo: {
+          name: doc.name,
+          types: [ doc.ctx.type ]
+        }
+      }
+    );
 
     return (
       <PropertyTag
-        key={path}
+        key={doc.id}
         typeInfo={tag.typeInfo}
-        path={path}
-        parentPath={this.props.doc.name}
-        anchor={this.getEntityAnchor(path)}
+        anchor={this.getEntityAnchor(doc)}
         doc={doc}
       />
     );
@@ -181,20 +200,18 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Static Methods" tagName="ul" className="class-view__method-list">
+      <DocGroup label="Static Method Documentation" tagName="ul" className="class-view__method-list">
         {staticMethodDocs.map(this.renderStaticMethod)}
       </DocGroup>
     );
   },
 
   renderStaticMethod(doc) {
-    const path = doc.ctx.symbol + doc.name;
-
     return (
       <Doc
-        key={path}
+        key={doc.id}
         doc={doc}
-        anchor={this.getEntityAnchor(path)}
+        anchor={this.getEntityAnchor(doc)}
       />
     );
   },
@@ -211,56 +228,38 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Methods" tagName="ul" className="class-view__method-list">
+      <DocGroup label="Instance Method Documentation" tagName="ul" className="class-view__method-list">
         {methodDocs.map(this.renderMethod)}
       </DocGroup>
     );
   },
 
   renderMethod(doc) {
-    const path = doc.ctx.symbol + doc.name;
-
     return (
       <Doc
         key={doc.id}
         doc={doc}
-        anchor={this.getEntityAnchor(path)}
+        anchor={this.getEntityAnchor(doc)}
       />
     );
   },
 
-  getEntityAnchor(path) {
-    return this.props.documentNode.entities.filter(x => x.id === path)[0].meta.anchor;
-  },
-
-  getActiveEntityId() {
-    return (
-      this.props.focusedEntity ||
-      decodeURIComponent(Router.getParamItem('entity'))
-    );
+  getEntityAnchor(doc) {
+    return this.props.documentNode.entities.filter(x => x.properties === doc)[0].meta.anchor;
   },
 });
 
-function getRenderableType(doc, moduleDocs) {
-  if (doc.ctx.type === K.TYPE_FUNCTION) {
-    if (moduleDocs.some(DocClassifier.isFactoryExports)) {
-      return K.TYPE_FACTORY;
-    }
-    else if (moduleDocs.some(DocClassifier.isClassEntity)) {
-      return K.TYPE_CLASS;
-    }
-    else {
-      return K.TYPE_FUNCTION;
-    }
-  }
-  else {
-    return K.TYPE_OBJECT;
-  }
+function isStaticProperty(scope) {
+  return [
+    K.SCOPE_PROTOTYPE,
+    K.SCOPE_INSTANCE
+  ].indexOf(scope) === -1 || scope ;
 }
 
-
-function isStaticProperty(scope) {
-  return [ K.SCOPE_PROTOTYPE, K.SCOPE_INSTANCE ].indexOf(scope) === -1;
+function hasDetailedDescription(node) {
+  return node.properties.description && (
+    node.properties.description.replace(/(^\<p\>|\<\/p\>\n?$)/g, '') !== node.summary
+  );
 }
 
 module.exports = ModuleBody;

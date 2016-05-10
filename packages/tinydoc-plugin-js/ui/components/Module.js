@@ -20,9 +20,11 @@ const Module = React.createClass({
   render() {
     const { documentNode, namespaceNode } = this.props;
     const { config } = namespaceNode;
-    const moduleNode = documentNode.type === 'DocumentEntity' ? documentNode.parentNode : documentNode;
-    const moduleDoc = moduleNode.properties;
-    const moduleDocs = moduleNode.entities.map(x => x.properties);
+    const moduleNode = documentNode.type === 'DocumentEntity' ?
+      documentNode.parentNode :
+      documentNode
+    ;
+
     const legacyParams = {
       moduleId: moduleNode.id,
       entity: documentNode.type === 'DocumentEntity' ? documentNode.id : undefined,
@@ -33,8 +35,6 @@ const Module = React.createClass({
         <ModuleHeader
           routeName={config.routeName}
           documentNode={moduleNode}
-          doc={moduleDoc}
-          moduleDocs={moduleDocs}
           showSourcePaths={config.showSourcePaths}
           showNamespace={config.showNamespaceInModuleHeader}
           generateAnchor={false}
@@ -43,26 +43,21 @@ const Module = React.createClass({
         <ModuleBody
           routeName={config.routeName}
           documentNode={moduleNode}
-          doc={moduleDoc}
-          moduleDocs={moduleDocs}
           focusedEntity={documentNode.type === 'DocumentEntity' ? documentNode.id : undefined}
         />
 
         <Outlet
           name="CJS::ModuleBody"
           elementProps={{
-            routeName: config.routeName,
             params: legacyParams,
             query: {},
-            moduleId: legacyParams.moduleId,
-            moduleDoc: moduleDoc,
-            moduleDocs: moduleDocs,
-            document: moduleDoc,
+            documentNode,
+            namespaceNode,
           }}
         />
 
         {config.gitStats && (
-          <GitStats {...moduleDoc.git} />
+          <GitStats {...documentNode.properties.git} />
         )}
       </div>
     );

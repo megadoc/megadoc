@@ -21,6 +21,7 @@ tinydoc.publicModules = require('../tmp/publicModules');
 tinydoc.outlets = require('components/Outlet');
 tinydoc.outlets.define('LayoutWrapper');
 tinydoc.outlets.define('Layout');
+tinydoc.outlets.define('Inspector');
 
 tinydoc.start = function() {
   tinydoc.onReady(function(registrar) {

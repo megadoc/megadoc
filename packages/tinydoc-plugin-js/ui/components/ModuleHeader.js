@@ -3,8 +3,9 @@ const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
 const HeadingAnchor = require('components/HeadingAnchor');
 const K = require('../constants');
+const DocClassifier = require('../utils/DocClassifier');
 
-const { string, object, array, bool } = React.PropTypes;
+const { string, object, bool } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
   propTypes: {
@@ -39,26 +40,9 @@ const ModuleHeader = React.createClass({
       anchor = documentNode.meta.anchor;
     }
 
-    let type;
 
     if (!doc.ctx) {
       return <header>Unsupported Entity</header>;
-    }
-
-    if (documentNode.type !== 'Namespace' && documentNode.entities.some(n => n.properties.ctx.scope === K.SCOPE_PROTOTYPE))  {
-      type = 'Class';
-    }
-    else if (documentNode.type !== 'Namespace' && documentNode.entities.some(n => n.properties.ctx.scope === K.SCOPE_FACTORY_EXPORTS))  {
-      type = 'Factory';
-    }
-    else if (doc.ctx.type === K.TYPE_FUNCTION) {
-      type = 'Function';
-    }
-    else if (!documentNode.properties) {
-      type = 'Namespace';
-    }
-    else {
-      type = 'Object';
     }
 
     return (
@@ -94,7 +78,7 @@ const ModuleHeader = React.createClass({
               firstMatchingElement
               elementProps={this.props}
             >
-              <span>{type}</span>
+              <span>{DocClassifier.getDisplayType(documentNode)}</span>
             </Outlet>
           </span>
         </Heading>

@@ -116,10 +116,11 @@ function Tag(doxTag, options, filePath) {
       //   "Expected @type tag to contain only a single type, but it contained %d.",
       //   doxTag.types.length
       // );
+      this.typeInfo = TypeInfo(doxTag);
+      this.string = this.string.replace(doxTag.string, '');
 
       if (doxTag.types.length === 1) {
         this.explicitType = renamePrimitiveType(doxTag.types[0].trim());
-        this.string = this.string.replace('{'+doxTag.types[0]+'}', '');
       }
 
       break;

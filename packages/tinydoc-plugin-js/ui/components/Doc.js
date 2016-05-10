@@ -2,6 +2,7 @@ const React = require('react');
 const classSet = require('utils/classSet');
 const HighlightedText = require('components/HighlightedText');
 const DocTags = require('./DocTags');
+const FunctionSignature = require('./FunctionSignature');
 const TypeNames = require('./Tags/TypeNames');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
@@ -68,16 +69,12 @@ const Doc = React.createClass({
             {anchor && <HeadingAnchor.Link href={anchor} />}
 
             <HeadingAnchor.Text className="doc-entity__name">
-              {doc.name}
+              <span className="doc-entity__name-fragment">
+                {doc.name}
+              </span>
 
               {isFunction(doc) && (
-                <span className="doc-entity__method-params">
-                  (
-                    <span
-                      dangerouslySetInnerHTML={{ __html: params(doc.tags) }}
-                    />
-                  )
-                </span>
+                <FunctionSignature doc={doc} />
               )}
 
               {this.renderReturnType()}
@@ -135,14 +132,6 @@ const Doc = React.createClass({
     );
   }
 });
-
-function params(tags) {
-  return tags.filter(function(tag){
-    return tag.type === 'param' && tag.typeInfo.name.indexOf('.') === -1;
-  }).map(function(param){
-    return param.typeInfo.name + ': ' + param.typeInfo.types.join('|');
-  }).join(', ');
-}
 
 function isFunction(doc) {
   return doc.ctx.type === 'function';

@@ -29,3 +29,40 @@ exports.isMethod = isMethod;
 exports.isStaticMethod = isStaticMethod;
 exports.isFactoryExports = isFactoryExports;
 exports.isClassEntity = isClassEntity;
+
+exports.getDisplayType = function(documentNode) {
+  if (documentNode.type === 'Namespace') {
+    return 'Library';
+  }
+
+  if (!documentNode.properties) {
+    return 'Namespace';
+  }
+  else if (documentNode.entities.some(n => isClassEntity(n.properties))) {
+    return 'Class';
+  }
+  else if (documentNode.entities.some(n => isFactoryExports(n.properties))) {
+    return 'Factory';
+  }
+  else if (documentNode.properties.ctx.type === K.TYPE_FUNCTION) {
+    return 'Function';
+  }
+  else {
+    return 'Object';
+  }
+};
+
+exports.isProperty = function(doc) {
+  return doc && doc.tags.some(x => x.type === 'property');
+};
+
+exports.isStaticProperty = function(doc) {
+  return exports.isProperty(doc) && [
+    K.SCOPE_PROTOTYPE,
+    K.SCOPE_INSTANCE
+  ].indexOf(doc.ctx.scope) === -1;
+};
+
+exports.isMemberProperty = function(doc) {
+  return exports.isProperty(doc) && !exports.isStaticProperty(doc);
+};

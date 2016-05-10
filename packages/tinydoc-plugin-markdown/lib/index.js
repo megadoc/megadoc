@@ -29,7 +29,8 @@ function MarkdownPlugin(userConfig) {
       compiler.on('index', function(registry, done) {
         var namespace = b.namespace({
           id: config.routeName,
-          corpusContext: config.corpusContext,
+          name: 'tinydoc-plugin-markdown',
+          title: config.corpusContext,
           documents: database.map(function(doc) {
             // omg omg, we're rendering everything twice now
             var compiled = compiler.renderer.withTOC(doc.source);

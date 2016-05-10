@@ -8,6 +8,7 @@ const TypeNames = React.createClass({
   render() {
     return (
       <span
+        className="js-type-names"
         dangerouslySetInnerHTML={{
           __html: this.props.types.join('|')
         }}

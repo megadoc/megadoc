@@ -124,7 +124,7 @@ var ClassBrowser = React.createClass({
   renderModule(docNode) {
     const doc = docNode.properties;
     const { id } = doc;
-    const isActive = this.props.activeModuleId === docNode.id;
+    const isActive = this.props.activeModuleId === docNode.uid;
     const className = classSet({
       'class-browser__entry': true,
       'class-browser__entry--active': isActive

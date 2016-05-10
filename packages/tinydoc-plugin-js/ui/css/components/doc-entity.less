@@ -27,11 +27,11 @@
     margin-bottom: @spacing;
   }
 
-  &__name {
+  &__name-fragment {
     font-weight: bold;
   }
 
-  &__method-params {
+  &__method-params, &__function-signature {
     font-weight: normal;
     // font-size: 0.875em;
     font-family: Monospace, monospace, courier;
@@ -39,11 +39,6 @@
 
   &__description.markdown-text p {
     margin: @spacing 0;
-  }
-
-  .anchorable-heading__link {
-    position: absolute;
-    margin-top: 0.25em;
   }
 }
 
@@ -78,7 +73,7 @@
       color: @accent;
     }
 
-    &__method-params {
+    &__method-params, &__function-signature {
       color: @base1;
     }
 
