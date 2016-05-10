@@ -70,7 +70,6 @@ describe("[Integration] tinydoc-plugin-js", function() {
 
   it('works with file serializing', function(done) {
     config.emitFiles = true;
-    config.useHashLocation = false;
 
     var tiny = tinydoc(config, {
       scan: true,

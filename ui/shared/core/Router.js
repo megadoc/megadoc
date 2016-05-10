@@ -69,8 +69,10 @@ Router.refreshScroll = function() {
   const originalLocation = window.location.hash;
 
   if (originalLocation && originalLocation.length > 0) {
-    window.location.hash = '#/';
-    window.location.hash = originalLocation;
+    setTimeout(function() {
+      window.location.hash = '#/';
+      window.location.hash = originalLocation;
+    }, 0);
   }
 };
 

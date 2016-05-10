@@ -43,8 +43,8 @@ const Layout = React.createClass({
     const documentHref = DocumentURI(
       DocumentURI.withExtension(this.props.pathname)
     ) + window.location.hash;
-    const documentNode = tinydoc.corpus.getByURI(documentHref);
 
+    const documentNode = tinydoc.corpus.getByURI(documentHref);
     const namespaceNode = tinydoc.corpus.getNamespaceOfDocument(documentNode);
     const layout = (
       getLayoutForDocument(documentNode, this.props.config.layouts || []) ||
@@ -79,13 +79,13 @@ const Layout = React.createClass({
         />
 
         <div className="root__screen">
-          {this.renderContent(ctx)}
+          {this.renderScreen(ctx)}
         </div>
       </div>
     );
   },
 
-  renderContent(ctx) {
+  renderScreen(ctx) {
     if (!ctx.documentNode) {
       return <NotFound />;
     }
@@ -108,20 +108,22 @@ const Layout = React.createClass({
         </TwoColumnLayout.LeftColumn>
 
         <TwoColumnLayout.RightColumn>
-          <ContentTag>
-            {this.renderElements(ctx, 'Layout::Content')}
-          </ContentTag>
+          {this.renderContent(ctx)}
         </TwoColumnLayout.RightColumn>
       </TwoColumnLayout>
     );
   },
 
   renderSingleColumnLayout(ctx) {
+    return this.renderContent(ctx);
+  },
+
+  renderContent(ctx) {
     const ContentTag = this.getContentOutletTag(ctx.layout);
 
     return (
       <ContentTag>
-        {this.renderElements(ctx, 'Layout::Content')}
+        {this.renderElements(ctx, 'Layout::Content') || <NotFound />}
       </ContentTag>
     );
   },

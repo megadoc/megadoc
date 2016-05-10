@@ -58,7 +58,6 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
   it('works with emitting files', function(done) {
     var tiny = tinydoc(assign(config, {
       emitFiles: true,
-      useHashLocation: false,
     }), {
       scan: true,
       write: true,

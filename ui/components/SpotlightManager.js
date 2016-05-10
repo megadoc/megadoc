@@ -5,6 +5,7 @@ const { KC_ESCAPE } = require('constants');
 const { bool, func, } = React.PropTypes;
 const config = require('config');
 const { sortBy } = require('lodash');
+const DocumentURI = require('core/DocumentURI');
 
 const SpotlightManager = React.createClass({
   propTypes: {
@@ -121,7 +122,7 @@ const SpotlightManager = React.createClass({
 });
 
 function getSymbolsForDocumentByURI(uri) {
-  const documentNode = tinydoc.corpus.getByURI(uri);
+  const documentNode = tinydoc.corpus.getByURI(DocumentURI(uri));
 
   if (documentNode) {
     return tinydoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);

@@ -23,9 +23,14 @@ tinydoc.outlets.define('LayoutWrapper');
 tinydoc.outlets.define('Layout');
 tinydoc.outlets.define('Inspector');
 
-tinydoc.start = function() {
+tinydoc.start = function(options = {}) {
+  const currentDocument = tinydoc.corpus.get(options.startingDocumentUID);
+
+  config.mountPath = MountPath(currentDocument);
+
   tinydoc.onReady(function(registrar) {
     console.log('Ok, firing up.');
+    console.log('Mount path = "%s".', config.mountPath);
 
     const routes = RouteMap(config, registrar);
     const location = Location(config);
@@ -80,9 +85,6 @@ function Location(config) {
   if (config.$static) {
     return new ReactRouter.StaticLocation('/');
   }
-  else if (config.useHashLocation) {
-    return ReactRouter.HashLocation;
-  }
   else {
     return CustomLocation;
   }
@@ -96,13 +98,20 @@ function RouteMap(config, registrar) {
       handler={require('./screens/Root')}
       ignoreScrollBehavior
     >
-      {config.home && <Redirect from="/" to={config.home} />}
-
       <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
-      <Route name="404" path="/404" handler={require('./screens/NotFound')} />
+      <Route name="404" path="/404" handler={require('components/NotFound')} />
 
-      <NotFoundRoute name="not-found" handler={require('./screens/NotFound')} />
+      <NotFoundRoute name="not-found" handler={require('./screens/Root')} />
       {registrar.getRouteMap()}
     </Route>
   );
+}
+
+function MountPath(currentDocument) {
+  if (currentDocument) {
+    return location.pathname.replace(currentDocument.meta.href, '');
+  }
+  else {
+    return '';
+  }
 }

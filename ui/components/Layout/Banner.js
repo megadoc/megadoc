@@ -23,7 +23,7 @@ const Banner = React.createClass({
       <div className="banner-wrapper">
         <header className="banner">
           <h1 className="banner__logo">
-            <Link to="/">
+            <Link to="/index.html">
               {config.title || 'tinydoc'}
             </Link>
 
