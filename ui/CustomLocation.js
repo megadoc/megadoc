@@ -1,6 +1,7 @@
 const LocationActions = require('react-router/lib/actions/LocationActions');
 const History = require('react-router/lib/History');
 const DocumentURI = require('core/DocumentURI');
+const inFileProtocol = window.location.protocol === 'file:';
 
 var _listeners = [];
 var _isListening = false;
@@ -39,18 +40,30 @@ var TinydocLocation = {
     }
   },
 
-  push: function push(path) {
-    window.history.pushState({ path: path }, '', path);
-    History.length += 1;
-    notifyChange(LocationActions.PUSH);
+  push(path) {
+    if (inFileProtocol) {
+      window.location.href = path;
+    }
+    else {
+      window.history.pushState({ path: path }, '', path);
+      History.length += 1;
+      notifyChange(LocationActions.PUSH);
+    }
   },
 
-  replace: function replace(path) {
-    window.history.replaceState({ path: path }, '', path);
-    notifyChange(LocationActions.REPLACE);
+  replace(path) {
+    if (inFileProtocol) {
+      window.location.href = path;
+    }
+    else {
+      window.history.replaceState({ path: path }, '', path);
+      notifyChange(LocationActions.REPLACE);
+    }
   },
 
-  pop: History.back,
+  pop() {
+    History.back();
+  },
 
   getCurrentPath: function getCurrentPath() {
     const path = decodeURI(window.location.pathname + window.location.search);

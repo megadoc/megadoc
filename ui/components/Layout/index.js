@@ -24,7 +24,6 @@ const Layout = React.createClass({
     children: node,
     path: string,
     pathname: string,
-    params: object, // DEPRECATED
     query: object, // DEPRECATED
     config: shape({
       bannerLinks: arrayOf(Link)
@@ -41,7 +40,9 @@ const Layout = React.createClass({
   },
 
   render() {
-    const documentHref = DocumentURI.withExtension(this.props.pathname) + window.location.hash;
+    const documentHref = DocumentURI(
+      DocumentURI.withExtension(this.props.pathname)
+    ) + window.location.hash;
     const documentNode = tinydoc.corpus.getByURI(documentHref);
 
     const namespaceNode = tinydoc.corpus.getNamespaceOfDocument(documentNode);
@@ -151,7 +152,6 @@ const Layout = React.createClass({
           name={x.name}
           outletOptions={x.options}
           elementProps={{
-            params: this.props.params,
             query: this.props.query,
             documentNode: ctx.documentNode,
             namespaceNode: ctx.namespaceNode,

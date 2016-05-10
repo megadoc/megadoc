@@ -2,11 +2,18 @@ const React = require('react');
 const Router = require('core/Router');
 const DocumentURI = require('core/DocumentURI');
 const classSet = require('utils/classSet');
-const { string, } = React.PropTypes;
+const URIjs = require('urijs');
+const { string, func, node, } = React.PropTypes;
 
 const Link = React.createClass({
   propTypes: {
+    to: string,
+    id: string,
+    name: string,
+    title: string,
+    onClick: func,
     className: string,
+    children: node,
   },
 
   render() {
@@ -21,39 +28,13 @@ const Link = React.createClass({
         id={this.props.id}
         name={this.props.name}
         title={this.props.title}
-        href={this.props.to}
-        onClick={this.navigate}
+        href={URIjs(this.props.to).relativeTo(DocumentURI.getCurrentPathName()).toString()}
+        onClick={this.props.onClick}
         children={this.props.children}
         className={classSet(this.props.className, { 'active' : isActive })}
       />
     );
-  },
-
-  navigate(e) {
-    if (isLeftClickEvent(e) && !isModifiedEvent(e)) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      Router.transitionTo(this.props.to);
-
-      if (this.props.to.indexOf('#')) {
-        Router.refresh();
-        Router.refreshScroll();
-      }
-
-      if (this.props.onClick) {
-        this.props.onClick(e);
-      }
-    }
   }
 });
-
-function isLeftClickEvent(event) {
-  return event.button === 0;
-}
-
-function isModifiedEvent(event) {
-  return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
-}
 
 module.exports = Link;

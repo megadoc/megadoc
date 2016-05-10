@@ -29,7 +29,7 @@ tinydoc.start = function() {
 
     const routes = RouteMap(config, registrar);
     const location = Location(config);
-    const router = HijackedRouter(config, { location, routes });
+    const router = ReactRouter.create({ location, routes });
 
     Router.setInstance(router);
 
@@ -105,18 +105,4 @@ function RouteMap(config, registrar) {
       {registrar.getRouteMap()}
     </Route>
   );
-}
-
-function HijackedRouter(config, options) {
-  const router = ReactRouter.create(options);
-  // const { makePath } = router;
-
-  // if (!config.useHashLocation) {
-  //   router.makePath = function stripFileExtensionFromURL() {
-  //     const url = makePath.apply(router, arguments);
-  //     return DocumentURI.withoutExtension(url);
-  //   };
-  // }
-
-  return router;
 }
