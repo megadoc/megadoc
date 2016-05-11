@@ -1,10 +1,9 @@
 var fs = require('fs');
 var path = require('path');
 
-var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
 var RendererUtils = require('tinydoc/lib/RendererUtils');
-
-var parseTitle = require('./scan/parseTitle');
+var findCommonPrefix = require('./utils/findCommonPrefix');
+var parseTitle = require('./utils/parseTitle');
 var strHumanize = require('./utils/strHumanize');
 
 var pluck = require('lodash').pluck;
