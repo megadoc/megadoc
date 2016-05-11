@@ -21,6 +21,10 @@ tinydoc.publicModules = require('../tmp/publicModules');
 tinydoc.outlets = require('components/Outlet');
 tinydoc.outlets.define('LayoutWrapper');
 tinydoc.outlets.define('Layout');
+tinydoc.outlets.define('Layout::Banner');
+tinydoc.outlets.define('Layout::Content');
+tinydoc.outlets.define('Layout::Sidebar');
+tinydoc.outlets.define('Layout::Footer');
 tinydoc.outlets.define('Inspector');
 
 tinydoc.start = function(options = {}) {

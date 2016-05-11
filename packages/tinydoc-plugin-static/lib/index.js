@@ -1,7 +1,6 @@
 var assert = require('assert');
 var fs = require('fs');
 var path = require('path');
-var parseGitStats = require('tinydoc/lib/utils/parseGitStats');
 var defaults = require('./config');
 var b = require('tinydoc-corpus').Types.builders;
 
@@ -23,26 +22,8 @@ module.exports = function(userConfig) {
       );
 
       var compiledFile;
-      var gitStats;
       var filePath = compiler.utils.getAssetPath(config.source);
       var format = config.format || inferFormat(filePath);
-
-      compiler.on('scan', function(done) {
-        if (config.gitStats) {
-          parseGitStats(compiler.config.gitRepository, [ filePath ], function(err, stats) {
-            if (err) {
-              return done(err);
-            }
-
-            gitStats = stats[0];
-
-            done();
-          });
-        }
-        else {
-          done();
-        }
-      });
 
       compiler.on('index', function(_registry, done) {
         compiler.corpus.add(
@@ -92,7 +73,6 @@ module.exports = function(userConfig) {
           anchorableHeadings: config.anchorableHeadings,
           disqus: config.disqusShortname,
           scrollToTop: config.scrollToTop,
-          gitStats: gitStats,
           file: compiledFile,
           filePath: filePath,
           format: format

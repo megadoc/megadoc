@@ -51,6 +51,7 @@ module.exports = function reduceDocuments(options) {
                 { name: 'CJS::ModuleHeader' },
                 { name: 'CJS::ModuleIndex' },
                 { name: 'CJS::ModuleBody' },
+                { name: 'Layout::Content' },
               ]
             },
             {

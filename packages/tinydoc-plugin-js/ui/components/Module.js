@@ -2,7 +2,6 @@ const React = require('react');
 const ModuleBody = require('./ModuleBody');
 const HasTitle = require('mixins/HasTitle');
 const ModuleHeader = require('./ModuleHeader');
-const GitStats = require('components/GitStats');
 const Outlet = require('components/Outlet');
 
 const Module = React.createClass({
@@ -55,10 +54,6 @@ const Module = React.createClass({
             namespaceNode,
           }}
         />
-
-        {config.gitStats && (
-          <GitStats {...documentNode.properties.git} />
-        )}
       </div>
     );
   }

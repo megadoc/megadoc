@@ -146,11 +146,11 @@ const Layout = React.createClass({
         );
       }
 
-      console.log('Rendering "%s" inside the outlet "%s" within the region "%s".',
-        operatingNodes.documentNode.uid,
-        x.name,
-        regionSpec.name
-      );
+      // console.log('Rendering "%s" inside the outlet "%s" within the region "%s".',
+      //   operatingNodes.documentNode.uid,
+      //   x.name,
+      //   regionSpec.name
+      // );
 
       return (
         <Outlet

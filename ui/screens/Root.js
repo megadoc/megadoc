@@ -41,10 +41,10 @@ const Root = React.createClass({
   },
 
   render() {
-    console.log("Pathname = '%s', DPathname = '%s'",
-      this.getPathName(),
-      DocumentURI.getCurrentPathName()
-    );
+    // console.log("Pathname = '%s', DPathname = '%s'",
+    //   this.getPathName(),
+    //   DocumentURI.getCurrentPathName()
+    // );
 
     return (
       <Outlet name="LayoutWrapper" forwardChildren>

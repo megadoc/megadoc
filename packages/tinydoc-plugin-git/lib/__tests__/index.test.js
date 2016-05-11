@@ -2,6 +2,7 @@ var TestUtils = require('tinydoc/lib/TestUtils');
 var tinydocPluginGit = require('../');
 var assert = require('chai').assert;
 var path = require('path');
+var b = require('tinydoc-corpus').Types.builders;
 
 describe('tinydoc-plugin-git', function() {
   var compiler, plugin;
@@ -35,7 +36,22 @@ describe('tinydoc-plugin-git', function() {
 
   describe('#render', function() {
     beforeEach(function(done) {
+      compiler.corpus.add(b.namespace({
+        id: 'git',
+        name: 'git',
+        documents: [
+          b.document({
+            id: 'someFile',
+            filePath: path.resolve(__dirname, '../index.js')
+          })
+        ]
+      }));
+
       compiler.run({ scan: true, index: true, render: true }, done);
+    });
+
+    it('stats the files collected during scanning', function() {
+      assert.ok(compiler.corpus.get('git/someFile').meta.gitStats);
     });
 
     it('renders subject and body of recent commits', function() {

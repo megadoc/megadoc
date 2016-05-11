@@ -16,7 +16,7 @@ function MarkdownPlugin(userConfig) {
       var database;
 
       compiler.on('scan', function(done) {
-        scan(config, compiler.utils, compiler.config, function(err, _documents) {
+        scan(config, compiler.utils, function(err, _documents) {
           if (err) {
             return done(err);
           }
@@ -94,7 +94,7 @@ function MarkdownPlugin(userConfig) {
 
       compiler.on('generateStats', function(stats, done) {
         stats['tinydoc-plugin-markdown:' + config.routeName] = {
-          count: database.length
+          count: database.documents.length
         };
 
         done();

@@ -1,6 +1,5 @@
 var path = require('path');
 var spawn = require('child_process').spawn;
-var console = require('../Logger')('git-statter');
 var massGitBlamePath = path.resolve(__dirname, 'parseGitStats__massGitBlame.sh');
 
 function Parser() {
@@ -85,7 +84,7 @@ module.exports = function(repoPath, files, done) {
     var errCapture;
 
     if ((errCapture = err.match(/fatal: no such path '(.*)' in HEAD/))) {
-      console.warn("File could not be git-statted:", errCapture[1]);
+      console.warn("[git] File could not be git-statted:", errCapture[1]);
       parser.discardCurrentEntry();
       // ignore the file
     }

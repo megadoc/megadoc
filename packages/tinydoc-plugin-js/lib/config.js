@@ -27,16 +27,6 @@ module.exports = {
   /**
    * @property {Boolean}
    *
-   * Turn this on if you want to extract git stats for the files, like
-   * the last commit timestamp and the authors of each file.
-   *
-   * This is needed if you want to use the "Hot Items" feature.
-   */
-  gitStats: false,
-
-  /**
-   * @property {Boolean}
-   *
    * Turn this on if you want to use the file's folder name as its namespace.
    * This will be used only if the source file defines no @namespace tag.
    */

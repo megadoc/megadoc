@@ -1,6 +1,5 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
-const GitStats = require('components/GitStats');
 const Disqus = require('components/Disqus');
 const scrollToTop = require('utils/scrollToTop');
 const HasTitle = require('mixins/HasTitle');
@@ -66,10 +65,6 @@ const Article = React.createClass({
     return (
       <Document>
         <HighlightedText>{article.source}</HighlightedText>
-
-        {this.props.documentNode.meta.gitStats && (
-          <GitStats {...this.props.documentNode.meta.gitStats} />
-        )}
 
         <Disqus identifier={article.id} title={article.title} />
       </Document>

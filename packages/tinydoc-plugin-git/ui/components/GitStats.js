@@ -1,7 +1,7 @@
-var React = require('react');
-const Gravatar = require('components/Gravatar');
+const React = require('react');
+const Gravatar = require('./Gravatar');
 
-var GitStats = React.createClass({
+const GitStats = React.createClass({
   propTypes: {
     committers: React.PropTypes.object,
     lastCommittedAt: React.PropTypes.oneOfType([
@@ -27,12 +27,11 @@ var GitStats = React.createClass({
   },
 
   renderCommitters() {
-    var lastCommittedAt = new Date(this.props.lastCommittedAt * 1000);
+    const lastCommittedAt = new Date(this.props.lastCommittedAt * 1000);
 
     return (
       <div className="git-stats__committers">
-        This file was last edited at {lastCommittedAt.toString()} and was contributed to by
-        the following team members:
+        This file was last edited at {lastCommittedAt.toString()} and was contributed to by:
 
         <ul className="git-stats__committers-list">
           {Object.keys(this.props.committers).map(this.renderCommitter)}
@@ -42,7 +41,7 @@ var GitStats = React.createClass({
   },
 
   renderCommitter(email) {
-    var committer = { email, name: this.props.committers[email] };
+    const committer = { email, name: this.props.committers[email] };
 
     return (
       <li key={committer.email} className="git-stats__committers-list-item">

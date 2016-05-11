@@ -85,7 +85,6 @@ function createCJSPlugin(userConfig) {
         scan({
           config: config,
           parserConfig: parserConfig,
-          gitRepository: compiler.config.gitRepository,
           utils: compiler.utils,
           assetRoot: compiler.config.assetRoot,
         }, function(err, _documents) {

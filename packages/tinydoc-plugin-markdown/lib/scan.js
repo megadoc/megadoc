@@ -2,16 +2,14 @@ var fs = require('fs');
 var path = require('path');
 
 var findCommonPrefix = require('tinydoc/lib/utils/findCommonPrefix');
-var parseGitStats = require('tinydoc/lib/utils/parseGitStats');
 var RendererUtils = require('tinydoc/lib/RendererUtils');
 
 var parseTitle = require('./scan/parseTitle');
 var strHumanize = require('./utils/strHumanize');
 
 var pluck = require('lodash').pluck;
-var uniq = require('lodash').uniq;
 
-module.exports = function scan(config, utils, globalConfig, done) {
+module.exports = function scan(config, utils, done) {
   var files = utils.globAndFilter(config.source, config.exclude);
   var database = files.map(function(filePath) {
     return {
@@ -71,29 +69,5 @@ module.exports = function scan(config, utils, globalConfig, done) {
 
   config.commonPrefix = commonPrefix;
 
-  if (config.gitStats) {
-    console.log("Parsing git stats...");
-
-    var filePaths = uniq(pluck(database, 'filePath'));
-
-    parseGitStats(globalConfig.gitRepository, filePaths, function(err, stats) {
-      if (err) {
-        return done(err);
-      }
-
-      stats.forEach(function(fileStats) {
-        database
-          .filter(function(x) { return x.filePath === fileStats.filePath; })
-          .forEach(function(entry) {
-            entry.git = fileStats;
-          })
-        ;
-      });
-
-      done(null, database);
-    });
-  }
-  else {
-    done(null, database);
-  }
+  done(null, database);
 };

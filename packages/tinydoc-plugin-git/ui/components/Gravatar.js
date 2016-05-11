@@ -1,7 +1,7 @@
-var React = require('react');
-var md5 = require('md5');
+const React = require('react');
+const md5 = require('md5');
 
-var Gravatar = React.createClass({
+const Gravatar = React.createClass({
   propTypes: {
     email: React.PropTypes.string.isRequired,
     https: React.PropTypes.bool,
@@ -21,7 +21,7 @@ var Gravatar = React.createClass({
 
   render: function() {
     const { props } = this;
-    const href = props.https ?
+    const href = (props.https || window.location.protocol === 'https:') ?
       'https://secure.gravatar.com/avatar/' :
       'http://www.gravatar.com/avatar/'
     ;
