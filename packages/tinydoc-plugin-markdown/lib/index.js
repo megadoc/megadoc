@@ -12,26 +12,27 @@ function MarkdownPlugin(userConfig) {
     id: config.routeName,
 
     run: function(compiler) {
+      var documents;
       var database;
 
       compiler.on('scan', function(done) {
-        scan(config, compiler.utils, compiler.config, function(err, _database) {
+        scan(config, compiler.utils, compiler.config, function(err, _documents) {
           if (err) {
             return done(err);
           }
 
-          database = _database;
+          documents = _documents;
 
           done();
         });
       });
 
       compiler.on('index', function(registry, done) {
-        var namespace = b.namespace({
+        database = b.namespace({
           id: config.routeName,
           name: 'tinydoc-plugin-markdown',
           title: config.corpusContext,
-          documents: database.map(function(doc) {
+          documents: documents.map(function(doc) {
             // omg omg, we're rendering everything twice now
             var compiled = compiler.renderer.withTOC(doc.source);
 
@@ -53,21 +54,19 @@ function MarkdownPlugin(userConfig) {
           })
         });
 
-        compiler.corpus.add(namespace);
+        compiler.corpus.add(database);
 
         done();
       });
 
       compiler.on('render', function(md, linkify, done) {
-        database.forEach(function(doc) {
+        database.documents.forEach(function(documentNode) {
+          var doc = documentNode.properties;
           var compiled = md.withTOC(linkify({
             text: doc.source,
-            source: {
-              href: doc.href,
-              title: doc.plainTitle,
-            }
+            contextNode: documentNode
           }), {
-            baseURL: '/' + doc.href
+            baseURL: documentNode.meta.href
           });
 
           doc.source = compiled.html;
