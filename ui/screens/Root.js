@@ -9,6 +9,7 @@ const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
 const navigate = require('../utils/navigate');
+const DocumentResolver = require('../DocumentResolver');
 
 const Root = React.createClass({
   propTypes: {
@@ -20,6 +21,10 @@ const Root = React.createClass({
       query: {},
       params: {}
     };
+  },
+
+  componentWillMount() {
+    this.documentResolver = DocumentResolver(tinydoc.corpus);
   },
 
   componentDidMount() {
@@ -41,6 +46,8 @@ const Root = React.createClass({
   },
 
   render() {
+    const documentContext = this.resolveCurrentDocument();
+
     // console.log("Pathname = '%s', DPathname = '%s'",
     //   this.getPathName(),
     //   DocumentURI.getCurrentPathName()
@@ -54,6 +61,7 @@ const Root = React.createClass({
             active={AppState.isSpotlightOpen()}
             onOpen={AppState.openSpotlight}
             onClose={AppState.closeSpotlight}
+            documentNode={documentContext && documentContext.documentNode}
           />
         )}
 
@@ -65,7 +73,7 @@ const Root = React.createClass({
           {...config.layoutOptions}
           pathname={this.getPathName()}
           query={this.props.query /* TODO: deprecate */}
-          {...this.resolveCurrentDocument()}
+          {...documentContext}
         />
       </Outlet>
     );
@@ -82,22 +90,20 @@ const Root = React.createClass({
   },
 
   resolveCurrentDocument() {
-    const href = this.getPathName();
-    const documentNode = tinydoc.corpus.getByURI(href);
-
-    if (documentNode) {
-      return {
-        documentNode,
-        namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode)
-      };
-    }
-    else {
-      console.warn("Unable to find a document at the URI '%s' (from '%s')", href, this.props.pathname);
-    }
+    return this.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
   },
 
   getPathName() {
-    return DocumentURI(DocumentURI.withExtension(this.props.pathname)) + window.location.hash;
+    return DocumentResolver.getProtocolAgnosticPathName(this.getLocation());
+  },
+
+  getLocation() {
+    return {
+      pathname: this.props.pathname,
+      origin: window.location.origin,
+      protocol: window.location.protocol,
+      hash: window.location.hash
+    };
   }
 });
 

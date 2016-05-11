@@ -61,22 +61,6 @@ module.exports = function CorpusAPI(shallowCorpus) {
     }
   };
 
-  exports.getEntities = function(uid) {
-    const node = corpus[uid];
-
-    if (!node) {
-      console.warn("Document with the UID '%s' does not exist!", uid);
-      return [];
-    }
-
-    if (node.entities) {
-      return node.entities.map(x => corpus[x]);
-    }
-    else {
-      return [];
-    }
-  };
-
   /**
    * @param  {String} uid
    * @return {T.Namespace}
@@ -104,6 +88,10 @@ module.exports = function CorpusAPI(shallowCorpus) {
   }
 
   function getPrivateIndex(node) {
+    if (node.meta.indexDisplayName) {
+      return node.meta.indexDisplayName;
+    }
+
     for (let index in node.indices) {
       if (node.indices[index] === 1) {
         return index;
@@ -125,7 +113,7 @@ module.exports = function CorpusAPI(shallowCorpus) {
         $2: node.filePath,
         link: {
           href: getHref(node),
-          context: namespaceNode && namespaceNode.corpusContext
+          context: namespaceNode && namespaceNode.title
         }
       }
     });

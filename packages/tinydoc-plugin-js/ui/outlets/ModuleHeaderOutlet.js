@@ -16,15 +16,11 @@ tinydoc.outlets.add('CJS::ModuleHeader', {
 
     render() {
       const { documentNode } = this.props;
-      const moduleNode = documentNode.type === 'DocumentEntity' ?
-        documentNode.parentNode :
-        documentNode
-      ;
 
       return (
         <div className="js-module-header-outlet">
           <ModuleHeader
-            documentNode={moduleNode}
+            documentNode={documentNode}
             generateAnchor={false}
           />
 
@@ -34,8 +30,8 @@ tinydoc.outlets.add('CJS::ModuleHeader', {
             </p>
           )}
 
-          {this.props.$outletOptions.showSummary !== false && moduleNode.summary && (
-            <p>{moduleNode.summary}</p>
+          {this.props.$outletOptions.showSummary !== false && documentNode.summary && (
+            <p>{documentNode.summary}</p>
           )}
         </div>
       );

@@ -70,7 +70,7 @@ Router.refreshScroll = function() {
 
   if (originalLocation && originalLocation.length > 0) {
     setTimeout(function() {
-      window.location.hash = '#/';
+      window.location.hash = '';
       window.location.hash = originalLocation;
     }, 0);
   }

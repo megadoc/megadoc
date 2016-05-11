@@ -4,13 +4,104 @@ var config = {
 
   title: 'tinydoc',
   home: '/readme',
-  outputDir: 'doc/compiled',
+  outputDir: '/srv/http/docs/tinydoc',
   // readme: 'README.md',
   useHashLocation: true,
   publicPath: '',
   stylesheet: 'doc/theme.less',
   disqus: false,
   showSettingsLinkInBanner: false,
+
+  layoutOptions: {
+    bannerLinks: [
+      {
+        text: 'Usage',
+        href: '/usage/readme',
+      },
+
+      {
+        text: 'Plugins',
+        href: '/plugins',
+        links: [
+          {
+            text: 'Git',
+            href: '/plugins/tinydoc-plugin-git',
+          },
+
+          {
+            text: 'JavaScript',
+            href: '/plugins/tinydoc-plugin-js',
+          },
+          {
+            text: 'JavaScript React',
+            href: '/plugins/tinydoc-plugin-react',
+          },
+
+          {
+            text: 'Markdown',
+            href: '/plugins/tinydoc-plugin-markdown',
+          },
+
+          {
+            text: 'Lua',
+            href: '/plugins/tinydoc-plugin-lua',
+          },
+
+          {
+            text: 'Static',
+            href: '/plugins/tinydoc-plugin-static',
+          },
+
+          {
+            text: 'YARD-API',
+            href: '/plugins/tinydoc-plugin-yard-api',
+          },
+
+          {
+            text: 'Reference Graph',
+            href: '/plugins/tinydoc-plugin-reference-graph',
+          },
+
+          {
+            text: 'Theme - Qt',
+            href: '/plugins/tinydoc-theme-qt',
+          },
+
+          {
+            text: 'Theme - gitbooks.io',
+            href: '/plugins/tinydoc-theme-qt',
+          },
+        ]
+      },
+
+      {
+        text: 'Developers',
+        links: [
+          {
+            text: 'Plugins',
+            href: '/dev/plugins/readme',
+          },
+
+          {
+            text: 'API',
+            href: '/dev/api',
+          },
+
+          {
+            text: 'Corpus',
+            href: '/dev/corpus',
+          },
+        ]
+      },
+
+      {
+        text: 'Changes',
+        href: '/changes',
+      },
+
+    ]
+  },
+
 };
 
 config.plugins = [
@@ -73,106 +164,6 @@ config.plugins = [
     corpusContext: 'Usage',
   }),
 
-  require('tinydoc-layout-multi-page')({
-    bannerLinks: [
-      {
-        text: 'Usage',
-        href: '/usage/readme',
-      },
-
-      {
-        text: 'Plugins',
-        href: '/plugins',
-        links: [
-          {
-            text: 'Git',
-            href: '/plugins/tinydoc-plugin-git',
-          },
-
-          {
-            text: 'JavaScript',
-            href: '/plugins/tinydoc-plugin-js',
-          },
-          {
-            text: 'JavaScript React',
-            href: '/plugins/tinydoc-plugin-react',
-          },
-
-          {
-            text: 'Markdown',
-            href: '/plugins/tinydoc-plugin-markdown',
-          },
-
-          {
-            text: 'Lua',
-            href: '/plugins/tinydoc-plugin-lua',
-          },
-
-          {
-            text: 'Static',
-            href: '/plugins/tinydoc-plugin-static',
-          },
-
-          {
-            text: 'YARD-API',
-            href: '/plugins/tinydoc-plugin-yard-api',
-          },
-
-          {
-            text: 'Reference Graph',
-            href: '/plugins/tinydoc-plugin-reference-graph',
-          },
-
-          {
-            text: 'Layout - Single-Page',
-            href: '/plugins/tinydoc-layout-single-page',
-          },
-
-          {
-            text: 'Layout - Multi-Page',
-            href: '/plugins/tinydoc-layout-multi-page',
-          },
-
-          {
-            text: 'Theme - Qt',
-            href: '/plugins/tinydoc-theme-qt',
-          },
-
-          {
-            text: 'Theme - gitbooks.io',
-            href: '/plugins/tinydoc-theme-qt',
-          },
-        ]
-      },
-
-      {
-        text: 'Developers',
-        links: [
-          {
-            text: 'Plugins',
-            href: '/dev/plugins/readme',
-          },
-
-          {
-            text: 'API',
-            href: '/dev/api',
-          },
-
-          {
-            text: 'Corpus',
-            href: '/dev/corpus',
-          },
-        ]
-      },
-
-      {
-        text: 'Changes',
-        href: '/changes',
-      },
-
-    ]
-  }),
-
   require('tinydoc-theme-qt')({}),
 
   require('tinydoc-plugin-static')({
@@ -199,8 +190,6 @@ config.plugins = [
 ];
 
 [
-  'tinydoc-layout-multi-page',
-  'tinydoc-layout-single-page',
   'tinydoc-plugin-git',
   'tinydoc-plugin-js',
   'tinydoc-plugin-lua',

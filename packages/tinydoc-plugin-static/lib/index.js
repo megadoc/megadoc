@@ -29,7 +29,8 @@ module.exports = function(userConfig) {
         compiler.corpus.add(
           b.namespace({
             id: config.url.replace(/\//g, '-'),
-            corpusContext: config.corpusContext || config.title,
+            name: 'tinydoc-plugin-static',
+            title: config.corpusContext || config.title,
             documents: [
               b.document({
                 meta: {

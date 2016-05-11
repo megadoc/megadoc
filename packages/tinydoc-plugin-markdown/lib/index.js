@@ -32,6 +32,46 @@ function MarkdownPlugin(userConfig) {
           id: config.routeName,
           name: 'tinydoc-plugin-markdown',
           title: config.corpusContext,
+          meta: {
+            defaultLayouts: [
+              // index pages, no sidebar, only content panel
+              {
+                match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
+                regions: [
+                  {
+                    name: 'Layout::Content',
+                    options: { framed: true },
+                    outlets: [
+                      { name: 'Markdown::Document' },
+                      { name: 'Layout::Content' },
+                    ]
+                  }
+                ]
+              },
+
+              // within our namespace, we'll show the sidebar:
+              // {
+              //   match: [
+              //     { by: 'type', on: [ 'Document', 'DocumentEntity' ] }
+              //     { by: 'url', on: '[namespace]*' }
+              //   ],
+              //   regions: [
+              //     {
+              //       name: 'Layout::Content',
+              //       options: { framed: true },
+              //       outlets: [
+              //         { name: 'Markdown::Document' },
+              //         { name: 'Layout::Content' },
+              //       ]
+              //     },
+              //     {
+              //       name: 'Layout::Sidebar',
+              //       outlets: [{ name: 'Markdown::ArticleIndex' }]
+              //     }
+              //   ]
+              // }
+            ]
+          },
           documents: documents.map(function(doc) {
             // omg omg, we're rendering everything twice now
             var compiled = compiler.renderer.withTOC(doc.source);
@@ -47,7 +87,11 @@ function MarkdownPlugin(userConfig) {
                 return b.documentEntity({
                   id: section.scopedId,
                   title: section.text,
-                  properties: section
+                  properties: section,
+                  meta: {
+                    indexDisplayName: Array(section.level * 2).join(' ') + section.text,
+                    anchor: section.scopedId
+                  }
                 })
               })
             })
@@ -66,7 +110,7 @@ function MarkdownPlugin(userConfig) {
             text: doc.source,
             contextNode: documentNode
           }), {
-            baseURL: documentNode.meta.href
+            baseURL: ''
           });
 
           doc.source = compiled.html;

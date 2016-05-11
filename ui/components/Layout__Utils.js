@@ -1,6 +1,6 @@
 const invariant = require('utils/invariant');
 
-function getLayoutForDocument({ documentNode, layouts, pathname }) {
+function getRegionsForDocument({ documentNode, layouts, pathname }) {
   if (!layouts) {
     return null;
   }
@@ -26,7 +26,7 @@ function getLayoutForDocument({ documentNode, layouts, pathname }) {
       ) ||
       (
         matchBy === 'url' &&
-        matchOn.indexOf(pathname) > -1
+        matchOn.indexOf(pathname.split('#')[0]) > -1
       )
     );
   })[0];
@@ -40,4 +40,4 @@ function arrayWrap(x) {
   return Array.isArray(x) ? x : [].concat(x || []);
 }
 
-exports.getLayoutForDocument = getLayoutForDocument;
+exports.getRegionsForDocument = getRegionsForDocument;

@@ -34,6 +34,8 @@ var MarkdownClassBrowser = React.createClass({
   },
 
   render() {
+    return null;
+
     return (
       <nav>
         {this.hasFolders() && Storage.get(GROUP_BY_FOLDER) ?

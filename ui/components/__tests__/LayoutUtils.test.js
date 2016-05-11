@@ -3,8 +3,8 @@ const { assert } = require('chai');
 const { assign } = require('lodash');
 
 describe('tinydoc::Components::Layout__Utils', function() {
-  describe('getLayoutForDocument', function() {
-    const subject = Subject.getLayoutForDocument;
+  describe('getRegionsForDocument', function() {
+    const subject = Subject.getRegionsForDocument;
 
     it('matches by url', function() {
       const layout = subject({

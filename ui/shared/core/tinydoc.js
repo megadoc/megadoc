@@ -171,7 +171,7 @@ module.exports = function createTinydoc(config) {
   exports.corpus = corpusAPI;
 
   exports.hasCustomLayoutForDocument = function(node) {
-    return !!Layout.getLayoutForDocument(node, config.layoutOptions.layouts || []);
+    return !!Layout.getRegionsForDocument(node, config.layoutOptions.layouts || []);
   };
 
   exports.getRelativeFilePath = function(filePath) {

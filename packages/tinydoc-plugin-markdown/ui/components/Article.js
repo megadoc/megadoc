@@ -63,11 +63,11 @@ const Article = React.createClass({
     // }
 
     return (
-      <Document>
+      <div>
         <HighlightedText>{article.source}</HighlightedText>
 
         <Disqus identifier={article.id} title={article.title} />
-      </Document>
+      </div>
     );
   }
 });

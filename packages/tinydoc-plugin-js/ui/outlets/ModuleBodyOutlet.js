@@ -15,17 +15,7 @@ tinydoc.outlets.add('CJS::ModuleBody', {
         return null;
       }
 
-      const { documentNode } = this.props;
-      const moduleNode = documentNode.type === 'DocumentEntity' ?
-        documentNode.parentNode :
-        documentNode
-      ;
-
-      return (
-        <ModuleBody
-          documentNode={moduleNode}
-        />
-      );
+      return <ModuleBody documentNode={this.props.documentNode} />;
     }
   }),
 });

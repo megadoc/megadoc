@@ -16,16 +16,10 @@ tinydoc.outlets.add('CJS::ModuleIndex', {
     },
 
     render() {
-      const { documentNode } = this.props;
-      const moduleNode = documentNode.type === 'DocumentEntity' ?
-        documentNode.parentNode :
-        documentNode
-      ;
-
       return (
         <ModuleIndex
           {...this.props.$outletOptions}
-          documentNode={moduleNode}
+          documentNode={this.props.documentNode}
         />
       );
     }

@@ -4,7 +4,6 @@ const contains = require('dom-contains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, } = React.PropTypes;
 const config = require('config');
-const { sortBy } = require('lodash');
 const DocumentURI = require('core/DocumentURI');
 
 const SpotlightManager = React.createClass({
@@ -18,13 +17,6 @@ const SpotlightManager = React.createClass({
     return {
       openedInSymbolMode: false
     };
-  },
-
-  componentWillMount() {
-    // backwards compatibility with non-corpus indices
-    this.combinedCorpus = tinydoc.corpus.getDocumentSearchIndex().concat(
-      config.corpus
-    );
   },
 
   componentDidMount() {
@@ -54,13 +46,16 @@ const SpotlightManager = React.createClass({
 
   render() {
     if (this.props.active) {
-      const symbols = getSymbolsForDocumentByURI(location.pathname);
+      const symbols = this.props.documentNode ?
+        getSymbolsForDocument(this.props.documentNode) :
+        getSymbolsForDocumentByURI(location.pathname)
+      ;
 
       return (
         <Spotlight
           startInSymbolMode={this.state.openedInSymbolMode}
-          corpus={this.combinedCorpus}
-          symbols={sortBy(symbols, '$1')}
+          corpus={tinydoc.corpus.getDocumentSearchIndex()}
+          symbols={symbols}
           onActivate={this.closeSpotlight}
         />
       );
@@ -121,26 +116,16 @@ const SpotlightManager = React.createClass({
   },
 });
 
+function getSymbolsForDocument(documentNode) {
+  return tinydoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
+}
+
 function getSymbolsForDocumentByURI(uri) {
   const documentNode = tinydoc.corpus.getByURI(DocumentURI(uri));
 
   if (documentNode) {
-    return tinydoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
+    return getSymbolsForDocument(documentNode);
   }
-  else {
-    return legacy__getSymbolsForDocumentByURI(uri);
-  }
-}
-
-function legacy__getSymbolsForDocumentByURI(uri) {
-  let symbols;
-
-  tinydoc.getSymbolIndexers().some(function(fn) {
-    symbols = fn(uri);
-    return !!symbols;
-  });
-
-  return symbols;
 }
 
 module.exports = SpotlightManager;

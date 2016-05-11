@@ -57,7 +57,7 @@ tinydoc.start = function(options = {}) {
             //   return done(404);
             // }
 
-            done(null, React.renderToString(<Handler {...state} />));
+            done(null, React.renderToString(<Handler {...state} config={config} />));
           });
         },
 
@@ -69,7 +69,7 @@ tinydoc.start = function(options = {}) {
     }
     else {
       router.run(function(Handler, state) {
-        React.render(<Handler {...state} />, document.querySelector('#__app__'));
+        React.render(<Handler {...state} config={config} />, document.querySelector('#__app__'));
       });
     }
   });

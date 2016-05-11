@@ -29,7 +29,7 @@
 
   .doc-entity__name {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
     line-height: 1.56em;
     font-size: 1.25em;
     font-weight: 300;
@@ -72,6 +72,11 @@
   }
 
   .js-document-index {
+    tr:first-of-type td                 { border-top-color: transparent;    }
+    tr:last-of-type  td                 { border-bottom-color: transparent; }
+    tr               td:first-of-type   { border-left-color: transparent;   }
+    tr               td:last-of-type    { border-right-color: transparent;  }
+
     table td {
       padding: 0.25em 0.75em;
     }

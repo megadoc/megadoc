@@ -5,6 +5,12 @@ var array = CorpusTypes.array;
 var t = CorpusTypes.builtInTypes;
 
 /**
+ * @namespace T
+ *
+ * Corpus type definitions.
+ */
+
+/**
  * @module T.Corpus
  */
 def("Corpus", {

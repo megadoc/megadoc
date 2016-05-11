@@ -1,10 +1,13 @@
-.anchorable-heading {
-  position: relative;
-  // pointer-events: none;
+@keyframes anchorFadeOut {
+  0%   { visibility: visible; }
+  99%  { visibility: visible; }
+  100% { visibility: hidden;  }
+}
 
-  // &__link, &__text {
-  //   pointer-events: initial;
-  // }
+.anchorable-heading {
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding;
+  background-clip: padding-box;
 
   &__link {
     font-size: 14px;
@@ -13,6 +16,7 @@
     vertical-align: middle;
     padding-right: 4px;
     visibility: hidden;
+    transition: visibility 0s linear 0.35s;
 
     &:hover, &:active, &:focus {
       text-decoration: none;
@@ -31,6 +35,9 @@
 
   &:hover &__link {
     visibility: visible;
+    transition: visibility 0s linear 0s;
+    // animation: 2s anchorFadeOut;
+    // animation-fill-mode: forwards;
   }
 }
 
@@ -40,10 +47,11 @@
   &__anchor {
     position: relative;
     top: -1 * @offset;
+    display: block;
 
-    &:before {
-      content: '';
-    }
+    // &:before {
+    //   content: '';
+    // }
   }
 
   &[id]:before {

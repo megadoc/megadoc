@@ -115,3 +115,15 @@ a, a.active {
     }
   }
 });
+
+.schemable({
+  @keyframes animatedBackgroundColor {
+    0%   { background-color: transparent; }
+    20%  { background-color: fade(@link, 15%); }
+    60%  { background-color: fade(@link, 10%); }
+    100% { background-position: transparent; }
+  }
+  .anchorable-heading__anchor:target + .anchorable-heading__link + .anchorable-heading__text {
+    animation: animatedBackgroundColor 2.5s ease-out normal;
+  }
+});
