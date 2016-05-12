@@ -24,20 +24,48 @@ module.exports = function(userConfig) {
       var compiledFile;
       var filePath = compiler.utils.getAssetPath(config.source);
       var format = config.format || inferFormat(filePath);
+      var database;
 
       compiler.on('scan', function(done) {
-        compiler.corpus.add(
+        database = compiler.corpus.add(
           b.namespace({
             id: config.url.replace(/\//g, '-'),
             name: 'tinydoc-plugin-static',
             title: config.corpusContext || config.title,
+            meta: {
+              defaultLayouts: [
+                {
+                  match: { by: 'url', on: config.url },
+                  regions: [
+                    {
+                      name: 'Layout::Content',
+                      options: { framed: true },
+                      outlets: [
+                        { name: 'Static::Document' },
+                        { name: 'Layout::Content' },
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+
+            config: {
+              url: config.url,
+              anchorableHeadings: config.anchorableHeadings,
+              disqus: config.disqusShortname,
+              scrollToTop: config.scrollToTop,
+              file: compiledFile,
+              filePath: filePath,
+              format: format,
+            },
+
             documents: [
               b.document({
-                meta: {
-                  href: config.url,
-                },
                 id: config.source,
-                title: config.title
+                title: config.title,
+                meta: { href: config.url, },
+                properties: {},
               })
             ]
           })
@@ -46,20 +74,24 @@ module.exports = function(userConfig) {
         done();
       });
 
-      compiler.on('render', function(renderMarkdown, linkify, done) {
+      compiler.on('render', function(md, linkify, done) {
+        var documentNode = database.documents[0];
         var fileContents = fs.readFileSync(filePath, 'utf-8');
 
         if (format === 'html') {
-          compiledFile = {
+          documentNode.properties = {
             html: fileContents,
             toc: []
           };
         }
         else {
-          compiledFile = renderMarkdown.withTOC(linkify(fileContents), {
-            anchorableHeadings: config.anchorableHeadings,
-            baseURL: config.url,
-          });
+          documentNode.properties = md.withTOC(
+            linkify({ text: fileContents, contextNode: documentNode }),
+            {
+              anchorableHeadings: config.anchorableHeadings,
+              baseURL: documentNode.meta.href,
+            }
+          );
         }
 
         done();
@@ -67,17 +99,6 @@ module.exports = function(userConfig) {
 
       compiler.on('write', function(done) {
         compiler.assets.addPluginScript(path.resolve(__dirname, '../dist/tinydoc-plugin-static.js'));
-
-        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-static', {
-          url: config.url,
-          outlet: config.outlet,
-          anchorableHeadings: config.anchorableHeadings,
-          disqus: config.disqusShortname,
-          scrollToTop: config.scrollToTop,
-          file: compiledFile,
-          filePath: filePath,
-          format: format
-        });
 
         done();
       });
