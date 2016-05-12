@@ -3,6 +3,7 @@ const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const NotFound = require('components/NotFound');
 const Document = require('components/Document');
+const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
 
 const { node, shape, string, arrayOf, object, oneOfType } = React.PropTypes;
@@ -108,9 +109,13 @@ const LayoutScreen = React.createClass({
             documentEntityNode: ctx.documentEntityNode,
             namespaceNode: ctx.namespaceNode,
           }}
-        />
+        >
+          <ErrorMessage>
+            Outlet "{x.name}" seems to be empty!
+          </ErrorMessage>
+        </Outlet>
       );
-    })
+    }).filter(x => !!x)
   },
 
   getContentOutletTag(regions) {
