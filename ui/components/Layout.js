@@ -1,10 +1,5 @@
 const React = require("react");
-const Outlet = require('components/Outlet');
-const TwoColumnLayout = require('components/TwoColumnLayout');
 const classSet = require('utils/classSet');
-const NotFound = require('components/NotFound');
-const Document = require('components/Document');
-const ErrorMessage = require('components/ErrorMessage');
 const Banner = require('./Layout__Banner');
 const { getRegionsForDocument } = require('../LayoutEngine');
 const LayoutScreen = require('./Layout__Screen');
@@ -106,24 +101,6 @@ function getDefaultRegions() {
       outlets: null
     }
   ];
-}
-
-function getNodesForOutlet(outlet, defaults) {
-  if (!outlet.using) {
-    return defaults;
-  }
-
-  const documentNode = tinydoc.corpus.get(outlet.using);
-
-  if (documentNode) {
-    return {
-      documentNode,
-      namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode)
-    }
-  }
-  else {
-    return null;
-  }
 }
 
 function RenderContext(props) {

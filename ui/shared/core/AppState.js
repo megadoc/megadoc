@@ -6,6 +6,7 @@ const invariant = require('utils/invariant');
 let state = {
   layout: config.layout,
   spotlightOpen: false,
+  singlePageMode: config.layoutOptions && config.layoutOptions.singlePageMode,
 };
 
 let AppState = EventEmitter([ 'change', 'layoutChange' ]);
@@ -41,6 +42,10 @@ AppState.closeSpotlight = function() {
 
 AppState.isSpotlightOpen = function() {
   return state.spotlightOpen;
+};
+
+AppState.inSinglePageMode = function() {
+  return state.singlePageMode;
 };
 
 module.exports = AppState;

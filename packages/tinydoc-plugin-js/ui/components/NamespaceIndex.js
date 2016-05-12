@@ -55,7 +55,7 @@ const NamespaceIndex = React.createClass({
     return (
       <tr key={node.uid}>
         <td>
-          <Link to={node.meta.href}>{node.properties ? node.properties.name : node.title}</Link>
+          <Link to={node}>{node.properties ? node.properties.name : node.title}</Link>
         </td>
 
         <td>

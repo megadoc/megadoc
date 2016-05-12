@@ -6,7 +6,7 @@ const { assign } = require('lodash');
  * To access these APIs from within your plugins, use the global instance found
  * at [tinydoc@corpus `window.tinydoc.corpus`]().
  */
-module.exports = function CorpusAPI(shallowCorpus) {
+function CorpusAPI(shallowCorpus) {
   const exports = {};
   const corpus = CorpusTree(shallowCorpus);
   const documentSearchIndex = buildDocumentSearchIndex();
@@ -61,6 +61,21 @@ module.exports = function CorpusAPI(shallowCorpus) {
         return corpus[uid];
       }
     }
+
+    // Ok, if we still didn't match any node but there's an anchor in the URL
+    // it might be a URI to a Document and not a DocumentEntity, in which case
+    // we only really care about the href fragment.
+    //
+    // This happens in SinglePageMode where we must use fully-qualified URIs
+    // (i.e. both href + anchor).
+    if (uri.indexOf('#') > -1) {
+      const [ path, anchor ] = uri.split('#');
+      const node = exports.getByURI(path);
+
+      if (node && node.meta.anchor === anchor) {
+        return node;
+      }
+    }
   };
 
   Object.defineProperty(exports, 'length', {
@@ -78,17 +93,9 @@ module.exports = function CorpusAPI(shallowCorpus) {
   function getNamespaceOfDocument(uid) {
     let node = typeof uid === 'string' ? getByUID(uid) : uid;
 
-    if (!node) {
-      return null;
+    if (node) {
+      return getNamespaceOfNode(node);
     }
-
-    while (node.type !== 'Namespace' && node.parentNode) {
-      node = node.parentNode;
-    }
-
-    if (node.type === 'Namespace') {
-      return node;
-    };
   }
 
   function getByUID(uid) {
@@ -121,6 +128,7 @@ module.exports = function CorpusAPI(shallowCorpus) {
         $2: node.filePath,
         link: {
           href: getHref(node),
+          anchor: getAnchor(node),
           context: namespaceNode && namespaceNode.title
         }
       }
@@ -141,7 +149,8 @@ module.exports = function CorpusAPI(shallowCorpus) {
             return {
               $1: getPrivateIndex(x),
               link: {
-                href: getHref(x)
+                href: getHref(x),
+                anchor: getAnchor(x),
               }
             };
           });
@@ -157,6 +166,10 @@ module.exports = function CorpusAPI(shallowCorpus) {
 
 function getHref(node) {
   return node.meta.href;
+}
+
+function getAnchor(node) {
+  return node.meta.anchor;
 }
 
 function CorpusTree(corpus) {
@@ -220,3 +233,18 @@ function CorpusTree(corpus) {
     return node;
   }
 }
+
+function getNamespaceOfNode(rootNode) {
+  let node = rootNode;
+
+  while (node.type !== 'Namespace' && node.parentNode) {
+    node = node.parentNode;
+  }
+
+  if (node.type === 'Namespace') {
+    return node;
+  }
+}
+
+module.exports = CorpusAPI;
+module.exports.getNamespaceOfNode = getNamespaceOfNode;

@@ -47,29 +47,14 @@ const Root = React.createClass({
   },
 
   render() {
-    const documentContext = this.resolveCurrentDocument();
+    let documentContext;
 
-    // console.log("Pathname = '%s', DPathname = '%s'",
-    //   this.getPathName(),
-    //   DocumentURI.getCurrentPathName()
-    // );
+    if (!AppState.inSinglePageMode()) {
+      documentContext = this.resolveCurrentDocument();
 
-    if (!documentContext) {
-      return (
-        <ErrorMessage style={{ width: '50vw', margin: '10vh auto 0 auto' }}>
-          <p>There was no document found at this URL. This most likely indicates
-          a configuration error. Please check and try again.
-          </p>
-
-          <p>Debugging information:</p>
-
-          <pre>
-            Corpus size: {tinydoc.corpus.length}
-            {"\n"}
-            Location: {JSON.stringify(this.getLocation(), null, 2)}
-          </pre>
-        </ErrorMessage>
-      );
+      if (!documentContext) {
+        return this.renderInternalError();
+      }
     }
 
     return (
@@ -91,10 +76,27 @@ const Root = React.createClass({
         <Layout
           {...config.layoutOptions}
           pathname={this.getPathName()}
-          query={this.props.query /* TODO: deprecate */}
           {...documentContext}
         />
       </Outlet>
+    );
+  },
+
+  renderInternalError() {
+    return (
+      <ErrorMessage style={{ width: '50vw', margin: '10vh auto 0 auto' }}>
+        <p>There was no document found at this URL. This most likely indicates
+        a configuration error. Please check and try again.
+        </p>
+
+        <p>Debugging information:</p>
+
+        <pre>
+          Corpus size: {tinydoc.corpus.length}
+          {"\n"}
+          Location: {JSON.stringify(this.getLocation(), null, 2)}
+        </pre>
+      </ErrorMessage>
     );
   },
 

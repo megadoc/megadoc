@@ -71,7 +71,7 @@ const ModuleIndex = React.createClass({
     return (
       <tr key={node.uid}>
         <td>
-          <Link to={node.meta.href}>{node.properties ? node.properties.name : node.title}</Link>
+          <Link to={node}>{node.properties ? node.properties.name : node.title}</Link>
         </td>
 
         <td>
@@ -120,7 +120,7 @@ const ModuleIndex = React.createClass({
         </td>
 
         <td>
-          <Link to={documentNode.meta.href} className="js-document-index__entity-name">
+          <Link to={documentNode} className="js-document-index__entity-name">
             {documentNode.properties.name}
           </Link>
 
@@ -162,7 +162,7 @@ const ModuleIndex = React.createClass({
         </td>
 
         <td>
-          <Link to={documentNode.meta.href} className="js-document-index__entity-name">
+          <Link to={documentNode} className="js-document-index__entity-name">
             {documentNode.properties.name}
           </Link>
         </td>

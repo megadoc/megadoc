@@ -5,6 +5,7 @@ const NotFound = require('components/NotFound');
 const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
+const DocumentResolver = require('../DocumentResolver');
 
 const { node, shape, string, arrayOf, object, oneOfType } = React.PropTypes;
 
@@ -92,22 +93,37 @@ const LayoutScreen = React.createClass({
       }
     });
 
-    return children.map(x => {
-      // console.log('Rendering "%s" inside the outlet "%s" within the region "%s".',
-      //   operatingNodes.documentNode.uid,
-      //   x.name,
-      //   region.name
-      // );
+    return children.map((x,i) => {
+      const overridenNodes = getNodesForOutlet(x);
+      const operatingNodes = overridenNodes || ctx;
+      const key = `${x.name}__${i}`;
+
+      if (x.using && !overridenNodes) {
+        return (
+          <ErrorMessage key={key}>
+            <p>
+              No document was found with the UID "{x.using}" to be inserted
+              into the outlet "{x.name}" of the region "{region.name}". This
+              is most likely a configuration error.
+            </p>
+          </ErrorMessage>
+        );
+
+        console.log(
+          `Rendering "${operatingNodes.documentNode.uid}" inside the outlet ` +
+          `"${x.name}" within the region "${region.name}".`
+        );
+      }
 
       return (
         <Outlet
-          key={x.name}
+          key={key}
           name={x.name}
-          outletOptions={x.options}
+          options={x.options}
           elementProps={{
-            documentNode: ctx.documentNode,
-            documentEntityNode: ctx.documentEntityNode,
-            namespaceNode: ctx.namespaceNode,
+            documentNode: operatingNodes.documentNode,
+            documentEntityNode: operatingNodes.documentEntityNode,
+            namespaceNode: operatingNodes.namespaceNode,
           }}
         >
           <ErrorMessage>
@@ -132,3 +148,13 @@ const LayoutScreen = React.createClass({
 });
 
 module.exports = LayoutScreen;
+
+function getNodesForOutlet(outlet) {
+  if (outlet.using) {
+    const documentNode = tinydoc.corpus.get(outlet.using);
+
+    if (documentNode) {
+      return DocumentResolver.buildDocumentContext(documentNode);
+    }
+  }
+};

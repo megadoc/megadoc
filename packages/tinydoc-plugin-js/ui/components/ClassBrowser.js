@@ -102,10 +102,7 @@ var ClassBrowser = React.createClass({
         {shouldDisplayName && (
           <h3 className="class-browser__category-name">
             {hasSelfDocument ? (
-              <Link
-                to={ns.meta.href}
-                children={ns.title}
-              />
+              <Link to={ns} children={ns.title} />
             ) : (
               ns.title
             )}
@@ -138,11 +135,7 @@ var ClassBrowser = React.createClass({
 
     return (
       <div key={docNode.uid} className={className}>
-        <Link
-          ref={id}
-          to={docNode.meta.href}
-          className="class-browser__entry-link"
-        >
+        <Link ref={id} to={docNode} className="class-browser__entry-link">
           {doc.name}
 
           {isPrivate && (
@@ -183,7 +176,7 @@ var ClassBrowser = React.createClass({
     return (
       <li key={node.uid} className="class-browser__methods-entity">
         <Link
-          to={node.meta.href}
+          to={node}
           children={(node.properties.ctx.symbol || '') + node.properties.name}
           title={node.title}
         />

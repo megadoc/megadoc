@@ -81,7 +81,7 @@ const APIResource = React.createClass({
     return (
       <Row key={endpoint.uid}>
         <Column>
-          <Link to={endpoint.meta.href} children={endpoint.properties.title} />
+          <Link to={endpoint} children={endpoint.properties.title} />
         </Column>
 
         <Column>
@@ -94,7 +94,7 @@ const APIResource = React.createClass({
   renderObjectQuickLink(documentNode) {
     return (
       <li key={documentNode.uid}>
-        <Link to={documentNode.meta.href} children={documentNode.properties.title} />
+        <Link to={documentNode} children={documentNode.properties.title} />
       </li>
     );
   },

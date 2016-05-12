@@ -30,8 +30,7 @@ const Browser = React.createClass({
       <li key={documentNode.uid} className="lua-browser__module">
         <Link
           className="lua-browser__link"
-          to={documentNode.meta.href}
-          anchor={documentNode.meta.anchor}
+          to={documentNode}
           children={documentNode.title}
         />
 
@@ -49,7 +48,7 @@ const Browser = React.createClass({
       <li key={documentNode.uid} className="lua-browser__module-entity">
         <Link
           className="lua-browser__link"
-          to={documentNode.meta.href}
+          to={documentNode}
           children={documentNode.title}
         />
       </li>

@@ -55,8 +55,7 @@ tinydoc.use('tinydoc-plugin-react', function ReactPlugin(api, configs) {
               {' '}
 
               <Link
-                to={`${routeName}.module`}
-                params={{ moduleId: this.props.doc.id }}
+                to={this.props.documentNode}
                 query={{
                   editing: '1',
                   source: routeName

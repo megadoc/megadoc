@@ -31,7 +31,7 @@ const APIClassBrowser = React.createClass({
     return (
       <div key={documentNode.uid} className="class-browser__entry">
         <Link
-          to={documentNode.meta.href}
+          to={documentNode}
           children={documentNode.title}
           className="class-browser__entry-link"
         />
@@ -70,10 +70,7 @@ const APIClassBrowser = React.createClass({
   renderEntity(documentNode) {
     return (
       <li key={documentNode.uid}>
-        <Link
-          to={documentNode.meta.href}
-          children={documentNode.title}
-        />
+        <Link to={documentNode} children={documentNode.title} />
       </li>
     );
   },

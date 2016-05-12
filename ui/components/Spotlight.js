@@ -139,13 +139,13 @@ const Spotlight = React.createClass({
 
     return (
       <li
-        key={href}
+        key={href + (token.link.anchor || '')}
         className={classSet({
           "spotlight__result": true,
           "spotlight__result--active": this.state.cursor === index
         })
       }>
-        <Link to={href} ref={`link__${index}`} onClick={this.props.onActivate}>
+        <Link href={href} anchor={token.link.anchor} ref={`link__${index}`} onClick={this.props.onActivate}>
           <span dangerouslySetInnerHTML={{__html:
             text.replace(/^(\s+)/, x => Array(x.length+1).join('&nbsp;&nbsp;'))
           }} /> {token.link.context && (

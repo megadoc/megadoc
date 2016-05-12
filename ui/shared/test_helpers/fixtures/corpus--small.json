@@ -1,0 +1,22 @@
+{
+  "api": {
+    "type": "Namespace",
+    "id": "api",
+    "uid": "api",
+    "meta": {
+      "href": null
+    },
+    "documents": [ "api/foo" ]
+  },
+  "api/foo": {
+    "type": "Document",
+    "id": "foo",
+    "uid": "api/foo",
+    "parentNode": "api",
+    "title": "Foo",
+    "meta": {
+      "href": "/api/foo.html",
+      "anchor": "foo"
+    }
+  }
+}

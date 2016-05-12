@@ -5,11 +5,13 @@ const K = require('constants');
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydoc.outlets.define('Markdown::Document');
+tinydoc.outlets.define('Markdown::DocumentTOC');
 tinydoc.outlets.define('Markdown::ArticleIndex');
 
 tinydoc.use('tinydoc-plugin-markdown', function MarkdownPlugin(api, configs) {
   require('./outlets/ArticleIndexOutlet');
   require('./outlets/DocumentOutlet');
+  require('./outlets/DocumentTOCOutlet');
 
   configs.forEach(function(config) {
     const { routeName } = config;

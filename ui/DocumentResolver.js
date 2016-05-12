@@ -1,4 +1,5 @@
 const DocumentURI = require('core/DocumentURI');
+const CorpusAPI = require('core/CorpusAPI');
 const invariant = require('utils/invariant');
 const LayoutEngine = require('./LayoutEngine');
 
@@ -44,11 +45,7 @@ function DocumentResolver(corpus) {
     }
 
     if (documentNode) {
-      return {
-        documentNode: documentNode.type === 'DocumentEntity' ? documentNode.parentNode : documentNode,
-        documentEntityNode: documentNode.type === 'DocumentEntity' ? documentNode : undefined,
-        namespaceNode: corpus.getNamespaceOfDocument(documentNode)
-      };
+      return buildDocumentContext(documentNode);
     }
     else {
       console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
@@ -66,5 +63,14 @@ function getByUIDOrURI(corpus, link) {
   return corpus.get(link) || corpus.getByURI(link);
 }
 
+function buildDocumentContext(documentNode) {
+  return {
+    documentNode: documentNode.type === 'DocumentEntity' ? documentNode.parentNode : documentNode,
+    documentEntityNode: documentNode.type === 'DocumentEntity' ? documentNode : undefined,
+    namespaceNode: CorpusAPI.getNamespaceOfNode(documentNode)
+  };
+}
+
 module.exports = DocumentResolver;
 module.exports.getProtocolAgnosticPathName = getProtocolAgnosticPathName;
+module.exports.buildDocumentContext = buildDocumentContext;

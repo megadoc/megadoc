@@ -24,8 +24,11 @@ tinydoc.outlets.define('Layout');
 tinydoc.outlets.define('Layout::Banner');
 tinydoc.outlets.define('Layout::Content');
 tinydoc.outlets.define('Layout::Sidebar');
+tinydoc.outlets.define('Layout::SidebarHeader');
 tinydoc.outlets.define('Layout::Footer');
 tinydoc.outlets.define('Inspector');
+
+require('./outlets/SidebarHeaderOutlet')(tinydoc);
 
 tinydoc.start = function(options = {}) {
   const currentDocument = tinydoc.corpus.get(options.startingDocumentUID);

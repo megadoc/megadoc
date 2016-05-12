@@ -23,7 +23,7 @@ const Banner = React.createClass({
       <div className="banner-wrapper">
         <header className="banner">
           <h1 className="banner__logo">
-            <Link to="/index.html">
+            <Link href="/index.html">
               {config.title || 'tinydoc'}
             </Link>
 
@@ -61,7 +61,7 @@ const Banner = React.createClass({
             >
               {config.showSettingsLinkInBanner && (
                 <BannerItem key="settings">
-                  <Link to="settings">
+                  <Link href="/settings.html">
                     <Icon className="icon-cog" />
                   </Link>
                 </BannerItem>
@@ -86,7 +86,7 @@ const Banner = React.createClass({
 
     return (
       <BannerItem key={link.text}>
-        <Link to={DocumentURI.withExtension(link.href)}>{link.text}</Link>
+        <Link href={DocumentURI.withExtension(link.href)}>{link.text}</Link>
       </BannerItem>
     );
   },
