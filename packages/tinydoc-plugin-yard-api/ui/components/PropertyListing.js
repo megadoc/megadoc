@@ -12,17 +12,25 @@ var Properties = React.createClass({
     })),
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       tags: []
     };
   },
 
-  render: function() {
+  render() {
+    if (!this.props.tags || !this.props.tags.length) {
+      return null;
+    }
+
     return (
-      <ul className="argument-listing">
-        {this.props.tags.map(this.renderArgument)}
-      </ul>
+      <div>
+        {this.props.children}
+
+        <ul className="argument-listing">
+          {this.props.tags.map(this.renderArgument)}
+        </ul>
+      </div>
     );
   },
 

@@ -1,39 +1,20 @@
-/* eslint "camelcase":0 */
 const React = require("react");
 const { findWhere, where } = require('lodash');
+const ErrorMessage = require('components/ErrorMessage');
 const HighlightedText = require('components/HighlightedText');
 const PropertyListing = require('./PropertyListing');
-const ExampleRequestTag = require('./tags/ExampleRequestTag');
-const ExampleResponseTag = require('./tags/ExampleResponseTag');
-const ReturnsTag = require('./tags/ReturnsTag');
-const Header = require('./APIEndpoint/Header');
-const TagGroup = require('./APIEndpoint/TagGroup');
-
-function highlightDynamicFragments(route) {
-  const fragments = route.split('/');
-
-  return fragments.map(function(fragment, index) {
-    return (
-      <span key={fragment}>
-        {fragment.match(/^:[\w|_]+$/) ? (
-          <span className="api-endpoint__route-dynamic-fragment">
-            {fragment}
-          </span>
-        ) : (
-          fragment
-        )}
-
-        {index !== fragments.length-1 && '/'}
-      </span>
-    );
-  });
-}
-
-const { shape, string, arrayOf } = React.PropTypes;
+const ExampleRequestTag = require('./ExampleRequestTag');
+const ExampleResponseTag = require('./ExampleResponseTag');
+const ReturnsTag = require('./ReturnsTag');
+const Header = require('./APIEndpoint__Header');
+const TagGroup = require('./APIEndpoint__TagGroup');
+const Route = require('./APIEndpoint__Route');
+const { shape, string, arrayOf, object, } = React.PropTypes;
 
 const APIEndpoint = React.createClass({
   propTypes: {
-    anchorId: string,
+    anchor: string,
+    config: object,
 
     endpoint: shape({
       id: string,
@@ -74,25 +55,19 @@ const APIEndpoint = React.createClass({
           path={endpoint.id}
           tag={apiTag}
           isBeta={!!findWhere(endpoint.tags, { tag_name: 'beta' })}
-          anchorId={this.props.anchorId}
+          anchor={this.props.anchor}
+          showEndpointPath={this.props.config.showEndpointPath}
         />
 
-        <div className="api-endpoint__route">
-          <span className="api-endpoint__route-verb">
-            {endpoint.route.verb}
-          </span>
-
-          {' '}
-
-          {highlightDynamicFragments(endpoint.route.path)}
-        </div>
+        <Route route={endpoint.route} />
 
         <div className="api-endpoint__docstring">
           <HighlightedText>{endpoint.text}</HighlightedText>
         </div>
 
-        <h4>Arguments</h4>
-        <PropertyListing tags={where(endpoint.tags, { tag_name: 'argument' })} />
+        <PropertyListing tags={where(endpoint.tags, { tag_name: 'argument' })}>
+          <h4>Arguments</h4>
+        </PropertyListing>
 
         <TagGroup
           tagName="returns"
@@ -115,9 +90,13 @@ const APIEndpoint = React.createClass({
         />
 
         {unhandledTags.length > 0 && (
-          <pre>
-            {JSON.stringify(unhandledTags, null, 2)}
-          </pre>
+          <ErrorMessage>
+            <p>Unrecognized tags:</p>
+
+            <pre>
+              {JSON.stringify(unhandledTags, null, 2)}
+            </pre>
+          </ErrorMessage>
         )}
       </div>
     );
@@ -125,3 +104,24 @@ const APIEndpoint = React.createClass({
 });
 
 module.exports = APIEndpoint;
+
+
+function highlightDynamicFragments(route) {
+  const fragments = route.split('/');
+
+  return fragments.map(function(fragment, index) {
+    return (
+      <span key={fragment}>
+        {fragment.match(/^:[\w|_]+$/) ? (
+          <span className="api-endpoint__route-dynamic-fragment">
+            {fragment}
+          </span>
+        ) : (
+          fragment
+        )}
+
+        {index !== fragments.length-1 && '/'}
+      </span>
+    );
+  });
+}

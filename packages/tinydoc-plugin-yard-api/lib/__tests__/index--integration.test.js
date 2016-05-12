@@ -115,6 +115,8 @@ describe("[Integration] tinydoc-plugin-yard-api", function() {
     tiny.run(function(err, stats) {
       if (err) { return done(err); }
 
+      console.log(stats)
+
       assert.equal(stats['yard-api:test'].apiCount, 2);
       assert.equal(stats['yard-api:test'].objectCount, 1);
       assert.equal(stats['yard-api:test'].endpointCount, 1);

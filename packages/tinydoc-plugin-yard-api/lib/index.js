@@ -1,11 +1,10 @@
 var path = require('path');
 var assign = require('object-assign');
 var scan = require('./scan');
-var indexEntities = require('./indexEntities');
-var resolveLink = require('./resolveLink');
 var render = require('./render');
-
 var defaults = require('./config');
+var isAPIObject = require('./utils').isAPIObject;
+var isAPIEndpoint = require('./utils').isAPIEndpoint;
 
 function YardAPIPlugin(userConfig) {
   var config = assign({}, defaults, userConfig);
@@ -23,16 +22,10 @@ function YardAPIPlugin(userConfig) {
           }
 
           database = _database;
-          compiler.linkResolver.use(resolveLink.bind(null, config.routeName,  database));
+          compiler.corpus.add(database);
 
           done();
         });
-      });
-
-      compiler.on('index', function(registry, done) {
-        indexEntities(database, registry, config);
-
-        done();
       });
 
       compiler.on('render', function(md, linkify, done) {
@@ -41,8 +34,6 @@ function YardAPIPlugin(userConfig) {
       });
 
       compiler.on('write', function(done) {
-        var runtimeConfig = assign({}, config, { database: database });
-
         compiler.assets.addStyleSheet(
           path.resolve(__dirname, '..', 'ui', 'css', 'index.less')
         );
@@ -51,20 +42,18 @@ function YardAPIPlugin(userConfig) {
           path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-yard-api.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig('yard-api', runtimeConfig);
-
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
         stats['yard-api:' + config.routeName] = {
-          apiCount: database.length,
-          objectCount: database.reduce(function(acc, doc) {
-            return acc + doc.objects.length
+          apiCount: database.documents.length,
+          objectCount: database.documents.reduce(function(acc, node) {
+            return acc + node.entities.filter(isAPIObject).length
           }, 0),
 
-          endpointCount: database.reduce(function(acc, doc) {
-            return acc + doc.endpoints.length
+          endpointCount: database.documents.reduce(function(acc, node) {
+            return acc + node.entities.filter(isAPIEndpoint).length
           }, 0),
         };
 

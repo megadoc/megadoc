@@ -1,14 +1,14 @@
 const React = require("react");
 const MarkdownText = require('components/MarkdownText');
+const AnchorableHeading = require('components/AnchorableHeading');
 const PropertyListing = require('./PropertyListing');
-
 const { shape, string, array } = React.PropTypes;
 
 const APIObject = React.createClass({
   displayName: "APIObject",
 
   propTypes: {
-    anchorId: string,
+    anchor: string,
     object: shape({
       id: string,
       title: string,
@@ -28,20 +28,15 @@ const APIObject = React.createClass({
 
     return (
       <div className="object-synopsis">
-        <a
-          name={this.props.anchorId}
-          style={{
-            position: 'absolute',
-            marginTop: '-65px',
-          }}
-        />
+        <AnchorableHeading level="3" withLink={false} href={this.props.anchor}>
+          <div className="object-synopsis__header">
+            <span className="object-synopsis__header-text">{apiObject.title}</span>
 
-        <h3 className="object-synopsis__header anchorable-heading">
-          <span className="object-synopsis__header-text">{apiObject.title}</span>
-          <button className="object-synopsis__toggler" onClick={this.toggle}>
-            {this.state.expanded ? 'Hide' : 'Show'}
-          </button>
-        </h3>
+            <button className="object-synopsis__toggler" onClick={this.toggle}>
+              {this.state.expanded ? 'Hide' : 'Show'}
+            </button>
+          </div>
+        </AnchorableHeading>
 
         {this.state.expanded && (
           <div className="object-synopsis__content">

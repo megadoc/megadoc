@@ -11,29 +11,18 @@
   }
 
   &__route {
-    font-family: monospace;
-  }
-
-  &__quicklinks {
-    padding: 0;
-    margin: 0;
-  }
-
-  &__quicklinks li {
-    list-style: none;
-    display: block;
-    padding: 0;
-  }
-
-  &__quicklinks li a {
-    display: block;
-    padding: 0.5em 0;
-    line-height: 1.3;
     font-size: 85%;
+    font-weight: normal;
+    font-family: Monaco, Consolas, Courier, monospace;
+
+    &--skinned {
+      padding: 0.5em;
+      margin: 1em 0;
+    }
   }
 
-  &__quicklinks li a:hover {
-    background-color: transparent;
+  &__route-verb {
+    font-weight: bold;
   }
 }
 
@@ -63,15 +52,11 @@
     }
 
     &__route {
-      font-size: 85%;
-      font-weight: normal;
-      font-family: Monaco, Consolas, Courier, monospace;
-      padding: 0.5em;
-      margin: 1em 0;
-      background: @code;
+      &--skinned {
+        background: @code;
+      }
 
       &-verb {
-        font-weight: bold;
         color: @solarized-red;
       }
 

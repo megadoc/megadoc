@@ -1,8 +1,7 @@
-/* eslint "camelcase":0 */
-var React = require('react');
-var { where } = require('lodash');
+const React = require('react');
+const { where } = require('lodash');
 
-var TagGroup = React.createClass({
+const TagGroup = React.createClass({
   propTypes: {
     tags: React.PropTypes.array,
     tagName: React.PropTypes.string,
@@ -12,8 +11,8 @@ var TagGroup = React.createClass({
   },
 
   render() {
-    var tags = where(this.props.tags, { tag_name: this.props.tagName });
-    var Renderer = this.props.renderer;
+    const tags = where(this.props.tags, { tag_name: this.props.tagName });
+    const Renderer = this.props.renderer;
 
     if (tags.length === 0) {
       return null;

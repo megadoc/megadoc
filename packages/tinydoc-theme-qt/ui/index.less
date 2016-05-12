@@ -123,7 +123,8 @@ a, a.active {
     60%  { background-color: fade(@link, 10%); }
     100% { background-position: transparent; }
   }
-  .anchorable-heading__anchor:target + .anchorable-heading__link + .anchorable-heading__text {
+  .anchorable-heading__anchor:target + .anchorable-heading__link + .anchorable-heading__text,
+  .anchorable-heading__anchor:target + .anchorable-heading__text {
     animation: animatedBackgroundColor 2.5s ease-out normal;
   }
 });
