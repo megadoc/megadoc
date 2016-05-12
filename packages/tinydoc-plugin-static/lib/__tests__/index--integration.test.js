@@ -1,9 +1,7 @@
 var Subject = require("../");
-var assert = require('chai').assert;
 var TinyTestUtils = require('tinydoc/lib/TestUtils');
 var tinydoc = require('tinydoc');
 var multiline = require('multiline-slash');
-var assign = require('lodash').assign;
 
 describe("[Integration] tinydoc-plugin-static", function() {
   TinyTestUtils.IntegrationSuite(this);
@@ -39,7 +37,7 @@ describe("[Integration] tinydoc-plugin-static", function() {
       purge: true
     });
 
-    tiny.run(function(err, stats) {
+    tiny.run(function(err) {
       if (err) { return done(err); }
 
       TinyTestUtils.assertFileWasRendered('readme.html', {

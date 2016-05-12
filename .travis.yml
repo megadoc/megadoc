@@ -16,13 +16,13 @@ install:
   - npm install --ignore-scripts
   - npm link --ignore-scripts
   - npm run build # build failures should count!
-  - SKIP_SELF_PREPUBLISH=1 PRELINK=1 ./bin/prepublish-all.sh
+  - SKIP_SELF_PREPUBLISH=1 PRELINK=1 ./bin/prepublish-all
 
 script:
-  - ./bin/lint.sh
-  - ./bin/lint-ui.sh
-  - COVERAGE=1 ./bin/test.sh
-  - ./bin/test-ui.sh --single-run --browsers Firefox
+  - ./bin/lint
+  - ./bin/lint-ui
+  - COVERAGE=1 ./bin/test
+  - ./bin/test-ui --single-run --browsers Firefox
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js

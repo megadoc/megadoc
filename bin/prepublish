@@ -82,15 +82,15 @@ function refresh_dependencies {
 }
 
 function lint_sources {
-  ./bin/lint.sh $PACKAGE
+  ./bin/lint $PACKAGE
 }
 
 function lint_ui_sources {
-  ./bin/lint-ui.sh $PACKAGE
+  ./bin/lint-ui $PACKAGE
 }
 
 function run_tests {
-  ./bin/test.sh $PACKAGE --reporter dot
+  ./bin/test $PACKAGE --reporter dot
 }
 
 function build_assets {

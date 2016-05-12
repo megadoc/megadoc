@@ -9,12 +9,12 @@
   },
   "scripts": {
     "build": "NODE_ENV=production webpack -p --display-chunks",
-    "coverage": "COVERAGE=1 ./bin/test.sh",
-    "doc": "./bin/docs.sh",
-    "lint": "./bin/lint.sh && ./bin/lint-ui.sh",
+    "coverage": "COVERAGE=1 ./bin/test",
+    "doc": "./bin/build-docs",
+    "lint": "./bin/lint && ./bin/lint-ui",
     "prepublish": "npm run lint && npm run test && npm run build",
-    "start": "./bin/devserver.sh",
-    "test": "./bin/test.sh && karma start --single-run"
+    "start": "./bin/devserver",
+    "test": "./bin/test && ./bin/test-ui --single-run"
   },
   "repository": {
     "type": "git",

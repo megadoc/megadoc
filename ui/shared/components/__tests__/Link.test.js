@@ -50,14 +50,14 @@ describe('tinydoc::Components::Link', function() {
         assert.include(drill(subject).node.href, '/foo.html#foo');
       });
 
-      it('should complain if it finds no anchor', function() {
-        sinon.stub(console, 'warn');
+      // it('should complain if it finds no anchor', function() {
+      //   sinon.stub(console, 'warn');
 
-        render({ href: '/foo.html' });
+      //   render({ href: '/foo.html' });
 
-        assert.calledWith(console.warn, sinon.match(/An anchor is required/));
-        assert.include(drill(subject).node.href, '/foo.html');
-      });
+      //   assert.calledWith(console.warn, sinon.match(/An anchor is required/));
+      //   assert.include(drill(subject).node.href, '/foo.html');
+      // });
     });
   });
 

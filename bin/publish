@@ -70,7 +70,7 @@ but tinydoc is currently version v${TINYDOC_VERSION}.
 }
 
 function build_package {
-  ./bin/prepublish.sh $PACKAGE
+  ./bin/prepublish $PACKAGE
 }
 
 function publish_package {

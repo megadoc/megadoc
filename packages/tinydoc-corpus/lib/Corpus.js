@@ -151,6 +151,8 @@ function Corpus() {
     if (node.entities) { // Document
       node.entities.forEach(add);
     }
+
+    return node;
   }
 
   return exports;

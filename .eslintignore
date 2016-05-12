@@ -2,6 +2,8 @@ dist
 packages/*/dist
 packages/tinydoc/ui
 packages/interface-builder
+packages/tinydoc-plugin-react
+packages/tinydoc-plugin-markdown/ui/components/ClassBrowser.js
 
 doc/compiled
 packages/*/doc/compiled
