@@ -1,13 +1,10 @@
 .root {
   &__screen {
     position: relative;
-    margin-top: @content-top-offset + @whitespace;
   }
 
-  &__footer {
-    margin: 1em 0;
-    padding: 1em 0;
-    font-size: 0.75rem;
+  &--with-banner &__screen {
+    margin-top: @content-top-offset + @whitespace;
   }
 }
 
@@ -16,12 +13,5 @@
     width: @content-widescreen-width;
     margin-left: auto;
     margin-right: auto;
-  }
-});
-
-.schemable({
-  .root__footer {
-    border-top: 1px solid @base2;
-    color: @base1;
   }
 });

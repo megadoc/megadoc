@@ -9,7 +9,7 @@ const Banner = require('./Layout__Banner');
 const { getRegionsForDocument } = require('./Layout__Utils');
 const LayoutScreen = require('./Layout__Screen');
 
-const { node, shape, string, arrayOf, array, object, oneOfType, oneOf } = React.PropTypes;
+const { node, shape, string, arrayOf, array, object, oneOfType, oneOf, bool, } = React.PropTypes;
 const Link = shape({
   text: string,
   href: string,
@@ -28,6 +28,8 @@ const Layout = React.createClass({
     documentNode: object,
     documentEntityNode: object,
     namespaceNode: object,
+    banner: bool,
+    fixedSidbar: bool,
     bannerLinks: arrayOf(Link),
     customLayouts: arrayOf(shape({
       match: shape({
@@ -52,6 +54,8 @@ const Layout = React.createClass({
 
   getDefaultProps() {
     return {
+      banner: true,
+      fixedSidbar: true,
       bannerLinks: [],
       customLayouts: []
     };
@@ -62,15 +66,19 @@ const Layout = React.createClass({
     const className = classSet({
       'root': true,
       'root--with-multi-page-layout': true,
-      'root--with-two-column-layout': ctx.hasSidebarElements
+      'root--with-fixed-sidebar': this.props.fixedSidbar,
+      'root--with-two-column-layout': ctx.hasSidebarElements,
+      'root--with-banner': this.props.banner,
     });
 
     return (
       <div className={className}>
-        <Banner
-          links={this.props.bannerLinks || []}
-          currentPath={this.props.pathname}
-        />
+        {this.props.banner && (
+          <Banner
+            links={this.props.bannerLinks || []}
+            currentPath={this.props.pathname}
+          />
+        )}
 
         <LayoutScreen {...ctx} />
       </div>

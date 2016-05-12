@@ -43,7 +43,9 @@ function start(host, port, done) {
   config.entry = {
     tinydoc: [
       'webpack-hot-middleware/client',
-    ].concat(generatePluginEntry(pluginNames)),
+    ].concat(generatePluginEntry(pluginNames).concat(
+      process.argv.slice(2).map(function(x) { return path.resolve(x)}))
+    ),
   };
 
   config.module.loaders.some(function(loader) {

@@ -1,9 +1,3 @@
-@keyframes anchorFadeOut {
-  0%   { visibility: visible; }
-  99%  { visibility: visible; }
-  100% { visibility: hidden;  }
-}
-
 .anchorable-heading {
   -webkit-background-clip: padding-box;
   -moz-background-clip: padding;
@@ -36,22 +30,16 @@
   &:hover &__link {
     visibility: visible;
     transition: visibility 0s linear 0s;
-    // animation: 2s anchorFadeOut;
-    // animation-fill-mode: forwards;
   }
 }
 
-.root--with-multi-page-layout .anchorable-heading {
+.root--with-banner .anchorable-heading {
   @offset: @banner-height + @banner-border-dim + @whitespace;
 
   &__anchor {
     position: relative;
     top: -1 * @offset;
     display: block;
-
-    // &:before {
-    //   content: '';
-    // }
   }
 
   &[id]:before {
@@ -66,26 +54,6 @@
     margin-top: -1 * @offset;
     padding-top: @offset;
     z-index: -1;
-  }
-}
-
-.root--with-single-page-layout .anchorable-heading {
-  @offset: @whitespace;
-
-  &__anchor {
-    position: relative;
-    top: -1 * @offset;
-
-    &:before {
-      content: '';
-    }
-  }
-
-  &[id]:before {
-    content: '';
-    display: block;
-    margin-top: -1 * @offset;
-    padding-top: @offset;
   }
 }
 

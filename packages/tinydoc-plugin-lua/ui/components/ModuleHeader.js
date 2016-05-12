@@ -1,5 +1,6 @@
 const React = require("react");
 const Heading = require('components/Heading');
+const HeadingAnchor = require('components/HeadingAnchor');
 const { string, object, bool, number } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
@@ -35,29 +36,26 @@ const ModuleHeader = React.createClass({
     }
 
     return (
-      <header>
+      <header className="anchorable-heading">
         <Heading
           level={this.props.level || 1}
-          className="lua-module__header markdown-text__heading"
+          className="lua-module__header"
           title={this.props.showSourcePaths ? doc.filePath : undefined}
-          id={anchorId}
         >
-          <span className="lua-module__header-name">
-            {id}
-          </span>
+          <HeadingAnchor.Anchor href={this.props.anchorId} />
+          <HeadingAnchor.Link href={this.props.anchorId} />
+          <HeadingAnchor.Text>
+            <span className="lua-module__header-name">
+              {id}
+            </span>
 
-          {' '}
+            {' '}
 
-          <span className="lua-module__header-type">
-            <span>{type}</span>
-          </span>
+            <span className="lua-module__header-type">
+              <span>{type}</span>
+            </span>
+          </HeadingAnchor.Text>
 
-          {anchorId && (
-            <a
-              href={'#'+anchorId}
-              className="markdown-text__heading-anchor icon icon-link"
-            />
-          )}
         </Heading>
       </header>
     );

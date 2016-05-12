@@ -19,6 +19,8 @@ export NODE_ENV="development"
 export VERBOSE=1
 export CONFIG_FILE=$1
 
+shift
+
 if [ -z "${CONFIG_FILE}" ]; then
   echo "Usage: $0 path/to/tinydoc-config.js"
   exit 1
@@ -29,4 +31,4 @@ if [ ! -d "./ui" ]; then
   exit 1
 fi
 
-exec node ./server.js
+exec node ./server.js $@

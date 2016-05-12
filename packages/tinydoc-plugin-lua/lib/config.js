@@ -3,6 +3,4 @@ module.exports = {
 
   source: [ '**/*.lua' ],
   exclude: [],
-
-  indexByFileNames: true,
 };

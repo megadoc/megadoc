@@ -3,6 +3,7 @@ var defaults = require('./config');
 var path = require('path');
 var merge = require('lodash').merge;
 var root = path.resolve(__dirname, '..');
+var b = require('tinydoc-corpus').builders;
 
 module.exports = function LuaPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
@@ -20,117 +21,67 @@ module.exports = function LuaPlugin(userConfig) {
         var files = utils.globAndFilter(config.source, config.exclude);
         var assetRoot = compiler.config.assetRoot;
 
-        database = files.reduce(function(set, file) {
-          return set.concat(
-            Parser.parseFile(file).map(function(doc) {
-              doc.filePath = file.replace(assetRoot, '');
-              return doc;
-            })
-          );
+        var documents = files.reduce(function(set, file) {
+          return set.concat(Parser.parseFile(file).map(function(doc) {
+            doc.filePath = file.replace(assetRoot, '');
+            return doc;
+          }));
         }, []);
 
-        compiler.linkResolver.use(resolveLink);
-
-        done();
-      });
-
-      compiler.on('index', function(registry, done) {
-        database.forEach(function(doc) {
-          var index = {
-            type: 'lua',
-            routeName: config.routeName,
-            path: doc.path
-          };
-
-          registry.add(doc.path, index);
-
-          if (config.indexByFileNames && doc.isModule) {
-            registry.add(doc.filePath, index);
-            registry.add(doc.filePath.replace(/^\//, ''), index);
-          }
+        database = b.namespace({
+          id: config.routeName,
+          name: 'tinydoc-plugin-lua',
+          title: config.title,
+          config: config,
+          documents: documents
+            .filter(function(x) { return !x.receiver; })
+            .map(reduceModule(documents))
         });
+
+        compiler.corpus.add(database);
 
         done();
       });
 
       compiler.on('render', function(markdown, linkify, done) {
-        database.forEach(function(doc) {
-          doc.description = markdown(linkify(doc.description, doc.receiver || doc.id));
-          doc.tags.forEach(function(tag) {
-            tag.description = markdown(linkify(tag.description, doc.receiver || doc.id));
-          })
+        database.documents.forEach(function(node) {
+          renderDoc(node);
+
+          node.entities.forEach(renderDoc);
         });
+
+        function renderDoc(documentNode) {
+          var doc = documentNode.properties;
+
+          doc.description = markdown(linkify({ text: doc.description, contextNode: documentNode }));
+          doc.tags.forEach(function(tag) {
+            tag.description = markdown(linkify({ text: tag.description, contextNode: documentNode }));
+          });
+        }
 
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
         stats['lua:' + config.routeName] = {
-          moduleCount: database.length
+          moduleCount: database.documents.length
         };
 
         done();
       });
 
       compiler.on('write', function(done) {
-        compiler.assets.addPluginRuntimeConfig('lua', {
-          routeName: config.routeName,
-          title: config.title,
-          sidebarTitle: config.sidebarTitle,
-          database: database
-        });
+        // compiler.assets.addPluginRuntimeConfig('lua', {
+        //   routeName: config.routeName,
+        //   title: config.title,
+        //   sidebarTitle: config.sidebarTitle,
+        //   database: database
+        // });
 
         compiler.assets.addStyleSheet(path.join(root, 'ui', 'css', 'index.less'));
         compiler.assets.addPluginScript(path.join(root, 'dist', 'tinydoc-plugin-lua.js'));
         done();
       });
-
-      function resolveLink(id, registry, currentModuleId) {
-        var index = registry.get(id);
-
-        if (!index && currentModuleId) {
-          var entityDoc = database.filter(function(doc) {
-            return (
-              doc.id === id && doc.receiver === currentModuleId ||
-              doc.path === (currentModuleId + id)
-            );
-          })[0];
-
-          if (entityDoc) {
-            index = registry.get(entityDoc.path);
-          }
-        }
-
-        if (!index || index.type !== 'lua' || index.routeName !== config.routeName) {
-          return;
-        }
-
-        var doc = database.filter(function(d) {
-          return d.path === index.path;
-        })[0];
-
-        var urlPath, title;
-
-        if (doc.isModule) {
-          urlPath = encodeURIComponent(doc.id);
-          title = doc.id;
-        }
-        else {
-          urlPath = encodeURIComponent(doc.receiver) + '/' + encodeURIComponent(doc.symbol + doc.id);
-
-          if (currentModuleId === doc.receiver) {
-            title = doc.symbol + doc.id;
-          }
-          else {
-            title = doc.path;
-          }
-        }
-
-        return {
-          title: title,
-          href: config.routeName + '/' + urlPath
-        };
-      }
 
       return function() {
         return database;
@@ -138,3 +89,25 @@ module.exports = function LuaPlugin(userConfig) {
     }
   };
 };
+
+function reduceModule(documents) {
+  return function(doc) {
+    return b.document({
+      id: doc.id,
+      title: doc.id,
+      filePath: doc.filePath,
+      properties: doc,
+      entities: documents.filter(function(x) {
+        return x.receiver === doc.id;
+      }).map(reduceEntity)
+    })
+  };
+}
+
+function reduceEntity(doc) {
+  return b.documentEntity({
+    id: doc.id,
+    title: doc.id,
+    properties: doc
+  })
+}

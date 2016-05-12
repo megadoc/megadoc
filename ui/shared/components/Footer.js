@@ -5,7 +5,7 @@ const MarkdownText = require('components/MarkdownText');
 const Footer = React.createClass({
   render() {
     return (
-      <div className="root__footer">
+      <div className="footer">
         <MarkdownText>
           {config.footer}
         </MarkdownText>

@@ -160,7 +160,7 @@ const TwoColumnLayout = React.createClass({
     Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
   },
 
-  collapseSidebar() {
+  collapseSidebar(e) {
     this.setState({ sidebarCollapsed: !this.state.sidebarCollapsed });
   }
 });

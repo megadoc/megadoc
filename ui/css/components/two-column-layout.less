@@ -3,13 +3,14 @@
     right: 0;
   }
 
-  &__left {
-    position: fixed;
-    bottom: 0;
+  .root--with-banner &__left {
     top: @content-top-offset;
-    font-size: 0.85em;
+  }
+
+  &__left {
+    top: 0;
+    bottom: 0;
     z-index: 1;
-    // min-width: 160px;
 
     transition: width 0.3s ease 0s;
 
@@ -40,6 +41,7 @@
     overflow: hidden;
     font-size: 16px;
     line-height: 1;
+    outline: none;
   }
 
   &__right {
@@ -47,21 +49,20 @@
   }
 }
 
-.root--with-single-page-layout {
-  .two-column-layout {
-    // TODO: this should _definitely_ not be done here
+.root--with-fixed-sidebar .two-column-layout {
+  // TODO: this should _definitely_ not be done here
+  .resizable-panel__content {
+    padding: 0 1em;
+  }
+
+  &__left {
+    position: fixed;
+    top: 0;
+  }
+
+  &__left--collapsed {
     .resizable-panel__content {
-      padding: 0 1em;
-    }
-
-    &__left {
-      top: 0;
-    }
-
-    &__left--collapsed {
-      .resizable-panel__content {
-        visibility: hidden;
-      }
+      visibility: hidden;
     }
   }
 }
@@ -78,6 +79,11 @@
   .two-column-layout__collapse-btn {
     background-color: transparent;
     color: darken(@base2, 15%);
+
+    &:active {
+      outline: none;
+      box-shadow: none;
+    }
 
     &:hover {
       color: @base0;

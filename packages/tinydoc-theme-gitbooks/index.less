@@ -3,9 +3,9 @@
 @sidebar-width: 225px;
 @content-width: 640px;
 
-html {
-  font-size: 62.5%;
-}
+// html {
+//   font-size: 62.5%;
+// }
 
 body {
   text-rendering: optimizeLegibility;
@@ -13,34 +13,27 @@ body {
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-size: 14px;
   letter-spacing: .2px;
-  text-size-adjust: 100%;
+  // text-size-adjust: 100%;
+}
+
+.two-column-layout__right {
+  width: @content-width;
+  margin-left: auto;
+  margin-right: auto;
+  // font-size: 1.6rem;
+  line-height: 1.7;
+  padding-bottom: 1em;
+
+  // .root__footer {
+  //   width: @content-width;
+  //   margin-left: auto;
+  //   margin-right: auto;
+  // }
 }
 
 .single-page-layout {
-  &__content {
-    width: @content-width;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.6rem;
-    line-height: 1.7;
-    padding-bottom: 1em;
-
-    .root__footer {
-      width: @content-width;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-
   &__sidebar {
-    ul {
-      list-style: none;
-      padding: 0;
 
-      ol {
-        list-style: none;
-      }
-    }
   }
 
   &__home-link {
@@ -50,7 +43,7 @@ body {
 
 .two-column-layout__left {
   left: 0;
-  font-size: 1.4rem;
+  // font-size: 1.4rem;
   line-height: 1.3;
   letter-spacing: 0;
 
@@ -62,15 +55,24 @@ body {
     width: 1px;
   }
 
-  .lua-browser {
-    &__module {
-      margin-bottom: 1em;
+  ul {
+    list-style: none;
+    padding: 0;
 
-      > .lua-browser__link {
-        line-height: 2;
-      }
+    ol {
+      list-style: none;
     }
   }
+
+  // .lua-browser {
+  //   &__module {
+  //     margin-bottom: 1em;
+
+  //     > .lua-browser__link {
+  //       line-height: 2;
+  //     }
+  //   }
+  // }
 }
 
 .schemable({
