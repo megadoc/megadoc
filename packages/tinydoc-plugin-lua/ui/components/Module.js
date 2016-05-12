@@ -5,13 +5,11 @@ const FunctionSignature = require('../components/FunctionSignature');
 const FunctionParams = require('../components/FunctionParams');
 const FunctionReturns = require('../components/FunctionReturns');
 const ExampleTags = require('../components/ExampleTags');
-const Router = require('core/Router');
-const { string, array, } = React.PropTypes;
+const { object, } = React.PropTypes;
 
 const Module = React.createClass({
   propTypes: {
-    routeName: string,
-    database: array,
+    documentNode: object,
   },
 
   render() {

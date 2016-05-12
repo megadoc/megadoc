@@ -1,5 +1,3 @@
-const React = require('react');
-
 tinydoc.outlets.define('Lua::Module');
 tinydoc.outlets.define('Lua::Browser');
 tinydoc.outlets.define('Lua::AllModules');

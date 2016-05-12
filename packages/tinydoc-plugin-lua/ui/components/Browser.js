@@ -1,18 +1,12 @@
 const React = require('react');
 const Link = require('components/Link');
-const { shape, array, string, object, } = React.PropTypes;
+const { shape, object, } = React.PropTypes;
 
 const Browser = React.createClass({
   propTypes: {
     params: shape,
     namespaceNode: object,
-    // database: array,
-    // routeName: string,
   },
-
-  // shouldComponentUpdate: function(nextProps) {
-  //   return nextProps.params !== this.props.params;
-  // },
 
   render() {
     return (
@@ -23,7 +17,6 @@ const Browser = React.createClass({
   },
 
   renderModule(documentNode) {
-    const moduleDoc = documentNode.properties;
     const { entities } = documentNode;
 
     return (

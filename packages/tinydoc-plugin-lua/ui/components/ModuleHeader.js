@@ -6,10 +6,8 @@ const { string, object, bool, number } = React.PropTypes;
 const ModuleHeader = React.createClass({
   propTypes: {
     doc: object,
-    commonPrefix: string,
     showSourcePaths: bool,
     anchorId: string,
-    showNamespace: bool,
     level: number,
   },
 
@@ -18,7 +16,7 @@ const ModuleHeader = React.createClass({
   },
 
   render() {
-    const { doc, anchorId } = this.props;
+    const { doc } = this.props;
 
     let type;
 
