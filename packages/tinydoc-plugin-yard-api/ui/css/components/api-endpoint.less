@@ -1,7 +1,7 @@
 .api-endpoint {
   &__header {
-    padding-bottom: @whitespace;
-    margin-bottom: @whitespace;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
   }
 
   &__header-path {
@@ -28,10 +28,6 @@
 
 .schemable({
   .api-endpoint {
-    &__quicklinks li a {
-      // background-color: @base2;
-    }
-
     &__header {
       border-bottom: 1px solid @border-color;
     }
@@ -47,8 +43,8 @@
       font-size: 0.75em;
       display: inline-block;
 
-      padding: 0 @whitespace / 2;
-      margin-left: @whitespace / 2;
+      padding: 0 0.5em;
+      margin-left: 0.5em;
     }
 
     &__route {
@@ -65,5 +61,4 @@
       }
     }
   }
-
 });

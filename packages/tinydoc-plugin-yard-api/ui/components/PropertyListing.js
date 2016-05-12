@@ -1,15 +1,18 @@
-var React = require('react');
-var MarkdownText = require('components/MarkdownText');
+const React = require('react');
+const MarkdownText = require('components/MarkdownText');
+const { arrayOf, shape, string, bool, node } = React.PropTypes;
 
-var Properties = React.createClass({
+const Properties = React.createClass({
   propTypes: {
-    tags: React.PropTypes.arrayOf(React.PropTypes.shape({
-      name: React.PropTypes.string,
-      types: React.PropTypes.arrayOf(React.PropTypes.string),
-      accepted_values: React.PropTypes.arrayOf(React.PropTypes.string),
-      is_required: React.PropTypes.bool,
-      text: React.PropTypes.string,
+    tags: arrayOf(shape({
+      name: string,
+      types: arrayOf(string),
+      accepted_values: arrayOf(string),
+      is_required: bool,
+      text: string,
     })),
+
+    children: node,
   },
 
   getDefaultProps() {

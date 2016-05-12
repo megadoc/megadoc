@@ -9,12 +9,14 @@ const ReturnsTag = require('./ReturnsTag');
 const Header = require('./APIEndpoint__Header');
 const TagGroup = require('./APIEndpoint__TagGroup');
 const Route = require('./APIEndpoint__Route');
-const { shape, string, arrayOf, object, } = React.PropTypes;
+const { shape, string, arrayOf, bool, } = React.PropTypes;
 
 const APIEndpoint = React.createClass({
   propTypes: {
     anchor: string,
-    config: object,
+    config: shape({
+      showEndpointPath: bool
+    }),
 
     endpoint: shape({
       id: string,
@@ -104,24 +106,3 @@ const APIEndpoint = React.createClass({
 });
 
 module.exports = APIEndpoint;
-
-
-function highlightDynamicFragments(route) {
-  const fragments = route.split('/');
-
-  return fragments.map(function(fragment, index) {
-    return (
-      <span key={fragment}>
-        {fragment.match(/^:[\w|_]+$/) ? (
-          <span className="api-endpoint__route-dynamic-fragment">
-            {fragment}
-          </span>
-        ) : (
-          fragment
-        )}
-
-        {index !== fragments.length-1 && '/'}
-      </span>
-    );
-  });
-}

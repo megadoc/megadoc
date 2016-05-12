@@ -1,17 +1,17 @@
 const React = require('react');
-const { where } = require('lodash');
+const { array, string, func, any } = React.PropTypes;
 
 const TagGroup = React.createClass({
   propTypes: {
-    tags: React.PropTypes.array,
-    tagName: React.PropTypes.string,
-    renderer: React.PropTypes.func,
-    className: React.PropTypes.string,
-    children: React.PropTypes.any,
+    tags: array,
+    tagName: string,
+    renderer: func,
+    className: string,
+    children: any,
   },
 
   render() {
-    const tags = where(this.props.tags, { tag_name: this.props.tagName });
+    const tags = this.props.tags.filter(x => x.tag_name === this.props.tagName);
     const Renderer = this.props.renderer;
 
     if (tags.length === 0) {

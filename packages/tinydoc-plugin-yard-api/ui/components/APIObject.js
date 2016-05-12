@@ -5,8 +5,6 @@ const PropertyListing = require('./PropertyListing');
 const { shape, string, array } = React.PropTypes;
 
 const APIObject = React.createClass({
-  displayName: "APIObject",
-
   propTypes: {
     anchor: string,
     object: shape({

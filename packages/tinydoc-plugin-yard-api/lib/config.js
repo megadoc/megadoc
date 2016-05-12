@@ -5,5 +5,5 @@ module.exports = {
   showEndpointPath: false,
   skipScan: false,
   routeName: 'api',
-  navigationLabel: 'API',
+  title: 'API',
 };

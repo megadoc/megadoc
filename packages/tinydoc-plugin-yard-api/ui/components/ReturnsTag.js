@@ -1,15 +1,21 @@
 const React = require("react");
 const MarkdownText = require('components/MarkdownText');
+const { string, bool, } = React.PropTypes;
 
 const ReturnsTag = React.createClass({
   propTypes: {
-    text: React.PropTypes.string,
+    text: string,
+    codeBlock: bool,
   },
 
   render() {
     return (
       <p>
-        Returns <MarkdownText tagName="span">{this.props.types.join(' | ')}</MarkdownText>
+        Returns {(
+          <MarkdownText tagName={this.props.codeBlock ? "pre" : 'span'}>
+            {this.props.text.trim()}
+          </MarkdownText>
+        )}
       </p>
     );
   }

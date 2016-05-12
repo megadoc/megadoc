@@ -27,7 +27,10 @@ tinydoc.outlets.add('Git::Stats', {
 
 tinydoc.outlets.add('Layout::Content', {
   key: 'Git::Stats',
-  component: StatsOutlet
+  component: StatsOutlet,
+  match(props) {
+    return !!props.documentNode.meta.gitStats;
+  }
 });
 
 module.exports = StatsOutlet;

@@ -58,7 +58,7 @@ const ModuleHeader = React.createClass({
           {anchor && <HeadingAnchor.Link href={anchor} />}
 
           <HeadingAnchor.Text className="class-view__header-name">
-            {doc.name}
+            <span>{doc.name}</span>
           </HeadingAnchor.Text>
 
           {' '}

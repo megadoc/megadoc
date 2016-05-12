@@ -1,70 +1,78 @@
 const React = require("react");
-const Router = require('core/Router');
-const Database = require('core/Database');
 const MarkdownText = require('components/MarkdownText');
 const APIObject = require('./APIObject');
 const APIEndpoint = require('./APIEndpoint');
 const APIEndpointRoute = require('./APIEndpoint__Route');
 const Link = require('components/Link');
-const HasTitle = require('mixins/HasTitle');
-const scrollToTop = require('utils/scrollToTop');
-const { refreshScroll } = require('core/Router');
-const { isAPIEndpoint, isAPIObject } = require('utils');
+const { isAPIEndpoint, isAPIObject } = require('../utils');
 const { Table, Row, Column } = require('components/IndexTable');
+const { object } = React.PropTypes;
 
 const APIResource = React.createClass({
   propTypes: {
-    params: React.PropTypes.shape({
-      resourceId: React.PropTypes.string,
-      endpointId: React.PropTypes.string,
-      objectId: React.PropTypes.string,
-    }),
+    documentNode: object,
+    config: object,
   },
 
   render() {
     const { documentNode } = this.props;
+    const endpoints = documentNode.entities.filter(isAPIEndpoint);
+    const objects = documentNode.entities.filter(isAPIObject);
 
     return (
-      <div className="doc-content">
+      <div className="api-resource">
         <h1>{documentNode.title}</h1>
 
         <MarkdownText>{documentNode.properties.text}</MarkdownText>
 
-        {documentNode.entities.filter(isAPIEndpoint).length > 0 && (
-          this.renderQuickLinks(documentNode)
-        )}
+        {this.renderQuickLinks({ endpoints, objects })}
 
-        {documentNode.entities.filter(isAPIObject).length > 0 && (
-          <div className="api-objects">
-            <h2>Object Synopses</h2>
-
+        {objects.length > 0 && (
+          <div className="api-resource__object-index">
+            <h2>API Object Synopses</h2>
             <p>Below is a description of objects emitted or accepted by this API.</p>
 
-            {documentNode.entities.filter(isAPIObject).map(this.renderAPIObject)}
+            {objects.map(this.renderAPIObject)}
           </div>
         )}
 
-        <div className="api-endpoints">
-          {documentNode.entities.filter(isAPIEndpoint).map(this.renderAPIEndpoint)}
-        </div>
+        {endpoints.length > 0 && (
+          <div className="api-endpoint-index">
+            <h2>API Endpoint Documentation</h2>
+
+            {endpoints.map(this.renderAPIEndpoint)}
+          </div>
+        )}
       </div>
     );
   },
 
-  renderQuickLinks(documentNode) {
+  renderQuickLinks({ endpoints, objects }) {
+    if (!endpoints.length && !objects.length) {
+      return null;
+    }
+
     return (
       <div>
-        <h2>Endpoints</h2>
+        {endpoints.length > 0 && (
+          <div>
+            <h2>API Endpoints</h2>
 
-        <Table>
-          {documentNode.entities.filter(isAPIEndpoint).map(this.renderEndpointQuickLink)}
-        </Table>
+            <Table>
+              {endpoints.map(this.renderEndpointQuickLink)}
+            </Table>
+          </div>
+        )}
 
-        <h2>Objects</h2>
+        {objects.length > 0 && (
+          <div>
+            <h2>API Objects</h2>
 
-        <ol>
-          {documentNode.entities.filter(isAPIObject).map(this.renderQuickLink)}
-        </ol>
+            <ol>
+              {objects.map(this.renderObjectQuickLink)}
+            </ol>
+          </div>
+        )}
       </div>
     );
   },
@@ -83,10 +91,10 @@ const APIResource = React.createClass({
     );
   },
 
-  renderQuickLink(object) {
+  renderObjectQuickLink(documentNode) {
     return (
-      <li key={object.uid}>
-        <Link to={object.meta.href} children={object.properties.title} />
+      <li key={documentNode.uid}>
+        <Link to={documentNode.meta.href} children={documentNode.properties.title} />
       </li>
     );
   },
@@ -96,7 +104,6 @@ const APIResource = React.createClass({
       <APIObject
         key={documentNode.uid}
         object={documentNode.properties}
-        config={this.props.config}
         anchor={documentNode.meta.anchor}
       />
     );

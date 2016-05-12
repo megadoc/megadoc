@@ -1,6 +1,6 @@
 const React = require('react');
 const AnchorableHeading = require('components/AnchorableHeading');
-const { string, bool, shape, object } = React.PropTypes;
+const { string, bool, shape, } = React.PropTypes;
 
 const Header = React.createClass({
   propTypes: {
@@ -23,7 +23,7 @@ const Header = React.createClass({
     var { tag } = this.props;
 
     return (
-      <AnchorableHeading level="2" className="api-endpoint__header" href={this.props.anchor}>
+      <AnchorableHeading level="3" className="api-endpoint__header" href={this.props.anchor}>
         {tag.text}
 
         {this.props.isBeta && (
