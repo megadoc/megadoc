@@ -3,7 +3,6 @@ var assert = require('chai').assert;
 var TinyTestUtils = require('tinydoc/lib/TestUtils');
 var multiline = require('multiline-slash');
 var tinydoc = require('tinydoc');
-var fs = require('fs');
 
 describe("[Integration] tinydoc-plugin-js", function() {
   TinyTestUtils.IntegrationSuite(this, 5000);
@@ -41,7 +40,7 @@ describe("[Integration] tinydoc-plugin-js", function() {
     TinyTestUtils.createFile(multiline(function() {;
       // /**
       //  * @module
-      //  * A module that utilizes [Cache]().
+      //  * dis be our store, mon!
       //  */
       // function Store() {}
     }), 'lib/core/Store.js');
@@ -87,7 +86,9 @@ describe("[Integration] tinydoc-plugin-js", function() {
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);
 
-      TinyTestUtils.assertFileWasRendered('test/Store.html');
+      TinyTestUtils.assertFileWasRendered('test/Store.html', {
+        text: 'dis be our store, mon!'
+      });
 
       done();
     });

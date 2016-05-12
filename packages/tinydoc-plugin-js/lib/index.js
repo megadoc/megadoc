@@ -93,23 +93,18 @@ function createCJSPlugin(userConfig) {
           }
 
           documents = _documents;
+          database = reduceDocuments({
+            documents: documents,
+            namespaceId: config.routeName,
+            namespaceTitle: config.corpusContext,
+            baseURL: config.routeName,
+            config: config
+          });
+
+          compiler.corpus.add(database);
 
           done();
         });
-      });
-
-      compiler.on('index', function(_registry, done) {
-        database = reduceDocuments({
-          documents: documents,
-          namespaceId: config.routeName,
-          namespaceTitle: config.corpusContext,
-          baseURL: config.routeName,
-          config: config
-        });
-
-        compiler.corpus.add(database);
-
-        done();
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {

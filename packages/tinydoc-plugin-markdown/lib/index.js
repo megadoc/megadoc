@@ -23,84 +23,80 @@ function MarkdownPlugin(userConfig) {
 
           documents = _documents;
 
-          done();
-        });
-      });
+          database = b.namespace({
+            id: config.routeName,
+            name: 'tinydoc-plugin-markdown',
+            title: config.corpusContext,
+            meta: {
+              defaultLayouts: [
+                // index pages, no sidebar, only content panel
+                {
+                  match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
+                  regions: [
+                    {
+                      name: 'Layout::Content',
+                      options: { framed: true },
+                      outlets: [
+                        { name: 'Markdown::Document' },
+                        { name: 'Layout::Content' },
+                      ]
+                    }
+                  ]
+                },
 
-      compiler.on('index', function(registry, done) {
-        database = b.namespace({
-          id: config.routeName,
-          name: 'tinydoc-plugin-markdown',
-          title: config.corpusContext,
-          meta: {
-            defaultLayouts: [
-              // index pages, no sidebar, only content panel
-              {
-                match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
-                regions: [
-                  {
-                    name: 'Layout::Content',
-                    options: { framed: true },
-                    outlets: [
-                      { name: 'Markdown::Document' },
-                      { name: 'Layout::Content' },
-                    ]
-                  }
-                ]
-              },
+                // within our namespace, we'll show the sidebar:
+                // {
+                //   match: [
+                //     { by: 'type', on: [ 'Document', 'DocumentEntity' ] }
+                //     { by: 'url', on: '[namespace]*' }
+                //   ],
+                //   regions: [
+                //     {
+                //       name: 'Layout::Content',
+                //       options: { framed: true },
+                //       outlets: [
+                //         { name: 'Markdown::Document' },
+                //         { name: 'Layout::Content' },
+                //       ]
+                //     },
+                //     {
+                //       name: 'Layout::Sidebar',
+                //       outlets: [{ name: 'Markdown::ArticleIndex' }]
+                //     }
+                //   ]
+                // }
+              ]
+            },
+            documents: documents.map(function(doc) {
+              // omg omg, we're rendering everything twice now
+              var compiled = compiler.renderer.withTOC(doc.source);
 
-              // within our namespace, we'll show the sidebar:
-              // {
-              //   match: [
-              //     { by: 'type', on: [ 'Document', 'DocumentEntity' ] }
-              //     { by: 'url', on: '[namespace]*' }
-              //   ],
-              //   regions: [
-              //     {
-              //       name: 'Layout::Content',
-              //       options: { framed: true },
-              //       outlets: [
-              //         { name: 'Markdown::Document' },
-              //         { name: 'Layout::Content' },
-              //       ]
-              //     },
-              //     {
-              //       name: 'Layout::Sidebar',
-              //       outlets: [{ name: 'Markdown::ArticleIndex' }]
-              //     }
-              //   ]
-              // }
-            ]
-          },
-          documents: documents.map(function(doc) {
-            // omg omg, we're rendering everything twice now
-            var compiled = compiler.renderer.withTOC(doc.source);
-
-            // TODO: b.markdownDocument
-            return b.document({
-              id: doc.id,
-              title: doc.plainTitle,
-              summary: doc.summary,
-              filePath: doc.filePath,
-              properties: doc,
-              entities: compiled.toc.map(function(section) {
-                return b.documentEntity({
-                  id: section.scopedId,
-                  title: section.text,
-                  properties: section,
-                  meta: {
-                    indexDisplayName: Array(section.level * 2).join(' ') + section.text,
-                    anchor: section.scopedId
-                  }
+              // TODO: b.markdownDocument
+              return b.document({
+                id: doc.id,
+                title: doc.plainTitle,
+                summary: doc.summary,
+                filePath: doc.filePath,
+                properties: doc,
+                entities: compiled.toc.map(function(section) {
+                  return b.documentEntity({
+                    id: section.scopedId,
+                    title: section.text,
+                    properties: section,
+                    meta: {
+                      indexDisplayName: Array(section.level * 2).join(' ') + section.text,
+                      anchor: section.scopedId
+                    }
+                  })
                 })
               })
             })
-          })
+          });
+
+          compiler.corpus.add(database);
+
+          done();
         });
-
-        compiler.corpus.add(database);
-
-        done();
       });
 
       compiler.on('render', function(md, linkify, done) {

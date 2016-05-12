@@ -25,7 +25,7 @@ module.exports = function(userConfig) {
       var filePath = compiler.utils.getAssetPath(config.source);
       var format = config.format || inferFormat(filePath);
 
-      compiler.on('index', function(_registry, done) {
+      compiler.on('scan', function(done) {
         compiler.corpus.add(
           b.namespace({
             id: config.url.replace(/\//g, '-'),
