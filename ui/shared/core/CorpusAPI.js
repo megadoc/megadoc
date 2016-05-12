@@ -25,6 +25,8 @@ module.exports = function CorpusAPI(shallowCorpus) {
     return map;
   }, {});
 
+  const length = Object.keys(corpus).length;
+
   exports.getDocumentSearchIndex = function() {
     return documentSearchIndex;
   };
@@ -60,6 +62,12 @@ module.exports = function CorpusAPI(shallowCorpus) {
       }
     }
   };
+
+  Object.defineProperty(exports, 'length', {
+    configurable: false,
+    writable: false,
+    value: length
+  });
 
   /**
    * @param  {String} uid

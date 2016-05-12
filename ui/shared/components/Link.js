@@ -4,12 +4,14 @@ const DocumentURI = require('core/DocumentURI');
 const classSet = require('utils/classSet');
 const URIjs = require('urijs');
 const navigate = require('../../utils/navigate');
-const { string, func, node, } = React.PropTypes;
+const { string, func, node, bool, } = React.PropTypes;
 const { findDOMNode } = require('react');
 
 const Link = React.createClass({
   propTypes: {
     to: string,
+    href: string,
+    anchor: string,
     id: string,
     name: string,
     title: string,
@@ -19,11 +21,12 @@ const Link = React.createClass({
   },
 
   render() {
-    const path = this.props.to.split('#')[0];
-    const isActive = (
-      this.props.to === location.href.substr( location.origin.length ) ||
-      (path === this.props.to && Router.isActive(DocumentURI.withoutExtension(path)))
-    );
+    const href = this.props.href || this.props.to;
+    const fragments = href.split('#');
+    const anchor = this.props.anchor || fragments[1] || '';
+
+    // blurgh, what?
+    const isActive = this.isActive(fragments[0] /* forget the anchor */);
 
     // console.warn("Target URL = '%s', current URL = '%s', relative URL = '%s'",
     //   this.props.to,
@@ -36,7 +39,7 @@ const Link = React.createClass({
         id={this.props.id}
         name={this.props.name}
         title={this.props.title}
-        href={RelativeHref(this.props.to)}
+        href={RelativeHref(href)}
         onClick={this.navigate}
         children={this.props.children}
         className={classSet(this.props.className, { 'active' : isActive })}
@@ -50,6 +53,17 @@ const Link = React.createClass({
     if (this.props.onClick) {
       this.props.onClick(e);
     }
+  },
+
+  isActive(path) {
+    // we need this for the http: protocol
+    const pathNameWithoutOrigin = window.location.href.substr(window.location.origin.length);
+
+    return (
+      this.props.to === pathNameWithoutOrigin ||
+      // this.. i have no idea anymore
+      (path === this.props.to && Router.isActive(DocumentURI.withoutExtension(path)))
+    )
   }
 });
 

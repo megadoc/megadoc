@@ -1,3 +1,5 @@
+const invariant = require('utils/invariant');
+
 /**
  * @module LayoutEngine
  *
@@ -57,12 +59,72 @@ exports.getDocumentOverride = function(href, layoutConfig) {
   const url = href.split('#')[0]; // ignore hash/DocumentEntity links here
 
   if (layoutConfig.customLayouts) {
-    const layoutOverride = layoutConfig.customLayouts.filter(x => {
-      return x.match.by === 'url' && x.match.on === url;
-    })[0];
+    const layoutOverride = getOverrideEntry({
+      pathname: href,
+      layouts: layoutConfig.customLayouts
+    });
 
     if (layoutOverride && layoutOverride.using) {
       return layoutOverride.using;
     }
   }
 };
+
+function getOverrideEntry({ documentNode, layouts, pathname }) {
+  if (!layouts) {
+    return null;
+  }
+
+  return layouts.filter(x => {
+    invariant(x.hasOwnProperty('match'),
+      "A custom layout must have a @match property defined!"
+    );
+
+    const matchBy = x.match.by;
+    const matchOn = arrayWrap(x.match.on);
+
+    return (
+      (
+        documentNode &&
+        matchBy === 'type' &&
+        matchOn.indexOf(documentNode.type) > -1
+      ) ||
+      (
+        documentNode &&
+        matchBy === 'uid' &&
+        matchOn.indexOf(documentNode.uid) > -1
+      ) ||
+      (
+        matchBy === 'url' &&
+        matchURL(matchOn, pathname)
+      )
+    );
+  })[0];
+}
+
+function getRegionsForDocument({ documentNode, layouts, pathname }) {
+  const entry = getOverrideEntry({ documentNode, layouts, pathname });
+
+  if (entry) {
+    return entry.regions;
+  }
+}
+
+function arrayWrap(x) {
+  return Array.isArray(x) ? x : [].concat(x || []);
+}
+
+function matchURL(matchOn, pathname) {
+  const pathWithoutHash = pathname.split('#')[0];
+
+  return matchOn.some(function(pattern) {
+    if (pattern === '*') {
+      return true;
+    }
+
+    return pattern.match(pathWithoutHash);
+  });
+}
+
+exports.getOverrideEntry = getOverrideEntry;
+exports.getRegionsForDocument = getRegionsForDocument;

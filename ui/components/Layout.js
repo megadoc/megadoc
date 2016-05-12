@@ -6,7 +6,7 @@ const NotFound = require('components/NotFound');
 const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Banner = require('./Layout__Banner');
-const { getRegionsForDocument } = require('./Layout__Utils');
+const { getRegionsForDocument } = require('../LayoutEngine');
 const LayoutScreen = require('./Layout__Screen');
 
 const { node, shape, string, arrayOf, array, object, oneOfType, oneOf, bool, } = React.PropTypes;
@@ -69,6 +69,7 @@ const Layout = React.createClass({
       'root--with-fixed-sidebar': this.props.fixedSidbar,
       'root--with-two-column-layout': ctx.hasSidebarElements,
       'root--with-banner': this.props.banner,
+      'root--without-banner': !this.props.banner,
     });
 
     return (

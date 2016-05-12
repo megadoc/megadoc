@@ -34,27 +34,11 @@
 }
 
 .root--with-banner .anchorable-heading {
-  @offset: @banner-height + @banner-border-dim + @whitespace;
+  .fix-me-up(@banner-height + @banner-border-dim + @whitespace);
+}
 
-  &__anchor {
-    position: relative;
-    top: -1 * @offset;
-    display: block;
-  }
-
-  &[id]:before {
-    content: '';
-    display: block;
-
-    // This is so crazy that it works, but it works perfectly. Credit goes to
-    // the answer by Jan on http://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
-    //
-    // We need this for the browser to scroll correctly to the heading anchors,
-    // ignoring the fixed space on top (occupied by the banner.)
-    margin-top: -1 * @offset;
-    padding-top: @offset;
-    z-index: -1;
-  }
+.root--without-banner .anchorable-heading {
+  .fix-me-up(1em);
 }
 
 .schemable({
@@ -63,3 +47,24 @@
     .unmark-link-external()
   }
 });
+
+.fix-me-up(@offset) {
+  &__anchor {
+    position: relative;
+    top: -1 * @offset;
+    display: block;
+  }
+
+  // This is so crazy that it works, but it works perfectly. Credit goes to
+  // the answer by Jan on http://bit.ly/PJveKt
+  //
+  // We need this for the browser to scroll correctly to the heading anchors,
+  // ignoring the fixed space on top (occupied by the banner.)
+  &[id]:before {
+    content: '';
+    display: block;
+    margin-top: -1 * @offset;
+    padding-top: @offset;
+    z-index: -1;
+  }
+}

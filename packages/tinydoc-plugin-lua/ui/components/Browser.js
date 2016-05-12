@@ -31,6 +31,7 @@ const Browser = React.createClass({
         <Link
           className="lua-browser__link"
           to={documentNode.meta.href}
+          anchor={documentNode.meta.anchor}
           children={documentNode.title}
         />
 

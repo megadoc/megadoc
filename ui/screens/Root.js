@@ -10,6 +10,7 @@ const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
 const navigate = require('../utils/navigate');
 const DocumentResolver = require('../DocumentResolver');
+const ErrorMessage = require('components/ErrorMessage');
 
 const Root = React.createClass({
   propTypes: {
@@ -52,6 +53,24 @@ const Root = React.createClass({
     //   this.getPathName(),
     //   DocumentURI.getCurrentPathName()
     // );
+
+    if (!documentContext) {
+      return (
+        <ErrorMessage style={{ width: '50vw', margin: '10vh auto 0 auto' }}>
+          <p>There was no document found at this URL. This most likely indicates
+          a configuration error. Please check and try again.
+          </p>
+
+          <p>Debugging information:</p>
+
+          <pre>
+            Corpus size: {tinydoc.corpus.length}
+            {"\n"}
+            Location: {JSON.stringify(this.getLocation(), null, 2)}
+          </pre>
+        </ErrorMessage>
+      );
+    }
 
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
