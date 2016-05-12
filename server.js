@@ -48,7 +48,7 @@ function start(host, port, done) {
 
   config.module.loaders.some(function(loader) {
     if (loader.id === 'js-loaders') {
-      loader.loaders.push('react-hot');
+      loader.loaders.unshift('react-hot');
       return true;
     }
   });
