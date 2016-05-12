@@ -1,6 +1,6 @@
 var React = require('react');
 var config = require('config');
-var { Link } = require('react-router');
+var Link = require('components/Link');
 var Icon = require('components/Icon');
 
 var Header = React.createClass({

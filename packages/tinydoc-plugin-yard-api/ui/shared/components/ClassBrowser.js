@@ -1,5 +1,5 @@
 var React = require("react");
-var { Link } = require('react-router');
+var Link = require('components/Link');
 var Checkbox = require('components/Checkbox');
 var Storage = require('core/Storage');
 var EXPAND_ALL = require('constants').CFG_CLASS_BROWSER_EXPAND_ALL;
