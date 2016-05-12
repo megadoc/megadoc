@@ -23,6 +23,7 @@ describe("[Integration] tinydoc-plugin-lua", function() {
 
     TinyTestUtils.createFile(multiline(function() {;
       // --- @module
+      // --- This here be our CLI module.
       // local cli = {}
       //
       // return cli
@@ -47,6 +48,46 @@ describe("[Integration] tinydoc-plugin-lua", function() {
       if (err) { return done(err); }
 
       assert.equal(stats['lua:lua-test'].moduleCount, 1);
+
+      TinyTestUtils.assertFileWasRendered('lua-test/cli.html', {
+        text: 'This here be our CLI module.'
+      });
+
+      done();
+    });
+  });
+
+  it('works in single page mode', function(done) {
+    config.layoutOptions.singlePageMode = true;
+    config.layoutOptions.customLayouts = [
+      {
+        match: { by: 'url', on: '*' },
+        regions: [
+          {
+            name: 'Layout::Content',
+            outlets: [{ name: 'Lua::AllModules', using: 'lua-test' }]
+          }
+        ]
+      }
+    ]
+
+    var tiny = tinydoc(config, {
+      scan: true,
+      write: true,
+      index: true,
+      render: true,
+      stats: true,
+      purge: true
+    });
+
+    tiny.run(function(err, stats) {
+      if (err) { return done(err); }
+
+      assert.equal(stats['lua:lua-test'].moduleCount, 1);
+
+      TinyTestUtils.assertFileWasRendered('index.html', {
+        text: 'This here be our CLI module.'
+      });
 
       done();
     });

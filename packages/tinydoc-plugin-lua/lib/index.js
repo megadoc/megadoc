@@ -33,6 +33,9 @@ module.exports = function LuaPlugin(userConfig) {
           name: 'tinydoc-plugin-lua',
           title: config.title,
           config: config,
+          meta: {
+            defaultLayouts: require('./defaultLayouts'),
+          },
           documents: documents
             .filter(function(x) { return !x.receiver; })
             .map(reduceModule(documents))
@@ -97,6 +100,7 @@ function reduceModule(documents) {
       title: doc.id,
       filePath: doc.filePath,
       properties: doc,
+      symbol: '',
       entities: documents.filter(function(x) {
         return x.receiver === doc.id;
       }).map(reduceEntity)
@@ -106,8 +110,8 @@ function reduceModule(documents) {
 
 function reduceEntity(doc) {
   return b.documentEntity({
-    id: doc.id,
-    title: doc.id,
+    id: (doc.symbol || '') + doc.id,
+    title: doc.path,
     properties: doc
   })
 }

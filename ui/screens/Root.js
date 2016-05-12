@@ -2,8 +2,7 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const AppState = require('core/AppState');
 const Storage = require('core/Storage');
-const DocumentURI = require('core/DocumentURI');
-const config = require('config');
+const Router = require('core/Router');
 const SpotlightManager = require('../components/SpotlightManager');
 const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
@@ -11,16 +10,16 @@ const ScrollSpy = require('../components/ScrollSpy');
 const navigate = require('../utils/navigate');
 const DocumentResolver = require('../DocumentResolver');
 const ErrorMessage = require('components/ErrorMessage');
+const { object } = React.PropTypes;
 
 const Root = React.createClass({
   propTypes: {
-    params: React.PropTypes.object,
+    config: object,
   },
 
   getDefaultProps() {
     return {
       query: {},
-      params: {}
     };
   },
 
@@ -33,10 +32,19 @@ const Root = React.createClass({
     AppState.on('change', this.reload);
 
     window.addEventListener('click', this.handleInternalLink, false);
-  },
 
-  shouldComponentUpdate(nextProps) {
-    return this.props.params !== nextProps.params;
+    // Argh, otherwise when you refresh the page the browser doesn't seem to
+    // make the jump!
+    //
+    // To reproduce:
+    //
+    //   - turn on single page mode
+    //   - anchor to some heading
+    //   - reload
+    //     - watch it stick to the top
+    if (AppState.inSinglePageMode()) {
+      Router.refreshScroll();
+    }
   },
 
   componentWillUnmount() {
@@ -47,6 +55,7 @@ const Root = React.createClass({
   },
 
   render() {
+    const { config } = this.props;
     let documentContext;
 
     if (!AppState.inSinglePageMode()) {

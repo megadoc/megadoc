@@ -29,13 +29,6 @@ const Link = React.createClass({
     const href = this.getHref();
     const anchor = this.getAnchor(href) || '';
 
-    if (AppState.inSinglePageMode() && !anchor.length) {
-      console.warn(
-        `You are linking to '${href}' but have not specified any anchor. ` +
-        "An anchor is required for links to function in SinglePageMode."
-      );
-    }
-
     // blurgh, what?
     const isActive = this.isActive(href);
     const targetHref = anchor.length > 0 && AppState.inSinglePageMode() && href.indexOf('#') === -1 ?
@@ -109,6 +102,10 @@ const Link = React.createClass({
 });
 
 function RelativeHref(href) {
+  if (AppState.inSinglePageMode()) {
+    return href;
+  }
+
   try {
     return URIjs(href).relativeTo(DocumentURI.getCurrentPathName()).toString();
   }

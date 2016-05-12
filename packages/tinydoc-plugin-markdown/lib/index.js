@@ -110,7 +110,7 @@ function MarkdownPlugin(userConfig) {
             text: doc.source,
             contextNode: documentNode
           }), {
-            baseURL: ''
+            baseURL: documentNode.meta.href
           });
 
           doc.source = compiled.html;

@@ -87,17 +87,9 @@ describe("[Integration] tinydoc-plugin-js", function() {
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);
 
-      assertFileWasRendered('test/Store.html');
+      TinyTestUtils.assertFileWasRendered('test/Store.html');
 
       done();
     });
   });
-
-  function assertFileWasRendered(fileName) {
-    assert.ok(fs.existsSync(TinyTestUtils.tempPath('doc/compiled/' + fileName)));
-    assert.notOk(
-      fs.readFileSync(TinyTestUtils.tempPath('doc/compiled/' + fileName), 'utf-8').match(/404/),
-      "It did not 404"
-    );
-  }
 });

@@ -48,8 +48,9 @@ tinydoc.start = function(options = {}) {
     if (config.$static) {
       config.$static.readyCallback({
         render(href, done) {
-          // location.path = href.indexOf('/index') === 0 ? '/' : href;
-          location.path = href;
+          // Stripping the leading hash is necessary for single page mode...
+          // can't wait till RR is gone :)
+          location.path = href.replace(/^#/, '');
 
           router.run(function(Handler, state) {
             if (process.env.DEBUG) {

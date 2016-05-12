@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null || {
+  echo "$0: Must be run from tinydoc root.";
+  exit 1
+}
+
+source "bin/_helpers.sh"
+
+if [ -z $PACKAGE ]; then
+  if [ $# -gt 0 ]; then
+    PACKAGE=$@
+    shift $#
+  else
+    echo "Usage: $0 PACKAGE"
+    exit 1
+  fi
+fi
+
+for pkg in $PACKAGE; do
+  ./bin/prepublish.sh $pkg -S update -S lint -S test
+done

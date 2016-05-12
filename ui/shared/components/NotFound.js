@@ -1,6 +1,12 @@
 const React = require("react");
 
 // TODO: customize
+//
+// SMELL ALERT: if you change this component, there's a high likelihood most
+// integration tests will start failing too because they sniff the dom for the
+// contents of this component.
+//
+// See TestUtils.js#assertFileWasRendered
 const NotFound = React.createClass({
   displayName: "NotFound",
 
