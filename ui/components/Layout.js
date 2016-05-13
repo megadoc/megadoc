@@ -3,6 +3,7 @@ const classSet = require('utils/classSet');
 const Banner = require('./Layout__Banner');
 const { getRegionsForDocument } = require('../LayoutEngine');
 const LayoutScreen = require('./Layout__Screen');
+const scrollToTop = require('utils/scrollToTop');
 
 const { node, shape, string, arrayOf, array, object, oneOfType, oneOf, bool, } = React.PropTypes;
 const Link = shape({
@@ -54,6 +55,12 @@ const Layout = React.createClass({
       bannerLinks: [],
       customLayouts: []
     };
+  },
+
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.documentNode !== this.props.documentNode) {
+      scrollToTop();
+    }
   },
 
   render() {
