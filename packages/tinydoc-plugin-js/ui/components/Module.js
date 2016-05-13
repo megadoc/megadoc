@@ -30,9 +30,8 @@ const Module = React.createClass({
     };
 
     return (
-      <div className="class-view doc-content">
+      <div className="class-view">
         <ModuleHeader
-          routeName={config.routeName}
           documentNode={moduleNode}
           showSourcePaths={config.showSourcePaths}
           showNamespace={config.showNamespaceInModuleHeader}
@@ -40,7 +39,6 @@ const Module = React.createClass({
         />
 
         <ModuleBody
-          routeName={config.routeName}
           documentNode={moduleNode}
           focusedEntity={documentNode.type === 'DocumentEntity' ? documentNode.id : undefined}
         />

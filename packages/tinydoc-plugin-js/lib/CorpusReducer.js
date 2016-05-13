@@ -20,6 +20,7 @@ module.exports = function reduceDocuments(options) {
     config: options.config,
     indexFields: [ 'aliases' ],
     meta: {
+      href: options.baseURL,
       outlets: [
         {
           name: 'CJS::Module',
@@ -31,36 +32,7 @@ module.exports = function reduceDocuments(options) {
         }
       ],
 
-      defaultLayouts: [
-        {
-          match: { by: 'type', on: 'Namespace' },
-          regions: [
-            {
-              name: 'Layout::Sidebar',
-              outlets: [{ name: 'CJS::ClassBrowser' }]
-            }
-          ]
-        },
-        {
-          match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
-          regions: [
-            {
-              name: 'Layout::Content',
-              options: { framed: true },
-              outlets: [
-                { name: 'CJS::ModuleHeader' },
-                { name: 'CJS::ModuleIndex' },
-                { name: 'CJS::ModuleBody' },
-                { name: 'Layout::Content' },
-              ]
-            },
-            {
-              name: 'Layout::Sidebar',
-              outlets: [{ name: 'CJS::ClassBrowser' }]
-            }
-          ]
-        }
-      ]
+      defaultLayouts: require('./defaultLayouts')
     }
   });
 

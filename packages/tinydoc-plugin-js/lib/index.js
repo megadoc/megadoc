@@ -26,15 +26,15 @@ function createCJSPlugin(userConfig) {
     postProcessors: [],
   };
 
-  assert(typeof config.routeName === 'string',
+  assert(typeof config.id === 'string' || typeof config.routeName === 'string',
     "You must specify a @routeName string to the tinydoc-plugin-js plugin."
   );
 
   var plugin = {
     name: 'tinydoc-plugin-js',
-    id: config.routeName,
+    id: config.id || config.routeName,
 
-    routeName: config.routeName,
+    routeName: config.url || config.routeName,
 
     /**
      * Add a custom-tag definition.
@@ -95,9 +95,9 @@ function createCJSPlugin(userConfig) {
           documents = _documents;
           database = reduceDocuments({
             documents: documents,
-            namespaceId: config.routeName,
-            namespaceTitle: config.corpusContext,
-            baseURL: config.routeName,
+            namespaceId: config.id || config.routeName,
+            namespaceTitle: config.title || config.corpusContext,
+            baseURL: config.url || config.routeName,
             config: config
           });
 
