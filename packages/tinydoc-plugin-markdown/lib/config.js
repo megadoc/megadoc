@@ -10,6 +10,5 @@ module.exports = {
   allowLeadingSlashInLinks: true,
   generateMissingHeadings: true,
   discardIdPrefix: null,
-  discardFileExtension: false,
-  corpusContext: 'Articles',
+  discardFileExtension: true,
 };
