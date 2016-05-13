@@ -26,7 +26,7 @@ function MarkdownPlugin(userConfig) {
           database = b.namespace({
             id: config.routeName,
             name: 'tinydoc-plugin-markdown',
-            title: config.corpusContext,
+            title: config.title,
             meta: {
               defaultLayouts: [
                 // index pages, no sidebar, only content panel

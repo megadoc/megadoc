@@ -15,13 +15,16 @@ and runtime performance.
 - (semver-minor) A suffix may be appended to document URLs, like `.html`, see [Core.Config.format]()
 - (semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See [Core.Config.emitFiles]() and [Core.Config.emittedFileExtension]()
 - (semver-minor) runtime config now contains a `pluginNames` list of the registered plugin names (inferred from the distributable JS files)
-- (semver-major) [tinydoc-plugin-static]() now requires a `title` config item
-- (semver-minor) [tinydoc-plugin-static]() now integrates with the corpus for indexing
-- (semver-major) [tinydoc-plugin-js](): links to document entities are now represented as a hash-tag following the document's URI
+- ~~(semver-major) tinydoc-plugin-static now requires a `title` config item~~
+- ~~(semver-minor) tinydoc-plugin-static now integrates with the corpus for indexing~~
+- (semver-major) tinydoc-plugin-static **has been dropped** - it was duplicating functionality that could be achieved using other plugins like [tinydoc-plugin-markdown](). Now with the new layouting engine, it is possible to achieve the same effect.
+- (semver-major) links to document entities are now represented as a hash-tag following the document's URI
 - (semver-patch) `bin/devserver.sh` has been modified to use [connect](https://github.com/senchalabs/connect) with [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware) for local development. Also, `/.local` file support has been dropped; the server will now automatically resolve which plugins to use and use the local versions of them
 - (semver-patch) introduced a few localized hacks to react-router to make it ignore any suffixes in links (file extension)
 - (semver-major) [tinydoc-ui](): no longer using the HashLocation
-
+- (semver-major) [tinydoc-plugin-markdown]() will now discard file extensions by default (this will cause URLs to change unless you opt-out)
+- (semver-major) [tinydoc]() no longer accepts a `readme` config; use the markdown plugin with a rewrite for serving such a file
+- (semver-major) [tinydoc]() no longer accepts a `home` config for redirecting
 ## 5.0.0
 
 - Markdown renderer now accepts a `anchorableHeadings: Boolean` option that

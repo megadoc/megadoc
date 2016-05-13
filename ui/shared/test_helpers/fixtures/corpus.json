@@ -31,7 +31,6 @@
       "analyzeNode": null,
       "customTags": {},
       "showSourcePaths": true,
-      "sortModulesAlphabetically": true,
       "verbose": false,
       "corpusContext": "JS",
       "alias": {

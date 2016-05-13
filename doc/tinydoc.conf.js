@@ -3,16 +3,20 @@ var config = {
   assetRoot: path.resolve(__dirname, '..'),
 
   title: 'tinydoc',
-  home: '/readme',
   outputDir: '/srv/http/docs/tinydoc',
-  // readme: 'README.md',
   useHashLocation: true,
   publicPath: '',
   stylesheet: 'doc/theme.less',
   disqus: false,
   showSettingsLinkInBanner: false,
+  tooltipPreviews: false,
 
   layoutOptions: {
+    rewrite: {
+      '/articles/readme.html': '/index.html',
+      '/articles/changes.html': '/changes.html',
+    },
+
     bannerLinks: [
       {
         text: 'Usage',
@@ -25,51 +29,51 @@ var config = {
         links: [
           {
             text: 'Git',
-            href: '/plugins/tinydoc-plugin-git',
+            href: '/plugins/tinydoc-plugin-git/readme.html',
           },
 
           {
             text: 'JavaScript',
-            href: '/plugins/tinydoc-plugin-js',
+            href: '/plugins/tinydoc-plugin-js/readme.html',
           },
           {
             text: 'JavaScript React',
-            href: '/plugins/tinydoc-plugin-react',
+            href: '/plugins/tinydoc-plugin-react/readme.html',
           },
 
           {
             text: 'Markdown',
-            href: '/plugins/tinydoc-plugin-markdown',
+            href: '/plugins/tinydoc-plugin-markdown/readme.html',
           },
 
           {
             text: 'Lua',
-            href: '/plugins/tinydoc-plugin-lua',
+            href: '/plugins/tinydoc-plugin-lua/readme.html',
           },
 
           {
             text: 'Static',
-            href: '/plugins/tinydoc-plugin-static',
+            href: '/plugins/tinydoc-plugin-static/readme.html',
           },
 
           {
             text: 'YARD-API',
-            href: '/plugins/tinydoc-plugin-yard-api',
+            href: '/plugins/tinydoc-plugin-yard-api/readme.html',
           },
 
           {
             text: 'Reference Graph',
-            href: '/plugins/tinydoc-plugin-reference-graph',
+            href: '/plugins/tinydoc-plugin-reference-graph/readme.html',
           },
 
           {
             text: 'Theme - Qt',
-            href: '/plugins/tinydoc-theme-qt',
+            href: '/plugins/tinydoc-theme-qt/readme.html',
           },
 
           {
             text: 'Theme - gitbooks.io',
-            href: '/plugins/tinydoc-theme-qt',
+            href: '/plugins/tinydoc-theme-qt/readme.html',
           },
         ]
       },
@@ -89,7 +93,7 @@ var config = {
 
           {
             text: 'Corpus',
-            href: '/dev/corpus',
+            href: '/dev/corpus/readme.html',
           },
         ]
       },
@@ -99,6 +103,68 @@ var config = {
         href: '/changes',
       },
 
+    ],
+
+    customLayouts: [
+      {
+        match: { by: 'url', on: '/changes.html' },
+        regions: [
+          {
+            name: 'Layout::Content',
+            options: { framed: true },
+            outlets: [
+              { name: 'Markdown::Document' }
+            ]
+          },
+          {
+            name: 'Layout::Sidebar',
+            outlets: [
+              { name: 'Markdown::DocumentTOC' }
+            ]
+          }
+
+        ]
+      },
+      {
+        match: { by: 'url', on: '/dev/corpus/readme.html' },
+        regions: [
+          {
+            name: 'Layout::Content',
+            options: { framed: true },
+            outlets: [
+              { name: 'Markdown::Document' }
+            ]
+          },
+          {
+            name: 'Layout::Sidebar',
+            outlets: [
+              { name: 'Markdown::DocumentTOC', using: '/dev/corpus/readme' },
+              { name: 'CJS::ClassBrowser', using: 'corpus-js' },
+            ]
+          }
+
+        ]
+      },
+      {
+        match: { by: 'url', on: '/dev/corpus/(?!readme)' },
+        regions: [
+          {
+            name: 'Layout::Content',
+            options: { framed: true },
+            outlets: [
+              { name: 'CJS::Module' }
+            ]
+          },
+          {
+            name: 'Layout::Sidebar',
+            outlets: [
+              { name: 'Markdown::DocumentTOC', using: '/dev/corpus/readme' },
+              { name: 'CJS::ClassBrowser', using: 'corpus-js' },
+            ]
+          }
+
+        ]
+      }
     ]
   },
 
@@ -106,7 +172,9 @@ var config = {
 
 config.plugins = [
   require('tinydoc-plugin-js')({
-    routeName: 'dev/api',
+    id: 'core-js',
+    url: '/dev/api',
+    title: 'API',
     // navigationLabel: 'API',
 
     source: [
@@ -130,53 +198,40 @@ config.plugins = [
     }
   }),
 
-  require('tinydoc-plugin-static')({
-    title: 'README',
-    url: '/readme',
-    source: 'README.md',
-    anchorableHeadings: true,
-  }),
-
-  require('tinydoc-plugin-static')({
-    title: 'Changes',
-    source: 'CHANGES.md',
-    url: '/changes',
-    anchorableHeadings: true
+  require('tinydoc-plugin-markdown')({
+    title: 'Documents',
+    source: [ 'README.md', 'CHANGES.md' ],
   }),
 
   // @url: /dev/plugins
   require('tinydoc-plugin-markdown')({
-    routeName: 'dev/plugins',
+    routeName: '/dev/plugins',
     source: [ 'doc/plugins/**/*.md' ],
-    title: false,
+    title: 'Plugins',
     fullFolderTitles: false,
-    discardFileExtension: true,
-    corpusContext: 'Plugins',
   }),
 
   // @url: /usage
   require('tinydoc-plugin-markdown')({
-    routeName: 'usage',
+    routeName: '/usage',
     source: [ 'doc/usage/**/*.md' ],
-    title: false,
+    title: 'Usage',
     fullFolderTitles: false,
-    discardFileExtension: true,
-    corpusContext: 'Usage',
   }),
 
-  require('tinydoc-theme-qt')({}),
 
-  require('tinydoc-plugin-static')({
+  require('tinydoc-plugin-markdown')({
     title: 'Corpus',
     source: 'packages/tinydoc-corpus/README.md',
-    url: '/dev/corpus',
-    outlet: 'CJS::Landing',
-    anchorableHeadings: false
+    routeName: '/dev/corpus',
+    // outlet: 'CJS::Landing',
+    // anchorableHeadings: false
   }),
 
   require('tinydoc-plugin-js')({
-    routeName: 'dev/corpus',
-    corpusContext: 'Corpus',
+    id: 'corpus-js',
+    url: '/dev/corpus',
+    title: 'Corpus',
     useDirAsNamespace: false,
     inferModuleIdFromFileName: true,
 
@@ -186,7 +241,10 @@ config.plugins = [
     ],
 
     exclude: [ /\.test\.js$/ ],
-  })
+  }),
+
+  require('tinydoc-theme-qt')({}),
+
 ];
 
 [
@@ -202,8 +260,9 @@ config.plugins = [
   'tinydoc-theme-qt',
 ].forEach(function(pluginName) {
   config.plugins.push(require('tinydoc-plugin-js')({
-    routeName: 'plugins/' + pluginName,
-    corpusContext: pluginName,
+    id: 'js-plugin-' + pluginName,
+    url: '/plugins/' + pluginName,
+    title: pluginName,
     useDirAsNamespace: false,
     inferModuleIdFromFileName: true,
 
@@ -215,12 +274,12 @@ config.plugins = [
     exclude: [ /\.test\.js$/, /vendor/ ],
   }));
 
-  config.plugins.push(require('tinydoc-plugin-static')({
+  config.plugins.push(require('tinydoc-plugin-markdown')({
     title: pluginName,
     source: 'packages/' + pluginName + '/README.md',
-    url: '/plugins/' + pluginName,
-    outlet: 'CJS::Landing',
-    anchorableHeadings: false
+    routeName: '/plugins/' + pluginName,
+    // outlet: 'CJS::Landing',
+    // anchorableHeadings: false
   }));
 })
 
