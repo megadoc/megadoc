@@ -122,7 +122,7 @@ function matchURL(matchOn, pathname) {
       return true;
     }
 
-    return pattern.match(pathWithoutHash);
+    return pathWithoutHash.match(pattern);
   });
 }
 
