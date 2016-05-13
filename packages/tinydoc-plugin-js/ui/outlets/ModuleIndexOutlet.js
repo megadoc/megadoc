@@ -1,5 +1,6 @@
 const React = require('react');
 const { object, shape, bool, } = React.PropTypes;
+const NamespaceIndex = require('../components/NamespaceIndex');
 const ModuleIndex = require('../components/ModuleIndex');
 
 tinydoc.outlets.add('CJS::ModuleIndex', {
@@ -17,10 +18,17 @@ tinydoc.outlets.add('CJS::ModuleIndex', {
 
     render() {
       return (
-        <ModuleIndex
-          {...this.props.$outletOptions}
-          documentNode={this.props.documentNode}
-        />
+        <div>
+          <NamespaceIndex
+            {...this.props.$outletOptions}
+            documentNode={this.props.documentNode}
+          />
+
+          <ModuleIndex
+            {...this.props.$outletOptions}
+            documentNode={this.props.documentNode}
+          />
+        </div>
       );
     }
   }),
