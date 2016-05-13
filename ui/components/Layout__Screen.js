@@ -125,11 +125,7 @@ const LayoutScreen = React.createClass({
             documentEntityNode: operatingNodes.documentEntityNode,
             namespaceNode: operatingNodes.namespaceNode,
           }}
-        >
-          <ErrorMessage>
-            Outlet "{x.name}" seems to be empty!
-          </ErrorMessage>
-        </Outlet>
+        />
       );
     }).filter(x => !!x)
   },
