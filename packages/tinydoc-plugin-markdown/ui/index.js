@@ -6,10 +6,10 @@ Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 tinydoc.outlets.define('Markdown::Document');
 tinydoc.outlets.define('Markdown::DocumentTOC');
-tinydoc.outlets.define('Markdown::ArticleIndex');
+tinydoc.outlets.define('Markdown::Browser');
 
 tinydoc.use('tinydoc-plugin-markdown', function MarkdownPlugin(api, configs) {
-  require('./outlets/ArticleIndexOutlet');
+  require('./outlets/BrowserOutlet');
   require('./outlets/DocumentOutlet');
   require('./outlets/DocumentTOCOutlet');
 

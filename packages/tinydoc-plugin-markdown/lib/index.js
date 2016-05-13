@@ -28,7 +28,8 @@ function MarkdownPlugin(userConfig) {
             name: 'tinydoc-plugin-markdown',
             title: config.title,
             meta: {
-              href: config.baseURL,
+              // TODO: stop switching against null in CorpusVisitor - it's stupid
+              href: config.baseURL ? config.baseURL : undefined,
 
               defaultLayouts: [
                 // index pages, no sidebar, only content panel
@@ -42,31 +43,27 @@ function MarkdownPlugin(userConfig) {
                         { name: 'Markdown::Document' },
                         { name: 'Layout::Content' },
                       ]
+                    },
+                    {
+                      name: 'Layout::Sidebar',
+                      outlets: [
+                        { name: 'Markdown::Browser' },
+                        { name: 'Layout::Sidebar' }
+                      ]
                     }
                   ]
                 },
 
                 // within our namespace, we'll show the sidebar:
-                // {
-                //   match: [
-                //     { by: 'type', on: [ 'Document', 'DocumentEntity' ] }
-                //     { by: 'url', on: '[namespace]*' }
-                //   ],
-                //   regions: [
-                //     {
-                //       name: 'Layout::Content',
-                //       options: { framed: true },
-                //       outlets: [
-                //         { name: 'Markdown::Document' },
-                //         { name: 'Layout::Content' },
-                //       ]
-                //     },
-                //     {
-                //       name: 'Layout::Sidebar',
-                //       outlets: [{ name: 'Markdown::ArticleIndex' }]
-                //     }
-                //   ]
-                // }
+                {
+                  match: { by: 'type', on: [ 'Namespace' ] },
+                  regions: [
+                    {
+                      name: 'Layout::Sidebar',
+                      outlets: [{ name: 'Markdown::Browser' }]
+                    }
+                  ]
+                }
               ]
             },
             documents: documents.map(function(doc) {
@@ -108,7 +105,8 @@ function MarkdownPlugin(userConfig) {
             text: doc.source,
             contextNode: documentNode
           }), {
-            baseURL: documentNode.meta.href
+            baseURL: documentNode.meta.href,
+            sanitize: config.sanitize !== false,
           });
 
           doc.source = compiled.html;

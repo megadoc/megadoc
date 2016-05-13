@@ -2,8 +2,8 @@ const React = require('react');
 const ClassBrowser = require('../components/ClassBrowser')
 const { object } = React.PropTypes;
 
-tinydoc.outlets.add('Markdown::ArticleIndex', {
-  key: 'Markdown::ArticleIndex',
+tinydoc.outlets.add('Markdown::Browser', {
+  key: 'Markdown::Browser',
 
   component: React.createClass({
     propTypes: {

@@ -7,142 +7,121 @@ const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const { ROOT_FOLDER_ID } = require('constants');
 const isItemHot = require('utils/isItemHot');
 const JumperMixin = require('mixins/JumperMixin');
-const Database = require('../Database');
+const ArticleTOC = require('./ArticleTOC');
+// const Database = require('../Database');
+const { object } = React.PropTypes;
 
 var MarkdownClassBrowser = React.createClass({
-  mixins: [
-    JumperMixin(function(props) {
-      if (props.activeArticleId) {
-        return this.refs[props.activeArticleId];
-      }
-      else {
-        return false;
-      }
-    }, -50)
-  ],
+  // mixins: [
+  //   JumperMixin(function(props) {
+  //     if (props.activeArticleId) {
+  //       return this.refs[props.activeArticleId];
+  //     }
+  //     else {
+  //       return false;
+  //     }
+  //   }, -50)
+  // ],
 
   propTypes: {
-    activeArticleId: React.PropTypes.string,
-    routeName: React.PropTypes.string,
+    namespaceNode: object,
+    documentNode: object,
+    documentEntityNode: object,
+    // activeArticleId: React.PropTypes.string,
+    // routeName: React.PropTypes.string,
     expanded: React.PropTypes.bool,
   },
 
-  getDefaultProps: function() {
-    return {
-      folders: []
-    };
-  },
+  // getDefaultProps() {
+  //   return {
+  //     folders: []
+  //   };
+  // },
 
   render() {
-    return null;
+    // {this.hasFolders() && Storage.get(GROUP_BY_FOLDER) ?
+    //   this.renderGroupedEntries() :
+    //   this.renderAllArticles()
+    // }
 
     return (
       <nav>
-        {this.hasFolders() && Storage.get(GROUP_BY_FOLDER) ?
-          this.renderGroupedEntries() :
-          this.renderAllArticles()
-        }
+        <div>
+          {this.props.namespaceNode.documents.map(this.renderArticle)}
+        </div>
 
-        {this.renderControls()}
+        {false && this.renderControls()}
       </nav>
     );
   },
 
-  renderGroupedEntries() {
-    const folders = this.getFolders();
+  // renderGroupedEntries() {
+  //   const folders = this.getFolders();
 
-    return (
-      <div>
-        {folders.map(this.renderFolder)}
-      </div>
-    );
-  },
+  //   return (
+  //     <div>
+  //       {folders.map(this.renderFolder)}
+  //     </div>
+  //   );
+  // },
 
-  renderFolder(folder) {
-    let articles = folder.articles;
+  // renderFolder(folder) {
+  //   let articles = folder.articles;
 
-    return (
-      <div key={folder.path} className="class-browser__category">
-        <h3 className="class-browser__category-name">
-          {folder.title === '.' ? '/' : folder.title}
-        </h3>
+  //   return (
+  //     <div key={folder.path} className="class-browser__category">
+  //       <h3 className="class-browser__category-name">
+  //         {folder.title === '.' ? '/' : folder.title}
+  //       </h3>
 
-        <div>
-          {articles.map(this.renderArticle)}
-        </div>
-      </div>
-    );
-  },
+  //       <div>
+  //         {articles.map(this.renderArticle)}
+  //       </div>
+  //     </div>
+  //   );
+  // },
 
-  renderAllArticles() {
-    const articles = this.getArticles();
+  // renderAllArticles() {
+  //   const articles = this.getArticles();
 
-    return (
-      <div>
-        {articles.map(this.renderArticle)}
-      </div>
-    );
-  },
+  //   return (
+  //     <div>
+  //       {articles.map(this.renderArticle)}
+  //     </div>
+  //   );
+  // },
 
-  renderArticle(article) {
-    const { id } = article;
+  renderArticle(documentNode) {
+    const article = documentNode.properties;
     let { title } = article;
-    const isActive = this.props.activeArticleId === id || this.props.expanded;
+    const isActive = this.props.documentNode === documentNode || this.props.expanded;
 
     if (Storage.get(GROUP_BY_FOLDER) &&
       article.folderTitle !== ROOT_FOLDER_ID &&
       article.folderTitle !== '.') {
+
       if (title.indexOf(article.folderTitle + '/') === 0) {
         title = title.substr(article.folderTitle.length + 1 /* '/' */);
       }
     }
 
     return (
-      <div key={id} ref={id}>
-        <Link
-          to={article}
-          className="class-browser__entry-link"
-        >
+      <div key={documentNode.uid}>
+        <Link to={documentNode} className="class-browser__entry-link">
           {article.plainTitle}
 
-          {article.git && isItemHot(article.git.lastCommittedAt) && (
+          {documentNode.meta.gitStats && isItemHot(documentNode.meta.gitStats.lastCommittedAt) && (
             <HotItemIndicator />
           )}
         </Link>
 
-        {isActive && this.renderTOC(article)}
+        {isActive && this.renderTOC(documentNode)}
       </div>
     );
   },
 
-  renderTOC(article) {
-    return (
-      <ul className="class-browser__sections">
-        {article.sections.map(this.renderSection.bind(null, article))}
-      </ul>
-    );
-  },
-
-  renderSection(article, section) {
-    var className = "class-browser__sections-section";
-    var sectionId = section.id;
-
-    if (section.level === 1) {
-      return null;
-    }
-
-    else if (section.level > 2) {
-      className += " class-browser__sections-section--indented";
-    }
-
-    return (
-      <li key={sectionId} className={className}>
-        <Link
-          to={section}
-          children={section.text}
-        />
-      </li>
-    );
+  renderTOC(documentNode) {
+    return <ArticleTOC documentNode={documentNode} />
   },
 
   renderControls() {
