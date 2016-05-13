@@ -10,6 +10,8 @@ var trackComponentsWithoutLiveExamples = require('./postProcessors/trackComponen
  * @preserveOrder
  */
 var defaults = {
+  id: null,
+
   /**
    * @property {String[]|Object[]}
    *
@@ -98,9 +100,9 @@ var defaults = {
 };
 
 function createReactPlugin(userConfig) {
-  var exports = { name: 'ReactPlugin' };
+  var exports = { name: 'tinydoc-plugin-react' };
   var config = _.extend({}, defaults, userConfig);
-  var routeName = config.routeName;
+  var id = config.id;
 
   var liveExampleProcessor = createLiveExampleTagProcessor({
     resolveComponentName: config.resolveComponentName
@@ -108,7 +110,7 @@ function createReactPlugin(userConfig) {
 
   var liveExampleCount = 0;
 
-  assert(typeof config.routeName === 'string');
+  assert(typeof config.id === 'string');
 
   function install(cjsPlugin) {
     assert(!!cjsPlugin && cjsPlugin.defineCustomTag instanceof Function,
@@ -132,7 +134,7 @@ function createReactPlugin(userConfig) {
   exports.run = function(compiler) {
     var utils = compiler.utils;
     var cjsPlugin = compiler.config.plugins.filter(function(plugin) {
-      return plugin.routeName === routeName;
+      return plugin.name === 'tinydoc-plugin-js' && plugin.id === id;
     })[0];
 
     assert(cjsPlugin);
@@ -140,7 +142,7 @@ function createReactPlugin(userConfig) {
     install(cjsPlugin);
 
     var runtimeConfig = {
-      routeName: routeName,
+      id: id,
 
       frameWidth: config.frameWidth,
       frameHeight: config.frameHeight,
@@ -197,7 +199,7 @@ function createReactPlugin(userConfig) {
     });
 
     compiler.on('generateStats', function(stats, done) {
-      stats['tinydoc-plugin-react:' + config.routeName] = {
+      stats['tinydoc-plugin-react:' + config.id] = {
         componentCount: liveExampleProcessor.getComponents().length,
         liveExampleCount: liveExampleCount
       };

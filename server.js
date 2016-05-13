@@ -8,6 +8,7 @@ var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 var fs = require('fs-extra');
 var http = require('http')
 var assign = require('lodash').assign;
+var K = require('./lib/HTMLSerializer__constants');
 
 var CONTENT_HOST = process.env.HOST || '0.0.0.0';
 var CONTENT_PORT = process.env.PORT || '8942';
@@ -105,7 +106,7 @@ function start(host, port, done) {
   app.use(require('webpack-hot-middleware')(compiler));
 
   app.use(modRewrite([
-    '^/(tinydoc__vendor.js|styles.css)$ - [G]',
+    '^/(' + K.VENDOR_BUNDLE + '.js|' + K.STYLE_BUNDLE + ')$ - [G]',
     '^/plugins/(' + pluginNames.join('|') + ').js$ - [G]',
   ]));
 

@@ -1,30 +1,23 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
-var multiline = require('multiline-slash');
-var tinydoc = require('tinydoc');
+var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
 var TinydocPluginJS = require('tinydoc-plugin-js');
 
 describe("[Integration] tinydoc-plugin-react", function() {
-  TinyTestUtils.IntegrationSuite(this);
-
-  var config;
+  var suite = IntegrationSuite(this);
 
   beforeEach(function() {
-    config = TinyTestUtils.generateTestConfig({
-      verbose: false,
-      plugins: [
-        TinydocPluginJS({
-          verbose: false,
-          routeName: 'test',
-          source: TinyTestUtils.tempPath('lib/**/*.js'),
-        }),
+    suite.set('plugins', [
+      TinydocPluginJS({
+        id: 'test',
+        verbose: false,
+        source: 'lib/**/*.js'
+      }),
 
-        Subject({ routeName: 'test', })
-      ]
-    });
+      Subject({ id: 'test', })
+    ]);
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/core/X.js', function() {;
       // /**
       //  * Hello baby!
       //  */
@@ -35,9 +28,9 @@ describe("[Integration] tinydoc-plugin-react", function() {
       //   getSomething() {
       //   }
       // });
-    }), 'lib/core/X.js');
+    });
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/core/Y.js', function() {;
       // /**
       //  * Hello honey!
       //  *
@@ -57,20 +50,11 @@ describe("[Integration] tinydoc-plugin-react", function() {
       // });
       //
       // module.exports = Y;
-    }), 'lib/core/Y.js');
+    });
   });
 
   it('works', function(done) {
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
-    });
-
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['tinydoc-plugin-react:test'].componentCount, 2);

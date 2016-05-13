@@ -1,7 +1,8 @@
 module.exports = {
   gitStats: false,
-  routeName: 'articles',
+  id: 'articles',
   title: 'Articles',
+  baseURL: null,
   source: [ 'doc/**/*.md' ],
   icon: null,
   exclude: [],

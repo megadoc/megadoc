@@ -1,55 +1,28 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
-var tinydoc = require('tinydoc');
-var multiline = require('multiline-slash');
+var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
+var path = require('path');
 
 describe("[Integration] tinydoc-plugin-lua", function() {
-  TinyTestUtils.IntegrationSuite(this);
-
-  var config;
+  var suite = IntegrationSuite(this);
 
   beforeEach(function() {
-    config = TinyTestUtils.generateTestConfig({
-      verbose: false,
-      plugins: [
-        Subject({
-          verbose: false,
-          routeName: 'lua-test',
-          source: TinyTestUtils.tempPath('lib/**/*.lua')
-        })
-      ]
-    });
-
-    TinyTestUtils.createFile(multiline(function() {;
-      // --- @module
-      // --- This here be our CLI module.
-      // local cli = {}
-      //
-      // return cli
-    }), 'lib/main.lua');
-
-    TinyTestUtils.createFile(multiline(function() {;
-      // print("Hello World!")
-    }), 'lib/another.lua');
+    suite.set('plugins', [
+      Subject({
+        verbose: false,
+        routeName: 'lua-test',
+        source: path.resolve(__dirname, 'fixtures/**/*.lua')
+      })
+    ]);
   });
 
   it('works', function(done) {
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
-    });
-
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['lua:lua-test'].moduleCount, 1);
 
-      TinyTestUtils.assertFileWasRendered('lua-test/cli.html', {
+      suite.assertFileWasRendered('lua-test/cli.html', {
         text: 'This here be our CLI module.'
       });
 
@@ -58,34 +31,22 @@ describe("[Integration] tinydoc-plugin-lua", function() {
   });
 
   it('works in single page mode', function(done) {
-    config.layoutOptions.singlePageMode = true;
-    config.layoutOptions.customLayouts = [
-      {
-        match: { by: 'url', on: '*' },
-        regions: [
-          {
-            name: 'Layout::Content',
-            outlets: [{ name: 'Lua::AllModules', using: 'lua-test' }]
-          }
-        ]
-      }
-    ]
-
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
+    suite.engageSinglePageMode({
+      match: { by: 'url', on: '*' },
+      regions: [
+        {
+          name: 'Layout::Content',
+          outlets: [{ name: 'Lua::AllModules', using: 'lua-test' }]
+        }
+      ]
     });
 
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['lua:lua-test'].moduleCount, 1);
 
-      TinyTestUtils.assertFileWasRendered('index.html', {
+      suite.assertFileWasRendered('index.html', {
         text: 'This here be our CLI module.'
       });
 

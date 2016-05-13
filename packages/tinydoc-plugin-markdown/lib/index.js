@@ -8,8 +8,8 @@ function MarkdownPlugin(userConfig) {
   var config = assign({}, defaults, userConfig);
 
   return {
+    id: config.id,
     name: 'tinydoc-plugin-markdown',
-    id: config.routeName,
 
     run: function(compiler) {
       var documents;
@@ -24,10 +24,12 @@ function MarkdownPlugin(userConfig) {
           documents = _documents;
 
           database = b.namespace({
-            id: config.routeName,
+            id: config.id,
             name: 'tinydoc-plugin-markdown',
             title: config.title,
             meta: {
+              href: config.baseURL,
+
               defaultLayouts: [
                 // index pages, no sidebar, only content panel
                 {
@@ -133,7 +135,7 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('generateStats', function(stats, done) {
-        stats['tinydoc-plugin-markdown:' + config.routeName] = {
+        stats['tinydoc-plugin-markdown:' + config.id] = {
           count: database.documents.length
         };
 

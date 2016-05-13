@@ -1,27 +1,20 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
-var multiline = require('multiline-slash');
-var tinydoc = require('tinydoc');
+var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
 
 describe("[Integration] tinydoc-plugin-js", function() {
-  TinyTestUtils.IntegrationSuite(this, 5000);
-
-  var config;
+  var suite = IntegrationSuite(this, { timeout: 5000 });
 
   beforeEach(function() {
-    config = TinyTestUtils.generateTestConfig({
-      verbose: false,
-      plugins: [
-        Subject({
-          verbose: false,
-          routeName: 'test',
-          source: 'lib/**/*.js'
-        })
-      ]
-    });
+    suite.set('plugins', [
+      Subject({
+        id: 'test',
+        verbose: false,
+        source: 'lib/**/*.js'
+      })
+    ]);
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/core/Cache.js', function() {;
       // /**
       //  * @namespace Core
       //  * @module
@@ -35,58 +28,61 @@ describe("[Integration] tinydoc-plugin-js", function() {
       //  */
       // Cache.prototype.add = function() {
       // };
-    }), 'lib/core/Cache.js');
+    });
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/core/Store.js', function() {;
       // /**
       //  * @module
       //  * dis be our store, mon!
       //  */
       // function Store() {}
-    }), 'lib/core/Store.js');
+    });
   });
 
   it('works', function(done) {
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
-    });
-
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['js:test'].count, 3);
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);
+
+      suite.assertFileWasRendered('test/Core/Cache.html', {
+        text: 'Add an item to the cache.'
+      });
+
+      suite.assertFileWasRendered('test/Store.html', {
+        text: 'dis be our store, mon'
+      });
 
       done();
     });
   });
 
-  it('works with file serializing', function(done) {
-    config.emitFiles = true;
-
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
+  it('works in single page mode', function(done) {
+    suite.engageSinglePageMode({
+      match: { by: 'url', on: '*' },
+      regions: [
+        {
+          name: 'Layout::Content',
+          outlets: [
+            { name: 'CJS::ModuleHeader', using: 'test/Core.Cache' },
+            { name: 'CJS::ModuleBody', using: 'test/Core.Cache' },
+            { name: 'CJS::ModuleHeader', using: 'test/Store' },
+            { name: 'CJS::ModuleBody', using: 'test/Store' },
+          ]
+        }
+      ]
     });
 
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['js:test'].count, 3);
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);
 
-      TinyTestUtils.assertFileWasRendered('test/Store.html', {
+      suite.assertFileWasRendered('index.html', {
         text: 'dis be our store, mon!'
       });
 

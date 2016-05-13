@@ -1,76 +1,78 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
-var tinydoc = require('tinydoc');
-var multiline = require('multiline-slash');
-var assign = require('lodash').assign;
+var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
 
 describe("[Integration] tinydoc-plugin-markdown", function() {
-  TinyTestUtils.IntegrationSuite(this);
-
-  var config;
+  var suite = IntegrationSuite(this);
 
   beforeEach(function() {
-    config = TinyTestUtils.generateTestConfig({
-      verbose: false,
-      plugins: [
-        Subject({
-          verbose: false,
-          routeName: 'test',
-          source: 'lib/**/*.md'
-        })
-      ]
-    });
+    suite.set('plugins', [
+      Subject({
+        id: 'test',
+        baseURL: '/articles',
+        verbose: false,
+        source: 'lib/**/*.md'
+      })
+    ]);
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/README.md', function() {;
       // # Hello!
       //
       // What buzzes and is not buzzy?
-    }), 'lib/README.md');
+    });
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/some/Scoped Article 2.md', function() {;
       // Some Article
       // ============
       //
       // Body.
-    }), 'lib/article.md');
+    });
   });
 
   it('works', function(done) {
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
-    });
-
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
+
+      suite.assertFileWasRendered('articles/readme.html', {
+        text: 'What buzzes and is not buzzy?'
+      });
+
+      suite.assertFileWasRendered('articles/some-scoped-article-2.html', {
+        text: 'Some Article'
+      });
 
       done();
     });
   });
 
-  it('works with emitting files', function(done) {
-    var tiny = tinydoc(assign(config, {
-      emitFiles: true,
-    }), {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
+  it('works in single page mode', function(done) {
+    suite.engageSinglePageMode({
+      match: { by: 'url', on: '*' },
+      regions: [
+        {
+          name: 'Layout::Content',
+          outlets: [
+            { name: 'Markdown::Document', using: 'test/readme' },
+            { name: 'Markdown::Document', using: 'test/some-scoped-article-2' },
+          ]
+        }
+      ]
     });
 
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
 
       assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
+
+      suite.assertFileWasRendered('index.html', {
+        text: 'What buzzes and is not buzzy?'
+      });
+
+      suite.assertFileWasRendered('index.html', {
+        text: 'Some Article'
+      });
 
       done();
     });

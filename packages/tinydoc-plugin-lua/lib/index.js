@@ -74,13 +74,6 @@ module.exports = function LuaPlugin(userConfig) {
       });
 
       compiler.on('write', function(done) {
-        // compiler.assets.addPluginRuntimeConfig('lua', {
-        //   routeName: config.routeName,
-        //   title: config.title,
-        //   sidebarTitle: config.sidebarTitle,
-        //   database: database
-        // });
-
         compiler.assets.addStyleSheet(path.join(root, 'ui', 'css', 'index.less'));
         compiler.assets.addPluginScript(path.join(root, 'dist', 'tinydoc-plugin-lua.js'));
         done();

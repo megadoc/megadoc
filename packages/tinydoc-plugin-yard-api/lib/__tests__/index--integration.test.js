@@ -1,28 +1,21 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
-var tinydoc = require('tinydoc');
-var multiline = require('multiline-slash');
+var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
 
 describe("[Integration] tinydoc-plugin-yard-api", function() {
-  TinyTestUtils.IntegrationSuite(this);
-
-  var config;
+  var suite = IntegrationSuite(this);
 
   beforeEach(function() {
-    config = TinyTestUtils.generateTestConfig({
-      verbose: false,
-      plugins: [
-        Subject({
-          verbose: false,
-          skipScan: true,
-          routeName: 'test',
-          source: TinyTestUtils.tempPath('lib/**/*.json')
-        })
-      ]
-    });
+    suite.set('plugins', [
+      Subject({
+        verbose: false,
+        skipScan: true,
+        routeName: 'test',
+        source: 'lib/**/*.json'
+      })
+    ]);
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/a.json', function() {;
       // {
       //   "id": "admin_account_configs",
       //   "title": "Admin - Account_Configs",
@@ -70,9 +63,9 @@ describe("[Integration] tinydoc-plugin-yard-api", function() {
       //     }
       //   ]
       // }
-    }), 'lib/a.json');
+    });
 
-    TinyTestUtils.createFile(multiline(function() {;
+    suite.createFile('lib/b.json', function() {;
       // {
       //   "id": "author_users",
       //   "title": "Author - Users",
@@ -99,27 +92,30 @@ describe("[Integration] tinydoc-plugin-yard-api", function() {
       //   ],
       //   "endpoints": []
       // }
-    }), 'lib/b.json');
+    });
   });
 
   it('works', function(done) {
-    var tiny = tinydoc(config, {
-      scan: true,
-      write: true,
-      index: true,
-      render: true,
-      stats: true,
-      purge: true
-    });
-
-    tiny.run(function(err, stats) {
+    suite.run(function(err, stats) {
       if (err) { return done(err); }
-
-      console.log(stats)
 
       assert.equal(stats['yard-api:test'].apiCount, 2);
       assert.equal(stats['yard-api:test'].objectCount, 1);
       assert.equal(stats['yard-api:test'].endpointCount, 1);
+
+      suite.assertFileWasRendered('test/admin_account_configs.html', {
+        text: 'Admin config information'
+      });
+
+      // it renders the objects
+      suite.assertFileWasRendered('test/author_users.html', {
+        text: 'UserResponse'
+      });
+
+      // it renders the endpoints
+      suite.assertFileWasRendered('test/admin_account_configs.html', {
+        text: 'This endpoint returns the admin config information.'
+      });
 
       done();
     });
