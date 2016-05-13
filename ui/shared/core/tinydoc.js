@@ -1,4 +1,3 @@
-const buildRouteMap = require('utils/buildRouteMap');
 const Outlet = require('components/Outlet');
 const Layout = require('../../components/Layout');
 const CorpusAPI = require('./CorpusAPI');
@@ -18,9 +17,9 @@ module.exports = function createTinydoc(config) {
   let callbacks = [];
   let ran = 0;
   let state = {
-    getRouteMap() {
-      return buildRouteMap(routeSpecs);
-    }
+    // getRouteMap() {
+    //   return buildRouteMap(routeSpecs);
+    // }
   };
 
   const pluginAPI = {
@@ -60,10 +59,11 @@ module.exports = function createTinydoc(config) {
   }
 
   function addRoutes(specs) {
+    invariant(false, "Disabled!")
     specs.forEach(function(spec) {
-      spec.ignoreScrollBehavior = spec.ignoreScrollBehavior !== false;
-      // todo: validate spec
-      routeSpecs.push(spec);
+      // spec.ignoreScrollBehavior = spec.ignoreScrollBehavior !== false;
+      // // todo: validate spec
+      // routeSpecs.push(spec);
     });
   }
 

@@ -1,8 +1,6 @@
 /* global DISQUS:true */
 
 var React = require('react');
-var config = require('config');
-var Router = require('core/Router');
 
 var DOM = React.DOM;
 var DISQUS_CONFIG = [
@@ -17,10 +15,6 @@ function camelCase(str) {
 }
 
 var disqusAdded = false;
-
-function isDisabled() {
-  return !config.disqus || config.disqus.enabled === false;
-}
 
 // Stolen from https://github.com/mzabriskie/react-disqus-thread because of the
 // (not merged as of yet) fix in
@@ -174,25 +168,36 @@ var Disqus = React.createClass({
   propTypes: {
     identifier: React.PropTypes.string,
     title: React.PropTypes.string,
-    categoryId: React.PropTypes.string
+    categoryId: React.PropTypes.string,
+    pathname: React.PropTypes.string.isRequired,
+    config: React.PropTypes.shape({
+      enabled: React.PropTypes.bool,
+      shortname: React.PropTypes.string,
+      baseUrl: React.PropTypes.string,
+    })
   },
 
   render: function() {
-    var currentPath = Router.getCurrentPath();
+    const { config } = this.props;
+    const currentPath = this.props.pathname;
 
-    if (!currentPath || isDisabled()) {
+    if (!currentPath || this.isDisabled()) {
       return null;
     }
 
     return (
       <ReactDisqusThread
-        shortname={config.disqus.shortname}
+        shortname={config.shortname}
         identifier={this.props.identifier}
         title={this.props.title || document.title}
-        url={config.disqus.baseUrl + '/' + currentPath}
+        url={config.baseUrl + '/' + currentPath}
         categoryId={this.props.categoryId}
       />
     );
+  },
+
+  isDisabled() {
+    return !this.props.config || this.props.config.enabled === false;
   }
 });
 

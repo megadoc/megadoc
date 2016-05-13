@@ -1,1 +1,1 @@
-module.exports = require('react/lib/invariant');
+module.exports = require('invariant');

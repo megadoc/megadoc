@@ -1,0 +1,2460 @@
+{
+  "lua": {
+    "id": "lua",
+    "name": "tinydoc-plugin-lua",
+    "config": {
+      "routeName": "lua",
+      "source": "src/**/*.lua",
+      "exclude": []
+    },
+    "meta": {
+      "defaultLayouts": [
+        {
+          "match": {
+            "by": "type",
+            "on": [
+              "Document",
+              "DocumentEntity"
+            ]
+          },
+          "regions": [
+            {
+              "name": "Layout::Content",
+              "outlets": [
+                {
+                  "name": "Lua::Module"
+                },
+                {
+                  "name": "Layout::Content"
+                }
+              ]
+            },
+            {
+              "name": "Layout::Sidebar",
+              "outlets": [
+                {
+                  "name": "Lua::Browser"
+                },
+                {
+                  "name": "Layout::Sidebar"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "href": "#/lua",
+      "anchor": "/lua"
+    },
+    "documents": [
+      "lua/from_lua",
+      "lua/from_json",
+      "lua/from_ini",
+      "lua/from_yaml",
+      "lua/cli",
+      "lua/cmd",
+      "lua/shallow_copy",
+      "lua/p"
+    ],
+    "type": "Namespace",
+    "symbol": "/",
+    "uid": "lua",
+    "indices": {}
+  },
+  "lua/from_lua": {
+    "id": "from_lua",
+    "title": "from_lua",
+    "filePath": "/src/cliargs/config_loader.lua",
+    "properties": {
+      "tags": [],
+      "description": "<p>Load configuration from a Lua file that exports a table.</p>\n",
+      "id": "from_lua",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "filepath",
+            "loc": {
+              "start": {
+                "line": 27,
+                "column": 22
+              },
+              "end": {
+                "line": 27,
+                "column": 30
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "undefined#from_lua",
+      "filePath": "/src/cliargs/config_loader.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/from_lua",
+      "anchor": "/lua/from_lua"
+    },
+    "uid": "lua/from_lua",
+    "indices": {
+      "from_lua": 1
+    }
+  },
+  "lua/from_json": {
+    "id": "from_json",
+    "title": "from_json",
+    "filePath": "/src/cliargs/config_loader.lua",
+    "properties": {
+      "tags": [],
+      "description": "<p>Load configuration from a JSON file.</p>\n<p>Requires the &quot;dkjson&quot;[1] module to be present on the system. Get it with:</p>\n<pre><code>luarocks install dkjson\n</code></pre><p>[1] <a href=\"http://dkolf.de/src/dkjson-lua.fsl/home\" target=\"_blank\">http://dkolf.de/src/dkjson-lua.fsl/home</a></p>\n",
+      "id": "from_json",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "filepath",
+            "loc": {
+              "start": {
+                "line": 44,
+                "column": 23
+              },
+              "end": {
+                "line": 44,
+                "column": 31
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "undefined#from_json",
+      "filePath": "/src/cliargs/config_loader.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/from_json",
+      "anchor": "/lua/from_json"
+    },
+    "uid": "lua/from_json",
+    "indices": {
+      "from_json": 1
+    }
+  },
+  "lua/from_ini": {
+    "id": "from_ini",
+    "title": "from_ini",
+    "filePath": "/src/cliargs/config_loader.lua",
+    "properties": {
+      "tags": [],
+      "description": "<p>Load configuration from an INI file.</p>\n<p>Requires the &quot;inifile&quot;[1] module to be present on the system. Get it with:</p>\n<pre><code>luarocks install inifile\n</code></pre><p>The INI file must contain a group that lists the default values. For\nexample:</p>\n<pre><code>[cli]\nquiet = true\ncompress = lzma\n</code></pre><p>The routine will automatically cast boolean values (&quot;true&quot; and &quot;false&quot;)\ninto Lua booleans. You may opt out of this behavior by passing <code>false</code>\nto <code>no_cast</code>.</p>\n<p>[1] <a href=\"http://docs.bartbes.com/inifile\" target=\"_blank\">http://docs.bartbes.com/inifile</a></p>\n",
+      "id": "from_ini",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "filepath",
+            "loc": {
+              "start": {
+                "line": 81,
+                "column": 22
+              },
+              "end": {
+                "line": 81,
+                "column": 30
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "group",
+            "loc": {
+              "start": {
+                "line": 81,
+                "column": 32
+              },
+              "end": {
+                "line": 81,
+                "column": 37
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "no_cast",
+            "loc": {
+              "start": {
+                "line": 81,
+                "column": 39
+              },
+              "end": {
+                "line": 81,
+                "column": 46
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "undefined#from_ini",
+      "filePath": "/src/cliargs/config_loader.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/from_ini",
+      "anchor": "/lua/from_ini"
+    },
+    "uid": "lua/from_ini",
+    "indices": {
+      "from_ini": 1
+    }
+  },
+  "lua/from_yaml": {
+    "id": "from_yaml",
+    "title": "from_yaml",
+    "filePath": "/src/cliargs/config_loader.lua",
+    "properties": {
+      "tags": [],
+      "description": "<p>Load configuration from a YAML file.</p>\n<p>Requires the &quot;yaml&quot;[1] module to be present on the system. Get it with:</p>\n<pre><code>luarocks install yaml\n</code></pre><p>[1] <a href=\"http://doc.lubyk.org/yaml.html\" target=\"_blank\">http://doc.lubyk.org/yaml.html</a></p>\n",
+      "id": "from_yaml",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "filepath",
+            "loc": {
+              "start": {
+                "line": 121,
+                "column": 23
+              },
+              "end": {
+                "line": 121,
+                "column": 31
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "undefined#from_yaml",
+      "filePath": "/src/cliargs/config_loader.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/from_yaml",
+      "anchor": "/lua/from_yaml"
+    },
+    "uid": "lua/from_yaml",
+    "indices": {
+      "from_yaml": 1
+    }
+  },
+  "lua/cli": {
+    "id": "cli",
+    "title": "cli",
+    "filePath": "/src/cliargs/core.lua",
+    "properties": {
+      "tags": [
+        {
+          "type": "module",
+          "name": "",
+          "description": "<p>The primary export you receive when you require the library. For example:</p>\n<pre><code>local cli = require &#39;cliargs&#39;\n</code></pre>"
+        }
+      ],
+      "description": "",
+      "id": "cli",
+      "ctx": {
+        "type": "table"
+      },
+      "isModule": true,
+      "path": "cli",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "symbol": "",
+    "entities": [
+      "lua/cli#set_description",
+      "lua/cli#set_colsz",
+      "lua/cli#load_defaults",
+      "lua/cli#read_defaults",
+      "lua/cli#argument",
+      "lua/cli#splat",
+      "lua/cli#option",
+      "lua/cli#flag",
+      "lua/cli#command",
+      "lua/cli#parse",
+      "lua/cli#print_usage",
+      "lua/cli#print_help"
+    ],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/cli",
+      "anchor": "/lua/cli"
+    },
+    "uid": "lua/cli",
+    "indices": {
+      "cli": 1
+    }
+  },
+  "lua/cli#set_description": {
+    "id": "#set_description",
+    "title": "cli#set_description",
+    "properties": {
+      "tags": [],
+      "description": "<p>Write down a brief, 1-liner description of what the program does.</p>\n",
+      "receiver": "cli",
+      "id": "set_description",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "in_description",
+            "loc": {
+              "start": {
+                "line": 133,
+                "column": 31
+              },
+              "end": {
+                "line": 133,
+                "column": 45
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#set_description",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#set_description",
+      "anchor": "/lua/cli#set_description"
+    },
+    "uid": "lua/cli#set_description",
+    "indices": {
+      "#set_description": 1,
+      "cli#set_description": 2
+    }
+  },
+  "lua/cli#set_colsz": {
+    "id": "#set_colsz",
+    "title": "cli#set_colsz",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "key_cols",
+          "description": "<p>The number of columns assigned to the argument keys, set to 0 to\nauto detect.</p>\n",
+          "typeInfo": {
+            "types": [
+              "number"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "0"
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc_cols",
+          "description": "<p>The number of columns assigned to the argument descriptions, set to\n0 to auto set the total width to 72.</p>\n",
+          "typeInfo": {
+            "types": [
+              "number"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "0"
+          }
+        }
+      ],
+      "description": "<p>Sets the amount of space allocated to the argument keys and descriptions\nin the help listing.</p>\n<p>The sizes are used for wrapping long argument keys and descriptions.</p>\n",
+      "receiver": "cli",
+      "id": "set_colsz",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "key_cols",
+            "loc": {
+              "start": {
+                "line": 151,
+                "column": 25
+              },
+              "end": {
+                "line": 151,
+                "column": 33
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc_cols",
+            "loc": {
+              "start": {
+                "line": 151,
+                "column": 35
+              },
+              "end": {
+                "line": 151,
+                "column": 44
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#set_colsz",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#set_colsz",
+      "anchor": "/lua/cli#set_colsz"
+    },
+    "uid": "lua/cli#set_colsz",
+    "indices": {
+      "#set_colsz": 1,
+      "cli#set_colsz": 2
+    }
+  },
+  "lua/cli#load_defaults": {
+    "id": "#load_defaults",
+    "title": "cli#load_defaults",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "config",
+          "description": "<p>Your new set of defaults. The keys could either point to the short\nor expanded option keys, and their values are the new defaults.</p>\n",
+          "typeInfo": {
+            "types": [
+              "table"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "strict",
+          "description": "<p>Turn this on to return nil and an error message if a key in the\nconfig table could not be mapped to any CLI option.</p>\n",
+          "typeInfo": {
+            "types": [
+              "boolean"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "false"
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>When the new defaults were loaded successfully, or strict was not\nset.</p>\n",
+          "typeInfo": {
+            "types": [
+              "true"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>When strict was set and there was an error.</p>\n",
+          "typeInfo": {
+            "types": [
+              "union.<nil, string>"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Load default values from a table.</p>\n",
+      "receiver": "cli",
+      "id": "load_defaults",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "config",
+            "loc": {
+              "start": {
+                "line": 187,
+                "column": 29
+              },
+              "end": {
+                "line": 187,
+                "column": 35
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "strict",
+            "loc": {
+              "start": {
+                "line": 187,
+                "column": 37
+              },
+              "end": {
+                "line": 187,
+                "column": 43
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#load_defaults",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#load_defaults",
+      "anchor": "/lua/cli#load_defaults"
+    },
+    "uid": "lua/cli#load_defaults",
+    "indices": {
+      "#load_defaults": 1,
+      "cli#load_defaults": 2
+    }
+  },
+  "lua/cli#read_defaults": {
+    "id": "#read_defaults",
+    "title": "cli#read_defaults",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "path",
+          "description": "<p>Absolute file path.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "format",
+          "description": "<p>The config file format, which has to be one of:\n&quot;lua&quot;, &quot;json&quot;, &quot;ini&quot;, or &quot;yaml&quot;.\nWhen this is left blank, we try to auto-detect the format from the\nfile extension.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "nil"
+          }
+        },
+        {
+          "type": "param",
+          "name": "strict",
+          "description": "<p>Forwarded to <a href=\"#/lua/cli#load_defaults\">cli#load_defaults</a>. See that method for the parameter\ndescription.</p>\n",
+          "typeInfo": {
+            "types": [
+              "boolean"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "false"
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>Returns true on successful load. Otherwise, nil and an error\nmessage are returned instead.</p>\n",
+          "typeInfo": {
+            "types": [
+              "true",
+              "union.<nil, string>"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Read config values from a configuration file.</p>\n",
+      "receiver": "cli",
+      "id": "read_defaults",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "path",
+            "loc": {
+              "start": {
+                "line": 217,
+                "column": 29
+              },
+              "end": {
+                "line": 217,
+                "column": 33
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "format",
+            "loc": {
+              "start": {
+                "line": 217,
+                "column": 35
+              },
+              "end": {
+                "line": 217,
+                "column": 41
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#read_defaults",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#read_defaults",
+      "anchor": "/lua/cli#read_defaults"
+    },
+    "uid": "lua/cli#read_defaults",
+    "indices": {
+      "#read_defaults": 1,
+      "cli#read_defaults": 2
+    }
+  },
+  "lua/cli#argument": {
+    "id": "#argument",
+    "title": "cli#argument",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "key",
+          "description": "<p>The argument identifier that will be displayed to the user and\nbe used to reference the run-time value.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc",
+          "description": "<p>A description for this argument to display in usage help.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "callback",
+          "description": "<p>Callback to invoke when this argument is parsed.</p>\n",
+          "typeInfo": {
+            "types": [
+              "function"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Define a required argument.</p>\n<p>Required arguments do not take a symbol like <code>-</code> or <code>--</code>, may not have a\ndefault value, and are parsed in the order they are defined.</p>\n<p>For example:</p>\n<pre><code class=\"lang-lua\">cli:argument(&#39;INPUT&#39;, &#39;path to the input file&#39;)\ncli:argument(&#39;OUTPUT&#39;, &#39;path to the output file&#39;)\n</code></pre>\n<p>At run-time, the arguments have to be specified using the following\nnotation:</p>\n<pre><code class=\"lang-bash\">$ ./script.lua ./main.c ./a.out\n</code></pre>\n<p>If the user does not pass a value to <em>every</em> argument, the parser will\nraise an error.</p>\n",
+      "receiver": "cli",
+      "id": "argument",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "key",
+            "loc": {
+              "start": {
+                "line": 266,
+                "column": 24
+              },
+              "end": {
+                "line": 266,
+                "column": 27
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc",
+            "loc": {
+              "start": {
+                "line": 266,
+                "column": 29
+              },
+              "end": {
+                "line": 266,
+                "column": 33
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "callback",
+            "loc": {
+              "start": {
+                "line": 266,
+                "column": 35
+              },
+              "end": {
+                "line": 266,
+                "column": 43
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#argument",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#argument",
+      "anchor": "/lua/cli#argument"
+    },
+    "uid": "lua/cli#argument",
+    "indices": {
+      "#argument": 1,
+      "cli#argument": 2
+    }
+  },
+  "lua/cli#splat": {
+    "id": "#splat",
+    "title": "cli#splat",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "key",
+          "description": "<p>The argument&#39;s &quot;name&quot; that will be displayed to the user.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc",
+          "description": "<p>A description of the argument.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "default",
+          "description": "<p>A default value.</p>\n",
+          "typeInfo": {
+            "types": [],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "nil"
+          }
+        },
+        {
+          "type": "param",
+          "name": "maxcount",
+          "description": "<p>The maximum number of occurences allowed.</p>\n",
+          "typeInfo": {
+            "types": [
+              "number"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "1"
+          }
+        },
+        {
+          "type": "param",
+          "name": "callback",
+          "description": "<p>A function to call <strong>everytime</strong> a value for this argument is\nparsed.</p>\n",
+          "typeInfo": {
+            "types": [
+              "function"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Defines a &quot;splat&quot; (or catch-all) argument.</p>\n<p>This is a special kind of argument that may be specified 0 or more times,\nthe values being appended to a list.</p>\n<p>For example, let&#39;s assume our program takes a single output file and works\non multiple source files:</p>\n<pre><code class=\"lang-lua\">cli:argument(&#39;OUTPUT&#39;, &#39;path to the output file&#39;)\ncli:splat(&#39;INPUTS&#39;, &#39;the sources to compile&#39;, nil, 10) -- up to 10 source files\n</code></pre>\n<p>At run-time, it could be invoked as such:</p>\n<pre><code class=\"lang-bash\">$ ./script.lua ./a.out file1.c file2.c main.c\n</code></pre>\n<p>If you want to make the output optional, you could do something like this:</p>\n<pre><code class=\"lang-lua\">cli:option(&#39;-o, --output=FILE&#39;, &#39;path to the output file&#39;, &#39;./a.out&#39;)\ncli:splat(&#39;INPUTS&#39;, &#39;the sources to compile&#39;, nil, 10)\n</code></pre>\n<p>And now we may omit the output file path:</p>\n<pre><code class=\"lang-bash\">$ ./script.lua file1.c file2.c main.c\n</code></pre>\n",
+      "receiver": "cli",
+      "id": "splat",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "key",
+            "loc": {
+              "start": {
+                "line": 337,
+                "column": 21
+              },
+              "end": {
+                "line": 337,
+                "column": 24
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc",
+            "loc": {
+              "start": {
+                "line": 337,
+                "column": 26
+              },
+              "end": {
+                "line": 337,
+                "column": 30
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "default",
+            "loc": {
+              "start": {
+                "line": 337,
+                "column": 32
+              },
+              "end": {
+                "line": 337,
+                "column": 39
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "maxcount",
+            "loc": {
+              "start": {
+                "line": 337,
+                "column": 41
+              },
+              "end": {
+                "line": 337,
+                "column": 49
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "callback",
+            "loc": {
+              "start": {
+                "line": 337,
+                "column": 51
+              },
+              "end": {
+                "line": 337,
+                "column": 59
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#splat",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#splat",
+      "anchor": "/lua/cli#splat"
+    },
+    "uid": "lua/cli#splat",
+    "indices": {
+      "#splat": 1,
+      "cli#splat": 2
+    }
+  },
+  "lua/cli#option": {
+    "id": "#option",
+    "title": "cli#option",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "key",
+          "description": "<p>The argument identifier. This can either be <code>-key</code>, or\n<code>-key, --expanded-key</code>.\nValues can be specified either by appending a space after the\nidentifier (e.g. <code>-key value</code> or <code>--expanded-key value</code>) or by\nseparating them with a <code>=</code> (e.g. <code>-key=value</code> or\n<code>--expanded-key=value</code>).</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc",
+          "description": "<p>A description for the argument to be shown in --help.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "default",
+          "description": "<p>A default value to use in case the option was not specified at\nrun-time (the default value is nil if you leave this blank.)</p>\n",
+          "typeInfo": {
+            "types": [
+              "bool"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "nil"
+          }
+        },
+        {
+          "type": "param",
+          "name": "callback",
+          "description": "<p>A callback to invoke when this option is parsed.</p>\n",
+          "typeInfo": {
+            "types": [
+              "function"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "example",
+          "name": "",
+          "description": "<p>The following option will be stored in <code>args[&quot;i&quot;]</code> and <code>args[&quot;input&quot;]</code>\nwith a default value of <code>file.txt</code>:</p>\n<pre><code>cli:option(&quot;-i, --input=FILE&quot;, &quot;path to the input file&quot;, &quot;file.txt&quot;)\n</code></pre>"
+        }
+      ],
+      "description": "<p>Defines an optional argument.</p>\n<p>Optional arguments can use 3 different notations, and can accept a value.</p>\n",
+      "receiver": "cli",
+      "id": "option",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "key",
+            "loc": {
+              "start": {
+                "line": 410,
+                "column": 22
+              },
+              "end": {
+                "line": 410,
+                "column": 25
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc",
+            "loc": {
+              "start": {
+                "line": 410,
+                "column": 27
+              },
+              "end": {
+                "line": 410,
+                "column": 31
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "default",
+            "loc": {
+              "start": {
+                "line": 410,
+                "column": 33
+              },
+              "end": {
+                "line": 410,
+                "column": 40
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "callback",
+            "loc": {
+              "start": {
+                "line": 410,
+                "column": 42
+              },
+              "end": {
+                "line": 410,
+                "column": 50
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#option",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#option",
+      "anchor": "/lua/cli#option"
+    },
+    "uid": "lua/cli#option",
+    "indices": {
+      "#option": 1,
+      "cli#option": 2
+    }
+  },
+  "lua/cli#flag": {
+    "id": "#flag",
+    "title": "cli#flag",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "key",
+          "description": "",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc",
+          "description": "",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "default",
+          "description": "",
+          "typeInfo": {
+            "types": [],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "callback",
+          "description": "",
+          "typeInfo": {
+            "types": [
+              "function"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Define an optional &quot;flag&quot; argument.</p>\n<p>Flags are a special subset of options that can either be <code>true</code> or <code>false</code>.</p>\n<p>For example:</p>\n<pre><code class=\"lang-lua\">cli:flag(&#39;-q, --quiet&#39;, &#39;Suppress output.&#39;, true)\n</code></pre>\n<p>At run-time:</p>\n<pre><code class=\"lang-bash\">$ ./script.lua --quiet\n$ ./script.lua -q\n</code></pre>\n<p>Passing a value to a flag raises an error:</p>\n<pre><code class=\"lang-bash\">$ ./script.lua --quiet=foo\n$ echo $? # =&gt; 1\n</code></pre>\n<p>Flags may be <em>negatable</em> by prepending <code>[no-]</code> to their key:</p>\n<pre><code class=\"lang-lua\">cli:flag(&#39;-c, --[no-]compress&#39;, &#39;whether to compress or not&#39;, true)\n</code></pre>\n<p>Now the user gets to pass <code>--no-compress</code> if they want to skip\ncompression, or either specify <code>--compress</code> explicitly or leave it\nunspecified to use compression.</p>\n",
+      "receiver": "cli",
+      "id": "flag",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "key",
+            "loc": {
+              "start": {
+                "line": 471,
+                "column": 20
+              },
+              "end": {
+                "line": 471,
+                "column": 23
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc",
+            "loc": {
+              "start": {
+                "line": 471,
+                "column": 25
+              },
+              "end": {
+                "line": 471,
+                "column": 29
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "default",
+            "loc": {
+              "start": {
+                "line": 471,
+                "column": 31
+              },
+              "end": {
+                "line": 471,
+                "column": 38
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "callback",
+            "loc": {
+              "start": {
+                "line": 471,
+                "column": 40
+              },
+              "end": {
+                "line": 471,
+                "column": 48
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#flag",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#flag",
+      "anchor": "/lua/cli#flag"
+    },
+    "uid": "lua/cli#flag",
+    "indices": {
+      "#flag": 1,
+      "cli#flag": 2
+    }
+  },
+  "lua/cli#command": {
+    "id": "#command",
+    "title": "cli#command",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "name",
+          "description": "<p>The name of the command and the argument that the user has to\nsupply to invoke it.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "param",
+          "name": "desc",
+          "description": "<p>An optional string to show in the help listing which should\ndescribe what the command does. It will be displayed if --help\nwas run on the main program.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>Another instance of the CLI library which is scoped to that\ncommand.</p>\n",
+          "typeInfo": {
+            "types": [
+              "cmd"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Define a command argument.</p>\n",
+      "receiver": "cli",
+      "id": "command",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "name",
+            "loc": {
+              "start": {
+                "line": 507,
+                "column": 23
+              },
+              "end": {
+                "line": 507,
+                "column": 27
+              }
+            },
+            "isLocal": true
+          },
+          {
+            "type": "Identifier",
+            "name": "desc",
+            "loc": {
+              "start": {
+                "line": 507,
+                "column": 29
+              },
+              "end": {
+                "line": 507,
+                "column": 33
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#command",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#command",
+      "anchor": "/lua/cli#command"
+    },
+    "uid": "lua/cli#command",
+    "indices": {
+      "#command": 1,
+      "cli#command": 2
+    }
+  },
+  "lua/cli#parse": {
+    "id": "#parse",
+    "title": "cli#parse",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "arguments",
+          "description": "<p>The list of arguments to parse. Defaults to the global <code>arg</code> table\nwhich contains the arguments the process was started with.</p>\n",
+          "typeInfo": {
+            "types": [
+              "table.<string>"
+            ],
+            "optional": true,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false,
+            "defaultValue": "_G.arg"
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>A table containing all the arguments, options, flags,\nand splat arguments that were specified or had a default\n(where applicable).</p>\n",
+          "typeInfo": {
+            "types": [
+              "table"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        },
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>If a parsing error has occured, note that the --help option is\nalso considered an error.</p>\n",
+          "typeInfo": {
+            "types": [
+              "array.<nil, string>"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Parse the process arguments table.</p>\n",
+      "receiver": "cli",
+      "id": "parse",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "arguments",
+            "loc": {
+              "start": {
+                "line": 532,
+                "column": 21
+              },
+              "end": {
+                "line": 532,
+                "column": 30
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cli#parse",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#parse",
+      "anchor": "/lua/cli#parse"
+    },
+    "uid": "lua/cli#parse",
+    "indices": {
+      "#parse": 1,
+      "cli#parse": 2
+    }
+  },
+  "lua/cli#print_usage": {
+    "id": "#print_usage",
+    "title": "cli#print_usage",
+    "properties": {
+      "tags": [
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>The USAGE message.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Prints the USAGE message.</p>\n",
+      "receiver": "cli",
+      "id": "print_usage",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": []
+      },
+      "symbol": "#",
+      "path": "cli#print_usage",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#print_usage",
+      "anchor": "/lua/cli#print_usage"
+    },
+    "uid": "lua/cli#print_usage",
+    "indices": {
+      "#print_usage": 1,
+      "cli#print_usage": 2
+    }
+  },
+  "lua/cli#print_help": {
+    "id": "#print_help",
+    "title": "cli#print_help",
+    "properties": {
+      "tags": [
+        {
+          "type": "return",
+          "name": "",
+          "description": "<p>The HELP message.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Prints the HELP information.</p>\n",
+      "receiver": "cli",
+      "id": "print_help",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": []
+      },
+      "symbol": "#",
+      "path": "cli#print_help",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cli",
+    "meta": {
+      "href": "#/lua/cli#print_help",
+      "anchor": "/lua/cli#print_help"
+    },
+    "uid": "lua/cli#print_help",
+    "indices": {
+      "#print_help": 1,
+      "cli#print_help": 2
+    }
+  },
+  "lua/cmd": {
+    "id": "cmd",
+    "title": "cmd",
+    "filePath": "/src/cliargs/core.lua",
+    "properties": {
+      "tags": [
+        {
+          "type": "module",
+          "name": "",
+          "description": "<p>This is a special instance of the <a href=\"#/lua/cli\">cli</a> module that you receive when\nyou define a new command using <a href=\"#/lua/cli#command\">cli#command</a>.</p>\n"
+        }
+      ],
+      "description": "",
+      "id": "cmd",
+      "ctx": {
+        "type": "?"
+      },
+      "isModule": true,
+      "path": "cmd",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "symbol": "",
+    "entities": [
+      "lua/cmd#file",
+      "lua/cmd#action"
+    ],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/cmd",
+      "anchor": "/lua/cmd"
+    },
+    "uid": "lua/cmd",
+    "indices": {
+      "cmd": 1
+    }
+  },
+  "lua/cmd#file": {
+    "id": "#file",
+    "title": "cmd#file",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "file_path",
+          "description": "<p>Absolute file-path to a lua script to execute.</p>\n",
+          "typeInfo": {
+            "types": [
+              "string"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Specify a file that the command should run. The rest of the arguments\nare forward to that file to process, which is free to use or not use\nlua_cliargs in turn.</p>\n",
+      "receiver": "cmd",
+      "id": "file",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "file_path",
+            "loc": {
+              "start": {
+                "line": 100,
+                "column": 22
+              },
+              "end": {
+                "line": 100,
+                "column": 31
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cmd#file",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cmd",
+    "meta": {
+      "href": "#/lua/cmd#file",
+      "anchor": "/lua/cmd#file"
+    },
+    "uid": "lua/cmd#file",
+    "indices": {
+      "#file": 1,
+      "cmd#file": 2
+    }
+  },
+  "lua/cmd#action": {
+    "id": "#action",
+    "title": "cmd#action",
+    "properties": {
+      "tags": [
+        {
+          "type": "param",
+          "name": "callback",
+          "description": "",
+          "typeInfo": {
+            "types": [
+              "function"
+            ],
+            "optional": false,
+            "nullable": false,
+            "nonNullable": false,
+            "variable": false
+          }
+        }
+      ],
+      "description": "<p>Define a command handler. This callback will be invoked if the command\nargument was supplied by the user at runtime. What you return from this\ncallback will be returned to the parent CLI library&#39;s parse routine and\nit will return that in turn!</p>\n",
+      "receiver": "cmd",
+      "id": "action",
+      "indexer": ":",
+      "ctx": {
+        "type": "function",
+        "params": [
+          {
+            "type": "Identifier",
+            "name": "callback",
+            "loc": {
+              "start": {
+                "line": 111,
+                "column": 24
+              },
+              "end": {
+                "line": 111,
+                "column": 32
+              }
+            },
+            "isLocal": true
+          }
+        ]
+      },
+      "symbol": "#",
+      "path": "cmd#action",
+      "filePath": "/src/cliargs/core.lua"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "lua/cmd",
+    "meta": {
+      "href": "#/lua/cmd#action",
+      "anchor": "/lua/cmd#action"
+    },
+    "uid": "lua/cmd#action",
+    "indices": {
+      "#action": 1,
+      "cmd#action": 2
+    }
+  },
+  "lua/shallow_copy": {
+    "id": "shallow_copy",
+    "title": "shallow_copy",
+    "filePath": "/src/cliargs/parser.lua",
+    "properties": {
+      "tags": [],
+      "description": "<hr>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"utils\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#utils\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">UTILS</span>\n    </h2>\n  ",
+      "id": "shallow_copy",
+      "ctx": {
+        "type": "?"
+      },
+      "symbol": ".",
+      "path": "undefined.shallow_copy",
+      "filePath": "/src/cliargs/parser.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/shallow_copy",
+      "anchor": "/lua/shallow_copy"
+    },
+    "uid": "lua/shallow_copy",
+    "indices": {
+      "shallow_copy": 1
+    }
+  },
+  "lua/p": {
+    "id": "p",
+    "title": "p",
+    "filePath": "/src/cliargs/parser.lua",
+    "properties": {
+      "tags": [],
+      "description": "<hr>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"parse-routines\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#parse-routines\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">PARSE ROUTINES</span>\n    </h2>\n  ",
+      "id": "p",
+      "ctx": {
+        "type": "table"
+      },
+      "symbol": ".",
+      "path": "undefined.p",
+      "filePath": "/src/cliargs/parser.lua"
+    },
+    "symbol": "",
+    "entities": [],
+    "type": "Document",
+    "parentNode": "lua",
+    "meta": {
+      "href": "#/lua/p",
+      "anchor": "/lua/p"
+    },
+    "uid": "lua/p",
+    "indices": {
+      "p": 1
+    }
+  },
+  "articles": {
+    "id": "articles",
+    "name": "tinydoc-plugin-markdown",
+    "title": "Articles",
+    "meta": {
+      "defaultLayouts": [
+        {
+          "match": {
+            "by": "type",
+            "on": [
+              "Document",
+              "DocumentEntity"
+            ]
+          },
+          "regions": [
+            {
+              "name": "Layout::Content",
+              "options": {
+                "framed": true
+              },
+              "outlets": [
+                {
+                  "name": "Markdown::Document"
+                },
+                {
+                  "name": "Layout::Content"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "anchor": "/articles"
+    },
+    "documents": [
+      "articles/readme"
+    ],
+    "type": "Namespace",
+    "symbol": "/",
+    "uid": "articles",
+    "indices": {}
+  },
+  "articles/readme": {
+    "id": "readme",
+    "title": "lua_cliargs\n",
+    "summary": "",
+    "filePath": "README.md",
+    "properties": {
+      "filePath": "README.md",
+      "source": "\n    <h1 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/lua_cliargs\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/lua_cliargs\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">lua_cliargs</span>\n    </h1>\n  <p><a href=\"http://travis-ci.org/#!/amireh/lua_cliargs/builds\" target=\"_blank\"><img src=\"https://secure.travis-ci.org/amireh/lua_cliargs.png\" alt=\"travis-ci status\"></a></p>\n<p>cliargs is a command-line argument parser for Lua. It supports several types of arguments:</p>\n<ol>\n<li>required arguments</li>\n<li>optional arguments with different notations: <code>-short-key VALUE</code> and/or <code>--expanded-key=VALUE</code></li>\n<li>optional arguments with multiple-values that get appended to a list</li>\n<li>optional &quot;flag&quot; arguments (on/off options) with notations: <code>-short-key</code> and/or <code>--expanded-key</code></li>\n<li>a single optional &quot;splat&quot; argument which can be repeated (must be the last argument)</li>\n</ol>\n<p>Optional arguments can have default values (strings), flags always default to &#39;true&#39;.</p>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/usage-examples\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/usage-examples\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Usage Examples</span>\n    </h2>\n  <p>See the examples under the <code>examples/</code> directory.</p>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/api\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/api\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">API</span>\n    </h2>\n  <p>See <a href=\"http://lua-cliargs.netlify.com/\" target=\"_blank\">http://lua-cliargs.netlify.com/</a> for the API docs.</p>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/help-listings-help\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/help-listings-help\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Help listings <code>--help</code></span>\n    </h2>\n  <p>A help listing will be automatically generated and accessed using the <code>--help</code> argument. When such an option is encountered, <a href=\"#/lua/cli#parse\">cli:parse()</a> will abort and return <code>nil, string</code> with the help message; you are free to print it to the screen using <code>print()</code> if you want.</p>\n<p>You can also force its display in the code using <code>cli:print_help()</code>.</p>\n<p>This is the result for our example (see <code>examples/00_general.lua</code>):</p>\n<pre><code>Usage: cli_example.lua [OPTIONS]  INPUT  [OUTPUT-1 [OUTPUT-2 [...]]]\n\nARGUMENTS:\n  INPUT                 path to the input file (required)\n  OUTPUT                multiple output paths (optional, default:\n                        /dev/stdout)\n\nOPTIONS:\n  -c, --compress=FILTER the filter to use for compressing output: gzip,\n                        lzma, bzip2, or none (default: gzip)\n  -o FILE               path to output file (default: /dev/stdout)\n  -d                    script will run in DEBUG mode\n  -v, --version         prints the program&#39;s version and exits\n  --verbose             the script output will be very verbose\n</code></pre>\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/validations\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/validations\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Validations</span>\n    </h2>\n  \n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/runtime-argument-validation\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/runtime-argument-validation\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Runtime argument validation</span>\n    </h3>\n  <p>From a parsing point of view, there are 3 cases that need to be handled which are outlined below. If I missed something, please open a ticket!</p>\n<p><strong>Missing a required argument</strong></p>\n<pre><code>$ lua examples/00_general.lua\ncli_example.lua: error: bad number of arguments; 1-4 argument(s) must be specified, not 0; re-run with --help for usage.\n</code></pre><p><strong>Missing value for an optional argument</strong></p>\n<pre><code>$ lua examples/00_general.lua --compress inputfile\ncli_example.lua: error: option --compress requires a value to be set; re-run with --help for usage.\n</code></pre><p><strong>Unknown arguments</strong></p>\n<pre><code>$ lua examples/00_general.lua -f inputfile\ncli_example.lua: error: unknown/bad flag; -f; re-run with --help for usage.\n</code></pre>\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/some-sanity-guards\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/some-sanity-guards\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Some sanity guards</span>\n    </h3>\n  <p>In the following cases, <code>cliargs</code> will report an error to you and terminate the running script:</p>\n<ol>\n<li>flag options can not accept a value. For example: <code>cli:add_flag(&#39;-v VERSION&#39;)</code> will return an error</li>\n<li>duplicate keys are not allowed: defining two options with the key <code>--input</code> will be rejected</li>\n</ol>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/tests\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/tests\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Tests</span>\n    </h2>\n  <p>Running test specs is done using <a href=\"http://olivinelabs.com/busted/\" target=\"_blank\">busted</a>. You can install it using <a href=\"http://www.luarocks.org/\" target=\"_blank\">LuaRocks</a>, and then just call it with the <code>spec</code> folder:</p>\n<pre><code>luarocks install busted\ncd /path/to/lua_cliargs/\nbusted spec\n</code></pre>\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/contributions\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/contributions\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Contributions</span>\n    </h2>\n  <p>If you come across a bug and you&#39;d like to patch it, please fork the repository, commit your patch, and request a pull.</p>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/thanks-to\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/thanks-to\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Thanks to</span>\n    </h2>\n  <p>Many thanks to everyone who reported bugs, provided fixes, and added entirely new features:</p>\n<ol>\n<li><a href=\"https://github.com/Tieske\" target=\"_blank\">Thijs Schreijer</a></li>\n<li><a href=\"https://github.com/ajacksified\" target=\"_blank\">Jack Lawson</a></li>\n<li><a href=\"https://github.com/DorianGray\" target=\"_blank\">Robert Andrew Ditthardt</a></li>\n<li><a href=\"https://github.com/o-lim\" target=\"_blank\">Oscar Lim</a></li>\n</ol>\n<p><em>If I missed you, don&#39;t hesitate to update this file or just email me.</em></p>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changelog\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changelog\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changelog</span>\n    </h2>\n  \n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-from-2-5-x-3-0\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-from-2-5-x-3-0\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes from 2.5.x 3.0</span>\n    </h3>\n  <p>This major version release contains BREAKING API CHANGES. See the UPGRADE guide for help in updating your code to make use of it.</p>\n<p><strong>More flexible parsing</strong></p>\n<ul>\n<li>options can occur anywhere now even after arguments (unless the <code>--</code> indicator is specified, then no options are parsed afterwards.) Previously, options were accepted only before arguments.</li>\n<li>options using the short-key notation can be specified using <code>=</code> as a value delimiter as well as a space (e.g. <code>-c=lzma</code> and <code>-c lzma</code>)</li>\n<li>the library is now more flexible with option definitions (notations like <code>-key VALUE</code>, <code>--key=VALUE</code>, <code>-k=VALUE</code> are all treated equally)</li>\n<li><code>--help</code> or <code>-h</code> will now cause the help listing to be displayed no matter where they are. Previously, this only happened if they were supplied as the first option.</li>\n</ul>\n<p><strong>Basic command support</strong></p>\n<p>You may now define commands with custom handlers. A command may be invoked by supplying its name as the first argument (options can still come before or afterwards). lua_cliargs will forward the rest of the options to that command to handle, which can be in a separate file.</p>\n<p>See <code>examples/04_commands--git.lua</code> for an example.</p>\n<p><strong>Re-defining defaults</strong></p>\n<p>It is now possible to pass a table containing default values (and override any \nexisting defaults).</p>\n<p>The function for doing this is called <code>cli:load_defaults().</code>.</p>\n<p>This makes it possible to load run-time defaults from a configuration file, for example.</p>\n<p><strong>Reading configuration files</strong></p>\n<p><code>cliargs</code> now exposes some convenience helpers for loading configuration from files (and a separate hook, <code>cli:load_defaults()</code> to inject this config if you want) found in <code>cli:read_defaults()</code>. This method takes a file-path and an optional file format and it will parse it for you, provided you have the necessary libraries installed.</p>\n<p>See the API docs for using this hook.</p>\n<p><strong>Other changes</strong></p>\n<ul>\n<li>internal code changes and more comprehensive test-coverage</li>\n</ul>\n\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-from-2-5-1-to-2-5-2\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-from-2-5-1-to-2-5-2\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes from 2.5.1 to 2.5.2</span>\n    </h3>\n  <ul>\n<li>No longer tracking the (legacy) tarballs in git or the luarocks package. Instead, we use the GitHub release tarballs for each version.</li>\n</ul>\n\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-in-2-4-0-from-2-3-4\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-in-2-4-0-from-2-3-4\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes in 2.4.0 from 2.3-4</span>\n    </h3>\n  <ol>\n<li>All arguments now accept a callback that will be invoked when parsing of those arguments was successful</li>\n<li>(<strong>POSSIBLY BREAKING</strong>) Default value for flags is now <code>nil</code> instead of <code>false</code>. This will only affect existing behavior if you were explicitly testing unset flags to equal <code>false</code> (i.e. <code>if flag == false then</code>) as opposed to <code>if flag then</code> (or <code>if not flag then</code>).</li>\n<li>Minor bugfixes</li>\n</ol>\n\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-in-2-3-0\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-in-2-3-0\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes in 2.3.0</span>\n    </h3>\n  <ol>\n<li>the parser will now understand <code>--</code> to denote the end of optional arguments and will map whatever comes after it to required/splat args</li>\n<li><code>-short VALUE</code> is now properly supported, so is <code>-short=VALUE</code></li>\n<li>short-key options can now officially be composed of more than 1 character</li>\n<li>the parser now accepts callbacks that will be invoked as soon as options are parsed so that you can bail out of parsing preemptively (like for <code>--version</code> or <code>--help</code> options)</li>\n<li>options can now accept multiple values via multiple invocations if a table was provided as a default value (passed-in values will be appended to that list)</li>\n</ol>\n\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-in-2-2-0-from-2-1-2\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-in-2-2-0-from-2-1-2\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes in 2.2-0 from 2.1-2</span>\n    </h3>\n  <ol>\n<li>the <code>=</code> that separates keys from values in the <code>--expanded-key</code> notation is no longer mandatory; using either a space or a <code>=</code> will map the value to the key (e.g., <code>--compress lzma</code> is equal to <code>--compress=lzma</code>)</li>\n</ol>\n\n    <h3 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/changes-in-2-0-0-from-1-x-x\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/changes-in-2-0-0-from-1-x-x\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">Changes in 2.0.0 from 1.x.x</span>\n    </h3>\n  <ol>\n<li>added the &#39;splat&#39; argument, an optional repetitive argument for which a maximum number of occurrences can be set</li>\n<li>removed the reference, arguments are now solely returned by their key/expanded-key (BREAKING!)</li>\n<li>removed object overhead and the <code>new()</code> method as the library will only be used once on program start-up (BREAKING!)</li>\n<li>after parsing completed successfully, the library will effectively delete itself to free resources (BREAKING!)</li>\n<li>option/flag is now allowed with only an expanded-key defined</li>\n<li>Debug aid implemented; adding a first option <code>--__DUMP__</code>, will dump the results of parsing the command line. Especially for testing how to use the commandline with arguments containing spaces either quoted or not.</li>\n<li>the <code>print_usage()</code> and <code>print_help()</code> now have a &#39;noprint&#39; parameter that will not print the message, but return it as an error string (<code>nil + errmsg</code>)</li>\n</ol>\n\n    <h2 class=\"anchorable-heading\">\n      <a name=\"/articles/readme/license\" class=\"anchorable-heading__anchor\"></a>\n      <a href=\"#/articles/readme/license\" class=\"anchorable-heading__link icon icon-link\"></a><span class=\"anchorable-heading__text\">License</span>\n    </h2>\n  <p>The code is released under the MIT terms. Feel free to use it in both open and closed software as you please.</p>\n<p>Copyright (c) 2011-2015 Ahmad Amireh</p>\n<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>\n<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>\n<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>\n",
+      "id": "readme",
+      "sortingId": "README.md",
+      "title": "lua_cliargs",
+      "wordCount": 1392,
+      "summary": "",
+      "plainTitle": "lua_cliargs\n",
+      "fileName": "README",
+      "folder": ".",
+      "sections": [
+        {
+          "id": "#/articles/readme/lua_cliargs",
+          "scopedId": "lua_cliargs",
+          "level": 1,
+          "html": "lua_cliargs",
+          "text": "lua_cliargs"
+        },
+        {
+          "id": "#/articles/readme/usage-examples",
+          "scopedId": "usage-examples",
+          "level": 2,
+          "html": "Usage Examples",
+          "text": "Usage Examples"
+        },
+        {
+          "id": "#/articles/readme/api",
+          "scopedId": "api",
+          "level": 2,
+          "html": "API",
+          "text": "API"
+        },
+        {
+          "id": "#/articles/readme/help-listings-help",
+          "scopedId": "help-listings-help",
+          "level": 2,
+          "html": "Help listings <code>--help</code>",
+          "text": "Help listings --help"
+        },
+        {
+          "id": "#/articles/readme/validations",
+          "scopedId": "validations",
+          "level": 2,
+          "html": "Validations",
+          "text": "Validations"
+        },
+        {
+          "id": "#/articles/readme/runtime-argument-validation",
+          "scopedId": "runtime-argument-validation",
+          "level": 3,
+          "html": "Runtime argument validation",
+          "text": "Runtime argument validation"
+        },
+        {
+          "id": "#/articles/readme/some-sanity-guards",
+          "scopedId": "some-sanity-guards",
+          "level": 3,
+          "html": "Some sanity guards",
+          "text": "Some sanity guards"
+        },
+        {
+          "id": "#/articles/readme/tests",
+          "scopedId": "tests",
+          "level": 2,
+          "html": "Tests",
+          "text": "Tests"
+        },
+        {
+          "id": "#/articles/readme/contributions",
+          "scopedId": "contributions",
+          "level": 2,
+          "html": "Contributions",
+          "text": "Contributions"
+        },
+        {
+          "id": "#/articles/readme/thanks-to",
+          "scopedId": "thanks-to",
+          "level": 2,
+          "html": "Thanks to",
+          "text": "Thanks to"
+        },
+        {
+          "id": "#/articles/readme/changelog",
+          "scopedId": "changelog",
+          "level": 2,
+          "html": "Changelog",
+          "text": "Changelog"
+        },
+        {
+          "id": "#/articles/readme/changes-from-2-5-x-3-0",
+          "scopedId": "changes-from-2-5-x-3-0",
+          "level": 3,
+          "html": "Changes from 2.5.x 3.0",
+          "text": "Changes from 2.5.x 3.0"
+        },
+        {
+          "id": "#/articles/readme/changes-from-2-5-1-to-2-5-2",
+          "scopedId": "changes-from-2-5-1-to-2-5-2",
+          "level": 3,
+          "html": "Changes from 2.5.1 to 2.5.2",
+          "text": "Changes from 2.5.1 to 2.5.2"
+        },
+        {
+          "id": "#/articles/readme/changes-in-2-4-0-from-2-3-4",
+          "scopedId": "changes-in-2-4-0-from-2-3-4",
+          "level": 3,
+          "html": "Changes in 2.4.0 from 2.3-4",
+          "text": "Changes in 2.4.0 from 2.3-4"
+        },
+        {
+          "id": "#/articles/readme/changes-in-2-3-0",
+          "scopedId": "changes-in-2-3-0",
+          "level": 3,
+          "html": "Changes in 2.3.0",
+          "text": "Changes in 2.3.0"
+        },
+        {
+          "id": "#/articles/readme/changes-in-2-2-0-from-2-1-2",
+          "scopedId": "changes-in-2-2-0-from-2-1-2",
+          "level": 3,
+          "html": "Changes in 2.2-0 from 2.1-2",
+          "text": "Changes in 2.2-0 from 2.1-2"
+        },
+        {
+          "id": "#/articles/readme/changes-in-2-0-0-from-1-x-x",
+          "scopedId": "changes-in-2-0-0-from-1-x-x",
+          "level": 3,
+          "html": "Changes in 2.0.0 from 1.x.x",
+          "text": "Changes in 2.0.0 from 1.x.x"
+        },
+        {
+          "id": "#/articles/readme/license",
+          "scopedId": "license",
+          "level": 2,
+          "html": "License",
+          "text": "License"
+        }
+      ]
+    },
+    "entities": [
+      "articles/readme/lua_cliargs",
+      "articles/readme/usage-examples",
+      "articles/readme/api",
+      "articles/readme/help-listings-help",
+      "articles/readme/validations",
+      "articles/readme/runtime-argument-validation",
+      "articles/readme/some-sanity-guards",
+      "articles/readme/tests",
+      "articles/readme/contributions",
+      "articles/readme/thanks-to",
+      "articles/readme/changelog",
+      "articles/readme/changes-from-2-5-x-3-0",
+      "articles/readme/changes-from-2-5-1-to-2-5-2",
+      "articles/readme/changes-in-2-4-0-from-2-3-4",
+      "articles/readme/changes-in-2-3-0",
+      "articles/readme/changes-in-2-2-0-from-2-1-2",
+      "articles/readme/changes-in-2-0-0-from-1-x-x",
+      "articles/readme/license"
+    ],
+    "type": "Document",
+    "parentNode": "articles",
+    "symbol": "/",
+    "meta": {
+      "href": "#/articles/readme",
+      "anchor": "/articles/readme"
+    },
+    "uid": "articles/readme",
+    "indices": {
+      "readme": 1
+    }
+  },
+  "articles/readme/lua_cliargs": {
+    "id": "lua_cliargs",
+    "title": "lua_cliargs",
+    "properties": {
+      "id": "lua_cliargs",
+      "scopedId": "lua_cliargs",
+      "level": 1,
+      "html": "lua_cliargs",
+      "text": "lua_cliargs"
+    },
+    "meta": {
+      "indexDisplayName": " lua_cliargs",
+      "anchor": "/articles/readme/lua_cliargs",
+      "href": "#/articles/readme/lua_cliargs"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/lua_cliargs",
+    "indices": {
+      "lua_cliargs": 1,
+      "readme/lua_cliargs": 2
+    }
+  },
+  "articles/readme/usage-examples": {
+    "id": "usage-examples",
+    "title": "Usage Examples",
+    "properties": {
+      "id": "usage-examples",
+      "scopedId": "usage-examples",
+      "level": 2,
+      "html": "Usage Examples",
+      "text": "Usage Examples"
+    },
+    "meta": {
+      "indexDisplayName": "   Usage Examples",
+      "anchor": "/articles/readme/usage-examples",
+      "href": "#/articles/readme/usage-examples"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/usage-examples",
+    "indices": {
+      "usage-examples": 1,
+      "readme/usage-examples": 2
+    }
+  },
+  "articles/readme/api": {
+    "id": "api",
+    "title": "API",
+    "properties": {
+      "id": "api",
+      "scopedId": "api",
+      "level": 2,
+      "html": "API",
+      "text": "API"
+    },
+    "meta": {
+      "indexDisplayName": "   API",
+      "anchor": "/articles/readme/api",
+      "href": "#/articles/readme/api"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/api",
+    "indices": {
+      "api": 1,
+      "readme/api": 2
+    }
+  },
+  "articles/readme/help-listings-help": {
+    "id": "help-listings-help",
+    "title": "Help listings --help",
+    "properties": {
+      "id": "help-listings-help",
+      "scopedId": "help-listings-help",
+      "level": 2,
+      "html": "Help listings <code>--help</code>",
+      "text": "Help listings --help"
+    },
+    "meta": {
+      "indexDisplayName": "   Help listings --help",
+      "anchor": "/articles/readme/help-listings-help",
+      "href": "#/articles/readme/help-listings-help"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/help-listings-help",
+    "indices": {
+      "help-listings-help": 1,
+      "readme/help-listings-help": 2
+    }
+  },
+  "articles/readme/validations": {
+    "id": "validations",
+    "title": "Validations",
+    "properties": {
+      "id": "validations",
+      "scopedId": "validations",
+      "level": 2,
+      "html": "Validations",
+      "text": "Validations"
+    },
+    "meta": {
+      "indexDisplayName": "   Validations",
+      "anchor": "/articles/readme/validations",
+      "href": "#/articles/readme/validations"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/validations",
+    "indices": {
+      "validations": 1,
+      "readme/validations": 2
+    }
+  },
+  "articles/readme/runtime-argument-validation": {
+    "id": "runtime-argument-validation",
+    "title": "Runtime argument validation",
+    "properties": {
+      "id": "runtime-argument-validation",
+      "scopedId": "runtime-argument-validation",
+      "level": 3,
+      "html": "Runtime argument validation",
+      "text": "Runtime argument validation"
+    },
+    "meta": {
+      "indexDisplayName": "     Runtime argument validation",
+      "anchor": "/articles/readme/runtime-argument-validation",
+      "href": "#/articles/readme/runtime-argument-validation"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/runtime-argument-validation",
+    "indices": {
+      "runtime-argument-validation": 1,
+      "readme/runtime-argument-validation": 2
+    }
+  },
+  "articles/readme/some-sanity-guards": {
+    "id": "some-sanity-guards",
+    "title": "Some sanity guards",
+    "properties": {
+      "id": "some-sanity-guards",
+      "scopedId": "some-sanity-guards",
+      "level": 3,
+      "html": "Some sanity guards",
+      "text": "Some sanity guards"
+    },
+    "meta": {
+      "indexDisplayName": "     Some sanity guards",
+      "anchor": "/articles/readme/some-sanity-guards",
+      "href": "#/articles/readme/some-sanity-guards"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/some-sanity-guards",
+    "indices": {
+      "some-sanity-guards": 1,
+      "readme/some-sanity-guards": 2
+    }
+  },
+  "articles/readme/tests": {
+    "id": "tests",
+    "title": "Tests",
+    "properties": {
+      "id": "tests",
+      "scopedId": "tests",
+      "level": 2,
+      "html": "Tests",
+      "text": "Tests"
+    },
+    "meta": {
+      "indexDisplayName": "   Tests",
+      "anchor": "/articles/readme/tests",
+      "href": "#/articles/readme/tests"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/tests",
+    "indices": {
+      "tests": 1,
+      "readme/tests": 2
+    }
+  },
+  "articles/readme/contributions": {
+    "id": "contributions",
+    "title": "Contributions",
+    "properties": {
+      "id": "contributions",
+      "scopedId": "contributions",
+      "level": 2,
+      "html": "Contributions",
+      "text": "Contributions"
+    },
+    "meta": {
+      "indexDisplayName": "   Contributions",
+      "anchor": "/articles/readme/contributions",
+      "href": "#/articles/readme/contributions"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/contributions",
+    "indices": {
+      "contributions": 1,
+      "readme/contributions": 2
+    }
+  },
+  "articles/readme/thanks-to": {
+    "id": "thanks-to",
+    "title": "Thanks to",
+    "properties": {
+      "id": "thanks-to",
+      "scopedId": "thanks-to",
+      "level": 2,
+      "html": "Thanks to",
+      "text": "Thanks to"
+    },
+    "meta": {
+      "indexDisplayName": "   Thanks to",
+      "anchor": "/articles/readme/thanks-to",
+      "href": "#/articles/readme/thanks-to"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/thanks-to",
+    "indices": {
+      "thanks-to": 1,
+      "readme/thanks-to": 2
+    }
+  },
+  "articles/readme/changelog": {
+    "id": "changelog",
+    "title": "Changelog",
+    "properties": {
+      "id": "changelog",
+      "scopedId": "changelog",
+      "level": 2,
+      "html": "Changelog",
+      "text": "Changelog"
+    },
+    "meta": {
+      "indexDisplayName": "   Changelog",
+      "anchor": "/articles/readme/changelog",
+      "href": "#/articles/readme/changelog"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changelog",
+    "indices": {
+      "changelog": 1,
+      "readme/changelog": 2
+    }
+  },
+  "articles/readme/changes-from-2-5-x-3-0": {
+    "id": "changes-from-2-5-x-3-0",
+    "title": "Changes from 2.5.x 3.0",
+    "properties": {
+      "id": "changes-from-2-5-x-3-0",
+      "scopedId": "changes-from-2-5-x-3-0",
+      "level": 3,
+      "html": "Changes from 2.5.x 3.0",
+      "text": "Changes from 2.5.x 3.0"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes from 2.5.x 3.0",
+      "anchor": "/articles/readme/changes-from-2-5-x-3-0",
+      "href": "#/articles/readme/changes-from-2-5-x-3-0"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-from-2-5-x-3-0",
+    "indices": {
+      "changes-from-2-5-x-3-0": 1,
+      "readme/changes-from-2-5-x-3-0": 2
+    }
+  },
+  "articles/readme/changes-from-2-5-1-to-2-5-2": {
+    "id": "changes-from-2-5-1-to-2-5-2",
+    "title": "Changes from 2.5.1 to 2.5.2",
+    "properties": {
+      "id": "changes-from-2-5-1-to-2-5-2",
+      "scopedId": "changes-from-2-5-1-to-2-5-2",
+      "level": 3,
+      "html": "Changes from 2.5.1 to 2.5.2",
+      "text": "Changes from 2.5.1 to 2.5.2"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes from 2.5.1 to 2.5.2",
+      "anchor": "/articles/readme/changes-from-2-5-1-to-2-5-2",
+      "href": "#/articles/readme/changes-from-2-5-1-to-2-5-2"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-from-2-5-1-to-2-5-2",
+    "indices": {
+      "changes-from-2-5-1-to-2-5-2": 1,
+      "readme/changes-from-2-5-1-to-2-5-2": 2
+    }
+  },
+  "articles/readme/changes-in-2-4-0-from-2-3-4": {
+    "id": "changes-in-2-4-0-from-2-3-4",
+    "title": "Changes in 2.4.0 from 2.3-4",
+    "properties": {
+      "id": "changes-in-2-4-0-from-2-3-4",
+      "scopedId": "changes-in-2-4-0-from-2-3-4",
+      "level": 3,
+      "html": "Changes in 2.4.0 from 2.3-4",
+      "text": "Changes in 2.4.0 from 2.3-4"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes in 2.4.0 from 2.3-4",
+      "anchor": "/articles/readme/changes-in-2-4-0-from-2-3-4",
+      "href": "#/articles/readme/changes-in-2-4-0-from-2-3-4"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-in-2-4-0-from-2-3-4",
+    "indices": {
+      "changes-in-2-4-0-from-2-3-4": 1,
+      "readme/changes-in-2-4-0-from-2-3-4": 2
+    }
+  },
+  "articles/readme/changes-in-2-3-0": {
+    "id": "changes-in-2-3-0",
+    "title": "Changes in 2.3.0",
+    "properties": {
+      "id": "changes-in-2-3-0",
+      "scopedId": "changes-in-2-3-0",
+      "level": 3,
+      "html": "Changes in 2.3.0",
+      "text": "Changes in 2.3.0"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes in 2.3.0",
+      "anchor": "/articles/readme/changes-in-2-3-0",
+      "href": "#/articles/readme/changes-in-2-3-0"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-in-2-3-0",
+    "indices": {
+      "changes-in-2-3-0": 1,
+      "readme/changes-in-2-3-0": 2
+    }
+  },
+  "articles/readme/changes-in-2-2-0-from-2-1-2": {
+    "id": "changes-in-2-2-0-from-2-1-2",
+    "title": "Changes in 2.2-0 from 2.1-2",
+    "properties": {
+      "id": "changes-in-2-2-0-from-2-1-2",
+      "scopedId": "changes-in-2-2-0-from-2-1-2",
+      "level": 3,
+      "html": "Changes in 2.2-0 from 2.1-2",
+      "text": "Changes in 2.2-0 from 2.1-2"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes in 2.2-0 from 2.1-2",
+      "anchor": "/articles/readme/changes-in-2-2-0-from-2-1-2",
+      "href": "#/articles/readme/changes-in-2-2-0-from-2-1-2"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-in-2-2-0-from-2-1-2",
+    "indices": {
+      "changes-in-2-2-0-from-2-1-2": 1,
+      "readme/changes-in-2-2-0-from-2-1-2": 2
+    }
+  },
+  "articles/readme/changes-in-2-0-0-from-1-x-x": {
+    "id": "changes-in-2-0-0-from-1-x-x",
+    "title": "Changes in 2.0.0 from 1.x.x",
+    "properties": {
+      "id": "changes-in-2-0-0-from-1-x-x",
+      "scopedId": "changes-in-2-0-0-from-1-x-x",
+      "level": 3,
+      "html": "Changes in 2.0.0 from 1.x.x",
+      "text": "Changes in 2.0.0 from 1.x.x"
+    },
+    "meta": {
+      "indexDisplayName": "     Changes in 2.0.0 from 1.x.x",
+      "anchor": "/articles/readme/changes-in-2-0-0-from-1-x-x",
+      "href": "#/articles/readme/changes-in-2-0-0-from-1-x-x"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/changes-in-2-0-0-from-1-x-x",
+    "indices": {
+      "changes-in-2-0-0-from-1-x-x": 1,
+      "readme/changes-in-2-0-0-from-1-x-x": 2
+    }
+  },
+  "articles/readme/license": {
+    "id": "license",
+    "title": "License",
+    "properties": {
+      "id": "license",
+      "scopedId": "license",
+      "level": 2,
+      "html": "License",
+      "text": "License"
+    },
+    "meta": {
+      "indexDisplayName": "   License",
+      "anchor": "/articles/readme/license",
+      "href": "#/articles/readme/license"
+    },
+    "type": "DocumentEntity",
+    "parentNode": "articles/readme",
+    "uid": "articles/readme/license",
+    "indices": {
+      "license": 1,
+      "readme/license": 2
+    }
+  },
+  "ui": {
+    "id": "ui",
+    "name": "ui",
+    "meta": {
+      "anchor": "/ui"
+    },
+    "documents": [
+      "ui/index",
+      "ui/404"
+    ],
+    "type": "Namespace",
+    "symbol": "/",
+    "uid": "ui",
+    "indices": {}
+  },
+  "ui/index": {
+    "id": "index",
+    "title": "lua_cliargs",
+    "summary": "",
+    "meta": {
+      "href": "#/index.html",
+      "anchor": "/ui/index"
+    },
+    "type": "Document",
+    "parentNode": "ui",
+    "symbol": "/",
+    "uid": "ui/index",
+    "indices": {
+      "index": 1
+    }
+  },
+  "ui/404": {
+    "id": "404",
+    "title": "404 - Not Found",
+    "summary": "Not Found",
+    "meta": {
+      "href": "#/404.html",
+      "anchor": "/ui/404"
+    },
+    "type": "Document",
+    "parentNode": "ui",
+    "symbol": "/",
+    "uid": "ui/404",
+    "indices": {
+      "404": 1
+    }
+  }
+}

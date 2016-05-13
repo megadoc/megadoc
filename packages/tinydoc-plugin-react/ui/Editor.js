@@ -1,4 +1,5 @@
 const React = require('react');
+const { findDOMNode } = require('react-dom');
 const ExampleRunner = require('./ExampleRunner');
 const get = require('lodash/object/get');
 const set = require('lodash/object/set');
@@ -62,7 +63,7 @@ const Editor = React.createClass({
         messageSource={IFrameCommunicator.getUID(this)}
         origin={IFrameCommunicator.getOrigin()}
       />,
-      React.findDOMNode(this.refs.iframe)
+      findDOMNode(this.refs.iframe)
     );
 
     document.body.addEventListener('keydown', this.closeOnEscape);
@@ -278,7 +279,7 @@ const Editor = React.createClass({
   },
 
   reloadExampleWithProps(props) {
-    IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
+    IFrameCommunicator.postMessage(findDOMNode(this.refs.iframe), {
       type: 'render',
       payload: {
         elementName: this.props.moduleDoc.name,

@@ -4,6 +4,7 @@ var program = require('commander');
 var fs = require('fs-extra');
 var path = require('path');
 var set = require('lodash').set;
+var omit = require('lodash').omit;
 var pkg = require('../package');
 var tinydoc = require('..');
 var Logger = require('../lib/Logger');
@@ -27,6 +28,7 @@ program
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
   .option('--dump-config')
+  .option('--dump-corpus <PATH>')
   .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
@@ -96,10 +98,10 @@ console.log('version %s', pkg.version);
 tiny = tinydoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
-  index: program.index !== false && program.scan !== false,
   render: program.render !== false && program.index !== false,
   stats: program.stats === true,
-  purge: program.purge !== false
+  purge: program.purge !== false,
+  includeCorpusInStats: program.dumpCorpus
 });
 
 tiny.run(function(err, stats) {
@@ -113,7 +115,13 @@ tiny.run(function(err, stats) {
   }
 
   if (stats) {
-    console.raw.log(JSON.stringify(stats, null, 2));
+    console.raw.log(JSON.stringify(omit(stats, ['corpus']), null, 2));
+  }
+
+  if (stats.corpus) {
+    var corpusFilePath = path.resolve(program.dumpCorpus);
+    console.log('Writing JSON-serialized corpus of size %d to:\n', Object.keys(stats.corpus).length, corpusFilePath);
+    fs.writeFileSync(corpusFilePath, JSON.stringify(stats.corpus, null, 2), 'utf-8');
   }
 
   console.log('done!');

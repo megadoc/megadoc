@@ -1,4 +1,5 @@
 const React = require('react');
+const { findDOMNode } = require('react-dom');
 const scrollIntoView = require('utils/scrollIntoView');
 const SIDEBAR_SELECTOR = '.resizable-panel__content';
 
@@ -11,7 +12,7 @@ function JumperMixin(locateElement, offset, parentNodeSelector = SIDEBAR_SELECTO
     }
     else if (element) {
       scrollIntoView(
-        React.findDOMNode(element),
+        findDOMNode(element),
         document.querySelector(parentNodeSelector),
         offset
       );

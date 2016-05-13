@@ -1,12 +1,11 @@
 const React = require('react');
-const ReactRouter = require('react-router');
-const Router = require('core/Router');
+const { render } = require('react-dom');
+const { renderToString } = require('react-dom/server');
 const config = require('config');
 const createTinydoc = require('core/tinydoc');
 const Storage = require('core/Storage');
-const { Route, NotFoundRoute, Redirect } = ReactRouter;
 const K = require('constants');
-const CustomLocation = require('./CustomLocation');
+const App = require('./screens/App');
 const tinydoc = window.tinydoc = createTinydoc(config);
 
 console.log('tinydoc: version %s', config.version);
@@ -31,89 +30,51 @@ tinydoc.outlets.define('Inspector');
 require('./outlets/SidebarHeaderOutlet')(tinydoc);
 
 tinydoc.start = function(options = {}) {
-  const currentDocument = tinydoc.corpus.get(options.startingDocumentUID);
-
-  config.mountPath = MountPath(currentDocument);
-
   tinydoc.onReady(function(registrar) {
     console.log('Ok, firing up.');
-    console.log('Mount path = "%s".', config.mountPath);
-
-    const routes = RouteMap(config, registrar);
-    const location = Location(config);
-    const router = ReactRouter.create({ location, routes });
-
-    Router.setInstance(router);
 
     if (config.$static) {
       config.$static.readyCallback({
         render(href, done) {
-          // Stripping the leading hash is necessary for single page mode...
-          // can't wait till RR is gone :)
-          location.path = href.replace(/^#/, '');
+          var markup = renderToString(
+            <App
+              config={config}
+              location={{
+                protocol: 'file:',
+                origin: "file://",
+                pathname: href.replace(/^#/, ''),
+                hash: '', // do we have to handle this? :o
+              }}
+            />
+          );
 
-          router.run(function(Handler, state) {
-            if (process.env.DEBUG) {
-              console.log('[DEBUG] Rendered using:', state.routes[state.routes.length-1].name);
-            }
-
-            // if (state.routes.length && state.routes[state.routes.length-1].name === 'not-found') {
-            //   return done(404);
-            // }
-
-            done(null, React.renderToString(<Handler {...state} config={config} />));
-          });
+          done(null, markup);
         },
 
         dumpRoutes: function() {
-          return dumpRoute(router.routes[0]);
+          return [];
         }
       });
 
     }
     else {
-      router.run(function(Handler, state) {
-        React.render(<Handler {...state} config={config} />, document.querySelector('#__app__'));
-      });
+      config.mountPath = MountPath(tinydoc.corpus.get(options.startingDocumentUID));
+
+      console.log('Mount path = "%s".', config.mountPath);
+
+      render(
+        <App
+          config={config}
+          location={window.location}
+        />,
+        document.querySelector('#__app__')
+      );
     }
   });
 };
 
 module.exports = tinydoc;
 
-function dumpRoute(route) {
-  return {
-    path: route.path,
-    name: route.name,
-    children: (route.childRoutes || []).map(dumpRoute)
-  };
-}
-
-function Location(config) {
-  if (config.$static) {
-    return new ReactRouter.StaticLocation('/');
-  }
-  else {
-    return CustomLocation;
-  }
-}
-
-function RouteMap(config, registrar) {
-  return (
-    <Route
-      name="root"
-      path="/"
-      handler={require('./screens/Root')}
-      ignoreScrollBehavior
-    >
-      <Route name="settings" path="/settings" handler={require('./screens/Settings')} />
-      <Route name="404" path="/404" handler={require('components/NotFound')} />
-
-      <NotFoundRoute name="not-found" handler={require('./screens/Root')} />
-      {registrar.getRouteMap()}
-    </Route>
-  );
-}
 
 function MountPath(currentDocument) {
   if (currentDocument) {

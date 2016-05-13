@@ -1,4 +1,6 @@
 const config = require('config');
+const invariant = require('utils/invariant');
+
 
 /**
  * @namespace UI.Core
@@ -27,6 +29,8 @@ if (process.env.NODE_ENV === 'development') {
  *         The query parameters.
  */
 Router.updateQuery = function(newQuery) {
+  invariant(false, "Routing is disabled!");
+
   var routes = instance.getCurrentRoutes();
   var currentRouteName = routes[routes.length-1].name;
   var query = instance.getCurrentQuery();
@@ -43,29 +47,41 @@ Router.updateQuery = function(newQuery) {
 };
 
 Router.transitionTo = function(path, params, query) {
+  invariant(false, "Routing is disabled!");
+
   instance.transitionTo(path, params, query);
 };
 
 Router.replaceWith = function(path, params, query) {
+  invariant(false, "Routing is disabled!");
+
   instance.replaceWith(path, params, query);
 };
 
 Router.getQueryItem = function(item) {
+  invariant(false, "Routing is disabled!");
+
   if (instance) {
     return instance.getCurrentQuery()[item];
   }
 };
 
 Router.makeHref = function(name, params, query) {
+  invariant(false, "Routing is disabled!");
+
   return instance.makeHref(name, params, query);
 };
 
 Router.refresh = function() {
+  invariant(false, "Routing is disabled!");
+
   instance.refresh();
 };
 
 // force the browser to (re)scroll to the proper location
 Router.refreshScroll = function() {
+  invariant(false, "Routing is disabled!");
+
   const originalLocation = window.location.hash;
 
   if (originalLocation && originalLocation.length > 0) {
@@ -77,6 +93,8 @@ Router.refreshScroll = function() {
 };
 
 Router.generateAnchorId = function({ routeName, params }) {
+  invariant(false, "Routing is disabled!");
+
   console.warn(
     'Deprecated: Router.generateAnchorId() should no longer be used as the ' +
     'URIs are resolved at compile-time.'
@@ -89,20 +107,28 @@ Router.generateAnchorId = function({ routeName, params }) {
 };
 
 Router.getCurrentPath = function() {
+  invariant(false, "Routing is disabled!");
+
   if (instance) {
     return instance.getCurrentPath();
   }
 };
 
 Router.isActive = function(routeName) {
+  invariant(false, "Routing is disabled!");
+
   return instance && instance.isRunning && instance.isActive(routeName);
 };
 
 Router.isRunning = function() {
+  invariant(false, "Routing is disabled!");
+
   return instance && instance.isRunning;
 };
 
 Router.getParamItem = function(item) {
+  invariant(false, "Routing is disabled!");
+
   if (instance) {
     return instance.getCurrentParams()[item];
   }

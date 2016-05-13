@@ -2,6 +2,7 @@ const Subject = require('../Layout');
 const reactSuite = require('test_helpers/reactSuite');
 const sinonSuite = require('test_helpers/sinonSuite');
 const stubCorpus = require('test_helpers/stubCorpus');
+const stubContext = require('test_helpers/stubContext');
 const { assert } = require('chai');
 const { drill, m } = require('react-drill');
 const Outlet = require('components/Outlet');
@@ -12,7 +13,7 @@ const React = require('react');
 describe('tinydoc::Components::Layout', function() {
   const sinon = sinonSuite(this);
 
-  reactSuite(this, Subject, {
+  const suite = reactSuite(this, stubContext(Subject), {
     pathname: '/'
   });
 
@@ -40,7 +41,7 @@ describe('tinydoc::Components::Layout', function() {
         })
       });
 
-      subject.setProps({
+      suite.setProps({
         pathname: '/foo',
 
         customLayouts: [{
@@ -78,7 +79,7 @@ describe('tinydoc::Components::Layout', function() {
         })
       });
 
-      subject.setProps({
+      suite.setProps({
         pathname: '/foo',
 
         customLayouts: [{
@@ -104,7 +105,7 @@ describe('tinydoc::Components::Layout', function() {
     it('displays an error when no such document is found', function() {
       sinon.spy(tinydoc.corpus, 'get');
 
-      subject.setProps({
+      suite.setProps({
         pathname: '/foo',
 
         customLayouts: [{

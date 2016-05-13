@@ -1,4 +1,5 @@
 const React = require('react');
+const { findDOMNode } = require('react-dom');
 const findChildByType = require('utils/findChildByType');
 const EventEmitter = require('core/EventEmitter');
 const Storage = require('core/Storage');
@@ -7,7 +8,6 @@ const classSet = require('utils/classSet');
 const config = require('config');
 const Icon = require('components/Icon');
 const Button = require('components/Button');
-const emitter = new EventEmitter([ 'change', 'resize' ]);
 const {
   CFG_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
@@ -18,15 +18,7 @@ Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
 
 // We want all instances of TwoColumnLayout across the app to share the same
 // sidebar width, so we'll track it here outside of state or something.
-let initialWidth = Storage.get(CFG_SIDEBAR_WIDTH);
-let sidebarWidth = initialWidth;
-let activeInstances = [];
 let inverted;
-
-// so that we reset the sidebar width if storage was cleared
-Storage.on('change', function() {
-  sidebarWidth = Storage.get(CFG_SIDEBAR_WIDTH);
-});
 
 const LeftColumn = React.createClass({
   propTypes: {
@@ -50,17 +42,6 @@ const RightColumn = React.createClass({
 
 const TwoColumnLayout = React.createClass({
   statics: {
-    isActive() {
-      return config.resizableSidebar && activeInstances.length > 0;
-    },
-
-    getSidebarWidth() {
-      return TwoColumnLayout.isActive() ? sidebarWidth : 0;
-    },
-
-    on: emitter.on,
-    off: emitter.off,
-
     invert() { inverted = true; }
   },
 
@@ -68,41 +49,40 @@ const TwoColumnLayout = React.createClass({
     children: React.PropTypes.any,
   },
 
-  getInitialState: function() {
+  getInitialState() {
     return {
+      initialSidebarWidth: INITIAL_SIDEBAR_WIDTH,
+      sidebarWidth: INITIAL_SIDEBAR_WIDTH,
       sidebarCollapsed: false
     };
   },
 
   componentDidMount() {
-    activeInstances.push(1);
+    // so that we reset the sidebar width if storage was cleared
+    // Storage.on('change', () => {
+    //   this.setState({
+    //     sidebarWidth: Storage.get(CFG_SIDEBAR_WIDTH)
+    //   });
+    // });
 
     if (config.resizableSidebar) {
-      this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
+      this.resizableInstance = resizable(findDOMNode(this.refs.resizer), {
         onResize: this.updateSidebarWidth,
         onResizeStop: this.updateAndSaveSidebarWidth
       });
     }
-
-    emitter.on('resize', this.reloadOnResize);
-    emitter.emit('change');
-    emitter.emit('resize');
   },
 
   componentWillUnmount() {
-    emitter.off('resize', this.reloadOnResize);
-
     if (config.resizableSidebar) {
       this.resizableInstance.destroy();
     }
-
-    activeInstances.pop();
-    emitter.emit('change');
   },
 
   render() {
-    var left = findChildByType(this.props.children, LeftColumn);
-    var right = findChildByType(this.props.children, RightColumn);
+    const left = findChildByType(this.props.children, LeftColumn);
+    const right = findChildByType(this.props.children, RightColumn);
+    const sidebarWidth = this.state.sidebarCollapsed ? 0 : this.state.sidebarWidth;
 
     const leftClassName = classSet({
       'two-column-layout__left': true,
@@ -113,7 +93,7 @@ const TwoColumnLayout = React.createClass({
       <div className={classSet({ "two-column-layout": true, "two-column-layout--inverted": inverted })}>
         <div
           className={leftClassName}
-          style={{ width: config.resizableSidebar ? sidebarWidth : null }}
+          style={{ width: sidebarWidth }}
         >
           <div className="resizable-panel">
             {config.collapsibleSidebar && (
@@ -138,7 +118,7 @@ const TwoColumnLayout = React.createClass({
         <div
           className="two-column-layout__right"
           style={{
-            [inverted ? 'marginRight' : 'marginLeft']: config.resizableSidebar ? sidebarWidth : null
+            [inverted ? 'marginRight' : 'marginLeft']: sidebarWidth
           }}
           children={right}
         />
@@ -151,13 +131,16 @@ const TwoColumnLayout = React.createClass({
   },
 
   updateSidebarWidth(x) {
-    sidebarWidth = Math.max(initialWidth + x, MIN_SIDEBAR_WIDTH);
-    emitter.emit('resize', sidebarWidth);
+    this.setState({
+      sidebarWidth: Math.max(this.state.initialSidebarWidth + x, MIN_SIDEBAR_WIDTH)
+    });
   },
 
   updateAndSaveSidebarWidth() {
-    initialWidth = sidebarWidth;
-    Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
+    this.setState({
+      initialSidebarWidth: this.state.sidebarWidth
+    });
+    // Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
   },
 
   collapseSidebar(e) {

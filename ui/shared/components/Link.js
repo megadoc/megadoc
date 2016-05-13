@@ -1,19 +1,29 @@
 const React = require('react');
-const Router = require('core/Router');
-const DocumentURI = require('core/DocumentURI');
-const AppState = require('core/AppState');
 const classSet = require('utils/classSet');
-const URIjs = require('urijs');
-const navigate = require('../../utils/navigate');
-const { string, func, node, bool, oneOfType, shape, } = React.PropTypes;
-const { findDOMNode } = require('react');
+const resolvePathname = require('utils/resolvePathname');
+const { string, func, node, bool, shape, } = React.PropTypes;
+const { findDOMNode } = require('react-dom');
+const { get } = require('lodash');
 
 const Link = React.createClass({
+  contextTypes: {
+    navigate: func.isRequired,
+    location: shape({
+      pathname: string.isRequired,
+    }).isRequired,
+
+    config: shape({
+      mountPath: string,
+      layoutOptions: shape({
+        singlePageMode: bool,
+      }),
+    }),
+  },
+
   propTypes: {
     to: shape({
       meta: shape({
-        href: string.isRequired,
-        anchor: string
+        href: string.isRequired
       }).isRequired
     }),
     href: string,
@@ -27,27 +37,14 @@ const Link = React.createClass({
 
   render() {
     const href = this.getHref();
-    const anchor = this.getAnchor(href) || '';
-
-    // blurgh, what?
     const isActive = this.isActive(href);
-    const targetHref = anchor.length > 0 && AppState.inSinglePageMode() && href.indexOf('#') === -1 ?
-      href + '#' + anchor :
-      href
-    ;
-
-    // console.warn("Target URL = '%s', current URL = '%s', relative URL = '%s'",
-    //   this.props.to,
-    //   DocumentURI.getCurrentPathName(),
-    //   RelativeHref(this.props.to)
-    // );
 
     return (
       <a
         id={this.props.id}
         name={this.props.name}
         title={this.props.title}
-        href={RelativeHref(targetHref)}
+        href={this.getRelativeHref(href)}
         onClick={this.navigate}
         children={this.props.children}
         className={classSet(this.props.className, { 'active' : isActive })}
@@ -56,7 +53,7 @@ const Link = React.createClass({
   },
 
   navigate(e) {
-    navigate(e, findDOMNode(this));
+    this.context.navigate(e, findDOMNode(this));
 
     if (this.props.onClick) {
       this.props.onClick(e);
@@ -64,16 +61,18 @@ const Link = React.createClass({
   },
 
   isActive(href) {
-    const path = href.split('#')[0];
+    // TODO
+    return false;
+    // const path = href.split('#')[0];
 
-    // we need this for the http: protocol
-    const pathWithoutOrigin = window.location.href.substr(window.location.origin.length);
+    // // we need this for the http: protocol
+    // const pathWithoutOrigin = window.location.href.substr(window.location.origin.length);
 
-    return (
-      this.props.to === pathWithoutOrigin ||
-      // this.. i have no idea anymore
-      (path === this.props.to && Router.isActive(DocumentURI.withoutExtension(path)))
-    )
+    // return (
+    //   this.props.to === pathWithoutOrigin ||
+    //   // this.. i have no idea anymore
+    //   (path === this.props.to && Router.isActive(DocumentURI.withoutExtension(path)))
+    // )
   },
 
   getHref() {
@@ -88,37 +87,18 @@ const Link = React.createClass({
     }
   },
 
-  getAnchor(href) {
-    if (this.props.anchor) {
-      return this.props.anchor;
+  getRelativeHref(href) {
+    if (this.inSinglePageMode()) {
+      return href;
     }
-    else if (this.props.to && typeof this.props.to === 'object') {
-      return this.props.to.meta.anchor;
-    }
-    else {
-      return href.split('#')[1];
-    }
+
+    return resolvePathname(href, this.context.location.pathname);
+  },
+
+  inSinglePageMode() {
+    return !!get(this.context, 'config.layoutOptions.singlePageMode');
   }
 });
 
-function RelativeHref(href) {
-  if (AppState.inSinglePageMode()) {
-    return href;
-  }
-
-  try {
-    return URIjs(href).relativeTo(DocumentURI.getCurrentPathName()).toString();
-  }
-  catch(e) {
-    if (e.message === 'Cannot calculate a URI relative to another relative URI') {
-      console.warn("Target URL = '%s', current URL = '%s'",
-        href,
-        DocumentURI.getCurrentPathName()
-      );
-    }
-
-    throw e;
-  }
-}
 
 module.exports = Link;

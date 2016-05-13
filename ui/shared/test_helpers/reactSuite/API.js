@@ -1,4 +1,5 @@
 const React = require("react");
+const { render, unmountComponentAtNode } = require('react-dom');
 const config = require("./config");
 const EventEmitter = require('core/EventEmitter');
 const { assign } = require('lodash');
@@ -54,13 +55,17 @@ ReactSuiteAPI.prototype.createSubject = function(initialProps, done) {
     this.attachToDOM();
   }
 
-  this.subject = React.render(<Type {...props} />, this.container);
+  this.subject = render(<Type {...props} />, this.container);
 
   this.emit('change');
 
   if (done) {
     done(this.subject, this.container);
   }
+};
+
+ReactSuiteAPI.prototype.setProps = function(props) {
+  this.subject = render(<this.type {...props} />, this.container);
 };
 
 /**
@@ -104,8 +109,8 @@ ReactSuiteAPI.prototype.remountSubject = function(initialProps, done) {
   if (this.isRunning()) {
     const Type = this.subject.constructor;
 
-    React.unmountComponentAtNode(this.container);
-    this.subject = React.render(<Type {...initialProps} />, this.container);
+    unmountComponentAtNode(this.container);
+    this.subject = render(<Type {...initialProps} />, this.container);
 
     this.emit('change');
 
@@ -123,7 +128,7 @@ ReactSuiteAPI.prototype.remountSubject = function(initialProps, done) {
  */
 ReactSuiteAPI.prototype.removeSubject = function() {
   if (this.isRunning()) {
-    React.unmountComponentAtNode(this.container);
+    unmountComponentAtNode(this.container);
 
     if (this.isAttachedToDOM()) {
       this.detachFromDOM();

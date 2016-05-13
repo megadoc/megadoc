@@ -1,4 +1,5 @@
 const React = require('react');
+const { findDOMNode } = require('react-dom');
 const domContains = require('dom-contains');
 const config = require('config');
 const Tooltip = require('./InspectorTooltip');
@@ -51,7 +52,7 @@ const Inspector = React.createClass({
         this.setState({ element: e.target });
       }
     }
-    else if (e.target === React.findDOMNode(this)) {
+    else if (e.target === findDOMNode(this)) {
       return;
     }
     else if (this.state.element) {

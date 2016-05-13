@@ -2,6 +2,7 @@ const React = require('react');
 const hljs = require('highlight.js/lib/highlight');
 const Storage = require('core/Storage');
 const { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
+const { findDOMNode } = require('react-dom');
 
 hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'));
 // hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'));
@@ -37,7 +38,7 @@ const HighlightedText = React.createClass({
 
   highlightCode: function () {
     if (HighlightedText.isHighlightingEnabled()) {
-      const nodes = this.getDOMNode().querySelectorAll('pre');
+      const nodes = findDOMNode(this).querySelectorAll('pre');
 
       if (nodes.length > 0) {
         for (let i = 0; i < nodes.length; i=i+1) {

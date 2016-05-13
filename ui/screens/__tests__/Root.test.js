@@ -4,8 +4,13 @@ const { assert } = require('chai');
 
 describe('tinydoc::Components::Root', function() {
   reactSuite(this, Subject, {
-    params: {},
-    pathname: '/'
+    config: {},
+    location: {
+      pathname: '/',
+      protocol: 'http:',
+      origin: 'http://localhost',
+      hash: ''
+    }
   });
 
   it('renders', function() {

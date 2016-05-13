@@ -2,24 +2,33 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const AppState = require('core/AppState');
 const Storage = require('core/Storage');
-const Router = require('core/Router');
 const SpotlightManager = require('../components/SpotlightManager');
 const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
-const navigate = require('../utils/navigate');
 const DocumentResolver = require('../DocumentResolver');
 const ErrorMessage = require('components/ErrorMessage');
-const { object } = React.PropTypes;
+const { object, func, } = React.PropTypes;
 
 const Root = React.createClass({
-  propTypes: {
+  childContextTypes: {
     config: object,
+    location: require('schemas/Location'),
+    navigate: func,
   },
 
-  getDefaultProps() {
+  propTypes: {
+    config: object,
+    location: require('schemas/Location'),
+    onNavigate: func,
+    onRefreshScroll: func,
+  },
+
+  getChildContext() {
     return {
-      query: {},
+      location: this.props.location,
+      config: this.props.config,
+      navigate: this.props.onNavigate
     };
   },
 
@@ -32,18 +41,12 @@ const Root = React.createClass({
     AppState.on('change', this.reload);
 
     window.addEventListener('click', this.handleInternalLink, false);
+  },
 
-    // Argh, otherwise when you refresh the page the browser doesn't seem to
-    // make the jump!
-    //
-    // To reproduce:
-    //
-    //   - turn on single page mode
-    //   - anchor to some heading
-    //   - reload
-    //     - watch it stick to the top
-    if (AppState.inSinglePageMode()) {
-      Router.refreshScroll();
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.location.hash !== this.props.location.hash) {
+      console.warn('hash has changed from "%s" to "%s", forcing refresh!', prevProps.location.hash, this.props.location.hash);
+      this.props.onRefreshScroll();
     }
   },
 
@@ -110,12 +113,13 @@ const Root = React.createClass({
   },
 
   reload() {
+    console.debug('Root: updating');
     this.forceUpdate();
   },
 
   handleInternalLink(e) {
     if (e.target.tagName === 'A' && e.target.href.indexOf(location.origin) === 0) {
-      navigate(e, e.target);
+      this.props.onNavigate(e, e.target);
     }
   },
 
@@ -128,13 +132,8 @@ const Root = React.createClass({
   },
 
   getLocation() {
-    return {
-      pathname: this.props.pathname,
-      origin: window.location.origin,
-      protocol: window.location.protocol,
-      hash: window.location.hash
-    };
-  }
+    return this.props.location;
+  },
 });
 
 module.exports = Root;

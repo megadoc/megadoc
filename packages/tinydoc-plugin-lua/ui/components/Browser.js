@@ -1,10 +1,10 @@
 const React = require('react');
 const Link = require('components/Link');
-const { shape, object, } = React.PropTypes;
+const { object, } = React.PropTypes;
 
 const Browser = React.createClass({
   propTypes: {
-    params: shape,
+    params: object,
     namespaceNode: object,
   },
 

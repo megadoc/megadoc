@@ -1,4 +1,5 @@
 const React = require("react");
+const { findDOMNode } = require('react-dom');
 const HighlightedText = require('components/HighlightedText');
 const Button = require('components/Button');
 const ExampleRunner = require('./ExampleRunner');
@@ -18,7 +19,7 @@ const LiveExampleJSXTag = React.createClass({
         case 'ready':
           const { tag } = this.props;
 
-          IFrameCommunicator.postMessage(React.findDOMNode(this.refs.iframe), {
+          IFrameCommunicator.postMessage(findDOMNode(this.refs.iframe), {
             type: 'render',
             payload: {
               elementName: tag.elementName,
@@ -86,11 +87,11 @@ const LiveExampleJSXTag = React.createClass({
         origin={IFrameCommunicator.getOrigin()}
         alignment={this.props.tag.alignment || 'left'}
       />,
-      React.findDOMNode(this.refs.iframe)
+      findDOMNode(this.refs.iframe)
     );
 
-    this.resizableInstance = resizable(React.findDOMNode(this.refs.resizer), {
-      target: React.findDOMNode(this.refs.iframeContainer),
+    this.resizableInstance = resizable(findDOMNode(this.refs.resizer), {
+      target: findDOMNode(this.refs.iframeContainer),
       onResizeStart: this.maximizeFrame
     });
   },

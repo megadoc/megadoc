@@ -13,15 +13,7 @@
   </head>
 
   <body class="body--themed">
-    <div id="__app__">
-      <% if (obj.contents) { %>
-        <%= obj.contents %>
-      <% } else { %>
-        <div class="loading-screen">
-          Loading application data... please wait.
-        </div>
-      <% } %>
-    </div>
+    <div id="__app__"><%= obj.contents %></div>
     <% _.forEach(scripts, function(script) { %>
     <script type="text/javascript" src="<%- script %>"></script>
     <% }); %>

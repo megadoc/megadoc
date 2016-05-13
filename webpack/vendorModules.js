@@ -1,6 +1,11 @@
 module.exports = [
-  'react',
-  'react-router',
+  'classnames',
+  'dom-contains',
+  'fuzzaldrin-plus',
   'lodash',
   'moment',
+  'react',
+  'react-dom',
+  'react-transclusion',
+  'urijs',
 ];

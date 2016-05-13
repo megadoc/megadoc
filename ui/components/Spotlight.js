@@ -1,4 +1,5 @@
 const React = require('react');
+const { findDOMNode } = require('react-dom');
 const { debounce } = require('lodash');
 const TokenSearcher = require('core/TokenSearcher');
 const Link = require('components/Link');
@@ -43,7 +44,7 @@ const Spotlight = React.createClass({
 
   componentDidMount() {
     if (this.props.startInSymbolMode) {
-      const node = React.findDOMNode(this.refs.editingWidget);
+      const node = findDOMNode(this.refs.editingWidget);
 
       node.value = '@';
       this.search('@');
@@ -282,7 +283,7 @@ const Spotlight = React.createClass({
   },
 
   getSelectedDOMNode() {
-    return React.findDOMNode(this.refs[`link__${this.state.cursor}`]);
+    return findDOMNode(this.refs[`link__${this.state.cursor}`]);
   },
 });
 
