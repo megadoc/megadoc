@@ -26,8 +26,10 @@ tinydoc.outlets.define('Layout::Sidebar');
 tinydoc.outlets.define('Layout::SidebarHeader');
 tinydoc.outlets.define('Layout::Footer');
 tinydoc.outlets.define('Inspector');
+tinydoc.outlets.define('Image');
 
 require('./outlets/SidebarHeaderOutlet')(tinydoc);
+require('./outlets/ImageOutlet')(tinydoc);
 
 tinydoc.start = function(options = {}) {
   tinydoc.onReady(function(registrar) {
