@@ -117,11 +117,6 @@ function CorpusAPI(shallowCorpus) {
   function buildDocumentSearchIndex() {
     return Object.keys(corpus).filter(uid => !!getHref(corpus[uid])).map(uid => {
       const node = corpus[uid];
-      const namespaceNode = getNamespaceOfDocument(uid);
-
-      if (!namespaceNode) {
-        // console.warn(`CorpusIntegrityError: Document '${uid}' has no namespace!`);
-      }
 
       return {
         $1: node.title,
@@ -129,7 +124,7 @@ function CorpusAPI(shallowCorpus) {
         link: {
           href: getHref(node),
           anchor: getAnchor(node),
-          context: namespaceNode && namespaceNode.title
+          context: getContext(node)
         }
       }
     });
@@ -170,6 +165,20 @@ function getHref(node) {
 
 function getAnchor(node) {
   return node.meta.anchor;
+}
+
+function getContext(targetNode) {
+  let node = targetNode;
+
+  do {
+    if (node.meta.corpusContext) {
+      return node.meta.corpusContext;
+    }
+
+    node = node.parentNode;
+  } while (node && node.type !== 'Namespace');
+
+  return node ? node.title : null;
 }
 
 function CorpusTree(corpus) {
