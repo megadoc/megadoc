@@ -4,7 +4,9 @@
 /packages/*/coverage
 
 /dist
+!/dist/.keep
 /packages/*/dist
+!/packages/tinydoc/dist
 
 /doc/compiled
 /packages/*/doc/compiled
