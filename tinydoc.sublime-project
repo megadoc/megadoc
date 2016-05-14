@@ -1,0 +1,39 @@
+{
+	"folders":
+	[
+		{
+			"file_exclude_patterns":
+			[
+				"*.sublime-workspace",
+				"jsapp/i18n/translations.prod.js"
+			],
+			"folder_exclude_patterns":
+			[
+				"log",
+				"tmp",
+				"node_modules",
+				".bundle",
+				".git",
+				".grunt",
+				".yardoc",
+				".ebextensions",
+				"public/files",
+				"public/assets",
+				"app/assets/javascripts",
+				"jsapp/shared/GetSmart",
+				"coverage-js",
+				"regression_spec",
+				"spec/fixtures",
+				"public/doc/api",
+				"dist",
+				"coverage",
+				"packages/tinydoc/lib",
+				"packages/tinydoc/ui"
+			],
+			"path": "tinydoc"
+		},
+		{
+			"path": "tinydoc-docstring"
+		}
+	]
+}
