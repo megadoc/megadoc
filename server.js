@@ -46,6 +46,8 @@ function start(host, port, done) {
       'webpack-hot-middleware/client',
     ].concat(generatePluginEntry(pluginNames).concat(
       process.argv.slice(2).map(function(x) { return path.resolve(x)}))
+    ).concat(
+      window.CONFIG.stylesheet || []
     ),
   };
 
