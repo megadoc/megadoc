@@ -138,8 +138,8 @@ var config = {
           {
             name: 'Layout::Sidebar',
             outlets: [
-              { name: 'Markdown::DocumentTOC', using: '/dev/corpus/readme' },
-              { name: 'CJS::ClassBrowser', using: 'corpus-js' },
+              { name: 'Markdown::DocumentTOC', using: 'md__corpus/readme' },
+              { name: 'CJS::ClassBrowser', using: 'js__corpus' },
             ]
           }
 
@@ -158,8 +158,8 @@ var config = {
           {
             name: 'Layout::Sidebar',
             outlets: [
-              { name: 'Markdown::DocumentTOC', using: '/dev/corpus/readme' },
-              { name: 'CJS::ClassBrowser', using: 'corpus-js' },
+              { name: 'Markdown::DocumentTOC', using: 'md__corpus/readme' },
+              { name: 'CJS::ClassBrowser', using: 'js__corpus' },
             ]
           }
 
@@ -205,7 +205,8 @@ config.plugins = [
 
   // @url: /dev/plugins
   require('tinydoc-plugin-markdown')({
-    routeName: '/dev/plugins',
+    id: 'md__plugins',
+    baseURL: '/dev/plugins',
     source: [ 'doc/plugins/**/*.md' ],
     title: 'Plugins',
     fullFolderTitles: false,
@@ -213,7 +214,8 @@ config.plugins = [
 
   // @url: /usage
   require('tinydoc-plugin-markdown')({
-    routeName: '/usage',
+    id: 'md__usage',
+    baseURL: '/usage',
     source: [ 'doc/usage/**/*.md' ],
     title: 'Usage',
     fullFolderTitles: false,
@@ -221,15 +223,16 @@ config.plugins = [
 
 
   require('tinydoc-plugin-markdown')({
+    id: 'md__corpus',
     title: 'Corpus',
     source: 'packages/tinydoc-corpus/README.md',
-    routeName: '/dev/corpus',
+    baseURL: '/dev/corpus',
     // outlet: 'CJS::Landing',
     // anchorableHeadings: false
   }),
 
   require('tinydoc-plugin-js')({
-    id: 'corpus-js',
+    id: 'js__corpus',
     url: '/dev/corpus',
     title: 'Corpus',
     useDirAsNamespace: false,
@@ -275,9 +278,10 @@ config.plugins = [
   }));
 
   config.plugins.push(require('tinydoc-plugin-markdown')({
+    id: 'md__' + pluginName,
     title: pluginName,
     source: 'packages/' + pluginName + '/README.md',
-    routeName: '/plugins/' + pluginName,
+    baseURL: '/plugins/' + pluginName,
     // outlet: 'CJS::Landing',
     // anchorableHeadings: false
   }));
