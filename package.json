@@ -57,7 +57,7 @@
     "raw-loader": "0.5.1",
     "react": "15.0.2",
     "react-dom": "15.0.2",
-    "react-transclusion": "1.0.0-1",
+    "react-transclusion": "1.1.0",
     "style-loader": "0.13.1",
     "urijs": "1.18.0",
     "url-loader": "0.5.7",
