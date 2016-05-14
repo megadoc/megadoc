@@ -68,11 +68,13 @@ function createGitPlugin(userConfig) {
       compiler.corpus.visit({
         Document: function(node) {
           if (node.filePath) {
-            if (!files[node.filePath]) {
-              files[node.filePath] = [];
+            var filePath = compiler.utils.getAssetPath(node.filePath);
+
+            if (!files[filePath]) {
+              files[filePath] = [];
             }
 
-            files[node.filePath].push(node.uid);
+            files[filePath].push(node.uid);
           }
         }
       });
