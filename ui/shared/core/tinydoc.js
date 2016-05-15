@@ -7,7 +7,7 @@ const invariant = require('utils/invariant');
  * @module megadoc
  * @singleton
  */
-module.exports = function createTinydoc(config) {
+module.exports = function createMegadoc(config) {
   const corpusAPI = CorpusAPI(config.database || []);
   let exports = {};
   let routeSpecs = [];

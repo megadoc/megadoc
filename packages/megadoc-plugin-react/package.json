@@ -1,7 +1,7 @@
 {
   "name": "megadoc-plugin-react",
   "version": "5.0.0",
-  "description": "Document React components and preview them in Tinydoc.",
+  "description": "Document React components and preview them in Megadoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",

@@ -1,14 +1,14 @@
 var Subject = require("../");
 var assert = require('chai').assert;
 var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
-var TinydocPluginJS = require('megadoc-plugin-js');
+var MegadocPluginJS = require('megadoc-plugin-js');
 
 describe("[Integration] megadoc-plugin-react", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {
     suite.set('plugins', [
-      TinydocPluginJS({
+      MegadocPluginJS({
         id: 'test',
         verbose: false,
         source: 'lib/**/*.js'

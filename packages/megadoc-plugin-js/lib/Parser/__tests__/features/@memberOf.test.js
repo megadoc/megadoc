@@ -1,7 +1,7 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
 var K = require('../../constants');
-var TinyTestUtils = require('megadoc/lib/TestUtils');
+var MegaTestUtils = require('megadoc/lib/TestUtils');
 var multiline = require('multiline-slash');
 
 describe('CJS::Parser - @memberOf support', function() {
@@ -86,12 +86,12 @@ describe('CJS::Parser - @memberOf support', function() {
     var file1, file2;
 
     beforeEach(function() {
-      file1 = TinyTestUtils.createFile(multiline(function() {;
+      file1 = MegaTestUtils.createFile(multiline(function() {;
         // /** @module DOMSelectors */
         //
       }), 'module.js');
 
-      file2 = TinyTestUtils.createFile(multiline(function() {;
+      file2 = MegaTestUtils.createFile(multiline(function() {;
         // /**
         //  * @memberOf DOMSelectors
         //  *

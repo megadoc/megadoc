@@ -2,11 +2,11 @@ const React = require('react');
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const config = require('config');
-const createTinydoc = require('core/megadoc');
+const createMegadoc = require('core/megadoc');
 const Storage = require('core/Storage');
 const K = require('constants');
 const App = require('./screens/App');
-const megadoc = window.megadoc = createTinydoc(config);
+const megadoc = window.megadoc = createMegadoc(config);
 
 console.log('megadoc: version %s', config.version);
 

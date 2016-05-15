@@ -50,8 +50,7 @@ function expose(key, value) {
  * @param {Boolean} [options.immediatelyAttachToDOM=false]
  *        When true, the subject's container node will be attached to the DOM
  *        before the subject gets mounted. This is necessary for components that
- *        use libraries/or rely on DOM operations when they mount. Like the
- *        SlideEditor/TinyMCE.
+ *        use libraries/or rely on DOM operations when they mount.
  *
  * @param {Boolean} [options.requiresRouterContext=false]
  *        Convenience option for calling "stubRoutes()" with an empty route-set.
