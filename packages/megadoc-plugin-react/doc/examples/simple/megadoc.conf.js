@@ -1,5 +1,5 @@
 module.exports = function(config) {
-  var jsPlugin = require('tinydoc/plugins/cjs')({
+  var jsPlugin = require('megadoc/plugins/cjs')({
     navigationLabel: 'Simple Example',
     routeName: 'examples--simple',
 

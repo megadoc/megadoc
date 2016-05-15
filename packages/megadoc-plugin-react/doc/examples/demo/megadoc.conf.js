@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var jsPlugin = require('tinydoc-plugin-js')({
+var jsPlugin = require('megadoc-plugin-js')({
   navigationLabel: 'Demo',
   routeName: 'demo',
 

@@ -58,7 +58,7 @@ Hopefully, the command ran successfully and you see some files written to
 
 ```shell
 $ ls public/docs
-.                  ..                 404.html           config.js          index.html         styles.css         tinydoc.js         tinydoc__vendor.js
+.                  ..                 404.html           config.js          index.html         styles.css         megadoc.js         megadoc__vendor.js
 ```
 
 Okay, beef time!
@@ -77,8 +77,8 @@ For now, we'll introduce ourselves to the first type of plugins - ones
 that let us get some source files scanned and rendered. Choose from one of
 the following guides based on what kind of content you have:
 
-- [tinydoc-plugin-markdown Markdown documents]()
-- [tinydoc-plugin-javascript JavaScript source files]()
-- [tinydoc-plugin-yard-api Rails APIs]()
-- [tinydoc-plugin-lua Lua source files]()
+- [megadoc-plugin-markdown Markdown documents]()
+- [megadoc-plugin-javascript JavaScript source files]()
+- [megadoc-plugin-yard-api Rails APIs]()
+- [megadoc-plugin-lua Lua source files]()
 

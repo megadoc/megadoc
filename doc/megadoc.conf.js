@@ -2,8 +2,8 @@ var path = require('path');
 var config = {
   assetRoot: path.resolve(__dirname, '..'),
 
-  title: 'tinydoc',
-  outputDir: '/srv/http/docs/tinydoc',
+  title: 'megadoc',
+  outputDir: '/srv/http/docs/megadoc',
   useHashLocation: true,
   publicPath: '',
   stylesheet: 'doc/theme.less',
@@ -12,11 +12,11 @@ var config = {
   tooltipPreviews: false,
 
   alias: {
-    'md__tinydoc-plugin-markdown/readme': 'tinydoc-plugin-markdown',
-    'md__tinydoc-plugin-js/readme': 'tinydoc-plugin-js',
-    'md__tinydoc-plugin-git/readme': 'tinydoc-plugin-git',
-    'md__tinydoc-plugin-lua/readme': 'tinydoc-plugin-lua',
-    'md__tinydoc-plugin-yard-api/readme': 'tinydoc-plugin-yard-api',
+    'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
+    'md__megadoc-plugin-js/readme': 'megadoc-plugin-js',
+    'md__megadoc-plugin-git/readme': 'megadoc-plugin-git',
+    'md__megadoc-plugin-lua/readme': 'megadoc-plugin-lua',
+    'md__megadoc-plugin-yard-api/readme': 'megadoc-plugin-yard-api',
   },
 
   layoutOptions: {
@@ -37,46 +37,46 @@ var config = {
         links: [
           {
             text: 'Git',
-            href: '/plugins/tinydoc-plugin-git/readme.html',
+            href: '/plugins/megadoc-plugin-git/readme.html',
           },
 
           {
             text: 'JavaScript',
-            href: '/plugins/tinydoc-plugin-js/readme.html',
+            href: '/plugins/megadoc-plugin-js/readme.html',
           },
           {
             text: 'JavaScript React',
-            href: '/plugins/tinydoc-plugin-react/readme.html',
+            href: '/plugins/megadoc-plugin-react/readme.html',
           },
 
           {
             text: 'Markdown',
-            href: '/plugins/tinydoc-plugin-markdown/readme.html',
+            href: '/plugins/megadoc-plugin-markdown/readme.html',
           },
 
           {
             text: 'Lua',
-            href: '/plugins/tinydoc-plugin-lua/readme.html',
+            href: '/plugins/megadoc-plugin-lua/readme.html',
           },
 
           {
             text: 'YARD-API',
-            href: '/plugins/tinydoc-plugin-yard-api/readme.html',
+            href: '/plugins/megadoc-plugin-yard-api/readme.html',
           },
 
           {
             text: 'Reference Graph',
-            href: '/plugins/tinydoc-plugin-reference-graph/readme.html',
+            href: '/plugins/megadoc-plugin-reference-graph/readme.html',
           },
 
           {
             text: 'Theme - Qt',
-            href: '/plugins/tinydoc-theme-qt/readme.html',
+            href: '/plugins/megadoc-theme-qt/readme.html',
           },
 
           {
             text: 'Theme - gitbooks.io',
-            href: '/plugins/tinydoc-theme-qt/readme.html',
+            href: '/plugins/megadoc-theme-qt/readme.html',
           },
         ]
       },
@@ -174,7 +174,7 @@ var config = {
 };
 
 config.plugins = [
-  require('tinydoc-plugin-js')({
+  require('megadoc-plugin-js')({
     id: 'core-js',
     url: '/dev/api',
     title: 'API',
@@ -198,13 +198,13 @@ config.plugins = [
     }
   }),
 
-  require('tinydoc-plugin-markdown')({
+  require('megadoc-plugin-markdown')({
     title: 'Documents',
     source: [ 'README.md', 'CHANGES.md' ],
   }),
 
   // @url: /dev/plugins
-  require('tinydoc-plugin-markdown')({
+  require('megadoc-plugin-markdown')({
     id: 'md__plugins',
     baseURL: '/dev/plugins',
     source: [ 'doc/plugins/**/*.md' ],
@@ -213,7 +213,7 @@ config.plugins = [
   }),
 
   // @url: /usage
-  require('tinydoc-plugin-markdown')({
+  require('megadoc-plugin-markdown')({
     id: 'md__usage',
     baseURL: '/usage',
     source: [ 'doc/usage/**/*.md' ],
@@ -222,16 +222,16 @@ config.plugins = [
   }),
 
 
-  require('tinydoc-plugin-markdown')({
+  require('megadoc-plugin-markdown')({
     id: 'md__corpus',
     title: 'Corpus',
-    source: 'packages/tinydoc-corpus/README.md',
+    source: 'packages/megadoc-corpus/README.md',
     baseURL: '/dev/corpus',
     // outlet: 'CJS::Landing',
     // anchorableHeadings: false
   }),
 
-  require('tinydoc-plugin-js')({
+  require('megadoc-plugin-js')({
     id: 'js__corpus',
     url: '/dev/corpus',
     title: 'Corpus',
@@ -239,29 +239,29 @@ config.plugins = [
     inferModuleIdFromFileName: true,
 
     source: [
-      'packages/tinydoc-corpus/defs/*.js',
-      'packages/tinydoc-corpus/lib/**/*.js',
+      'packages/megadoc-corpus/defs/*.js',
+      'packages/megadoc-corpus/lib/**/*.js',
     ],
 
     exclude: [ /\.test\.js$/ ],
   }),
 
-  require('tinydoc-theme-qt')({}),
+  require('megadoc-theme-qt')({}),
 
 ];
 
 [
-  'tinydoc-plugin-git',
-  'tinydoc-plugin-js',
-  'tinydoc-plugin-lua',
-  'tinydoc-plugin-markdown',
-  'tinydoc-plugin-react',
-  'tinydoc-plugin-reference-graph',
-  'tinydoc-plugin-yard-api',
-  'tinydoc-theme-gitbooks',
-  'tinydoc-theme-qt',
+  'megadoc-plugin-git',
+  'megadoc-plugin-js',
+  'megadoc-plugin-lua',
+  'megadoc-plugin-markdown',
+  'megadoc-plugin-react',
+  'megadoc-plugin-reference-graph',
+  'megadoc-plugin-yard-api',
+  'megadoc-theme-gitbooks',
+  'megadoc-theme-qt',
 ].forEach(function(pluginName) {
-  config.plugins.push(require('tinydoc-plugin-js')({
+  config.plugins.push(require('megadoc-plugin-js')({
     id: 'js__' + pluginName,
     url: '/plugins',
     title: pluginName,
@@ -279,7 +279,7 @@ config.plugins = [
     exclude: [ /\.test\.js$/, /vendor/ ],
   }));
 
-  config.plugins.push(require('tinydoc-plugin-markdown')({
+  config.plugins.push(require('megadoc-plugin-markdown')({
     id: 'md__' + pluginName,
     title: pluginName,
     source: 'packages/' + pluginName + '/**/*.md',

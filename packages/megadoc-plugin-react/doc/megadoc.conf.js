@@ -2,7 +2,7 @@ var path = require('path');
 var config = {
   assetRoot: path.resolve(__dirname, '..'),
 
-  title: 'tinydoc React',
+  title: 'megadoc React',
   outputDir: 'doc/compiled',
   readme: 'README.md',
   disqus: false,
@@ -11,7 +11,7 @@ var config = {
 };
 
 config.plugins = [
-  require('tinydoc/plugins/cjs')({
+  require('megadoc/plugins/cjs')({
     navigationLabel: 'API',
 
     source: [
@@ -28,6 +28,6 @@ config.plugins = [
   }),
 ];
 
-require('./examples/demo/tinydoc.conf.js')(config);
+require('./examples/demo/megadoc.conf.js')(config);
 
 module.exports = config;

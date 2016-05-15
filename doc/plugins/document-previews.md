@@ -1,7 +1,7 @@
 # Previewing documents in tooltips
 
 ```javascript
-tinydoc.outlets.add("Inspector", {
+megadoc.outlets.add("Inspector", {
   key: 'js',
   
   match(props) {

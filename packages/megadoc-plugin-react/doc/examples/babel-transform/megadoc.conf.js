@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 
 module.exports = function(config) {
-  var jsPlugin = require('tinydoc/plugins/cjs')({
+  var jsPlugin = require('megadoc/plugins/cjs')({
     navigationLabel: 'Example Babel-Transform',
     routeName: 'examples--babel-transform',
 
