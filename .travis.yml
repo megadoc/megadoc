@@ -11,11 +11,7 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 install:
-  # skip the "prepublish" hook because we want finer control
-  - npm install --ignore-scripts
-  - npm run build # build failures should count!
-  - npm link --ignore-scripts
-  - SKIP_SELF_PREPUBLISH=1 PRELINK=1 ./bin/prepublish-all
+  - PRELINK=1 ./bin/setup
 
 script:
   - ./bin/lint

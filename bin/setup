@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Prepublish EVERYTHING; the core package and all official packages, running
-# their lints, tests, and compiling their assets.
+# Set up the core and all dependent packages; their NPM dependencies and HTML
+# assets.
 
 set -e
 
@@ -10,8 +10,11 @@ set -e
   exit 1
 }
 
-if [ -z $SKIP_SELF_PREPUBLISH ]; then # for travis
-  npm run prepublish
+npm install --ignore-scripts
+npm run build # build failures should count!
+
+if [ "${PRELINK}" == "1" ]; then
+  npm link --ignore-scripts
 fi
 
 for pkg in $(find packages -maxdepth 1 -type d -name 'megadoc-*' | sort | sed 's/packages\///')

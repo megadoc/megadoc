@@ -53,7 +53,25 @@ fi
 function link_local_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
     cd $PACKAGE_ROOT
-    PEER_DEPS=$(node -e 'console.log(Object.keys(require("./package").peerDependencies || {}).join("\n"))')
+
+    DEPS=$(node -e '
+      console.log(Object.keys(require("./package").dependencies || {})
+        .filter(function(x) { return x.match(/^megadoc/) })
+        .join("\n")
+      )
+    ')
+
+    PEER_DEPS=$(node -e '
+      console.log(Object.keys(require("./package").peerDependencies || {})
+        .filter(function(x) { return x.match(/^megadoc/) })
+        .join("\n")
+      )
+    ')
+
+    for dep in $DEPS; do
+      echo "Linking local version of '${dep}'..."
+      npm link --ignore-scripts "../${dep}"
+    done
 
     for dep in $PEER_DEPS; do
       echo "Linking local version of '${dep}'..."
