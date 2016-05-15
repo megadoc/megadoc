@@ -10,7 +10,7 @@ var megadoc = require('..');
 var Logger = require('../lib/Logger');
 var console = new Logger('megadoc');
 var config = {};
-var tiny, configFilePath;
+var mega, configFilePath;
 
 function collect(val, set) {
   set.push(val);
@@ -95,7 +95,7 @@ if (program.layout) {
 
 console.log('version %s', pkg.version);
 
-tiny = megadoc(config, {
+mega = megadoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
   render: program.render !== false && program.index !== false,
@@ -104,7 +104,7 @@ tiny = megadoc(config, {
   includeCorpusInStats: program.dumpCorpus
 });
 
-tiny.run(function(err, stats) {
+mega.run(function(err, stats) {
   if (err) {
     console.error(Array(80 - 'megadoc-cli'.length).join('*'));
     console.error('An error occurred during compilation. Error details below.');
