@@ -27,7 +27,7 @@ after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
 
 env:
-  - TINYDOC_TEST_TIMEOUT=60000 TRAVIS_BUILD=1
+  - MEGADOC_TEST_TIMEOUT=60000 TRAVIS_BUILD=1
 
 cache:
   directories:

@@ -43,14 +43,14 @@ if [ ! -d "${PACKAGE_ROOT}" ]; then
 fi
 
 function verify_dependency_versions {
-  TINYDOC_VERSION=$(read_package_version package.json | cut -d'.' -f1)
+  MEGADOC_VERSION=$(read_package_version package.json | cut -d'.' -f1)
   PACKAGE_VERSION=$(read_package_version $PACKAGE_ROOT/package.json | cut -d'.' -f1)
-  TINYDOC_DEP_VERSION=$(read_peer_dependency_version $PACKAGE_ROOT/package.json "megadoc" | cut -d'.' -f1)
+  MEGADOC_DEP_VERSION=$(read_peer_dependency_version $PACKAGE_ROOT/package.json "megadoc" | cut -d'.' -f1)
 
-  if [ $TINYDOC_DEP_VERSION != $PACKAGE_VERSION ]; then
+  if [ $MEGADOC_DEP_VERSION != $PACKAGE_VERSION ]; then
     echo "
 Package major version seems to be '${PACKAGE_VERSION}' while the version
-of megadoc specified as a peerDependency is '${TINYDOC_VERSION}'.
+of megadoc specified as a peerDependency is '${MEGADOC_VERSION}'.
 
 Optimally, we want major versions to be consistent between the packages
 and the megadoc peerDependency they specify.
@@ -59,10 +59,10 @@ and the megadoc peerDependency they specify.
     return 1
   fi
 
-  if [ $TINYDOC_VERSION != $TINYDOC_DEP_VERSION ]; then
+  if [ $MEGADOC_VERSION != $MEGADOC_DEP_VERSION ]; then
     echo "
-Peer dependency mismatch: package depends on megadoc v${TINYDOC_DEP_VERSION}
-but megadoc is currently version v${TINYDOC_VERSION}.
+Peer dependency mismatch: package depends on megadoc v${MEGADOC_DEP_VERSION}
+but megadoc is currently version v${MEGADOC_VERSION}.
     "
 
     return 1
