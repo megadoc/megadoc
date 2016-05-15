@@ -2,7 +2,7 @@ const Subject = require('../LayoutEngine');
 const { assert } = require('chai');
 const { assign } = require('lodash');
 
-describe('tinydoc::LayoutEngine', function() {
+describe('megadoc::LayoutEngine', function() {
   describe('getRegionsForDocument', function() {
     const subject = Subject.getRegionsForDocument;
 

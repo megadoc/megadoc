@@ -20,7 +20,7 @@ global.window = {};
 
 require(configFile);
 
-var pluginNames = ['tinydoc'].concat(global.window.CONFIG.pluginNames || []);
+var pluginNames = ['megadoc'].concat(global.window.CONFIG.pluginNames || []);
 
 start(CONTENT_HOST, CONTENT_PORT, function(connectError) {
   if (connectError) {
@@ -38,11 +38,11 @@ function start(host, port, done) {
   config.output = {
     path: path.resolve(__dirname, 'tmp/devserver'),
     publicPath: '/',
-    filename: 'tinydoc.js'
+    filename: 'megadoc.js'
   };
 
   config.entry = {
-    tinydoc: [
+    megadoc: [
       'webpack-hot-middleware/client',
     ].concat(generatePluginEntry(pluginNames).concat(
       process.argv.slice(2).map(function(x) { return path.resolve(x)}))

@@ -1,8 +1,8 @@
 var exec = require('child_process').exec;
 var fs = require('fs');
 var assign = require('object-assign');
-var b = require('tinydoc-corpus').builders;
-var RendererUtils = require('tinydoc/lib/RendererUtils');
+var b = require('megadoc-corpus').builders;
+var RendererUtils = require('megadoc/lib/RendererUtils');
 
 module.exports = function generateAndScanAndReduce(config, globalConfig, utils, done) {
   if (config.skipScan) {
@@ -49,7 +49,7 @@ function scan(config, utils, done) {
 function reduce(config, documents) {
   return b.namespace({
     id: config.routeName,
-    name: 'tinydoc-plugin-yard-api',
+    name: 'megadoc-plugin-yard-api',
     title: config.title,
     config: config,
     indexFields: [ 'title' ],

@@ -6,7 +6,7 @@
 /dist
 !/dist/.keep
 /packages/*/dist
-!/packages/tinydoc/dist
+!/packages/megadoc/dist
 
 /doc/compiled
 /packages/*/doc/compiled

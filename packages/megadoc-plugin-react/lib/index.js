@@ -15,7 +15,7 @@ var defaults = {
   /**
    * @property {String[]|Object[]}
    *
-   * Convenience property for adding assets that will be picked up by tinydoc's
+   * Convenience property for adding assets that will be picked up by megadoc's
    * compiler. You should specfy any assets that your components and examples
    * need in order to render correctly.
    */
@@ -100,7 +100,7 @@ var defaults = {
 };
 
 function createReactPlugin(userConfig) {
-  var exports = { name: 'tinydoc-plugin-react' };
+  var exports = { name: 'megadoc-plugin-react' };
   var config = _.extend({}, defaults, userConfig);
   var id = config.id;
 
@@ -134,7 +134,7 @@ function createReactPlugin(userConfig) {
   exports.run = function(compiler) {
     var utils = compiler.utils;
     var cjsPlugin = compiler.config.plugins.filter(function(plugin) {
-      return plugin.name === 'tinydoc-plugin-js' && plugin.id === id;
+      return plugin.name === 'megadoc-plugin-js' && plugin.id === id;
     })[0];
 
     assert(cjsPlugin);
@@ -171,7 +171,7 @@ function createReactPlugin(userConfig) {
       });
 
       compiler.assets.addPluginScript(
-        path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-react.js')
+        path.resolve(__dirname, '..', 'dist', 'megadoc-plugin-react.js')
       );
 
       compiler.assets.addStyleSheet(
@@ -193,13 +193,13 @@ function createReactPlugin(userConfig) {
       }
 
       function saveRuntimeConfigAndFinish() {
-        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-react', runtimeConfig);
+        compiler.assets.addPluginRuntimeConfig('megadoc-plugin-react', runtimeConfig);
         done();
       }
     });
 
     compiler.on('generateStats', function(stats, done) {
-      stats['tinydoc-plugin-react:' + config.id] = {
+      stats['megadoc-plugin-react:' + config.id] = {
         componentCount: liveExampleProcessor.getComponents().length,
         liveExampleCount: liveExampleCount
       };

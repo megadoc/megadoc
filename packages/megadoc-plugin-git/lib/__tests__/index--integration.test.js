@@ -1,9 +1,9 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
 var path = require('path');
 
-describe("[Integration] tinydoc-plugin-git", function() {
+describe("[Integration] megadoc-plugin-git", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {

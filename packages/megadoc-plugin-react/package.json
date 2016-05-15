@@ -1,23 +1,23 @@
 {
-  "name": "tinydoc-plugin-react",
+  "name": "megadoc-plugin-react",
   "version": "5.0.0",
   "description": "Document React components and preview them in Tinydoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+    "url": "git+ssh://git@github.com/megadoc/megadoc.git"
   },
   "keywords": [
-    "tinydoc",
+    "megadoc",
     "react",
     "plugin"
   ],
   "author": "Ahmad Amireh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc/issues"
+    "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
     "babel-core": "6.7.6",
     "babel-generator": "6.7.5",
@@ -26,8 +26,8 @@
     "lodash": "3.10.1"
   },
   "peerDependencies": {
-    "tinydoc": "5.x",
-    "tinydoc-plugin-js": "5.x"
+    "megadoc": "5.x",
+    "megadoc-plugin-js": "5.x"
   },
   "devDependencies": {
     "babel-loader": "6.2.4",

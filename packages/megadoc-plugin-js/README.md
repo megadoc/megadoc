@@ -1,20 +1,20 @@
-# tinydoc-plugin-js
+# megadoc-plugin-js
 
-[![Build Status](https://travis-ci.org/tinydoc/tinydoc-plugin-js.svg?branch=master)](https://travis-ci.org/tinydoc/tinydoc-plugin-js)
+[![Build Status](https://travis-ci.org/megadoc/megadoc-plugin-js.svg?branch=master)](https://travis-ci.org/megadoc/megadoc-plugin-js)
 
 This plugin parses [JSDoc3](usejsdoc.org) annotated JavaScript source code files. The parser performs an AST-based analysis of the source files and it tries to infer what it can for you when you leave some parts blank (like function parameter names, property types and names, etc.)
 
 ## Usage
 
 ```bash
-npm install tinydoc tinydoc-plugin-js
+npm install megadoc megadoc-plugin-js
 ```
 
-In your `tinydoc.conf.js`:
+In your `megadoc.conf.js`:
 
 ```javascript
 exports.plugins = [
-  require('tinydoc-plugin-js')({
+  require('megadoc-plugin-js')({
     source: [ 'lib/**/*.js' ]
   })
 ];

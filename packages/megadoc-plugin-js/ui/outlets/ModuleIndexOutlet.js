@@ -3,7 +3,7 @@ const { object, shape, bool, } = React.PropTypes;
 const NamespaceIndex = require('../components/NamespaceIndex');
 const ModuleIndex = require('../components/ModuleIndex');
 
-tinydoc.outlets.add('CJS::ModuleIndex', {
+megadoc.outlets.add('CJS::ModuleIndex', {
   key: 'CJS::ModuleIndex',
   component: React.createClass({
     propTypes: {

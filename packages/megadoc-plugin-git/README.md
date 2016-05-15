@@ -1,4 +1,4 @@
-# git tinydoc Plugin
+# git megadoc Plugin
 
 This plugin analyzes a git repository's history to present some useful (and silly) statistics, like recent merge activity, and a repository's _superstars_.
 

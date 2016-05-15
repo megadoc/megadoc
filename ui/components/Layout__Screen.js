@@ -147,7 +147,7 @@ module.exports = LayoutScreen;
 
 function getNodesForOutlet(outlet) {
   if (outlet.using) {
-    const documentNode = tinydoc.corpus.get(outlet.using);
+    const documentNode = megadoc.corpus.get(outlet.using);
 
     if (documentNode) {
       return DocumentResolver.buildDocumentContext(documentNode);

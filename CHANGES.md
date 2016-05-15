@@ -2,7 +2,7 @@
 
 ## 6.0.0
 
-This is a very exciting release; a new model for representing the documents rendered by tinydoc is introduced called the [Corpus](). This model enables
+This is a very exciting release; a new model for representing the documents rendered by megadoc is introduced called the [Corpus](). This model enables
 us to analyze the database in a source-agnostic manner and provide many 
 features out-of-the-box such as automatic indexing, URI generation, and more!
 
@@ -15,16 +15,16 @@ and runtime performance.
 - (semver-minor) A suffix may be appended to document URLs, like `.html`, see [Core.Config.format]()
 - (semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See [Core.Config.emitFiles]() and [Core.Config.emittedFileExtension]()
 - (semver-minor) runtime config now contains a `pluginNames` list of the registered plugin names (inferred from the distributable JS files)
-- ~~(semver-major) tinydoc-plugin-static now requires a `title` config item~~
-- ~~(semver-minor) tinydoc-plugin-static now integrates with the corpus for indexing~~
-- (semver-major) tinydoc-plugin-static **has been dropped** - it was duplicating functionality that could be achieved using other plugins like [tinydoc-plugin-markdown](). Now with the new layouting engine, it is possible to achieve the same effect.
+- ~~(semver-major) megadoc-plugin-static now requires a `title` config item~~
+- ~~(semver-minor) megadoc-plugin-static now integrates with the corpus for indexing~~
+- (semver-major) megadoc-plugin-static **has been dropped** - it was duplicating functionality that could be achieved using other plugins like [megadoc-plugin-markdown](). Now with the new layouting engine, it is possible to achieve the same effect.
 - (semver-major) links to document entities are now represented as a hash-tag following the document's URI
 - (semver-patch) `bin/devserver.sh` has been modified to use [connect](https://github.com/senchalabs/connect) with [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware) for local development. Also, `/.local` file support has been dropped; the server will now automatically resolve which plugins to use and use the local versions of them
 - (semver-patch) introduced a few localized hacks to react-router to make it ignore any suffixes in links (file extension)
-- (semver-major) [tinydoc-ui](): no longer using the HashLocation
-- (semver-major) [tinydoc-plugin-markdown]() will now discard file extensions by default (this will cause URLs to change unless you opt-out)
-- (semver-major) [tinydoc]() no longer accepts a `readme` config; use the markdown plugin with a rewrite for serving such a file
-- (semver-major) [tinydoc]() no longer accepts a `home` config for redirecting
+- (semver-major) [megadoc-ui](): no longer using the HashLocation
+- (semver-major) [megadoc-plugin-markdown]() will now discard file extensions by default (this will cause URLs to change unless you opt-out)
+- (semver-major) [megadoc]() no longer accepts a `readme` config; use the markdown plugin with a rewrite for serving such a file
+- (semver-major) [megadoc]() no longer accepts a `home` config for redirecting
 ## 5.0.0
 
 - Markdown renderer now accepts a `anchorableHeadings: Boolean` option that
@@ -47,30 +47,30 @@ The Spotlight also sports an intuitive keyboard navigation interface.
 
 Currently supported plugins:
 
-- [tinydoc-plugin-js]()
-- [tinydoc-plugin-markdown]()
-- [tinydoc-plugin-react]()
-- [tinydoc-plugin-yard-api]()
+- [megadoc-plugin-js]()
+- [megadoc-plugin-markdown]()
+- [megadoc-plugin-react]()
+- [megadoc-plugin-yard-api]()
 
 ### New Feature - Preview Tooltips
 
-Anytime you're hovering over a link to an internal document, tinydoc will now show a small tooltip that gives the reader a brief description of that document.
+Anytime you're hovering over a link to an internal document, megadoc will now show a small tooltip that gives the reader a brief description of that document.
 
 Very helpful for the times when you are not yet ready to leave the document you're currently reading, but have no idea what the referenced document is.
 
 Currently supported plugins:
 
-- [tinydoc-plugin-js]()
-- [tinydoc-plugin-markdown]()
-- [tinydoc-plugin-react]()
-- [tinydoc-plugin-yard-api]()
+- [megadoc-plugin-js]()
+- [megadoc-plugin-markdown]()
+- [megadoc-plugin-react]()
+- [megadoc-plugin-yard-api]()
 
-### New Plugin - [tinydoc-plugin-static]()
+### New Plugin - [megadoc-plugin-static]()
 
 A new plugin for rendering static files at arbitrary URLs. Useful for rendering
 landing pages for other plugins, like js/markdown/API.
 
-### New Plugin - [tinydoc-layout-single-page]()
+### New Plugin - [megadoc-layout-single-page]()
 
 A plugin for rendering all the content in a single page. Useful for small
 projects orlibraries that consist of a bunch of files and a single API
@@ -78,43 +78,43 @@ reference.
 
 Navigation is done using a static/fixed sidebar to the left.
 
-### New Plugin - [tinydoc-layout-multi-page]()
+### New Plugin - [megadoc-layout-multi-page]()
 
 A plugin for rendering content in multiple pages. Primary navigation is 
 achieved using a banner on the top, which supports arbitrary links and menus
 of links, and sub-navigation using a sidebar.
 
-### New Plugin - [tinydoc-theme-qt]()
+### New Plugin - [megadoc-theme-qt]()
 
 A new theme plugin that mimics [Qt docs](http://doc.qt.io). Very nice looking
 for multi-page layouts.
 
-### New Plugin - [tinydoc-plugin-reference-graph]()
+### New Plugin - [megadoc-plugin-reference-graph]()
 
 This plugin will build an internal graph of all the inter-document links in the database. When viewing a document, a list of external documents that talk about the current one will be displayed. This helps the reader find related articles and explore the document database.
 
 Currently supported plugins:
 
-- [tinydoc-plugin-js]()
-- [tinydoc-plugin-markdown]()
-- [tinydoc-plugin-react]()
+- [megadoc-plugin-js]()
+- [megadoc-plugin-markdown]()
+- [megadoc-plugin-react]()
 
 ### Plugin API changes
 
-**[tinydoc.use]() signature change**
+**[megadoc.use]() signature change**
 
 The new signature is:
 
-    tinydoc.use(String, Function) -> void
+    megadoc.use(String, Function) -> void
 
 And the function will be passed two arguments, the first is the plugin API,
 and the second is the runtime configs registered for that plugin. This is for
-convenience instead of having to reach out to `tinydoc.getRuntimeConfigs(...)`
+convenience instead of having to reach out to `megadoc.getRuntimeConfigs(...)`
 and is (currently) backwards compatible.
 
 ### Plugin Changes
 
-#### [tinydoc-plugin-js]()
+#### [megadoc-plugin-js]()
 
 - now using [babeljs](https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md) instead of recast for parsing code
 - now supports an outlet `CJS::Landing` for rendering custom landing content
@@ -122,38 +122,38 @@ and is (currently) backwards compatible.
 - Spotlight support for indexing modules and their properties, static methods and instance methods
 - Tooltip Preview support for modules and all their entities. The tooltips should the document's type, its summary, and its corpus context.
 - some style updates for better readability, especially when method parameters are involved
-- interoperability with `tinydoc-plugin-reference-graph` for generating a "Related Documents" list for modules
+- interoperability with `megadoc-plugin-reference-graph` for generating a "Related Documents" list for modules
 - new config param, `alias: Object<String,Array.<String>>` that supports explicit aliasing of modules. Very useful when you do not control the source code for those modules, or do not want to change it.
 
-#### [tinydoc-plugin-react]()
+#### [megadoc-plugin-react]()
 
 - now using [babeljs](https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md) instead of recast for parsing code
 
-#### [tinydoc-plugin-yard-api]()
+#### [megadoc-plugin-yard-api]()
 
 - now supports an outlet `yard-api::Landing` for rendering custom landing content
 - fixed a styling issue when scrolling or using anchors to API objects that caused the heading of those objects to be outside of the visible viewport
 
-#### [tinydoc-plugin-markdown]()
+#### [megadoc-plugin-markdown]()
 
-- the `<meta name="description">` is now modified to reflect the current article's summary. Very link when you're linking to tinydoc documents in Slack or such that utilize the meta of the document when displaying those links.
+- the `<meta name="description">` is now modified to reflect the current article's summary. Very link when you're linking to megadoc documents in Slack or such that utilize the meta of the document when displaying those links.
 - Spotlight support for indexing articles and their headings
 - Spotlight Symbol-Jumping support for scanning and jumping between sections of the current article quickly
 - Tooltip Preview support: the name of the article plus an estimated reading time in minutes
 
 ## 4.0.1
 
-- `tinydoc-run` or `tinydoc run` binary was restored to just `tinydoc`
-- `tinydoc compile` is no longer a thing, use the `tinydoc-compile` binary directly instead
+- `megadoc-run` or `megadoc run` binary was restored to just `megadoc`
+- `megadoc compile` is no longer a thing, use the `megadoc-compile` binary directly instead
 
 ## 4.0.0
 
 Pulled out the plugins that were previously in core into their own packages:
 
-- `tinydoc/plugins/cjs` is now in `tinydoc-plugin-js`
-- `tinydoc/plugins/yard-api` is now in `tinydoc-plugin-yard-api`
-- `tinydoc/plugins/markdown` is now in `tinydoc-plugin-markdown`
-- `tinydoc/plugins/git` is now in `tinydoc-plugin-git`
+- `megadoc/plugins/cjs` is now in `megadoc-plugin-js`
+- `megadoc/plugins/yard-api` is now in `megadoc-plugin-yard-api`
+- `megadoc/plugins/markdown` is now in `megadoc-plugin-markdown`
+- `megadoc/plugins/git` is now in `megadoc-plugin-git`
 
 ## 3.2.0
 
@@ -187,19 +187,19 @@ Only the CJS and Markdown plugins currently support the single-page layout.
 
 **(BREAKING) Internal changes**
 
-- tinydoc's plugin registrar API has changed:
+- megadoc's plugin registrar API has changed:
   + `registerRoutes` has been renamed to `addRoutes`
   + `registerOutletElement` was dropped; use `Outlet.add` directly instead
 
 ## 3.0.0
 
-This release brings a whole lot of improvements to the robustness of tinydoc's parsers, the UI, and runtime performance since we now do all the content rendering at compile-time instead.
+This release brings a whole lot of improvements to the robustness of megadoc's parsers, the UI, and runtime performance since we now do all the content rendering at compile-time instead.
 
 Also, plugins have been revisited and it's now very easy to write a custom plugin and hook it into the system.
 
 ### Major changes to the plugin architecture
 
-1. tinydoc no longer configures plugins by itself, instead the caller configures each plugin manually.
+1. megadoc no longer configures plugins by itself, instead the caller configures each plugin manually.
 2. a plugin is now any object that contains a `run` function
 3. a plugin's UI runtime context is no longer saved in a separate file and exposed to an arbitrary global. Instead, a plugin registers its runtime config at write-time and it can later retrieve it at runtime through a custom API.
 
@@ -220,7 +220,7 @@ The compilation now has two more phases:
 
 ### CLI changes
 
-- the `tinydoc` binary now supports two commands: `run` for generating the docs, and `compile` for compiling external plugins
+- the `megadoc` binary now supports two commands: `run` for generating the docs, and `compile` for compiling external plugins
 - The output directory is now purged before writing unless you pass in `--no-purge` to `run`
 
 ### Internal API changes
@@ -274,7 +274,7 @@ The compilation now has two more phases:
 ## 2.2.0
 
 - compile-time indexing of link tokens, this allows for linting in the future
-- (UI) global plugin hook `tinydocReact.use` renamed to `tinydoc.use`
+- (UI) global plugin hook `megadocReact.use` renamed to `megadoc.use`
 - fixed an issue that was causing some markdown headings to be out-of-sync with their links/anchors
 - fixed an issue that was causing CJS entities not to be reachable via sidebar links
 

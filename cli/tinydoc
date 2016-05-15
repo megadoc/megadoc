@@ -6,9 +6,9 @@ var path = require('path');
 var set = require('lodash').set;
 var omit = require('lodash').omit;
 var pkg = require('../package');
-var tinydoc = require('..');
+var megadoc = require('..');
 var Logger = require('../lib/Logger');
-var console = new Logger('tinydoc');
+var console = new Logger('megadoc');
 var config = {};
 var tiny, configFilePath;
 
@@ -20,7 +20,7 @@ function collect(val, set) {
 program
   .version(pkg.version)
   .description('Parse sources and generate static documentation.')
-  .option('--config [PATH]', 'path to tinydoc config file (defaults to tinydoc.conf.js)')
+  .option('--config [PATH]', 'path to megadoc config file (defaults to megadoc.conf.js)')
   .option('--no-scan', 'Skip the scanning phase.')
   .option('--no-index', 'Do not index documentation entities (for linking.)')
   .option('--no-render', 'Do not render markdown or resolve links.')
@@ -33,12 +33,12 @@ program
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
   .option('--stats', 'Show scanner-related statistics.')
-  .option('--tmp-dir [PATH]', 'Path to a directory tinydoc will use for intermediatery files. Defaults to .tinydoc/')
+  .option('--tmp-dir [PATH]', 'Path to a directory megadoc will use for intermediatery files. Defaults to .megadoc/')
   .option('--no-purge', 'Do not purge the output directory.')
   .parse(process.argv)
 ;
 
-configFilePath = program.config || 'tinydoc.conf.js';
+configFilePath = program.config || 'megadoc.conf.js';
 
 if (fs.existsSync(configFilePath)) {
   config = require(path.resolve(configFilePath));
@@ -48,7 +48,7 @@ else {
   throw new Error("You must specify a config file using --config.");
 }
 
-config.tmpDir = path.join(config.assetRoot, '.tinydoc');
+config.tmpDir = path.join(config.assetRoot, '.megadoc');
 
 if (!config.gitRepository) {
   config.gitRepository = path.resolve(config.assetRoot, '.git');
@@ -95,7 +95,7 @@ if (program.layout) {
 
 console.log('version %s', pkg.version);
 
-tiny = tinydoc(config, {
+tiny = megadoc(config, {
   scan: program.scan !== false,
   write: program.write !== false,
   render: program.render !== false && program.index !== false,
@@ -106,10 +106,10 @@ tiny = tinydoc(config, {
 
 tiny.run(function(err, stats) {
   if (err) {
-    console.error(Array(80 - 'tinydoc-cli'.length).join('*'));
+    console.error(Array(80 - 'megadoc-cli'.length).join('*'));
     console.error('An error occurred during compilation. Error details below.');
     console.error(err.stack ? err.stack : err);
-    console.error(Array(80 - 'tinydoc-cli'.length).join('*'));
+    console.error(Array(80 - 'megadoc-cli'.length).join('*'));
 
     throw err;
   }

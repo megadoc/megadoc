@@ -5,7 +5,7 @@ const LiveExampleTag = require('./LiveExampleTag');
 const Link = require('components/Link');
 const { object, shape, string, bool } = React.PropTypes;
 
-tinydoc.use('tinydoc-plugin-react', function ReactPlugin(api, configs) {
+megadoc.use('megadoc-plugin-react', function ReactPlugin(api, configs) {
   configs.forEach(function(config) {
     const { routeName } = config;
 

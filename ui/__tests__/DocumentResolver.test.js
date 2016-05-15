@@ -2,7 +2,7 @@ const Subject = require('../DocumentResolver');
 const CorpusAPI = require('../shared/core/CorpusAPI');
 const { assert } = require('chai');
 
-describe('tinydoc::DocumentResolver', function() {
+describe('megadoc::DocumentResolver', function() {
   let corpus, subject;
 
   beforeEach(function() {

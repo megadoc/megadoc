@@ -2,7 +2,7 @@ var Utils = require('../Utils');
 var NodeInfo = require('./NodeInfo');
 var K = require('../constants');
 var generateContext = require('./generateContext');
-var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
+var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var t = require('babel-types');
 
 function analyzeNode(node, path, filePath, config) {

@@ -16,7 +16,7 @@ const ControllerOutlet = React.createClass({
   }
 });
 
-tinydoc.outlets.add('YARD-API::Controller', {
+megadoc.outlets.add('YARD-API::Controller', {
   key: 'YARD-API::Controller',
   component: ControllerOutlet
 });

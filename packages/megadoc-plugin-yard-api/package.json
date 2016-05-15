@@ -1,14 +1,14 @@
 {
-  "name": "tinydoc-plugin-yard-api",
+  "name": "megadoc-plugin-yard-api",
   "version": "5.0.0",
-  "description": "A YARD-API/Rails documentation generator plugin for tinydoc.",
+  "description": "A YARD-API/Rails documentation generator plugin for megadoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+    "url": "git+ssh://git@github.com/megadoc/megadoc.git"
   },
   "keywords": [
-    "tinydoc",
+    "megadoc",
     "plugin",
     "ruby",
     "api",
@@ -20,14 +20,14 @@
   "author": "Ahmad Amireh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc/issues"
+    "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
     "glob": "5.0.3",
     "object-assign": "4.0.1"
   },
   "peerDependencies": {
-    "tinydoc": "5.x"
+    "megadoc": "5.x"
   }
 }

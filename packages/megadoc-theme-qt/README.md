@@ -1,18 +1,18 @@
-# tinydoc-theme-qt
+# megadoc-theme-qt
 
 A theme plugin after [Qt documentation](http://doc.qt.io).
 
 ## Usage
 
 ```bash
-npm install --save tinydoc-theme-qt
+npm install --save megadoc-theme-qt
 ```
 
-And in your `tinydoc.conf.js`:
+And in your `megadoc.conf.js`:
 
 ```javascript
 exports.plugins = [
-  require('tinydoc-theme-qt')()
+  require('megadoc-theme-qt')()
 ];
 ```
 

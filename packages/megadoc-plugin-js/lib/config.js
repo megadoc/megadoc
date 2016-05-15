@@ -6,7 +6,7 @@ module.exports = {
   /**
    * @property {String}
    *           A unique identifier for this plugin (throughout all other
-   *           plugins in your tinydoc config.)
+   *           plugins in your megadoc config.)
    *
    *           This will be used in the corpus to namespace documents and may
    *           affect the URL if you leave [@baseURL]() blank.

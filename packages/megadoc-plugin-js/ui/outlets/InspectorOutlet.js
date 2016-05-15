@@ -2,11 +2,11 @@ const React = require('react');
 const K = require('../constants');
 const { shape, string } = React.PropTypes;
 
-tinydoc.outlets.add('Inspector', {
+megadoc.outlets.add('Inspector', {
   key: 'CJS::Inspector',
 
   match(props) {
-    return props.namespaceNode.name === 'tinydoc-plugin-js' && props.documentNode.properties;
+    return props.namespaceNode.name === 'megadoc-plugin-js' && props.documentNode.properties;
   },
 
   component: React.createClass({

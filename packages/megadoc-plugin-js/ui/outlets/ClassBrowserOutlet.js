@@ -2,7 +2,7 @@ const React = require('react');
 const ClassBrowser = require('../components/ClassBrowser');
 const { object, } = React.PropTypes;
 
-tinydoc.outlets.add('CJS::ClassBrowser', {
+megadoc.outlets.add('CJS::ClassBrowser', {
   key: 'CJS::ClassBrowser',
   component: React.createClass({
     propTypes: {

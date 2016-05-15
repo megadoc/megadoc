@@ -13,7 +13,7 @@ const CoreUITests = require.context('./ui', true, /.test.js$/);
 
 CoreUITests.keys().forEach(CoreUITests);
 
-tap(require.context('./packages/tinydoc-plugin-markdown/ui', true, /.test.js$/), function(x) {
+tap(require.context('./packages/megadoc-plugin-markdown/ui', true, /.test.js$/), function(x) {
   x.keys().forEach(x);
 });
 

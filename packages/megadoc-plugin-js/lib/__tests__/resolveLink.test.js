@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
 var reduceDocuments = require('../CorpusReducer');
-var Corpus = require('tinydoc-corpus').Corpus;
+var Corpus = require('megadoc-corpus').Corpus;
 
 describe('cjs::resolveLink', function() {
   var corpus;

@@ -22,7 +22,7 @@ const AllModulesOutlet = React.createClass({
   }
 });
 
-tinydoc.outlets.add('Lua::AllModules', {
+megadoc.outlets.add('Lua::AllModules', {
   key: 'source',
   component: AllModulesOutlet
 });

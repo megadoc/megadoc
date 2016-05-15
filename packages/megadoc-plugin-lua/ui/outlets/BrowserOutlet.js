@@ -9,7 +9,7 @@ const BrowserOutlet = React.createClass({
   },
 });
 
-tinydoc.outlets.add('Lua::Browser', {
+megadoc.outlets.add('Lua::Browser', {
   key: 'source',
   component: BrowserOutlet
 });

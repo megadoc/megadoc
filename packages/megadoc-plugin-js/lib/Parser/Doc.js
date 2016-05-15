@@ -4,7 +4,7 @@ var _ = require('lodash');
 var findWhere = _.findWhere;
 var assign = _.assign;
 var assert = require('assert');
-var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
+var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 /**
  * @param {Docstring} docstring

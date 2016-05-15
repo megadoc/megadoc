@@ -22,8 +22,8 @@ const ImageOutlet = React.createClass({
   }
 });
 
-module.exports = function(tinydoc) {
-  tinydoc.outlets.add('Image', {
+module.exports = function(megadoc) {
+  megadoc.outlets.add('Image', {
     key: 'Image',
     component: ImageOutlet
   });

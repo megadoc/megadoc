@@ -2,7 +2,7 @@ var path = require('path');
 var glob = require('glob');
 var root = path.resolve(__dirname, '..', 'ui');
 
-var GLOBAL = 'tinydoc.publicModules';
+var GLOBAL = 'megadoc.publicModules';
 var vendorModules = require('./vendorModules');
 
 var sharedModuleDirs = [

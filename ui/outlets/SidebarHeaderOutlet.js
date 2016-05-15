@@ -17,8 +17,8 @@ const SidebarHeaderOutlet = React.createClass({
   }
 });
 
-module.exports = function(tinydoc) {
-  tinydoc.outlets.add('Layout::SidebarHeader', {
+module.exports = function(megadoc) {
+  megadoc.outlets.add('Layout::SidebarHeader', {
     key: 'xxx',
     component: SidebarHeaderOutlet
   });

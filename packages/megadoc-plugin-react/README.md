@@ -1,8 +1,8 @@
-# tinydoc-plugin-react
+# megadoc-plugin-react
 
-This plugin extends [tinydoc's JS plugin](https://github.com/tinydoc/tinydoc-plugin-js) with support for [React](http://facebook.github.io/react) components both during the analysis phase and in the UI.
+This plugin extends [megadoc's JS plugin](https://github.com/megadoc/megadoc-plugin-js) with support for [React](http://facebook.github.io/react) components both during the analysis phase and in the UI.
 
-A demo can be [seen here](http://tinydoc.github.io/tinydoc-plugin-react/). Make sure you try out the real-time editor by clicking on the `Try it!` link for component modules.
+A demo can be [seen here](http://megadoc.github.io/megadoc-plugin-react/). Make sure you try out the real-time editor by clicking on the `Try it!` link for component modules.
 
 ## Features
 
@@ -15,27 +15,27 @@ Core/analysis stuff:
 
 - all `React.createClass` components will be marked as modules
 - in-depth analysis of `propTypes`
-- understands `statics` so that tinydoc will be able to properly differentiate between instance and static methods in the UI
+- understands `statics` so that megadoc will be able to properly differentiate between instance and static methods in the UI
 
 ## Installation
 
 ```
-npm install tinydoc tinydoc-plugin-js tinydoc-plugin-react
+npm install megadoc megadoc-plugin-js megadoc-plugin-react
 ```
 
 ## Usage
 
-This plugin expects to be installed onto a tinydoc JS plugin so that it provides its sources with the React support:
+This plugin expects to be installed onto a megadoc JS plugin so that it provides its sources with the React support:
 
 ```javascript
-// @file tinydoc.conf.js
+// @file megadoc.conf.js
 
-var jsPlugin = require('tinydoc-plugins-js')({
+var jsPlugin = require('megadoc-plugins-js')({
   routeName: 'js',
   source: [ 'lib/components/**/*.js' ]
 });
 
-var reactPlugin = require('tinydoc-plugin-react')({
+var reactPlugin = require('megadoc-plugin-react')({
   routeName: 'js' // <- this must match the JS plugin's
 });
 
@@ -82,7 +82,7 @@ var entryFileTemplate = _.template(
   fs.readFileSync(path.resolve(__dirname,  'reactPlugin.tmpl.js'), 'utf-8')
 );
 
-var reactPlugin = require('tinydoc-plugin-react')({
+var reactPlugin = require('megadoc-plugin-react')({
   compile: function(compiler, components, done) {
     var entryFileContents = entryFileTemplate({
       components: components

@@ -10,7 +10,7 @@ const NotFound = require('components/NotFound');
 const ErrorMessage = require('components/ErrorMessage');
 const React = require('react');
 
-describe('tinydoc::Components::Layout', function() {
+describe('megadoc::Components::Layout', function() {
   const sinon = sinonSuite(this);
 
   const suite = reactSuite(this, stubContext(Subject), {
@@ -67,7 +67,7 @@ describe('tinydoc::Components::Layout', function() {
     stubCorpus(this, require('json!test_helpers/fixtures/corpus--small.json'));
 
     it('injects a custom documentNode into an outlet when specified', function() {
-      sinon.spy(tinydoc.corpus, 'get');
+      sinon.spy(megadoc.corpus, 'get');
 
       Outlet.define('TestOutlet');
       Outlet.add('TestOutlet', {
@@ -98,12 +98,12 @@ describe('tinydoc::Components::Layout', function() {
         }]
       });
 
-      assert.calledWith(tinydoc.corpus.get, 'api/foo');
+      assert.calledWith(megadoc.corpus.get, 'api/foo');
       assert.include(drill(subject).node.textContent, "Hello Foo!");
     });
 
     it('displays an error when no such document is found', function() {
-      sinon.spy(tinydoc.corpus, 'get');
+      sinon.spy(megadoc.corpus, 'get');
 
       suite.setProps({
         pathname: '/foo',
@@ -124,7 +124,7 @@ describe('tinydoc::Components::Layout', function() {
         }]
       });
 
-      assert.calledWith(tinydoc.corpus.get, 'api/something');
+      assert.calledWith(megadoc.corpus.get, 'api/something');
 
       drill(subject).find(ErrorMessage,
         m.hasText('No document was found with the UID "api/something"')

@@ -10,8 +10,8 @@ module.exports = function(userConfig) {
       compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.join(root, 'ui/index.less'));
         compiler.assets.addStyleOverrides(require('../ui/styleOverrides'));
-        compiler.assets.addPluginScript(path.join(root, 'dist/tinydoc-theme-qt.js'));
-        compiler.assets.addPluginRuntimeConfig('tinydoc-theme-qt', config);
+        compiler.assets.addPluginScript(path.join(root, 'dist/megadoc-theme-qt.js'));
+        compiler.assets.addPluginRuntimeConfig('megadoc-theme-qt', config);
 
         done();
       });

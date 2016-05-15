@@ -5,8 +5,8 @@
 
 set -e
 
-[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null || {
-  echo "$0: Must be run from tinydoc root.";
+[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
+  echo "$0: Must be run from megadoc root.";
   exit 1
 }
 
@@ -14,9 +14,9 @@ if [ -z $SKIP_SELF_PREPUBLISH ]; then # for travis
   npm run prepublish
 fi
 
-for pkg in $(find packages -maxdepth 1 -type d -name 'tinydoc-*' | sort | sed 's/packages\///')
+for pkg in $(find packages -maxdepth 1 -type d -name 'megadoc-*' | sort | sed 's/packages\///')
 do
-  if [ $pkg == "tinydoc-plugin-skeleton" ]; then
+  if [ $pkg == "megadoc-plugin-skeleton" ]; then
     continue
   fi
 

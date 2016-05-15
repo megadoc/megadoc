@@ -1,7 +1,7 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
 var K = require('../../constants');
-var TinyTestUtils = require('tinydoc/lib/TestUtils');
+var TinyTestUtils = require('megadoc/lib/TestUtils');
 var multiline = require('multiline-slash');
 
 describe('CJS::Parser - @memberOf support', function() {

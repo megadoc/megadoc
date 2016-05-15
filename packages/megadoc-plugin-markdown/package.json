@@ -1,14 +1,14 @@
 {
-  "name": "tinydoc-plugin-markdown",
+  "name": "megadoc-plugin-markdown",
   "version": "5.0.0",
-  "description": "Markdown documentation generator for tinydoc.",
+  "description": "Markdown documentation generator for megadoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+    "url": "git+ssh://git@github.com/megadoc/megadoc.git"
   },
   "keywords": [
-    "tinydoc",
+    "megadoc",
     "plugin",
     "markdown",
     "documentation",
@@ -17,15 +17,15 @@
   "author": "Ahmad Amireh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc/issues"
+    "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "homepage": "https://github.com/megadoc/megadoc#readme",
 
   "dependencies": {
     "lodash": "3.10.1"
   },
 
   "peerDependencies": {
-    "tinydoc": "5.x"
+    "megadoc": "5.x"
   }
 }

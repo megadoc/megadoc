@@ -8,7 +8,7 @@ var ctx = {};
 
 program
   .version(pkg.version)
-  .description('Compile a tinydoc UI plugin.')
+  .description('Compile a megadoc UI plugin.')
   .arguments('<outfile> <entry_file> [other_entry_files...]')
   .option('--optimize', 'Build a production-ready version.')
   .action(function(output, entry, otherEntries) {

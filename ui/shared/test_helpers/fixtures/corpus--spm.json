@@ -1,7 +1,7 @@
 {
   "lua": {
     "id": "lua",
-    "name": "tinydoc-plugin-lua",
+    "name": "megadoc-plugin-lua",
     "config": {
       "routeName": "lua",
       "source": "src/**/*.lua",
@@ -1779,7 +1779,7 @@
   },
   "articles": {
     "id": "articles",
-    "name": "tinydoc-plugin-markdown",
+    "name": "megadoc-plugin-markdown",
     "title": "Articles",
     "meta": {
       "defaultLayouts": [

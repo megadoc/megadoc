@@ -10,8 +10,8 @@
 #
 #   - PACKAGE: the package, in case $1 is not passed
 
-[ -f "./package.json" ] && grep '"name": "tinydoc"' ./package.json &> /dev/null || {
-  echo "$0: Must be run from tinydoc root.";
+[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
+  echo "$0: Must be run from megadoc root.";
   exit 1
 }
 
@@ -33,11 +33,11 @@ PACKAGE_NAME="${PACKAGE}"
 PACKAGE_ROOT="packages/${PACKAGE_NAME}"
 
 if [ ! -d "${PACKAGE_ROOT}" ]; then
-  PACKAGE_NAME="tinydoc-plugin-${PACKAGE}"
+  PACKAGE_NAME="megadoc-plugin-${PACKAGE}"
   PACKAGE_ROOT="packages/${PACKAGE_NAME}"
 
   if [ ! -d "${PACKAGE_ROOT}" ]; then
-    echo "${PACKAGE_NAME} is not a valid tinydoc plugin package."
+    echo "${PACKAGE_NAME} is not a valid megadoc plugin package."
     exit 1
   fi
 fi
@@ -45,15 +45,15 @@ fi
 function verify_dependency_versions {
   TINYDOC_VERSION=$(read_package_version package.json | cut -d'.' -f1)
   PACKAGE_VERSION=$(read_package_version $PACKAGE_ROOT/package.json | cut -d'.' -f1)
-  TINYDOC_DEP_VERSION=$(read_peer_dependency_version $PACKAGE_ROOT/package.json "tinydoc" | cut -d'.' -f1)
+  TINYDOC_DEP_VERSION=$(read_peer_dependency_version $PACKAGE_ROOT/package.json "megadoc" | cut -d'.' -f1)
 
   if [ $TINYDOC_DEP_VERSION != $PACKAGE_VERSION ]; then
     echo "
 Package major version seems to be '${PACKAGE_VERSION}' while the version
-of tinydoc specified as a peerDependency is '${TINYDOC_VERSION}'.
+of megadoc specified as a peerDependency is '${TINYDOC_VERSION}'.
 
 Optimally, we want major versions to be consistent between the packages
-and the tinydoc peerDependency they specify.
+and the megadoc peerDependency they specify.
     "
 
     return 1
@@ -61,8 +61,8 @@ and the tinydoc peerDependency they specify.
 
   if [ $TINYDOC_VERSION != $TINYDOC_DEP_VERSION ]; then
     echo "
-Peer dependency mismatch: package depends on tinydoc v${TINYDOC_DEP_VERSION}
-but tinydoc is currently version v${TINYDOC_VERSION}.
+Peer dependency mismatch: package depends on megadoc v${TINYDOC_DEP_VERSION}
+but megadoc is currently version v${TINYDOC_VERSION}.
     "
 
     return 1

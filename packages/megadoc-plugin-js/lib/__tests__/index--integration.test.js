@@ -1,8 +1,8 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
 
-describe("[Integration] tinydoc-plugin-js", function() {
+describe("[Integration] megadoc-plugin-js", function() {
   var suite = IntegrationSuite(this, { timeout: 5000 });
 
   beforeEach(function() {

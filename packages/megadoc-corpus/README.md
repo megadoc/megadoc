@@ -1,11 +1,11 @@
-# tinydoc-corpus
+# megadoc-corpus
 
-The corpus is tinydoc's module for indexing documents. The corpus has enough 
+The corpus is megadoc's module for indexing documents. The corpus has enough 
 semantics to ensure a correct and intuitive approach to resolving links, among
 other things like the inference of dependency and co-relation graphs between
 documents and entities.
 
-Most of tinydoc's features like link-resolving, the Spotlight, and the Preview 
+Most of megadoc's features like link-resolving, the Spotlight, and the Preview 
 Tooltips rely on the corpus directly or indirectly - so as an upstream 
 developer, utilizing the corpus will pay off greatly.
 
@@ -56,13 +56,13 @@ Let's look at an example corpus with the following contents:
 ```
 - corpus
 |
-| - tinydoc-plugin-markdown (namespace id = MD)
+| - megadoc-plugin-markdown (namespace id = MD)
 |   |
 |   |-- X (doc/X.md)
 |   |-- Y (doc/Y.md)
 |   |-- Z (doc/Z.md)
 |   
-| - tinydoc-plugin-js       (namespace id = JS)
+| - megadoc-plugin-js       (namespace id = JS)
 |   |
 |   |-- X                   (filePath = js/lib/X.js)
 |   |-- Core.X              (filePath = js/lib/core/X.js)

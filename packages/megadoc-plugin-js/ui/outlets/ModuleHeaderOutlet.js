@@ -2,7 +2,7 @@ const React = require('react');
 const ModuleHeader = require('../components/ModuleHeader');
 const { object, shape, bool, } = React.PropTypes;
 
-tinydoc.outlets.add('CJS::ModuleHeader', {
+megadoc.outlets.add('CJS::ModuleHeader', {
   key: 'CJS::ModuleHeader',
   component: React.createClass({
     propTypes: {
@@ -26,7 +26,7 @@ tinydoc.outlets.add('CJS::ModuleHeader', {
 
           {this.props.$outletOptions.showFilePath !== false && documentNode.filePath && (
             <p className="class-view__module-filepath">
-              Defined in: {tinydoc.getRelativeFilePath(documentNode.filePath)}
+              Defined in: {megadoc.getRelativeFilePath(documentNode.filePath)}
             </p>
           )}
 

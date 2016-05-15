@@ -20,12 +20,12 @@ const StatsOutlet = React.createClass({
   }
 });
 
-tinydoc.outlets.add('Git::Stats', {
+megadoc.outlets.add('Git::Stats', {
   key: 'Git::Stats',
   component: StatsOutlet
 });
 
-tinydoc.outlets.add('Layout::Content', {
+megadoc.outlets.add('Layout::Content', {
   key: 'Git::Stats',
   component: StatsOutlet,
   match(props) {

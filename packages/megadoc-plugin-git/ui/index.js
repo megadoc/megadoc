@@ -1,5 +1,5 @@
-tinydoc.outlets.define('Git::Stats');
+megadoc.outlets.define('Git::Stats');
 
-tinydoc.use(function GitPlugin() {
+megadoc.use(function GitPlugin() {
   require('./outlets/StatsOutlet');
 });

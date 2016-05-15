@@ -1,8 +1,8 @@
-var Corpus = require('tinydoc-corpus').Corpus;
-var CorpusTypes = require('tinydoc-corpus').Types;
+var Corpus = require('megadoc-corpus').Corpus;
+var CorpusTypes = require('megadoc-corpus').Types;
 var b = CorpusTypes.builders;
 var K = require('./Parser/constants');
-var RendererUtils = require('tinydoc/lib/RendererUtils');
+var RendererUtils = require('megadoc/lib/RendererUtils');
 
 module.exports = function reduceDocuments(options) {
   var rawDocuments = options.documents;
@@ -14,7 +14,7 @@ module.exports = function reduceDocuments(options) {
   var namespaces = {};
   var bank = b.namespace({
     id: options.namespaceId,
-    name: 'tinydoc-plugin-js',
+    name: 'megadoc-plugin-js',
     title: options.namespaceTitle,
     documents: [],
     config: options.config,

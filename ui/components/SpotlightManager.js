@@ -55,7 +55,7 @@ const SpotlightManager = React.createClass({
       return (
         <Spotlight
           startInSymbolMode={this.state.openedInSymbolMode}
-          corpus={tinydoc.corpus.getDocumentSearchIndex()}
+          corpus={megadoc.corpus.getDocumentSearchIndex()}
           symbols={symbols}
           onActivate={this.closeSpotlight}
         />
@@ -118,11 +118,11 @@ const SpotlightManager = React.createClass({
 });
 
 function getSymbolsForDocument(documentNode) {
-  return tinydoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
+  return megadoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
 }
 
 function getSymbolsForDocumentByURI(uri) {
-  const documentNode = tinydoc.corpus.getByURI(DocumentURI(uri));
+  const documentNode = megadoc.corpus.getByURI(DocumentURI(uri));
 
   if (documentNode) {
     return getSymbolsForDocument(documentNode);

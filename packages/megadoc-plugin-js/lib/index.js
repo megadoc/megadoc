@@ -27,13 +27,13 @@ function createCJSPlugin(userConfig) {
   };
 
   assert(typeof config.id === 'string',
-    "You must specify an @id to the tinydoc-plugin-js plugin."
+    "You must specify an @id to the megadoc-plugin-js plugin."
   );
 
   var plugin = {
     id: config.id,
 
-    name: 'tinydoc-plugin-js',
+    name: 'megadoc-plugin-js',
 
     /**
      * Add a custom-tag definition.

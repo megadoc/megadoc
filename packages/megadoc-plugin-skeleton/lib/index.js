@@ -4,7 +4,7 @@ var ROOT = path.resolve(__dirname, '..');
 module.exports = function(userConfig) {
 
   return {
-    // This is the only required export for tinydoc to use our plugin.
+    // This is the only required export for megadoc to use our plugin.
     run: function(compiler) {
       compiler.on('scan', function(done) {
         done();
@@ -18,14 +18,14 @@ module.exports = function(userConfig) {
 
         // Register our JS
         compiler.assets.addPluginScript(
-          path.join(ROOT, 'dist', 'tinydoc-plugin-skeleton.js')
+          path.join(ROOT, 'dist', 'megadoc-plugin-skeleton.js')
         );
 
         // Everything we might need at run-time to render (like our data) should
         // be registered through this hook. Later on in our UI, we can retrieve
         // this config and deal with it.
         //
-        // tinydoc will ensure it is available by the time the UI gets booted
+        // megadoc will ensure it is available by the time the UI gets booted
         // up.
         compiler.assets.addPluginRuntimeConfig('skeleton', {
           userConfig: userConfig

@@ -27,8 +27,8 @@
 				"public/doc/api",
 				"dist",
 				"coverage",
-				"packages/tinydoc/lib",
-				"packages/tinydoc/ui"
+				"packages/megadoc/lib",
+				"packages/megadoc/ui"
 			],
 			"path": "."
 		}

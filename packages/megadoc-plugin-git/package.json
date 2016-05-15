@@ -1,14 +1,14 @@
 {
-  "name": "tinydoc-plugin-git",
+  "name": "megadoc-plugin-git",
   "version": "5.0.0",
-  "description": "Git stats collector for files parsed by tinydoc.",
+  "description": "Git stats collector for files parsed by megadoc.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tinydoc/tinydoc.git"
+    "url": "git+ssh://git@github.com/megadoc/megadoc.git"
   },
   "keywords": [
-    "tinydoc",
+    "megadoc",
     "plugin",
     "git",
     "docs",
@@ -18,9 +18,9 @@
   "author": "Ahmad Amireh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc/issues"
+    "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc#readme",
+  "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
     "async": "2.0.0-rc.3",
     "git-log-parser": "1.1.0",
@@ -30,6 +30,6 @@
     "md5": "^2.0.0"
   },
   "peerDependencies": {
-    "tinydoc": "5.x"
+    "megadoc": "5.x"
   }
 }

@@ -9,7 +9,7 @@ var NodeAnalyzer = require('./NodeAnalyzer');
 var WeakSet = require('weakset');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
-var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
+var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var babel = require('babel-core');
 var t = require('babel-types');
 
@@ -80,12 +80,12 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
 
   Object.keys(config.alias).forEach(function(key) {
     assert(Array.isArray(config.alias[key]),
-      "tinydoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
+      "megadoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
       " be an array, got '" + typeof config.alias[key] + "'."
     );
     config.alias[key].forEach(function(value) {
       assert(typeof value === 'string',
-        "tinydoc-plugin-js: OptionError: expected alias entry to be a string " +
+        "megadoc-plugin-js: OptionError: expected alias entry to be a string " +
         ", not '" + typeof value + "' (key '" + key + "')"
       );
     });

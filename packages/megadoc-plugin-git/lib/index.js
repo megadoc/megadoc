@@ -150,7 +150,7 @@ function createGitPlugin(userConfig) {
         );
 
         compiler.assets.addPluginScript(
-          path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-git.js')
+          path.resolve(__dirname, '..', 'dist', 'megadoc-plugin-git.js')
         );
 
         compiler.assets.addPluginRuntimeConfig('git', runtimeConfig);

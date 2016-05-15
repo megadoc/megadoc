@@ -2,7 +2,7 @@ const React = require('react');
 const ModuleBody = require('../components/ModuleBody');
 const { object, } = React.PropTypes;
 
-tinydoc.outlets.add('CJS::ModuleBody', {
+megadoc.outlets.add('CJS::ModuleBody', {
   key: 'CJS::ModuleBody',
   component: React.createClass({
     propTypes: {

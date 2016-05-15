@@ -1,14 +1,14 @@
 {
-  "name": "tinydoc-theme-qt",
+  "name": "megadoc-theme-qt",
   "version": "5.0.0",
-  "description": "A theme for tinydoc after Qt documentation pages.",
+  "description": "A theme for megadoc after Qt documentation pages.",
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/tinydoc/tinydoc-theme-qt.git"
+    "url": "git+ssh://git@github.com/megadoc/megadoc-theme-qt.git"
   },
   "keywords": [
-    "tinydoc",
+    "megadoc",
     "theme",
     "qt",
     "documentation",
@@ -17,10 +17,10 @@
   "author": "Ahmad Amireh",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc-theme-qt/issues"
+    "url": "https://github.com/megadoc/megadoc-theme-qt/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc-theme-qt#readme",
+  "homepage": "https://github.com/megadoc/megadoc-theme-qt#readme",
   "peerDependencies": {
-    "tinydoc": "5.x"
+    "megadoc": "5.x"
   }
 }

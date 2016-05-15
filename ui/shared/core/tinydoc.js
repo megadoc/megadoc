@@ -4,7 +4,7 @@ const CorpusAPI = require('./CorpusAPI');
 const invariant = require('utils/invariant');
 
 /**
- * @module tinydoc
+ * @module megadoc
  * @singleton
  */
 module.exports = function createTinydoc(config) {
@@ -47,7 +47,7 @@ module.exports = function createTinydoc(config) {
   function seal() {
     exports.use = function() {
       console.warn(
-        "You are attempting to call 'tinydoc.use()' after all plugins were " +
+        "You are attempting to call 'megadoc.use()' after all plugins were " +
         "loaded. This probably means you forgot to register your " +
         "script as a plugin script."
       );
@@ -68,7 +68,7 @@ module.exports = function createTinydoc(config) {
   }
 
   /**
-   * @method tinydoc.use
+   * @method megadoc.use
    *
    * @param {Function} pluginEntryRunner
    *        The function that will register your plugin.

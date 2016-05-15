@@ -1,4 +1,4 @@
-# tinydoc-theme-gitbooks
+# megadoc-theme-gitbooks
 
 A theme plugin after [gitbooks.io](https://gitbooks.io).
 
@@ -11,14 +11,14 @@ Or a demo, if you're lucky and it's still running: http://lua-cliargs.netlify.co
 ## Usage
 
 ```bash
-npm install --save tinydoc-theme-gitbooks
+npm install --save megadoc-theme-gitbooks
 ```
 
-And in your `tinydoc.conf.js`:
+And in your `megadoc.conf.js`:
 
 ```javascript
 exports.plugins = [
-  require('tinydoc-theme-gitbooks')()
+  require('megadoc-theme-gitbooks')()
 ];
 
 // you should probably turn on the collapsible sidebar setting:

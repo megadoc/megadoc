@@ -1,6 +1,6 @@
 ## 4.0.2
 
-- turned off the debugging messages during parse. To turn them on, run tinydoc with the environment variable `NODE_DEBUG=tinydoc` exported.
+- turned off the debugging messages during parse. To turn them on, run megadoc with the environment variable `NODE_DEBUG=megadoc` exported.
 
 ## 4.0.1
 
@@ -8,4 +8,4 @@
 
 ## 4.0.0
 
-- the plugin was extracted from tinydoc's core
+- the plugin was extracted from megadoc's core

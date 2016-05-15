@@ -33,7 +33,7 @@ const Root = React.createClass({
   },
 
   componentWillMount() {
-    this.documentResolver = DocumentResolver(tinydoc.corpus);
+    this.documentResolver = DocumentResolver(megadoc.corpus);
   },
 
   componentDidMount() {
@@ -104,7 +104,7 @@ const Root = React.createClass({
         <p>Debugging information:</p>
 
         <pre>
-          Corpus size: {tinydoc.corpus.length}
+          Corpus size: {megadoc.corpus.length}
           {"\n"}
           Location: {JSON.stringify(this.getLocation(), null, 2)}
         </pre>

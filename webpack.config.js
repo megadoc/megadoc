@@ -15,7 +15,7 @@ var config = {
     path: K.BUNDLE_DIR,
     filename: '[name].js',
     libraryTarget: 'var',
-    jsonpFunction: 'webpackJsonp_tinydoc'
+    jsonpFunction: 'webpackJsonp_megadoc'
   },
 
   plugins: [

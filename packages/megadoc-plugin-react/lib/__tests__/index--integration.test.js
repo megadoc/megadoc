@@ -1,9 +1,9 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
-var TinydocPluginJS = require('tinydoc-plugin-js');
+var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var TinydocPluginJS = require('megadoc-plugin-js');
 
-describe("[Integration] tinydoc-plugin-react", function() {
+describe("[Integration] megadoc-plugin-react", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {
@@ -57,8 +57,8 @@ describe("[Integration] tinydoc-plugin-react", function() {
     suite.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['tinydoc-plugin-react:test'].componentCount, 2);
-      assert.equal(stats['tinydoc-plugin-react:test'].liveExampleCount, 1);
+      assert.equal(stats['megadoc-plugin-react:test'].componentCount, 2);
+      assert.equal(stats['megadoc-plugin-react:test'].liveExampleCount, 1);
 
       done();
     });

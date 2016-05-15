@@ -4,7 +4,7 @@ const { assign } = require('lodash');
  * @module UI.Corpus
  *
  * To access these APIs from within your plugins, use the global instance found
- * at [tinydoc@corpus `window.tinydoc.corpus`]().
+ * at [megadoc@corpus `window.megadoc.corpus`]().
  */
 function CorpusAPI(shallowCorpus) {
   const exports = {};

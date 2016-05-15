@@ -3,7 +3,7 @@ const { shape, string, number } = React.PropTypes;
 const WPM = 275; // https://help.medium.com/hc/en-us/articles/214991667-Read-time
 
 module.exports = function(api, config) {
-  tinydoc.outlets.add('Inspector', {
+  megadoc.outlets.add('Inspector', {
     key: config.routeName,
 
     match(props) {

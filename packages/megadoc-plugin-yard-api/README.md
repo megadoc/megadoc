@@ -1,18 +1,18 @@
-# [YARD-API](http://amireh.github.io/yard-api/) tinydoc Plugin
+# [YARD-API](http://amireh.github.io/yard-api/) megadoc Plugin
 
 This plugin parses Rails controllers that are documented in the YARD-API format.
 
 ## Configuration
 
 ```javascript
-// tinydoc.conf.js
+// megadoc.conf.js
 
 exports['yard-api'] = {
     /**
      * @property {String}
      *
      * The full command to use for generating the JSON YARD-API documents.
-     * This will be run in the repository's root (dir of tinydoc.conf.js).
+     * This will be run in the repository's root (dir of megadoc.conf.js).
      */
     command: "bundle exec rake yard_api",
 

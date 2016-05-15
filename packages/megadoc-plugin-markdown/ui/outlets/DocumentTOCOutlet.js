@@ -2,7 +2,7 @@ const React = require('react');
 const ArticleTOC = require('../components/ArticleTOC')
 const { object } = React.PropTypes;
 
-tinydoc.outlets.add('Markdown::DocumentTOC', {
+megadoc.outlets.add('Markdown::DocumentTOC', {
   key: 'Markdown::DocumentTOC',
 
   component: React.createClass({

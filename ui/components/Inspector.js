@@ -84,7 +84,7 @@ function isApplicable(containerNode, node) {
 }
 
 function inspectElement(el) {
-  const { corpus } = tinydoc;
+  const { corpus } = megadoc;
   const href = decodeURIComponent(el.href.replace(location.origin, ''));
   const documentNode = corpus.getByURI(href);
 
@@ -92,7 +92,7 @@ function inspectElement(el) {
   if (documentNode) {
     const context = {
       documentNode,
-      namespaceNode: tinydoc.corpus.getNamespaceOfDocument(documentNode),
+      namespaceNode: megadoc.corpus.getNamespaceOfDocument(documentNode),
     };
 
     if (hasMatchingElements({ name: 'Inspector', elementProps: context })) {
@@ -106,7 +106,7 @@ function inspectElement(el) {
 function legacy__inspectElement(href) {
   let content;
 
-  tinydoc.getPreviewHandlers().some(function(fn) {
+  megadoc.getPreviewHandlers().some(function(fn) {
     content = fn(href);
     return !!content;
   });

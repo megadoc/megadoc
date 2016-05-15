@@ -7,7 +7,7 @@ module.exports = function scan(params, done) {
   var files = params.utils.globAndFilter(config.source, config.exclude);
 
   if (config.verbose) {
-    console.log('tinydoc-plugin-js[%s]: Parsing docs from %d files.', config.routeName, files.length);
+    console.log('megadoc-plugin-js[%s]: Parsing docs from %d files.', config.routeName, files.length);
   }
 
   var parser = new Parser();

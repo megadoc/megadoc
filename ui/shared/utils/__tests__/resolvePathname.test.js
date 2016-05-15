@@ -1,7 +1,7 @@
 const Subject = require("../resolvePathname");
 const { assert } = require('chai');
 
-describe("tinydoc::utils::resolvePathname", function() {
+describe("megadoc::utils::resolvePathname", function() {
   [
     // depth = 0
     [ '/index.html', '/foo.html', 'foo.html' ],

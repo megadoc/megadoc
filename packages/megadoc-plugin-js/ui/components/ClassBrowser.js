@@ -95,7 +95,7 @@ var ClassBrowser = React.createClass({
       return null;
     }
 
-    const hasSelfDocument = ns.id !== '__general__' && (ns.properties || tinydoc.hasCustomLayoutForDocument(ns));
+    const hasSelfDocument = ns.id !== '__general__' && (ns.properties || megadoc.hasCustomLayoutForDocument(ns));
 
     return (
       <div key={ns.id} className="class-browser__category">

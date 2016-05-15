@@ -29,7 +29,7 @@ var baseConfig = {
     ],
 
     alias: {
-      'tinydoc': root,
+      'megadoc': root,
       'sinon': path.join(root, 'ui', 'shims', 'sinon.js'),
     }
   },

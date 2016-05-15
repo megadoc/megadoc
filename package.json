@@ -1,11 +1,11 @@
 {
-  "name": "tinydoc",
+  "name": "megadoc",
   "version": "5.0.1",
   "description": "Fast and sleek and modular documentation generator.",
   "main": "lib/index.js",
   "bin": {
-    "tinydoc": "./cli/tinydoc",
-    "tinydoc-compile": "./cli/tinydoc-compile"
+    "megadoc": "./cli/megadoc",
+    "megadoc-compile": "./cli/megadoc-compile"
   },
   "scripts": {
     "build": "NODE_ENV=production webpack -p --display-chunks",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:tinydoc/tinydoc"
+    "url": "git@github.com:megadoc/megadoc"
   },
   "keywords": [
     "docs",
@@ -27,9 +27,9 @@
   "author": "Ahmad Amireh",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/tinydoc/tinydoc/issues"
+    "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/tinydoc/tinydoc",
+  "homepage": "https://github.com/megadoc/megadoc",
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "babel-core": "6.7.6",

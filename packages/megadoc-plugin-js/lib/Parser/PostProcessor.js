@@ -2,7 +2,7 @@ var path = require('path');
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var Utils = require('./Utils');
-var debuglog = require('tinydoc/lib/Logger')('tinydoc').info;
+var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 exports.run = function(registry, config) {
   var docs = registry.docs;
@@ -203,7 +203,7 @@ function warnAboutUnknownContexts(registry) {
 
     if (!ctx.type || ctx.type === K.TYPE_UNKNOWN) {
       debuglog(
-        'Entity "%s" has no context. This probably means tinydoc does not know ' +
+        'Entity "%s" has no context. This probably means megadoc does not know ' +
         'how to handle it yet. (Source: %s)',
         doc.id,
         doc.nodeInfo.fileLoc

@@ -2,14 +2,14 @@ var path = require('path');
 var scan = require('./scan');
 var assign = require('lodash').assign;
 var defaults = require('./config');
-var b = require('tinydoc-corpus').Types.builders;
+var b = require('megadoc-corpus').Types.builders;
 
 function MarkdownPlugin(userConfig) {
   var config = assign({}, defaults, userConfig);
 
   return {
     id: config.id,
-    name: 'tinydoc-plugin-markdown',
+    name: 'megadoc-plugin-markdown',
 
     run: function(compiler) {
       var database;
@@ -22,7 +22,7 @@ function MarkdownPlugin(userConfig) {
 
           database = b.namespace({
             id: config.id,
-            name: 'tinydoc-plugin-markdown',
+            name: 'megadoc-plugin-markdown',
             title: config.title,
             meta: {
               // TODO: stop switching against null in CorpusVisitor - it's stupid
@@ -121,16 +121,16 @@ function MarkdownPlugin(userConfig) {
         );
 
         compiler.assets.addPluginScript(
-          path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-markdown.js')
+          path.resolve(__dirname, '..', 'dist', 'megadoc-plugin-markdown.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-markdown', runtimeConfig);
+        compiler.assets.addPluginRuntimeConfig('megadoc-plugin-markdown', runtimeConfig);
 
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
-        stats['tinydoc-plugin-markdown:' + config.id] = {
+        stats['megadoc-plugin-markdown:' + config.id] = {
           count: database.documents.length
         };
 

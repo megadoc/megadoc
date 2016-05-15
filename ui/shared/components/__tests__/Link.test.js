@@ -10,7 +10,7 @@ const { string, func, shape, object, } = React.PropTypes;
 const { assign } = require('lodash');
 
 
-describe('tinydoc::Components::Link', function() {
+describe('megadoc::Components::Link', function() {
   let linkContext;
   const sinon = sinonSuite(this);
   const Subject = React.createClass({
@@ -112,7 +112,7 @@ describe('tinydoc::Components::Link', function() {
       render({ href: "/api.html" }, {
         location: {
           protocol: 'file:',
-          pathname: '/srv/http/docs/tinydoc-test/index.html'
+          pathname: '/srv/http/docs/megadoc-test/index.html'
         }
       });
 

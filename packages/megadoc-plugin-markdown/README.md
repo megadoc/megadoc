@@ -1,10 +1,10 @@
-# tinydoc-plugin-markdown
+# megadoc-plugin-markdown
 
 Read markdown files and render them as HTML with syntax highlighting and linking.
 
 ## Installation
 
-    npm install tinydoc tinydoc-plugin-markdown
+    npm install megadoc megadoc-plugin-markdown
 
 ## Usage
 
@@ -19,10 +19,10 @@ Let's assume we have a source folder like this:
 We can build up a plugin to parse these files as such:
 
 ```javascript
-// @file: tinydoc.conf.js
+// @file: megadoc.conf.js
 module.exports = {
   plugins: [
-    require('tinydoc-plugin-markdown')({
+    require('megadoc-plugin-markdown')({
       id: 'articles',
       source: [ 'README.md', 'docs/**/*.md' ]
     })
@@ -30,4 +30,4 @@ module.exports = {
 }
 ```
 
-See [tinydoc-plugin-markdown.Config Config]() for the available settings.
+See [megadoc-plugin-markdown.Config Config]() for the available settings.

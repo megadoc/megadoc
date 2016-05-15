@@ -3,9 +3,9 @@ var root = path.resolve(__dirname, '..');
 
 module.exports = function(userConfig) {
   return {
-    name: 'tinydoc-plugin-reference-graph',
+    name: 'megadoc-plugin-reference-graph',
 
-    // This is the only required export for tinydoc to use our plugin.
+    // This is the only required export for megadoc to use our plugin.
     run: function(compiler) {
       var database = [];
 
@@ -24,8 +24,8 @@ module.exports = function(userConfig) {
 
       compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.join(root, 'ui/css/index.less'));
-        compiler.assets.addPluginScript(path.join(root, 'dist/tinydoc-plugin-reference-graph.js'));
-        compiler.assets.addPluginRuntimeConfig('tinydoc-plugin-reference-graph', {
+        compiler.assets.addPluginScript(path.join(root, 'dist/megadoc-plugin-reference-graph.js'));
+        compiler.assets.addPluginRuntimeConfig('megadoc-plugin-reference-graph', {
           database: database
         });
 

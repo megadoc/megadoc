@@ -1,8 +1,8 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('tinydoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
 
-describe("[Integration] tinydoc-plugin-markdown", function() {
+describe("[Integration] megadoc-plugin-markdown", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {
@@ -33,7 +33,7 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
     suite.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
+      assert.equal(stats['megadoc-plugin-markdown:test'].count, 2);
 
       suite.assertFileWasRendered('articles/readme.html', {
         text: 'What buzzes and is not buzzy?'
@@ -64,7 +64,7 @@ describe("[Integration] tinydoc-plugin-markdown", function() {
     suite.run(function(err, stats) {
       if (err) { return done(err); }
 
-      assert.equal(stats['tinydoc-plugin-markdown:test'].count, 2);
+      assert.equal(stats['megadoc-plugin-markdown:test'].count, 2);
 
       suite.assertFileWasRendered('index.html', {
         text: 'What buzzes and is not buzzy?'

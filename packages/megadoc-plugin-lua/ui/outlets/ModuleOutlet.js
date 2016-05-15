@@ -16,7 +16,7 @@ const ModuleOutlet = React.createClass({
   }
 });
 
-tinydoc.outlets.add('Lua::Module', {
+megadoc.outlets.add('Lua::Module', {
   key: 'source',
   component: ModuleOutlet
 });

@@ -6,7 +6,7 @@ const invariant = require('utils/invariant');
  * @typedef {LayoutOverride}
  *
  * A layout override configuration object. This object describes how to render
- * a certain page. By default, tinydoc will compute a preferred layout based on
+ * a certain page. By default, megadoc will compute a preferred layout based on
  * the type of document that is being rendered.
  *
  * @property {Object} match

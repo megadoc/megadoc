@@ -8,7 +8,7 @@
   ],
 
   "globals": {
-    "tinydoc": false,
+    "megadoc": false,
     "subject": false
   },
 

@@ -1,15 +1,15 @@
-var TestUtils = require('tinydoc/lib/TestUtils');
-var tinydocPluginGit = require('../');
+var TestUtils = require('megadoc/lib/TestUtils');
+var megadocPluginGit = require('../');
 var assert = require('chai').assert;
 var path = require('path');
-var b = require('tinydoc-corpus').Types.builders;
+var b = require('megadoc-corpus').Types.builders;
 
-describe('tinydoc-plugin-git', function() {
+describe('megadoc-plugin-git', function() {
   var compiler, plugin;
 
   beforeEach(function() {
     compiler = TestUtils.createCompiler();
-    plugin = tinydocPluginGit({
+    plugin = megadocPluginGit({
       repository: path.resolve(__dirname, '..', '..', '..', '..', '.git')
     });
 

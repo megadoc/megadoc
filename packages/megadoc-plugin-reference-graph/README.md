@@ -1,1 +1,1 @@
-# tinydoc-plugin-reference-graph
+# megadoc-plugin-reference-graph

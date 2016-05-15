@@ -1,1 +1,1 @@
-# tinydoc-plugin-lua
+# megadoc-plugin-lua

@@ -39,7 +39,7 @@ function YardAPIPlugin(userConfig) {
         );
 
         compiler.assets.addPluginScript(
-          path.resolve(__dirname, '..', 'dist', 'tinydoc-plugin-yard-api.js')
+          path.resolve(__dirname, '..', 'dist', 'megadoc-plugin-yard-api.js')
         );
 
         done();

@@ -3,7 +3,7 @@ var defaults = require('./config');
 var path = require('path');
 var merge = require('lodash').merge;
 var root = path.resolve(__dirname, '..');
-var b = require('tinydoc-corpus').builders;
+var b = require('megadoc-corpus').builders;
 
 module.exports = function LuaPlugin(userConfig) {
   var config = merge({}, defaults, userConfig);
@@ -30,7 +30,7 @@ module.exports = function LuaPlugin(userConfig) {
 
         database = b.namespace({
           id: config.routeName,
-          name: 'tinydoc-plugin-lua',
+          name: 'megadoc-plugin-lua',
           title: config.title,
           config: config,
           meta: {
@@ -75,7 +75,7 @@ module.exports = function LuaPlugin(userConfig) {
 
       compiler.on('write', function(done) {
         compiler.assets.addStyleSheet(path.join(root, 'ui', 'css', 'index.less'));
-        compiler.assets.addPluginScript(path.join(root, 'dist', 'tinydoc-plugin-lua.js'));
+        compiler.assets.addPluginScript(path.join(root, 'dist', 'megadoc-plugin-lua.js'));
         done();
       });
 

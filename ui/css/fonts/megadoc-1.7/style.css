@@ -1,16 +1,16 @@
 @font-face {
-	font-family: 'tinydoc';
-	src:url('fonts/tinydoc.eot?pirwll');
-	src:url('fonts/tinydoc.eot?pirwll#iefix') format('embedded-opentype'),
-		url('fonts/tinydoc.ttf?pirwll') format('truetype'),
-		url('fonts/tinydoc.woff?pirwll') format('woff'),
-		url('fonts/tinydoc.svg?pirwll#tinydoc') format('svg');
+	font-family: 'megadoc';
+	src:url('fonts/megadoc.eot?pirwll');
+	src:url('fonts/megadoc.eot?pirwll#iefix') format('embedded-opentype'),
+		url('fonts/megadoc.ttf?pirwll') format('truetype'),
+		url('fonts/megadoc.woff?pirwll') format('woff'),
+		url('fonts/megadoc.svg?pirwll#megadoc') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
 .icon {
-	font-family: 'tinydoc';
+	font-family: 'megadoc';
 	speak: none;
 	font-style: normal;
 	font-weight: normal;

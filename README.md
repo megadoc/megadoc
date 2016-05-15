@@ -1,8 +1,8 @@
-# tinydoc
+# megadoc
 
-[![Build Status](https://travis-ci.org/tinydoc/tinydoc.svg)](https://travis-ci.org/tinydoc/tinydoc) [![Coverage Status](https://coveralls.io/repos/github/tinydoc/tinydoc/badge.svg?branch=master)](https://coveralls.io/github/tinydoc/tinydoc?branch=master)
+[![Build Status](https://travis-ci.org/megadoc/megadoc.svg)](https://travis-ci.org/megadoc/megadoc) [![Coverage Status](https://coveralls.io/repos/github/megadoc/megadoc/badge.svg?branch=master)](https://coveralls.io/github/megadoc/megadoc?branch=master)
 
-tinydoc is a documentation generator that is able to scan, parse, and present documentation found in different sources in a coherent UI. Example sources are JavaScript modules, Markdown articles, and Rails APIs.
+megadoc is a documentation generator that is able to scan, parse, and present documentation found in different sources in a coherent UI. Example sources are JavaScript modules, Markdown articles, and Rails APIs.
 
 ## Motivation
 
@@ -12,17 +12,17 @@ tinydoc is a documentation generator that is able to scan, parse, and present do
 
 ## Installation
 
-tinydoc requires [Node.js](http://nodejs.org) to run and you can get it through NPM by running:
+megadoc requires [Node.js](http://nodejs.org) to run and you can get it through NPM by running:
 
 ```
-npm install -g tinydoc
+npm install -g megadoc
 ```
 
-Now run `tinydoc --help` for more information.
+Now run `megadoc --help` for more information.
 
 ## Configuration
 
-tinydoc will look for a file called `tinydoc.conf.js` in the CWD, or use the file specified using the `--config` command-line argument. The file is a regular JavaScript module. For example:
+megadoc will look for a file called `megadoc.conf.js` in the CWD, or use the file specified using the `--config` command-line argument. The file is a regular JavaScript module. For example:
 
 ```javascript
 module.exports = {
@@ -34,18 +34,18 @@ For the actual configuration parameters, please refer to each plugin's README fi
 
 ## API Docs
 
-You can find them here: http://tinydoc.netlify.com/.
+You can find them here: http://megadoc.netlify.com/.
 
 ## Extending
 
-tinydoc accepts plugins that can hook into the compilation of the docs. The compilation is composed of several phases:
+megadoc accepts plugins that can hook into the compilation of the docs. The compilation is composed of several phases:
 
 1. the scanning phase: sources are scraped and a _database_ is generated
 2. the indexing phase: a registry of all linkable entities is generated
 3. the rendering phase: all non-HTML content is converted to HTML and links are resolved 
 4. the writing phase: the database, now containing rendered content, is exported to some file which the UI can use to render its stuff
 
-The UI of tinydoc is written in [React](https://facebook.github.io/react/) and is also extensible through different means: outlets and full-fledged plugins.
+The UI of megadoc is written in [React](https://facebook.github.io/react/) and is also extensible through different means: outlets and full-fledged plugins.
 
 _TODO_: UI plugin guide.
 

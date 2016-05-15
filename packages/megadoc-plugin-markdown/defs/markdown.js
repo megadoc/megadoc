@@ -1,5 +1,5 @@
-var def = require('tinydoc-corpus').Types.def;
-var t = require('tinydoc-corpus').Types.types;
+var def = require('megadoc-corpus').Types.def;
+var t = require('megadoc-corpus').Types.types;
 
 def("MarkdownDocument", {
   base: "Document",

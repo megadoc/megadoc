@@ -3,7 +3,7 @@ var fs = require('fs');
 var _ = require('lodash');
 var assign = _.assign;
 var findWhere = _.findWhere;
-var Docstring = require('tinydoc-docstring');
+var Docstring = require('megadoc-docstring');
 var parseNode = require('./parseNode');
 
 var docstringParser = new Docstring.Parser();
