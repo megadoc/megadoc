@@ -12,16 +12,13 @@ function MarkdownPlugin(userConfig) {
     name: 'tinydoc-plugin-markdown',
 
     run: function(compiler) {
-      var documents;
       var database;
 
       compiler.on('scan', function(done) {
-        scan(config, compiler.utils, function(err, _documents) {
+        scan(config, compiler.utils, function(err, documents) {
           if (err) {
             return done(err);
           }
-
-          documents = _documents;
 
           database = b.namespace({
             id: config.id,

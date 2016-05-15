@@ -80,6 +80,9 @@ function Corpus() {
   };
 
   exports.add = add;
+  exports.alias = function(uid, alias) {
+    nodes[alias] = nodes[uid];
+  };
 
   exports.toJSON = function() {
     return Object.keys(nodes).reduce(function(map, uid) {

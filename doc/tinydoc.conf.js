@@ -11,6 +11,14 @@ var config = {
   showSettingsLinkInBanner: false,
   tooltipPreviews: false,
 
+  alias: {
+    'md__tinydoc-plugin-markdown/readme': 'tinydoc-plugin-markdown',
+    'md__tinydoc-plugin-js/readme': 'tinydoc-plugin-js',
+    'md__tinydoc-plugin-git/readme': 'tinydoc-plugin-git',
+    'md__tinydoc-plugin-lua/readme': 'tinydoc-plugin-lua',
+    'md__tinydoc-plugin-yard-api/readme': 'tinydoc-plugin-yard-api',
+  },
+
   layoutOptions: {
     rewrite: {
       '/articles/readme.html': '/index.html',
@@ -49,11 +57,6 @@ var config = {
           {
             text: 'Lua',
             href: '/plugins/tinydoc-plugin-lua/readme.html',
-          },
-
-          {
-            text: 'Static',
-            href: '/plugins/tinydoc-plugin-static/readme.html',
           },
 
           {
@@ -175,13 +178,10 @@ config.plugins = [
     id: 'core-js',
     url: '/dev/api',
     title: 'API',
-    // navigationLabel: 'API',
 
     source: [
       'lib/**/*.js',
       'ui/**/*.js',
-      // 'packages/(?!tinydoc)/lib/**/*.js',
-      // 'packages/(?!tinydoc)/ui/**/*.js',
     ],
 
     exclude: [
@@ -257,18 +257,20 @@ config.plugins = [
   'tinydoc-plugin-markdown',
   'tinydoc-plugin-react',
   'tinydoc-plugin-reference-graph',
-  'tinydoc-plugin-static',
   'tinydoc-plugin-yard-api',
   'tinydoc-theme-gitbooks',
   'tinydoc-theme-qt',
 ].forEach(function(pluginName) {
   config.plugins.push(require('tinydoc-plugin-js')({
-    id: 'js-plugin-' + pluginName,
-    url: '/plugins/' + pluginName,
+    id: 'js__' + pluginName,
+    url: '/plugins',
     title: pluginName,
     useDirAsNamespace: false,
     inferModuleIdFromFileName: true,
-
+    namespaceDirMap: {
+      'lib': pluginName,
+      'ui': pluginName,
+    },
     source: [
       'packages/' + pluginName + '/lib/**/*.js',
       'packages/' + pluginName + '/ui/**/*.js',
@@ -280,7 +282,8 @@ config.plugins = [
   config.plugins.push(require('tinydoc-plugin-markdown')({
     id: 'md__' + pluginName,
     title: pluginName,
-    source: 'packages/' + pluginName + '/README.md',
+    source: 'packages/' + pluginName + '/**/*.md',
+    exclude: /node_modules/,
     baseURL: '/plugins/' + pluginName,
     // outlet: 'CJS::Landing',
     // anchorableHeadings: false
