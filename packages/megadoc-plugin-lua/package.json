@@ -20,9 +20,9 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "luaparse": "^0.2.0",
+    "luaparse": "0.2.0",
     "megadoc-docstring": "1.0.x",
-    "lodash": "^3.10.1"
+    "lodash": "3.10.1"
   },
 
   "peerDependencies": {
