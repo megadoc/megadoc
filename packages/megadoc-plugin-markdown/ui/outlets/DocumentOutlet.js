@@ -7,10 +7,14 @@ megadoc.outlets.add('Markdown::Document', {
 
   component: React.createClass({
     propTypes: {
-      namespaceNode: object,
+      documentNode: object,
     },
 
     render() {
+      if (!this.props.documentNode || !this.props.documentNode.properties) {
+        return null;
+      }
+
       return (
         <Article {...this.props} />
       );

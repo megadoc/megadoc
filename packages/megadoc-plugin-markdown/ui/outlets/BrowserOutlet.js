@@ -1,5 +1,5 @@
 const React = require('react');
-const ClassBrowser = require('../components/ClassBrowser')
+const Browser = require('../components/Browser')
 const { object } = React.PropTypes;
 
 megadoc.outlets.add('Markdown::Browser', {
@@ -12,7 +12,7 @@ megadoc.outlets.add('Markdown::Browser', {
 
     render() {
       return (
-        <ClassBrowser {...this.props} />
+        <Browser {...this.props} />
       );
     }
   })
