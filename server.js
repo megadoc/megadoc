@@ -47,7 +47,7 @@ function start(host, port, done) {
     ].concat(generatePluginEntry(pluginNames).concat(
       process.argv.slice(2).map(function(x) { return path.resolve(x)}))
     ).concat(
-      window.CONFIG.stylesheet || []
+      getStyleSheets()
     ),
   };
 
@@ -149,4 +149,12 @@ function getStyleOverrides() {
 
     return map;
   }, {});
+}
+
+function getStyleSheets() {
+  if (!window.CONFIG.stylesheet) {
+    return [];
+  }
+
+  return path.resolve(window.CONFIG.assetRoot, window.CONFIG.stylesheet);
 }
