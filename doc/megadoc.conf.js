@@ -14,6 +14,10 @@ var config = {
     indexByFilepath: true,
   },
 
+  assets: [
+    { 'packages/megadoc-corpus/doc/corpus-resolver.png': 'images/corpus-resolver.png' },
+  ],
+
   alias: {
     'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
     'md__megadoc-plugin-js/readme': 'megadoc-plugin-js',
