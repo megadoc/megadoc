@@ -6,8 +6,8 @@ megadoc.outlets.add('CJS::Module', {
   key: 'CJS::Module',
   component: React.createClass({
     propTypes: {
-      documentNode: object,
-      namespaceNode: object,
+      documentNode: object.isRequired,
+      namespaceNode: object.isRequired,
     },
 
     render() {

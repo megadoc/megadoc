@@ -25,9 +25,8 @@ var ClassBrowser = React.createClass({
   ],
 
   propTypes: {
-    activeModuleId: string,
-    activeEntityId: string,
     withControls: bool,
+    documentNode: object,
     namespaceNode: object,
   },
 
@@ -39,8 +38,9 @@ var ClassBrowser = React.createClass({
 
   shouldComponentUpdate: function(nextProps) {
     return (
-      nextProps.activeModuleId !== this.props.activeModuleId ||
-      nextProps.activeEntityId !== this.props.activeEntityId
+      nextProps.documentEntityNode !== this.props.documentEntityNode ||
+      nextProps.documentNode !== this.props.documentNode ||
+      nextProps.namespaceNode !== this.props.namespaceNode
     );
   },
 
@@ -121,7 +121,7 @@ var ClassBrowser = React.createClass({
   renderModule(docNode) {
     const doc = docNode.properties;
     const { id } = doc;
-    const isActive = this.props.activeModuleId === docNode.uid;
+    const isActive = this.props.documentNode === docNode;
     const className = classSet({
       'class-browser__entry': true,
       'class-browser__entry--active': isActive

@@ -18,7 +18,7 @@ module.exports = function reduceDocuments(options) {
     title: options.namespaceTitle,
     documents: [],
     config: options.config,
-    indexFields: [ 'aliases' ],
+    indexFields: [ '$uid', '$filePath', 'aliases' ],
     meta: {
       href: options.baseURL,
       outlets: [
