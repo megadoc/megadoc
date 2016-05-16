@@ -12,8 +12,6 @@ megadoc.outlets.add('CJS::ClassBrowser', {
     },
 
     render() {
-      const { documentNode } = this.props;
-
       return (
         <div>
           <ClassBrowser

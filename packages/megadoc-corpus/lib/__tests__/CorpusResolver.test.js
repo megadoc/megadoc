@@ -110,6 +110,7 @@ describe('CorpusResolver', function() {
     { from: "JS/Core.X#add"    , to: "Y@name"          , res: "JS/Core.Y@name" },
     { from: "JS/Core.X#add"    , to: "Core.Y@name"     , res: "JS/Core.Y@name" },
     { from: "JS/Core.X#add"    , to: "JS/Core.Y@name"  , res: "JS/Core.Y@name" },
+    { from: "JS/Core.X"        , to: "@name"           , res: "JS/Core.X@name" },
     { from: "JS/Core.Y"        , to: "X"               , res: "JS/Core.X" },
     { from: "JS/Core.Y"        , to: "#add"            , res: null },
     { from: "JS/Core.Y"        , to: "X#add"           , res: "JS/Core.X#add" },

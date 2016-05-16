@@ -8,25 +8,14 @@ const { findWhere, sortBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('../constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
-const JumperMixin = require('mixins/JumperMixin');
 const orderAwareSort = require('../utils/orderAwareSort');
-const { object, bool, string, } = React.PropTypes;
+const { object, bool, } = React.PropTypes;
 
 var ClassBrowser = React.createClass({
-  mixins: [
-    JumperMixin(function(props) {
-      if (props.activeModuleId) {
-        return this.refs[props.activeModuleId];
-      }
-      else {
-        return false;
-      }
-    }, -50, '.resizable-panel__content')
-  ],
-
   propTypes: {
     withControls: bool,
     documentNode: object,
+    documentEntityNode: object,
     namespaceNode: object,
   },
 
@@ -109,7 +98,7 @@ var ClassBrowser = React.createClass({
           </h3>
         )}
 
-        {hasSelfDocument && this.props.activeModuleId === ns.id && (
+        {hasSelfDocument && this.props.documentNode === ns && (
           this.renderModuleEntities(ns.entities)
         )}
 

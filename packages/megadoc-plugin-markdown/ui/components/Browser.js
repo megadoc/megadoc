@@ -1,12 +1,10 @@
 const React = require("react");
 const Link = require('components/Link');
-const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
 const Storage = require('core/Storage');
 const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const { ROOT_FOLDER_ID } = require('constants');
 const isItemHot = require('utils/isItemHot');
-const JumperMixin = require('mixins/JumperMixin');
 const ArticleTOC = require('./ArticleTOC');
 // const Database = require('../Database');
 const { object } = React.PropTypes;

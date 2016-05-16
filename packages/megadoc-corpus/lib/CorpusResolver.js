@@ -180,10 +180,14 @@ function resolveByFilePath(anchor) {
 function createListOfFriendNodes(node) {
   var map = {};
 
-  map[node.parentNode.uid] = true;
+  map[node.uid] = true;
 
-  if (isLeaf(node)) {
-    map[node.parentNode.parentNode.uid] = true;
+  if (node.parentNode) {
+    map[node.parentNode.uid] = true;
+
+    if (isLeaf(node) && node.parentNode.parentNode) {
+      map[node.parentNode.parentNode.uid] = true;
+    }
   }
 
   return map;

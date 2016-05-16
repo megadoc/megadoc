@@ -1,4 +1,3 @@
-const Database = require('./Database');
 const Storage = require('core/Storage');
 const K = require('constants');
 
@@ -8,7 +7,7 @@ megadoc.outlets.define('Markdown::Document');
 megadoc.outlets.define('Markdown::DocumentTOC');
 megadoc.outlets.define('Markdown::Browser');
 
-megadoc.use('megadoc-plugin-markdown', function MarkdownPlugin(api, configs) {
+megadoc.use('megadoc-plugin-markdown', function MarkdownPlugin() {
   require('./outlets/BrowserOutlet');
   require('./outlets/DocumentOutlet');
   require('./outlets/DocumentTOCOutlet');
