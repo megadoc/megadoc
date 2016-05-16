@@ -101,13 +101,23 @@ describe('CorpusResolver', function() {
     { ctx: "JS/Core.Y"        , link: "X"            , res: "JS/Core.X" },
     { ctx: "JS/Core.Y"        , link: "#add"         , res: null },
     { ctx: "JS/Core.Y"        , link: "X#add"        , res: "JS/Core.X#add" },
-    // { ctx: "JS/Core.Y"        , link: "X.js"         , res: null },
-    // { ctx: "JS/Core.Y"        , link: "./X.js"       , res: "JS/Core.X" },
-    // { ctx: "JS/Core.Y"        , link: "../X.js"      , res: "JS/X" },
+    { ctx: "JS/Core.Y"        , link: "X.js"         , res: null },
     { ctx: "JS/Z"             , link: "X"            , res: "JS/X" },
     { ctx: "MD/X"             , link: "X"            , res: "MD/X" },
     { ctx: "MD/X"             , link: "Core.X"       , res: "JS/Core.X" },
     { ctx: "MD/Y"             , link: "X"            , res: "MD/X" },
+
+    // filepath resolving (relative to contextNode's filepath):
+    { ctx: "JS/Core.Y"        , link: "./X.js"       , res: "JS/Core.X" },
+    { ctx: "JS/Core.Y"        , link: "../X.js"      , res: "JS/X" },
+    { ctx: "JS/Core.Y"        , link: "../../X.js"   , res: null },
+
+    // resolving entities within a document by a filepath:
+    { ctx: 'JS/Core.Y'        , link: './X.js#add'   , res: 'JS/Core.X#add' },
+    { ctx: 'JS/Core.Y'        , link: '../X.js#add'   , res: null },
+
+    // absolute filepath resolving (relative to assetRoot):
+    { ctx: "JS/Core.Y"        , link: "/js/lib/core/X.js"   , res: 'JS/Core.X' },
   ].forEach(function(spec) {
     var fn = spec.only ? it.only : it;
 

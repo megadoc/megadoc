@@ -13,7 +13,8 @@ function Corpus() {
   var nodes = {};
   var corpusNode = b.corpus({
     meta: {},
-    namespaces: []
+    namespaces: [],
+    indexFields: [ '$uid', '$filePath' ],
   });
 
   var visitors = {};
@@ -65,10 +66,6 @@ function Corpus() {
     });
   };
 
-  exports.getRootNode = function() {
-    return corpusNode;
-  };
-
   /**
    * @private
    */
@@ -80,8 +77,18 @@ function Corpus() {
   };
 
   exports.add = add;
+
+  /**
+   * Define an alias for a document.
+   *
+   * @param {String} uid
+   *        The UID of the node to alias.
+   *
+   * @param {String} alias
+   *        The alias to use (should be fully-qualified.)
+   */
   exports.alias = function(uid, alias) {
-    nodes[alias] = nodes[uid];
+    nodes[uid].indices[alias] = 1;
   };
 
   exports.toJSON = function() {

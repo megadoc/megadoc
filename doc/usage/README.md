@@ -77,8 +77,8 @@ For now, we'll introduce ourselves to the first type of plugins - ones
 that let us get some source files scanned and rendered. Choose from one of
 the following guides based on what kind of content you have:
 
-- [megadoc-plugin-markdown Markdown documents]()
-- [megadoc-plugin-javascript JavaScript source files]()
-- [megadoc-plugin-yard-api Rails APIs]()
-- [megadoc-plugin-lua Lua source files]()
+- [/packages/megadoc-plugin-markdown/README.md Markdown documents]()
+- [/packages/megadoc-plugin-js/README.md JavaScript source files]()
+- [/packages/megadoc-plugin-yard-api/README.md Rails APIs]()
+- [/packages/megadoc-plugin-lua/README.md Lua source files]()
 

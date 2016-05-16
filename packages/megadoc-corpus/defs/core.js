@@ -16,6 +16,7 @@ var t = CorpusTypes.builtInTypes;
 def("Corpus", {
   fields: {
     meta: t.object,
+    indexFields: array(t.string),
     namespaces: array("Namespace")
   }
 });
@@ -48,6 +49,7 @@ def("Node", {
     summary: or(t.string, null),
     filePath: or(t.string, null),
     meta: or(t.object, null),
+    indexFields: or(array(t.string), null),
     properties: or(array("Property"), t.object, null),
     parentNode: or("Namespace", "Node")
   }

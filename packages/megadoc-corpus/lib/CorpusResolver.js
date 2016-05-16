@@ -1,6 +1,10 @@
 var assert = require('assert');
+var path = require('path')
+var RE_MATCH_ENTITY_IN_FILEPATH = /\.\w+(\b.+)$/;
 
-module.exports = function resolve(anchor, options, _visited) {
+module.exports = resolve;
+
+function resolve(anchor, options, _visited) {
   assert(anchor && typeof anchor.text === 'string',
     "ArgumentError: resolve request requires a 'text' term to resolve.");
 
@@ -16,6 +20,10 @@ module.exports = function resolve(anchor, options, _visited) {
 
   trace("Context:", contextNode.uid);
   trace("Term:", term);
+
+  if (term.match(/^(\.\.?\/)+/)) {
+    return resolveByFilePath(anchor);
+  }
 
   // descend first
   if (!isLeaf(contextNode)) {
@@ -95,7 +103,7 @@ module.exports = function resolve(anchor, options, _visited) {
 
   function matches(node, dontLookForPrivateIndices) {
     if (dontLookForPrivateIndices) {
-      return node.uid === term || node.indices[term] > 1;
+      return node.uid === term || node.indices[term] > 0;
     }
     else {
       return node.uid === term || term in node.indices;
@@ -115,3 +123,29 @@ function isLeaf(node) {
   return node.type === 'DocumentEntity';
 }
 
+
+function resolveByFilePath(anchor) {
+  var filePath = anchor.text;
+  var contextNode = anchor.contextNode;
+  var targetPath;
+  var entityId;
+
+  if (path.extname(filePath).match(RE_MATCH_ENTITY_IN_FILEPATH)) {
+    entityId = RegExp.$1;
+    filePath = filePath.slice(0, -1 * entityId.length);
+  }
+
+  targetPath = path.join(path.dirname(contextNode.filePath), filePath);
+
+  var node = resolve({ text: targetPath, contextNode: anchor.contextNode });
+
+  if (entityId && node) {
+    return resolve({
+      text: node.uid + entityId,
+      contextNode: node
+    });
+  }
+  else {
+    return node;
+  }
+}
