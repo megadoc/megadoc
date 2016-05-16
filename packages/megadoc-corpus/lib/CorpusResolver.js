@@ -4,7 +4,7 @@ var RE_MATCH_ENTITY_IN_FILEPATH = /\.\w+(\b.+)$/;
 
 module.exports = resolve;
 
-function resolve(anchor, options, _visited) {
+function resolve(anchor, options, _state) {
   assert(anchor && typeof anchor.text === 'string',
     "ArgumentError: resolve request requires a 'text' term to resolve.");
 
@@ -15,7 +15,25 @@ function resolve(anchor, options, _visited) {
   var term = anchor.text;
   var contextNode = anchor.contextNode;
   var parentNode = contextNode.parentNode;
-  var visited = _visited || {};
+  var state = _state || {
+    visited: {},
+    // friend nodes are ones we can access by their private indices, which
+    // basically are our direct siblings if we're resolving from a non-leaf
+    // node, otherwise they'd be the parent and the grandparent.
+    //
+    // | -- NS1
+    // |    |-- X
+    // |    |-- Y
+    // |    |-- Core
+    // |        |-- X         <- friends: [Core], can access Core.Y using "Y"
+    // |        |   |-- @id   <- friends: [X, Core], can access Core.X#add using "#add"
+    // |        |   |-- #add
+    // |        |-- Y         <- friends: [Core], can access Core.X using "X"
+    // |        |   |-- @id   <- friends: [Y, Core], can NOT access Core.X#add using "#add"!!!
+    // |    |-- Z             <- friends: [NS1]
+    friends: createListOfFriendNodes(contextNode)
+  };
+
   var trace = options && options.trace ? console.log.bind(console) : Function.prototype;
 
   trace("Context:", contextNode.uid);
@@ -27,7 +45,7 @@ function resolve(anchor, options, _visited) {
 
   // descend first
   if (!isLeaf(contextNode)) {
-    targetNode = searchInBranch(contextNode);
+    targetNode = searchInBranch(contextNode, isFriend(contextNode));
   }
 
   // go up the tree one level, unless we're at the Corpus level
@@ -35,21 +53,21 @@ function resolve(anchor, options, _visited) {
     trace("Found nothing at this level, looking for a document in my ancestor...");
     trace(Array(80).join('-'))
 
-    return resolve({ contextNode: parentNode, text: term }, options, visited);
+    return resolve({ contextNode: parentNode, text: term }, options, state);
   }
 
   return targetNode;
 
-  function searchInBranch(node) {
+  function searchInBranch(node, inFriendBranch) {
     var result;
-    trace("Searching '%s'...", node.uid)
+    trace("Searching '%s' (relative? %s, %s)...", node.uid, inFriendBranch, JSON.stringify(node.indices))
 
     if (hasVisited(node)) {
       trace("- Skipping '%s' - already seen before!", node.uid);
       return;
     }
 
-    if (node.entities) { // Document
+    if (!result && node.entities) { // Document
       node.entities.some(visitLeafNode);
     }
 
@@ -69,11 +87,11 @@ function resolve(anchor, options, _visited) {
 
       trace("- Checking '%s'", childNode.uid);
 
-      if (matches(childNode)) {
+      if (matches(childNode, inFriendBranch)) {
         result = childNode;
       }
       else {
-        result = searchInBranch(childNode);
+        result = searchInBranch(childNode, isFriend(childNode));
       }
 
       markVisited(childNode);
@@ -91,7 +109,7 @@ function resolve(anchor, options, _visited) {
 
       markVisited(childNode);
 
-      if (matches(childNode, childNode.parentNode !== contextNode)) {
+      if (matches(childNode, inFriendBranch)) {
         result = childNode;
       }
 
@@ -101,28 +119,37 @@ function resolve(anchor, options, _visited) {
     return result;
   }
 
-  function matches(node, dontLookForPrivateIndices) {
-    if (dontLookForPrivateIndices) {
-      return node.uid === term || node.indices[term] > 0;
+  function matches(n, lookInPrivateIndices) {
+    if (n.uid === term) {
+      return true;
+    }
+    else if (!n.indices) {
+      return false;
+    }
+    else if (lookInPrivateIndices) {
+      return term in n.indices;
     }
     else {
-      return node.uid === term || term in node.indices;
+      return n.indices[term] > 0;
     }
   }
 
   function markVisited(node) {
-    visited[node.uid] = true;
+    state.visited[node.uid] = true;
   }
 
   function hasVisited(node) {
-    return node.uid in visited;
+    return node.uid in state.visited;
+  }
+
+  function isFriend(node) {
+    return node.uid in state.friends;
   }
 };
 
 function isLeaf(node) {
   return node.type === 'DocumentEntity';
 }
-
 
 function resolveByFilePath(anchor) {
   var filePath = anchor.text;
@@ -148,4 +175,16 @@ function resolveByFilePath(anchor) {
   else {
     return node;
   }
+}
+
+function createListOfFriendNodes(node) {
+  var map = {};
+
+  map[node.parentNode.uid] = true;
+
+  if (isLeaf(node)) {
+    map[node.parentNode.parentNode.uid] = true;
+  }
+
+  return map;
 }

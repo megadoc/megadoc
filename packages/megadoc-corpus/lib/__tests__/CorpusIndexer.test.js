@@ -50,7 +50,7 @@ describe('CorpusIndexer', function() {
 
   it('indexes on @id', function() {
     assert.include(Subject(corpus.get('MD/X')), {
-      'X': 0
+      'X': 1
     });
   });
 

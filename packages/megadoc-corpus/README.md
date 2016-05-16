@@ -1,29 +1,85 @@
 # megadoc-corpus
 
-The corpus is megadoc's module for indexing documents. The corpus has enough 
-semantics to ensure a correct and intuitive approach to resolving links, among
-other things like the inference of dependency and co-relation graphs between
-documents and entities.
+The corpus is megadoc's model for indexing documents. It is a database (or, a 
+graph) of _abstract_ representations of documentation.
 
-Most of megadoc's features like link-resolving, the Spotlight, and the Preview 
-Tooltips rely on the corpus directly or indirectly - so as an upstream 
-developer, utilizing the corpus will pay off greatly.
+The corpus has enough semantics to provide a powerful and intuitive 
+implementation for resolving links, among other things like plotting
+dependency and co-relation graphs between documents.
+
+Megadoc's HTML serializer is entirely powered by the corpus and exposes 
+[Core.UI.CorpusAPI an API]() for interacting with it - so as an upstream 
+developer, learning how to use and utilize the corpus will pay off greatly.
+
+## Design
+
+The corpus is formed initially as a tree of nodes, each representing either a
+document or an entity inside a document, grouped by what are called _namespace_
+nodes.
+
+What a document or document entity is is context-specific and, in practice, 
+irrelevant to the corpus - all it cares about is an abstract representation of 
+those documents that allows us to treat the database in a generic manner.
+
+The distinction in the codebase and this documentation between documents or 
+document entities themselves and their corpus representation is made by the 
+use of the word "node". So, when we're talking about a node, it would mean the
+abstract node in the corpus and not the underlying document. The actual 
+documents and document entities themselves referred to as, simply, a document, 
+a document entity, or an entity for brevity.
+
+### The Abstract Document Tree (ADT)
+
+Each node in the corpus must have an id and a type. Types are pre-defined and
+may be one of `Namespace`, `Document`, or `DocumentEntity`.
+
+At the root of the corpus, we have a singleton node of type `Corpus` that
+houses a set of `Namespace` nodes. Each plugin that registers with the corpus
+has to define its own unique `Namespace` node and nest its documents underneath
+it.
+
+A `Namespace` node is the direct owner of a plugin's `Document` nodes. However,
+from that point down, the hierarchy is flexible in that a `Document` node may
+contain either `Document` nodes as children (namespacing at the plugin level)
+or leaf `DocumentEntity` nodes.
+
+This architecture is flexible enough to support a wide array of documentation 
+schemes; most kinds of textual documentation, public API references, library 
+documentation, etc., can be structured within this model.
+
+Each node added to the corpus is stamped with a `uid` - an identifier that is
+guaranteed to be unique among all nodes and can always be used to reference 
+the exact document, although it's usually not human-friendly. To address that,
+we get to indexing...
 
 ## Indexing
 
-The corpus performs a depth-first search in the AST to resolve links to 
-documents. The parameters for the search are the term, and the _context node_.
+A lot of care has gone into making the algorithm and heuristics behind 
+resolving links to documents provide for an _intuitive_ and natural experience 
+for the author. The effect it strives to achieve is that "It Just Works". For 
+this reason, the implementation is heavily influenced by the node from which a 
+link is being made - the _context node_.
 
-A lot of care has gone into making the algorithm support an _intuitive_ 
-interface for linking to documents to make authoring a more pleasant 
-experience. The effect we're trying to achieve is that "It Just Works". This 
-is why the context node plays a great role in determining how a link is 
-resolved.
+For every node added to the corpus, a list of _indices_ is built. An index
+represents a **term that can be used to link to a node** - but only from a 
+specific context. Some indices are _private_, a semantic for indicating that 
+the term may only be used by the document itself (i.e. when referencing its 
+entities), entities amongst each other, and _friends_ which we'll touch upon
+later.
+
+The indices generated for a node are customizable. We cover the process in
+great detail over in the [/doc/dev/using-the-corpus.md#tuning-the-indexer corpus usage guide]().
+
+### The resolver
+
+The corpus resolver performs a depth-first search in the ADT to resolve the 
+node that is being linked to. The parameters needed for resolving are the 
+term, and the _context node_.
 
 ### Constraints
 
 - Document identifiers MUST NOT begin with any of the following characters:
-  1. `.` (a dot)
+  1. `./` (a dot followed by a forward slash)
   2. `/` (a forward slash)
 
 ### Private contextual resolving
@@ -95,21 +151,50 @@ MD/X             | X            | MD/X
 MD/X             | Core.X       | JS/Core.X
 MD/Y             | X            | MD/X
 
-## The AST
+Here's a visual example (although it does not fully conform to the table
+above):
 
-At the root of the corpus, we have a singleton node of type `Corpus` that
-houses a set of `Namespace` nodes. Each plugin that registers with the corpus
-has to define its own unique `Namespace` node and nest its documents underneath
-it.
+![A visualization of the table above](/images/corpus-resolver.png)
 
-A `Namespace` node is the direct owner of a plugin's `Document` nodes. However,
-from that point down, the hierarchy is flexible in that a `Document` node may
-contain either `Document` nodes as children (namespacing at the plugin level)
-or leaf `DocumentEntity` nodes.
+### Friend nodes
 
-This architecture is flexible enough to support a wide array of documentation 
-schemes; most kinds of textual documentation, public API references, library 
-documentation, etc., can be structured within this model.
+When resolving an index from a certain context node, we will consider the 
+indices in a binary fashion: either indices that are private or public. Private
+indices are ones that are semantically too specific to be linked to outside the
+scope they were defined in; in our example above, `JS/Core.X@id` would have
+a private index of `@id` which would not make much sense once we're outside of
+`JS/Core.X`.
+
+However, this rule is broken in one case, and is modeled as a friendship 
+between nodes. Nodes that are considered "friends" can peek into each others'
+private indices but _not_ their entity indices. The reason for this will be
+explained after we look at the following table:
+
+```
+| -- JS
+|    |-- X
+|    |-- Y
+|    |-- Core
+|        |-- X         <- friends: [Core], can access Core.Y using "Y"
+|        |   |-- @id   <- friends: [X, Core], can access Core.X#add using "#add"
+|        |   |-- #add
+|        |-- Y         <- friends: [Core], can access Core.X using "X"
+|        |   |-- @name <- friends: [Y, Core], can NOT access Core.X#add using "#add"!!!
+|    |-- Z             <- friends: [NS1]
+```
+
+It so happens that when you're authoring docs in a context like the `Core.X` 
+document above, you would naturally want to link to other related documents by
+their "short names", which to the corpus are private indices. For this reason,
+`Core.X` is considered a friend of Core.Y and may call it by its "short name",
+`Y`.
+
+In order to support this style of linking, but still protect from _invalid_ 
+links, we prohibit nodes from accessing their friends' entity indices. So,
+in `Core.X`, you may not link to `@name` which resides in `Y` - only using
+`Y@name`.
+
+## ADT Types
 
 ```javascript
 def("Corpus", {
@@ -225,6 +310,4 @@ A sample AST for the example above:
 
 ## TODO
 
-- resolving by filepath
-- customizing the index fields (e.g. for JS's @alias tag support)
 - resolved link title should be tuned based on the contextNode's scope - private scopes should not use the FQN-index and so on

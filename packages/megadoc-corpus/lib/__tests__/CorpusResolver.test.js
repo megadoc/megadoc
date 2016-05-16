@@ -1,15 +1,16 @@
 require('../../');
 
 var Subject = require("../Corpus");
+var resolve = require("../CorpusResolver");
 var b = require('../CorpusTypes').builders;
 var assert = require('chai').assert;
 
 describe('CorpusResolver', function() {
-  var subject;
+  var corpus;
 
   beforeEach(function() {
-    subject = Subject();
-    subject.add(
+    corpus = Subject();
+    corpus.add(
       b.namespace({
         id: 'MD',
         name: 'test-plugin',
@@ -26,17 +27,28 @@ describe('CorpusResolver', function() {
             filePath: '/doc/articles/Y.md',
             entities: [],
           }),
-
-          b.document({
-            id: 'Z',
-            filePath: '/doc/articles/Z.md',
-            entities: [],
-          }),
         ]
       })
     );
 
-    subject.add(
+    corpus.add(
+      b.namespace({
+        id: 'JS_UI',
+        name: 'test-plugin',
+        documents: [
+          b.document({
+            id: 'UI',
+            documents: [
+              b.document({
+                id: 'Z'
+              })
+            ]
+          })
+        ]
+      })
+    );
+
+    corpus.add(
       b.namespace({
         id: 'JS',
         name: 'test-plugin',
@@ -91,64 +103,55 @@ describe('CorpusResolver', function() {
   });
 
   [
-    { ctx: "JS/Core.X@name"     , link: "X"               , res: "JS/Core.X" },
-    { ctx: "JS/Core.X@name"     , link: "JS/X"            , res: "JS/X" },
-    { ctx: "JS/Core.X@name"     , link: "MD/X"            , res: "MD/X" },
-    { ctx: "JS/Core.X#add"      , link: "@name"           , res: "JS/Core.X@name" },
-    { ctx: "JS/Core.X#add"      , link: "Y@name"          , res: "JS/Core.Y@name" },
-    { ctx: "JS/Core.X#add"      , link: "Core.Y@name"     , res: "JS/Core.Y@name" },
-    { ctx: "JS/Core.X#add"      , link: "JS/Core.Y@name"  , res: "JS/Core.Y@name" },
-    { ctx: "JS/Core.Y"        , link: "X"            , res: "JS/Core.X" },
-    { ctx: "JS/Core.Y"        , link: "#add"         , res: null },
-    { ctx: "JS/Core.Y"        , link: "X#add"        , res: "JS/Core.X#add" },
-    { ctx: "JS/Core.Y"        , link: "X.js"         , res: null },
-    { ctx: "JS/Z"             , link: "X"            , res: "JS/X" },
-    { ctx: "MD/X"             , link: "X"            , res: "MD/X" },
-    { ctx: "MD/X"             , link: "Core.X"       , res: "JS/Core.X" },
-    { ctx: "MD/Y"             , link: "X"            , res: "MD/X" },
+    { from: "JS/Core.X@name"   , to: "X"               , res: "JS/Core.X" },
+    { from: "JS/Core.X@name"   , to: "JS/X"            , res: "JS/X" },
+    { from: "JS/Core.X@name"   , to: "MD/X"            , res: "MD/X" },
+    { from: "JS/Core.X#add"    , to: "@name"           , res: "JS/Core.X@name" },
+    { from: "JS/Core.X#add"    , to: "Y@name"          , res: "JS/Core.Y@name" },
+    { from: "JS/Core.X#add"    , to: "Core.Y@name"     , res: "JS/Core.Y@name" },
+    { from: "JS/Core.X#add"    , to: "JS/Core.Y@name"  , res: "JS/Core.Y@name" },
+    { from: "JS/Core.Y"        , to: "X"               , res: "JS/Core.X" },
+    { from: "JS/Core.Y"        , to: "#add"            , res: null },
+    { from: "JS/Core.Y"        , to: "X#add"           , res: "JS/Core.X#add" },
+    { from: "JS/Core.Y"        , to: "X.js"            , res: null },
+    { from: "JS/Z"             , to: "X"               , res: "JS/X" },
+    { from: "MD/X"             , to: "X"               , res: "MD/X" },
+    { from: "MD/X"             , to: "Core.X"          , res: "JS/Core.X" },
+    { from: "MD/Y"             , to: "X"               , res: "MD/X" },
+
+    // it should not use private indices:
+    //
+    // "JS UI/UI/Z" has a private index "Z" while JS/Z has a public index "Z" so
+    // we expect the latter to be resolved:
+    { from: "MD"               , to: "Z"               , res: "JS/Z" },
 
     // filepath resolving (relative to contextNode's filepath):
-    { ctx: "JS/Core.Y"        , link: "./X.js"       , res: "JS/Core.X" },
-    { ctx: "JS/Core.Y"        , link: "../X.js"      , res: "JS/X" },
-    { ctx: "JS/Core.Y"        , link: "../../X.js"   , res: null },
+    { from: "JS/Core.Y"        , to: "./X.js"          , res: "JS/Core.X" },
+    { from: "JS/Core.Y"        , to: "../X.js"         , res: "JS/X" },
+    { from: "JS/Core.Y"        , to: "../../X.js"      , res: null },
 
     // resolving entities within a document by a filepath:
-    { ctx: 'JS/Core.Y'        , link: './X.js#add'   , res: 'JS/Core.X#add' },
-    { ctx: 'JS/Core.Y'        , link: '../X.js#add'   , res: null },
+    { from: 'JS/Core.Y'        , to: './X.js#add'      , res: 'JS/Core.X#add' },
+    { from: 'JS/Core.Y'        , to: '../X.js#add'     , res: null },
 
     // absolute filepath resolving (relative to assetRoot):
-    { ctx: "JS/Core.Y"        , link: "/js/lib/core/X.js"   , res: 'JS/Core.X' },
+    { from: "JS/Core.Y"        , to: "/js/lib/core/X.js"   , res: 'JS/Core.X' },
   ].forEach(function(spec) {
     var fn = spec.only ? it.only : it;
 
-    fn("resolves '" + spec.res + "' from '" + spec.ctx + "' using '" + spec.link + "'", function() {
-      var document = subject.resolve({
-        text: spec.link,
-        contextNode: subject.get(spec.ctx)
-      });
+    fn("resolves '" + spec.res + "' from '" + spec.from + "' using '" + spec.to + "'", function() {
+      var document = resolve({
+        text: spec.to,
+        contextNode: corpus.get(spec.from)
+      }, { trace: false });
 
       if (spec.res === null) {
-        if (document) {
-          subject.resolve({
-            text: spec.link,
-            contextNode: subject.get(spec.ctx),
-          }, { trace: true });
-        }
-
-        assert.notOk(document);
+        assert.notOk(document, (document && "Resolved '" + document.uid + "' when it should not have."));
       }
       else {
-        if (!document) {
-          subject.resolve({
-            text: spec.link,
-            contextNode: subject.get(spec.ctx),
-          }, { trace: true });
-        }
 
         assert.ok(document);
-        assert.equal(document, subject.get(spec.res),
-          document.id + " vs " + spec.res
-        );
+        assert.equal(document.uid, corpus.get(spec.res).uid);
       }
     })
   })

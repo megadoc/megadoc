@@ -1,5 +1,8 @@
 var invariant = require('invariant');
 
+// An index of value 0 is considered private and is accessible only to the node
+// and its "friends". Indices of higher values are not significant in their
+// value and merely denote that they are visible to all nodes.
 module.exports = function buildIndices(node) {
   if (node.type === 'Namespace') {
     return {};
@@ -41,18 +44,26 @@ module.exports = function buildIndices(node) {
 function generateIdIndices(node, map) {
   var ancestors = [];
   var anchorNode = node;
+  var isTopLevel = node.parentNode && node.parentNode.type === 'Namespace';
 
-  do {
-    if (anchorNode.type === 'Namespace') {
-      break;
-    }
+  // If the node resides at the top level of its namespace, it will have only
+  // one UID index and that *should* be public.
+  if (isTopLevel) {
+    map[node.id] = 1;
+  }
+  else {
+    do {
+      if (anchorNode.type === 'Namespace') {
+        break;
+      }
 
-    ancestors.unshift(anchorNode);
+      ancestors.unshift(anchorNode);
 
-    map[ancestors.map(identifyNode).join('')] = ancestors.length - 1;
-  } while ((anchorNode = anchorNode.parentNode));
+      map[ancestors.map(identifyNodeInChain).join('')] = ancestors.length - 1;
+    } while ((anchorNode = anchorNode.parentNode));
+  }
 
-  function identifyNode(x, i) {
+  function identifyNodeInChain(x, i) {
     if (i > 0) {
       return (ancestors[i-1].symbol || '') + x.id;
     }
