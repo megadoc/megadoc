@@ -12,9 +12,9 @@ var console = new Logger('megadoc');
 var config = {};
 var mega, configFilePath;
 
-function collect(val, set) {
-  set.push(val);
-  return set;
+function collect(val, list) {
+  list.push(val);
+  return list;
 }
 
 program
@@ -38,7 +38,7 @@ program
   .parse(process.argv)
 ;
 
-configFilePath = program.config || 'megadoc.conf.js';
+configFilePath = program.config || process.argv[2] || 'megadoc.conf.js';
 
 if (fs.existsSync(configFilePath)) {
   config = require(path.resolve(configFilePath));
@@ -60,6 +60,7 @@ if (program.dumpConfig) {
 
 if (program.verbose) {
   Logger.setVerbose(true);
+  set(config, 'verbose', true);
 }
 
 if (program.logLevel) {
