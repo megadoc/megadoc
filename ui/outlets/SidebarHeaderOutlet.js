@@ -10,9 +10,9 @@ const SidebarHeaderOutlet = React.createClass({
 
   render() {
     return (
-      <header className="layout__sidebar-header">
+      <h3 className="layout__sidebar-header">
         {this.props.$outletOptions.text}
-      </header>
+      </h3>
     );
   }
 });

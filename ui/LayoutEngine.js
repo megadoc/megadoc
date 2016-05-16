@@ -70,7 +70,9 @@ exports.getDocumentOverride = function(href, layoutConfig) {
   }
 };
 
-function getOverrideEntry({ documentNode, layouts, pathname }) {
+function getOverrideEntry(params) {
+  const { layouts } = params;
+
   if (!layouts) {
     return null;
   }
@@ -80,25 +82,7 @@ function getOverrideEntry({ documentNode, layouts, pathname }) {
       "A custom layout must have a @match property defined!"
     );
 
-    const matchBy = x.match.by;
-    const matchOn = arrayWrap(x.match.on);
-
-    return (
-      (
-        documentNode &&
-        matchBy === 'type' &&
-        matchOn.indexOf(documentNode.type) > -1
-      ) ||
-      (
-        documentNode &&
-        matchBy === 'uid' &&
-        matchOn.indexOf(documentNode.uid) > -1
-      ) ||
-      (
-        matchBy === 'url' &&
-        matchURL(matchOn, pathname)
-      )
-    );
+    return match(x, params);
   })[0];
 }
 
@@ -126,5 +110,33 @@ function matchURL(matchOn, pathname) {
   });
 }
 
+function match(entry, { documentNode, namespaceNode, pathname }) {
+  const matchBy = entry.match.by;
+  const matchOn = arrayWrap(entry.match.on);
+
+  return (
+    (
+      documentNode &&
+      matchBy === 'type' &&
+      matchOn.indexOf(documentNode.type) > -1
+    ) ||
+    (
+      documentNode &&
+      matchBy === 'uid' &&
+      matchOn.indexOf(documentNode.uid) > -1
+    ) ||
+    (
+      matchBy === 'url' &&
+      matchURL(matchOn, pathname)
+    ) ||
+    (
+      matchBy === 'namespace' &&
+      namespaceNode &&
+      matchOn.indexOf(namespaceNode.id) > -1
+    )
+  );
+};
+
+exports.match = match;
 exports.getOverrideEntry = getOverrideEntry;
 exports.getRegionsForDocument = getRegionsForDocument;

@@ -6,6 +6,7 @@ const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
 const DocumentResolver = require('../DocumentResolver');
+const LayoutEngine = require('../LayoutEngine');
 
 const { node, shape, string, arrayOf, object, oneOfType } = React.PropTypes;
 
@@ -81,7 +82,9 @@ const LayoutScreen = React.createClass({
       return null;
     }
 
-    const children = [].concat(region.outlets || []);
+    const children = region.outlets.filter(x => {
+      return !x.match || LayoutEngine.match(x, ctx);
+    });
 
     children.forEach(function({ name }) {
       if (!Outlet.isDefined(name)) {
@@ -92,6 +95,8 @@ const LayoutScreen = React.createClass({
         );
       }
     });
+
+    // console.log('matching outlets:', children)
 
     return children.map((x,i) => {
       const overridenNodes = getNodesForOutlet(x);

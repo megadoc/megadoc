@@ -78,7 +78,7 @@ const BannerMenu = React.createClass({
 
   renderLink(link) {
     return (
-      <li key={link.href} className="banner__menu-list-item">
+      <li key={link.href + link.text} className="banner__menu-list-item">
         <Link href={DocumentURI.withExtension(link.href)}>{link.text}</Link>
       </li>
     );

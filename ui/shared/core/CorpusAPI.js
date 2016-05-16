@@ -1,8 +1,6 @@
 const { assign } = require('lodash');
 
 /**
- * @module UI.Corpus
- *
  * To access these APIs from within your plugins, use the global instance found
  * at [megadoc@corpus `window.megadoc.corpus`]().
  */

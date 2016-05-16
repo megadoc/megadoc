@@ -95,6 +95,7 @@ function getDefaultRegionsForDocument(props) {
   if (props.namespaceNode && props.namespaceNode.meta.defaultLayouts) {
     return getRegionsForDocument({
       documentNode: props.documentNode,
+      namespaceNode: props.namespaceNode,
       layouts: props.namespaceNode.meta.defaultLayouts,
       pathname: props.pathname
     });
@@ -114,6 +115,7 @@ function RenderContext(props) {
   const defaultRegions = getDefaultRegionsForDocument(props) || getDefaultRegions();
   const customRegions = getRegionsForDocument({
     documentNode: props.documentNode,
+    namespaceNode: props.namespaceNode,
     layouts: props.customLayouts,
     pathname: props.pathname
   });
