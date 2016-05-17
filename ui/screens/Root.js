@@ -71,6 +71,8 @@ const Root = React.createClass({
 
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
+        <Outlet name="Meta" />
+
         {config.tooltipPreviews && (<Inspector />)}
         {config.spotlight && (
           <SpotlightManager
