@@ -13,7 +13,7 @@ megadoc.outlets.add('Markdown::DocumentTOC', {
 
     render() {
       return (
-        <ArticleTOC {...this.props} />
+        <ArticleTOC flat {...this.props} />
       );
     }
   })
