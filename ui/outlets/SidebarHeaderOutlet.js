@@ -1,4 +1,5 @@
 const React = require('react');
+const SidebarHeader = require('components/SidebarHeader');
 const { shape, string } = React.PropTypes;
 
 const SidebarHeaderOutlet = React.createClass({
@@ -10,9 +11,9 @@ const SidebarHeaderOutlet = React.createClass({
 
   render() {
     return (
-      <h3 className="layout__sidebar-header">
+      <SidebarHeader>
         {this.props.$outletOptions.text}
-      </h3>
+      </SidebarHeader>
     );
   }
 });

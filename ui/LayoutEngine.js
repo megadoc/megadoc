@@ -56,8 +56,6 @@ const invariant = require('utils/invariant');
  *         The UID of the document to use for the given location.
  */
 exports.getDocumentOverride = function(href, layoutConfig) {
-  const url = href.split('#')[0]; // ignore hash/DocumentEntity links here
-
   if (layoutConfig.customLayouts) {
     const layoutOverride = getOverrideEntry({
       pathname: href,
@@ -86,8 +84,8 @@ function getOverrideEntry(params) {
   })[0];
 }
 
-function getRegionsForDocument({ documentNode, layouts, pathname }) {
-  const entry = getOverrideEntry({ documentNode, layouts, pathname });
+function getRegionsForDocument(params) {
+  const entry = getOverrideEntry(params);
 
   if (entry) {
     return entry.regions;
@@ -132,7 +130,7 @@ function match(entry, { documentNode, namespaceNode, pathname }) {
     (
       matchBy === 'namespace' &&
       namespaceNode &&
-      matchOn.indexOf(namespaceNode.id) > -1
+      matchOn.indexOf(namespaceNode.uid) > -1
     )
   );
 };

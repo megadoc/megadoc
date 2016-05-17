@@ -61,5 +61,24 @@ describe('megadoc::LayoutEngine', function() {
       assert.notOk(subject(assign({}, params, { documentNode: { uid: 'api/foo' }})));
       assert.ok(subject(assign({}, params, { documentNode: { uid: 'api/Database' }})));
     });
+
+    it('matches by namespace UID', function() {
+      const params = {
+        pathname: '/foo',
+
+        layouts: [{
+          match: { by: 'namespace', on: [ 'api' ] },
+          regions: [
+            {
+              name: 'Layout::Content',
+              outlets: null
+            }
+          ]
+        }]
+      };
+
+      assert.notOk(subject(assign({}, params, { namespaceNode: { uid: 'md' }})));
+      assert.ok(subject(assign({}, params, { namespaceNode: { uid: 'api' }})));
+    });
   });
 });

@@ -18,6 +18,7 @@ megadoc.publicModules = require('../tmp/publicModules');
 // expose this to plugins so that we can move to a non-global version in the
 // future
 megadoc.outlets = require('components/Outlet');
+megadoc.outlets.define('Meta');
 megadoc.outlets.define('LayoutWrapper');
 megadoc.outlets.define('Layout');
 megadoc.outlets.define('Layout::Banner');

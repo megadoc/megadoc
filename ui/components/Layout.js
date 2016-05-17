@@ -29,7 +29,7 @@ const Layout = React.createClass({
     bannerLinks: arrayOf(Link),
     customLayouts: arrayOf(shape({
       match: shape({
-        by: oneOf([ 'url', 'uid', 'type' ]).isRequired,
+        by: oneOf([ 'url', 'uid', 'type', 'namespace' ]).isRequired,
         on: oneOfType([ string, arrayOf(string) ]).isRequired,
       }).isRequired,
 
@@ -57,7 +57,7 @@ const Layout = React.createClass({
     };
   },
 
-  componentWillUpdate(nextProps, nextState) {
+  componentWillUpdate(nextProps) {
     if (nextProps.documentNode !== this.props.documentNode) {
       scrollToTop();
     }
