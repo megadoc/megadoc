@@ -1,0 +1,37 @@
+@import (reference) "~helpers";
+@import (reference) "~variables";
+
+.plugin-dot {
+  &__container {
+    margin: 2em 0;
+    height: auto;
+    text-align: center;
+
+    svg:not(:root) {
+      max-height: 100%;
+      // overflow: visible;
+    }
+
+    // rect, ellipse, path, circle {
+    //   stroke-width: 1;
+    // }
+
+    text {
+      // font-family: inherit;
+      font-weight: normal;
+    }
+  }
+}
+
+.schemable({
+  .plugin-dot__container {
+    // rect, ellipse {
+    //   fill: @code !important;
+    //   stroke: @base0 !important;
+    // }
+
+    // path {
+    //   stroke: @base0;
+    // }
+  }
+});
