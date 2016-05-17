@@ -28,8 +28,8 @@ var config = {
 
   layoutOptions: {
     rewrite: {
-      '/articles/readme.html': '/index.html',
-      '/articles/changes.html': '/changes.html',
+      'README.md': '/index.html',
+      'CHANGES.md': '/changes.html',
     },
 
     bannerLinks: [
@@ -40,8 +40,12 @@ var config = {
 
       {
         text: 'Plugins',
-        href: '/plugins',
         links: [
+          {
+            text: 'Dot (graphs)',
+            href: '/plugins/megadoc-plugin-dot/readme.html',
+          },
+
           {
             text: 'Git',
             href: '/plugins/megadoc-plugin-git/readme.html',
@@ -117,7 +121,7 @@ var config = {
 
     customLayouts: [
       {
-        match: { by: 'url', on: '^/changes.html' },
+        match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changes' ] },
         regions: [
           {
             name: 'Layout::Content',
@@ -132,70 +136,8 @@ var config = {
               { name: 'Markdown::DocumentTOC' }
             ]
           }
-
         ]
       },
-      {
-        match: { by: 'url', on: '/dev/corpus/(?!api)' },
-        regions: [
-          {
-            name: 'Layout::Content',
-            options: { framed: true },
-            outlets: [
-              { name: 'Markdown::Document' }
-            ]
-          },
-          {
-            name: 'Layout::Sidebar',
-            outlets: [
-              { name: 'Markdown::Browser', using: 'md__corpus' },
-              { name: 'Layout::SidebarHeader', options: { text: 'API' } },
-              { name: 'CJS::ClassBrowser', using: 'js__corpus' },
-            ]
-          }
-
-        ]
-      },
-      {
-        match: { by: 'url', on: '/dev/corpus/api' },
-        regions: [
-          {
-            name: 'Layout::Content',
-            options: { framed: true },
-            outlets: [
-              { name: 'CJS::Module' }
-            ]
-          },
-          {
-            name: 'Layout::Sidebar',
-            outlets: [
-              { name: 'Markdown::Browser', using: 'md__corpus' },
-              { name: 'Layout::SidebarHeader', options: { text: 'API' } },
-              { name: 'CJS::ClassBrowser', using: 'js__corpus' },
-            ]
-          }
-
-        ]
-      },
-      {
-        match: { by: 'url', on: '/dev/plugins' },
-        regions: [
-          {
-            name: 'Layout::Content',
-            options: { framed: true },
-            outlets: [
-              { name: 'Markdown::Document' }
-            ]
-          },
-          {
-            name: 'Layout::Sidebar',
-            outlets: [
-              { name: 'Markdown::Browser' }
-            ]
-          }
-
-        ]
-      }
     ]
   },
 
@@ -203,7 +145,7 @@ var config = {
 
 config.plugins = [
   require('megadoc-plugin-js')({
-    id: 'core-js',
+    id: 'js__core',
     url: '/dev/api',
     title: 'API',
 
@@ -227,6 +169,7 @@ config.plugins = [
   }),
 
   require('megadoc-plugin-markdown')({
+    id: 'md__core',
     title: 'Documents',
     source: [ 'README.md', 'CHANGES.md' ],
   }),
@@ -250,74 +193,53 @@ config.plugins = [
     discardIdPrefix: 'dev-',
   }),
 
-  // @url: /dev/corpus
-  require('megadoc-plugin-markdown')({
-    id: 'md__corpus',
-    title: 'Corpus',
-    source: 'packages/megadoc-corpus/README.md',
-    baseURL: '/dev/corpus',
-    // outlet: 'CJS::Landing',
-    // anchorableHeadings: false
-  }),
-
-  require('megadoc-plugin-js')({
-    id: 'js__corpus',
-    url: '/dev/corpus/api',
-    title: 'Corpus',
-    useDirAsNamespace: false,
-    inferModuleIdFromFileName: true,
-
-    source: [
-      'packages/megadoc-corpus/defs/*.js',
-      'packages/megadoc-corpus/lib/**/*.js',
-    ],
-
-    exclude: [ /\.test\.js$/ ],
-  }),
-
   require('megadoc-theme-qt')({}),
+  require('megadoc-plugin-dot')({}),
 
 ];
 
-[
-  'megadoc-plugin-git',
-  'megadoc-plugin-js',
-  'megadoc-plugin-lua',
-  'megadoc-plugin-markdown',
-  'megadoc-plugin-react',
-  'megadoc-plugin-reference-graph',
-  'megadoc-plugin-yard-api',
-  'megadoc-theme-gitbooks',
-  'megadoc-theme-qt',
-].forEach(function(pluginName) {
-  var url = '/plugins/' + pluginName;
+addPackageDocumentation('megadoc-corpus', {
+  url: '/dev/corpus'
+});
 
-  config.plugins.push(require('megadoc-plugin-js')({
-    id: 'js__' + pluginName,
-    url: url,
-    title: pluginName,
-    useDirAsNamespace: false,
-    inferModuleIdFromFileName: true,
-    // namespaceDirMap: {
-    //   'lib': pluginName,
-    //   'ui': pluginName,
-    // },
-    source: [
-      'packages/' + pluginName + '/lib/**/*.js',
-      'packages/' + pluginName + '/ui/**/*.js',
-    ],
+addPackageDocumentation('megadoc-plugin-dot', { withJS: false });
+addPackageDocumentation('megadoc-plugin-git');
+addPackageDocumentation('megadoc-plugin-js');
+addPackageDocumentation('megadoc-plugin-lua');
+addPackageDocumentation('megadoc-plugin-markdown');
+addPackageDocumentation('megadoc-plugin-react');
+addPackageDocumentation('megadoc-plugin-reference-graph');
+addPackageDocumentation('megadoc-plugin-yard-api');
+addPackageDocumentation('megadoc-theme-gitbooks');
+addPackageDocumentation('megadoc-theme-qt');
 
-    exclude: [ /\.test\.js$/, /vendor/ ],
-  }));
+module.exports = config;
+
+function addPackageDocumentation(pluginName, options) {
+  var url = (options && options.url) || '/plugins/' + pluginName;
+  var withJS = !options || options.withJS !== false;
+
+  if (withJS) {
+    config.plugins.push(require('megadoc-plugin-js')({
+      id: 'js__' + pluginName,
+      url: url,
+      title: pluginName,
+      useDirAsNamespace: false,
+      inferModuleIdFromFileName: true,
+      source: [
+        'packages/' + pluginName + '/**/*.js'
+      ],
+
+      exclude: [ /__tests__/, /vendor/, /node_modules/ ],
+    }));
+  }
 
   config.plugins.push(require('megadoc-plugin-markdown')({
     id: 'md__' + pluginName,
     title: pluginName,
     source: [ 'packages/' + pluginName + '/**/*.md' ],
-    exclude: /node_modules/,
+    exclude: [ /node_modules/, /__tests__/ ],
     baseURL: url,
-    // outlet: 'CJS::Landing',
-    // anchorableHeadings: false
   }));
 
   config.layoutOptions.customLayouts.push({
@@ -328,8 +250,8 @@ config.plugins = [
         outlets: [
           { name: 'Markdown::Browser', using: 'md__' + pluginName },
           { name: 'Layout::SidebarHeader', options: { text: 'API' } },
-          { name: 'CJS::ClassBrowser', using: 'js__' + pluginName },
-        ]
+          withJS && { name: 'CJS::ClassBrowser', using: 'js__' + pluginName },
+        ].filter(truthy)
       },
       {
         name: 'Layout::Content',
@@ -339,22 +261,16 @@ config.plugins = [
             name: 'Markdown::Document',
             match: { by: 'namespace', on: [ 'md__' + pluginName ] },
           },
-          {
+          withJS && {
             name: 'CJS::Module',
             match: { by: 'namespace', on: [ 'js__' + pluginName ] },
           }
-        ]
+        ].filter(truthy)
       },
-      // {
-      //   name: 'Layout::Content',
-      //   match: { by: 'namespace', on: [ 'js__' + pluginName ] },
-      //   options: { framed: true },
-      //   outlets: [
-      //     { name: 'CJS::Module' }
-      //   ]
-      // },
     ]
-  })
-})
+  });
+}
 
-module.exports = config;
+function truthy(x) {
+  return !!x;
+}

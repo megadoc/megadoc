@@ -38,6 +38,21 @@ houses a set of `Namespace` nodes. Each plugin that registers with the corpus
 has to define its own unique `Namespace` node and nest its documents underneath
 it.
 
+```dot
+[<frame>Corpus Model|
+  [Corpus]
+  [Corpus] -> [JavaScripts]
+  [Corpus] -> [Markdown]
+  [JavaScripts] -> [Core]
+  [Core] -> [X]
+  [X] -> [#add]
+  [JavaScripts] -> [Y]
+  [Y] -> [@name]
+  [Y] -> [#speak]
+  [Markdown] -> [Article A]
+]
+```
+
 A `Namespace` node is the direct owner of a plugin's `Document` nodes. However,
 from that point down, the hierarchy is flexible in that a `Document` node may
 contain either `Document` nodes as children (namespacing at the plugin level)

@@ -15,8 +15,7 @@ var CONTENT_PORT = process.env.PORT || '8942';
 
 var configFile = path.resolve(process.env.CONFIG_FILE);
 var contentBase = path.dirname(configFile);
-
-global.window = {};
+var window = global.window = {};
 
 require(configFile);
 
@@ -122,8 +121,6 @@ function generatePluginEntry() {
 
   return pluginNames.reduce(function(list, name) {
     trackFileIfExists('ui/index.js');
-    trackFileIfExists('ui/index.less');
-    trackFileIfExists('ui/css/index.less');
 
     function trackFileIfExists(fileName) {
       var filePath = path.join(basePath, name, fileName);
@@ -152,9 +149,5 @@ function getStyleOverrides() {
 }
 
 function getStyleSheets() {
-  if (!window.CONFIG.stylesheet) {
-    return [];
-  }
-
-  return path.resolve(window.CONFIG.assetRoot, window.CONFIG.stylesheet);
+  return window.CONFIG.sourceStyleSheets;
 }
