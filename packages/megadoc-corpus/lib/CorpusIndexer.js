@@ -15,7 +15,17 @@ module.exports = function buildIndices(node) {
       generateIdIndices(node, indices);
     }
     else if (field === '$filePath') {
-      if (node.filePath) {
+      // for entities, we want to index by the enclosing document's filepath
+      // followed by the id of the entity for links like:
+      //
+      //     /README.md#see-something
+      //     /lib/X.js@name
+      if (node.type === 'DocumentEntity') {
+        if (node.filePath || node.parentNode.filePath) {
+          indices[buildEntityFileIndex(node)] = 1;
+        }
+      }
+      else if (node.filePath) {
         indices[ensureLeadingSlash(node.filePath)] = 1;
       }
     }
@@ -87,4 +97,8 @@ function resolveIndexFields(node) {
 
 function ensureLeadingSlash(x) {
   return x[0] === '/' ? x : '/' + x;
+}
+
+function buildEntityFileIndex(node) {
+  return ensureLeadingSlash(node.filePath || node.parentNode.filePath) + node.id;
 }

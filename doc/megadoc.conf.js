@@ -154,10 +154,7 @@ config.plugins = [
       'ui/**/*.js',
     ],
 
-    exclude: [
-      /\.test\.js$/,
-      'ui/app/vendor',
-    ],
+    exclude: [ /test/, /vendor/, ],
 
     useDirAsNamespace: false,
 
@@ -249,7 +246,7 @@ function addPackageDocumentation(pluginName, options) {
         name: 'Layout::Sidebar',
         outlets: [
           { name: 'Markdown::Browser', using: 'md__' + pluginName },
-          { name: 'Layout::SidebarHeader', options: { text: 'API' } },
+          withJS && { name: 'Layout::SidebarHeader', options: { text: 'API' } },
           withJS && { name: 'CJS::ClassBrowser', using: 'js__' + pluginName },
         ].filter(truthy)
       },

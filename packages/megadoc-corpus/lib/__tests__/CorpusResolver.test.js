@@ -133,6 +133,7 @@ describe('CorpusResolver', function() {
 
     // resolving entities within a document by a filepath:
     { from: 'JS/Core.Y'        , to: './X.js#add'      , res: 'JS/Core.X#add' },
+    { from: 'JS/Core.Y'        , to: '/js/lib/core/X.js#add', res: 'JS/Core.X#add' },
     { from: 'JS/Core.Y'        , to: '../X.js#add'     , res: null },
 
     // absolute filepath resolving (relative to assetRoot):
