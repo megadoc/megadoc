@@ -156,5 +156,60 @@ describe('CorpusResolver', function() {
         assert.equal(document.uid, corpus.get(spec.res).uid);
       }
     })
+  });
+
+  describe('funny names', function() {
+    beforeEach(function() {
+      corpus.add(b.namespace({
+        id: 'Wild Babies',
+        name: 'test-plugin',
+        documents: [
+          b.document({ id: 'The Gorilla Emperor' })
+        ]
+      }));
+
+      corpus.add(b.namespace({
+        id: 'Wild #Hash',
+        name: 'test-plugin',
+        documents: [
+          b.document({ id: 'The $Wilderness B3Y)ND' })
+        ]
+      }));
+
+      corpus.add(b.namespace({
+        id: 'مجموعتي',
+        name: 'test-plugin',
+        documents: [
+          b.document({ id: 'صفحة' })
+        ]
+      }));
+    });
+
+    it('works when there are spaces in a namespace', function() {
+      assert(corpus.resolve({ text: 'Wild Babies' }));
+      assert(corpus.resolve({ text: 'Wild Babies/The Gorilla Emperor' }));
+    });
+
+    it('works when there are special characters in a namespace', function() {
+      assert(corpus.resolve({ text: 'Wild #Hash' }));
+      assert(corpus.resolve({ text: 'Wild #Hash/The $Wilderness B3Y)ND' }));
+    });
+
+    it('works when there are unicode characters in a namespace', function() {
+      assert(corpus.resolve({ text: 'مجموعتي' }));
+      assert(corpus.resolve({ text: 'مجموعتي/صفحة' }));
+    });
+
+    it('rejects a namespace with an illegal name (starts with /)', function() {
+      assert.throws(function() {
+        corpus.add(b.namespace({ id: '/foo', name: 'test-plugin' }));
+      }, 'IntegrityViolation: a namespace id may not start with');
+    });
+
+    it('rejects a namespace with an illegal name (starts with .)', function() {
+      assert.throws(function() {
+        corpus.add(b.namespace({ id: './foo', name: 'test-plugin' }));
+      }, 'IntegrityViolation: a namespace id may not start with');
+    });
   })
 });

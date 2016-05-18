@@ -79,6 +79,20 @@ describe('Corpus', function() {
     }, "IntegrityViolation: expected node to reference a parentNode.");
   });
 
+  it('borks on duplicate UIDs', function() {
+    assert.throws(function() {
+      subject.add(
+        b.namespace({
+          id: 'foo',
+          name: 'test-plugin',
+          documents: [
+            b.document({ id: 'a' }),
+            b.document({ id: 'a' }),
+          ]
+        }));
+    }, "IntegrityViolation: a node with the UID \"foo/a\" already exists.");
+  });
+
   describe('serialization', function() {
     it('flattens the database', function() {
       subject.add(b.namespace({

@@ -125,6 +125,11 @@ function Corpus() {
         "IntegrityViolation: a namespace with the id '" + node.id + "' already exists."
       );
 
+      assert(hasValidNamespaceId(node),
+        'IntegrityViolation: a namespace id may not start with "/" ' +
+        '(forward slash) or "." (dot) characters.'
+      );
+
       corpusNode.namespaces.push(node);
 
       node.parentNode = corpusNode;
@@ -145,6 +150,10 @@ function Corpus() {
 
     node.uid = UID(node);
     node.indices = buildIndices(node);
+
+    assert(!(node.uid in nodes),
+      'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.'
+    );
 
     nodes[node.uid] = node;
 
@@ -222,6 +231,9 @@ function getUID(node) {
   return node.uid;
 }
 
+function hasValidNamespaceId(node) {
+  return node.id && node.id[0] !== '/' && node.id[0] !== '.';
+}
 
 module.exports = Corpus;
 
