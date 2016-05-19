@@ -101,11 +101,14 @@ module.exports = App;
 function HistoryLocation(options) {
   const { history } = window;
   const emitChange = options.onChange;
-
-  return {
+  const exports = {
     start() {
       window.addEventListener('hashchange', refreshScroll);
       window.addEventListener('popstate', emitChange);
+
+      if (options.location.pathname === '/') {
+        exports.transitionTo('/index.html');
+      }
     },
 
     transitionTo(pathname) {
@@ -123,6 +126,8 @@ function HistoryLocation(options) {
       window.removeEventListener('hashchange', refreshScroll);
     }
   };
+
+  return exports;
 
   // force the browser to (re)scroll to the proper location
   function refreshScroll() {

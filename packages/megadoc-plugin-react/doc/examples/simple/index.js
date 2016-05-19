@@ -16,6 +16,8 @@ var Button = React.createClass({
 });
 
 /**
+ * @namespace SimpleExample
+ *
  * @module
  * @example {jsx}
  *

@@ -29,3 +29,4 @@ selection.json
 # runtime junk
 npm-debug.log
 /examples/*/public
+/megadoc.sublime-workspace

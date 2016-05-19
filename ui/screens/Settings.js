@@ -1,24 +1,13 @@
 var React = require('react');
-var Checkbox = require("components/Checkbox");
 var Radio = require("components/Radio");
 var Storage = require('core/Storage');
 var AppState = require('core/AppState');
-var { CFG_SYNTAX_HIGHLIGHTING } = require('constants');
 
 var Settings = React.createClass({
   render: function() {
     return (
       <div className="settings">
         <h1>Settings</h1>
-
-        <p>
-          <Checkbox
-            onChange={this.toggleHighlighting}
-            checked={this.isHighlightingEnabled()}
-          >
-            Enable syntax highlighting
-          </Checkbox>
-        </p>
 
         <fieldset>
           <legend><strong>Layout</strong></legend>
@@ -49,14 +38,6 @@ var Settings = React.createClass({
         </div>
       </div>
     );
-  },
-
-  isHighlightingEnabled() {
-    return Storage.get(CFG_SYNTAX_HIGHLIGHTING);
-  },
-
-  toggleHighlighting() {
-    Storage.set(CFG_SYNTAX_HIGHLIGHTING, !this.isHighlightingEnabled());
   },
 
   setLayout(e) {

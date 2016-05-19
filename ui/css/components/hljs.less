@@ -1,19 +1,10 @@
-// syntax highlighting schemes
-body.body--themed {
-  @import '../vendor/highlight/plain';
-}
-
 .schemable({
+  & {
+    @import '~prismjs/themes/prism.css';
+  }
+
   // override the background color, regardless of syntax theme:
-  .hljs, pre {
+  pre {
     background-color: @code;
-  }
-
-  .hljs when (@whitespace <= @max-hljs-padding) {
-    padding: @whitespace;
-  }
-
-  .hljs when (@whitespace > @max-hljs-padding) {
-    padding: @max-hljs-padding;
   }
 });
