@@ -11,6 +11,8 @@ function classSet(set) {
 }
 
 /**
+ * @namespace Demo
+ *
  * A simple controlled checkbox to check.
  *
  * @example {jsx}

@@ -11,7 +11,6 @@ const megadoc = window.megadoc = createMegadoc(config);
 console.log('megadoc: version %s', config.version);
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
-Storage.register(K.CFG_SYNTAX_HIGHLIGHTING, true);
 
 megadoc.publicModules = require('../tmp/publicModules');
 

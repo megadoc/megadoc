@@ -56,9 +56,10 @@ not be presenting anything as we haven't fed it any input yet.
 Hopefully, the command ran successfully and you see some files written to
 `public/docs`:
 
-```shell
+```bash
 $ ls public/docs
-.                  ..                 404.html           config.js          index.html         styles.css         megadoc.js         megadoc__vendor.js
+.                  ..                 404.html           config.js
+index.html         styles.css         megadoc.js         megadoc__vendor.js
 ```
 
 Okay, beef time!

@@ -1,6 +1,8 @@
 const { func, bool, node } = React.PropTypes;
 
 /**
+ * @namespace Demo
+ *
  * A super button to push!
  *
  * @example {jsx}

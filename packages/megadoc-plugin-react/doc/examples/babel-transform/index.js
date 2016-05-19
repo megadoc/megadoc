@@ -7,6 +7,8 @@ const Button = React.createClass({
 });
 
 /**
+ * @namespace BabelTransformExample
+ *
  * @module
  * @example {jsx}
  *
