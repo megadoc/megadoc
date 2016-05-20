@@ -2,8 +2,6 @@ var invariant = require('utils/invariant');
 var config = require('config');
 
 /**
- * @namespace UI.Core
- *
  * A module for adjusting the document's title for a while then restoring it.
  *
  * @param  {Function} generateTitle

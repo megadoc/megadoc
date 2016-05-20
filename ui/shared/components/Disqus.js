@@ -160,8 +160,6 @@ var ReactDisqusThread = React.createClass({
 });
 
 /**
- * @namespace UI.Components
- *
  * Renders a small [disqus](http://disqus.com) comment box.
  */
 var Disqus = React.createClass({

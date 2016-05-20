@@ -3,8 +3,6 @@ const invariant = require('utils/invariant');
 
 
 /**
- * @namespace UI.Core
- *
  * Routing APIs for the app.
  */
 let Router = exports;

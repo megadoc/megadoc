@@ -6,5 +6,10 @@
   // override the background color, regardless of syntax theme:
   pre {
     background-color: @code;
+
+    &:not([class]) {
+      color: @base0;
+      padding: 1em;
+    }
   }
 });
