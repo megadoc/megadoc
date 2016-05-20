@@ -100,5 +100,9 @@ function ensureLeadingSlash(x) {
 }
 
 function buildEntityFileIndex(node) {
-  return ensureLeadingSlash(node.filePath || node.parentNode.filePath) + node.id;
+  return (
+    ensureLeadingSlash(node.filePath || node.parentNode.filePath) +
+    (node.parentNode.symbol || '') +
+    node.id
+  );
 }
