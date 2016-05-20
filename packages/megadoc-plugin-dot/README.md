@@ -33,6 +33,12 @@ The plugin uses the wonderful [nomnoml](https://github.com/skanaar/nomnoml)
 package for converting code to SVG, so the syntax for using this plugin is
 what nomnoml supports.
 
+Want more? Here's a diagram with **links to internal documents**:
+
+```dot
+[You are here] -> [mega://megadoc-plugin-dot as "Back to the top"]
+```
+
 ## Installation
 
 ```shell
@@ -58,10 +64,8 @@ Inside your Markdown blocks, name your fenced code blocks with the `dot`
 language and type away!
 
     ```dot
-    graph {
-      A -> B;
-      C -> B;
-    }
+    [A] -> [B]
+    [C] -> [B]
     ```
 
 Or, use UML:
@@ -86,6 +90,29 @@ megadoc's color scheme:
 - `#stroke: #404244`
 
 You can still override this on a per-graph basis in your ````dot` blocks.
+
+### Linking to internal documents
+
+It's not possible to link using the regular linking schemes inside your 
+diagrams, instead you must use a special syntax that looks something like
+this:
+
+    [mega://my-link]
+
+And if you want to customize the text:
+
+    [mega://my-link as "My Custom Text"]
+
+It's totally possible to _frame_ it:
+
+    [Foo | mega://my-link]
+    [Foo | mega://my-link as "My Custom Text"]
+
+Which will look something like this:
+
+```dot
+[Foo | mega://my-broken-link]
+```
 
 ## Credits
 

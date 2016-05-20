@@ -9,15 +9,9 @@
 
     svg:not(:root) {
       max-height: 100%;
-      // overflow: visible;
     }
 
-    // rect, ellipse, path, circle {
-    //   stroke-width: 1;
-    // }
-
     text {
-      // font-family: inherit;
       font-weight: normal;
     }
   }
@@ -25,13 +19,12 @@
 
 .schemable({
   .plugin-dot__container {
-    // rect, ellipse {
-    //   fill: @code !important;
-    //   stroke: @base0 !important;
-    // }
+    text .mega-link--internal {
+      fill: @link;
+    }
 
-    // path {
-    //   stroke: @base0;
-    // }
+    text .mega-link--internal.mega-link--broken {
+      fill: @solarized-red;
+    }
   }
 });
