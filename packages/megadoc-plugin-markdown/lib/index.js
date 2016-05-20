@@ -40,10 +40,11 @@ function MarkdownPlugin(userConfig) {
           var doc = documentNode.properties;
           var compiled = md.withTOC(linkify({
             text: doc.source,
-            contextNode: documentNode
+            contextNode: documentNode,
           }), {
             baseURL: documentNode.meta.href,
             sanitize: config.sanitize !== false,
+            contextNode: documentNode,
           });
 
           doc.source = compiled.html;
