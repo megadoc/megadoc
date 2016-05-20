@@ -65,6 +65,7 @@ function reduce(compiler, config, documents) {
     // TODO: b.markdownDocument
     return b.document({
       id: doc.id,
+      symbol: '#',
       title: doc.plainTitle,
       summary: doc.summary,
       filePath: doc.filePath,
