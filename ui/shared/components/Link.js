@@ -61,18 +61,12 @@ const Link = React.createClass({
   },
 
   isActive(href) {
-    // TODO
-    return false;
-    // const path = href.split('#')[0];
+    const { location } = this.context;
 
-    // // we need this for the http: protocol
-    // const pathWithoutOrigin = window.location.href.substr(window.location.origin.length);
-
-    // return (
-    //   this.props.to === pathWithoutOrigin ||
-    //   // this.. i have no idea anymore
-    //   (path === this.props.to && Router.isActive(DocumentURI.withoutExtension(path)))
-    // )
+    return (
+      href === location.pathname ||
+      href === location.pathname + location.hash
+    );
   },
 
   getHref() {
