@@ -120,8 +120,12 @@ const Root = React.createClass({
   },
 
   handleInternalLink(e) {
-    if (e.target.tagName === 'A' && e.target.href.indexOf(location.origin) === 0) {
-      this.props.onNavigate(e, e.target);
+    var node = e.target;
+
+    if ((node.tagName === 'A' || node.tagName === 'a') && isInternalLink(node)) {
+      this.props.onNavigate(e, {
+        href: node.getAttribute('href')
+      });
     }
   },
 
@@ -139,3 +143,10 @@ const Root = React.createClass({
 });
 
 module.exports = Root;
+
+function isInternalLink(node) {
+  return (
+    node.getAttribute('href').indexOf(location.origin) === 0 ||
+    ((node.getAttribute('class') || '').match('mega-link--internal'))
+  );
+}
