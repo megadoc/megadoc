@@ -113,7 +113,7 @@ describe("[Integration] megadoc-plugin-yard-api", function() {
 
       // it linkifies stuff in @example_response and @example_request
       suite.assertFileWasRendered('test/admin_account_configs.html', {
-        html: '"response": "<a href="author_users.html#test-author_users-user_response" class="mega-link--internal">API::UserResponse</a>'
+        html: '"response": "<a class="mega-link--internal" href="author_users.html#test-author_users-user_response">API::UserResponse</a>'
       });
 
       // it renders the objects

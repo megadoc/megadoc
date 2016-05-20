@@ -1,5 +1,4 @@
 const React = require('react');
-const ModuleBody = require('./ModuleBody');
 const HasTitle = require('mixins/HasTitle');
 const ModuleHeader = require('./ModuleHeader');
 const Outlet = require('components/Outlet');

@@ -30,7 +30,7 @@ module.exports = function(compiler, config) {
       text: sharedDirectives + code,
       injectors: [ injector ],
       format: 'html',
-      contextNode: params.contextNode
+      contextNode: params && params.contextNode
     });
 
     var svg = nomnoml.renderSvg(src);

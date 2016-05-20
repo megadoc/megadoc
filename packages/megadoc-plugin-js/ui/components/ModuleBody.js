@@ -262,12 +262,6 @@ function isStaticProperty(scope) {
   ].indexOf(scope) === -1 || scope ;
 }
 
-function hasDetailedDescription(node) {
-  return node.properties.description && (
-    node.properties.description.replace(/(^\<p\>|\<\/p\>\n?$)/g, '') !== node.summary
-  );
-}
-
 function getMixedInTargets(node, namespaceNode) {
   const { uid } = node;
 
