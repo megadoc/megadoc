@@ -5,6 +5,7 @@ var render = require('./render');
 var defaults = require('./config');
 var isAPIObject = require('./utils').isAPIObject;
 var isAPIEndpoint = require('./utils').isAPIEndpoint;
+var YARDLinkInjector = require('./YARDLinkInjector');
 
 function YardAPIPlugin(userConfig) {
   var config = assign({}, defaults, userConfig);
@@ -29,7 +30,13 @@ function YardAPIPlugin(userConfig) {
       });
 
       compiler.on('render', function(md, linkify, done) {
-        render(database, md, linkify);
+        var injectors = compiler.linkResolver.defaultInjectors.concat(YARDLinkInjector);
+
+        render(database, md, function(options) {
+          return linkify(assign({
+            injectors: injectors
+          }, options));
+        });
         done();
       });
 

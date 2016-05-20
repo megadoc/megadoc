@@ -58,6 +58,10 @@ describe("[Integration] megadoc-plugin-yard-api", function() {
       //           "text": "{\n  \"account_config\":\n  {\n    \"progressive_finance_customization\": false\n  }\n}",
       //           "name": "",
       //           "types": null
+      //         },
+      //         {
+      //           "tag_name": "example_response",
+      //           "text": "{ \"response\": \"{API::UserResponse}\" }"
       //         }
       //       ]
       //     }
@@ -105,6 +109,11 @@ describe("[Integration] megadoc-plugin-yard-api", function() {
 
       suite.assertFileWasRendered('test/admin_account_configs.html', {
         text: 'Admin config information'
+      });
+
+      // it linkifies stuff in @example_response and @example_request
+      suite.assertFileWasRendered('test/admin_account_configs.html', {
+        html: '"response": "<a href="author_users.html#test-author_users-user_response" class="mega-link--internal">API::UserResponse</a>'
       });
 
       // it renders the objects

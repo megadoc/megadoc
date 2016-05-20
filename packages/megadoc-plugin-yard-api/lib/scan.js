@@ -40,7 +40,17 @@ function generateDocs(config, globalConfig, done) {
 function scan(config, utils, done) {
   var files = utils.globAndFilter(config.source, config.exclude);
   var database = files.map(function(fileName) {
-    return JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+    var doc = JSON.parse(fs.readFileSync(fileName, 'utf-8'));
+
+    if (doc.objects) {
+      doc.objects.forEach(function(objectDoc) {
+        if (objectDoc.title) {
+          objectDoc.shorthandTitle = 'API::' + objectDoc.title;
+        }
+      });
+    }
+
+    return doc;
   });
 
   done(null, reduce(config, database));
@@ -52,7 +62,7 @@ function reduce(config, documents) {
     name: 'megadoc-plugin-yard-api',
     title: config.title,
     config: config,
-    indexFields: [ 'title' ],
+    indexFields: [ 'title', 'shorthandTitle' ],
     meta: {
       defaultLayouts: require('./defaultLayouts')
     },
@@ -101,8 +111,12 @@ function reduce(config, documents) {
 
 function generateSummary(doc) {
   if (doc.text) {
-    return RendererUtils.extractSummary(doc.text, {
-      plainText: true
-    });
+    var text = typeof doc.text === 'object' ? doc.text.description : doc.text;
+
+    if (typeof text === 'string') {
+      return RendererUtils.extractSummary(text, {
+        plainText: true
+      });
+    }
   }
 }

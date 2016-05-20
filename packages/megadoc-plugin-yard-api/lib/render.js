@@ -51,8 +51,15 @@ function renderEndpointTag(tag, md, linkify, parentNode) {
   var tagName = tag.tag_name;
 
   if (CODE_TAGS.indexOf(tagName) > -1) {
-    var srcText = '```javascript\n'+tag.text+'\n```';
-    tag.text = md(linkify({ text: srcText, contextNode: parentNode }));
+    var srcText = tag.text;
+
+    var linkedText = linkify({
+      text: srcText,
+      contextNode: parentNode,
+      format: 'html'
+    });
+
+    tag.text = md('```json\n' + linkedText + '\n```');
   }
   else if ([ 'argument' ].indexOf(tagName) > -1) {
     tag.text = md(linkify({ text: tag.text, contextNode: parentNode }));
@@ -77,7 +84,6 @@ function renderEndpointTag(tag, md, linkify, parentNode) {
       link = md(linkify({
         text: '[' + typeInfo.name + ']()',
         contextNode: contextNode,
-        options: { useOriginalTitle: true }
       }), { trimHTML: true });
     }
 
