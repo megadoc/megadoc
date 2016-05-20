@@ -145,8 +145,7 @@ const Root = React.createClass({
 module.exports = Root;
 
 function isInternalLink(node) {
-  return (
-    node.getAttribute('href').indexOf(location.origin) === 0 ||
-    ((node.getAttribute('class') || '').match('mega-link--internal'))
-  );
+  const href = node.getAttribute('href');
+
+  return href && href.indexOf(location.origin) === 0;
 }
