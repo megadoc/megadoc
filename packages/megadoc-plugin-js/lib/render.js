@@ -65,7 +65,7 @@ module.exports = function(namespaceNode, md, linkify) {
             linkify({
               text: '['+typeStr+']()',
               contextNode: node,
-              options: { strict: false }
+              strict: false
             }),
             { trimHTML: true }
           );

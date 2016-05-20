@@ -38,17 +38,13 @@ const Module = React.createClass({
           generateAnchor={false}
         />
 
-        <ModuleBody
-          documentNode={moduleNode}
-          focusedEntity={documentNode.type === 'DocumentEntity' ? documentNode.id : undefined}
-        />
-
         <Outlet
           name="CJS::ModuleBody"
           elementProps={{
             params: legacyParams,
             query: {},
             documentNode,
+            documentEntityNode: this.props.documentEntityNode,
             namespaceNode,
           }}
         />

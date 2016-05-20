@@ -1,31 +1,12 @@
 var render = require('../render');
 var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
+var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
 var reduceDocuments = require('../CorpusReducer');
-var chai = require('chai');
-var sinon = require('sinon');
-
-sinon.assert.expose(chai.assert, { prefix: "" });
-
-function sinonSuite(suite) {
-  var sandbox;
-
-  suite.beforeEach(function() {
-    sandbox = sinon.sandbox.create();
-  });
-
-  suite.afterEach(function() {
-    sandbox.restore();
-  });
-
-  return function getSandbox() {
-    return sandbox;
-  }
-}
 
 describe('cjs::render', function() {
   var database;
-  var getSandbox = sinonSuite(this);
+  var sinon = sinonSuite(this);
   var renderMarkdown, linkify;
 
   beforeEach(function() {
@@ -52,8 +33,8 @@ describe('cjs::render', function() {
       // };
     });
 
-    renderMarkdown = getSandbox().stub().returnsArg(0);
-    linkify = getSandbox().spy(function(x) { return x.text; });
+    renderMarkdown = sinon.stub().returnsArg(0);
+    linkify = sinon.spy(function(x) { return x.text; });
 
     render(reduceDocuments({
       documents: database,
