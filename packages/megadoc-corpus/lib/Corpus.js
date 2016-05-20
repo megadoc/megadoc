@@ -6,6 +6,8 @@ var assign = require('object-assign');
 var b = Types.builders;
 
 /**
+ * @preserveOrder
+ *
  * The Corpus public API.
  */
 function Corpus() {
@@ -19,16 +21,28 @@ function Corpus() {
 
   var visitors = {};
 
-  exports.visit = function(visitor) {
-    Object.keys(visitor).forEach(function(typeName) {
-      assert(Types.isTypeKnown(typeName),
-        "ArgumentError: a visitor was defined for an unknown node type '" + typeName + "'."
-      );
-
-      visitors[typeName] = visitors[typeName] || [];
-      visitors[typeName].push(visitor[typeName]);
-    });
-  };
+  /**
+   * @method add
+   *
+   * Add a namespace or a document to the corpus. The corpus will be populated
+   * with all offspring nodes (if applicable).
+   *
+   * Items added to the corpus will gain a UID and will be indexed.
+   *
+   * @example
+   *
+   *     corpus.add(b.namespace({
+   *       id: 'JS',
+   *       documents: [
+   *         b.document({
+   *           id: 'jQuery'
+   *         })
+   *       ]
+   *     }))
+   *
+   * @param {T.Namespace|T.Node} node
+   */
+  exports.add = add;
 
   /**
    * Retrieve a document AST node by its UID.
@@ -76,8 +90,6 @@ function Corpus() {
     };
   };
 
-  exports.add = add;
-
   /**
    * Define an alias for a document.
    *
@@ -91,6 +103,12 @@ function Corpus() {
     nodes[uid].indices[alias] = 1;
   };
 
+  /**
+   * Serialize the Corpus to a flat JSON map with no circular dependencies.
+   *
+   * @return {Object}
+   *         An object that can be safely serialized to disk.
+   */
   exports.toJSON = function() {
     return Object.keys(nodes).reduce(function(map, uid) {
       map[uid] = flattenNodeAndChildren(nodes[uid]);
@@ -99,26 +117,38 @@ function Corpus() {
   };
 
   /**
-   * @lends Corpus
+   * Install a Node visitor that will be called any time a node of the specified
+   * type is added to the corpus.
    *
-   * Add a namespace or a document to the corpus. The corpus will be populated
-   * with all offspring nodes (if applicable).
-   *
-   * Items added to the corpus will gain a UID and will be indexed.
+   * @param {Object.<String, Corpus~Visitor>} visitor
+   *        A map of node types as keys and functions as values.
    *
    * @example
    *
-   *     corpus.add(b.namespace({
-   *       id: 'JS',
-   *       documents: [
-   *         b.document({
-   *           id: 'jQuery'
-   *         })
-   *       ]
-   *     }))
+   * ```javascript
+   * corpus.visit({
+   *   Document: function(node) {
+   *     if (node.filePath.match(/foo.js/)) {
+   *       node.meta.isFoo = true;
+   *     }
+   *   }
+   * });
+   * ```
    *
+   * @callback Corpus~Visitor
    * @param {T.Namespace|T.Node} node
    */
+  exports.visit = function(visitor) {
+    Object.keys(visitor).forEach(function(typeName) {
+      assert(Types.isTypeKnown(typeName),
+        "ArgumentError: a visitor was defined for an unknown node type '" + typeName + "'."
+      );
+
+      visitors[typeName] = visitors[typeName] || [];
+      visitors[typeName].push(visitor[typeName]);
+    });
+  };
+
   function add(node) {
     if (node.type === 'Namespace') {
       assert(corpusNode.namespaces.map(function(x) { return x.id; }).indexOf(node.id) === -1,
@@ -151,9 +181,13 @@ function Corpus() {
     node.uid = UID(node);
     node.indices = buildIndices(node);
 
-    assert(!(node.uid in nodes),
-      'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.'
-    );
+    if (node.uid in nodes) {
+      assert(false,
+        'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
+        '\nOriginal node is defined in: ' + (nodes[node.uid].filePath || '<<unknown>>') +
+        '\nCurrent node is defined in: ' + (node.filePath || '<<unknown>>')
+      );
+    }
 
     nodes[node.uid] = node;
 

@@ -24,6 +24,14 @@ var config = {
     'md__megadoc-plugin-git/readme': 'megadoc-plugin-git',
     'md__megadoc-plugin-lua/readme': 'megadoc-plugin-lua',
     'md__megadoc-plugin-yard-api/readme': 'megadoc-plugin-yard-api',
+    'md__megadoc-corpus/readme#uids': 'CorpusUIDs'
+  },
+
+  linkResolver: {
+    schemes: [ 'Megadoc', 'GitHub Wiki' ],
+    ignore: {
+      'md__core/changes': true
+    },
   },
 
   layoutOptions: {
@@ -96,8 +104,8 @@ var config = {
         text: 'Developers',
         links: [
           {
-            text: 'Plugins',
-            href: '/dev/plugins/readme.html',
+            text: 'Handbook',
+            href: '/dev/handbook/readme.html',
           },
 
           {
@@ -159,9 +167,7 @@ config.plugins = [
     useDirAsNamespace: false,
 
     namespaceDirMap: {
-      'lib': 'Core',
-      'lib/utils': 'Core.Utils',
-      'ui/': 'Core.UI',
+      'ui/': 'UI',
     }
   }),
 
@@ -180,10 +186,10 @@ config.plugins = [
     fullFolderTitles: false,
   }),
 
-  // @url: /dev/plugins
+  // @url: /dev/handbook
   require('megadoc-plugin-markdown')({
     id: 'md__plugins',
-    baseURL: '/dev/plugins',
+    baseURL: '/dev/handbook',
     source: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
     title: 'Plugin Development',
     fullFolderTitles: false,
@@ -199,7 +205,7 @@ addPackageDocumentation('megadoc-corpus', {
   url: '/dev/corpus'
 });
 
-addPackageDocumentation('megadoc-plugin-dot', { withJS: false });
+addPackageDocumentation('megadoc-plugin-dot');
 addPackageDocumentation('megadoc-plugin-git');
 addPackageDocumentation('megadoc-plugin-js');
 addPackageDocumentation('megadoc-plugin-lua');
@@ -226,6 +232,10 @@ function addPackageDocumentation(pluginName, options) {
       source: [
         'packages/' + pluginName + '/**/*.js'
       ],
+
+      namespaceDirMap: {
+        'ui/': 'UI',
+      },
 
       exclude: [ /__tests__/, /vendor/, /node_modules/ ],
     }));

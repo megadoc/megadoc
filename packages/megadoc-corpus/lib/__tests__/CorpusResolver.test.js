@@ -130,6 +130,7 @@ describe('CorpusResolver', function() {
     { from: "JS/Core.Y"        , to: "./X.js"          , res: "JS/Core.X" },
     { from: "JS/Core.Y"        , to: "../X.js"         , res: "JS/X" },
     { from: "JS/Core.Y"        , to: "../../X.js"      , res: null },
+    { from: "MD/X"             , to: "./Y.md"          , res: "MD/Y" },
 
     // resolving entities within a document by a filepath:
     { from: 'JS/Core.Y'        , to: './X.js#add'      , res: 'JS/Core.X#add' },

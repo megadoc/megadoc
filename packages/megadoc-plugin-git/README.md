@@ -6,4 +6,4 @@ Most of these stats are parsed with the help of [git-log-parser](https://github.
 
 ## Configuration
 
-See [Plugins.Git.Config]().
+See [Config]().

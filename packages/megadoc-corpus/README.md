@@ -62,6 +62,8 @@ This architecture is flexible enough to support a wide array of documentation
 schemes; most kinds of textual documentation, public API references, library 
 documentation, etc., can be structured within this model.
 
+### UIDs
+
 Each node added to the corpus is stamped with a `uid` - an identifier that is
 guaranteed to be unique among all nodes and can always be used to reference 
 the exact document, although it's usually not human-friendly. To address that,
@@ -118,7 +120,7 @@ found relative from the current document's filepath:
 ### Resolving by (absolute) filepath
 
 Any link that begins with `/` is expected to point to a document that can be
-found at that path, relative to the [[@assetRoot]]:
+found at that path, relative to the [[Config@assetRoot]]:
 
     [[/path/to/file]]
 
@@ -268,9 +270,9 @@ def("Property", {
 A sample AST for the example above:
 
 ```javascript
-// JS/Core.X@id -> [[X]] -> JS/Core.X
-// JS/Core.X@id -> [[@id]] -> JS/Core@id
-// JS/Core.X@id -> [[#add]] -> JS/Core#add
+// JS/Core.X@id -> \[[X]] -> JS/Core.X
+// JS/Core.X@id -> \[[@id]] -> JS/Core@id
+// JS/Core.X@id -> \[[#add]] -> JS/Core#add
 
 { // DocumentEntity
   type: "DocumentEntity",

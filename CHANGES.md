@@ -12,8 +12,8 @@ and runtime performance.
 
 - (semver-minor) Now using [urijs](https://github.com/medialize/URI.js/) for manipulating URIs
 - (semver-major) Generated URLs to internal documents are now relative
-- (semver-minor) A suffix may be appended to document URLs, like `.html`, see [Core.Config.format]()
-- (semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See [Core.Config.emitFiles]() and [Core.Config.emittedFileExtension]()
+- (semver-minor) A suffix may be appended to document URLs, like `.html`, see [Config.format]()
+- (semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See [Config.emitFiles]() and [Config.emittedFileExtension]()
 - (semver-minor) runtime config now contains a `pluginNames` list of the registered plugin names (inferred from the distributable JS files)
 - ~~(semver-major) megadoc-plugin-static now requires a `title` config item~~
 - ~~(semver-minor) megadoc-plugin-static now integrates with the corpus for indexing~~
@@ -101,7 +101,7 @@ Currently supported plugins:
 
 ### Plugin API changes
 
-**[megadoc.use]() signature change**
+**`megadoc.use` signature change**
 
 The new signature is:
 
@@ -225,19 +225,19 @@ The compilation now has two more phases:
 
 ### Internal API changes
 
-- New utility helper for generating temporary files, [Utils#writeTmpFile]()
+- New utility helper for generating temporary files, [AssetUtils#writeTmpFile]()
 - A new Assets API for plugins to register different kinds of assets they generate. See [Assets]().
 - Markdown plugin now supports multiple instances
 
 ### CJS Plugin changes
 
 - parsing was switched to an AST-based implementation using [recast](https://github.com/benjamn/recast). We still use [dox](https://github.com/tj/dox) for parsing docstrings.
-- the plugin can now accept custom tag definitions, see [Plugins.CJS#defineCustomTag]()
+- the plugin can now accept custom tag definitions, see [js__megadoc-plugin-js/Plugin#defineCustomTag]()
 - the plugin can now accept custom processors for the following entities:
-  + tags: [Plugins.CJS#addTagProcessor]()
-  + docs (the entire database): [Plugins.CJS#addPostProcessor]()
-  + recast node analyzer: [Plugins.CJS#addNodeAnalyzer]()
-  + dox docstring processor: [Plugins.CJS#addDocstringProcessor]()
+  + tags: [js__megadoc-plugin-js/Plugin#addTagProcessor]()
+  + docs (the entire database): [js__megadoc-plugin-js/Plugin#addPostProcessor]()
+  + recast node analyzer: [js__megadoc-plugin-js/Plugin#addNodeAnalyzer]()
+  + dox docstring processor: [js__megadoc-plugin-js/Plugin#addDocstringProcessor]()
 - much better `@lends` support:
   + you can now lend to a prototype: `@lends SomeObject.prototype`
   + or lend to an instance: `@lends exports`
@@ -306,7 +306,7 @@ Internal changes:
 
 ## 2.1.1
 
-- support for custom link titles in the format: `[/path/to/entity Custom Title]()`
+- support for custom link titles in the format: `\[/path/to/entity Custom Title]()`
 - new markdown option: `allowLeadingSlashInLinks`
 
 ## 2.1.0
@@ -316,7 +316,7 @@ Internal changes:
 
 ## 2.0.22
 
-- `cjs` plugin: module "static" methods (like `exports.something = function()`) are now linked to using the `.` symbol. For example: `[exports.something]()` instead of `[exports#something]()`
+- `cjs` plugin: module "static" methods (like `exports.something = function()`) are now linked to using the `.` symbol. For example: `\[exports.something]()` instead of `\[exports#something]()`
 
 ## 2.0.21
 

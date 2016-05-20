@@ -14,6 +14,5 @@ Refer to each folder's README.md for more contextual information.
     |-- index.js
 /ui
     |-- index.js
-    css
-    |-- index.{css,less,scss}
+    |-- index.less
 ```

@@ -8,6 +8,20 @@ var uniq = require('lodash').uniq;
 var camelizeCache = {};
 var definitions = [];
 
+/**
+ * @module CorpusTypes
+ */
+
+/**
+ * @lends CorpusTypes
+ * @private
+ *
+ * Define a corpus node type. The type will not be usable until [.finalize]()
+ * is invoked.
+ *
+ * @param  {String} typeName
+ * @param  {Object} typeDef
+ */
 function def(typeName, typeDef) {
   typeDefs[typeName] = typeDef;
 
@@ -23,7 +37,7 @@ function def(typeName, typeDef) {
 
     builders[camelize(typeName)] = createTypeBuilder(typeName, typeDef);
   });
-};
+}
 
 function createTypeBuilder(typeName, typeDef) {
   var TypeBuilder, constructor; // eslint-disable-line
@@ -248,6 +262,13 @@ function isOrType(type) {
   return type && type.type === 'or';
 }
 
+/**
+ * @lends CorpusTypes
+ *
+ * "Seal" the type definitions, create the builders and type checkers. This has
+ * to be done separately from the stage where [.def]() is called so that we can
+ * resolve custom types in the definitions.
+ */
 function finalize() {
   definitions.forEach(function(fn) {
     fn();
@@ -321,6 +342,14 @@ function BuiltInTypeChecker(typeName, f) {
   };
 }
 
+/**
+ * @lends CorpusTypes
+ *
+ * @property {Object} builders
+ *           The set of corpus type builder functions. The functions defined
+ *           in this property are what you'd use for building nodes of certain
+ *           types.
+ */
 exports.builders = builders;
 exports.def = def;
 exports.array = array;
@@ -328,10 +357,21 @@ exports.or = or;
 exports.finalize = finalize;
 exports.builtInTypes = builtInTypes;
 exports.types = builtInTypes;
+
+/**
+ * @param  {String}  typeName
+ * @return {Boolean}
+ *         Whether a definition exists for such a type.
+ */
 exports.isTypeKnown = function(typeName) {
   return typeName in typeDefs;
 };
 
+/**
+ * @param  {String} typeName
+ * @return {Array.<String>}
+ *         The type and any ancestor types it may have inherited from.
+ */
 exports.getTypeChain = function(typeName) {
   // TODO: optimize/cache
 
@@ -349,6 +389,11 @@ exports.getTypeChain = function(typeName) {
   return ancestors;
 };
 
+/**
+ * @param  {String} typeName
+ * @return {Array.<String>}
+ *         The type and any types that eventually inherit from it.
+ */
 exports.getTypeDescendants = function(typeName) {
   // TODO: optimize/cache
   return Object.keys(typeDefs).filter(function(thisTypeName) {
