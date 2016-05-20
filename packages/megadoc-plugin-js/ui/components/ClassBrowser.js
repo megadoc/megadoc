@@ -25,13 +25,13 @@ var ClassBrowser = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps) {
-    return (
-      nextProps.documentEntityNode !== this.props.documentEntityNode ||
-      nextProps.documentNode !== this.props.documentNode ||
-      nextProps.namespaceNode !== this.props.namespaceNode
-    );
-  },
+  // shouldComponentUpdate: function(nextProps) {
+  //   return (
+  //     nextProps.documentEntityNode !== this.props.documentEntityNode ||
+  //     nextProps.documentNode !== this.props.documentNode ||
+  //     nextProps.namespaceNode !== this.props.namespaceNode
+  //   );
+  // },
 
   render() {
     const rootDocuments = this.props.namespaceNode.documents;

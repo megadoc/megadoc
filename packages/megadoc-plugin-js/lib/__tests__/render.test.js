@@ -2,7 +2,8 @@ var render = require('../render');
 var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
 var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
-var reduceDocuments = require('../CorpusReducer');
+var createCompiler = require('megadoc/lib/TestUtils').createCompiler;
+var reduceDocuments = require('../reduce');
 
 describe('cjs::render', function() {
   var database;
@@ -36,7 +37,7 @@ describe('cjs::render', function() {
     renderMarkdown = sinon.stub().returnsArg(0);
     linkify = sinon.spy(function(x) { return x.text; });
 
-    render(reduceDocuments({
+    render(createCompiler(), reduceDocuments({
       documents: database,
       namespaceId: 'test',
       namespaceTitle: 'JavaScript Test',

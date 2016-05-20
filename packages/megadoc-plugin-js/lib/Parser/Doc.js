@@ -34,6 +34,12 @@ Doc.prototype.toJSON = function() {
   doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
   doc.receiver = this.getReceiver();
+  doc.mixinTargets = doc.tags.filter(function(tag) {
+    return tag.type === 'mixes';
+  }).reduce(function(list, tag) {
+    return list.concat(tag.mixinTargets);
+  }, []);
+
   doc.aliases = doc.tags.filter(function(tag) {
     return tag.type === 'alias';
   }).map(function(tag) {

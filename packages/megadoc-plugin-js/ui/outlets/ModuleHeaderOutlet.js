@@ -10,7 +10,6 @@ megadoc.outlets.add('CJS::ModuleHeader', {
       namespaceNode: object,
       $outletOptions: shape({
         showFilePath: bool,
-        showSummary: bool,
       })
     },
 
@@ -21,18 +20,9 @@ megadoc.outlets.add('CJS::ModuleHeader', {
         <div className="js-module-header-outlet">
           <ModuleHeader
             documentNode={documentNode}
+            showSourcePaths={this.props.$outletOptions.showFilePath !== false}
             generateAnchor={false}
           />
-
-          {this.props.$outletOptions.showFilePath !== false && documentNode.filePath && (
-            <p className="class-view__module-filepath">
-              Defined in: {megadoc.getRelativeFilePath(documentNode.filePath)}
-            </p>
-          )}
-
-          {this.props.$outletOptions.showSummary !== false && documentNode.summary && (
-            <p>{documentNode.summary}</p>
-          )}
         </div>
       );
     }

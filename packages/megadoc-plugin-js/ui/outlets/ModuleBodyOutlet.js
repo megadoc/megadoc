@@ -15,7 +15,7 @@ megadoc.outlets.add('CJS::ModuleBody', {
         return null;
       }
 
-      return <ModuleBody documentNode={this.props.documentNode} />;
+      return <ModuleBody {...this.props} />;
     }
   }),
 });

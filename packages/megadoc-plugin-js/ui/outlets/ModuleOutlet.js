@@ -16,10 +16,7 @@ megadoc.outlets.add('CJS::Module', {
       }
 
       return (
-        <Module
-          namespaceNode={this.props.namespaceNode}
-          documentNode={this.props.documentNode}
-        />
+        <Module {...this.props} />
       );
     }
   }),

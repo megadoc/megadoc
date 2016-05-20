@@ -1,7 +1,7 @@
 const React = require('react');
 const { findWhere, where } = require("lodash");
 const Outlet = require('components/Outlet');
-const HighlightedText = require('components/HighlightedText');
+const Link = require('components/Link');
 const Doc = require('./Doc');
 const SeeTag = require('./Tags/SeeTag');
 const DocGroup = require('./DocGroup');
@@ -15,6 +15,7 @@ const { string, object, arrayOf } = React.PropTypes;
 const ModuleBody = React.createClass({
   propTypes: {
     documentNode: object,
+    namespaceNode: object,
     doc: object,
     moduleDocs: arrayOf(object),
     focusedEntity: string,
@@ -25,17 +26,22 @@ const ModuleBody = React.createClass({
     const doc = documentNode.properties;
     const moduleDocs = documentNode.entities.map(x => x.properties);
     const renderableType = DocClassifier.getDisplayType(documentNode);
+    const mixedInTargets = getMixedInTargets(documentNode, this.props.namespaceNode);
 
     return (
       <div>
-        {hasDetailedDescription(documentNode) && [
-          <h2 key="description-header" className="doc-group__header">
-            Detailed Description
-          </h2>,
+        {mixedInTargets.length > 0 && [
+          <p key="mixinTargets__header" className="doc-group__header">
+            This module is mixed-in by the following modules:
+          </p>,
 
-          <HighlightedText key="description">
-            {doc.description}
-          </HighlightedText>
+          <ol key="mixinTargets__listing">
+            {mixedInTargets.map(x => (
+              <li key={x.uid}>
+                <Link to={x}>{x.title}</Link>
+              </li>
+            ))}
+          </ol>
         ]}
 
         {renderableType === 'Factory' && (
@@ -260,6 +266,32 @@ function hasDetailedDescription(node) {
   return node.properties.description && (
     node.properties.description.replace(/(^\<p\>|\<\/p\>\n?$)/g, '') !== node.summary
   );
+}
+
+function getMixedInTargets(node, namespaceNode) {
+  const { uid } = node;
+
+  return namespaceNode.documents.reduce(findMatchingDocuments, []);
+
+  function findMatchingDocuments(list, documentNode) {
+    if (match(documentNode)) {
+      list.push(documentNode);
+    }
+
+    if (documentNode.documents) {
+      documentNode.documents.reduce(findMatchingDocuments, list);
+    }
+
+    return list;
+  }
+
+  function match(x) {
+    return (
+      x.properties &&
+      x.properties.mixinTargets &&
+      x.properties.mixinTargets.some(y => y.uid === uid)
+    );
+  }
 }
 
 module.exports = ModuleBody;

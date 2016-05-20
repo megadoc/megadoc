@@ -5,12 +5,12 @@ var render = require('./render');
 var assign = require('lodash').assign;
 var assert = require('assert');
 var defaults = require('./config');
-var reduceDocuments = require('./CorpusReducer');
+var reduceDocuments = require('./reduce');
 
 /**
  * @param {Config} userConfig
  */
-function createCJSPlugin(userConfig) {
+function Plugin(userConfig) {
   var config = assign({}, defaults, userConfig);
   var parserConfig = {
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
@@ -107,7 +107,7 @@ function createCJSPlugin(userConfig) {
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
-        render(database, renderMarkdown, linkify);
+        render(compiler, database, renderMarkdown, linkify);
 
         done();
       });
@@ -137,4 +137,4 @@ function createCJSPlugin(userConfig) {
   return plugin;
 }
 
-module.exports = createCJSPlugin;
+module.exports = Plugin;

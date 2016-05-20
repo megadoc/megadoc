@@ -13,14 +13,12 @@ megadoc.outlets.add('CJS::ClassBrowser', {
 
     render() {
       return (
-        <div>
-          <ClassBrowser
-            namespaceNode={this.props.namespaceNode}
-            documentNode={this.props.documentNode}
-            documentEntityNode={this.props.documentEntityNode}
-            withControls={false}
-          />
-        </div>
+        <ClassBrowser
+          namespaceNode={this.props.namespaceNode}
+          documentNode={this.props.documentNode}
+          documentEntityNode={this.props.documentEntityNode}
+          withControls={false}
+        />
       );
     }
   }),

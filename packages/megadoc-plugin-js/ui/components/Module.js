@@ -12,8 +12,9 @@ const Module = React.createClass({
   ],
 
   propTypes: {
-    documentNode: React.PropTypes.object.isRequired,
     namespaceNode: React.PropTypes.object.isRequired,
+    documentNode: React.PropTypes.object.isRequired,
+    documentEntityNode: React.PropTypes.object,
   },
 
   render() {

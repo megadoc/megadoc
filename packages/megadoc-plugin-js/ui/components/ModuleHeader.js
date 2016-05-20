@@ -2,6 +2,7 @@ const React = require("react");
 const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
 const HeadingAnchor = require('components/HeadingAnchor');
+const HighlightedText = require('components/HighlightedText');
 const K = require('../constants');
 const DocClassifier = require('../utils/DocClassifier');
 
@@ -46,7 +47,7 @@ const ModuleHeader = React.createClass({
     }
 
     return (
-      <header>
+      <div>
         <Heading
           level="1"
           parentLevel={this.props.headerLevel}
@@ -80,11 +81,33 @@ const ModuleHeader = React.createClass({
             >
               <span>{DocClassifier.getDisplayType(documentNode)}</span>
             </Outlet>
+
+            {hasMixinTargets(documentNode) && documentNode.properties.mixinTargets.map(x => (
+              <span key={x.name}>, <span dangerouslySetInnerHTML={{__html: x.html}} /></span>
+            ))}
           </span>
         </Heading>
-      </header>
+
+        {this.props.showSourcePaths && documentNode.filePath && (
+          <p className="class-view__module-filepath">
+            Defined in: <code>{megadoc.getRelativeFilePath(documentNode.filePath)}</code>
+          </p>
+        )}
+
+        <HighlightedText key="description">
+          {doc.description}
+        </HighlightedText>
+      </div>
     );
   }
 });
+
+function hasMixinTargets(node) {
+  return (
+    node.properties &&
+    node.properties.mixinTargets &&
+    node.properties.mixinTargets.length > 0
+  );
+}
 
 module.exports = ModuleHeader;

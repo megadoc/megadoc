@@ -6,10 +6,12 @@ var NO_DESCRIPTION_TAGS = [
   'extends',
   'private',
   'mixin',
+  'mixes',
   'preserveOrder',
   'alias',
   'type',
   'method',
+  'inheritdoc',
 ];
 
 function extractSwallowedDescriptionInTag(tag, fragments) {

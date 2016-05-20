@@ -1,10 +1,9 @@
-module.exports = function(namespaceNode, md, linkify) {
+module.exports = function(compiler, namespaceNode, md, linkify) {
   namespaceNode.documents.forEach(visitNode);
 
   function visitNode(node) {
-
     if (node.properties) {
-      renderDocument(node);
+      renderNode(node);
     }
 
     if (node.entities) {
@@ -16,7 +15,7 @@ module.exports = function(namespaceNode, md, linkify) {
     }
   }
 
-  function renderDocument(node) {
+  function renderNode(node) {
     var doc = node.properties;
 
     if (doc.description) {
@@ -24,6 +23,33 @@ module.exports = function(namespaceNode, md, linkify) {
         text: doc.description,
         contextNode: node,
       }));
+    }
+
+    if (doc.mixinTargets) {
+      doc.mixinTargets = doc.mixinTargets.map(function(typeName) {
+        var target = compiler.corpus.resolve({
+          text: typeName,
+          contextNode: node
+        });
+
+        if (!target) {
+          return { name: typeName };
+        }
+
+        return {
+          uid: target.uid,
+          name: typeName,
+          html: compiler.linkResolver.renderLink({
+            strict: true,
+            format: 'html',
+            contextNode: node,
+          }, {
+            path: typeName,
+            text: typeName,
+            source: typeName
+          })
+        };
+      });
     }
 
     if (doc.tags) {

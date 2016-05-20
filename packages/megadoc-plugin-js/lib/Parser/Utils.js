@@ -147,10 +147,14 @@ Utils.findIdentifierInScope = function(identifierName, path) {
 };
 
 Utils.getLocation = function(node) {
-  if ('VariableDeclaration' === node.type) {
-    return node.declarations[0].init.loc || { start: {}, end: {} };
+  var loc;
+
+  if ('VariableDeclaration' === node.type && node.declarations[0].init) {
+    loc = node.declarations[0].init.loc;
   }
   else {
-    return node.loc || { start: {}, end: {} };
+    loc = node.loc;
   }
+
+  return loc || { start: {}, end: {} };
 };

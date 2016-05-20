@@ -1,6 +1,6 @@
 var assert = require('chai').assert;
 var TestUtils = require('../Parser/TestUtils');
-var reduceDocuments = require('../CorpusReducer');
+var reduceDocuments = require('../reduce');
 var Corpus = require('megadoc-corpus').Corpus;
 
 describe('cjs::resolveLink', function() {
@@ -19,6 +19,11 @@ describe('cjs::resolveLink', function() {
       //  */
       // Cache.prototype.add = function() {
       // };
+      //
+      // /**
+      //  * @module Foo
+      //  */
+      //  function Foo() {}
     });
 
     corpus = Corpus();
@@ -38,7 +43,7 @@ describe('cjs::resolveLink', function() {
   });
 
   it('resolves ${MODULE}', function() {
-    assert.ok(subject('Core.Cache'));
+    assert.ok(subject('Foo'));
   });
 
   it('resolves ${NS}.${MODULE}${SYM}${ENTITY}', function() {

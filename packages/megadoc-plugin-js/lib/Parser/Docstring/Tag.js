@@ -63,6 +63,8 @@ function Tag(doxTag, options, filePath) {
    */
   this.lendReceiver = null;
 
+  this.mixinTargets = [];
+
   /**
    * @property {String}
    *           Available on @property, @type, @param, and @live_example tags.
@@ -160,6 +162,12 @@ function Tag(doxTag, options, filePath) {
 
     case 'lends':
       this.lendReceiver = doxTag.parent;
+      break;
+
+    case 'mixes':
+      var firstLine = this.string.split('\n')[0].trim();
+      this.mixinTargets = firstLine.split(/\s+/);
+      this.string = this.string.replace(firstLine, '');
       break;
 
     default:
