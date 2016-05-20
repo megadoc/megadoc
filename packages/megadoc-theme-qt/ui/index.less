@@ -22,11 +22,22 @@ a, a.active {
   font-weight: normal;
 }
 
+pre {
+  font-size: 0.9rem;
+}
+
 .schemable({
   background: @background;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
+
   a:visited:not(.active) {
     color: lighten(@plain-link, 15%);
+  }
+
+  a.mega-link--broken {
+    &, &:visited {
+      color: @solarized-red;
+    }
   }
 
   .footer {
