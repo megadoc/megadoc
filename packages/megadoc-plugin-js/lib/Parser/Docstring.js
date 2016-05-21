@@ -15,15 +15,26 @@ var findWhere = _.findWhere;
  *        The JSDoc-compatible comment string to build from.
  */
 function Docstring(comment, options, filePath) {
-  // var doxDocs = dox.parseComments(comment, { raw: true });
-  var doxDocs = parseComment(comment);
-  var idInfo;
+  var commentNode, idInfo;
 
-  assert(doxDocs.length === 1,
-    'Dox should not extract more than 1 doc from an expression.'
-  );
+  try {
+    commentNode = parseComment(comment);
+  }
+  catch(e) {
+    throw new Error('Comment parse failed: "' + e.message + '" Source:\n' + comment);
+  }
 
-  this.tags = doxDocs[0].tags.map(function(doxTag) {
+  if (commentNode.length === 0) {
+    throw new Error('No content found in comment. Source:\n' + comment);
+  }
+  else if (commentNode.length > 1) {
+    throw new Error(
+      'Comment should not contain more than one block of documentaion.' +
+      'Source:\n' + comment
+    );
+  }
+
+  this.tags = commentNode[0].tags.map(function(doxTag) {
     return new Tag(doxTag, options || {}, filePath);
   });
 
@@ -31,7 +42,7 @@ function Docstring(comment, options, filePath) {
 
   this.id = idInfo.id;
   this.namespace = idInfo.namespace;
-  this.description = collectDescription(doxDocs[0], this.id, this.tags);
+  this.description = collectDescription(commentNode[0], this.id, this.tags);
 
   return this;
 }

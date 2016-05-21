@@ -94,6 +94,8 @@ module.exports = {
 
   verbose: false,
 
+  strict: true,
+
   /**
    * @property {Object.<String, String|Array.<String>>}
    *

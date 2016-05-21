@@ -1,11 +1,14 @@
-var assert = require('assert');
+var assert = require('chai').assert;
 var findWhere = require('lodash').findWhere;
 var TestUtils = require('../TestUtils');
 var K = require('../constants');
+var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
 
 var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser', function() {
+  var sinon = sinonSuite(this);
+
   it('should ignore @internal docs', function() {
     var docs = parseInline(function() {;
       // /**
@@ -18,6 +21,24 @@ describe('CJS::Parser', function() {
       //  module.exports = Something;
     });
 
+    assert.equal(docs.length, 0);
+  });
+
+  it('should warn about invalid docstrings', function() {
+    sinon.stub(console, 'warn');
+
+    var docs = parseInline(function() {;
+      // /*
+      //  * @internal
+      //  * Something.
+      //  */
+      //  function Something() {
+      //  }
+      //
+      //  module.exports = Something;
+    });
+
+    assert.calledWith(console.warn, sinon.match(/Comment could not be parsed correctly/));
     assert.equal(docs.length, 0);
   });
 

@@ -47,21 +47,33 @@ Ppt.parseFile = function(filePath, config, commonPrefix) {
 
 Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   if (str.length > 0) {
-    if (config.parse) {
-      this.ast = config.parse(str, filePath, absoluteFilePath);
-    }
-    else {
-      this.ast = babel.transform(str, assign({
-        filenameRelative: filePath,
-        filename: absoluteFilePath,
-        code: false,
-        ast: true,
-        babelrc: true,
-        comments: true
-      }, config.parserOptions)).ast;
-    }
+    try {
+      if (config.parse) {
+        this.ast = config.parse(str, filePath, absoluteFilePath);
+      }
+      else {
+        this.ast = babel.transform(str, assign({
+          filenameRelative: filePath,
+          filename: absoluteFilePath,
+          code: false,
+          ast: true,
+          babelrc: true,
+          comments: true
+        }, config.parserOptions)).ast;
+      }
 
-    this.walk(this.ast, config, filePath, absoluteFilePath);
+      this.walk(this.ast, config, filePath, absoluteFilePath);
+    } catch(e) {
+      if (config.strict) {
+        throw e;
+      }
+      else {
+        console.warn("File could not be parsed, most likely due to a SyntaxError. (Source: '%s')", filePath);
+        console.warn(e);
+
+        return;
+      }
+    }
   }
 };
 
@@ -186,7 +198,6 @@ Ppt.toJSON = function() {
 
 Ppt.parseComment = function(comment, path, contextNode, config, filePath, absoluteFilePath) {
   var nodeInfo, doc;
-
   var docstring = new Docstring('/*' + comment + '*/', config, absoluteFilePath);
 
   if (docstring.isInternal()) {

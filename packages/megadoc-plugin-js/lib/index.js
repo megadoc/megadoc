@@ -13,6 +13,7 @@ var reduceDocuments = require('./reduce');
 function Plugin(userConfig) {
   var config = assign({}, defaults, userConfig);
   var parserConfig = {
+    strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
