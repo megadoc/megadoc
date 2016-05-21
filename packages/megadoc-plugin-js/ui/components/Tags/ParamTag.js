@@ -8,7 +8,7 @@ var ParamTag = React.createClass({
   propTypes: {
     withTitle: React.PropTypes.bool,
     typeInfo: React.PropTypes.shape({
-      types: React.PropTypes.arrayOf(React.PropTypes.string),
+      type: React.PropTypes.object,
       name: React.PropTypes.string,
       defaultValue: React.PropTypes.string,
       description: React.PropTypes.string
@@ -31,11 +31,11 @@ var ParamTag = React.createClass({
 
           <code className="param-tag__name">{typeInfo.name}</code>
 
-          {typeInfo.types.length > 0 && (
+          {typeInfo.type && (
             <code className="param-tag__types">
               {': '}
 
-              <TypeNames types={typeInfo.types} />
+              <TypeNames type={typeInfo.type} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">

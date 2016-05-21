@@ -1,8 +1,10 @@
 const React = require('react');
+const K = require('../../constants');
+const renderType = require('../../utils/describeType');
 
 const TypeNames = React.createClass({
   propTypes: {
-    types: React.PropTypes.arrayOf(React.PropTypes.string).isRequired
+    type: React.PropTypes.object.isRequired
   },
 
   render() {
@@ -10,11 +12,11 @@ const TypeNames = React.createClass({
       <span
         className="js-type-names"
         dangerouslySetInnerHTML={{
-          __html: this.props.types.join('|')
+          __html: renderType(this.props.type)
         }}
       />
     );
-  }
+  },
 });
 
 module.exports = TypeNames;

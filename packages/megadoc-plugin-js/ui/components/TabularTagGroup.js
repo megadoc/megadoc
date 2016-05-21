@@ -88,9 +88,9 @@ var TabularTagGroup = React.createClass({
         </td>
 
         <td>
-          {typeInfo.types.length > 0 && (
+          {typeInfo.type && (
             <code className="param-tag__types">
-              <TypeNames types={typeInfo.types} />
+              <TypeNames type={typeInfo.type} />
 
               {typeInfo.defaultValue && (
                 <span className="param-tag__default-value">

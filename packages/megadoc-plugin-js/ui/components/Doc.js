@@ -4,6 +4,7 @@ const HighlightedText = require('components/HighlightedText');
 const DocTags = require('./DocTags');
 const FunctionSignature = require('./FunctionSignature');
 const TypeNames = require('./Tags/TypeNames');
+const K = require('../constants');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
 const HeadingAnchor = require('components/HeadingAnchor');
@@ -127,14 +128,14 @@ const Doc = React.createClass({
     return (
       <span className="doc-entity__method-params">
         {' -> '}
-        <TypeNames types={tag.typeInfo.types} />
+        <TypeNames type={tag.typeInfo.type} />
       </span>
     );
   }
 });
 
 function isFunction(doc) {
-  return doc.ctx.type === 'function';
+  return doc.ctx.type === K.TYPE_FUNCTION;
 }
 
 module.exports = Doc;

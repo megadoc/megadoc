@@ -3,7 +3,7 @@ var K = require('../constants');
 function isMethod(doc) {
   var ctx = doc.ctx;
 
-  return ctx.type === 'function' && (
+  return ctx.type === K.TYPE_FUNCTION && (
     ctx.scope === K.SCOPE_FACTORY_EXPORTS ||
     ctx.scope === K.SCOPE_INSTANCE ||
     ctx.scope === K.SCOPE_PROTOTYPE
@@ -22,7 +22,7 @@ function isClassEntity(doc) {
 }
 
 function isStaticMethod(doc) {
-  return doc.ctx.type === 'function' && !isMethod(doc);
+  return doc.ctx.type === K.TYPE_FUNCTION && !isMethod(doc);
 }
 
 exports.isMethod = isMethod;

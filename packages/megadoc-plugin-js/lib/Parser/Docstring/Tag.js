@@ -97,9 +97,9 @@ function Tag(commentNode, options, filePath) {
     defaultValue: null,
 
     /**
-     * @property {String[]}
+     * @property {String[]} typeInfo.type
      */
-    types: []
+    type: {}
   };
 
   switch(this.type) {

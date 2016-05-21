@@ -104,18 +104,18 @@ const ModuleIndex = React.createClass({
 
     const returnValue = documentNode.properties.tags.reduce((v, x) => {
       if (x.type === 'return') {
-        return x.typeInfo.types;
+        return x.typeInfo.type;
       }
       else {
         return v;
       }
-    }, ['void']);
+    }, { name: 'void' });
 
     return (
       <tr key={documentNode.uid}>
         <td>
           <span className="doc-entity__function-signature">
-            {returnValue && <TypeNames types={returnValue} />}
+            {returnValue && <TypeNames type={returnValue} />}
           </span>
         </td>
 
@@ -157,7 +157,7 @@ const ModuleIndex = React.createClass({
       <tr key={documentNode.uid}>
         <td>
           <span className="doc-entity__function-signature">
-            <TypeNames types={propertyTag.typeInfo.types} />
+            <TypeNames type={propertyTag.typeInfo.type} />
           </span>
         </td>
 

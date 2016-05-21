@@ -107,7 +107,7 @@ function Plugin(userConfig) {
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
-        render(compiler, database, renderMarkdown, linkify);
+        render(compiler, database, renderMarkdown, linkify, config);
 
         done();
       });

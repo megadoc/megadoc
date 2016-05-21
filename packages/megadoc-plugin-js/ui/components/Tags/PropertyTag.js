@@ -4,7 +4,7 @@ const HeadingAnchor = require('components/HeadingAnchor');
 const TypeNames = require('./TypeNames');
 const Doc = require('../Doc');
 
-const { shape, string, arrayOf, object } = React.PropTypes;
+const { shape, string, object } = React.PropTypes;
 
 const PropertyTag = React.createClass({
   displayName: "PropertyTag",
@@ -12,7 +12,7 @@ const PropertyTag = React.createClass({
   propTypes: {
     anchor: string,
     typeInfo: shape({
-      types: arrayOf(string),
+      type: object,
       name: string,
       defaultValue: string,
       description: string
@@ -37,7 +37,7 @@ const PropertyTag = React.createClass({
 
           {': '}
 
-          <code><TypeNames types={typeInfo.types} /></code>
+          <code><TypeNames type={typeInfo.type} /></code>
         </header>
 
         {description && (
@@ -52,7 +52,7 @@ const PropertyTag = React.createClass({
           </p>
         )}
 
-        {this.props.doc && typeInfo.types[0].toLowerCase() === 'function' && (
+        {this.props.doc && typeInfo.type.name.toLowerCase() === 'function' && (
           <Doc
             withTitle={false}
             collapsible={false}

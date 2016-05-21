@@ -1,5 +1,6 @@
 const React = require('react');
 const { bool, object, } = React.PropTypes;
+const describeType = require('../utils/describeType');
 
 const FunctionSignature = React.createClass({
   propTypes: {
@@ -23,10 +24,10 @@ const FunctionSignature = React.createClass({
       })
       .map(function(param) {
         if (withNames) {
-          return '<em>' + param.typeInfo.name + '</em>: ' + param.typeInfo.types.join('|');
+          return '<em>' + param.typeInfo.name + '</em>: ' + describeType(param.typeInfo.type);
         }
         else {
-          return param.typeInfo.types.join('|');
+          return describeType(param.typeInfo.type);
         }
       }).join(', ')
     ;

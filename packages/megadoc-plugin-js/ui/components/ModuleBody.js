@@ -179,7 +179,7 @@ const ModuleBody = React.createClass({
       findWhere(doc.tags, { type: 'type' }) || {
         typeInfo: {
           name: doc.name,
-          types: [ doc.ctx.type ]
+          type: { name: doc.ctx.type }
         }
       }
     );
