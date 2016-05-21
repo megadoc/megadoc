@@ -69,7 +69,11 @@ function TypeInfo(commentNode) {
   }
 
   if (hasType) {
-    typeInfo.type = parseTypes(commentNode.type)[0];
+    typeInfo.type = parseTypes(commentNode.type);
+
+    if (!typeInfo.type || !typeInfo.type.name) {
+      delete typeInfo.type;
+    }
   }
 
   if (commentNode.optional) {

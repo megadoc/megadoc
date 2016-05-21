@@ -25,14 +25,13 @@ function Docstring(comment, options, filePath) {
   }
 
   if (commentNode.length === 0) {
-    throw new Error('No content found in comment. Source:\n' + comment);
+    throw new Error('Invalid annotation in comment block. Source:\n' + comment);
   }
-  else if (commentNode.length > 1) {
-    throw new Error(
-      'Comment should not contain more than one block of documentaion.' +
-      'Source:\n' + comment
-    );
-  }
+
+  assert(commentNode.length === 1,
+    'Comment parser should yield a single node, not ' + commentNode.length + '! ' +
+    'Source:\n' + comment
+  );
 
   this.tags = commentNode[0].tags.map(function(doxTag) {
     return new Tag(doxTag, options || {}, filePath);

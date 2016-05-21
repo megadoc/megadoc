@@ -1,3 +1,4 @@
+var assert = require('assert');
 var K = require('./Parser/constants');
 var BUILT_IN_TYPES = [
   'Error',
@@ -159,10 +160,18 @@ module.exports = function(compiler, namespaceNode, md, linkify, config) {
 
   function renderTypeLink(params) {
     var typeName = params.typeName;
-    var strict = !(typeName.toLowerCase() in builtInTypes);
+    var builtInType = builtInTypes[typeName.toLowerCase()];
+
+    if (builtInType) {
+      if (typeof builtInType === 'string') {
+        return '<a href="' + encodeURI(builtInType) + '">' + typeName + '</a>';
+      }
+
+      return typeName;
+    }
 
     return params.linkResolver.renderLink({
-      strict: strict,
+      strict: true,
       format: 'html',
       contextNode: params.contextNode,
     }, {
@@ -174,6 +183,18 @@ module.exports = function(compiler, namespaceNode, md, linkify, config) {
 };
 
 function toIndexMap(map, x) {
-  map[x.toLowerCase()] = true;
+  if (typeof x === 'string') {
+    map[x.toLowerCase()] = true;
+  }
+  else if (x && typeof x === 'object') {
+    assert(typeof x.name === 'string');
+    assert(typeof x.href === 'string');
+
+    map[x.name.toLowerCase()] = x.href;
+  }
+  else {
+    assert(false);
+  }
+
   return map;
 }

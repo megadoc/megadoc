@@ -66,6 +66,7 @@ module.exports = function reduceDocuments(options) {
       title: doc.path,
       summary: generateSummary(doc),
       filePath: doc.absoluteFilePath,
+      loc: doc.loc,
       symbol: '',
       properties: doc,
       documents: rawDocuments.filter(function(x) {

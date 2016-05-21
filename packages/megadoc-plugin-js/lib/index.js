@@ -31,6 +31,22 @@ function Plugin(userConfig) {
     "You must specify an @id to the megadoc-plugin-js plugin."
   );
 
+  if (config.builtInTypes) {
+    config.builtInTypes.forEach(function(x) {
+      if (x && typeof x === 'object') {
+        assert(typeof x.name === 'string',
+          'An object for a built-in type must define a @name string.');
+
+        assert(typeof x.href === 'string',
+          'An object for a built-in type must specify @href with a URL to the built-in type documentation');
+      }
+      else {
+        assert(typeof x === 'string',
+          'Built-in type must be either a string or an object, not "' + typeof x + '"');
+      }
+    });
+  }
+
   var plugin = {
     id: config.id,
 

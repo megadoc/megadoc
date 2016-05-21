@@ -6,6 +6,7 @@ const invariant = require('utils/invariant');
 let state = {
   layout: config.layout,
   spotlightOpen: false,
+  invertedTCL: false,
   singlePageMode: config.layoutOptions && config.layoutOptions.singlePageMode,
 };
 
@@ -46,6 +47,24 @@ AppState.isSpotlightOpen = function() {
 
 AppState.inSinglePageMode = function() {
   return state.singlePageMode;
+};
+
+AppState.invertTwoColumnLayout = function() {
+  if (!AppState.isTwoColumnLayoutInverted()) {
+    state.invertedTCL = true;
+    AppState.emit('change');
+  }
+};
+
+AppState.restoreTwoColumnLayout = function() {
+  if (AppState.isTwoColumnLayoutInverted()) {
+    state.invertedTCL = false;
+    AppState.emit('change');
+  }
+};
+
+AppState.isTwoColumnLayoutInverted = function() {
+  return state.invertedTCL;
 };
 
 module.exports = AppState;

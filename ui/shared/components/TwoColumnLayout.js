@@ -1,7 +1,7 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 const findChildByType = require('utils/findChildByType');
-const EventEmitter = require('core/EventEmitter');
+const AppState = require('core/AppState');
 const Storage = require('core/Storage');
 const resizable = require('utils/resizable');
 const classSet = require('utils/classSet');
@@ -15,10 +15,6 @@ const {
 } = require('constants');
 
 Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
-
-// We want all instances of TwoColumnLayout across the app to share the same
-// sidebar width, so we'll track it here outside of state or something.
-let inverted;
 
 const LeftColumn = React.createClass({
   propTypes: {
@@ -41,10 +37,6 @@ const RightColumn = React.createClass({
 });
 
 const TwoColumnLayout = React.createClass({
-  statics: {
-    invert() { inverted = true; }
-  },
-
   propTypes: {
     children: React.PropTypes.any,
   },
@@ -58,6 +50,8 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentDidMount() {
+    AppState.on('change', this.reload);
+
     // so that we reset the sidebar width if storage was cleared
     // Storage.on('change', () => {
     //   this.setState({
@@ -74,6 +68,8 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentWillUnmount() {
+    AppState.off('change', this.reload);
+
     if (config.resizableSidebar) {
       this.resizableInstance.destroy();
     }
@@ -89,8 +85,15 @@ const TwoColumnLayout = React.createClass({
       'two-column-layout__left--collapsed': this.state.sidebarCollapsed
     });
 
+    const inverted = AppState.isTwoColumnLayoutInverted();
+
     return (
-      <div className={classSet({ "two-column-layout": true, "two-column-layout--inverted": inverted })}>
+      <div
+        className={classSet({
+          "two-column-layout": true,
+          "two-column-layout--inverted": inverted
+        })}
+      >
         <div
           className={leftClassName}
           style={{ width: sidebarWidth }}
@@ -126,7 +129,7 @@ const TwoColumnLayout = React.createClass({
     );
   },
 
-  reloadOnResize() {
+  reload() {
     this.forceUpdate();
   },
 

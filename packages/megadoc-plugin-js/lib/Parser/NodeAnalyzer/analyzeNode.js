@@ -63,7 +63,7 @@ function analyzeNode(node, path, filePath, config) {
   if (info.id) {
     info.addContextInfo(generateContext(info.$contextNode));
 
-    if (info.isExports() || info.isDestructuredObject()) {
+    if (info.isExports()/* || info.isDestructuredObject() */) {
       info.addContextInfo({ type: K.TYPE_OBJECT });
     }
   }
@@ -73,6 +73,7 @@ function analyzeNode(node, path, filePath, config) {
 
 function analyzeVariableDeclaration(node, path, info) {
   var decl = node.declarations[0];
+
 
   //     var Something = 'a';
   //     var Something = SomeFunc();

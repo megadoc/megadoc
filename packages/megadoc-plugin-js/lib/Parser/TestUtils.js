@@ -3,11 +3,12 @@ var ASTParser = require('./');
 
 function parseInline(strGenerator, config, filePath) {
   var parser = new ASTParser();
-  var body = multiline(strGenerator);
+  var body = typeof strGenerator === 'function' ? multiline(strGenerator) : strGenerator;
   var database;
 
   config = config || {};
   config.alias = config.alias || {};
+  config.strict = true;
 
   parser.parseString(body, config, filePath || '__test__');
   parser.seal(config);

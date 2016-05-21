@@ -212,6 +212,8 @@ def("Node", {
      */
     filePath: or(t.string, null),
 
+    loc: or(t.object, null),
+
     /**
      * @inheritdoc T.Corpus@meta
      */

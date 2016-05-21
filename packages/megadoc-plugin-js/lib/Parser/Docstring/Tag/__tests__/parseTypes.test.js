@@ -285,13 +285,10 @@ describe('CJS::Parser::Docstring::Tag::parseTypes', function() {
         return;
       }
 
-      var types = subject(spec.string);
-
-      assert.equal(types.length, spec.types.length, "Number of parsed types");
-
-      spec.types.forEach(function(expectedType, i) {
-        assert.equal(JSON.stringify(types[i]), JSON.stringify(expectedType))
-      });
+      assert.equal(
+        JSON.stringify(subject(spec.string)),
+        JSON.stringify(spec.types[0])
+      );
     });
   });
 });

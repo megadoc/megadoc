@@ -186,6 +186,10 @@ function Tag(commentNode, options, filePath) {
     case 'mixes':
       this.mixinTargets = [ commentNode.name ];
       break;
+
+    case 'see':
+      this.string = commentNode.name;
+      break;
   }
 
   if (customTags && customTags.hasOwnProperty(this.type)) {

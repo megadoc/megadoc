@@ -27,19 +27,18 @@ describe('CJS::Parser', function() {
   it('should warn about invalid docstrings', function() {
     sinon.stub(console, 'warn');
 
-    var docs = parseInline(function() {;
-      // /*
-      //  * @internal
-      //  * Something.
-      //  */
-      //  function Something() {
-      //  }
-      //
-      //  module.exports = Something;
-    });
-
-    assert.calledWith(console.warn, sinon.match(/Comment could not be parsed correctly/));
-    assert.equal(docs.length, 0);
+    assert.throws(function() {
+      parseInline(function() {;
+        // /**
+        //  * @internal
+        //    Something.
+        //  */
+        //  function Something() {
+        //  }
+        //
+        //  module.exports = Something;
+      });
+    }, /Invalid annotation in comment block/);
   });
 
   describe('resolving identifiers', function() {

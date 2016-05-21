@@ -2,7 +2,7 @@ var catharsis = require('catharsis');
 var K = require('../../constants');
 
 module.exports = function(typeString) {
-  return [].concat(catharsis.parse(typeString, { jsdoc: true, useCache: false })).map(reduceCatharsis);
+  return reduceCatharsis(catharsis.parse(typeString, { jsdoc: true, useCache: false }));
 };
 
 function reduceCatharsis(typeInfo) {

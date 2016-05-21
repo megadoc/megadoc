@@ -12,6 +12,7 @@ var assign = require('lodash').assign;
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var babel = require('babel-core');
 var t = require('babel-types');
+var util = require('util');
 
 var runAllSync = require('../utils/runAllSync');
 
@@ -58,7 +59,7 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
           code: false,
           ast: true,
           babelrc: true,
-          comments: true
+          comments: true,
         }, config.parserOptions)).ast;
       }
 
@@ -121,7 +122,27 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         commentPool = path.node.leadingComments;
       }
 
+
       if (commentPool) {
+        // Handle an edge-case with babel against ES6 destructured identifiers;
+        // it seems to attach the leading comments to both the VariableDeclaration
+        // node as well as the first identifier inside of it, so for the following
+        // snippet:
+        //
+        //     /**
+        //      * @module
+        //      */
+        //      var { Assertion } = require('chai');
+        //
+        // leadingComments will be set both on VariableDeclaration as well as
+        // Identifier(Assertion).
+        //
+        // We'll handle the Identifier and forget about the destructured variable
+        // altogether/
+        if (isCommentedDestructuredProperty(path)) {
+          return false;
+        }
+
         if (parser.visitedComments.has(path)) {
           // console.log('Comment walker: already seen this node, ignoring.');
           return false;
@@ -225,7 +246,9 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   if (doc.id) {
     if (doc.isModule()) {
       var modulePath = Utils.findNearestPathWithComments(path);
-
+      // if (doc.id.match(/chai/i)) {
+      //   console.log('Module:', path)
+      // }
       // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
 
       this.registry.addModuleDoc(doc, modulePath, filePath);
@@ -243,5 +266,18 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
 
   return true;
 };
+
+function isCommentedDestructuredProperty(path) {
+  return (
+    t.isIdentifier(path.node) &&
+    path.node.leadingComments &&
+    path.parentPath &&
+    t.isVariableDeclarator(path.parentPath) &&
+    path.parentPath.parentPath &&
+    t.isVariableDeclaration(path.parentPath.parentPath) &&
+    path.parentPath.parentPath.node.leadingComments &&
+    path.parentPath.parentPath.node.leadingComments[0] === path.node.leadingComments[0]
+  );
+}
 
 module.exports = Parser;
