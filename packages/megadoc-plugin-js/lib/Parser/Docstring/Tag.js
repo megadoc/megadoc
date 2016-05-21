@@ -1,7 +1,5 @@
-var parseProperty = require('./Tag/parseProperty');
-var extractDefaultValue = require('./Tag/extractDefaultValue');
-var neutralizeWhitespace = require('./Tag/neutralizeWhitespace');
 var K = require('../constants');
+var TypeInfo = require('./Tag__TypeInfo');
 var assert = require('assert');
 
 var TypeAliases = {
@@ -9,27 +7,27 @@ var TypeAliases = {
 };
 
 /**
- * @param {Object} doxTag
+ * @param {Object} commentNode
  * @param {Object} options
  * @param {Object} options.customTags
  * @param {Boolean} [options.namedReturnTags=true]
  *
  * @param {String} filePath
  */
-function Tag(doxTag, options, filePath) {
+function Tag(commentNode, options, filePath) {
   var customTags = options.customTags;
 
   /**
    * @property {String}
    *           The type of this tag. This is always present.
    */
-  this.type = TypeAliases[doxTag.type] || doxTag.type;
+  this.type = TypeAliases[commentNode.tag] || commentNode.tag;
 
   /**
    * @property {String}
    *           The raw text.
    */
-  this.string = String(doxTag.string || '')
+  this.string = String(commentNode.description || '');
 
   /**
    * @property {String}
@@ -47,6 +45,14 @@ function Tag(doxTag, options, filePath) {
    *           Module namepath pointed to by @memberOf.
    */
   this.explicitReceiver = null;
+
+  /**
+   * @propery {String}
+   *          Module namepath pointed to by @module.
+   */
+  this.explicitModule = null;
+
+  this.explicitNamespace = null;
 
   /**
    * @property {String}
@@ -103,26 +109,26 @@ function Tag(doxTag, options, filePath) {
     case 'throws':
     case 'example':
     case 'interface':
-      this.typeInfo = TypeInfo(doxTag);
+      this.typeInfo = TypeInfo(commentNode);
 
       // fixup for return tags when we're not expecting them to be named
-      if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
-        this.typeInfo.description = this.typeInfo.name + ' ' + this.typeInfo.description;
-        this.typeInfo.name = undefined;
-      }
+      // if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
+      //   this.typeInfo.description = this.typeInfo.name + ' ' + this.typeInfo.description;
+      //   this.typeInfo.name = undefined;
+      // }
 
       break;
 
     case 'type':
-      // console.assert(doxTag.types.length === 1,
+      // console.assert(commentNode.types.length === 1,
       //   "Expected @type tag to contain only a single type, but it contained %d.",
-      //   doxTag.types.length
+      //   commentNode.types.length
       // );
-      this.typeInfo = TypeInfo(doxTag);
-      this.string = this.string.replace(doxTag.string, '');
+      this.typeInfo = TypeInfo(commentNode);
+      // this.string = this.string.replace(commentNode.string, '');
 
-      if (doxTag.types.length === 1) {
-        this.explicitType = renamePrimitiveType(doxTag.types[0].trim());
+      if (this.typeInfo.type) {
+        this.explicitType = this.typeInfo.type;
       }
 
       break;
@@ -131,7 +137,7 @@ function Tag(doxTag, options, filePath) {
     // on object modules)
     case 'method':
       this.explicitType = K.TYPE_FUNCTION;
-      this.typeInfo = TypeInfo(doxTag);
+      this.typeInfo = TypeInfo(commentNode);
 
       break;
 
@@ -144,11 +150,24 @@ function Tag(doxTag, options, filePath) {
       break;
 
     case 'memberOf':
-      this.explicitReceiver = doxTag.parent;
+      this.explicitReceiver = commentNode.name;
 
       // @memberOf's "parent" property (which is the target class name) will be
       // present in the string so we remove it:
       this.string = this.string.replace(this.explicitReceiver, '');
+
+      break;
+
+    case 'module':
+      if (commentNode.name.trim().length > 0) {
+        this.explicitModule = commentNode.name;
+      }
+      break;
+
+    case 'namespace':
+      if (commentNode.name.trim().length > 0) {
+        this.explicitNamespace = commentNode.name;
+      }
 
       break;
 
@@ -161,19 +180,16 @@ function Tag(doxTag, options, filePath) {
       break;
 
     case 'lends':
-      this.lendReceiver = doxTag.parent;
+      this.lendReceiver = commentNode.name;
       break;
 
     case 'mixes':
-      var firstLine = this.string.split('\n')[0].trim();
-      this.mixinTargets = firstLine.split(/\s+/);
-      this.string = this.string.replace(firstLine, '');
+      this.mixinTargets = [ commentNode.name ];
       break;
+  }
 
-    default:
-      if (customTags && customTags.hasOwnProperty(doxTag.type)) {
-        this.useCustomTagDefinition(doxTag, customTags[doxTag.type], filePath);
-      }
+  if (customTags && customTags.hasOwnProperty(this.type)) {
+    this.useCustomTagDefinition(commentNode, customTags[this.type], filePath);
   }
 
   return this;
@@ -193,11 +209,11 @@ Tag.prototype.toJSON = function() {
   }.bind(this), {});
 };
 
-Tag.prototype.useCustomTagDefinition = function(doxTag, customTag, filePath) {
+Tag.prototype.useCustomTagDefinition = function(commentNode, customTag, filePath) {
   var customAttributes = customTag.attributes || [];
 
   if (customTag.withTypeInfo) {
-    this.typeInfo = TypeInfo(doxTag);
+    this.typeInfo = TypeInfo(commentNode);
   }
 
   if (customTag.process instanceof Function) {
@@ -222,36 +238,11 @@ function createCustomTagAPI(tag, attrWhitelist) {
 
 module.exports = Tag;
 
-function renamePrimitiveType(type) {
-  if (type === 'Function') {
-    return 'function';
-  }
-  else {
-    return type;
-  }
-}
-
-function TypeInfo(doxTag) {
-  var typeInfo = parseProperty(doxTag.string);
-
-  if (typeInfo.description) {
-    typeInfo.description = neutralizeWhitespace(typeInfo.description);
-  }
-
-  if (typeInfo.name) {
-    if (doxTag.name && doxTag.name !== typeInfo.name) {
-      typeInfo.name = doxTag.name;
-      typeInfo.description = doxTag.description;
-    }
-
-    var nameFragments = extractDefaultValue(typeInfo.name);
-
-    if (nameFragments) {
-      typeInfo.name = nameFragments.name;
-      typeInfo.defaultValue = nameFragments.defaultValue;
-    }
-  }
-
-
-  return typeInfo;
-}
+// function renamePrimitiveType(type) {
+//   if (type === 'Function') {
+//     return 'function';
+//   }
+//   else {
+//     return type;
+//   }
+// }

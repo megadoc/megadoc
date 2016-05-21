@@ -42,7 +42,7 @@ function extractSwallowedDescriptionInTag(tag, fragments) {
 }
 
 module.exports = function(doxDoc, id, tags) {
-  var description = String(doxDoc.description.full);
+  var description = String(doxDoc.description || '').trim();
 
   var fragments = tags.reduce(function(_fragments, tag) {
     extractSwallowedDescriptionInTag(tag, _fragments);

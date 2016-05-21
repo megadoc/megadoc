@@ -9,7 +9,7 @@ var RE_MATCH_INDENT = /(?:^|\n)([ \t]*)[^\s]/;
  * @param {String} str
  * @return {String}
  */
-module.exports = function(src) {
+module.exports = function neutralizeWhitespace(src) {
   var indent = src.match(RE_MATCH_INDENT);
   if (indent && indent[1].length !== CODE_BLOCK_PADDING) {
     return src.replace(new RegExp('(^|\n)' + indent[1], 'g'), '$1');

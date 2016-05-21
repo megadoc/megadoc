@@ -23,7 +23,7 @@ describe('CJS::Parser::Docstring::Tag::neutralizeWhitespace', function() {
         // newline
         .replace(/^\n{0,1}/, '')
       ,
-      'This\nis\na\nmultiline\ndescription.\n'
+      'This\nis\na\nmultiline\ndescription.\n    '
     );
   });
 });

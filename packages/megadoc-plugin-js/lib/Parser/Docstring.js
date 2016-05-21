@@ -1,4 +1,5 @@
-var dox = require('dox');
+// var dox = require('dox');
+var parseComment = require('./parseComment');
 var assert = require('assert');
 var _ = require('lodash');
 var K = require('./constants');
@@ -14,14 +15,14 @@ var findWhere = _.findWhere;
  *        The JSDoc-compatible comment string to build from.
  */
 function Docstring(comment, options, filePath) {
-  var doxDocs = dox.parseComments(comment, { raw: true });
+  // var doxDocs = dox.parseComments(comment, { raw: true });
+  var doxDocs = parseComment(comment);
   var idInfo;
 
   assert(doxDocs.length === 1,
     'Dox should not extract more than 1 doc from an expression.'
   );
 
-  this._doxDocs = doxDocs;
   this.tags = doxDocs[0].tags.map(function(doxTag) {
     return new Tag(doxTag, options || {}, filePath);
   });

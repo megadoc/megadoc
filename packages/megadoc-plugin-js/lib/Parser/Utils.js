@@ -1,5 +1,6 @@
 var nodejsPath = require('path');
 var t = require('babel-types');
+var K = require('./constants');
 
 var Utils = exports;
 
@@ -40,13 +41,14 @@ Utils.isInstanceEntity = function(node) {
 };
 
 Utils.isFactoryModuleReturnEntity = function(node, startingPath, registry) {
+
   var modulePath = Utils.findAncestorPath(startingPath, function(path) {
     var doc = registry.getModuleDocAtPath(path);
 
     return (
       doc &&
       doc.isModule() &&
-      doc.nodeInfo.ctx.type === 'function'
+      doc.nodeInfo.ctx.type === K.TYPE_FUNCTION
     );
   });
 

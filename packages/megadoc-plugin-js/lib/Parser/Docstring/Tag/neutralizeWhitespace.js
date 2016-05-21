@@ -1,36 +1,38 @@
-var CODE_BLOCK_PADDING = 4;
+module.exports = require('megadoc-docstring/lib/utils/neutralizeWhitespace');
 
-module.exports = function(src) {
-  if (!src) {
-    return;
-  }
+// var CODE_BLOCK_PADDING = 4;
 
-  var lines = src.split('\n');
+// module.exports = function(src) {
+//   if (!src) {
+//     return;
+//   }
 
-  var padding;
-  var firstNonBlankLine;
-  var lineIter, line;
+//   var lines = src.split('\n');
 
-  for (lineIter = 0; lineIter < lines.length; ++lineIter) {
-    line = lines[lineIter];
+//   var padding;
+//   var firstNonBlankLine;
+//   var lineIter, line;
 
-    if (line.trim().length > 0) {
-      firstNonBlankLine = line;
-      break;
-    }
-  }
+//   for (lineIter = 0; lineIter < lines.length; ++lineIter) {
+//     line = lines[lineIter];
 
-  if (firstNonBlankLine) {
-    if (firstNonBlankLine.match(/^(\s+)/)) {
-      padding = RegExp.$1.length;
+//     if (line.trim().length > 0) {
+//       firstNonBlankLine = line;
+//       break;
+//     }
+//   }
 
-      if (padding > 0 && padding !== CODE_BLOCK_PADDING) {
-        return lines.map(function(_line) {
-          return _line.substr(padding);
-        }).join('\n');
-      }
-    }
-  }
+//   if (firstNonBlankLine) {
+//     if (firstNonBlankLine.match(/^(\s+)/)) {
+//       padding = RegExp.$1.length;
 
-  return src;
-};
+//       if (padding > 0 && padding !== CODE_BLOCK_PADDING) {
+//         return lines.map(function(_line) {
+//           return _line.substr(padding);
+//         }).join('\n').replace(/^\n+|\n+$/g, '');
+//       }
+//     }
+//   }
+
+//   return src;
+// };

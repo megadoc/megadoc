@@ -7,17 +7,18 @@ function extractIdInfo(tags) {
   // extract the module id from a @module tag:
   var moduleTag = findWhere(tags, { type: 'module' });
   if (moduleTag) {
-    var moduleId = moduleTag.string.match(/^([\w\.]+)\s*$|^([\w\.]+)\s*\n/);
+    id = moduleTag.explicitModule;
+    // var moduleId = moduleTag.string.match(/^([\w\.]+)\s*$|^([\w\.]+)\s*\n/);
 
-    if (moduleId) {
-      id = moduleId[1] || moduleId[2];
-    }
+    // if (moduleId) {
+    //   id = moduleId[1] || moduleId[2];
+    // }
   }
 
   // extract the namespace from a @namespace tag:
   var nsTag = findWhere(tags, { type: 'namespace' });
   if (nsTag) {
-    var namespaceString = nsTag.string.split('\n')[0].trim();
+    var namespaceString = nsTag.explicitNamespace;// nsTag.string.split('\n')[0].trim();
 
     if (namespaceString.length) {
       namespace = namespaceString;
