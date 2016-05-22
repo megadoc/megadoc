@@ -16,8 +16,8 @@ describe('analyzeReactNode - statics', function() {
 
     assert.equal(docs.length, 1);
 
-    assert.equal(docs[0].ctx.statics.length, 1);
-    assert.equal(docs[0].ctx.statics[0], 'someFunction');
+    assert.equal(docs[0].nodeInfo.statics.length, 1);
+    assert.equal(docs[0].nodeInfo.statics[0], 'someFunction');
   });
 
   it('should correctify the scope of documented static methods', function() {
@@ -35,8 +35,8 @@ describe('analyzeReactNode - statics', function() {
 
     var doc = findWhere(docs, { name: 'someFunction' });
 
-    assert.equal(doc.ctx.scope, K.SCOPE_UNDEFINED);
-    assert.equal(doc.ctx.symbol, '.');
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_UNDEFINED);
+    assert.equal(doc.symbol, '.');
     assert.equal(doc.id, 'Something.someFunction');
   });
 });
@@ -56,8 +56,8 @@ describe('analyzeReactNode - methods', function() {
 
     var doc = findWhere(docs, { name: 'someMethod' });
 
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
-    assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_INSTANCE);
     assert.equal(doc.id, 'Something#someMethod');
   });
 });

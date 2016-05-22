@@ -2,9 +2,8 @@ var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var _ = require('lodash');
 var DocUtils = require('./DocUtils');
+var ASTUtils = require('./ASTUtils');
 var assign = _.assign;
-var assert = require('assert');
-var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 /**
  * @param {Docstring} docstring
@@ -31,8 +30,6 @@ function Doc(docstring, nodeInfo, filePath) {
     }
   });
 
-  // this.id = this.generateId();
-  // this.name = this.generateName();
   this.filePath = filePath;
   this.customAliases = [];
 
@@ -40,6 +37,12 @@ function Doc(docstring, nodeInfo, filePath) {
 }
 
 Doc.prototype.toJSON = function(registry) {
+  // We don't care about modules that @lend
+  if (this.docstring.doesLend()) {
+    return null;
+  }
+
+  var nodeInfo = this.nodeInfo;
   var doc = assign({},
     this.docstring.toJSON(),
     this.nodeInfo.toJSON()
@@ -52,31 +55,44 @@ Doc.prototype.toJSON = function(registry) {
   doc.name = this.generateName();
   doc.filePath = this.filePath;
   doc.isModule = this.isModule();
-  // doc.receiver = this.getReceiver();
 
   if (!doc.isModule) {
     var resolvedContext = DocUtils.getReceiverAndScopeFor(this, registry);
 
     doc.receiver = resolvedContext.receiver;
-    doc.nodeInfo.scope = resolvedContext.scope || doc.nodeInfo.scope;
-    // doc.receiver = DocUtils.getReceiverFor(this, registry);
-    // doc.ctx.scope = DocUtils.getScopeOf(this, doc.receiver, registry) || doc.ctx.scope;
+
+    // scope
+    if (resolvedContext.scope) {
+      doc.nodeInfo.scope = resolvedContext.scope;
+    }
+    else {
+      if (nodeInfo.isInstanceEntity()) {
+        doc.nodeInfo.scope = K.SCOPE_INSTANCE;
+      }
+      else if (nodeInfo.isPrototypeEntity()) {
+        doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
+      }
+      else if (
+        ASTUtils.isFactoryModuleReturnEntity(
+          this.$path.node,
+          this.$path,
+          registry
+        )
+      ) {
+        doc.nodeInfo.scope = K.SCOPE_FACTORY_EXPORTS;
+      }
+    }
   }
 
-  doc.mixinTargets = doc.tags.filter(function(tag) {
-    return tag.type === 'mixes';
-  }).reduce(function(list, tag) {
-    return list.concat(tag.mixinTargets);
-  }, []);
+  doc.mixinTargets = doc.tags
+    .filter(function(tag) { return tag.type === 'mixes'; })
+    .reduce(function(list, tag) { return list.concat(tag.mixinTargets); }, [])
+  ;
 
-  doc.aliases = doc.tags.filter(function(tag) {
-    return tag.type === 'alias';
-  }).map(function(tag) {
-    return tag.alias;
-  }).concat(this.customAliases);
+  doc.aliases = Object.keys(this.docstring.aliases);
 
   if (!doc.isModule) {
-    doc.symbol = this.generateSymbol();
+    doc.symbol = generateSymbol(this);
     doc.id = [ doc.receiver, doc.id ].join(doc.symbol);
     doc.path = [ doc.receiver, doc.name ].join(doc.symbol);
   }
@@ -92,8 +108,6 @@ Doc.prototype.toJSON = function(registry) {
     });
   }
 
-  // this.useSourceNameWhereNeeded(doc.name, doc);
-
   return doc;
 };
 
@@ -107,24 +121,10 @@ Doc.prototype.consumeNodeInfo = function(nodeInfo) {
 
 Doc.prototype.generateId = function() {
   return DocUtils.getIdOf(this);
-  // var id = this.docstring.id || this.nodeInfo.id;
-  // var namespace = this.docstring.namespace;
-
-  // if (id && namespace && id.indexOf(namespace) === -1) {
-  //   id = [ namespace, id ].join(K.NAMESPACE_SEP);
-  // }
-
-  // return id;
 };
 
 Doc.prototype.generateName = function() {
   return DocUtils.getNameOf(this);
-  // if (this.docstring.namespace && this.id) {
-  //   return this.id.replace(this.docstring.namespace + K.NAMESPACE_SEP, '');
-  // }
-  // else {
-  //   return this.id;
-  // }
 };
 
 Doc.prototype.markAsExported = function() {
@@ -137,104 +137,18 @@ Doc.prototype.isExported = function() {
 
 Doc.prototype.isModule = function() {
   return DocUtils.isModule(this);
-  // return !this.docstring.hasMemberOf() && (
-  //   this.isExported() ||
-  //   this.docstring.isModule() ||
-  //   this.nodeInfo.isModule()
-  // );
 };
 
-Doc.prototype.generateSymbol = function() {
-  // var symbol;
-
-  // if (typeof type === 'object') {
-  //   type = type.name;
-  // }
-
-  // console.log(type)
-
-  if (DocClassifier.isStaticMember(this)) {
+function generateSymbol(doc) {
+  if (DocClassifier.isStaticMember(doc)) {
     return '.';
   }
-  else if (DocClassifier.isMethod(this)) {
+  else if (DocClassifier.isMethod(doc)) {
     return '#';
   }
-  else if (DocClassifier.isMember(this)) {
+  else if (DocClassifier.isMember(doc)) {
     return '@';
   }
-  // }
-
-  // switch(type) {
-  //   case K.TYPE_FUNCTION:
-  //     if (DocClassifier.isStaticMethod(this)) {
-  //       symbol = '.';
-  //     }
-  //     else {
-  //       symbol = '#';
-  //     }
-  //     break;
-
-  //   default:
-  //     if (DocClassifier.isObjectProperty(this)) {
-  //       symbol = '@';
-  //     }
-  //     else {
-  //       symbol = '.';
-  //     }
-  //     break;
-  // }
-
-  // if (this.docstring.hasTag('property') && !this.docstring.hasTag('static')) {
-  //   symbol = '@';
-  // }
-
-  // if (this.docstring.hasTag('property') && this.docstring.hasTag('static')) {
-  //   symbol = '.';
-  // }
-
-  // return symbol;
-};
-
-/**
- * Set the correct receiver for this doc. The receiver might not have been
- * resolved correctly in NodeInfo due to @lends or module aliases.
- *
- * @param  {String} correctedReceiver
- *         Name of the new receiver.
- */
-Doc.prototype.overrideReceiver = function(correctedReceiver) {
-  assert(!!correctedReceiver,
-    "You are attempting to override a receiver with an undefined one!"
-  );
-
-  debuglog(
-    'Adjusting receiver from "%s" to "%s" for "%s" (scope: %s)',
-    this.nodeInfo.receiver,
-    correctedReceiver,
-    this.id,
-    this.nodeInfo.ctx && this.nodeInfo.ctx.scope
-  );
-
-  this.$correctedReceiver = correctedReceiver;
-};
-
-Doc.prototype.getReceiver = function() {
-  return this.$correctedReceiver || this.nodeInfo.receiver;
-};
-
-Doc.prototype.hasReceiver = function() {
-  return Boolean(this.getReceiver());
-};
-
-// Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
-//   var propertyTag = findWhere(doc.tags, { type: 'property' });
-//   if (propertyTag && !propertyTag.typeInfo.name) {
-//     propertyTag.typeInfo.name = name;
-//   }
-// };
-
-Doc.prototype.addAlias = function(name) {
-  this.customAliases.push(name);
 };
 
 module.exports = Doc;

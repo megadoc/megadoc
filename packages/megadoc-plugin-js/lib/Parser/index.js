@@ -5,7 +5,6 @@ var ASTUtils = require('./ASTUtils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
 var Registry = require('./Registry');
-var PostProcessor = require('./PostProcessor');
 var NodeAnalyzer = require('./NodeAnalyzer');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
@@ -183,15 +182,13 @@ Ppt.walk = function(ast, inConfig, filePath) {
   });
 };
 
-Ppt.seal = function(config) {
-  PostProcessor.run(this.registry, config);
-};
-
 Ppt.toJSON = function() {
   var registry = this.registry;
 
-  return this.registry.docs.map(function(doc) {
+  return registry.docs.map(function(doc) {
     return doc.toJSON(registry);
+  }).filter(function(x) {
+    return !!x;
   });
 };
 
@@ -208,6 +205,21 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
     this.registry.trackLend(docstring.getLentTo(), path);
   }
 
+  var predefinedNamespace = getPredefinedNamespace(config, docstring, filePath);
+
+  if (predefinedNamespace) {
+    if (docstring.namespace) {
+      console.warn("Ignoring pre-defined namespace '%s' for module as it already specifies one ('%s'). (Source: '%s')",
+        predefinedNamespace,
+        docstring.namespace,
+        nodeLocation
+      );
+    }
+    else {
+      docstring.namespace = predefinedNamespace;
+    }
+  }
+
   runAllSync(config.docstringProcessors || [], [ docstring ]);
 
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
@@ -215,7 +227,9 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   doc = new Doc(docstring, nodeInfo, filePath);
 
   if (config.alias.hasOwnProperty(doc.id)) {
-    config.alias[doc.id].forEach(doc.addAlias.bind(doc));
+    config.alias[doc.id].forEach(function(alias) {
+      doc.docstring.addAlias(alias);
+    });
   }
 
   docstring.tags.forEach(function(tag) {
@@ -238,7 +252,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
       if (process.env.VERBOSE) {
         console.log('\tFound an entity "%s" belonging to "%s" (source: %s)',
           doc.id,
-          doc.getReceiver(),
+          doc.nodeInfo.receiver || '<<unknown>>',
           nodeLocation
         );
       }
@@ -259,6 +273,25 @@ function isCommentedDestructuredProperty(path) {
     path.parentPath.parentPath.node.leadingComments &&
     path.parentPath.parentPath.node.leadingComments[0] === path.node.leadingComments[0]
   );
+}
+
+function getPredefinedNamespace(config, docstring, filePath) {
+  var namespace;
+
+  if (config.namespaceDirMap) {
+    var namespaceDirMap = Object.keys(config.namespaceDirMap);
+    var dirName = nodejsPath.dirname(filePath);
+
+    namespaceDirMap.some(function(pattern) {
+      if (dirName.match(pattern)) {
+        namespace = config.namespaceDirMap[pattern];
+
+        return true;
+      }
+    });
+  }
+
+  return namespace && namespace.length > 0 ? namespace : null;
 }
 
 module.exports = Parser;

@@ -1,5 +1,4 @@
 var K = require('./constants');
-var assert = require('assert');
 
 exports.getIdOf = function(doc) {
   var name = doc.docstring.name || doc.nodeInfo.id;

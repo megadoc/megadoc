@@ -143,15 +143,11 @@ Dpt.getTypeOverride = function() {
 };
 
 Dpt.overrideNamespace = function(namespace) {
-  // var oldNamespace = this.namespace;
-
   this.namespace = namespace;
+};
 
-  // if (oldNamespace && this.id) {
-  //   this.id = this.id.replace(oldNamespace + K.NAMESPACE_SEP, '');
-  // }
-
-  // this will FUBAR if we have @namespace tags ...
+Dpt.addAlias = function(name) {
+  this.aliases[name] = true;
 };
 
 module.exports = Docstring;

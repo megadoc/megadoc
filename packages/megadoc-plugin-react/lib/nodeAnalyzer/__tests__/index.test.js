@@ -10,7 +10,7 @@ describe('analyzeReactNode', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].ctx.type, 'component');
+    assert.equal(docs[0].type, 'component');
   });
 
   it('should mark a component with a displayName', function() {
@@ -23,6 +23,6 @@ describe('analyzeReactNode', function() {
 
     assert.equal(docs.length, 1);
     assert.equal(docs[0].id, 'SomeComponent');
-    assert.equal(docs[0].ctx.type, 'component');
+    assert.equal(docs[0].type, 'component');
   });
 });

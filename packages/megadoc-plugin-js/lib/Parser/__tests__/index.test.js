@@ -133,4 +133,56 @@ describe('CJS::Parser::Main', function() {
       assert.equal(docs[2].type, K.TYPE_LITERAL);
     });
   });
+
+  describe('config.alias', function() {
+    it('should use the aliases', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  */
+        //  function Foo() {
+        //  }
+      }, { alias: { 'Foo': [ 'Bar', 'Baz' ] } });
+
+      assert.equal(docs.length, 1);
+      assert.deepEqual(docs[0].aliases, [ 'Bar', 'Baz' ]);
+    });
+  });
+
+  describe('config.namespaceDirMap', function() {
+    it('should namespace modules that match the directory pattern', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  */
+        //  function Foo() {
+        //  }
+      }, {
+        namespaceDirMap: {
+          'lib/core': 'Core'
+        }
+      }, 'lib/core/Cache.js');
+
+      assert.equal(docs.length, 1);
+      assert.equal(docs[0].namespace, 'Core');
+    });
+
+    it('should ignore it if the module already has a namespace', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  * @namespace TheVoid
+        //  */
+        //  function Foo() {
+        //  }
+      }, {
+        namespaceDirMap: {
+          'lib/core': 'Core'
+        }
+      }, 'lib/core/Cache.js');
+
+      assert.equal(docs.length, 1);
+      assert.equal(docs[0].namespace, 'TheVoid');
+    });
+  });
 });

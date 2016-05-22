@@ -24,7 +24,6 @@ function parseInline(strGenerator, config, filePath) {
   config.strict = true;
 
   parser.parseString(body, config, filePath || '__test__');
-  parser.seal(config);
 
   database = parser.toJSON();
 
@@ -48,7 +47,6 @@ function parseFiles(filePaths, config, commonPrefix) {
     parser.parseFile(filePath, config || {}, commonPrefix || __dirname);
   });
 
-  parser.seal(config);
   database = parser.toJSON();
 
   if (config.postProcessors) {

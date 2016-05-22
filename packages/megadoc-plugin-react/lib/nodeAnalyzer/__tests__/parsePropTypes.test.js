@@ -14,9 +14,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'string');
     });
 
     it('works with "name: React.PropTypes.string.isRequired"', function() {
@@ -30,10 +30,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'string');
-      assert.equal(docs[0].ctx.propTypes[0].isRequired, true);
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes[0].isRequired, true);
     });
 
     it('works with "name: string"', function() {
@@ -47,9 +47,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'string');
     });
 
     it('works with "name: string.isRequired"', function() {
@@ -63,9 +63,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'string');
     });
   });
 
@@ -81,9 +81,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'someProp');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'custom');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'someProp');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'custom');
     });
 
     it('works with "name: () => {}"', function() {
@@ -97,9 +97,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'someProp');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'custom');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'someProp');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'custom');
     });
 
     it('works with "name: function someNamedValidator() {}"', function() {
@@ -113,9 +113,9 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'someNamedValidator');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'someNamedValidator');
     });
   });
 
@@ -134,10 +134,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'oneOfType');
-      assert.deepEqual(docs[0].ctx.propTypes[0].types, [
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'oneOfType');
+      assert.deepEqual(docs[0].nodeInfo.propTypes[0].types, [
         { type: 'number' },
         { type: 'string' },
       ]);
@@ -157,11 +157,11 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'oneOfType');
-      assert.equal(docs[0].ctx.propTypes[0].isRequired, true);
-      assert.deepEqual(docs[0].ctx.propTypes[0].types, [
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'oneOfType');
+      assert.equal(docs[0].nodeInfo.propTypes[0].isRequired, true);
+      assert.deepEqual(docs[0].nodeInfo.propTypes[0].types, [
         { type: 'number' },
         { type: 'string' },
       ]);
@@ -183,11 +183,11 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'oneOf');
-      assert.equal(docs[0].ctx.propTypes[0].values[0].value, 'a');
-      assert.equal(docs[0].ctx.propTypes[0].values[1].value, 1);
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'oneOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].values[0].value, 'a');
+      assert.equal(docs[0].nodeInfo.propTypes[0].values[1].value, 1);
     });
 
     it('works with "oneOf([ "a", 1 ]).isRequired"', function() {
@@ -201,10 +201,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'oneOf');
-      assert.equal(docs[0].ctx.propTypes[0].isRequired, true);
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'oneOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].isRequired, true);
     });
   });
 
@@ -223,14 +223,14 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'object');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'shape');
-      assert.equal(docs[0].ctx.propTypes[0].properties.length, 2);
-      assert.equal(docs[0].ctx.propTypes[0].properties[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].properties[0].type, 'string');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].name, 'age');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].type, 'number');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'object');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'shape');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties.length, 2);
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].name, 'age');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].type, 'number');
     });
 
     it('works with nested shapes', function() {
@@ -250,19 +250,19 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'person');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'shape');
-      assert.equal(docs[0].ctx.propTypes[0].properties.length, 2);
-      assert.equal(docs[0].ctx.propTypes[0].properties[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].properties[0].type, 'string');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].name, 'locale');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].type, 'shape');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].properties.length, 2);
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].properties[0].name, 'country');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].properties[0].type, 'string');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].properties[1].name, 'isoCode');
-      assert.equal(docs[0].ctx.propTypes[0].properties[1].properties[1].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'person');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'shape');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties.length, 2);
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].name, 'locale');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].type, 'shape');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].properties.length, 2);
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].properties[0].name, 'country');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].properties[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].properties[1].name, 'isoCode');
+      assert.equal(docs[0].nodeInfo.propTypes[0].properties[1].properties[1].type, 'string');
     });
   });
 
@@ -278,11 +278,11 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'arrayOf');
-      assert.equal(docs[0].ctx.propTypes[0].types.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].types[0].type, 'string');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'arrayOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].types.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].types[0].type, 'string');
     });
 
     it('works with "arrayOf(string).isRequired"', function() {
@@ -296,10 +296,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'arrayOf');
-      assert.equal(docs[0].ctx.propTypes[0].isRequired, true);
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'arrayOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].isRequired, true);
     });
   });
 
@@ -315,10 +315,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'instanceOf');
-      assert.equal(docs[0].ctx.propTypes[0].target.type, 'Date');
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'instanceOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].target.type, 'Date');
     });
 
     it('works with "instanceOf(Date).isRequired"', function() {
@@ -332,10 +332,10 @@ describe('analyzeReactNode - propTypes', function() {
       });
 
       assert.equal(docs.length, 1);
-      assert.equal(docs[0].ctx.propTypes.length, 1);
-      assert.equal(docs[0].ctx.propTypes[0].name, 'name');
-      assert.equal(docs[0].ctx.propTypes[0].type, 'instanceOf');
-      assert.equal(docs[0].ctx.propTypes[0].isRequired, true);
+      assert.equal(docs[0].nodeInfo.propTypes.length, 1);
+      assert.equal(docs[0].nodeInfo.propTypes[0].name, 'name');
+      assert.equal(docs[0].nodeInfo.propTypes[0].type, 'instanceOf');
+      assert.equal(docs[0].nodeInfo.propTypes[0].isRequired, true);
     });
   });
 
