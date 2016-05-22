@@ -1,51 +1,47 @@
 var K = require('./constants');
 var t = require('babel-types');
 
-module.exports = function generateContext(contextNode) {
-  var ctx;
+module.exports = parseNode;
 
+function parseNode(contextNode) {
   if (
     t.isFunctionExpression(contextNode) ||
     t.isFunctionDeclaration(contextNode) ||
     t.isObjectMethod(contextNode)
   ) {
-    ctx = parseFunctionExpression(contextNode);
+    return parseFunctionExpression(contextNode);
   }
   else if (t.isVariableDeclarator(contextNode)) {
-    return generateContext(contextNode.init);
+    return parseNode(contextNode.init);
   }
   else if (t.isVariableDeclaration(contextNode)) {
-    return generateContext(contextNode.declarations[0]);
+    return parseNode(contextNode.declarations[0]);
   }
   else if (t.isLiteral(contextNode)) {
-    ctx = parseLiteral(contextNode);
+    return parseLiteral(contextNode);
   }
   else if (t.isObjectExpression(contextNode)) {
-    ctx = parseObjectExpression(contextNode);
+    return parseObjectExpression(contextNode);
   }
   else if (t.isArrayExpression(contextNode)) {
-    ctx = parseArrayExpression(contextNode);
+    return parseArrayExpression(contextNode);
   }
   else if (t.isClassDeclaration(contextNode)) {
-    ctx = { type: K.TYPE_CLASS }; // TODO
+    return { type: K.TYPE_CLASS }; // TODO
   }
-
-  return ctx;
+  else if (t.isObjectProperty(contextNode) && t.isIdentifier(contextNode.key)) {
+    return {
+      type: K.OBJECT_PROPERTY,
+      key: contextNode.key.name,
+      value: parseNode(contextNode.value),
+    }
+  }
 };
-
-function castExpressionValue(expr) {
-  if (t.isArrayExpression(expr)) {
-    return expr.elements.map(castExpressionValue);
-  }
-  else if (t.isLiteral(expr)) {
-    return expr.value;
-  }
-}
 
 function parseFunctionExpression(node) {
   return {
     type: K.TYPE_FUNCTION,
-    params: node.params.map(function(param, i) {
+    params: node.params.map(function(param) {
       return parseFunctionParameter(param);
     })
   };
@@ -54,20 +50,21 @@ function parseFunctionExpression(node) {
 function parseLiteral(node) {
   return {
     type: K.TYPE_LITERAL,
-    value: castExpressionValue(node)
+    value: node.value
   };
 }
 
-function parseObjectExpression(/*expr*/) {
+function parseObjectExpression(expr) {
   return {
     type: K.TYPE_OBJECT,
-    properties: [] // TODO
+    properties: expr.properties.map(parseNode)
   }
 }
-function parseArrayExpression(/*expr*/) {
+
+function parseArrayExpression(expr) {
   return {
     type: K.TYPE_ARRAY,
-    values: [] // TODO
+    elements: expr.elements.map(parseNode)
   }
 }
 

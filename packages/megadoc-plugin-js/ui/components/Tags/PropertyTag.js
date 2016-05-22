@@ -2,7 +2,9 @@ const React = require("react");
 const HighlightedText = require('components/HighlightedText');
 const HeadingAnchor = require('components/HeadingAnchor');
 const TypeNames = require('./TypeNames');
+const DefaultValue = require('./DefaultValue');
 const Doc = require('../Doc');
+const describeNode = require('../../utils/describeNode');
 
 const { shape, string, object } = React.PropTypes;
 
@@ -24,6 +26,7 @@ const PropertyTag = React.createClass({
   render() {
     const { typeInfo, doc } = this.props;
     const description = typeInfo.description || doc.description;
+    const defaultValue = typeInfo.defaultValue || describeNode(doc.nodeInfo);
 
     return (
       <li className="property-tag">
@@ -46,10 +49,8 @@ const PropertyTag = React.createClass({
           </HighlightedText>
         )}
 
-        {typeInfo.defaultValue && (
-          <p className="property-tag__default-value">
-            Defaults to: <code>{typeInfo.defaultValue}</code>
-          </p>
+        {defaultValue && (
+          <DefaultValue defaultValue={defaultValue} />
         )}
 
         {this.props.doc && typeInfo.type.name.toLowerCase() === 'function' && (

@@ -1,6 +1,7 @@
 var React = require("react");
 var HighlightedText = require('components/HighlightedText');
 var TypeNames = require('./TypeNames');
+var DefaultValue = require('./DefaultValue');
 
 var ParamTag = React.createClass({
   displayName: "ParamTag",
@@ -36,12 +37,6 @@ var ParamTag = React.createClass({
               {': '}
 
               <TypeNames type={typeInfo.type} />
-
-              {typeInfo.defaultValue && (
-                <span className="param-tag__default-value">
-                  {' ('}defaults to: <code>{typeInfo.defaultValue}</code>)
-                </span>
-              )}
             </code>
           )}
         </header>
@@ -51,6 +46,8 @@ var ParamTag = React.createClass({
             {typeInfo.description.replace(/[ ]{4,}/g, '')}
           </HighlightedText>
         )}
+
+        <DefaultValue defaultValue={typeInfo.defaultValue} />
       </li>
     );
   }

@@ -7,10 +7,7 @@ function DocTypeInfo(doc) {
   typeInfo.name = DocUtils.getTypeNameOf(doc);
   typeInfo.nodeType = doc.nodeInfo.ctx.type;
 
-  if (typeInfo.nodeType === K.TYPE_LITERAL) {
-    typeInfo.value = doc.nodeInfo.ctx.value;
-  }
-  else if (typeInfo.nodeType === K.TYPE_FUNCTION) {
+  if (typeInfo.nodeType === K.TYPE_FUNCTION) {
     // forget it if it was overridden to a different type
     if (typeInfo.name === K.TYPE_FUNCTION) {
       aggregateFunctionDetails(typeInfo, doc);

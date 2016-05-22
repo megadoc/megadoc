@@ -47,11 +47,11 @@ describe('CJS::Parser - @module support', function() {
     assert.equal(docs.length, 2);
     assert.equal(docs[0].name, 'Something');
     assert.equal(docs[0].namespace, 'Core');
-    assert.equal(docs[0].typeInfo.name, K.TYPE_UNKNOWN);
+    assert.equal(docs[0].type, K.TYPE_UNKNOWN);
 
     assert.equal(docs[1].name, 'someFunc');
     assert.equal(docs[1].receiver, 'Core.Something');
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
   });
 
   it('should not cause a duplication when comment node is in the Program scope', function() {

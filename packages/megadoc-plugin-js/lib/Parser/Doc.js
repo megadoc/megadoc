@@ -2,6 +2,7 @@ var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var _ = require('lodash');
 var DocTypeInfo = require('./DocTypeInfo');
+var DocUtils = require('./DocUtils');
 var assign = _.assign;
 var assert = require('assert');
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
@@ -26,15 +27,20 @@ function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
 }
 
 Doc.prototype.toJSON = function() {
-  var doc = assign({}, this.docstring.toJSON(), this.nodeInfo.toJSON());
+  var doc = assign({},
+    this.docstring.toJSON(),
+    this.nodeInfo.toJSON()
+  );
+
+  doc.type = DocUtils.getTypeNameOf(this);
+  doc.nodeInfo = this.nodeInfo.ctx;
 
   doc.id = this.id;
   doc.name = this.generateName();
   doc.filePath = this.filePath;
-  doc.absoluteFilePath = this.absoluteFilePath;
+  // doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
   doc.receiver = this.getReceiver();
-  doc.typeInfo = DocTypeInfo(this);
 
   doc.mixinTargets = doc.tags.filter(function(tag) {
     return tag.type === 'mixes';

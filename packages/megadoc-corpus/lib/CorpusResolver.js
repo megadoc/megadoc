@@ -162,7 +162,7 @@ function resolveByFilePath(anchor) {
     filePath = filePath.slice(0, -1 * entityId.length);
   }
 
-  targetPath = path.join(path.dirname(contextNode.filePath), filePath);
+  targetPath = ensureLeadingSlash(path.join(path.dirname(contextNode.filePath), filePath));
 
   var node = resolve({ text: targetPath, contextNode: anchor.contextNode });
 
@@ -191,4 +191,8 @@ function createListOfFriendNodes(node) {
   }
 
   return map;
+}
+
+function ensureLeadingSlash(s) {
+  return s[0] === '/' ? s : '/' + s;
 }

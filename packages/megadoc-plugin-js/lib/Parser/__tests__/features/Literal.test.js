@@ -27,11 +27,11 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'sinonSuite');
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
   });
 
   it('works as a @property', function() {
@@ -57,12 +57,12 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'sinonSuite');
     assert.equal(docs[1].ctx.scope, K.SCOPE_FACTORY_EXPORTS);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].ctx.symbol, '#');
   });
 
@@ -81,12 +81,12 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_OBJECT);
+    assert.equal(docs[0].type, K.TYPE_OBJECT);
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'x');
     assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_UNKNOWN);
+    assert.equal(docs[1].type, K.TYPE_UNKNOWN);
     assert.equal(docs[1].ctx.symbol, '.');
   });
 
@@ -106,12 +106,12 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_OBJECT);
+    assert.equal(docs[0].type, K.TYPE_OBJECT);
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'x');
     assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].ctx.symbol, '.');
   });
 });

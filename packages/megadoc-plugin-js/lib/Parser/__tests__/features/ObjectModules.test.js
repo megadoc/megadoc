@@ -19,7 +19,7 @@ describe('CJS::Parser - Object modules', function() {
 
     assert.equal(docs.length, 2);
     assert.equal(docs[1].id, 'DragonHunter.capture');
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].receiver, 'DragonHunter');
   });
 
@@ -35,7 +35,7 @@ describe('CJS::Parser - Object modules', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_LITERAL);
+    assert.equal(docs[1].type, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
     assert.equal(docs[1].ctx.value, 'a');
@@ -54,7 +54,7 @@ describe('CJS::Parser - Object modules', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_OBJECT);
+    assert.equal(docs[1].type, K.TYPE_OBJECT);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
     assert.deepEqual(docs[1].ctx.properties, []);

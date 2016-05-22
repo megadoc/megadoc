@@ -17,7 +17,7 @@ describe('CJS::Parser - @memberOf support', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].name, 'capture');
     assert.equal(docs[1].receiver, 'DragonHunter');
   });
@@ -34,7 +34,7 @@ describe('CJS::Parser - @memberOf support', function() {
     assert.equal(docs.length, 2);
     assert.equal(docs[1].name, 'capture');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
   });
 
@@ -58,7 +58,7 @@ describe('CJS::Parser - @memberOf support', function() {
     assert.equal(docs.length, 2);
     assert.equal(docs[1].name, 'node');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.equal(docs[1].typeInfo.name, 'String');
+    assert.equal(docs[1].type, 'String');
     assert.equal(docs[1].ctx.symbol, '@');
     assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
   });
@@ -77,7 +77,7 @@ describe('CJS::Parser - @memberOf support', function() {
       });
 
       assert.equal(docs.length, 2);
-      assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+      assert.equal(docs[1].type, K.TYPE_FUNCTION);
       assert.equal(docs[1].name, 'capture');
       assert.equal(docs[1].receiver, 'DragonHunter');
     });
@@ -109,7 +109,7 @@ describe('CJS::Parser - @memberOf support', function() {
       assert.equal(docs.length, 2);
       var fnDoc = docs.filter(function(x) { return x.name === 'fn' })[0];
 
-      assert.equal(fnDoc.typeInfo.name, K.TYPE_FUNCTION);
+      assert.equal(fnDoc.type, K.TYPE_FUNCTION);
       assert.equal(fnDoc.name, 'fn');
       assert.equal(fnDoc.receiver, 'DOMSelectors');
     });

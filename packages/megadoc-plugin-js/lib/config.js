@@ -9,14 +9,14 @@ module.exports = {
    *           plugins in your megadoc config.)
    *
    *           This will be used in the corpus to namespace documents and may
-   *           affect the URL if you leave [@baseURL]() blank.
+   *           affect the URL if you leave [.baseURL]() blank.
    */
   id: 'js',
 
   /**
    * @property {String}
    *           The URL to reach the JavaScript documentation at.
-   *           The default is to infer it from [@id]().
+   *           The default is to infer it from [.id]().
    */
   baseURL: null,
 

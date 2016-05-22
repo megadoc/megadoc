@@ -18,7 +18,7 @@ describe('CJS::Parser - @mixes support', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
     assert.equal(docs[1].name, 'Document');
     assert.equal(docs[1].receiver, undefined);
     assert.equal(docs[1].description, 'Hello baby.', 'It grabs the rest of the docstring from @mixes');

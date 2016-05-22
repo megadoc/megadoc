@@ -60,7 +60,7 @@ describe('CJS::Parser::Main', function() {
 
       var doc = findWhere(docs, { name: 'scan' });
 
-      assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
+      assert.equal(doc.type, K.TYPE_FUNCTION);
       assert.equal(doc.receiver, 'DragonHunter');
       assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
@@ -83,7 +83,7 @@ describe('CJS::Parser::Main', function() {
 
       var doc = findWhere(docs, { name: 'scan' });
 
-      assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
+      assert.equal(doc.type, K.TYPE_LITERAL);
       assert.equal(doc.receiver, 'DragonHunter');
       assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
@@ -98,7 +98,7 @@ describe('CJS::Parser::Main', function() {
 
       assert.equal(docs.length, 1);
       assert.equal(docs[0].id, 'Something');
-      assert.equal(docs[0].typeInfo.name, K.TYPE_UNKNOWN);
+      assert.equal(docs[0].type, K.TYPE_UNKNOWN);
       assert.equal(docs[0].isModule, true);
     });
 
@@ -120,17 +120,17 @@ describe('CJS::Parser::Main', function() {
       assert.equal(docs.length, 3);
 
       assert.equal(docs[0].id, 'Something');
-      assert.deepEqual(docs[0].typeInfo.name, K.TYPE_OBJECT);
+      assert.deepEqual(docs[0].type, K.TYPE_OBJECT);
       assert.equal(docs[0].isModule, true);
 
       assert.equal(docs[1].name, 'someFunc');
       assert.equal(docs[1].receiver, 'Something');
-      assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
+      assert.equal(docs[1].type, K.TYPE_FUNCTION);
       assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
 
       assert.equal(docs[2].name, 'someProperty');
       assert.equal(docs[2].receiver, 'Something');
-      assert.equal(docs[2].typeInfo.name, K.TYPE_LITERAL);
+      assert.equal(docs[2].type, K.TYPE_LITERAL);
     });
   });
 });

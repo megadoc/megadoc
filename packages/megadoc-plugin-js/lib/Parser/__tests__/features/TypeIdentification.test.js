@@ -11,7 +11,7 @@ describe('CJS::Parser - Type Identification', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_OBJECT);
+    assert.equal(docs[0].type, K.TYPE_OBJECT);
   });
 
   it('marks `var SomeModule = function {};` as a `function`', function() {
@@ -21,7 +21,7 @@ describe('CJS::Parser - Type Identification', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });
 
   it('marks `function SomeModule() {}` as a `function`', function() {
@@ -31,7 +31,7 @@ describe('CJS::Parser - Type Identification', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });
 
   it('marks `class SomeModule {}` as a `class`', function() {
@@ -42,6 +42,6 @@ describe('CJS::Parser - Type Identification', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].typeInfo.name, K.TYPE_CLASS);
+    assert.equal(docs[0].type, K.TYPE_CLASS);
   });
 });

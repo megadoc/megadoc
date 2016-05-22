@@ -24,8 +24,9 @@ describe('CJS::Parser - Prototypal modules', function() {
 
     assert.ok(doc);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.typeInfo.name, 'String');
-    assert.equal(doc.typeInfo.value, 'a');
+    assert.equal(doc.type, 'String');
+    assert.equal(doc.nodeInfo.type, 'Literal');
+    assert.equal(doc.nodeInfo.value, 'a');
     assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
   });
 
@@ -46,7 +47,7 @@ describe('CJS::Parser - Prototypal modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
-    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_PROTOTYPE);
   });
@@ -68,7 +69,7 @@ describe('CJS::Parser - Prototypal modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter@someProperty' });
 
     assert.ok(doc);
-    assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_PROTOTYPE);
   });

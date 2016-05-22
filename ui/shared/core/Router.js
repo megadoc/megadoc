@@ -90,6 +90,16 @@ Router.refreshScroll = function() {
   }
 };
 
+/**
+ * @deprecated
+ *
+ * Hello.
+ *
+ * @param  {String} options.routeName [description]
+ * @param  {Object} options.params    [description]
+ *
+ * @return {String}                   [description]
+ */
 Router.generateAnchorId = function({ routeName, params }) {
   invariant(false, "Routing is disabled!");
 
