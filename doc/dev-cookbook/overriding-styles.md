@@ -1,13 +1,13 @@
 # Overriding style variables
 
-The [HTMLSerializer]() provides a set of pre-defined variables that control the
-look and feel of the UI. These variables are maintained in [/ui/css/variables.less]().
+The [HTMLSerializer](/lib/HTMLSerializer.js) provides a set of pre-defined variables that control the
+look and feel of the UI. These variables are maintained in [/ui/css/variables.less](/ui/css/variables.less).
 
 In order for an override of those variables to be reflected in all stylesheets,
 we must define our overrides ahead of the compilation time.
 
 To do this, you must define a file at `[my-plugin]/ui/styleOverrides.json` 
-and register it with the [Compiler@assets compiler's asset]() registry:
+and register it with the [Compiler@assets compiler's asset](/lib/Compiler.js#L73) registry:
 
 ```javascript
 // @file: my-plugin/lib/index.js

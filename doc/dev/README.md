@@ -6,15 +6,15 @@ unable to do anything useful beyond orchestrating plugins.
 What the core does provide is a compiler that is equipped and configured 
 with several modules your plugin can interact with:
 
-- the [Compiler@assets asset registry]() for registering static assets for serving at run-time, like images and free-form JS scripts (perhaps a Google Analytics snippet)
-- the [Compiler@linkResolver link-resolver]() for "linkifying" blocks of documentation
-- the [Compiler@renderer renderer]() for rendering Markdown to HTML
-- the [Compiler@corpus corpus]() instance for the current compilation
+- the [Compiler@assets asset registry](/lib/Compiler.js#L75) for registering static assets for serving at run-time, like images and free-form JS scripts (perhaps a Google Analytics snippet)
+- the [Compiler@linkResolver link-resolver](/lib/Compiler.js#L98) for "linkifying" blocks of documentation
+- the [Compiler@renderer renderer](/lib/Compiler.js#L108) for rendering Markdown to HTML
+- the [Compiler@corpus corpus](/lib/Compiler.js#L90) instance for the current compilation
 
 In this guide, we'll create a very basic plugin that reads Markdown files and
 presents them in the UI.
 
-Before we start, make sure you have your [./env.md local environment]() set up 
+Before we start, make sure you have your [./env.md local environment](./env.md) set up 
 and ready to start developing plugins.
 
 ## Plugin file structure
@@ -49,14 +49,14 @@ what it is:
 
 - `dist/` is optional unless you have any UI scripts, then it's mandatory. It
   contains the compiled UI scripts for your plugin which are generated using
-  [[/cli/megadoc-compile]].
+  [/cli/megadoc-compile](/cli/megadoc-compile).
 - `lib/` contains the plugin implementation files.
 - `lib/config.js` must contain all the configuration parameters your plugin accepts and they should be documented
 - `lib/index.js` is the entry point for your plugin - the one that the users will be using so it should export a function
 - `ui/` contains the plugin HTML UI implementation files.
 - `package.json` must contain a `peerDependency` on the version of megadoc you're working with
 
-For convenience, you can also clone the [megadoc-plugin-skeleton](https://github.com/megadoc/megadoc/tree/master/packages/megadoc-plugin-skeleton) 
+For convenience, you can also clone the [megadoc-plugin-skeleton](/packages/megadoc-plugin-skeleton) 
 package which has this wrapped up for you.
 
 Okay, time to get started!
@@ -64,7 +64,7 @@ Okay, time to get started!
 ## Defining a plugin
 
 The only requirement for a plugin to function is to expose a `#run` function
-that accepts a single argument; the [Compiler]() instance.
+that accepts a single argument; the [Compiler](/lib/Compiler.js) instance.
 
 ```javascript
 // @file: megadoc-plugin-markdown/lib/index.js
@@ -92,7 +92,7 @@ A compilation is basically a serial process composed of separate phases.
 ```
 
 Your plugin may hook into any of these stages using the compiler's
-[Compiler#on #on]() routine.
+[Compiler#on]() routine.
 
 ```javascript
 { // ...
@@ -114,7 +114,7 @@ documents. You'd usually use a source analyzer (like for generating an AST or
 some form of structured output from the source files your plugin covers) and 
 then _reduce_ those structures into corpus nodes.
 
-Check out the [./using-the-corpus.md]() guide for more information on 
+Check out the [./using-the-corpus.md](./using-the-corpus.md) guide for more information on 
 reduction.
 
 #### Example: a basic Markdown scanner
@@ -156,10 +156,10 @@ compiler.on('scan', function(done) {
 });
 ```
 
-The [AssetUtils]() contains a number of helpers for dealing with source files
+The [AssetUtils](/lib/AssetUtils.js) contains a number of helpers for dealing with source files
 and emitted files. The compiler has an instance of that factory configured for
 the current compilation which you can access using
-[Compiler@utils compiler.utils]().
+[Compiler@utils compiler.utils](/lib/Compiler.js#L85).
 
 Okay! Now we have scanned the markdown files the user had listed and built a 
 set of abstract representations of them for use in the Corpus. However, we 
@@ -186,9 +186,9 @@ compiler.on('render', function(md, linkify, done) {
   done();
 });
 ```
-
-The [Renderer#renderMarkdown md]() parameter will compile Markdown to HTML, 
-while [LinkResolver#linkify linkify]() will convert links to internal documents
+/Users/lwilkins/sandbox/megadoc/lib/HTMLSerializer__LinkResolver.js
+The [Renderer#renderMarkdown md](/lib/Renderer.js#L72) parameter will compile Markdown to HTML, 
+while [LinkResolver#linkify linkify](/lib/HTMLSerializer__LinkResolver.js#L96) will convert links to internal documents
 to either: Markdown (the default), assuming you will render the source into 
 HTML, or to HTML directly[1].
 
@@ -223,7 +223,7 @@ compiler.on('render', function(md, linkify, done) {
 ```
 
 Finally, it's worth noting here that the link "schemes" (i.e. the notation 
-used to define an internal link) [./defining-link-schemes.md can be customized]() to support different schemes, like a MediaWiki scheme (`\[[Object]]` or 
+used to define an internal link) [./defining-link-schemes.md can be customized](./defining-link-schemes.md) to support different schemes, like a MediaWiki scheme (`\[[Object]]` or 
 `\[[Custom Text | Object]]`).
 
 This may be necessary if you're parsing docs from an external source, maybe 
@@ -240,7 +240,7 @@ not need the source any longer.
 ### The `write` phase
 
 By this point, the corpus contains all the documents that are ready to be
-rendered by a web browser. Our [HTMLSerializer serializer]() now renders the 
+rendered by a web browser. Our [HTMLSerializer serializer](/lib/HTMLSerializer.js) now renders the 
 corpus into the output format, and we emit any assets we may require at 
 run-time.
 
@@ -262,7 +262,7 @@ We're now ready to get to the UI of our plugin - present the Markdown documents
 we've rendered as beautiful HTML.
 
 The UI of megadoc is written in [React](https://facebook.github.io/react/) and is extensible through different means which is covered extensively in
-[./building-interfaces.md]().
+[./building-interfaces.md](./building-interfaces.md).
 
 ## Where to go from here
 

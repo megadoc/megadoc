@@ -1,4 +1,4 @@
-# Using the [Corpus]()
+# Using the [Corpus](/lib/Corpus.js)
 
 ## Tuning the indexer
 
