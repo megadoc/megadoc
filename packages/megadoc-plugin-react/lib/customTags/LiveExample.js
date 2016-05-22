@@ -24,11 +24,12 @@ module.exports = function createLiveExampleTagProcessor(config) {
   var components = [];
 
   exports.process = function(tag/*, filePath*/) {
-    if (tag.type !== 'example' || tag.typeInfo.types[0] !== 'jsx') {
+    if (tag.type !== 'example' || !tag.typeInfo.type || tag.typeInfo.type.name !== 'jsx') {
       return;
     }
 
-    var lines = tag.string.split('\n');
+    console.log(tag)
+    var lines = tag.typeInfo.description.split('\n');
     var sourceCode = lines.filter(function(line) {
       return line.match(/^[ ]{4,}/);
     }).join('\n');
@@ -44,8 +45,11 @@ module.exports = function createLiveExampleTagProcessor(config) {
     else {
       tag.alignment = 'left';
     }
-
     var elementInfo = parseNameAndProps(sourceCode);
+
+    if (!elementInfo) {
+      return false;
+    }
 
     tag.sourceCode = sourceCode;
     tag.elementName = elementInfo.name;

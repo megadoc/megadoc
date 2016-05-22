@@ -7,8 +7,16 @@ module.exports = function(srcCode) {
     comments: false,
     code: false,
     ast: true,
+    babelrc: false,
     presets: [ 'react' ]
   });
+
+  if (!compiled.ast || !compiled.ast.program.body[0]) {
+    console.warn("Unable to parse Live Example code");
+    console.warn("Source code:\n", srcCode);
+
+    return null;
+  }
 
   // args are what's passed to React.createElement():
   //

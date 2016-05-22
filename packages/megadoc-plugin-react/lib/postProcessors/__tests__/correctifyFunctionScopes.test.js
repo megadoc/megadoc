@@ -6,7 +6,7 @@ var findWhere = require('lodash').findWhere;
 describe('analyzeReactNode - statics', function() {
   it('should find and track a static property', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    statics: {
       //      someFunction: function() {}
@@ -22,7 +22,7 @@ describe('analyzeReactNode - statics', function() {
 
   it('should correctify the scope of documented static methods', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    statics: {
       //      /** Foo */
@@ -44,7 +44,7 @@ describe('analyzeReactNode - statics', function() {
 describe('analyzeReactNode - methods', function() {
   it('should correctify the scope of an instance method', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    /** Do something. */
       //    someMethod() {
@@ -56,7 +56,7 @@ describe('analyzeReactNode - methods', function() {
 
     var doc = findWhere(docs, { name: 'someMethod' });
 
-    assert.equal(doc.ctx.type, 'function');
+    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
     assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
     assert.equal(doc.id, 'Something#someMethod');
   });

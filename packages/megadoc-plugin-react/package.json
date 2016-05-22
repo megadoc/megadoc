@@ -19,19 +19,12 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "babel-core": "6.7.6",
-    "babel-generator": "6.7.5",
-    "babel-preset-react": "6.5.0",
-    "babel-types": "6.7.2",
+    "babel-generator": "6.9.0",
+    "babel-types": "6.9.0",
     "lodash": "3.10.1"
   },
   "peerDependencies": {
     "megadoc": "5.x",
     "megadoc-plugin-js": "5.x"
-  },
-  "devDependencies": {
-    "babel-loader": "6.2.4",
-    "react": "^0.14.0",
-    "webpack": "1.13.0"
   }
 }
