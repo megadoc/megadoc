@@ -13,6 +13,6 @@ describe('CJS::Parser - @type support', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.include(docs[0].ctx.type, { name: K.TYPE_FUNCTION });
+    assert.equal(docs[0].typeInfo.name, K.TYPE_FUNCTION);
   });
 });

@@ -22,3 +22,8 @@ exports.VISIBILITY_PROTECTED = 'protected';
 exports.VISIBILITY_PRIVATE = 'private';
 
 exports.DEFAULT_FACTORY_EXPORTS_ID = 'default_exports';
+exports.TYPE_OVERRIDING_TAGS = Object.freeze({
+  'type': true,
+  'property': true,
+  'method': true
+});

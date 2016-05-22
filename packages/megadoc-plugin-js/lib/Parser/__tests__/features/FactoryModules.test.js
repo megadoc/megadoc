@@ -29,7 +29,7 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
@@ -53,7 +53,7 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
@@ -83,14 +83,14 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
@@ -120,25 +120,25 @@ describe('CJS::Parser - Factory modules', function() {
 
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter.someStaticMethod' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, undefined);
 
     doc = findWhere(docs, { id: 'DragonHunter.SOME_STATIC_PROP' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.typeInfo.name, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, undefined);
   });
@@ -162,7 +162,7 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#capture' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
@@ -184,7 +184,7 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#' + K.DEFAULT_FACTORY_EXPORTS_ID });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
@@ -211,7 +211,7 @@ describe('CJS::Parser - Factory modules', function() {
 
     assert.equal(docs[1].id, 'FactoryModule#getAssetPath');
     assert.equal(docs[1].receiver, 'FactoryModule');
-    assert.equal(docs[1].ctx.type, K.TYPE_FUNCTION);
+    assert.equal(docs[1].typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(docs[1].ctx.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
@@ -239,11 +239,11 @@ describe('CJS::Parser - Factory modules', function() {
 
     doc = findWhere(docs, { id: 'Core.EventEmitter#emitChange' });
     assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'Core.EventEmitter');
 
     doc = findWhere(docs, { id: 'Core.EventEmitter.throttleEmitter' });
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
     assert.equal(doc.ctx.scope, K.SCOPE_UNSCOPED);
     assert.equal(doc.receiver, 'Core.EventEmitter');
   });

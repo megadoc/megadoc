@@ -43,15 +43,10 @@ function castExpressionValue(expr) {
 }
 
 function parseFunctionExpression(node) {
-  var defaults = node.defaults || [];
-
   return {
     type: K.TYPE_FUNCTION,
     params: node.params.map(function(param, i) {
-      return {
-        name: param.name,
-        defaultValue: castExpressionValue(defaults[i])
-      }
+      return parseFunctionParameter(param);
     })
   };
 }
@@ -73,5 +68,35 @@ function parseArrayExpression(/*expr*/) {
   return {
     type: K.TYPE_ARRAY,
     values: [] // TODO
+  }
+}
+
+// ESprima seems to annotate FunctionDeclaration nodes with a "defaults" property
+// that is an array of Literal nodes that map to parameter default values,
+// however, babel doesn't seem to do it this way; instead, it's using an
+// AssignmentPattern to reflect the defaults. So for:
+//
+//     function x(a, b = 5) {}
+//
+// We get something like:
+//
+//     [FunctionDeclaration |
+//       params: [Array |
+//         [Node.Identifier],
+//         [Node.AssignmentPattern|
+//           left: Node,
+//           right: Node
+//         ]
+//       ]
+//     ]
+function parseFunctionParameter(node) {
+  if (t.isIdentifier(node)) {
+    return { name: node.name };
+  }
+  else if (t.isAssignmentPattern(node)) {
+    return {
+      name: node.left.name,
+      defaultValue: node.right.value
+    };
   }
 }

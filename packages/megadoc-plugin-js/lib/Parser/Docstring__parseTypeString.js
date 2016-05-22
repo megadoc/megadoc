@@ -5,6 +5,18 @@ module.exports = function(typeString) {
   return reduceCatharsis(catharsis.parse(typeString, { jsdoc: true, useCache: false }));
 };
 
+/**
+ * @typedef {TagTypeInfo}
+ * @property {String} name
+ * @property {?Boolean} nullable
+ * @property {?Boolean} optional
+ * @property {?Boolean} repeatable
+ * @property {?Array.<TagTypeInfo>} elements
+ * @property {?Array.<TagTypeInfo>} params
+ * @property {?TagTypeInfo} returnValue
+ * @property {?TagTypeInfo} key
+ * @property {?TagTypeInfo} value
+ */
 function reduceCatharsis(typeInfo) {
   var info = {};
 

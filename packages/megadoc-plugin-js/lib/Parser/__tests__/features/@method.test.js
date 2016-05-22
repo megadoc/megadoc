@@ -26,7 +26,7 @@ describe('CJS::Parser - @method tag', function() {
     assert.ok(doc);
     assert.equal(doc.id, 'Compiler#on');
     assert.equal(doc.receiver, 'Compiler');
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.typeInfo.name, K.TYPE_FUNCTION);
   });
 
   it('it accepts multiple dynamically generated methods in the same docstring', function() {

@@ -114,15 +114,17 @@ Dpt.getTag = function(type) {
 };
 
 Dpt.hasTypeOverride = function() {
-  return this.tags.filter(function(tag) {
-    return !!tag.explicitType;
-  }).length > 0;
+  return getTypeOverridingTags(this.tags).length > 0;
 };
 
 Dpt.getTypeOverride = function() {
-  return this.tags.filter(function(tag) {
-    return !!tag.explicitType;
-  })[0].explicitType;
+  var typedTags = getTypeOverridingTags(this.tags);
+
+  if (typedTags.length > 1) {
+    console.warn("Document '%s' has multiple type overrides!", this.id);
+  }
+
+  return typedTags[0].typeInfo.type;
 };
 
 Dpt.overrideNamespace = function(namespace) {
@@ -138,3 +140,9 @@ Dpt.overrideNamespace = function(namespace) {
 };
 
 module.exports = Docstring;
+
+function getTypeOverridingTags(tags) {
+  return tags.filter(function(tag) {
+    return tag.type in K.TYPE_OVERRIDING_TAGS;
+  });
+}

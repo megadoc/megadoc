@@ -35,7 +35,7 @@ describe('CJS::Parser - @lends support', function() {
 
     get('DOMHelpers', function(doc) {
       assert.equal(doc.isModule, true);
-      assert.equal(doc.ctx.type, K.TYPE_OBJECT);
+      assert.equal(doc.typeInfo.name, K.TYPE_OBJECT);
     });
 
     get('DOMHelpers.findAll', function(doc) {
@@ -62,7 +62,7 @@ describe('CJS::Parser - @lends support', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].ctx.type, K.TYPE_LITERAL);
+    assert.equal(docs[1].typeInfo.name, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
     assert.equal(docs[1].ctx.value, 'a');
@@ -86,7 +86,7 @@ describe('CJS::Parser - @lends support', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].ctx.type, K.TYPE_LITERAL);
+    assert.equal(docs[1].typeInfo.name, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'API.DragonHunter');
     assert.equal(docs[1].ctx.value, 'a');

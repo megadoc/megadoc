@@ -1,4 +1,5 @@
 var K = require('./constants');
+var DocUtils = require('./DocUtils');
 
 function isModule(doc) {
   return doc.isModule();
@@ -26,13 +27,11 @@ function isStaticMember(doc) {
 }
 
 function isMethod(doc) {
-  var ctx = doc.nodeInfo.ctx;
-
-  return isOfType(ctx.type, K.TYPE_FUNCTION) && isMember(doc);
+  return DocUtils.isOfType(doc, K.TYPE_FUNCTION) && isMember(doc);
 }
 
 function isStaticMethod(doc) {
-  return isOfType(doc.nodeInfo.ctx.type, K.TYPE_FUNCTION) && isStaticMember(doc);
+  return DocUtils.isOfType(doc, K.TYPE_FUNCTION) && isStaticMember(doc);
 }
 
 exports.isModule = isModule;
@@ -41,7 +40,3 @@ exports.isMethod = isMethod;
 exports.isStaticMethod = isStaticMethod;
 exports.isMember = isMember;
 exports.isStaticMember = isStaticMember;
-
-function isOfType(type, expectedType) {
-  return typeof type === 'string' ? type === expectedType : type.name === expectedType;
-}

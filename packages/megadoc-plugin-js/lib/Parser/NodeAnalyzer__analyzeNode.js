@@ -144,7 +144,6 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     //
     //     SomeModule.foo = 'a';
     if (t.isIdentifier(lhs.object) && t.isIdentifier(lhs.property)) {
-      info.type = 'property';
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
     }

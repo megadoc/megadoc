@@ -60,13 +60,6 @@ function Tag(commentNode, options, filePath) {
 
   /**
    * @property {String}
-   *           Would be "function" for @method tags, or whatever is specified
-   *           by a @type tag.
-   */
-  this.explicitType = null;
-
-  /**
-   * @property {String}
    *           Name of the module that is lent to by the enclosing doc.
    *
    *           Available only for @lends tags.
@@ -101,9 +94,9 @@ function Tag(commentNode, options, filePath) {
     defaultValue: null,
 
     /**
-     * @property {String[]} typeInfo.type
+     * @property {TagTypeInfo} typeInfo.type
      */
-    type: {}
+    type: null
   };
 
   switch(this.type) {
@@ -121,10 +114,6 @@ function Tag(commentNode, options, filePath) {
         delete this.typeInfo.name;
       }
 
-      if (this.type === 'property') {
-        this.explicitType = this.typeInfo.type;
-      }
-
       break;
 
     case 'type':
@@ -135,17 +124,13 @@ function Tag(commentNode, options, filePath) {
       this.typeInfo = TypeInfo(commentNode);
       // this.string = this.string.replace(commentNode.string, '');
 
-      if (this.typeInfo.type) {
-        this.explicitType = this.typeInfo.type;
-      }
-
       break;
 
     // if it was marked @method, treat it as such (not stupid "property" type
     // on object modules)
     case 'method':
-      this.explicitType = K.TYPE_FUNCTION;
       this.typeInfo = TypeInfo(commentNode);
+      this.typeInfo.type = { name: K.TYPE_FUNCTION };
 
       break;
 

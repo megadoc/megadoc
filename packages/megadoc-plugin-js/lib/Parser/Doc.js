@@ -1,7 +1,7 @@
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var _ = require('lodash');
-var findWhere = _.findWhere;
+var DocTypeInfo = require('./DocTypeInfo');
 var assign = _.assign;
 var assert = require('assert');
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
@@ -34,6 +34,8 @@ Doc.prototype.toJSON = function() {
   doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
   doc.receiver = this.getReceiver();
+  doc.typeInfo = DocTypeInfo(this);
+
   doc.mixinTargets = doc.tags.filter(function(tag) {
     return tag.type === 'mixes';
   }).reduce(function(list, tag) {
@@ -52,7 +54,7 @@ Doc.prototype.toJSON = function() {
   // }
 
   if (!doc.isModule) {
-    doc.ctx.symbol = this.generateSymbol(doc.ctx.type);
+    doc.ctx.symbol = this.generateSymbol();
     doc.id = [ doc.receiver, doc.id ].join(doc.ctx.symbol);
     doc.path = [ doc.receiver, doc.name ].join(doc.ctx.symbol);
   }
@@ -68,7 +70,7 @@ Doc.prototype.toJSON = function() {
     });
   }
 
-  this.useSourceNameWhereNeeded(doc.name, doc);
+  // this.useSourceNameWhereNeeded(doc.name, doc);
 
   return doc;
 };
@@ -199,12 +201,12 @@ Doc.prototype.hasReceiver = function() {
   return Boolean(this.getReceiver());
 };
 
-Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
-  var propertyTag = findWhere(doc.tags, { type: 'property' });
-  if (propertyTag && !propertyTag.typeInfo.name) {
-    propertyTag.typeInfo.name = name;
-  }
-};
+// Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
+//   var propertyTag = findWhere(doc.tags, { type: 'property' });
+//   if (propertyTag && !propertyTag.typeInfo.name) {
+//     propertyTag.typeInfo.name = name;
+//   }
+// };
 
 Doc.prototype.addAlias = function(name) {
   this.customAliases.push(name);

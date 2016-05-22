@@ -1,6 +1,19 @@
 var multiline = require('multiline-slash');
 var ASTParser = require('./');
 
+exports.parseNode = function(strGenerator, config, filePath) {
+  var parser = new ASTParser();
+  var body = typeof strGenerator === 'function' ? multiline(strGenerator) : strGenerator;
+
+  config = config || {};
+  config.alias = config.alias || {};
+  config.strict = true;
+
+  parser.parseString(body, config, filePath || '__test__');
+
+  return parser.registry.docs;
+}
+
 function parseInline(strGenerator, config, filePath) {
   var parser = new ASTParser();
   var body = typeof strGenerator === 'function' ? multiline(strGenerator) : strGenerator;

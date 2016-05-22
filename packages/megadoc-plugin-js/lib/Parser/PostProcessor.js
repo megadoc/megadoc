@@ -2,6 +2,7 @@ var path = require('path');
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var ASTUtils = require('./ASTUtils');
+var DocUtils = require('./DocUtils');
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 exports.run = function(registry, config) {
@@ -36,13 +37,13 @@ exports.run = function(registry, config) {
 
   // @method or @type specified? we use that type info instead of what we
   // inferred during node analysis
-  docs.forEach(function(doc) {
-    if (doc.docstring.hasTypeOverride()) {
-      doc.nodeInfo.addContextInfo({
-        type: doc.docstring.getTypeOverride()
-      });
-    }
-  });
+  // docs.forEach(function(doc) {
+  //   if (doc.docstring.hasTypeOverride()) {
+  //     doc.nodeInfo.addContextInfo({
+  //       type: doc.docstring.getTypeOverride()
+  //     });
+  //   }
+  // });
 
   docs.filter(DocClassifier.isEntity).forEach(function(doc) {
     resolveReceiver(registry, doc);
@@ -202,9 +203,7 @@ function removeBadDocs(registry) {
 
 function warnAboutUnknownContexts(registry) {
   registry.docs.forEach(function(doc) {
-    var ctx = doc.nodeInfo.ctx;
-
-    if (!ctx.type || ctx.type === K.TYPE_UNKNOWN) {
+    if (DocUtils.getTypeOf(doc) === K.TYPE_UNKNOWN) {
       debuglog(
         'Entity "%s" has no context. This probably means megadoc does not know ' +
         'how to handle it yet. (Source: %s)',

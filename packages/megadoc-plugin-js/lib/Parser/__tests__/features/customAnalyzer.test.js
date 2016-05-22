@@ -41,6 +41,6 @@ describe('CJS::Parser: customAnalyzer support', function() {
     assert.equal(docs.length, 1);
     assert.equal(docs[0].id, 'SomeComponent');
     assert.equal(docs[0].isModule, true);
-    assert.equal(docs[0].ctx.type, 'component');
+    assert.equal(docs[0].typeInfo.name, 'component');
   });
 });
