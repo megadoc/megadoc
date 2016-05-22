@@ -1,4 +1,4 @@
-var neutralizeWhitespace = require('./Docstring/Tag/neutralizeWhitespace');
+var neutralizeWhitespace = require('megadoc-docstring/lib/utils/neutralizeWhitespace');
 var parseComment = require('comment-parser/parser.js');
 var PARSERS = parseComment.PARSERS;
 

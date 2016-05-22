@@ -1,6 +1,6 @@
-var K = require('../constants');
+var K = require('./constants');
 var assign = require('lodash').assign;
-var getLocation = require('../Utils').getLocation;
+var getLocation = require('./ASTUtils').getLocation;
 
 /**
  * @param {recast.ast} node

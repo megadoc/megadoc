@@ -1,6 +1,6 @@
 var fs = require('fs');
 var assert = require('assert');
-var Utils = require('./Utils');
+var ASTUtils = require('./ASTUtils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
 var Registry = require('./Registry');
@@ -12,7 +12,6 @@ var assign = require('lodash').assign;
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var babel = require('babel-core');
 var t = require('babel-types');
-var util = require('util');
 
 var runAllSync = require('../utils/runAllSync');
 
@@ -174,18 +173,18 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         var expr = node.expression;
 
         // module.exports = Something;
-        if (Utils.isModuleExports(expr)) {
-          name = Utils.getVariableNameFromModuleExports(expr);
+        if (ASTUtils.isModuleExports(expr)) {
+          name = ASTUtils.getVariableNameFromModuleExports(expr);
 
           if (!name && config.inferModuleIdFromFileName) {
-            name = Utils.getVariableNameFromFilePath(filePath);
+            name = ASTUtils.getVariableNameFromFilePath(filePath);
           }
 
           if (name) {
             doc = parser.registry.get(name, filePath);
 
             if (doc) {
-              var modulePath = Utils.findNearestPathWithComments(doc.$path);
+              var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
 
               doc.markAsExported();
               parser.registry.trackModuleDocAtPath(doc, modulePath);
@@ -196,7 +195,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
               'Unable to identify exported module id. ' +
               'This probably means you are using an unnamed `module.exports`.' +
               ' (source: %s)',
-              Utils.dumpLocation(expr, filePath)
+              ASTUtils.dumpLocation(expr, filePath)
             );
 
             debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
@@ -245,7 +244,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
 
   if (doc.id) {
     if (doc.isModule()) {
-      var modulePath = Utils.findNearestPathWithComments(path);
+      var modulePath = ASTUtils.findNearestPathWithComments(path);
       // if (doc.id.match(/chai/i)) {
       //   console.log('Module:', path)
       // }

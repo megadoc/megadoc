@@ -1,5 +1,5 @@
 var WeakMap = require('weakmap');
-var Utils = require('./Utils');
+var ASTUtils = require('./ASTUtils');
 var K = require('./constants');
 var assert = require('assert');
 
@@ -28,7 +28,7 @@ Rpt.addModuleDoc = function(doc, path, filePath) {
   if (this.get(doc.id)) {
     console.warn('You are attempting to overwrite an existing doc entry! This is very bad.',
       doc.id,
-      filePath + ':' + Utils.getLocation(path.node).start.line
+      filePath + ':' + ASTUtils.getLocation(path.node).start.line
     );
   }
 
@@ -52,7 +52,7 @@ Rpt.addEntityDoc = function(doc, path) {
 };
 
 Rpt.trackLend = function(lendsTo, path) {
-  var targetPath = Utils.findNearestPathWithComments(path);
+  var targetPath = ASTUtils.findNearestPathWithComments(path);
 
   if (lendsTo.match(/(.*)\.prototype$/)) {
     this.lends.set(targetPath, {
@@ -135,10 +135,10 @@ Rpt.findClosestLend = function(path) {
  * @return {Object} lendEntry
  */
 Rpt.findAliasedLendTarget = function(path, alias) {
-  var identifierPath = Utils.findIdentifierInScope(alias, path);
+  var identifierPath = ASTUtils.findIdentifierInScope(alias, path);
 
   if (identifierPath) {
-    var targetPath = Utils.findNearestPathWithComments(identifierPath);
+    var targetPath = ASTUtils.findNearestPathWithComments(identifierPath);
 
     if (targetPath) {
       return this.lends.get(targetPath);
@@ -151,10 +151,10 @@ Rpt.findAliasedLendTarget = function(path, alias) {
  *         The actual/resolved receiver.
  */
 Rpt.findAliasedReceiver = function(path, alias) {
-  var identifierPath = Utils.findIdentifierInScope(alias, path);
+  var identifierPath = ASTUtils.findIdentifierInScope(alias, path);
 
   if (identifierPath) {
-    var receiverPath = Utils.findNearestPathWithComments(identifierPath);
+    var receiverPath = ASTUtils.findNearestPathWithComments(identifierPath);
 
     if (receiverPath) {
       var receiverDoc = this.getModuleDocAtPath(receiverPath);
@@ -170,7 +170,7 @@ Rpt.findAliasedReceiver = function(path, alias) {
 Rpt.findEnclosingDoc = function(startingPath, map) {
   var doc;
 
-  Utils.findAncestorPath(startingPath, function(path) {
+  ASTUtils.findAncestorPath(startingPath, function(path) {
     return Boolean(doc = map.get(path));
   });
 

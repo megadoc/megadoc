@@ -1,4 +1,4 @@
-var K = require('../constants');
+var K = require('./constants');
 var findWhere = require('lodash').findWhere;
 
 function extractIdInfo(tags) {

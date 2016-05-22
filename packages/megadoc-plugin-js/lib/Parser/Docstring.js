@@ -3,9 +3,9 @@ var parseComment = require('./parseComment');
 var assert = require('assert');
 var _ = require('lodash');
 var K = require('./constants');
-var Tag = require('./Docstring/Tag');
-var extractIdInfo = require('./Docstring/extractIdInfo');
-var collectDescription = require('./Docstring/collectDescription');
+var Tag = require('./Docstring__Tag');
+var extractIdInfo = require('./Docstring__extractIdInfo');
+var collectDescription = require('./Docstring__collectDescription');
 var findWhere = _.findWhere;
 
 /**

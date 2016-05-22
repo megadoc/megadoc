@@ -1,7 +1,7 @@
-var Tag = require('../Tag');
+var Tag = require('../Docstring__Tag');
 // var dox = require('dox');
 // var commentParser = require('comment-parser/parser.js');
-var commentParser = require('../../parseComment');
+var commentParser = require('../parseComment');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
 
@@ -113,16 +113,35 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
     describe('defaultValue', function() {
       [
-        { string: '/** @property {String} [foo="bar"] */', defaultValue: "bar" },
-        { string: '/** @property {String} [foo={}] */', defaultValue: "{}" },
-        { string: '/** @property {String} [foo=[]] */', defaultValue: "[]" },
-        { string: '/** @property {String} [foo={ foo: "bar" }] */', defaultValue: '{ foo: "bar" }' },
-        { string: '/** @property {String} [foo=null] */', defaultValue: 'null' },
+        { string: "foo", returnValue: null },
+        { string: "[foo]", defaultValue: null },
+        { string: "[foo='bar']", defaultValue: "bar" },
+        { string: "[foo=\"bar\"]", defaultValue: "bar" },
+        { string: "[foo={}]", defaultValue: "{}" },
+        { string: "[foo={ a: 'bar' }]", defaultValue: "{ a: 'bar' }" },
+        { string: "[foo=null]", defaultValue: "null" },
+        { string: "[foo=5]", defaultValue: "5" },
+        { string: "[foo=5.21]", defaultValue: "5.21" },
+        { string: "[foo=[]]", defaultValue: "[]" },
+        { string: "[foo=['a']]", defaultValue: "['a']" },
+        { string: "[ foo = [\"a\"] ]", defaultValue: " [\"a\"] " },
+        { string: "[foo = ]]", error: 'Invalid `name`, unpaired brackets' },
+        { string: "[foo = []", error: 'Invalid `name`, unpaired brackets' },
       ].forEach(function(sample) {
-        it('parses a default value of "' + sample.defaultValue + '"', function() {
-          var tag = parse(sample.string);
+        it('parses a default value of "' + sample.defaultValue + '" => "' + sample.defaultValue + '"', function() {
+          var docstring = '/** @property {Mixed} ' + sample.string + ' */'
 
-          assert.equal(tag.typeInfo.defaultValue, sample.defaultValue);
+          if (sample.error) {
+            assert.throws(function() {
+              parse(docstring);
+            }, sample.error);
+          }
+          else {
+            var tag = parse(docstring);
+
+            assert.equal(tag.typeInfo.name, 'foo');
+            assert.equal(tag.typeInfo.defaultValue, sample.defaultValue);
+          }
         });
       });
     });
@@ -210,6 +229,17 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(tag.typeInfo.name, undefined);
       assert.equal(tag.typeInfo.description, 'Something.');
+    });
+
+    it('parses inline description without a name', function() {
+      var tag = parse(function() {;
+        // /**
+        //  * @return {true} If the record is valid.
+        //  */
+      }, { namedReturnTags: false });
+
+      assert.equal(tag.typeInfo.name, undefined);
+      assert.equal(tag.typeInfo.description, 'If the record is valid.');
     });
   });
 

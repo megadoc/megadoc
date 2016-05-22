@@ -1,4 +1,4 @@
-var K = require('../constants');
+var K = require('./constants');
 var t = require('babel-types');
 
 module.exports = function generateContext(contextNode) {

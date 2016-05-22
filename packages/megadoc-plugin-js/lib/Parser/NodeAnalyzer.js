@@ -1,5 +1,5 @@
 var runAllSync = require('../utils/runAllSync');
-var analyzeNode = require('./NodeAnalyzer/analyzeNode');
+var analyzeNode = require('./NodeAnalyzer__analyzeNode');
 var t = require('babel-types');
 
 var NodeAnalyzer = exports;

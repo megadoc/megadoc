@@ -1,7 +1,7 @@
 var path = require('path');
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
-var Utils = require('./Utils');
+var ASTUtils = require('./ASTUtils');
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 exports.run = function(registry, config) {
@@ -67,7 +67,7 @@ function identifyScope(registry, doc) {
     nodeInfo.ctx.scope = K.SCOPE_PROTOTYPE;
   }
   else if (
-    Utils.isFactoryModuleReturnEntity(
+    ASTUtils.isFactoryModuleReturnEntity(
       doc.$path.node,
       doc.$path,
       registry

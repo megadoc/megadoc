@@ -1,7 +1,7 @@
-var subject = require('../parseTypes');
+var subject = require('../Docstring__parseTypeString');
 var assert = require('chai').assert;
 
-describe('CJS::Parser::Docstring::Tag::parseTypes', function() {
+describe('CJS::Parser::Docstring::Tag::parseTypeString', function() {
   [
     {
       sample: 'Simple type',

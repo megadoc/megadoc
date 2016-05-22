@@ -1,7 +1,4 @@
-// var parseProperty = require('./Tag/parseProperty');
-// var extractDefaultValue = require('./Tag/extractDefaultValue');
-var neutralizeWhitespace = require('./Tag/neutralizeWhitespace');
-var parseTypes = require('./Tag/parseTypes');
+var parseTypes = require('./Docstring__parseTypeString');
 
 function TypeInfo(commentNode) {
   // console.log(commentNode);
@@ -83,25 +80,6 @@ function TypeInfo(commentNode) {
       typeInfo.defaultValue = commentNode.default;
     }
   }
-  // var typeInfo = parseProperty(commentNode.string);
-
-  // if (typeInfo.name) {
-  //   if (commentNode.name && commentNode.name !== typeInfo.name) {
-  //     typeInfo.name = commentNode.name;
-  //     typeInfo.description = commentNode.description;
-  //   }
-
-  //   var nameFragments = extractDefaultValue(typeInfo.name);
-
-  //   if (nameFragments) {
-  //     typeInfo.name = nameFragments.name;
-  //     typeInfo.defaultValue = nameFragments.defaultValue;
-  //   }
-  // }
-
-  // if (typeInfo.description) {
-  //   typeInfo.description = neutralizeWhitespace(typeInfo.description);
-  // }
 
   return typeInfo;
 }

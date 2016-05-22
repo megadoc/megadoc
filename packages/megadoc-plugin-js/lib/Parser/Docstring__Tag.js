@@ -1,5 +1,5 @@
-var K = require('../constants');
-var TypeInfo = require('./Tag__TypeInfo');
+var K = require('./constants');
+var TypeInfo = require('./Docstring__TagTypeInfo');
 var assert = require('assert');
 
 var TypeAliases = {
@@ -16,6 +16,10 @@ var TypeAliases = {
  */
 function Tag(commentNode, options, filePath) {
   var customTags = options.customTags;
+
+  if (commentNode.errors && commentNode.errors.length) {
+    throw new Error(commentNode.errors[0]);
+  }
 
   /**
    * @property {String}
@@ -112,10 +116,10 @@ function Tag(commentNode, options, filePath) {
       this.typeInfo = TypeInfo(commentNode);
 
       // fixup for return tags when we're not expecting them to be named
-      // if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
-      //   this.typeInfo.description = this.typeInfo.name + ' ' + this.typeInfo.description;
-      //   this.typeInfo.name = undefined;
-      // }
+      if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
+        this.typeInfo.description = this.typeInfo.name + ' ' + this.typeInfo.description;
+        delete this.typeInfo.name;
+      }
 
       break;
 
