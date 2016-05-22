@@ -34,14 +34,14 @@ const ModuleHeader = React.createClass({
     const { documentNode } = this.props;
     const doc = documentNode.properties || {
       name: documentNode.title,
-      ctx: { type: K.TYPE_UNKNOWN }
+      type: K.TYPE_UNKNOWN
     };
 
     if (this.props.generateAnchor) {
       anchor = documentNode.meta.anchor;
     }
 
-    if (!doc.ctx) {
+    if (!doc.nodeInfo) {
       return <header>Unsupported Entity</header>;
     }
 

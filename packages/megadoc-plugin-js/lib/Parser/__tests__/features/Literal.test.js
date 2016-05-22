@@ -61,9 +61,9 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'sinonSuite');
-    assert.equal(docs[1].ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
     assert.equal(docs[1].type, K.TYPE_FUNCTION);
-    assert.equal(docs[1].ctx.symbol, '#');
+    assert.equal(docs[1].symbol, '#');
   });
 
   it('works as a @memberOf an object using @name to name it', function() {
@@ -85,9 +85,9 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'x');
-    assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_UNSCOPED);
     assert.equal(docs[1].type, K.TYPE_UNKNOWN);
-    assert.equal(docs[1].ctx.symbol, '.');
+    assert.equal(docs[1].symbol, '.');
   });
 
   it('works as a @memberOf an object using @name to name it and @type to specify it', function() {
@@ -110,8 +110,8 @@ describe('CJS::Parser - Literal nodes annotated with comments', function() {
 
     assert.equal(docs[1].name, 'spy');
     assert.equal(docs[1].receiver, 'x');
-    assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_UNSCOPED);
     assert.equal(docs[1].type, K.TYPE_FUNCTION);
-    assert.equal(docs[1].ctx.symbol, '.');
+    assert.equal(docs[1].symbol, '.');
   });
 });

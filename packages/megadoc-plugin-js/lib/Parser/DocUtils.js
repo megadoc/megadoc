@@ -51,6 +51,7 @@ exports.isModule = function(doc) {
 exports.getReceiverAndScopeFor = function(doc, registry) {
   var receiver = doc.nodeInfo.receiver;
   var correctedScope, exportedModule, enclosingModule, receivingModule;
+
   // Resolve @memberOf receiver aliasing:
   if (doc.docstring.hasMemberOf()) {
     receiver = doc.docstring.getExplicitReceiver();
@@ -136,34 +137,3 @@ exports.getLocationOf = function(doc) {
     doc.filePath + ':' + doc.nodeInfo.loc.start.line
   );
 };
-
-// exports.getScopeOf = function(doc, receiver, registry) {
-//   // var receiver = exports.getReceiverFor(doc, registry);
-
-//   if (doc.docstring.hasMemberOf()) {
-//     receiver = doc.docstring.getExplicitReceiver();
-
-//     if (receiver.match(/(.*)\.prototype$/)) {
-//       return K.SCOPE_PROTOTYPE;
-//     }
-//   }
-
-//   if (doc.docstring.doesLend()) {
-//     var lendsTo = doc.docstring.getLentTo();
-//     console.log(lendsTo)
-//     if (lendsTo.match(/(.*)\.prototype$/)) {
-//       return K.SCOPE_PROTOTYPE;
-//     }
-//   }
-
-//   // Resolve @lends
-//   // var lendEntry = (
-//   //   registry.findAliasedLendTarget(doc.$path, receiver) ||
-//   //   registry.findClosestLend(doc.$path)
-//   // );
-
-//   // // TODO: this needs a bit of rethinking really
-//   // if (lendEntry && lendEntry.scope) {
-//   //   return lendEntry.scope;
-//   // }
-// };

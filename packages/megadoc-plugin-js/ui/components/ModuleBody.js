@@ -152,9 +152,9 @@ const ModuleBody = React.createClass({
       moduleDocs.filter(function(entityDoc) {
 
         return (
-          (scope ? scope(entityDoc.ctx.scope) : true) &&
+          (scope ? scope(entityDoc.nodeInfo.scope) : true) &&
           (
-            entityDoc.ctx.type === K.TYPE_LITERAL ||
+            entityDoc.nodeInfo.type === K.TYPE_LITERAL ||
             entityDoc.tags.some(x => x.type === 'property')
           )
         );
@@ -179,7 +179,7 @@ const ModuleBody = React.createClass({
       findWhere(doc.tags, { type: 'type' }) || {
         typeInfo: {
           name: doc.name,
-          type: { name: doc.ctx.type }
+          type: { name: doc.type }
         }
       }
     );

@@ -65,7 +65,7 @@ describe('CJS::Parser - @lends support', function() {
     assert.equal(docs[1].type, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.equal(docs[1].ctx.value, 'a');
+    assert.equal(docs[1].nodeInfo.value, 'a');
   });
 
   it('correctly resolves a namespaced module', function() {
@@ -89,7 +89,7 @@ describe('CJS::Parser - @lends support', function() {
     assert.equal(docs[1].type, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'API.DragonHunter');
-    assert.equal(docs[1].ctx.value, 'a');
+    assert.equal(docs[1].nodeInfo.value, 'a');
   });
 
   it('lends to a prototype', function() {
@@ -111,10 +111,10 @@ describe('CJS::Parser - @lends support', function() {
     assert.equal(docs.length, 3);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_PROTOTYPE);
 
     assert.equal(docs[2].name, 'someMethod');
     assert.equal(docs[2].receiver, 'DragonHunter');
-    assert.equal(docs[2].ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(docs[2].nodeInfo.scope, K.SCOPE_PROTOTYPE);
   });
 });

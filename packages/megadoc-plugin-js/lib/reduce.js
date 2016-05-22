@@ -80,7 +80,7 @@ module.exports = function reduceDocuments(options) {
 
   function reduceEntityDocument(parentDoc, doc) {
     return b.documentEntity({
-      id: doc.ctx.symbol + doc.name,
+      id: doc.symbol + doc.name,
       title: doc.path,
       summary: generateSummary(doc),
       filePath: doc.filePath,

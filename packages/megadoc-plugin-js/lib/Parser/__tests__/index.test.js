@@ -62,7 +62,7 @@ describe('CJS::Parser::Main', function() {
 
       assert.equal(doc.type, K.TYPE_FUNCTION);
       assert.equal(doc.receiver, 'DragonHunter');
-      assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+      assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
     });
 
@@ -85,7 +85,7 @@ describe('CJS::Parser::Main', function() {
 
       assert.equal(doc.type, K.TYPE_LITERAL);
       assert.equal(doc.receiver, 'DragonHunter');
-      assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+      assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
     });
   });
@@ -126,7 +126,7 @@ describe('CJS::Parser::Main', function() {
       assert.equal(docs[1].name, 'someFunc');
       assert.equal(docs[1].receiver, 'Something');
       assert.equal(docs[1].type, K.TYPE_FUNCTION);
-      assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
+      assert.equal(docs[1].nodeInfo.scope, K.SCOPE_UNSCOPED);
 
       assert.equal(docs[2].name, 'someProperty');
       assert.equal(docs[2].receiver, 'Something');

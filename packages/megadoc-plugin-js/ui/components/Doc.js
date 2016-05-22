@@ -145,7 +145,7 @@ const Doc = React.createClass({
 });
 
 function isFunction(doc) {
-  return doc.ctx.type === K.TYPE_FUNCTION;
+  return doc.type === K.TYPE_FUNCTION;
 }
 
 module.exports = Doc;

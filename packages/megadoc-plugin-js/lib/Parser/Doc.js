@@ -58,7 +58,7 @@ Doc.prototype.toJSON = function(registry) {
     var resolvedContext = DocUtils.getReceiverAndScopeFor(this, registry);
 
     doc.receiver = resolvedContext.receiver;
-    doc.ctx.scope = resolvedContext.scope || doc.ctx.scope;
+    doc.nodeInfo.scope = resolvedContext.scope || doc.nodeInfo.scope;
     // doc.receiver = DocUtils.getReceiverFor(this, registry);
     // doc.ctx.scope = DocUtils.getScopeOf(this, doc.receiver, registry) || doc.ctx.scope;
   }
@@ -75,15 +75,10 @@ Doc.prototype.toJSON = function(registry) {
     return tag.alias;
   }).concat(this.customAliases);
 
-  // support for explicit typing using tags like @method or @type
-  // if (this.docstring.hasTypeOverride()) {
-  //   doc.ctx.type = this.docstring.getTypeOverride();
-  // }
-
   if (!doc.isModule) {
-    doc.ctx.symbol = this.generateSymbol();
-    doc.id = [ doc.receiver, doc.id ].join(doc.ctx.symbol);
-    doc.path = [ doc.receiver, doc.name ].join(doc.ctx.symbol);
+    doc.symbol = this.generateSymbol();
+    doc.id = [ doc.receiver, doc.id ].join(doc.symbol);
+    doc.path = [ doc.receiver, doc.name ].join(doc.symbol);
   }
   else {
     doc.path = doc.id;

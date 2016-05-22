@@ -34,32 +34,4 @@ describe('CJS::Parser - @alias support', function() {
     assert.equal(docs[1].name, 'something');
     assert.equal(docs[1].receiver, 'DragonHunter');
   });
-
-  it.skip('rewrites @memberOf thats point to an alias that @lends to the void', function() {
-    var docs = TestUtils.parseInline(function() {;
-      // /**
-      //  * @module
-      //  */
-      // var TheVoid;
-      //
-      // /**
-      //  * @module
-      //  * @lends TheVoid
-      //  * @alias Foo
-      //  */
-      // var DragonHunter = {};
-      //
-      // /**
-      //  * @memberOf Foo
-      //  */
-      // var something = '5';
-    });
-
-    console.log(docs)
-
-    assert.equal(docs.length, 2);
-    assert.equal(docs[1].name, 'something');
-    assert.equal(docs[1].receiver, 'TheVoid');
-  });
-
 });

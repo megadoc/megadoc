@@ -146,7 +146,7 @@ var ClassBrowser = React.createClass({
 
     const moduleDoc = documentNode.properties;
     const methodDocs = documentNode.entities.filter(function(x) {
-      return x.properties.ctx.type === K.TYPE_FUNCTION;
+      return x.properties.type === K.TYPE_FUNCTION;
     });
 
     const propertyDocs = documentNode.entities.filter(function(x) {
@@ -166,7 +166,7 @@ var ClassBrowser = React.createClass({
       <li key={node.uid} className="class-browser__methods-entity">
         <Link
           to={node}
-          children={(node.properties.ctx.symbol || '') + node.properties.name}
+          children={(node.properties.symbol || '') + node.properties.name}
           title={node.title}
         />
       </li>

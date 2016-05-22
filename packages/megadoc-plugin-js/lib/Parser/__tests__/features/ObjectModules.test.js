@@ -38,7 +38,7 @@ describe('CJS::Parser - Object modules', function() {
     assert.equal(docs[1].type, K.TYPE_LITERAL);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.equal(docs[1].ctx.value, 'a');
+    assert.equal(docs[1].nodeInfo.value, 'a');
   });
 
   it('parses static properties with an ObjectExpression value', function() {
@@ -57,7 +57,7 @@ describe('CJS::Parser - Object modules', function() {
     assert.equal(docs[1].type, K.TYPE_OBJECT);
     assert.equal(docs[1].name, 'someProperty');
     assert.equal(docs[1].receiver, 'DragonHunter');
-    assert.deepEqual(docs[1].ctx.properties, []);
+    assert.deepEqual(docs[1].nodeInfo.properties, []);
   });
 
   it.skip('does not confuse tokens with ones defined in another file', function() {

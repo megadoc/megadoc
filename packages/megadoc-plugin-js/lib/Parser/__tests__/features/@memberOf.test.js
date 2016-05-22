@@ -61,7 +61,7 @@ describe('CJS::Parser - @memberOf support', function() {
     });
 
     it('adjusts the scope so that it is "SCOPE_PROTOTYPE"', function() {
-      assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+      assert.equal(docs[1].nodeInfo.scope, K.SCOPE_PROTOTYPE);
     });
   });
 
@@ -131,8 +131,8 @@ describe('CJS::Parser - @memberOf support', function() {
     assert.equal(docs[1].name, 'node');
     assert.equal(docs[1].receiver, 'DragonHunter');
     assert.equal(docs[1].type, 'String');
-    assert.equal(docs[1].ctx.symbol, '@');
-    assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(docs[1].symbol, '@');
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_PROTOTYPE);
   });
 
   context('when the specified receiver @lends to something else', function() {

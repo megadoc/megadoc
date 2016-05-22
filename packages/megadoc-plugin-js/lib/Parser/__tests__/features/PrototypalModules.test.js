@@ -27,7 +27,7 @@ describe('CJS::Parser - Prototypal modules', function() {
     assert.equal(doc.type, 'String');
     assert.equal(doc.nodeInfo.type, 'Literal');
     assert.equal(doc.nodeInfo.value, 'a');
-    assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_INSTANCE);
   });
 
   it('parses prototype methods', function() {
@@ -49,7 +49,7 @@ describe('CJS::Parser - Prototypal modules', function() {
     assert.ok(doc);
     assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_PROTOTYPE);
   });
 
   it('parses prototype properties', function() {
@@ -71,6 +71,6 @@ describe('CJS::Parser - Prototypal modules', function() {
     assert.ok(doc);
     assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_PROTOTYPE);
   });
 });
