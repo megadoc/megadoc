@@ -6,7 +6,6 @@ var K = require('./constants');
 var Tag = require('./Docstring__Tag');
 var extractIdInfo = require('./Docstring__extractIdInfo');
 var collectDescription = require('./Docstring__collectDescription');
-var findWhere = _.findWhere;
 
 /**
  * An object representing a JSDoc comment (parsed using dox).
@@ -39,9 +38,22 @@ function Docstring(comment, options, filePath) {
 
   idInfo = extractIdInfo(this.tags);
 
-  this.id = idInfo.id;
+  // this.id = idInfo.id;
+  this.name = idInfo.name;
   this.namespace = idInfo.namespace;
   this.description = collectDescription(commentNode[0], this.id, this.tags);
+  this.aliases = this.tags.filter(function(tag) {
+    return tag.type === 'alias';
+  }).reduce(function(map, tag) {
+    map[tag.alias] = true;
+    return map;
+  }, {});
+
+  this.$location = (
+    (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
+    (this.name || '') + ' in ' +
+    filePath
+  );
 
   return this;
 }
@@ -65,7 +77,8 @@ var Dpt = Docstring.prototype;
  */
 Docstring.prototype.toJSON = function() {
   var docstring = _.pick(this, [
-    'id',
+    // 'id',
+    'name',
     'namespace',
     'description',
   ]);
@@ -85,10 +98,6 @@ Dpt.isInternal = function() {
   return this.hasTag('internal');
 };
 
-Dpt.isMethod = function() {
-  return this.hasTag('method');
-};
-
 Dpt.doesLend = function() {
   return this.hasTag('lends');
 };
@@ -106,11 +115,15 @@ Dpt.getExplicitReceiver = function() {
 };
 
 Dpt.hasTag = function(type) {
-  return !!findWhere(this.tags, { type: type });
+  return this.tags.some(findByType(type));
 };
 
 Dpt.getTag = function(type) {
-  return findWhere(this.tags, { type: type });
+  return this.tags.filter(findByType(type))[0];
+};
+
+Dpt.hasAlias = function(alias) {
+  return alias in this.aliases;
 };
 
 Dpt.hasTypeOverride = function() {
@@ -121,20 +134,22 @@ Dpt.getTypeOverride = function() {
   var typedTags = getTypeOverridingTags(this.tags);
 
   if (typedTags.length > 1) {
-    console.warn("Document '%s' has multiple type overrides!", this.id);
+    console.warn("Document has multiple type overrides! Source: %s",
+      this.$location
+    );
   }
 
   return typedTags[0].typeInfo.type;
 };
 
 Dpt.overrideNamespace = function(namespace) {
-  var oldNamespace = this.namespace;
+  // var oldNamespace = this.namespace;
 
   this.namespace = namespace;
 
-  if (oldNamespace && this.id) {
-    this.id = this.id.replace(oldNamespace + K.NAMESPACE_SEP, '');
-  }
+  // if (oldNamespace && this.id) {
+  //   this.id = this.id.replace(oldNamespace + K.NAMESPACE_SEP, '');
+  // }
 
   // this will FUBAR if we have @namespace tags ...
 };
@@ -145,4 +160,10 @@ function getTypeOverridingTags(tags) {
   return tags.filter(function(tag) {
     return tag.type in K.TYPE_OVERRIDING_TAGS;
   });
+}
+
+function findByType(type) {
+  return function(x) {
+    return x.type === type;
+  }
 }

@@ -32,7 +32,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  */
       });
 
-      assert.equal(tag.explicitModule, 'Dragon');
+      assert.equal(tag.typeInfo.name, 'Dragon');
     });
 
     it('parses the module path with a namespace', function() {
@@ -42,7 +42,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  */
       });
 
-      assert.equal(tag.explicitModule, 'NS.Dragon');
+      assert.equal(tag.typeInfo.name, 'NS.Dragon');
     });
   });
 
@@ -54,7 +54,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  */
       });
 
-      assert.equal(tag.explicitNamespace, 'Hairy');
+      assert.equal(tag.typeInfo.name, 'Hairy');
     });
 
     it('parses an inline namespace in a @module path', function() {
@@ -64,7 +64,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         //  */
       });
 
-      assert.equal(tag.explicitModule, 'Hairy.Dragon');
+      assert.equal(tag.typeInfo.name, 'Hairy.Dragon');
     });
   });
 

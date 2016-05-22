@@ -30,7 +30,6 @@ var t = CorpusTypes.builtInTypes;
  * });
  * ```
  */
-var exports;
 
 /**
  * @module T.Corpus

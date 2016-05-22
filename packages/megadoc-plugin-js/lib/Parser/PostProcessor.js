@@ -35,21 +35,11 @@ exports.run = function(registry, config) {
     });
   }
 
-  // @method or @type specified? we use that type info instead of what we
-  // inferred during node analysis
-  // docs.forEach(function(doc) {
-  //   if (doc.docstring.hasTypeOverride()) {
-  //     doc.nodeInfo.addContextInfo({
-  //       type: doc.docstring.getTypeOverride()
-  //     });
-  //   }
+  // docs.filter(DocClassifier.isEntity).forEach(function(doc) {
+  //   resolveReceiver(registry, doc);
   // });
 
-  docs.filter(DocClassifier.isEntity).forEach(function(doc) {
-    resolveReceiver(registry, doc);
-  });
-
-  removeBadDocs(registry);
+  // removeBadDocs(registry);
 
   docs.filter(DocClassifier.isEntity).forEach(function(doc) {
     identifyScope(registry, doc);

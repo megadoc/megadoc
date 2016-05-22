@@ -65,7 +65,7 @@ module.exports = function reduceDocuments(options) {
       id: doc.name,
       title: doc.path,
       summary: generateSummary(doc),
-      filePath: doc.absoluteFilePath,
+      filePath: doc.filePath,
       loc: doc.loc,
       symbol: '',
       properties: doc,
@@ -83,7 +83,8 @@ module.exports = function reduceDocuments(options) {
       id: doc.ctx.symbol + doc.name,
       title: doc.path,
       summary: generateSummary(doc),
-      filePath: doc.absoluteFilePath,
+      filePath: doc.filePath,
+      loc: doc.loc,
       properties: doc,
     });
   }

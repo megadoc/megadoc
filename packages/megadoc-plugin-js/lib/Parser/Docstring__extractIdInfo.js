@@ -2,54 +2,46 @@ var K = require('./constants');
 var findWhere = require('lodash').findWhere;
 
 function extractIdInfo(tags) {
-  var id, namespace;
+  var name, id;
+  var namespace = getNameFromTag(tags, 'namespace');
+  var fqid = id = getNameFromTag(tags, 'module');
 
-  // extract the module id from a @module tag:
-  var moduleTag = findWhere(tags, { type: 'module' });
-  if (moduleTag) {
-    id = moduleTag.explicitModule;
-    // var moduleId = moduleTag.string.match(/^([\w\.]+)\s*$|^([\w\.]+)\s*\n/);
-
-    // if (moduleId) {
-    //   id = moduleId[1] || moduleId[2];
-    // }
-  }
-
-  // extract the namespace from a @namespace tag:
-  var nsTag = findWhere(tags, { type: 'namespace' });
-  if (nsTag) {
-    var namespaceString = nsTag.explicitNamespace;// nsTag.string.split('\n')[0].trim();
-
-    if (namespaceString.length) {
-      namespace = namespaceString;
-    }
-    else {
-      console.warn('@namespace tag must have a name.');
-    }
-  }
   // check for inline namespaces found in a module id string
-  else if (id && id.indexOf(K.NAMESPACE_SEP) > -1) {
-    namespace = id
+  if (fqid && fqid.indexOf(K.NAMESPACE_SEP) > -1) {
+    if (namespace) {
+      console.warn(
+        "Document '%s' already has a namespace specified using the " +
+        "@namespace tag, it should not have a namespace in its name as well.",
+        fqid
+      );
+    }
+
+    namespace = fqid
       .split(K.NAMESPACE_SEP)
       .slice(0, -1)
       .join(K.NAMESPACE_SEP)
     ;
   }
 
+  // try getting the ID from other tags, but these do not allow implicit
+  // namespacing:
   if (!id) {
-    id = getNameFromTag(tags, 'name');
+    id = (
+      getNameFromTag(tags, 'name') ||
+      getNameFromTag(tags, 'method') ||
+      getNameFromTag(tags, 'property')
+    );
   }
 
-  if (!id) {
-    id = getNameFromTag(tags, 'method');
+  if (id && namespace && id.indexOf(namespace + K.NAMESPACE_SEP) === 0) {
+    name = id.substr(namespace.length + 1);
   }
-
-  if (!id) {
-    id = getNameFromTag(tags, 'property');
+  else {
+    name = id;
   }
 
   return {
-    id: id,
+    name: name,
     namespace: namespace
   };
 }

@@ -117,7 +117,7 @@ Utils.findNearestPathWithComments = function(startingPath) {
 };
 
 Utils.dumpLocation = function(node, filePath) {
-  return [filePath, node.loc.start.line].join(':');
+  return [filePath, Utils.getLocation(node).start.line].join(':');
 };
 
 /**
@@ -159,5 +159,8 @@ Utils.getLocation = function(node) {
     loc = node.loc;
   }
 
-  return loc || { start: {}, end: {} };
+  return loc || {
+    start: { line: '?' },
+    end: { line: '?' }
+  };
 };

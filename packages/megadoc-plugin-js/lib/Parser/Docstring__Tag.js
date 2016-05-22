@@ -51,14 +51,6 @@ function Tag(commentNode, options, filePath) {
   this.explicitReceiver = null;
 
   /**
-   * @propery {String}
-   *          Module namepath pointed to by @module.
-   */
-  this.explicitModule = null;
-
-  this.explicitNamespace = null;
-
-  /**
    * @property {String}
    *           Name of the module that is lent to by the enclosing doc.
    *
@@ -153,13 +145,13 @@ function Tag(commentNode, options, filePath) {
 
     case 'module':
       if (commentNode.name.trim().length > 0) {
-        this.explicitModule = commentNode.name;
+        this.typeInfo.name = commentNode.name.trim();
       }
       break;
 
     case 'namespace':
       if (commentNode.name.trim().length > 0) {
-        this.explicitNamespace = commentNode.name;
+        this.typeInfo.name = commentNode.name.trim();
       }
 
       break;
@@ -169,10 +161,11 @@ function Tag(commentNode, options, filePath) {
       break;
 
     case 'alias':
-      this.alias = this.string.split('\n')[0].trim();
+      this.alias = commentNode.name;
+      // this.alias = this.string.split('\n')[0].trim();
 
-      // same deal with @memberOf
-      this.string = this.string.replace(this.alias, '');
+      // // same deal with @memberOf
+      // this.string = this.string.replace(this.alias, '');
 
       break;
 

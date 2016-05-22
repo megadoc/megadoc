@@ -1,4 +1,5 @@
 var fs = require('fs');
+var nodejsPath = require('path');
 var assert = require('assert');
 var ASTUtils = require('./ASTUtils');
 var Doc = require('./Doc');
@@ -20,13 +21,13 @@ function Parser() {
 
 var Ppt = Parser.prototype;
 
-Ppt.parseFile = function(filePath, config, commonPrefix) {
+Ppt.parseFile = function(filePath, config, assetRoot) {
   try {
     this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
       config,
-      filePath.replace(commonPrefix, ''),
-      filePath
+      filePath,
+      assetRoot
     );
   }
   catch(e) {
@@ -35,16 +36,16 @@ Ppt.parseFile = function(filePath, config, commonPrefix) {
   }
 };
 
-Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
+Ppt.parseString = function(str, config, filePath, assetRoot) {
   if (str.length > 0) {
     try {
       if (config.parse) {
-        this.ast = config.parse(str, filePath, absoluteFilePath);
+        this.ast = config.parse(str, filePath);
       }
       else {
         this.ast = babel.transform(str, assign({
           filenameRelative: filePath,
-          filename: absoluteFilePath,
+          filename: assetRoot ? nodejsPath.resolve(assetRoot, filePath) : undefined,
           code: false,
           ast: true,
           babelrc: true,
@@ -52,8 +53,9 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
         }, config.parserOptions)).ast;
       }
 
-      this.walk(this.ast, config, filePath, absoluteFilePath);
-    } catch(e) {
+      this.walk(this.ast, config, filePath);
+    }
+    catch (e) {
       if (config.strict) {
         throw e;
       }
@@ -67,7 +69,7 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   }
 };
 
-Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
+Ppt.walk = function(ast, inConfig, filePath) {
   var parser = this;
   var config = pick(inConfig, [
     'inferModuleIdFromFileName',
@@ -135,7 +137,7 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
           var comment = commentNode.value;
 
           if (comment[0] === '*') {
-            if (!parser.parseComment(comment, path, path.node, config, filePath, absoluteFilePath)) {
+            if (!parser.parseComment(comment, path, path.node, config, filePath)) {
               return false;
             }
           }
@@ -186,14 +188,17 @@ Ppt.seal = function(config) {
 };
 
 Ppt.toJSON = function() {
+  var registry = this.registry;
+
   return this.registry.docs.map(function(doc) {
-    return doc.toJSON();
+    return doc.toJSON(registry);
   });
 };
 
-Ppt.parseComment = function(comment, path, contextNode, config, filePath, absoluteFilePath) {
+Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   var nodeInfo, doc;
-  var docstring = new Docstring('/*' + comment + '*/', config, absoluteFilePath);
+  var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
+  var docstring = new Docstring('/*' + comment + '*/', config, nodeLocation);
 
   if (docstring.isInternal()) {
     return false;
@@ -207,7 +212,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
 
   nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
 
-  doc = new Doc(docstring, nodeInfo, filePath, absoluteFilePath);
+  doc = new Doc(docstring, nodeInfo, filePath);
 
   if (config.alias.hasOwnProperty(doc.id)) {
     config.alias[doc.id].forEach(doc.addAlias.bind(doc));
@@ -221,18 +226,22 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
     if (doc.isModule()) {
       var modulePath = ASTUtils.findNearestPathWithComments(path);
 
-      // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
+      if (process.env.VERBOSE) {
+        console.log('\tFound a module "%s" (source: %s)', doc.id, nodeLocation);
+      }
 
       this.registry.addModuleDoc(doc, modulePath, filePath);
     }
     else {
       this.registry.addEntityDoc(doc, path);
 
-      // console.log('\tFound an entity "%s" belonging to "%s" (source: %s)',
-      //   doc.id,
-      //   doc.getReceiver(),
-      //   nodeInfo.fileLoc
-      // );
+      if (process.env.VERBOSE) {
+        console.log('\tFound an entity "%s" belonging to "%s" (source: %s)',
+          doc.id,
+          doc.getReceiver(),
+          nodeLocation
+        );
+      }
     }
   }
 

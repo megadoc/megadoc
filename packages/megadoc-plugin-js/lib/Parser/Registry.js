@@ -1,6 +1,6 @@
 var WeakMap = require('weakmap');
 var ASTUtils = require('./ASTUtils');
-var K = require('./constants');
+var DocUtils = require('./DocUtils');
 var assert = require('assert');
 
 /**
@@ -54,17 +54,9 @@ Rpt.addEntityDoc = function(doc, path) {
 Rpt.trackLend = function(lendsTo, path) {
   var targetPath = ASTUtils.findNearestPathWithComments(path);
 
-  if (lendsTo.match(/(.*)\.prototype$/)) {
-    this.lends.set(targetPath, {
-      receiver: RegExp.$1,
-      scope: K.SCOPE_PROTOTYPE
-    });
-  }
-  else {
-    this.lends.set(targetPath, {
-      receiver: lendsTo
-    });
-  }
+  this.lends.set(targetPath, {
+    receiver: lendsTo
+  });
 };
 
 Rpt.remove = function(doc) {
@@ -76,9 +68,17 @@ Rpt.remove = function(doc) {
 
 Rpt.get = function(id, filePath) {
   return this.docs.filter(function(doc) {
-    return (doc.id === id || doc.name === id) && (
-      filePath ? doc.filePath === filePath : true
+    if (filePath && doc.filePath !== filePath) {
+      return false;
+    }
+
+    return (
+      DocUtils.getIdOf(doc) === id ||
+      // DocUtils.getNameOf(doc) === id ||
+      doc.docstring.hasAlias(id)
     );
+  })[0] || this.docs.filter(function(doc) { // TODO: optimize
+    return DocUtils.getNameOf(doc) === id;
   })[0];
 };
 
@@ -93,7 +93,7 @@ Rpt.get = function(id, filePath) {
 Rpt.findClosestModule = function(path) {
   var receiverDoc = this.findEnclosingDoc(path, this.docPaths);
 
-  if (receiverDoc && receiverDoc.isModule()) {
+  if (receiverDoc && DocUtils.isModule(receiverDoc)) {
     return receiverDoc.id;
   }
 };
@@ -150,21 +150,33 @@ Rpt.findAliasedLendTarget = function(path, alias) {
  * @return {String}
  *         The actual/resolved receiver.
  */
-Rpt.findAliasedReceiver = function(path, alias) {
-  var identifierPath = ASTUtils.findIdentifierInScope(alias, path);
+Rpt.findAliasedReceiver = function(alias) {
+  var docs = this.docs.filter(function(doc) {
+    return doc.docstring.hasAlias(alias);
+  });
 
-  if (identifierPath) {
-    var receiverPath = ASTUtils.findNearestPathWithComments(identifierPath);
-
-    if (receiverPath) {
-      var receiverDoc = this.getModuleDocAtPath(receiverPath);
-      if (receiverDoc) {
-        if (receiverDoc.id !== alias) {
-          return receiverDoc.id;
-        }
-      }
-    }
+  if (docs.length > 1) {
+    console.warn("Multiple documents are using the same alias '%s': %s",
+      alias,
+      JSON.stringify(docs.map(function(x) { return x.id; }))
+    );
   }
+
+  return docs[0] && docs[0].id;
+  // var identifierPath = ASTUtils.findIdentifierInScope(alias, path);
+
+  // if (identifierPath) {
+  //   var receiverPath = ASTUtils.findNearestPathWithComments(identifierPath);
+
+  //   if (receiverPath) {
+  //     var receiverDoc = this.getModuleDocAtPath(receiverPath);
+  //     if (receiverDoc) {
+  //       if (receiverDoc.id !== alias) {
+  //         return receiverDoc.id;
+  //       }
+  //     }
+  //   }
+  // }
 };
 
 Rpt.findEnclosingDoc = function(startingPath, map) {

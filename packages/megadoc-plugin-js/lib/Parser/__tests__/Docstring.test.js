@@ -53,7 +53,7 @@ describe('CJS::Parser::Docstring', function() {
         //  */
       });
 
-      assert.equal(docstring.id, 'Hairy.Dragon');
+      assert.equal(docstring.name, 'Dragon');
       assert.equal(docstring.namespace, 'Hairy');
     });
   });

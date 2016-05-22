@@ -10,22 +10,36 @@ var debuglog = require('megadoc/lib/Logger')('megadoc').info;
  * @param {Docstring} docstring
  * @param {NodeInfo} nodeInfo
  * @param {String} filePath
- * @param {String} absoluteFilePath
  */
-function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
+function Doc(docstring, nodeInfo, filePath) {
+  var that = this;
+
   this.consumeDocstring(docstring);
   this.consumeNodeInfo(nodeInfo);
 
-  this.id = this.generateId();
-  this.name = this.generateName();
+  Object.defineProperty(this, 'id', {
+    get: function() {
+      // console.warn("Do not access Doc@id directly, use DocUtils.");
+      return DocUtils.getIdOf(that);
+    }
+  });
+
+  Object.defineProperty(this, 'name', {
+    get: function() {
+      // console.warn("Do not access Doc@name directly, use DocUtils.");
+      return DocUtils.getNameOf(that);
+    }
+  });
+
+  // this.id = this.generateId();
+  // this.name = this.generateName();
   this.filePath = filePath;
-  this.absoluteFilePath = absoluteFilePath;
   this.customAliases = [];
 
   return this;
 }
 
-Doc.prototype.toJSON = function() {
+Doc.prototype.toJSON = function(registry) {
   var doc = assign({},
     this.docstring.toJSON(),
     this.nodeInfo.toJSON()
@@ -37,9 +51,17 @@ Doc.prototype.toJSON = function() {
   doc.id = this.id;
   doc.name = this.generateName();
   doc.filePath = this.filePath;
-  // doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
-  doc.receiver = this.getReceiver();
+  // doc.receiver = this.getReceiver();
+
+  if (!doc.isModule) {
+    var resolvedContext = DocUtils.getReceiverAndScopeFor(this, registry);
+
+    doc.receiver = resolvedContext.receiver;
+    doc.ctx.scope = resolvedContext.scope || doc.ctx.scope;
+    // doc.receiver = DocUtils.getReceiverFor(this, registry);
+    // doc.ctx.scope = DocUtils.getScopeOf(this, doc.receiver, registry) || doc.ctx.scope;
+  }
 
   doc.mixinTargets = doc.tags.filter(function(tag) {
     return tag.type === 'mixes';
@@ -89,23 +111,25 @@ Doc.prototype.consumeNodeInfo = function(nodeInfo) {
 };
 
 Doc.prototype.generateId = function() {
-  var id = this.docstring.id || this.nodeInfo.id;
-  var namespace = this.docstring.namespace;
+  return DocUtils.getIdOf(this);
+  // var id = this.docstring.id || this.nodeInfo.id;
+  // var namespace = this.docstring.namespace;
 
-  if (id && namespace && id.indexOf(namespace) === -1) {
-    id = [ namespace, id ].join(K.NAMESPACE_SEP);
-  }
+  // if (id && namespace && id.indexOf(namespace) === -1) {
+  //   id = [ namespace, id ].join(K.NAMESPACE_SEP);
+  // }
 
-  return id;
+  // return id;
 };
 
 Doc.prototype.generateName = function() {
-  if (this.docstring.namespace && this.id) {
-    return this.id.replace(this.docstring.namespace + K.NAMESPACE_SEP, '');
-  }
-  else {
-    return this.id;
-  }
+  return DocUtils.getNameOf(this);
+  // if (this.docstring.namespace && this.id) {
+  //   return this.id.replace(this.docstring.namespace + K.NAMESPACE_SEP, '');
+  // }
+  // else {
+  //   return this.id;
+  // }
 };
 
 Doc.prototype.markAsExported = function() {
@@ -117,11 +141,12 @@ Doc.prototype.isExported = function() {
 };
 
 Doc.prototype.isModule = function() {
-  return !this.docstring.hasMemberOf() && (
-    this.isExported() ||
-    this.docstring.isModule() ||
-    this.nodeInfo.isModule()
-  );
+  return DocUtils.isModule(this);
+  // return !this.docstring.hasMemberOf() && (
+  //   this.isExported() ||
+  //   this.docstring.isModule() ||
+  //   this.nodeInfo.isModule()
+  // );
 };
 
 Doc.prototype.generateSymbol = function() {

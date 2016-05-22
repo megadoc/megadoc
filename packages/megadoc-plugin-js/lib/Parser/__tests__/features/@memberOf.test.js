@@ -22,20 +22,92 @@ describe('CJS::Parser - @memberOf support', function() {
     assert.equal(docs[1].receiver, 'DragonHunter');
   });
 
-  it('works with a Something.prototype', function() {
+  it('resolves the correct module even if it is namespaced and the tag omits it', function() {
     var docs = TestUtils.parseInline(function() {;
-      // /** @module */
+      // /**
+      //  * @module
+      //  * @namespace API
+      //  */
       // var DragonHunter = {};
       //
-      // /** @memberOf DragonHunter.prototype */
+      // /** @memberOf DragonHunter */
       // function capture() {}
     });
 
     assert.equal(docs.length, 2);
-    assert.equal(docs[1].name, 'capture');
-    assert.equal(docs[1].receiver, 'DragonHunter');
     assert.equal(docs[1].type, K.TYPE_FUNCTION);
-    assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+    assert.equal(docs[1].name, 'capture');
+    assert.equal(docs[1].receiver, 'API.DragonHunter');
+  });
+
+  context('when the target is a prototype...', function() {
+    var docs;
+
+    before(function() {
+      docs = TestUtils.parseInline(function() {;
+        // /** @module */
+        // var DragonHunter = {};
+        //
+        // /** @memberOf DragonHunter.prototype */
+        // function capture() {}
+      });
+
+      assert.equal(docs.length, 2);
+    });
+
+    it('omits ".prototype" from the receiver', function() {
+      assert.equal(docs[1].name, 'capture');
+      assert.equal(docs[1].receiver, 'DragonHunter');
+    });
+
+    it('adjusts the scope so that it is "SCOPE_PROTOTYPE"', function() {
+      assert.equal(docs[1].ctx.scope, K.SCOPE_PROTOTYPE);
+    });
+  });
+
+  context('when the target is aliased...', function() {
+    var docs;
+
+    before(function() {
+      docs = TestUtils.parseInline(function() {;
+        // /**
+        //  * @module
+        //  * @alias Foo
+        //  */
+        // var DragonHunter = {};
+        //
+        // /** @memberOf Foo */
+        // function capture() {}
+      });
+
+      assert.equal(docs.length, 2);
+    });
+
+    it('uses the original target name as the receiver', function() {
+      assert.equal(docs[1].name, 'capture');
+      assert.equal(docs[1].receiver, 'DragonHunter');
+    });
+  });
+
+  context('when the target is CommonJS "exports"...', function() {
+    var docs;
+
+    before(function() {
+      docs = TestUtils.parseInline(function() {;
+        // /** @module */
+        // var DragonHunter = eexports;
+        //
+        // /** @memberOf DragonHunter */
+        // function capture() {}
+      });
+
+      assert.equal(docs.length, 2);
+    });
+
+    it('resolves the identifier assigned to "exports" as the receiver', function() {
+      assert.equal(docs[1].name, 'capture');
+      assert.equal(docs[1].receiver, 'DragonHunter');
+    });
   });
 
   it('works with something like Object.defineProperty and @property', function() {
@@ -84,7 +156,7 @@ describe('CJS::Parser - @memberOf support', function() {
   });
 
   context('when they are spread across multiple files', function() {
-    var file1, file2;
+    var docs, file1, file2;
 
     beforeEach(function() {
       file1 = MegaTestUtils.createFile(multiline(function() {;
@@ -101,12 +173,13 @@ describe('CJS::Parser - @memberOf support', function() {
         //
         // module.exports = fn;
       }), 'module/fn.js');
+
+      docs = TestUtils.parseFiles([ file1.path, file2.path ], {});
+
+      assert.equal(docs.length, 2);
     });
 
     it('works', function() {
-      var docs = TestUtils.parseFiles([ file1.path, file2.path ], {});
-
-      assert.equal(docs.length, 2);
       var fnDoc = docs.filter(function(x) { return x.name === 'fn' })[0];
 
       assert.equal(fnDoc.type, K.TYPE_FUNCTION);

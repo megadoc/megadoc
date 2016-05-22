@@ -45,7 +45,7 @@ function parseFiles(filePaths, config, commonPrefix) {
   config.alias = config.alias || {};
 
   filePaths.forEach(function(filePath) {
-    parser.parseFile(filePath, config || {}, commonPrefix);
+    parser.parseFile(filePath, config || {}, commonPrefix || __dirname);
   });
 
   parser.seal(config);
