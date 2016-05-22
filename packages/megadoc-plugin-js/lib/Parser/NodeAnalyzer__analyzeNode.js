@@ -36,6 +36,16 @@ function analyzeNode(node, path, filePath, config) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
+  // TODO: when do we reach this? it seems FunctionExpression nodes are only
+  // really valid as an argument to a ReturnStatement, or as an init for a
+  // VariableDeclaration
+  //
+  // Maybe something like this?
+  //
+  //     (
+  //       /** Hello */
+  //       function() {}
+  //     )(this)
   else if (t.isFunctionExpression(node)) {
     info.id = node.id.name;
     info.$contextNode = node;

@@ -36,16 +36,16 @@ function extractIdInfo(tags) {
     ;
   }
 
-  var methodTag = findWhere(tags, { type: 'method' });
-
-  if (methodTag && methodTag.typeInfo.name) {
-    id = methodTag.typeInfo.name;
+  if (!id) {
+    id = getNameFromTag(tags, 'name');
   }
 
-  var propertyTag = findWhere(tags, { type: 'property' });
+  if (!id) {
+    id = getNameFromTag(tags, 'method');
+  }
 
-  if (propertyTag && propertyTag.typeInfo.name) {
-    id = propertyTag.typeInfo.name;
+  if (!id) {
+    id = getNameFromTag(tags, 'property');
   }
 
   return {
@@ -55,3 +55,11 @@ function extractIdInfo(tags) {
 }
 
 module.exports = extractIdInfo;
+
+function getNameFromTag(tags, tagType) {
+  var tag = findWhere(tags, { type: tagType });
+
+  if (tag && tag.typeInfo.name) {
+    return tag.typeInfo.name;
+  }
+}

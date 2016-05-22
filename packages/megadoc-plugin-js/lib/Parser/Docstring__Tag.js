@@ -121,6 +121,10 @@ function Tag(commentNode, options, filePath) {
         delete this.typeInfo.name;
       }
 
+      if (this.type === 'property') {
+        this.explicitType = this.typeInfo.type;
+      }
+
       break;
 
     case 'type':
@@ -173,6 +177,10 @@ function Tag(commentNode, options, filePath) {
         this.explicitNamespace = commentNode.name;
       }
 
+      break;
+
+    case 'name':
+      this.typeInfo.name = commentNode.name;
       break;
 
     case 'alias':

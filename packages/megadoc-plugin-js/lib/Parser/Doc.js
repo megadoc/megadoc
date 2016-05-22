@@ -47,9 +47,9 @@ Doc.prototype.toJSON = function() {
   }).concat(this.customAliases);
 
   // support for explicit typing using tags like @method or @type
-  if (this.docstring.hasTypeOverride()) {
-    doc.ctx.type = this.docstring.getTypeOverride();
-  }
+  // if (this.docstring.hasTypeOverride()) {
+  //   doc.ctx.type = this.docstring.getTypeOverride();
+  // }
 
   if (!doc.isModule) {
     doc.ctx.symbol = this.generateSymbol(doc.ctx.type);
@@ -117,38 +117,55 @@ Doc.prototype.isModule = function() {
   );
 };
 
-Doc.prototype.generateSymbol = function(type) {
-  var symbol;
+Doc.prototype.generateSymbol = function() {
+  // var symbol;
 
-  switch(type) {
-    case K.TYPE_FUNCTION:
-      if (DocClassifier.isStaticMethod(this)) {
-        symbol = '.';
-      }
-      else {
-        symbol = '#';
-      }
-      break;
+  // if (typeof type === 'object') {
+  //   type = type.name;
+  // }
 
-    default:
-      if (DocClassifier.isObjectProperty(this)) {
-        symbol = '@';
-      }
-      else {
-        symbol = '.';
-      }
-      break;
+  // console.log(type)
+
+  if (DocClassifier.isStaticMember(this)) {
+    return '.';
   }
-
-  if (this.docstring.hasTag('property') && !this.docstring.hasTag('static')) {
-    symbol = '@';
+  else if (DocClassifier.isMethod(this)) {
+    return '#';
   }
-
-  if (this.docstring.hasTag('property') && this.docstring.hasTag('static')) {
-    symbol = '.';
+  else if (DocClassifier.isMember(this)) {
+    return '@';
   }
+  // }
 
-  return symbol;
+  // switch(type) {
+  //   case K.TYPE_FUNCTION:
+  //     if (DocClassifier.isStaticMethod(this)) {
+  //       symbol = '.';
+  //     }
+  //     else {
+  //       symbol = '#';
+  //     }
+  //     break;
+
+  //   default:
+  //     if (DocClassifier.isObjectProperty(this)) {
+  //       symbol = '@';
+  //     }
+  //     else {
+  //       symbol = '.';
+  //     }
+  //     break;
+  // }
+
+  // if (this.docstring.hasTag('property') && !this.docstring.hasTag('static')) {
+  //   symbol = '@';
+  // }
+
+  // if (this.docstring.hasTag('property') && this.docstring.hasTag('static')) {
+  //   symbol = '.';
+  // }
+
+  // return symbol;
 };
 
 /**
