@@ -17,15 +17,6 @@ var runAllSync = require('../utils/runAllSync');
 
 function Parser() {
   this.registry = new Registry();
-
-  // @type {WeakSet<n.CommentNode>}
-  //
-  // This is necessary to track the comment nodes we visited because we might
-  // "force" a traversal of comments in the case of expression statements (so
-  // that the comments are parsed before actual module definitions)
-  //
-  // If we don't do this, we need to make multiple passes over the AST so meh.
-  this.visitedComments = new WeakSet();
 }
 
 var Ppt = Parser.prototype;
@@ -113,14 +104,13 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
     enter: function(path) {
       var commentPool;
 
+      // Comments at the Program scope:
       if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
         commentPool = path.node.innerComments;
       }
-
       else if (path.node.leadingComments && path.node.leadingComments.length) {
         commentPool = path.node.leadingComments;
       }
-
 
       if (commentPool) {
         // Handle an edge-case with babel against ES6 destructured identifiers;
@@ -136,18 +126,11 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
         // leadingComments will be set both on VariableDeclaration as well as
         // Identifier(Assertion).
         //
-        // We'll handle the Identifier and forget about the destructured variable
-        // altogether/
+        // We'll handle the VariableDeclaration and forget about the
+        // destructured variable identifier altogether.
         if (isCommentedDestructuredProperty(path)) {
           return false;
         }
-
-        if (parser.visitedComments.has(path)) {
-          // console.log('Comment walker: already seen this node, ignoring.');
-          return false;
-        }
-
-        parser.visitedComments.add(path);
 
         commentPool.forEach(function(commentNode) {
           var comment = commentNode.value;
@@ -163,43 +146,36 @@ Ppt.walk = function(ast, inConfig, filePath, absoluteFilePath) {
 
     ExpressionStatement: function(path) {
       var node = path.node;
-      var doc, name;
+      var doc, name, expr;
 
-      if (node.comments) {
-        this.visit(path.get('comments'));
-      }
+      // module.exports = Something;
+      if (t.isAssignmentExpression(node.expression) && ASTUtils.isModuleExports(node.expression)) {
+        expr = node.expression;
+        name = ASTUtils.getVariableNameFromModuleExports(expr);
 
-      if (t.isAssignmentExpression(node.expression)) {
-        var expr = node.expression;
+        if (!name && config.inferModuleIdFromFileName) {
+          name = ASTUtils.getVariableNameFromFilePath(filePath);
+        }
 
-        // module.exports = Something;
-        if (ASTUtils.isModuleExports(expr)) {
-          name = ASTUtils.getVariableNameFromModuleExports(expr);
+        if (name) {
+          doc = parser.registry.get(name, filePath);
 
-          if (!name && config.inferModuleIdFromFileName) {
-            name = ASTUtils.getVariableNameFromFilePath(filePath);
+          if (doc) {
+            var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
+
+            doc.markAsExported();
+            parser.registry.trackModuleDocAtPath(doc, modulePath);
           }
+        }
+        else {
+          console.warn(
+            'Unable to identify exported module id. ' +
+            'This probably means you are using an unnamed `module.exports`.' +
+            ' (source: %s)',
+            ASTUtils.dumpLocation(expr, filePath)
+          );
 
-          if (name) {
-            doc = parser.registry.get(name, filePath);
-
-            if (doc) {
-              var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
-
-              doc.markAsExported();
-              parser.registry.trackModuleDocAtPath(doc, modulePath);
-            }
-          }
-          else {
-            console.warn(
-              'Unable to identify exported module id. ' +
-              'This probably means you are using an unnamed `module.exports`.' +
-              ' (source: %s)',
-              ASTUtils.dumpLocation(expr, filePath)
-            );
-
-            debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
-          }
+          debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
         }
       }
     },
@@ -245,9 +221,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath, absolu
   if (doc.id) {
     if (doc.isModule()) {
       var modulePath = ASTUtils.findNearestPathWithComments(path);
-      // if (doc.id.match(/chai/i)) {
-      //   console.log('Module:', path)
-      // }
+
       // console.log('\tFound a module "%s" (source: %s)', doc.id, nodeInfo.fileLoc);
 
       this.registry.addModuleDoc(doc, modulePath, filePath);

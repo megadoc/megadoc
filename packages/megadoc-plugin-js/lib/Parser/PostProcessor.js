@@ -34,6 +34,16 @@ exports.run = function(registry, config) {
     });
   }
 
+  // @method or @type specified? we use that type info instead of what we
+  // inferred during node analysis
+  docs.forEach(function(doc) {
+    if (doc.docstring.hasTypeOverride()) {
+      doc.nodeInfo.addContextInfo({
+        type: doc.docstring.getTypeOverride()
+      });
+    }
+  });
+
   docs.filter(DocClassifier.isEntity).forEach(function(doc) {
     resolveReceiver(registry, doc);
   });
@@ -94,13 +104,6 @@ function resolveReceiver(registry, doc) {
         scope: K.SCOPE_PROTOTYPE
       });
 
-      // @method or @type ? we use that instead
-      if (doc.docstring.hasTypeOverride()) {
-        doc.nodeInfo.addContextInfo({
-          type: doc.docstring.getTypeOverride()
-        });
-      }
-
       // For something like:
       //
       //     Object.defineProperty(someObj, 'someProp', {
@@ -110,7 +113,7 @@ function resolveReceiver(registry, doc) {
       //     })
       //
       // we don't want the context type to be function, because it isn't
-      else if (doc.docstring.hasTag('property')) {
+      if (doc.docstring.hasTag('property')) {
         doc.nodeInfo.addContextInfo({
           type: K.TYPE_UNKNOWN
         });

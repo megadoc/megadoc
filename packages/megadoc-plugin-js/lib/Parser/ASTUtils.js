@@ -103,7 +103,7 @@ Utils.findScope = function(path) {
 
   do {
     scope = path.scope;
-  } while (!scope && path && (path = path.parentPath));
+  } while (!scope && ((path = path.parentPath)));
 
   return scope;
 };

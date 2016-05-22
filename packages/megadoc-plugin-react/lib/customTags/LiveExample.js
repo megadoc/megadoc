@@ -28,7 +28,6 @@ module.exports = function createLiveExampleTagProcessor(config) {
       return;
     }
 
-    console.log(tag)
     var lines = tag.typeInfo.description.split('\n');
     var sourceCode = lines.filter(function(line) {
       return line.match(/^[ ]{4,}/);
