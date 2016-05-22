@@ -1,5 +1,4 @@
 const React = require('react');
-const K = require('../../constants');
 const renderType = require('../../utils/describeType');
 
 const TypeNames = React.createClass({

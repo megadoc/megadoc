@@ -40,6 +40,11 @@ var EXPRESSION_TYPES = Object.freeze([
   K.TYPE_OBJECT_PROPERTY
 ].reduce(function(map, x) { map[x] = true; return map; }, {}));
 
+var TAGS_WITH_STRING = {
+  'deprecated': true,
+  'example': true,
+};
+
 module.exports = function(compiler, namespaceNode, md, linkify, config) {
   var builtInTypes = BUILT_IN_TYPES.concat(config.builtInTypes || []).reduce(toIndexMap, {});
 
@@ -101,7 +106,7 @@ module.exports = function(compiler, namespaceNode, md, linkify, config) {
           }), { contextNode: node, });
         }
 
-        if (tag.type === 'example') {
+        if (tag.type in TAGS_WITH_STRING) {
           tag.string = md(linkify({
             text: tag.string,
             contextNode: node,

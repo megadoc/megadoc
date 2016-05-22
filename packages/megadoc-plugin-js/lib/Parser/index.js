@@ -6,7 +6,6 @@ var Docstring = require('./Docstring');
 var Registry = require('./Registry');
 var PostProcessor = require('./PostProcessor');
 var NodeAnalyzer = require('./NodeAnalyzer');
-var WeakSet = require('weakset');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;

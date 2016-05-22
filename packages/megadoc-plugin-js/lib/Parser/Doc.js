@@ -1,7 +1,6 @@
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var _ = require('lodash');
-var DocTypeInfo = require('./DocTypeInfo');
 var DocUtils = require('./DocUtils');
 var assign = _.assign;
 var assert = require('assert');

@@ -1,5 +1,9 @@
 const React = require('react');
 const DefaultValue = React.createClass({
+  propTypes: {
+    defaultValue: React.PropTypes.string,
+  },
+
   render() {
     const { defaultValue } = this.props;
 

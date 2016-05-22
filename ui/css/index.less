@@ -87,6 +87,13 @@ ul, ol {
   float: left;
 }
 
+blockquote {
+  border-left-width: 0.5em;
+  border-left-style: solid;
+  padding-left: 1em;
+  margin: 1.5em 0;
+}
+
 .schemable({
   background-color: @base3;
   color: @base0;
@@ -135,14 +142,12 @@ ul, ol {
   }
 
   blockquote {
-    border-left: 0.5em solid @border-color;
-    padding-left: 1em;
+    border-left-color: @border-color;
     color: @base1;
-    margin: 1.5em 0;
-  }
 
-  blockquote.warning {
-    border-color: @solarized-orange;
+    &.warning, &.blockquote--warning {
+      border-color: @solarized-red;
+    }
   }
 });
 
