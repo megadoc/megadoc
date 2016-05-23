@@ -1,6 +1,6 @@
 var TestUtils = require('../../TestUtils');
 var K = require('../../constants');
-var assert = require('assert');
+var assert = require('chai').assert;
 
 describe('CJS::Parser - @type support', function() {
   it('respects the @type specified even if no context was generated', function() {
@@ -13,6 +13,6 @@ describe('CJS::Parser - @type support', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].ctx.type, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });
 });

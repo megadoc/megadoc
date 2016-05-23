@@ -162,7 +162,7 @@ config.plugins = [
       'ui/**/*.js',
     ],
 
-    exclude: [ /test/, /vendor/, ],
+    exclude: [ /__tests__/, /vendor/, ],
 
     useDirAsNamespace: false,
 

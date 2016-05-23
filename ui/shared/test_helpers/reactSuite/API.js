@@ -44,7 +44,7 @@ ReactSuiteAPI.getDOMContainer = function() {
  */
 ReactSuiteAPI.prototype.createSubject = function(initialProps, done) {
   const Type = this.type;
-  const props = initialProps instanceof Function ?
+  const props = this.initialProps = initialProps instanceof Function ?
     initialProps() :
     initialProps
   ;
@@ -65,7 +65,7 @@ ReactSuiteAPI.prototype.createSubject = function(initialProps, done) {
 };
 
 ReactSuiteAPI.prototype.setProps = function(props) {
-  this.subject = render(<this.type {...props} />, this.container);
+  this.subject = render(<this.type {...this.initialProps} {...props} />, this.container);
 };
 
 /**

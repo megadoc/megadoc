@@ -1,11 +1,14 @@
-var assert = require('assert');
+var assert = require('chai').assert;
 var findWhere = require('lodash').findWhere;
 var TestUtils = require('../TestUtils');
 var K = require('../constants');
+var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
 
 var parseInline = TestUtils.parseInline;
 
-describe('CJS::Parser', function() {
+describe('CJS::Parser::Main', function() {
+  var sinon = sinonSuite(this);
+
   it('should ignore @internal docs', function() {
     var docs = parseInline(function() {;
       // /**
@@ -19,6 +22,23 @@ describe('CJS::Parser', function() {
     });
 
     assert.equal(docs.length, 0);
+  });
+
+  it('should warn about invalid docstrings', function() {
+    sinon.stub(console, 'warn');
+
+    assert.throws(function() {
+      parseInline(function() {;
+        // /**
+        //  * @internal
+        //    Something.
+        //  */
+        //  function Something() {
+        //  }
+        //
+        //  module.exports = Something;
+      });
+    }, /Invalid annotation in comment block/);
   });
 
   describe('resolving identifiers', function() {
@@ -40,9 +60,9 @@ describe('CJS::Parser', function() {
 
       var doc = findWhere(docs, { name: 'scan' });
 
-      assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+      assert.equal(doc.type, K.TYPE_FUNCTION);
       assert.equal(doc.receiver, 'DragonHunter');
-      assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+      assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
     });
 
@@ -63,9 +83,9 @@ describe('CJS::Parser', function() {
 
       var doc = findWhere(docs, { name: 'scan' });
 
-      assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+      assert.equal(doc.type, K.TYPE_LITERAL);
       assert.equal(doc.receiver, 'DragonHunter');
-      assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+      assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
       assert.equal(doc.description, "Hi");
     });
   });
@@ -78,37 +98,91 @@ describe('CJS::Parser', function() {
 
       assert.equal(docs.length, 1);
       assert.equal(docs[0].id, 'Something');
-      assert.equal(docs[0].ctx.type, K.TYPE_UNKNOWN);
+      assert.equal(docs[0].type, K.TYPE_UNKNOWN);
       assert.equal(docs[0].isModule, true);
     });
 
-    it.skip('correctly maps entities to a node-free @module docstring', function() {
+    it('correctly maps entities to a node-free @module docstring', function() {
       var docs = parseInline(function() {;
-        // /** @module Something */
+        // /**
+        //   * @module Something
+        //   * @type {Object}
+        //   */
         //
         // /** weehee */
         // exports.someFunc = function() {
         // };
         //
         // /** weehee */
-        // exports.someOtherFunc = function() {
-        // };
+        // exports.someProperty = '5';
       });
 
       assert.equal(docs.length, 3);
 
       assert.equal(docs[0].id, 'Something');
-      assert.equal(docs[0].ctx.type, K.TYPE_UNKNOWN);
+      assert.deepEqual(docs[0].type, K.TYPE_OBJECT);
       assert.equal(docs[0].isModule, true);
 
-      assert.equal(docs[1].id, 'someFunc');
+      assert.equal(docs[1].name, 'someFunc');
       assert.equal(docs[1].receiver, 'Something');
-      assert.equal(docs[1].ctx.type, K.TYPE_FUNCTION);
-      assert.equal(docs[1].ctx.scope, K.SCOPE_UNSCOPED);
+      assert.equal(docs[1].type, K.TYPE_FUNCTION);
+      assert.equal(docs[1].nodeInfo.scope, K.SCOPE_UNSCOPED);
 
-      assert.equal(docs[2].id, 'someOtherFunc');
-      assert.equal(docs[2].ctx.type, K.TYPE_FUNCTION);
+      assert.equal(docs[2].name, 'someProperty');
       assert.equal(docs[2].receiver, 'Something');
+      assert.equal(docs[2].type, K.TYPE_LITERAL);
+    });
+  });
+
+  describe('config.alias', function() {
+    it('should use the aliases', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  */
+        //  function Foo() {
+        //  }
+      }, { alias: { 'Foo': [ 'Bar', 'Baz' ] } });
+
+      assert.equal(docs.length, 1);
+      assert.deepEqual(docs[0].aliases, [ 'Bar', 'Baz' ]);
+    });
+  });
+
+  describe('config.namespaceDirMap', function() {
+    it('should namespace modules that match the directory pattern', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  */
+        //  function Foo() {
+        //  }
+      }, {
+        namespaceDirMap: {
+          'lib/core': 'Core'
+        }
+      }, 'lib/core/Cache.js');
+
+      assert.equal(docs.length, 1);
+      assert.equal(docs[0].namespace, 'Core');
+    });
+
+    it('should ignore it if the module already has a namespace', function() {
+      var docs = parseInline(function() {;
+        // /**
+        //  * @module
+        //  * @namespace TheVoid
+        //  */
+        //  function Foo() {
+        //  }
+      }, {
+        namespaceDirMap: {
+          'lib/core': 'Core'
+        }
+      }, 'lib/core/Cache.js');
+
+      assert.equal(docs.length, 1);
+      assert.equal(docs[0].namespace, 'TheVoid');
     });
   });
 });

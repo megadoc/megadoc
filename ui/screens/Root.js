@@ -145,7 +145,15 @@ const Root = React.createClass({
 module.exports = Root;
 
 function isInternalLink(node) {
-  const href = node.getAttribute('href');
+  const href = node.href;
 
-  return href && href.indexOf(location.origin) === 0;
+  if (href && typeof href === 'object') {
+    // SVG
+    if (node.className.baseVal.indexOf('mega-link--internal') > -1) {
+      return href.baseVal;
+    }
+  }
+  else {
+    return href && href.indexOf(location.origin) === 0;
+  }
 }

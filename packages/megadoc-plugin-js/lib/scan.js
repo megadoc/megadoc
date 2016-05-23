@@ -1,4 +1,5 @@
 var Parser = require('./Parser');
+var K = require('./Parser/constants');
 
 module.exports = function scan(params, done) {
   var database;
@@ -16,8 +17,6 @@ module.exports = function scan(params, done) {
     parser.parseFile(filePath, parserConfig, params.assetRoot);
   });
 
-  parser.seal(parserConfig);
-
   database = parser.toJSON();
 
   if (parserConfig.postProcessors) {
@@ -26,5 +25,40 @@ module.exports = function scan(params, done) {
     });
   }
 
+  warnAboutOrphans(database);
+  warnAboutUnknownContexts(database);
+
   done(null, database);
 };
+
+
+function warnAboutOrphans(database) {
+  var ids = database.reduce(function(map, doc) {
+    map[doc.id] = true;
+    return map;
+  }, {});
+
+  database.forEach(function(doc) {
+    if (!doc.isModule && (!doc.receiver || !(doc.receiver in ids))) {
+      console.warn(
+        'Unable to map "%s" to any module, it will be discarded. (Source: %s:%s)',
+        doc.id,
+        doc.filePath,
+        doc.line
+      );
+    }
+  })
+}
+
+function warnAboutUnknownContexts(database) {
+  database.forEach(function(doc) {
+    if (doc.type === K.TYPE_UNKNOWN) {
+      console.info(
+        'Entity "%s" has no context. This probably means megadoc does not know ' +
+        'how to handle it yet. (Source: %s:%s)',
+        doc.id,
+        doc.filePath, doc.line
+      );
+    }
+  });
+}

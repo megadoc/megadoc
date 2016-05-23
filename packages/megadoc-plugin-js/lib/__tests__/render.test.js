@@ -8,7 +8,7 @@ var reduceDocuments = require('../reduce');
 describe('cjs::render', function() {
   var database;
   var sinon = sinonSuite(this);
-  var renderMarkdown, linkify;
+  var renderMarkdown, linkify, renderLink, compiler;
 
   beforeEach(function() {
     database = TestUtils.parseInline(function() {;
@@ -26,23 +26,32 @@ describe('cjs::render', function() {
       //  * @param {String} id
       //  *        A _unique_ record identifier.
       //  *
+      //  * @param {Foo|null}
       //  * @example
       //  *
       //  * Hello!
       //  */
-      // Cache.prototype.add = function(id) {
+      // Cache.prototype.add = function(id, foo) {
       // };
+      //
+      // /**
+      //  * @module Foo
+      //  */
+      //  function Foo() {}
     });
 
     renderMarkdown = sinon.stub().returnsArg(0);
     linkify = sinon.spy(function(x) { return x.text; });
+    compiler = createCompiler();
 
-    render(createCompiler(), reduceDocuments({
+    renderLink = sinon.spy(compiler.linkResolver, 'renderLink');
+
+    render(compiler, reduceDocuments({
       documents: database,
       namespaceId: 'test',
       namespaceTitle: 'JavaScript Test',
       baseURL: '/test',
-    }), renderMarkdown, linkify);
+    }), renderMarkdown, linkify, {});
   });
 
   it('renders doc.description', function() {
@@ -63,12 +72,23 @@ describe('cjs::render', function() {
     assert.calledWith(renderMarkdown, 'A _unique_ record identifier.');
   });
 
-  it('renders the "string" of an @example tag', function() {
+  it.skip('renders the "string" of an @example tag', function() {
     assert.calledWith(linkify, sinon.match({
       text: '\nHello!',
       contextNode: sinon.match({ id: '#add' })
     }));
 
     assert.calledWith(renderMarkdown, '\nHello!');
+  });
+
+  describe('tag rendering', function() {
+    it('linkifies custom types', function() {
+      assert.calledWith(renderLink, sinon.match({
+        strict: true,
+        contextNode: sinon.match({ id: '#add' }),
+      }), sinon.match({
+        path: 'Foo',
+      }));
+    });
   });
 });

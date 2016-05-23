@@ -12,7 +12,7 @@ describe('CJS::Parser - ES6 - defaultValues', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].ctx.type, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });
 
   it('works with default values assigned to destructured object `function x({ param = 5 }) {}`', function() {
@@ -23,6 +23,6 @@ describe('CJS::Parser - ES6 - defaultValues', function() {
     });
 
     assert.equal(docs.length, 1);
-    assert.equal(docs[0].ctx.type, K.TYPE_FUNCTION);
+    assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });
 });

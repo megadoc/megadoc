@@ -30,7 +30,6 @@ var t = CorpusTypes.builtInTypes;
  * });
  * ```
  */
-var exports;
 
 /**
  * @module T.Corpus
@@ -73,7 +72,7 @@ def("Corpus", {
 def("Namespace", {
   fields: {
     /**
-     * @property {String}
+     * @property {!String}
      *
      * An identifier for this namespace that must be unique at this level in the
      * corpus. The identifier is utilized in the generation of [CorpusUIDs UIDs]()
@@ -83,7 +82,7 @@ def("Namespace", {
     id: t.string,
 
     /**
-     * @property {String}
+     * @property {!String}
      *
      * A name to be used internally for the namespace. This property is meant to
      * identify the "class" of the namespace; or in other words, the type of
@@ -99,7 +98,7 @@ def("Namespace", {
     name: t.string,
 
     /**
-     * @property {String} [title=null]
+     * @property {String?} [title=null]
      *
      * A human-friendly title for display for this namespace. The title will be
      * utilized in the UI any time we need to reference this namespace, like in
@@ -112,7 +111,7 @@ def("Namespace", {
     title: or(t.string, null),
 
     /**
-     * @property {String} [symbol]
+     * @property {String?} [symbol="/"]
      *
      * The symbol is used when generating [[UIDs | CorpusUIDs]] for documents
      * in the namespace; their UID will effectively be their [[T.Node@id]]
@@ -129,8 +128,6 @@ def("Namespace", {
      * ```
      *
      * Document A above will have a UID of `X/A`.
-     *
-     * _Defaults to: `/`_
      */
     symbol: or(t.string, null),
 
@@ -213,6 +210,8 @@ def("Node", {
      * with a forward slash.
      */
     filePath: or(t.string, null),
+
+    loc: or(t.object, null),
 
     /**
      * @inheritdoc T.Corpus@meta

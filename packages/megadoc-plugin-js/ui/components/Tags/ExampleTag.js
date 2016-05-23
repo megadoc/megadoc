@@ -19,16 +19,14 @@ const ExampleTag = React.createClass({
 
     return (
       <div className="example-tag">
-        <p>
-          {name && (
-            <div>
-              <strong>Example: </strong>
-              <span dangerouslySetInnerHTML={{ __html: name }} />
-            </div>
-          )}
+        {name && (
+          <p>
+            <strong>Example: </strong>
+            <span dangerouslySetInnerHTML={{ __html: name }} />
+          </p>
+        )}
 
-          {!name && (<strong>Example</strong>)}
-        </p>
+        {!name && (<p><strong>Example</strong></p>)}
 
         <HighlightedText className="example-tag__code">
           {description}

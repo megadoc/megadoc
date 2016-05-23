@@ -6,7 +6,7 @@ var findWhere = require('lodash').findWhere;
 describe('analyzeReactNode - statics', function() {
   it('should find and track a static property', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    statics: {
       //      someFunction: function() {}
@@ -16,13 +16,13 @@ describe('analyzeReactNode - statics', function() {
 
     assert.equal(docs.length, 1);
 
-    assert.equal(docs[0].ctx.statics.length, 1);
-    assert.equal(docs[0].ctx.statics[0], 'someFunction');
+    assert.equal(docs[0].nodeInfo.statics.length, 1);
+    assert.equal(docs[0].nodeInfo.statics[0], 'someFunction');
   });
 
   it('should correctify the scope of documented static methods', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    statics: {
       //      /** Foo */
@@ -35,8 +35,8 @@ describe('analyzeReactNode - statics', function() {
 
     var doc = findWhere(docs, { name: 'someFunction' });
 
-    assert.equal(doc.ctx.scope, K.SCOPE_UNDEFINED);
-    assert.equal(doc.ctx.symbol, '.');
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_UNDEFINED);
+    assert.equal(doc.symbol, '.');
     assert.equal(doc.id, 'Something.someFunction');
   });
 });
@@ -44,7 +44,7 @@ describe('analyzeReactNode - statics', function() {
 describe('analyzeReactNode - methods', function() {
   it('should correctify the scope of an instance method', function() {
     var docs = TestUtils.parse(function() {;
-      // /** @module Some component. */
+      // /** @module */
       //  var Something = React.createClass({
       //    /** Do something. */
       //    someMethod() {
@@ -56,8 +56,8 @@ describe('analyzeReactNode - methods', function() {
 
     var doc = findWhere(docs, { name: 'someMethod' });
 
-    assert.equal(doc.ctx.type, 'function');
-    assert.equal(doc.ctx.scope, K.SCOPE_INSTANCE);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_INSTANCE);
     assert.equal(doc.id, 'Something#someMethod');
   });
 });

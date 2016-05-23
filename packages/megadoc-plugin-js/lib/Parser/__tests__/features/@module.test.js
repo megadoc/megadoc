@@ -1,5 +1,6 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
+var K = require('../../constants');
 var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser - @module support', function() {
@@ -28,9 +29,7 @@ describe('CJS::Parser - @module support', function() {
     assert.equal(docs[0].name, 'Something');
   });
 
-  // DISABLED until we figure it out with babel transformer...
-  // identifiers of destructured variable declarations seem to be lost o.O
-  it.skip('should work with imported modules using ES6 destructuring', function() {
+  it('should work with imported modules using ES6 destructuring', function() {
     var docs = parseInline(function() {;
       // /**
       //  * @namespace Core
@@ -48,11 +47,31 @@ describe('CJS::Parser - @module support', function() {
     assert.equal(docs.length, 2);
     assert.equal(docs[0].name, 'Something');
     assert.equal(docs[0].namespace, 'Core');
-    assert.equal(docs[0].ctx.type, 'object');
+    assert.equal(docs[0].type, K.TYPE_UNKNOWN);
 
     assert.equal(docs[1].name, 'someFunc');
     assert.equal(docs[1].receiver, 'Core.Something');
-    assert.equal(docs[1].ctx.type, 'function');
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
+  });
+
+  it('should not cause a duplication when comment node is in the Program scope', function() {
+    var docs = parseInline(function() {;
+      // const chai = require("chai");
+      //
+      // /**
+      //  * @module TestHelpers.chaiAssertions
+      //  */
+      // var { Assertion } = chai;
+    }, {
+      parserOptions: {
+        presets: [
+          'es2015',
+          'react',
+        ]
+      }
+    });
+
+    assert.equal(docs.length, 1);
   });
 
   describe('@module with an inline namespace', function() {

@@ -9,11 +9,15 @@ require('./ui');
 
 sinon.assert.expose(chai.assert, { prefix: "" });
 
-const CoreUITests = require.context('./ui', true, /.test.js$/);
-
-CoreUITests.keys().forEach(CoreUITests);
+tap(require.context('./ui', true, /.test.js$/), function(x) {
+  x.keys().forEach(x);
+});
 
 tap(require.context('./packages/megadoc-plugin-markdown/ui', true, /.test.js$/), function(x) {
+  x.keys().forEach(x);
+});
+
+tap(require.context('./packages/megadoc-plugin-js/ui', true, /.test.js$/), function(x) {
   x.keys().forEach(x);
 });
 

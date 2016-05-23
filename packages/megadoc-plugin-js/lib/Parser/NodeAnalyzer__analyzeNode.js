@@ -1,7 +1,7 @@
-var Utils = require('../Utils');
-var NodeInfo = require('./NodeInfo');
-var K = require('../constants');
-var generateContext = require('./generateContext');
+var ASTUtils = require('./ASTUtils');
+var NodeInfo = require('./NodeAnalyzer__NodeInfo');
+var K = require('./constants');
+var generateContext = require('./NodeAnalyzer__generateContext');
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var t = require('babel-types');
 
@@ -36,6 +36,16 @@ function analyzeNode(node, path, filePath, config) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
+  // TODO: when do we reach this? it seems FunctionExpression nodes are only
+  // really valid as an argument to a ReturnStatement, or as an init for a
+  // VariableDeclaration
+  //
+  // Maybe something like this?
+  //
+  //     (
+  //       /** Hello */
+  //       function() {}
+  //     )(this)
   else if (t.isFunctionExpression(node)) {
     info.id = node.id.name;
     info.$contextNode = node;
@@ -62,10 +72,6 @@ function analyzeNode(node, path, filePath, config) {
 
   if (info.id) {
     info.addContextInfo(generateContext(info.$contextNode));
-
-    if (info.isExports() || info.isDestructuredObject()) {
-      info.addContextInfo({ type: K.TYPE_OBJECT });
-    }
   }
 
   return info;
@@ -73,6 +79,7 @@ function analyzeNode(node, path, filePath, config) {
 
 function analyzeVariableDeclaration(node, path, info) {
   var decl = node.declarations[0];
+
 
   //     var Something = 'a';
   //     var Something = SomeFunc();
@@ -115,8 +122,9 @@ function analyzeVariableDeclaration(node, path, info) {
   //      * Something.
   //      */
   //     var SomeModule = exports;
-  if (Utils.isExports(node)) {
+  if (ASTUtils.isExports(node)) {
     info.markAsExports();
+    info.addContextInfo({ type: K.TYPE_OBJECT });
   }
 }
 
@@ -133,7 +141,6 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     //
     //     SomeModule.foo = 'a';
     if (t.isIdentifier(lhs.object) && t.isIdentifier(lhs.property)) {
-      info.type = 'property';
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
     }
@@ -163,14 +170,14 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     // CommonJS special scenario: a named function assigned to `module.exports`
     //
     //     module.exports = function namedFunction() {};
-    if (Utils.isModuleExports(expr) && t.isIdentifier(rhs.id)) {
+    if (ASTUtils.isModuleExports(expr) && t.isIdentifier(rhs.id)) {
       info.id = rhs.id.name;
     }
     // Unnamed CommonJS module.exports:
     //
     //     module.exports = function() {};
-    else if (Utils.isModuleExports(expr) && config.inferModuleIdFromFileName) {
-      info.id = Utils.getVariableNameFromFilePath(filePath);
+    else if (ASTUtils.isModuleExports(expr) && config.inferModuleIdFromFileName) {
+      info.id = ASTUtils.getVariableNameFromFilePath(filePath);
     }
     // A function assigned to some object property:
     //
@@ -211,7 +218,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     //     SomeModule.prototype.someFunction = function() {};
     else if (t.isMemberExpression(lhs.object) && t.isIdentifier(lhs.property)) {
       info.id = lhs.property.name;
-      info.receiver = Utils.flattenNodePath(lhs.object);
+      info.receiver = ASTUtils.flattenNodePath(lhs.object);
     }
   }
   else if (t.isMemberExpression(lhs)) {
@@ -233,7 +240,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
     console.info("Unrecognized ExpressionStatement '%s' => '%s' (Source: %s).",
       lhs ? lhs.type : expr.type,
       rhs ? rhs.type : expr.type,
-      Utils.dumpLocation(node, filePath)
+      ASTUtils.dumpLocation(node, filePath)
     );
   }
 }
@@ -247,7 +254,7 @@ function analyzeProperty(node, path, info) {
   //       someFunc: fn // <--
   //     };
   if (t.isIdentifier(node.key) && t.isIdentifier(node.value)) {
-    var identifierPath = Utils.findIdentifierInScope(node.value.name, path);
+    var identifierPath = ASTUtils.findIdentifierInScope(node.value.name, path);
     if (identifierPath) {
       info.id = node.key.name;
       info.$contextNode = identifierPath.parentPath.node;

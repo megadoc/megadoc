@@ -29,9 +29,9 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('parses properties in a literal return object', function() {
@@ -53,9 +53,9 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('parses entities in a locally-scoped returned object', function() {
@@ -83,16 +83,16 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('parse static methods & properties', function() {
@@ -120,27 +120,27 @@ describe('CJS::Parser - Factory modules', function() {
 
     doc = findWhere(docs, { id: 'DragonHunter#someMethod' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter@someProp' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
 
     doc = findWhere(docs, { id: 'DragonHunter.someStaticMethod' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, undefined);
+    assert.equal(doc.nodeInfo.scope, undefined);
 
     doc = findWhere(docs, { id: 'DragonHunter.SOME_STATIC_PROP' });
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, undefined);
+    assert.equal(doc.nodeInfo.scope, undefined);
   });
 
   it('works with a named function returned in a return literal', function() {
@@ -162,9 +162,9 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#capture' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('works with an anonymous function returned in a return literal', function() {
@@ -184,9 +184,9 @@ describe('CJS::Parser - Factory modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter#' + K.DEFAULT_FACTORY_EXPORTS_ID });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('works with an anonymous factory assigned to module.exports', function() {
@@ -211,8 +211,8 @@ describe('CJS::Parser - Factory modules', function() {
 
     assert.equal(docs[1].id, 'FactoryModule#getAssetPath');
     assert.equal(docs[1].receiver, 'FactoryModule');
-    assert.equal(docs[1].ctx.type, K.TYPE_FUNCTION);
-    assert.equal(docs[1].ctx.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(docs[1].type, K.TYPE_FUNCTION);
+    assert.equal(docs[1].nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
   });
 
   it('works with a namespaced factory', function() {
@@ -238,13 +238,13 @@ describe('CJS::Parser - Factory modules', function() {
     assert.equal(docs.length, 3);
 
     doc = findWhere(docs, { id: 'Core.EventEmitter#emitChange' });
-    assert.equal(doc.ctx.scope, K.SCOPE_FACTORY_EXPORTS);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_FACTORY_EXPORTS);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'Core.EventEmitter');
 
     doc = findWhere(docs, { id: 'Core.EventEmitter.throttleEmitter' });
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
-    assert.equal(doc.ctx.scope, K.SCOPE_UNSCOPED);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
+    assert.equal(doc.nodeInfo.scope, K.SCOPE_UNSCOPED);
     assert.equal(doc.receiver, 'Core.EventEmitter');
   });
 });

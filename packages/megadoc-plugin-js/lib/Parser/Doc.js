@@ -1,64 +1,83 @@
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var _ = require('lodash');
-var findWhere = _.findWhere;
+var DocUtils = require('./DocUtils');
+var ASTUtils = require('./ASTUtils');
 var assign = _.assign;
-var assert = require('assert');
-var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 
 /**
  * @param {Docstring} docstring
  * @param {NodeInfo} nodeInfo
  * @param {String} filePath
- * @param {String} absoluteFilePath
  */
-function Doc(docstring, nodeInfo, filePath, absoluteFilePath) {
+function Doc(docstring, nodeInfo, filePath) {
   this.consumeDocstring(docstring);
   this.consumeNodeInfo(nodeInfo);
 
-  this.id = this.generateId();
-  this.name = this.generateName();
   this.filePath = filePath;
-  this.absoluteFilePath = absoluteFilePath;
-  this.customAliases = [];
 
   return this;
 }
 
-Doc.prototype.toJSON = function() {
-  var doc = assign({}, this.docstring.toJSON(), this.nodeInfo.toJSON());
+Object.defineProperty(Doc.prototype, 'id', {
+  get: function() {
+    return DocUtils.getIdOf(this);
+  }
+});
+
+Doc.prototype.toJSON = function(registry) {
+  var nodeInfo = this.nodeInfo;
+  var doc = assign({},
+    this.docstring.toJSON(),
+    this.nodeInfo.toJSON()
+  );
+
+  doc.type = DocUtils.getTypeNameOf(this);
+  doc.nodeInfo = this.nodeInfo.ctx;
 
   doc.id = this.id;
-  doc.name = this.generateName();
+  doc.name = DocUtils.getNameOf(this);
   doc.filePath = this.filePath;
-  doc.absoluteFilePath = this.absoluteFilePath;
   doc.isModule = this.isModule();
-  doc.receiver = this.getReceiver();
-  doc.mixinTargets = doc.tags.filter(function(tag) {
-    return tag.type === 'mixes';
-  }).reduce(function(list, tag) {
-    return list.concat(tag.mixinTargets);
-  }, []);
-
-  doc.aliases = doc.tags.filter(function(tag) {
-    return tag.type === 'alias';
-  }).map(function(tag) {
-    return tag.alias;
-  }).concat(this.customAliases);
-
-  // support for explicit typing using tags like @method or @type
-  if (this.docstring.hasTypeOverride()) {
-    doc.ctx.type = this.docstring.getTypeOverride();
-  }
 
   if (!doc.isModule) {
-    doc.ctx.symbol = this.generateSymbol(doc.ctx.type);
-    doc.id = [ doc.receiver, doc.id ].join(doc.ctx.symbol);
-    doc.path = [ doc.receiver, doc.name ].join(doc.ctx.symbol);
+    var resolvedContext = DocUtils.getReceiverAndScopeFor(this, registry);
+
+    doc.receiver = resolvedContext.receiver;
+
+    // scope
+    if (resolvedContext.scope) {
+      doc.nodeInfo.scope = resolvedContext.scope;
+    }
+    else {
+      if (nodeInfo.isInstanceEntity()) {
+        doc.nodeInfo.scope = K.SCOPE_INSTANCE;
+      }
+      else if (nodeInfo.isPrototypeEntity()) {
+        doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
+      }
+      // blegh
+      else if (
+        ASTUtils.isFactoryModuleReturnEntity(
+          this.$path.node,
+          this.$path,
+          registry
+        )
+      ) {
+        doc.nodeInfo.scope = K.SCOPE_FACTORY_EXPORTS;
+      }
+    }
+
+    doc.symbol = generateSymbol(this);
+    doc.id = doc.receiver + doc.symbol + this.id;
   }
-  else {
-    doc.path = doc.id;
-  }
+
+  doc.mixinTargets = doc.tags
+    .filter(function(tag) { return tag.type === 'mixes'; })
+    .map(function(tag) { return tag.typeInfo.name; })
+  ;
+
+  doc.aliases = Object.keys(this.docstring.aliases);
 
   // we'll need this for @preserveOrder support
   if (doc.loc) {
@@ -67,8 +86,6 @@ Doc.prototype.toJSON = function() {
       tag.line = doc.line;
     });
   }
-
-  this.useSourceNameWhereNeeded(doc.name, doc);
 
   return doc;
 };
@@ -81,26 +98,6 @@ Doc.prototype.consumeNodeInfo = function(nodeInfo) {
   this.nodeInfo = nodeInfo;
 };
 
-Doc.prototype.generateId = function() {
-  var id = this.docstring.id || this.nodeInfo.id;
-  var namespace = this.docstring.namespace;
-
-  if (id && namespace && id.indexOf(namespace) === -1) {
-    id = [ namespace, id ].join(K.NAMESPACE_SEP);
-  }
-
-  return id;
-};
-
-Doc.prototype.generateName = function() {
-  if (this.docstring.namespace && this.id) {
-    return this.id.replace(this.docstring.namespace + K.NAMESPACE_SEP, '');
-  }
-  else {
-    return this.id;
-  }
-};
-
 Doc.prototype.markAsExported = function() {
   this.$isExported = true;
 };
@@ -110,87 +107,19 @@ Doc.prototype.isExported = function() {
 };
 
 Doc.prototype.isModule = function() {
-  return !this.docstring.hasMemberOf() && (
-    this.isExported() ||
-    this.docstring.isModule() ||
-    this.nodeInfo.isModule()
-  );
+  return DocUtils.isModule(this);
 };
 
-Doc.prototype.generateSymbol = function(type) {
-  var symbol;
-
-  switch(type) {
-    case K.TYPE_FUNCTION:
-      if (DocClassifier.isStaticMethod(this)) {
-        symbol = '.';
-      }
-      else {
-        symbol = '#';
-      }
-      break;
-
-    default:
-      if (DocClassifier.isObjectProperty(this)) {
-        symbol = '@';
-      }
-      else {
-        symbol = '.';
-      }
-      break;
+function generateSymbol(doc) {
+  if (DocClassifier.isStaticMember(doc)) {
+    return '.';
   }
-
-  if (this.docstring.hasTag('property') && !this.docstring.hasTag('static')) {
-    symbol = '@';
+  else if (DocClassifier.isMethod(doc)) {
+    return '#';
   }
-
-  if (this.docstring.hasTag('property') && this.docstring.hasTag('static')) {
-    symbol = '.';
+  else if (DocClassifier.isMember(doc)) {
+    return '@';
   }
-
-  return symbol;
-};
-
-/**
- * Set the correct receiver for this doc. The receiver might not have been
- * resolved correctly in NodeInfo due to @lends or module aliases.
- *
- * @param  {String} correctedReceiver
- *         Name of the new receiver.
- */
-Doc.prototype.overrideReceiver = function(correctedReceiver) {
-  assert(!!correctedReceiver,
-    "You are attempting to override a receiver with an undefined one!"
-  );
-
-  debuglog(
-    'Adjusting receiver from "%s" to "%s" for "%s" (scope: %s)',
-    this.nodeInfo.receiver,
-    correctedReceiver,
-    this.id,
-    this.nodeInfo.ctx && this.nodeInfo.ctx.scope
-  );
-
-  this.$correctedReceiver = correctedReceiver;
-};
-
-Doc.prototype.getReceiver = function() {
-  return this.$correctedReceiver || this.nodeInfo.receiver;
-};
-
-Doc.prototype.hasReceiver = function() {
-  return Boolean(this.getReceiver());
-};
-
-Doc.prototype.useSourceNameWhereNeeded = function(name, doc) {
-  var propertyTag = findWhere(doc.tags, { type: 'property' });
-  if (propertyTag && !propertyTag.typeInfo.name) {
-    propertyTag.typeInfo.name = name;
-  }
-};
-
-Doc.prototype.addAlias = function(name) {
-  this.customAliases.push(name);
 };
 
 module.exports = Doc;

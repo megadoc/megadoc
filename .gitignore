@@ -30,3 +30,4 @@ selection.json
 npm-debug.log
 /examples/*/public
 /megadoc.sublime-workspace
+/.local

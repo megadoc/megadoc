@@ -1,6 +1,6 @@
-var K = require('../constants');
+var K = require('./constants');
 var assign = require('lodash').assign;
-var getLocation = require('../Utils').getLocation;
+var getLocation = require('./ASTUtils').getLocation;
 
 /**
  * @param {recast.ast} node
@@ -27,7 +27,6 @@ function NodeInfo(node, filePath) {
 NodeInfo.prototype.toJSON = function() {
   return {
     id: this.id,
-    ctx: this.ctx,
     receiver: this.receiver,
     loc: this.loc,
   };

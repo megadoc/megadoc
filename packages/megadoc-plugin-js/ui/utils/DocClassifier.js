@@ -1,9 +1,9 @@
 var K = require('../constants');
 
 function isMethod(doc) {
-  var ctx = doc.ctx;
+  var ctx = doc.nodeInfo;
 
-  return ctx.type === 'function' && (
+  return doc.type === K.TYPE_FUNCTION && (
     ctx.scope === K.SCOPE_FACTORY_EXPORTS ||
     ctx.scope === K.SCOPE_INSTANCE ||
     ctx.scope === K.SCOPE_PROTOTYPE
@@ -11,18 +11,18 @@ function isMethod(doc) {
 }
 
 function isFactoryExports(doc) {
-  return doc.ctx.scope === K.SCOPE_FACTORY_EXPORTS;
+  return doc.nodeInfo.scope === K.SCOPE_FACTORY_EXPORTS;
 }
 
 function isClassEntity(doc) {
   return (
-    doc.ctx.scope === K.SCOPE_INSTANCE ||
-    doc.ctx.scope === K.SCOPE_PROTOTYPE
+    doc.nodeInfo.scope === K.SCOPE_INSTANCE ||
+    doc.nodeInfo.scope === K.SCOPE_PROTOTYPE
   );
 }
 
 function isStaticMethod(doc) {
-  return doc.ctx.type === 'function' && !isMethod(doc);
+  return doc.type === K.TYPE_FUNCTION && !isMethod(doc);
 }
 
 exports.isMethod = isMethod;
@@ -44,7 +44,7 @@ exports.getDisplayType = function(documentNode) {
   else if (documentNode.entities.some(n => isFactoryExports(n.properties))) {
     return 'Factory';
   }
-  else if (documentNode.properties.ctx.type === K.TYPE_FUNCTION) {
+  else if (documentNode.properties.type === K.TYPE_FUNCTION) {
     return 'Function';
   }
   else {
@@ -60,9 +60,17 @@ exports.isStaticProperty = function(doc) {
   return exports.isProperty(doc) && [
     K.SCOPE_PROTOTYPE,
     K.SCOPE_INSTANCE
-  ].indexOf(doc.ctx.scope) === -1;
+  ].indexOf(doc.nodeInfo.scope) === -1;
 };
 
 exports.isMemberProperty = function(doc) {
   return exports.isProperty(doc) && !exports.isStaticProperty(doc);
+};
+
+exports.isPrivate = function(doc) {
+  return doc && doc.tags.some(x => x.type === 'private');
+};
+
+exports.isProtected = function(doc) {
+  return doc && doc.tags.some(x => x.type === 'protected');
 };

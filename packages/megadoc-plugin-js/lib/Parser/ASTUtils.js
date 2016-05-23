@@ -1,16 +1,17 @@
 var nodejsPath = require('path');
 var t = require('babel-types');
+var K = require('./constants');
+var DocUtils = require('./DocUtils');
 
 var Utils = exports;
 
 Utils.isModuleExports = function(node) {
   return (
-    t.isMemberExpression(node.left)
-    && node.left.object.name === 'module'
-    && node.left.property.name === 'exports'
-    && (
-      t.isIdentifier(node.right)
-      || t.isFunctionExpression(node.right)
+    t.isMemberExpression(node.left) &&
+    node.left.object.name === 'module' &&
+    node.left.property.name === 'exports' && (
+      t.isIdentifier(node.right) ||
+      t.isFunctionExpression(node.right)
     )
   );
 };
@@ -40,13 +41,14 @@ Utils.isInstanceEntity = function(node) {
 };
 
 Utils.isFactoryModuleReturnEntity = function(node, startingPath, registry) {
+
   var modulePath = Utils.findAncestorPath(startingPath, function(path) {
     var doc = registry.getModuleDocAtPath(path);
 
     return (
       doc &&
       doc.isModule() &&
-      doc.nodeInfo.ctx.type === 'function'
+      DocUtils.isOfType(doc, K.TYPE_FUNCTION)
     );
   });
 
@@ -101,7 +103,7 @@ Utils.findScope = function(path) {
 
   do {
     scope = path.scope;
-  } while (!scope && path && (path = path.parentPath));
+  } while (!scope && ((path = path.parentPath)));
 
   return scope;
 };
@@ -114,7 +116,7 @@ Utils.findNearestPathWithComments = function(startingPath) {
 };
 
 Utils.dumpLocation = function(node, filePath) {
-  return [filePath, node.loc.start.line].join(':');
+  return [filePath, Utils.getLocation(node).start.line].join(':');
 };
 
 /**
@@ -133,16 +135,7 @@ Utils.findIdentifierInScope = function(identifierName, path) {
   if (currentScope) {
     var targetScope = currentScope.getBinding(identifierName);
 
-    // for (var x in currentScope) {
-    //   if (typeof currentScope[x] === 'function')
-    //     console.log('#' + x);
-    // }
     return targetScope && targetScope.path;
-    // console.log(targetScope)
-    // if (targetScope) {
-    //   console.log(targetScope)
-    //   return targetScope.getBinding(identifierName)[0];
-    // }
   }
 };
 
@@ -156,5 +149,28 @@ Utils.getLocation = function(node) {
     loc = node.loc;
   }
 
-  return loc || { start: {}, end: {} };
+  return loc || {
+    start: { line: '?' },
+    end: { line: '?' }
+  };
+};
+
+// Whether there's a commenet for such a node:
+//
+//     /**
+//      * @module
+//      */
+//      var { Assertion } = require('chai');
+//
+Utils.isCommentedDestructuredProperty = function(path) {
+  return (
+    t.isIdentifier(path.node) &&
+    path.node.leadingComments &&
+    path.parentPath &&
+    t.isVariableDeclarator(path.parentPath) &&
+    path.parentPath.parentPath &&
+    t.isVariableDeclaration(path.parentPath.parentPath) &&
+    path.parentPath.parentPath.node.leadingComments &&
+    path.parentPath.parentPath.node.leadingComments[0] === path.node.leadingComments[0]
+  );
 };

@@ -33,6 +33,7 @@ describe("[Integration] megadoc-plugin-js", function() {
     suite.createFile('lib/core/Store.js', function() {;
       // /**
       //  * @module
+      //  *
       //  * dis be our store, mon!
       //  */
       // function Store() {}

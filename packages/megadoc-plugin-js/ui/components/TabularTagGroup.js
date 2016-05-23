@@ -3,6 +3,7 @@ var { where } = require('lodash');
 var Collapsible = require('mixins/Collapsible');
 var classSet = require('utils/classSet');
 var TypeNames = require('./Tags/TypeNames');
+var DefaultValue = require('./Tags/DefaultValue');
 var HighlightedText = require('components/HighlightedText');
 
 var TabularTagGroup = React.createClass({
@@ -88,15 +89,9 @@ var TabularTagGroup = React.createClass({
         </td>
 
         <td>
-          {typeInfo.types.length > 0 && (
+          {typeInfo.type && (
             <code className="param-tag__types">
-              <TypeNames types={typeInfo.types} />
-
-              {typeInfo.defaultValue && (
-                <span className="param-tag__default-value">
-                  {' ('}defaults to: <code>{typeInfo.defaultValue}</code>)
-                </span>
-              )}
+              <TypeNames type={typeInfo.type} />
             </code>
           )}
 
@@ -105,6 +100,8 @@ var TabularTagGroup = React.createClass({
               {typeInfo.description.replace(/[ ]{4,}/g, '')}
             </HighlightedText>
           )}
+
+          <DefaultValue defaultValue={typeInfo.defaultValue} />
         </td>
       </tr>
     );

@@ -1,6 +1,7 @@
-var assert = require('assert');
+var assert = require('chai').assert;
 var TestUtils = require('../../TestUtils');
 var parseInline = TestUtils.parseInline;
+var MegaTestUtils = require('megadoc/lib/TestUtils');
 
 describe('CJS::Parser - CommonJS automatic module identification', function() {
   it('var SomeModule = function() {}; module.exports = SomeModule;', function() {
@@ -139,5 +140,81 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
     assert.equal(docs.length, 1);
     assert.ok(docs[0].isModule, 'it marks the doc as module');
     assert.equal(docs[0].id, 'OverriddenName');
+  });
+
+  // man this was a crazy bug xD
+  context('when an identifier exists in two files, and is exported in one of them...', function() {
+    var docs, file1, file2;
+    var suite = MegaTestUtils.IntegrationSuite(this);
+
+    beforeEach(function() {
+      file1 = suite.createFile('a.js', function() {;
+        // /** A module */
+        // function Corpus() {
+        //   var exports = {};
+        //
+        //   /** Teehee! */
+        //   exports.resolve = function() {}
+        //
+        //   return exports;
+        // }
+        //
+        // module.exports = Corpus;
+      });
+
+      file2 = suite.createFile('b.js', function() {;
+        // function resolve() {}
+        //
+        // module.exports = resolve;
+      });
+
+      docs = TestUtils.parseFiles([ file1.path, file2.path ], {});
+
+      assert.equal(docs.length, 2);
+    });
+
+    it('does not confuse them', function() {
+      assert.include(docs[0], { id: 'Corpus', isModule: true });
+      assert.include(docs[1], { id: 'Corpus#resolve', isModule: false });
+    });
+  });
+
+  // shoot me
+  context('when an identifier exists in two files, is a module in one but not the other, and is exported in one of them...', function() {
+    var docs, file1, file2;
+    var suite = MegaTestUtils.IntegrationSuite(this);
+
+    beforeEach(function() {
+      file1 = suite.createFile('a.js', function() {;
+        // /** A module */
+        // function Corpus() {
+        //   var exports = {};
+        //
+        //   /** Teehee! */
+        //   exports.resolve = function() {}
+        //
+        //   return exports;
+        // }
+        //
+        // module.exports = Corpus;
+      });
+
+      file2 = suite.createFile('b.js', function() {;
+        // /** Foo */
+        // function resolve() {}
+        //
+        // module.exports = resolve;
+      });
+
+      docs = TestUtils.parseFiles([ file1.path, file2.path ], {});
+
+      assert.equal(docs.length, 3);
+    });
+
+    it('does not confuse them', function() {
+      assert.include(docs[0], { id: 'Corpus', isModule: true });
+      assert.include(docs[1], { id: 'Corpus#resolve', isModule: false });
+      assert.include(docs[2], { id: 'resolve', isModule: true });
+    });
   });
 });

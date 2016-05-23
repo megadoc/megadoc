@@ -48,6 +48,8 @@
     padding: 0;
     left: 0;
     min-width: 100%;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
   }
 
   &__menu-list-item a {
@@ -56,6 +58,8 @@
     line-height: 3em;
     text-align: left;
     white-space: nowrap;
+    border-left-width: 3px;
+    border-left-style: solid;
   }
 }
 
@@ -116,7 +120,7 @@
 
     &.active {
       color: @accent;
-      border-bottom: 3px solid @accent;
+      border-bottom-color: @accent;
     }
   }
 
@@ -136,13 +140,13 @@
 
   .banner__menu-list {
     background: @base3;
-    border-bottom: 3px solid @base2;
+    border-bottom-color: @base2;
     margin-top: 0;
     margin-left: -3px;
   }
 
   .banner__menu-list-item a {
-    border-left: 3px solid @base2;
+    border-left-color: @base2;
   }
 
   .banner__menu-list-item a:hover,

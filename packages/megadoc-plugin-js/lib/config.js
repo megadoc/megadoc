@@ -9,14 +9,14 @@ module.exports = {
    *           plugins in your megadoc config.)
    *
    *           This will be used in the corpus to namespace documents and may
-   *           affect the URL if you leave [@baseURL]() blank.
+   *           affect the URL if you leave [.baseURL]() blank.
    */
   id: 'js',
 
   /**
    * @property {String}
    *           The URL to reach the JavaScript documentation at.
-   *           The default is to infer it from [@id]().
+   *           The default is to infer it from [.id]().
    */
   baseURL: null,
 
@@ -93,6 +93,8 @@ module.exports = {
   showSourcePaths: true,
 
   verbose: false,
+
+  strict: true,
 
   /**
    * @property {Object.<String, String|Array.<String>>}
@@ -179,4 +181,45 @@ module.exports = {
    * part of the description for their respective tags.
    */
   namedReturnTags: true,
+
+  /**
+   * @property {Array.<String>}
+   *
+   * A list of types to consider "built-in" and to avoid linking to.
+   *
+   * This list will be munged along with the following built-in types:
+   *
+   * ```javascript
+   * [
+   *   'Error',
+   *   'String',
+   *   'Array',
+   *   'Number',
+   *   'RegExp',
+   *   'Object',
+   *   'Boolean',
+   *   'Date',
+   *   'Function',
+   *   'Symbol',
+   *   'Promise',
+   *   'Map',
+   *   'Set',
+   *   'WeakMap',
+   *   'WeakSet',
+   *   'Buffer',
+   *   'Uint16Array',
+   *   'ArrayBuffer',
+   *   'DataView',
+   *   'Int8Array',
+   *   'Uint8Array',
+   *   'Uint8ClampedArray',
+   *   'Uint32Array',
+   *   'Int32Array',
+   *   'Float32Array',
+   *   'Int16Array',
+   *   'Float64Array'
+   * ]
+   * ```
+   */
+  builtInTypes: []
 };

@@ -29,8 +29,8 @@ megadoc.outlets.add('Inspector', {
       return (
         <div>
           <div className="tooltip__title">
-            {doc.id} ({doc.ctx.type !== K.TYPE_UNKNOWN && (
-              <strong>{doc.ctx.type} </strong>
+            {doc.id} ({doc.type !== K.TYPE_UNKNOWN && (
+              <strong>{doc.type} </strong>
             )}in {namespaceNode.title})
           </div>
 

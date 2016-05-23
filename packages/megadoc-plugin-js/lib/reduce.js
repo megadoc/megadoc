@@ -63,9 +63,10 @@ module.exports = function reduceDocuments(options) {
   function reduceModuleDocument(doc) {
     return b.document({
       id: doc.name,
-      title: doc.path,
+      title: doc.id,
       summary: generateSummary(doc),
-      filePath: doc.absoluteFilePath,
+      filePath: doc.filePath,
+      loc: doc.loc,
       symbol: '',
       properties: doc,
       documents: rawDocuments.filter(function(x) {
@@ -79,10 +80,11 @@ module.exports = function reduceDocuments(options) {
 
   function reduceEntityDocument(parentDoc, doc) {
     return b.documentEntity({
-      id: doc.ctx.symbol + doc.name,
-      title: doc.path,
+      id: doc.symbol + doc.name,
+      title: doc.id,
       summary: generateSummary(doc),
-      filePath: doc.absoluteFilePath,
+      filePath: doc.filePath,
+      loc: doc.loc,
       properties: doc,
     });
   }

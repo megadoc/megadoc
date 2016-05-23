@@ -1,10 +1,10 @@
-var Utils = require('../Utils');
+var Subject = require('../ASTUtils');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
 var babel = require('babel-core');
 var t = require('babel-types');
 
-describe('CJS::Parser::Utils', function() {
+describe('CJS::Parser::ASTUtils', function() {
   function parse(strGenerator) {
     return babel.transform(multiline(strGenerator), {
       code: false,
@@ -20,7 +20,7 @@ describe('CJS::Parser::Utils', function() {
 
       babel.traverse(ast, {
         MemberExpression: function(path) {
-          assert.equal(Utils.flattenNodePath(path.node), 'SomeModule.prototype');
+          assert.equal(Subject.flattenNodePath(path.node), 'SomeModule.prototype');
           return false;
         }
       });
@@ -33,7 +33,7 @@ describe('CJS::Parser::Utils', function() {
 
       babel.traverse(ast, {
         MemberExpression: function(path) {
-          assert.equal(Utils.flattenNodePath(path.node), 'SomeModule.prototype');
+          assert.equal(Subject.flattenNodePath(path.node), 'SomeModule.prototype');
           return false;
         }
       });
@@ -52,7 +52,7 @@ describe('CJS::Parser::Utils', function() {
 
       babel.traverse(ast, {
         Property: function(path) {
-          var ancestorPath = Utils.findAncestorPath(path, function(parentPath) {
+          var ancestorPath = Subject.findAncestorPath(path, function(parentPath) {
             return (
               parentPath.node &&
               t.isFunctionDeclaration(parentPath.node)
@@ -78,7 +78,7 @@ describe('CJS::Parser::Utils', function() {
 
       babel.traverse(ast, {
         MemberExpression: function(path) {
-          var ancestorPath = Utils.findAncestorPath(path, function(parentPath) {
+          var ancestorPath = Subject.findAncestorPath(path, function(parentPath) {
             return (
               parentPath.node &&
               t.isFunctionDeclaration(parentPath.node)
@@ -107,7 +107,7 @@ describe('CJS::Parser::Utils', function() {
 
       babel.traverse(ast, {
         Property: function(path) {
-          var targetPath = Utils.findIdentifierInScope(
+          var targetPath = Subject.findIdentifierInScope(
             path.node.value.name,
             path
           );

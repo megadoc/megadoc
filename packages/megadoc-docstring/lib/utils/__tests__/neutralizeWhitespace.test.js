@@ -63,4 +63,24 @@ describe('utils::neutralizeWhitespace', function() {
 
     assert.deepEqual(input, output);
   });
+
+  it('strips leading whitespace from description', function() {
+    var string = multiline(function() {;
+      //          This
+      //          is
+      //          a
+      //          multiline
+      //          description.
+    });
+
+    assert.equal(
+      neutralizeWhitespace(string)
+        // this silly hack is to work around istanbul's instrumentor /
+        // multiline-slash where when NOT instrumenting, we'll have a leading
+        // newline
+        .replace(/^\n{0,1}/, '')
+      ,
+      'This\nis\na\nmultiline\ndescription.\n    '
+    );
+  });
 });

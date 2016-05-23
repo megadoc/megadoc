@@ -4,6 +4,9 @@ const HighlightedText = require('components/HighlightedText');
 const DocTags = require('./DocTags');
 const FunctionSignature = require('./FunctionSignature');
 const TypeNames = require('./Tags/TypeNames');
+const DeprecatedTag = require('./Tags/DeprecatedTag');
+const K = require('../constants');
+const DocClassifier = require('../utils/DocClassifier');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
 const HeadingAnchor = require('components/HeadingAnchor');
@@ -49,6 +52,7 @@ const Doc = React.createClass({
 
     const { doc, anchor } = this.props;
     const description = doc.description;
+    const deprecatedTag = doc.tags.filter((t) => t.type === 'deprecated')[0];
 
     return (
       <div className={className}>
@@ -83,22 +87,30 @@ const Doc = React.createClass({
                 <span className="doc-entity__modifier">CONSTRUCTOR</span>
               )}
 
-              {doc.isProtected && (
+              {DocClassifier.isProtected(doc) && (
                 <span className="doc-entity__modifier doc-entity__protected">PROTECTED</span>
               )}
 
-              {doc.isPrivate && (
+              {DocClassifier.isPrivate(doc) && (
                 <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
               )}
 
               {doc.tags.some((t) => t.type === 'async') && (
                 <span className="doc-entity__modifier doc-entity__async">ASYNC</span>
               )}
+
+              {deprecatedTag && (
+                <span className="doc-entity__modifier doc-entity__async">DEPRECATED</span>
+              )}
             </HeadingAnchor.Text>
           </h4>
         )}
 
         <div className="doc-entity__description">
+          {deprecatedTag && deprecatedTag.string.length && (
+            <DeprecatedTag string={deprecatedTag.string} />
+          )}
+
           {this.props.withDescription && description && !isCollapsed && (
             <HighlightedText>
               {description}
@@ -127,14 +139,14 @@ const Doc = React.createClass({
     return (
       <span className="doc-entity__method-params">
         {' -> '}
-        <TypeNames types={tag.typeInfo.types} />
+        <TypeNames type={tag.typeInfo.type} />
       </span>
     );
   }
 });
 
 function isFunction(doc) {
-  return doc.ctx.type === 'function';
+  return doc.type === K.TYPE_FUNCTION;
 }
 
 module.exports = Doc;

@@ -82,12 +82,14 @@ function CorpusAPI(shallowCorpus) {
     value: length
   });
 
+  exports.getNamespaceOfDocument = getNamespaceOfDocument;
+
   /**
+   * @memberOf CorpusAPI
+   *
    * @param  {String} uid
    * @return {T.Namespace}
    */
-  exports.getNamespaceOfDocument = getNamespaceOfDocument;
-
   function getNamespaceOfDocument(uid) {
     let node = typeof uid === 'string' ? getByUID(uid) : uid;
 

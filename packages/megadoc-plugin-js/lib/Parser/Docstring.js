@@ -1,11 +1,11 @@
-var dox = require('dox');
+// var dox = require('dox');
+var parseComment = require('./parseComment');
 var assert = require('assert');
 var _ = require('lodash');
 var K = require('./constants');
-var Tag = require('./Docstring/Tag');
-var extractIdInfo = require('./Docstring/extractIdInfo');
-var collectDescription = require('./Docstring/collectDescription');
-var findWhere = _.findWhere;
+var Tag = require('./Docstring__Tag');
+var extractIdInfo = require('./Docstring__extractIdInfo');
+var collectDescription = require('./Docstring__collectDescription');
 
 /**
  * An object representing a JSDoc comment (parsed using dox).
@@ -14,23 +14,46 @@ var findWhere = _.findWhere;
  *        The JSDoc-compatible comment string to build from.
  */
 function Docstring(comment, options, filePath) {
-  var doxDocs = dox.parseComments(comment, { raw: true });
-  var idInfo;
+  var commentNode, idInfo;
 
-  assert(doxDocs.length === 1,
-    'Dox should not extract more than 1 doc from an expression.'
+  try {
+    commentNode = parseComment(comment);
+  }
+  catch(e) {
+    throw new Error('Comment parse failed: "' + e.message + '" Source:\n' + comment);
+  }
+
+  if (commentNode.length === 0) {
+    throw new Error('Invalid annotation in comment block. Source:\n' + comment);
+  }
+
+  assert(commentNode.length === 1,
+    'Comment parser should yield a single node, not ' + commentNode.length + '! ' +
+    'Source:\n' + comment
   );
 
-  this._doxDocs = doxDocs;
-  this.tags = doxDocs[0].tags.map(function(doxTag) {
+  this.tags = commentNode[0].tags.map(function(doxTag) {
     return new Tag(doxTag, options || {}, filePath);
   });
 
   idInfo = extractIdInfo(this.tags);
 
-  this.id = idInfo.id;
+  // this.id = idInfo.id;
+  this.name = idInfo.name;
   this.namespace = idInfo.namespace;
-  this.description = collectDescription(doxDocs[0], this.id, this.tags);
+  this.description = collectDescription(commentNode[0], this.id, this.tags);
+  this.aliases = this.tags.filter(function(tag) {
+    return tag.type === 'alias';
+  }).reduce(function(map, tag) {
+    map[tag.typeInfo.name] = true;
+    return map;
+  }, {});
+
+  this.$location = (
+    (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
+    (this.name || '') + ' in ' +
+    filePath
+  );
 
   return this;
 }
@@ -40,8 +63,10 @@ var Dpt = Docstring.prototype;
 /**
  * @return {Object} doc
  *
- * @return {String} doc.id
- *         The explicit module id found in a @module tag, if any.
+ * @return {String} doc.name
+ *         If this is a module, it will be the name of the module found in a
+ *         @module tag, or a @name tag. Otherwise, it's what may be found in a
+ *         @name tag, a @property tag, or a @method tag. See [extractIdInfo]().
  *
  * @return {String} doc.namespace
  *         The namespace name found in a @namespace tag, if any.
@@ -54,7 +79,7 @@ var Dpt = Docstring.prototype;
  */
 Docstring.prototype.toJSON = function() {
   var docstring = _.pick(this, [
-    'id',
+    'name',
     'namespace',
     'description',
   ]);
@@ -74,16 +99,12 @@ Dpt.isInternal = function() {
   return this.hasTag('internal');
 };
 
-Dpt.isMethod = function() {
-  return this.hasTag('method');
-};
-
 Dpt.doesLend = function() {
   return this.hasTag('lends');
 };
 
 Dpt.getLentTo = function() {
-  return this.getTag('lends').lendReceiver;
+  return this.getTag('lends').typeInfo.name;
 };
 
 Dpt.hasMemberOf = function() {
@@ -91,39 +112,55 @@ Dpt.hasMemberOf = function() {
 };
 
 Dpt.getExplicitReceiver = function() {
-  return this.getTag('memberOf').explicitReceiver;
+  return this.getTag('memberOf').typeInfo.name;
 };
 
 Dpt.hasTag = function(type) {
-  return !!findWhere(this.tags, { type: type });
+  return this.tags.some(findByType(type));
 };
 
 Dpt.getTag = function(type) {
-  return findWhere(this.tags, { type: type });
+  return this.tags.filter(findByType(type))[0];
+};
+
+Dpt.hasAlias = function(alias) {
+  return alias in this.aliases;
 };
 
 Dpt.hasTypeOverride = function() {
-  return this.tags.filter(function(tag) {
-    return !!tag.explicitType;
-  }).length > 0;
+  return getTypeOverridingTags(this.tags).length > 0;
 };
 
 Dpt.getTypeOverride = function() {
-  return this.tags.filter(function(tag) {
-    return !!tag.explicitType;
-  })[0].explicitType;
+  var typedTags = getTypeOverridingTags(this.tags);
+
+  if (typedTags.length > 1) {
+    console.warn("Document has multiple type overrides! Source: %s",
+      this.$location
+    );
+  }
+
+  return typedTags[0].typeInfo.type;
 };
 
 Dpt.overrideNamespace = function(namespace) {
-  var oldNamespace = this.namespace;
-
   this.namespace = namespace;
+};
 
-  if (oldNamespace && this.id) {
-    this.id = this.id.replace(oldNamespace + K.NAMESPACE_SEP, '');
-  }
-
-  // this will FUBAR if we have @namespace tags ...
+Dpt.addAlias = function(name) {
+  this.aliases[name] = true;
 };
 
 module.exports = Docstring;
+
+function getTypeOverridingTags(tags) {
+  return tags.filter(function(tag) {
+    return tag.type in K.TYPE_OVERRIDING_TAGS;
+  });
+}
+
+function findByType(type) {
+  return function(x) {
+    return x.type === type;
+  }
+}

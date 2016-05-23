@@ -184,8 +184,8 @@ function Corpus() {
     if (node.uid in nodes) {
       assert(false,
         'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
-        '\nOriginal node is defined in: ' + (nodes[node.uid].filePath || '<<unknown>>') +
-        '\nCurrent node is defined in: ' + (node.filePath || '<<unknown>>')
+        '\nPast definition: ' + dumpNodeFilePath(nodes[node.uid]) +
+        '\nThis definition: ' + dumpNodeFilePath(node)
       );
     }
 
@@ -269,5 +269,19 @@ function hasValidNamespaceId(node) {
   return node.id && node.id[0] !== '/' && node.id[0] !== '.';
 }
 
-module.exports = Corpus;
+function dumpNodeFilePath(node) {
+  var buffer = '<<unknown>>';
 
+  if (node && node.filePath) {
+    buffer = node.filePath;
+
+    if (node.loc && node.loc.start && node.loc.start.line) {
+      buffer += ':' + node.loc.start.line;
+    }
+  }
+
+  return buffer;
+}
+
+module.exports = Corpus;
+module.exports.dumpNodeFilePath = dumpNodeFilePath;

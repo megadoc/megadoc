@@ -23,7 +23,7 @@ describe('CJS::Parser - Function modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter.someFunction' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_FUNCTION);
+    assert.equal(doc.type, K.TYPE_FUNCTION);
     assert.equal(doc.receiver, 'DragonHunter');
   });
 
@@ -45,7 +45,7 @@ describe('CJS::Parser - Function modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter.SOME_PROP' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_LITERAL);
+    assert.equal(doc.type, K.TYPE_LITERAL);
     assert.equal(doc.receiver, 'DragonHunter');
   });
 
@@ -67,7 +67,7 @@ describe('CJS::Parser - Function modules', function() {
     doc = findWhere(docs, { id: 'DragonHunter.SOME_PROP' });
 
     assert.ok(doc);
-    assert.equal(doc.ctx.type, K.TYPE_UNKNOWN);
+    assert.equal(doc.type, K.TYPE_UNKNOWN);
     assert.equal(doc.receiver, 'DragonHunter');
   });
 });

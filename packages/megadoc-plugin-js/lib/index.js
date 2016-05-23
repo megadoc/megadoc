@@ -13,6 +13,7 @@ var reduceDocuments = require('./reduce');
 function Plugin(userConfig) {
   var config = assign({}, defaults, userConfig);
   var parserConfig = {
+    strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
@@ -29,6 +30,36 @@ function Plugin(userConfig) {
   assert(typeof config.id === 'string',
     "You must specify an @id to the megadoc-plugin-js plugin."
   );
+
+  if (config.builtInTypes) {
+    config.builtInTypes.forEach(function(x) {
+      if (x && typeof x === 'object') {
+        assert(typeof x.name === 'string',
+          'An object for a built-in type must define a @name string.');
+
+        assert(typeof x.href === 'string',
+          'An object for a built-in type must specify @href with a URL to the built-in type documentation');
+      }
+      else {
+        assert(typeof x === 'string',
+          'Built-in type must be either a string or an object, not "' + typeof x + '"');
+      }
+    });
+  }
+
+  Object.keys(config.alias).forEach(function(key) {
+    assert(Array.isArray(config.alias[key]),
+      "megadoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
+      " be an array, got '" + typeof config.alias[key] + "'."
+    );
+
+    config.alias[key].forEach(function(value) {
+      assert(typeof value === 'string',
+        "megadoc-plugin-js: OptionError: expected alias entry to be a string " +
+        ", not '" + typeof value + "' (key '" + key + "')"
+      );
+    });
+  });
 
   var plugin = {
     id: config.id,
@@ -107,7 +138,7 @@ function Plugin(userConfig) {
       });
 
       compiler.on('render', function(renderMarkdown, linkify, done) {
-        render(compiler, database, renderMarkdown, linkify);
+        render(compiler, database, renderMarkdown, linkify, config);
 
         done();
       });
