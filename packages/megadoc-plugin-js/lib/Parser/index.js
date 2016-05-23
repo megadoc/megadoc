@@ -20,30 +20,35 @@ function Parser() {
 var Ppt = Parser.prototype;
 
 Ppt.parseFile = function(filePath, config, assetRoot) {
+  var relativeFilePath = filePath.indexOf(assetRoot) === 0 ?
+    filePath.substr(assetRoot.length) :
+    filePath
+  ;
+
   try {
     this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
       config,
-      filePath,
-      assetRoot
+      relativeFilePath,
+      filePath
     );
   }
   catch(e) {
-    console.error('Failed to parse ' + filePath);
+    console.error('Failed to parse ' + relativeFilePath);
     throw e;
   }
 };
 
-Ppt.parseString = function(str, config, filePath, assetRoot) {
+Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
   if (str.length > 0) {
     try {
       if (config.parse) {
-        this.ast = config.parse(str, filePath);
+        this.ast = config.parse(str, absoluteFilePath);
       }
       else {
         this.ast = babel.transform(str, assign({
           filenameRelative: filePath,
-          filename: assetRoot ? nodejsPath.resolve(assetRoot, filePath) : undefined,
+          filename: absoluteFilePath,
           code: false,
           ast: true,
           babelrc: true,

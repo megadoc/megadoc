@@ -41,10 +41,6 @@ const ModuleHeader = React.createClass({
       anchor = documentNode.meta.anchor;
     }
 
-    if (!doc.nodeInfo) {
-      return <header>Unsupported Entity</header>;
-    }
-
     return (
       <div>
         <Heading

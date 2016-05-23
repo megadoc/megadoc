@@ -7,12 +7,11 @@ var Utils = exports;
 
 Utils.isModuleExports = function(node) {
   return (
-    t.isMemberExpression(node.left)
-    && node.left.object.name === 'module'
-    && node.left.property.name === 'exports'
-    && (
-      t.isIdentifier(node.right)
-      || t.isFunctionExpression(node.right)
+    t.isMemberExpression(node.left) &&
+    node.left.object.name === 'module' &&
+    node.left.property.name === 'exports' && (
+      t.isIdentifier(node.right) ||
+      t.isFunctionExpression(node.right)
     )
   );
 };

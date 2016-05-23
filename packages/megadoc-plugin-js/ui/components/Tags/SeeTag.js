@@ -1,17 +1,18 @@
-var React = require("react");
-var MarkdownText = require('components/MarkdownText');
+const React = require("react");
+const MarkdownText = require('components/MarkdownText');
+const { shape, string } = React.PropTypes;
 
-var SeeTag = React.createClass({
-  displayName: "SeeTag",
-
+const SeeTag = React.createClass({
   propTypes: {
-    string: React.PropTypes.string
+    typeInfo: shape({
+      name: string.isRequired
+    })
   },
 
   render() {
     return (
       <li className="see-tag">
-        <MarkdownText tagName="span">{this.props.string}</MarkdownText>
+        <MarkdownText tagName="span">{this.props.typeInfo.string}</MarkdownText>
       </li>
     );
   }

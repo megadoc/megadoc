@@ -104,7 +104,7 @@ Dpt.doesLend = function() {
 };
 
 Dpt.getLentTo = function() {
-  return this.getTag('lends').lendReceiver;
+  return this.getTag('lends').typeInfo.name;
 };
 
 Dpt.hasMemberOf = function() {

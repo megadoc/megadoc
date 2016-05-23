@@ -36,7 +36,7 @@ Doc.prototype.toJSON = function(registry) {
   doc.nodeInfo = this.nodeInfo.ctx;
 
   doc.id = this.id;
-  doc.name = this.generateName();
+  doc.name = DocUtils.getNameOf(this);
   doc.filePath = this.filePath;
   doc.isModule = this.isModule();
 
@@ -74,7 +74,7 @@ Doc.prototype.toJSON = function(registry) {
 
   doc.mixinTargets = doc.tags
     .filter(function(tag) { return tag.type === 'mixes'; })
-    .reduce(function(list, tag) { return list.concat(tag.mixinTargets); }, [])
+    .map(function(tag) { return tag.typeInfo.name; })
   ;
 
   doc.aliases = Object.keys(this.docstring.aliases);
@@ -96,14 +96,6 @@ Doc.prototype.consumeDocstring = function(docstring) {
 
 Doc.prototype.consumeNodeInfo = function(nodeInfo) {
   this.nodeInfo = nodeInfo;
-};
-
-Doc.prototype.generateId = function() {
-  return DocUtils.getIdOf(this);
-};
-
-Doc.prototype.generateName = function() {
-  return DocUtils.getNameOf(this);
 };
 
 Doc.prototype.markAsExported = function() {

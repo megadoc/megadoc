@@ -77,6 +77,10 @@ Rpt.get = function(id, filePath) {
       doc.docstring.hasAlias(id)
     );
   })[0] || this.docs.filter(function(doc) { // TODO: optimize
+    if (filePath && doc.filePath !== filePath) {
+      return false;
+    }
+
     return DocUtils.getNameOf(doc) === id;
   })[0];
 };

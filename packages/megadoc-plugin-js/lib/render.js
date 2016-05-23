@@ -40,10 +40,7 @@ var EXPRESSION_TYPES = Object.freeze([
   K.TYPE_OBJECT_PROPERTY
 ].reduce(function(map, x) { map[x] = true; return map; }, {}));
 
-var TAGS_WITH_STRING = {
-  'deprecated': true,
-  'example': true,
-};
+var TAGS_WITH_STRING = K.TAGS_WITH_STRINGS;
 
 module.exports = function(compiler, namespaceNode, md, linkify, config) {
   var builtInTypes = BUILT_IN_TYPES.concat(config.builtInTypes || []).reduce(toIndexMap, {});
@@ -112,12 +109,11 @@ module.exports = function(compiler, namespaceNode, md, linkify, config) {
             contextNode: node,
           }), { contextNode: node, });
         }
-
         else if (tag.type === 'see') {
-          tag.string = renderTypeLink({
+          tag.typeInfo.name = renderTypeLink({
             linkResolver: compiler.linkResolver,
             contextNode: node,
-            typeName: tag.string.trim(),
+            typeName: tag.typeInfo.name.trim(),
           });
         }
 

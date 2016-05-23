@@ -35,16 +35,6 @@ function Tag(commentNode, options, filePath) {
 
   /**
    * @property {String}
-   *           Name of the module that is lent to by the enclosing doc.
-   *
-   *           Available only for @lends tags.
-   */
-  this.lendReceiver = null;
-
-  this.mixinTargets = [];
-
-  /**
-   * @property {String}
    *           Available on @property, @type, @param, and @live_example tags.
    */
   this.typeInfo = {
@@ -120,19 +110,10 @@ function Tag(commentNode, options, filePath) {
     case 'namespace':
     case 'name':
     case 'alias':
-      this.typeInfo.name = commentNode.name;
-      break;
-
     case 'lends':
-      this.lendReceiver = commentNode.name;
-      break;
-
     case 'mixes':
-      this.mixinTargets = [ commentNode.name ];
-      break;
-
     case 'see':
-      this.string = commentNode.name;
+      this.typeInfo.name = commentNode.name;
       break;
   }
 
@@ -143,13 +124,9 @@ function Tag(commentNode, options, filePath) {
   return this;
 }
 
-Tag.prototype.adjustString = function(newString) {
-  this.string = newString;
-};
-
 Tag.prototype.toJSON = function() {
   return Object.keys(this).reduce(function(json, key) {
-    if (this[key] !== null && typeof this[key] !== 'function') {
+    if (this[key] !== null && typeof this[key] !== 'function' && key[0] !== '$') {
       json[key] = this[key];
     }
 

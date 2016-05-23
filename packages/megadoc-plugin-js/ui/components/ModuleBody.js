@@ -142,7 +142,7 @@ const ModuleBody = React.createClass({
 
   renderSeeTag(tag) {
     return (
-      <SeeTag key={tag.string} string={tag.string} />
+      <SeeTag key={tag.typeInfo.name} {...tag} />
     );
   },
 

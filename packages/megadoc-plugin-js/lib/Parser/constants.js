@@ -28,6 +28,11 @@ exports.TYPE_OVERRIDING_TAGS = {
   'type': true,
 };
 
+exports.TAGS_WITH_STRINGS = {
+  'deprecated': true,
+  'example': true,
+};
+
 exports.NO_DESCRIPTION_TAGS = {
   'alias': true,
   'class': true,
