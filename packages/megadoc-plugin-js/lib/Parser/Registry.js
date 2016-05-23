@@ -74,7 +74,6 @@ Rpt.get = function(id, filePath) {
 
     return (
       DocUtils.getIdOf(doc) === id ||
-      // DocUtils.getNameOf(doc) === id ||
       doc.docstring.hasAlias(id)
     );
   })[0] || this.docs.filter(function(doc) { // TODO: optimize
@@ -163,20 +162,6 @@ Rpt.findAliasedReceiver = function(alias) {
   }
 
   return docs[0] && docs[0].id;
-  // var identifierPath = ASTUtils.findIdentifierInScope(alias, path);
-
-  // if (identifierPath) {
-  //   var receiverPath = ASTUtils.findNearestPathWithComments(identifierPath);
-
-  //   if (receiverPath) {
-  //     var receiverDoc = this.getModuleDocAtPath(receiverPath);
-  //     if (receiverDoc) {
-  //       if (receiverDoc.id !== alias) {
-  //         return receiverDoc.id;
-  //       }
-  //     }
-  //   }
-  // }
 };
 
 Rpt.findEnclosingDoc = function(startingPath, map) {

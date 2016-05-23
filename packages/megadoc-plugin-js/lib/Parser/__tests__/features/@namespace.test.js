@@ -43,4 +43,20 @@ describe('CJS::Parser - @namespace support', function() {
     assert.equal(docs[0].namespace, 'Core.Data');
     assert.equal(docs[0].id, 'Core.Data.Cache');
   });
+
+  it('should not consume description', function() {
+    var docs = parseInline(function() {;
+      // /**
+      //  * @namespace Core.Data
+      //  *
+      //  * Some description.
+      //  */
+      // var Cache = {};
+    });
+
+    assert.equal(docs.length, 1);
+    assert.equal(docs[0].name, 'Cache');
+    assert.equal(docs[0].namespace, 'Core.Data');
+    assert.equal(docs[0].description, 'Some description.');
+  });
 });

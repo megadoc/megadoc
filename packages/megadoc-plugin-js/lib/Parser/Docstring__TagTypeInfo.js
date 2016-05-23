@@ -1,7 +1,6 @@
 var parseTypes = require('./Docstring__parseTypeString');
 
 function TypeInfo(commentNode) {
-  // console.log(commentNode);
   var description = commentNode.description;
   var name = (commentNode.name || '').trim();
   var typeInfo = {};
@@ -11,19 +10,6 @@ function TypeInfo(commentNode) {
   }
 
   var hasType = commentNode.type && commentNode.type.length > 0;
-
-  // Handle return tags without a name, a la:
-  //
-  //     /**
-  //      * @return {Foo}
-  //      *         Some description.
-  //      */
-  //
-  if (commentNode.tag === 'return' && commentNode.name[0] === '\n') {
-    // delete typeInfo.name;
-
-    // description = commentNode.name.trim();
-  }
 
   // Example tags without a type but with a name:
   //
@@ -44,7 +30,7 @@ function TypeInfo(commentNode) {
   //       description: 'Do something.'
   //     }
   //
-  else if (commentNode.tag === 'example' && !hasType) {
+  if (commentNode.tag === 'example' && !hasType) {
     if (commentNode.name.trim().length > 0) {
       console.warn("Invalid @example tag: this tag does not support a name.");
     }

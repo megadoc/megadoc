@@ -63,8 +63,10 @@ var Dpt = Docstring.prototype;
 /**
  * @return {Object} doc
  *
- * @return {String} doc.id
- *         The explicit module id found in a @module tag, if any.
+ * @return {String} doc.name
+ *         If this is a module, it will be the name of the module found in a
+ *         @module tag, or a @name tag. Otherwise, it's what may be found in a
+ *         @name tag, a @property tag, or a @method tag. See [extractIdInfo]().
  *
  * @return {String} doc.namespace
  *         The namespace name found in a @namespace tag, if any.
@@ -77,7 +79,6 @@ var Dpt = Docstring.prototype;
  */
 Docstring.prototype.toJSON = function() {
   var docstring = _.pick(this, [
-    // 'id',
     'name',
     'namespace',
     'description',

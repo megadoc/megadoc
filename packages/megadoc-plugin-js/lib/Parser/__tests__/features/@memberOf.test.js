@@ -187,4 +187,17 @@ describe('CJS::Parser - @memberOf support', function() {
       assert.equal(fnDoc.receiver, 'DOMSelectors');
     });
   });
+
+  it('should not consume description', function() {
+    var docs = TestUtils.parseInline(function() {;
+      // /**
+      //  * @memberOf Core.Data Some description.
+      //  */
+      // function add() {}
+    });
+
+    assert.equal(docs.length, 1);
+    assert.equal(docs[0].name, 'add');
+    assert.equal(docs[0].description, 'Some description.');
+  });
 });

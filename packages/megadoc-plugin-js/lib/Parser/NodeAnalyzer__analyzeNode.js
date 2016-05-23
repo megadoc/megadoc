@@ -72,10 +72,6 @@ function analyzeNode(node, path, filePath, config) {
 
   if (info.id) {
     info.addContextInfo(generateContext(info.$contextNode));
-
-    if (info.isExports()/* || info.isDestructuredObject() */) {
-      info.addContextInfo({ type: K.TYPE_OBJECT });
-    }
   }
 
   return info;
@@ -128,6 +124,7 @@ function analyzeVariableDeclaration(node, path, info) {
   //     var SomeModule = exports;
   if (ASTUtils.isExports(node)) {
     info.markAsExports();
+    info.addContextInfo({ type: K.TYPE_OBJECT });
   }
 }
 

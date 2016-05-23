@@ -1,6 +1,5 @@
 var fs = require('fs');
 var nodejsPath = require('path');
-var assert = require('assert');
 var ASTUtils = require('./ASTUtils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
@@ -81,19 +80,6 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'namedReturnTags',
   ]);
 
-  Object.keys(config.alias).forEach(function(key) {
-    assert(Array.isArray(config.alias[key]),
-      "megadoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
-      " be an array, got '" + typeof config.alias[key] + "'."
-    );
-    config.alias[key].forEach(function(value) {
-      assert(typeof value === 'string',
-        "megadoc-plugin-js: OptionError: expected alias entry to be a string " +
-        ", not '" + typeof value + "' (key '" + key + "')"
-      );
-    });
-  });
-
   config.tagProcessors = config.tagProcessors || [];
   config.namespaceDirMap = config.namespaceDirMap || {};
 
@@ -128,17 +114,15 @@ Ppt.walk = function(ast, inConfig, filePath) {
         //
         // We'll handle the VariableDeclaration and forget about the
         // destructured variable identifier altogether.
-        if (isCommentedDestructuredProperty(path)) {
-          return false;
+        if (ASTUtils.isCommentedDestructuredProperty(path)) {
+          return;
         }
 
         commentPool.forEach(function(commentNode) {
           var comment = commentNode.value;
 
           if (comment[0] === '*') {
-            if (!parser.parseComment(comment, path, path.node, config, filePath)) {
-              return false;
-            }
+            parser.parseComment(comment, path, path.node, config, filePath);
           }
         });
       }
@@ -185,15 +169,17 @@ Ppt.walk = function(ast, inConfig, filePath) {
 Ppt.toJSON = function() {
   var registry = this.registry;
 
-  return registry.docs.map(function(doc) {
-    return doc.toJSON(registry);
-  }).filter(function(x) {
-    return !!x;
-  });
+  return registry.docs.reduce(function(list, doc) {
+    // We don't care about modules that @lend
+    if (!doc.docstring.doesLend()) {
+      list.push(doc.toJSON(registry));
+    }
+
+    return list;
+  }, []);
 };
 
 Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
-  var nodeInfo, doc;
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
   var docstring = new Docstring('/*' + comment + '*/', config, nodeLocation);
 
@@ -220,21 +206,25 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
     }
   }
 
-  runAllSync(config.docstringProcessors || [], [ docstring ]);
+  if (config.docstringProcessors && config.docstringProcessors.length) {
+    runAllSync(config.docstringProcessors, [ docstring ]);
+  }
 
-  nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+  var nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+  var doc = new Doc(docstring, nodeInfo, filePath);
 
-  doc = new Doc(docstring, nodeInfo, filePath);
-
+  // Pre-defined aliases:
   if (config.alias.hasOwnProperty(doc.id)) {
     config.alias[doc.id].forEach(function(alias) {
       doc.docstring.addAlias(alias);
     });
   }
 
-  docstring.tags.forEach(function(tag) {
-    runAllSync(config.tagProcessors || [], [ tag ]);
-  });
+  if (config.tagProcessors && config.tagProcessors.length) {
+    docstring.tags.forEach(function(tag) {
+      runAllSync(config.tagProcessors, [ tag ]);
+    });
+  }
 
   if (doc.id) {
     if (doc.isModule()) {
@@ -258,22 +248,14 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
       }
     }
   }
+  else {
+    console.warn("No identifier was found for this document, it will be ignored! (Source: %s)",
+      nodeLocation
+    );
+  }
 
   return true;
 };
-
-function isCommentedDestructuredProperty(path) {
-  return (
-    t.isIdentifier(path.node) &&
-    path.node.leadingComments &&
-    path.parentPath &&
-    t.isVariableDeclarator(path.parentPath) &&
-    path.parentPath.parentPath &&
-    t.isVariableDeclaration(path.parentPath.parentPath) &&
-    path.parentPath.parentPath.node.leadingComments &&
-    path.parentPath.parentPath.node.leadingComments[0] === path.node.leadingComments[0]
-  );
-}
 
 function getPredefinedNamespace(config, docstring, filePath) {
   var namespace;

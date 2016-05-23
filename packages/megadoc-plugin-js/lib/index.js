@@ -47,6 +47,20 @@ function Plugin(userConfig) {
     });
   }
 
+  Object.keys(config.alias).forEach(function(key) {
+    assert(Array.isArray(config.alias[key]),
+      "megadoc-plugin-js: OptionError: expected alias '" + key + "' entry to " +
+      " be an array, got '" + typeof config.alias[key] + "'."
+    );
+
+    config.alias[key].forEach(function(value) {
+      assert(typeof value === 'string',
+        "megadoc-plugin-js: OptionError: expected alias entry to be a string " +
+        ", not '" + typeof value + "' (key '" + key + "')"
+      );
+    });
+  });
+
   var plugin = {
     id: config.id,
 

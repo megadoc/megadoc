@@ -27,7 +27,6 @@ function NodeInfo(node, filePath) {
 NodeInfo.prototype.toJSON = function() {
   return {
     id: this.id,
-    // ctx: this.ctx,
     receiver: this.receiver,
     loc: this.loc,
   };

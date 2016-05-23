@@ -22,8 +22,25 @@ exports.VISIBILITY_PROTECTED = 'protected';
 exports.VISIBILITY_PRIVATE = 'private';
 
 exports.DEFAULT_FACTORY_EXPORTS_ID = 'default_exports';
-exports.TYPE_OVERRIDING_TAGS = Object.freeze({
-  'type': true,
+exports.TYPE_OVERRIDING_TAGS = {
+  'method': true,
   'property': true,
-  'method': true
-});
+  'type': true,
+};
+
+exports.NO_DESCRIPTION_TAGS = {
+  'alias': true,
+  'class': true,
+  'constructor': true,
+  'extends': true,
+  'inheritdoc': true,
+  'memberOf': true,
+  'method': true,
+  'mixin': true,
+  'mixes': true,
+  'module': true,
+  'namespace': true,
+  'preserveOrder': true,
+  'private': true,
+  'type': true,
+};

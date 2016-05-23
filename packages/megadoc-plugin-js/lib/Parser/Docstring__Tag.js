@@ -109,17 +109,10 @@ function Tag(commentNode, options, filePath) {
       break;
 
     case 'type':
-      // console.assert(commentNode.types.length === 1,
-      //   "Expected @type tag to contain only a single type, but it contained %d.",
-      //   commentNode.types.length
-      // );
       this.typeInfo = TypeInfo(commentNode);
-      // this.string = this.string.replace(commentNode.string, '');
 
       break;
 
-    // if it was marked @method, treat it as such (not stupid "property" type
-    // on object modules)
     case 'method':
       this.typeInfo = TypeInfo(commentNode);
       this.typeInfo.type = { name: K.TYPE_FUNCTION };
@@ -136,10 +129,6 @@ function Tag(commentNode, options, filePath) {
 
     case 'memberOf':
       this.explicitReceiver = commentNode.name;
-
-      // @memberOf's "parent" property (which is the target class name) will be
-      // present in the string so we remove it:
-      this.string = this.string.replace(this.explicitReceiver, '');
 
       break;
 

@@ -11,37 +11,21 @@ var assign = _.assign;
  * @param {String} filePath
  */
 function Doc(docstring, nodeInfo, filePath) {
-  var that = this;
-
   this.consumeDocstring(docstring);
   this.consumeNodeInfo(nodeInfo);
 
-  Object.defineProperty(this, 'id', {
-    get: function() {
-      // console.warn("Do not access Doc@id directly, use DocUtils.");
-      return DocUtils.getIdOf(that);
-    }
-  });
-
-  Object.defineProperty(this, 'name', {
-    get: function() {
-      // console.warn("Do not access Doc@name directly, use DocUtils.");
-      return DocUtils.getNameOf(that);
-    }
-  });
-
   this.filePath = filePath;
-  this.customAliases = [];
 
   return this;
 }
 
-Doc.prototype.toJSON = function(registry) {
-  // We don't care about modules that @lend
-  if (this.docstring.doesLend()) {
-    return null;
+Object.defineProperty(Doc.prototype, 'id', {
+  get: function() {
+    return DocUtils.getIdOf(this);
   }
+});
 
+Doc.prototype.toJSON = function(registry) {
   var nodeInfo = this.nodeInfo;
   var doc = assign({},
     this.docstring.toJSON(),
@@ -72,6 +56,7 @@ Doc.prototype.toJSON = function(registry) {
       else if (nodeInfo.isPrototypeEntity()) {
         doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
       }
+      // blegh
       else if (
         ASTUtils.isFactoryModuleReturnEntity(
           this.$path.node,
@@ -82,6 +67,9 @@ Doc.prototype.toJSON = function(registry) {
         doc.nodeInfo.scope = K.SCOPE_FACTORY_EXPORTS;
       }
     }
+
+    doc.symbol = generateSymbol(this);
+    doc.id = doc.receiver + doc.symbol + this.id;
   }
 
   doc.mixinTargets = doc.tags
@@ -90,15 +78,6 @@ Doc.prototype.toJSON = function(registry) {
   ;
 
   doc.aliases = Object.keys(this.docstring.aliases);
-
-  if (!doc.isModule) {
-    doc.symbol = generateSymbol(this);
-    doc.id = [ doc.receiver, doc.id ].join(doc.symbol);
-    doc.path = [ doc.receiver, doc.name ].join(doc.symbol);
-  }
-  else {
-    doc.path = doc.id;
-  }
 
   // we'll need this for @preserveOrder support
   if (doc.loc) {

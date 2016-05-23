@@ -1,31 +1,33 @@
-var neutralizeWhitespace = require('megadoc-docstring/lib/utils/neutralizeWhitespace');
 var parseComment = require('comment-parser/parser.js');
-var PARSERS = parseComment.PARSERS;
+var neutralizeWhitespace = require('megadoc-docstring/lib/utils/neutralizeWhitespace');
+var RE_TRIM_SURROUNDING_NEWLINES = /^\n+|\n+$/g;
+var RE_HAS_STUFF = /\S/;
+var parserOptions = {
+  trim: false,
+  parsers: [
+    parseComment.PARSERS.parse_tag,
+    parseComment.PARSERS.parse_type,
+    parseComment.PARSERS.parse_name,
+    parseDescription
+  ]
+};
+
+module.exports = function(str) {
+  return parseComment(str, parserOptions);
+};
 
 function parseDescription(str, data) {
   if (data.errors && data.errors.length) { return null; }
 
-  if (str.match(/\S/)) {
+  if (str.match(RE_HAS_STUFF)) {
     return {
       source: str,
       data: {
-        description: neutralizeWhitespace(str).replace(/^\n+|\n+$/g, '')
+        description: neutralizeWhitespace(str).replace(RE_TRIM_SURROUNDING_NEWLINES, '')
       }
     };
   }
   else {
     return null;
   }
-};
-
-module.exports = function(str) {
-  return parseComment(str, {
-    trim: false,
-    parsers: [
-      PARSERS.parse_tag,
-      PARSERS.parse_type,
-      PARSERS.parse_name,
-      parseDescription
-    ]
-  });
 };

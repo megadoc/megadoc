@@ -136,16 +136,7 @@ Utils.findIdentifierInScope = function(identifierName, path) {
   if (currentScope) {
     var targetScope = currentScope.getBinding(identifierName);
 
-    // for (var x in currentScope) {
-    //   if (typeof currentScope[x] === 'function')
-    //     console.log('#' + x);
-    // }
     return targetScope && targetScope.path;
-    // console.log(targetScope)
-    // if (targetScope) {
-    //   console.log(targetScope)
-    //   return targetScope.getBinding(identifierName)[0];
-    // }
   }
 };
 
@@ -163,4 +154,24 @@ Utils.getLocation = function(node) {
     start: { line: '?' },
     end: { line: '?' }
   };
+};
+
+// Whether there's a commenet for such a node:
+//
+//     /**
+//      * @module
+//      */
+//      var { Assertion } = require('chai');
+//
+Utils.isCommentedDestructuredProperty = function(path) {
+  return (
+    t.isIdentifier(path.node) &&
+    path.node.leadingComments &&
+    path.parentPath &&
+    t.isVariableDeclarator(path.parentPath) &&
+    path.parentPath.parentPath &&
+    t.isVariableDeclaration(path.parentPath.parentPath) &&
+    path.parentPath.parentPath.node.leadingComments &&
+    path.parentPath.parentPath.node.leadingComments[0] === path.node.leadingComments[0]
+  );
 };

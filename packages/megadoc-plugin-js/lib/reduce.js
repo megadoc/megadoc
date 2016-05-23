@@ -63,7 +63,7 @@ module.exports = function reduceDocuments(options) {
   function reduceModuleDocument(doc) {
     return b.document({
       id: doc.name,
-      title: doc.path,
+      title: doc.id,
       summary: generateSummary(doc),
       filePath: doc.filePath,
       loc: doc.loc,
@@ -81,7 +81,7 @@ module.exports = function reduceDocuments(options) {
   function reduceEntityDocument(parentDoc, doc) {
     return b.documentEntity({
       id: doc.symbol + doc.name,
-      title: doc.path,
+      title: doc.id,
       summary: generateSummary(doc),
       filePath: doc.filePath,
       loc: doc.loc,

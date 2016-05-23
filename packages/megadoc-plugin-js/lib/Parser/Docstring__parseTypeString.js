@@ -1,8 +1,9 @@
 var catharsis = require('catharsis');
 var K = require('./constants');
+var CATHARSIS_OPTIONS = { jsdoc: true, useCache: false };
 
-module.exports = function(typeString) {
-  return reduceCatharsis(catharsis.parse(typeString, { jsdoc: true, useCache: false }));
+module.exports = function parseTypeString(typeString) {
+  return reduceCatharsis(catharsis.parse(typeString, CATHARSIS_OPTIONS));
 };
 
 /**

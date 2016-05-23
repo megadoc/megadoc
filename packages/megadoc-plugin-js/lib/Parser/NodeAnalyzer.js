@@ -7,7 +7,9 @@ var NodeAnalyzer = exports;
 NodeAnalyzer.analyze = function(node, path, filePath, config) {
   var nodeInfo = analyzeNode(node, path, filePath, config);
 
-  runAllSync(config.nodeAnalyzers || [], [ t, node, path, nodeInfo ]);
+  if (config.nodeAnalyzers && config.nodeAnalyzers.length) {
+    runAllSync(config.nodeAnalyzers, [ t, node, path, nodeInfo ]);
+  }
 
   return nodeInfo;
 };
