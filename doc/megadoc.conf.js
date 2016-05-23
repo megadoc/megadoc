@@ -274,6 +274,21 @@ function addPackageDocumentation(pluginName, options) {
           }
         ].filter(truthy)
       },
+
+      {
+        name: 'Layout::NavBar',
+        options: { framed: true },
+        outlets: [
+          {
+            name: 'Markdown::DocumentTOC',
+            match: { by: 'namespace', on: [ 'md__' + pluginName ] },
+          },
+          withJS && {
+            name: 'CJS::ModuleEntities',
+            match: { by: 'namespace', on: [ 'js__' + pluginName ] },
+          }
+        ]
+      }
     ]
   });
 }

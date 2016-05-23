@@ -6,6 +6,7 @@ Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
 megadoc.outlets.define('CJS::Landing');
 megadoc.outlets.define('CJS::ClassBrowser');
 megadoc.outlets.define('CJS::Module');
+megadoc.outlets.define('CJS::ModuleEntities');
 megadoc.outlets.define('CJS::ModuleHeader');
 megadoc.outlets.define('CJS::ModuleHeader::Type');
 megadoc.outlets.define('CJS::ModuleIndex');
@@ -18,6 +19,7 @@ megadoc.outlets.define('CJS::ExampleTag');
 megadoc.use('megadoc-plugin-js', function CJSPlugin() {
   require('./outlets/InspectorOutlet');
   require('./outlets/ModuleOutlet');
+  require('./outlets/ModuleEntitiesOutlet');
   require('./outlets/ModuleHeaderOutlet');
   require('./outlets/ModuleIndexOutlet');
   require('./outlets/ModuleBodyOutlet');

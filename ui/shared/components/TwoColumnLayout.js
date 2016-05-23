@@ -2,19 +2,16 @@ const React = require('react');
 const { findDOMNode } = require('react-dom');
 const findChildByType = require('utils/findChildByType');
 const AppState = require('core/AppState');
-const Storage = require('core/Storage');
 const resizable = require('utils/resizable');
 const classSet = require('utils/classSet');
 const config = require('config');
 const Icon = require('components/Icon');
 const Button = require('components/Button');
 const {
-  CFG_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
   INITIAL_SIDEBAR_WIDTH
 } = require('constants');
 
-Storage.register(CFG_SIDEBAR_WIDTH, INITIAL_SIDEBAR_WIDTH);
 
 const LeftColumn = React.createClass({
   propTypes: {
@@ -27,6 +24,16 @@ const LeftColumn = React.createClass({
 });
 
 const RightColumn = React.createClass({
+  propTypes: {
+    children: React.PropTypes.any,
+  },
+
+  render() {
+    return this.props.children;
+  }
+});
+
+const NavColumn = React.createClass({
   propTypes: {
     children: React.PropTypes.any,
   },
@@ -78,6 +85,7 @@ const TwoColumnLayout = React.createClass({
   render() {
     const left = findChildByType(this.props.children, LeftColumn);
     const right = findChildByType(this.props.children, RightColumn);
+    const nav = findChildByType(this.props.children, NavColumn);
     const sidebarWidth = this.state.sidebarCollapsed ? 0 : this.state.sidebarWidth;
 
     const leftClassName = classSet({
@@ -91,7 +99,8 @@ const TwoColumnLayout = React.createClass({
       <div
         className={classSet({
           "two-column-layout": true,
-          "two-column-layout--inverted": inverted
+          "two-column-layout--inverted": inverted,
+          "two-column-layout--with-nav": !!nav
         })}
       >
         <div
@@ -125,6 +134,10 @@ const TwoColumnLayout = React.createClass({
           }}
           children={right}
         />
+
+        {nav && (
+          <div className="two-column-layout__nav" children={nav || null} />
+        )}
       </div>
     );
   },
@@ -154,3 +167,4 @@ const TwoColumnLayout = React.createClass({
 module.exports = TwoColumnLayout;
 module.exports.LeftColumn = LeftColumn;
 module.exports.RightColumn = RightColumn;
+module.exports.NavColumn = NavColumn;

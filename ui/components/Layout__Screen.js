@@ -42,6 +42,8 @@ const LayoutScreen = React.createClass({
   },
 
   renderTwoColumnLayout(ctx) {
+    const navBar = this.renderNavBar(ctx);
+
     return (
       <TwoColumnLayout>
         <TwoColumnLayout.LeftColumn>
@@ -53,6 +55,12 @@ const LayoutScreen = React.createClass({
         <TwoColumnLayout.RightColumn>
           {this.renderContent(ctx)}
         </TwoColumnLayout.RightColumn>
+
+        {navBar && (
+          <TwoColumnLayout.NavColumn>
+            {navBar}
+          </TwoColumnLayout.NavColumn>
+        )}
       </TwoColumnLayout>
     );
   },
@@ -62,7 +70,7 @@ const LayoutScreen = React.createClass({
   },
 
   renderContent(ctx) {
-    const ContentTag = this.getContentOutletTag(ctx.regions);
+    const ContentTag = this.getOutletTag(ctx.regions, 'Layout::Content');
 
     return (
       <div>
@@ -72,6 +80,23 @@ const LayoutScreen = React.createClass({
 
         <Footer />
       </div>
+    );
+  },
+
+  renderNavBar(ctx) {
+    const ContentTag = this.getOutletTag(ctx.regions, 'Layout::NavBar');
+    const contents = this.renderElements(ctx, 'Layout::NavBar');
+
+    if (!contents) {
+      return null;
+    }
+
+    return (
+      <ContentTag>
+        <p>Contents</p>
+
+        {this.renderElements(ctx, 'Layout::NavBar')}
+      </ContentTag>
     );
   },
 
@@ -96,7 +121,7 @@ const LayoutScreen = React.createClass({
       }
     });
 
-    // console.log('matching outlets:', children)
+    // console.log('matching outlets for region "%s":', regionName, children)
 
     return children.map((x,i) => {
       const overridenNodes = getNodesForOutlet(x);
@@ -114,10 +139,10 @@ const LayoutScreen = React.createClass({
           </ErrorMessage>
         );
 
-        console.log(
-          `Rendering "${operatingNodes.documentNode.uid}" inside the outlet ` +
-          `"${x.name}" within the region "${region.name}".`
-        );
+        // console.log(
+        //   `Rendering "${operatingNodes.documentNode.uid}" inside the outlet ` +
+        //   `"${x.name}" within the region "${region.name}".`
+        // );
       }
 
       return (
@@ -135,8 +160,8 @@ const LayoutScreen = React.createClass({
     }).filter(x => !!x)
   },
 
-  getContentOutletTag(regions) {
-    const spec = regions.filter(x => x.name === 'Layout::Content')[0];
+  getOutletTag(regions, regionName = 'Layout::Content') {
+    const spec = regions.filter(x => x.name === regionName)[0];
 
     if (spec) {
       if (spec.options && spec.options.framed) {

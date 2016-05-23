@@ -11,6 +11,7 @@ const megadoc = window.megadoc = createMegadoc(config);
 console.log('megadoc: version %s', config.version);
 
 Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
+Storage.register(K.CFG_SIDEBAR_WIDTH, K.INITIAL_SIDEBAR_WIDTH);
 
 megadoc.publicModules = require('../tmp/publicModules');
 
@@ -23,6 +24,7 @@ megadoc.outlets.define('Layout');
 megadoc.outlets.define('Layout::Banner');
 megadoc.outlets.define('Layout::Content');
 megadoc.outlets.define('Layout::Sidebar');
+megadoc.outlets.define('Layout::NavBar');
 megadoc.outlets.define('Layout::SidebarHeader');
 megadoc.outlets.define('Layout::Footer');
 megadoc.outlets.define('Inspector');
