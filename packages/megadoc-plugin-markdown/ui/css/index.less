@@ -1,7 +1,36 @@
+@import (reference) "~helpers";
+@import (reference) "~variables";
+
 .markdown-toc {
+  padding-left: 1em;
+
   &--flat {
     list-style: none;
     padding-left: 0;
     margin: 0;
   }
+
+  &__entry {
+    list-style: none;
+    padding-left: 0;
+    margin-left: 0;
+    line-height: 1.3;
+
+    margin-top: 0.5em;
+
+    &--collapsible {
+      .icon {
+        cursor: pointer;
+        position: absolute;
+        margin-left: -1.25em;
+        line-height: inherit;
+      }
+    }
+  }
 }
+
+.schemable({
+  .markdown-toc__entry--collapsible .icon {
+    color: @base1;
+  }
+});

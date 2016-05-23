@@ -2,7 +2,7 @@
   position: relative;
 
   .collapser {
-    transition: transform 0.2s linear 0s;
+    transition: transform 0.12s linear 0s;
   }
 
   .collapser.icon {
@@ -26,9 +26,26 @@
     .collapser {
       transform: rotate(-90deg);
     }
+  }
+}
 
-    // .collapsible-header:hover .collapser {
-    //   transform: rotate(0deg);
-    // }
+
+.collapsible {
+  .collapser.icon {
+    right: 0;
+  }
+
+  &:not(&--collapsed) {
+    > .collapsible-header .collapser {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-header:hover .collapser {
+      transform: none;
+    }
+  }
+
+  &--collapsed .collapser {
+    transform: none;
   }
 }

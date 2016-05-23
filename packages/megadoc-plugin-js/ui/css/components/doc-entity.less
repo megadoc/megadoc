@@ -2,14 +2,6 @@
   @spacing: @whitespace / 2;
   margin-bottom: 1em;
 
-  &.collapsible {
-    padding-left: 1.5em;
-  }
-
-  .collapsible__icon {
-    margin-left: -1.5em;
-  }
-
   &__tags {
     list-style: none;
     margin: 0;
@@ -54,26 +46,11 @@
       border-bottom: 1px solid @border-color;
     }
 
-    &.collapsible {
-      margin-left: 0em;
-      border-left: 4px solid transparent;
-    }
-
     &.collapsible--collapsed {
       .doc-entity__description {
         color: @base1;
       }
     }
-
-    &.collapsible--expanded {
-      border-left-color: @base2;
-      padding-left: 1em;
-      margin-left: -1em;
-    }
-
-    // &__tags, &__description {
-    //   margin-left: 1em;
-    // }
 
     &__name {
       color: @accent;

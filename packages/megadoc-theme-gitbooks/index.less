@@ -31,14 +31,14 @@ body {
   // }
 }
 
-.single-page-layout {
-  &__sidebar {
-
-  }
-
-  &__home-link {
-    font-size: 1em;
-  }
+.two-column-layout__nav {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 200px;
+  padding: 0 1em 0 2em;
+  font-size: 0.85em;
+  border-left: 5px solid transparent;
 }
 
 .two-column-layout__left {
@@ -63,16 +63,6 @@ body {
       list-style: none;
     }
   }
-
-  // .lua-browser {
-  //   &__module {
-  //     margin-bottom: 1em;
-
-  //     > .lua-browser__link {
-  //       line-height: 2;
-  //     }
-  //   }
-  // }
 }
 
 .schemable({
@@ -90,6 +80,10 @@ body {
     a {
       font-weight: normal;
     }
+  }
+
+  .two-column-layout__nav {
+    border-left-color: @base2;
   }
 
   a.lua-browser__link {

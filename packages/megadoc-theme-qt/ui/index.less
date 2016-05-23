@@ -22,9 +22,20 @@ a, a.active {
   font-weight: normal;
 }
 
-// pre {
-//   font-size: 0.9rem;
-// }
+pre, code[class*="language-"], pre[class*="language-"] {
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+code[class*="language-"] {
+  background-color: transparent;
+}
+
+pre[class*="language-"] {
+  .token.operator, .token.entity, .token.url, .language-css .token.string, .style .token.string {
+    background-color: transparent;
+  }
+}
 
 .schemable({
   background: @background;
@@ -79,36 +90,6 @@ a, a.active {
     text-shadow: 0 1px 2px @base3;
   }
 });
-
-.collapsible {
-  .collapser.icon {
-    right: 0;
-  }
-
-  &:not(&--collapsed) {
-    > .collapsible-header .collapser {
-      transform: rotate(180deg);
-    }
-
-    .collapsible-header:hover .collapser {
-      transform: none;
-    }
-  }
-
-  &--collapsed .collapser {
-    transform: none;
-  }
-}
-
-.doc-entity {
-  &.collapsible {
-    padding-left: 0;
-  }
-
-  .collapsible__icon {
-    margin-left: 0;
-  }
-}
 
 .schemable({
   table {

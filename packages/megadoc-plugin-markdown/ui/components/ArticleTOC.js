@@ -1,12 +1,21 @@
 const React = require("react");
 const Link = require('components/Link');
+const Icon = require('components/Icon');
 const classSet = require('utils/classSet');
+const SectionTree = require('../SectionTree');
+const { assign } = require('lodash');
 
 const ArticleTOC = React.createClass({
   propTypes: {
     documentNode: React.PropTypes.object,
     documentEntityNode: React.PropTypes.object,
     flat: React.PropTypes.bool,
+  },
+
+  getInitialState() {
+    return {
+      collapsed: {}
+    };
   },
 
   getDefaultProps() {
@@ -16,35 +25,73 @@ const ArticleTOC = React.createClass({
   },
 
   render() {
+    const sections = SectionTree(this.props.documentNode);
+    const rootSections = sections.filter(x => x.root);
+
+    if (!rootSections.length) {
+      return null;
+    }
+
+    return (
+      <div>
+        {rootSections.map(this.renderTree.bind(null, sections))}
+      </div>
+    );
+  },
+
+  renderTree(tree, branch) {
+    if (!branch.children.length) {
+      return null;
+    }
+
     return (
       <ul
+        key={branch.node.uid}
         className={classSet("markdown-toc", {
-          "markdown-toc--flat": this.props.flat
+          "markdown-toc--flat": this.props.flat && branch.root
         })}
       >
-        {this.props.documentNode.entities.map(this.renderSection)}
+        {branch.children.map(this.renderNodeInBranch.bind(null, tree))}
       </ul>
     );
   },
 
-  renderSection(documentEntityNode) {
-    const section = documentEntityNode.properties;
-
-    if (section.level === 1) {
-      return null;
-    }
-
-    let className = "class-browser__sections-section";
-
-    if (section.level > 2) {
-      className += " class-browser__sections-section--indented";
-    }
+  renderNodeInBranch(tree, node) {
+    const children = tree.filter(x => x.node.uid === node.uid)[0];
+    const collapsed = this.state.collapsed[node.uid];
 
     return (
-      <li key={documentEntityNode.uid} className={className}>
-        <Link to={documentEntityNode} children={section.text} />
+      <li
+        key={node.uid}
+        className={classSet({
+          'markdown-toc__entry': true,
+          'markdown-toc__entry--collapsible': !!children,
+          'markdown-toc__entry--collapsed': collapsed,
+        })}
+      >
+        {children && (
+          <Icon
+            className={classSet({
+              "icon-arrow-down": collapsed,
+              "icon-arrow-right": !collapsed,
+            })}
+            onClick={this.collapse.bind(null, node.uid)}
+          />
+        )}
+
+        <Link to={node} children={node.properties.text} />
+
+        {children && !collapsed && (this.renderTree(tree, children))}
       </li>
-    );
+    )
+  },
+
+  collapse(key) {
+    this.setState({
+      collapsed: assign({}, this.state.collapsed, {
+        [key]: !this.state.collapsed[key]
+      })
+    });
   }
 });
 

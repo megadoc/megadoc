@@ -5,9 +5,9 @@
     padding-bottom: 0;
   }
 
-  .doc-entity.collapsible {
-    border-left-width: 0;
-  }
+  // .doc-entity.collapsible {
+  //   border-left-width: 0;
+  // }
 
   .doc-entity:not(:last-of-type) {
     border-bottom: none;
@@ -71,11 +71,35 @@
     padding-left: 0;
   }
 
-  .js-document-index, .index-table {
-    tr:first-of-type td                 { border-top-color: transparent;    }
-    tr:last-of-type  td                 { border-bottom-color: transparent; }
-    tr               td:first-of-type   { border-left-color: transparent;   }
-    tr               td:last-of-type    { border-right-color: transparent;  }
+  .js-document-index, .index-table, table {
+    tr:first-of-type {
+      td, th {
+        border-color: @border-color;
+        border-top-color: transparent;
+      }
+    }
+
+    tr:last-of-type {
+      td {
+        border-bottom-color: transparent;
+      }
+    }
+
+    tr:nth-of-type(even) {
+      background: darken(@base3, 2.5%);
+    }
+
+    tr {
+      th:first-of-type, td:first-of-type {
+        border-left-color: transparent;
+      }
+    }
+
+    tr {
+      th:last-of-type, td:last-of-type {
+        border-right-color: transparent;
+      }
+    }
 
     table td {
       padding: 0.25em 0.75em;

@@ -95,7 +95,7 @@ var config = {
 
           {
             text: 'Theme - gitbooks.io',
-            href: '/plugins/megadoc-theme-qt/readme.html',
+            href: '/plugins/megadoc-theme-gitbooks/readme.html',
           },
         ]
       },
