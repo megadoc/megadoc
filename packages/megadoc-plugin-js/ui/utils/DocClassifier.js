@@ -66,3 +66,11 @@ exports.isStaticProperty = function(doc) {
 exports.isMemberProperty = function(doc) {
   return exports.isProperty(doc) && !exports.isStaticProperty(doc);
 };
+
+exports.isPrivate = function(doc) {
+  return doc && doc.tags.some(x => x.type === 'private');
+};
+
+exports.isProtected = function(doc) {
+  return doc && doc.tags.some(x => x.type === 'protected');
+};

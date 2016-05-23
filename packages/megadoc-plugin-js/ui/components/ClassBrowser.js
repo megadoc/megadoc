@@ -4,11 +4,12 @@ const classSet = require('utils/classSet');
 const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
 const HotItemIndicator = require('components/HotItemIndicator');
-const { findWhere, sortBy } = require('lodash');
+const { sortBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
 const K = require('../constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
 const orderAwareSort = require('../utils/orderAwareSort');
+const DocClassifier = require('../utils/DocClassifier');
 const { object, bool, } = React.PropTypes;
 
 var ClassBrowser = React.createClass({
@@ -109,18 +110,18 @@ var ClassBrowser = React.createClass({
 
   renderModule(docNode) {
     const doc = docNode.properties;
+    const isPrivate = DocClassifier.isPrivate(doc);
+
+    if (isPrivate && !Storage.get(PRIVATE_VISIBILITY_KEY)) {
+      return null;
+    }
+
     const { id } = doc;
     const isActive = this.props.documentNode === docNode;
     const className = classSet({
       'class-browser__entry': true,
       'class-browser__entry--active': isActive
     });
-
-    const isPrivate = doc.isPrivate;
-
-    if (isPrivate && !Storage.get(PRIVATE_VISIBILITY_KEY)) {
-      return null;
-    }
 
     return (
       <div key={docNode.uid} className={className}>
@@ -144,19 +145,11 @@ var ClassBrowser = React.createClass({
       return null;
     }
 
-    const moduleDoc = documentNode.properties;
-    const methodDocs = documentNode.entities.filter(function(x) {
-      return x.properties.type === K.TYPE_FUNCTION;
-    });
-
-    const propertyDocs = documentNode.entities.filter(function(x) {
-      return !!findWhere(x.properties.tags, { type: 'property' });
-    });
+    const entityDocuments = orderAwareSort.asNodes(documentNode, documentNode.entities, 'id');
 
     return (
       <ul className="class-browser__methods">
-        {orderAwareSort(moduleDoc, methodDocs, 'id').map(this.renderEntity)}
-        {orderAwareSort(moduleDoc, propertyDocs, 'id').map(this.renderEntity)}
+        {entityDocuments.map(this.renderEntity)}
       </ul>
     );
   },

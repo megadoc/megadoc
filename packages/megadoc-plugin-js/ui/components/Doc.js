@@ -6,6 +6,7 @@ const FunctionSignature = require('./FunctionSignature');
 const TypeNames = require('./Tags/TypeNames');
 const DeprecatedTag = require('./Tags/DeprecatedTag');
 const K = require('../constants');
+const DocClassifier = require('../utils/DocClassifier');
 const Collapsible = require('mixins/Collapsible');
 const { object, bool, string } = React.PropTypes;
 const HeadingAnchor = require('components/HeadingAnchor');
@@ -86,11 +87,11 @@ const Doc = React.createClass({
                 <span className="doc-entity__modifier">CONSTRUCTOR</span>
               )}
 
-              {doc.isProtected && (
+              {DocClassifier.isProtected(doc) && (
                 <span className="doc-entity__modifier doc-entity__protected">PROTECTED</span>
               )}
 
-              {doc.isPrivate && (
+              {DocClassifier.isPrivate(doc) && (
                 <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
               )}
 

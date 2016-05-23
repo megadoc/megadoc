@@ -45,7 +45,7 @@ function Docstring(comment, options, filePath) {
   this.aliases = this.tags.filter(function(tag) {
     return tag.type === 'alias';
   }).reduce(function(map, tag) {
-    map[tag.alias] = true;
+    map[tag.typeInfo.name] = true;
     return map;
   }, {});
 
@@ -112,7 +112,7 @@ Dpt.hasMemberOf = function() {
 };
 
 Dpt.getExplicitReceiver = function() {
-  return this.getTag('memberOf').explicitReceiver;
+  return this.getTag('memberOf').typeInfo.name;
 };
 
 Dpt.hasTag = function(type) {

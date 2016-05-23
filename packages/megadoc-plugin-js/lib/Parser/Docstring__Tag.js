@@ -35,23 +35,6 @@ function Tag(commentNode, options, filePath) {
 
   /**
    * @property {String}
-   *           Module namepath pointed to by @alias.
-   */
-  this.alias = null;
-
-  /**
-   * @property {String} visibility
-   */
-  this.visibility = null;
-
-  /**
-   * @property {String}
-   *           Module namepath pointed to by @memberOf.
-   */
-  this.explicitReceiver = null;
-
-  /**
-   * @property {String}
    *           Name of the module that is lent to by the enclosing doc.
    *
    *           Available only for @lends tags.
@@ -120,15 +103,11 @@ function Tag(commentNode, options, filePath) {
       break;
 
     case 'protected':
-      this.visibility = K.VISIBILITY_PROTECTED;
-      break;
-
     case 'private':
-      this.visibility = K.VISIBILITY_PRIVATE;
       break;
 
     case 'memberOf':
-      this.explicitReceiver = commentNode.name;
+      this.typeInfo.name = commentNode.name;
 
       break;
 
@@ -139,23 +118,9 @@ function Tag(commentNode, options, filePath) {
       break;
 
     case 'namespace':
-      if (commentNode.name.trim().length > 0) {
-        this.typeInfo.name = commentNode.name.trim();
-      }
-
-      break;
-
     case 'name':
-      this.typeInfo.name = commentNode.name;
-      break;
-
     case 'alias':
-      this.alias = commentNode.name;
-      // this.alias = this.string.split('\n')[0].trim();
-
-      // // same deal with @memberOf
-      // this.string = this.string.replace(this.alias, '');
-
+      this.typeInfo.name = commentNode.name;
       break;
 
     case 'lends':
