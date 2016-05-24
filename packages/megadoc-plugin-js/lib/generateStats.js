@@ -29,7 +29,8 @@ module.exports = function(database) {
 
     stats.modules.count += doc ? 1 : 0;
     stats.count += doc ? 1 : 0;
-    inc(stats.modules.types, doc && doc.ctx ? doc.ctx.type : K.TYPE_UNKNOWN);
+
+    inc(stats.modules.types, doc && doc.type || K.TYPE_UNKNOWN);
 
     (documentNode.entities || []).forEach(function(entityNode) {
       var entityDoc = entityNode.properties;
@@ -37,7 +38,9 @@ module.exports = function(database) {
       stats.entities.count += 1;
       stats.count += 1;
 
-      inc(stats.entities.scopes, entityDoc.ctx && entityDoc.ctx.scope || 'unscoped');
+      inc(stats.entities.scopes,
+        entityDoc.nodeInfo && entityDoc.nodeInfo.scope || K.SCOPE_UNSCOPED
+      );
     });
 
     documentNode.documents.forEach(statDoc);

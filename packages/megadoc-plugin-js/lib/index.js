@@ -6,6 +6,7 @@ var assign = require('lodash').assign;
 var assert = require('assert');
 var defaults = require('./config');
 var reduceDocuments = require('./reduce');
+var EventEmitter = require('events');
 
 /**
  * @param {Config} userConfig
@@ -21,11 +22,13 @@ function Plugin(userConfig) {
     parse: config.parse,
     parserOptions: config.parserOptions,
     namedReturnTags: config.namedReturnTags,
-    nodeAnalyzers: [],
-    docstringProcessors: [],
-    tagProcessors: [],
-    postProcessors: [],
+    nodeAnalyzers: config.nodeAnalyzers || [],
+    docstringProcessors: config.docstringProcessors || [],
+    tagProcessors: config.tagProcessors || [],
+    postProcessors: config.postProcessors || [],
   };
+
+  var emitter = new EventEmitter();
 
   assert(typeof config.id === 'string',
     "You must specify an @id to the megadoc-plugin-js plugin."
@@ -92,20 +95,27 @@ function Plugin(userConfig) {
     },
 
     addNodeAnalyzer: function(analyzer) {
-      parserConfig.nodeAnalyzers.push(analyzer);
+      emitter.on('analyze-node', analyzer);
+      // parserConfig.nodeAnalyzers.push(analyzer);
     },
 
     addDocstringProcessor: function(processor) {
-      parserConfig.docstringProcessors.push(processor);
+      emitter.on('process-docstring', processor);
+      // parserConfig.docstringProcessors.push(processor);
     },
 
     addTagProcessor: function(processor) {
-      parserConfig.tagProcessors.push(processor);
+      emitter.on('process-tag', processor);
+      // parserConfig.tagProcessors.push(processor);
     },
 
-    addPostProcessor: function(postProcessor) {
-      parserConfig.postProcessors.push(postProcessor);
+    addPostProcessor: function(fn) {
+      emitter.on('postprocess', fn);
+      // parserConfig.postProcessors.push(postProcessor);
     },
+
+    on: emitter.addListener.bind(emitter),
+    off: emitter.removeListener.bind(emitter),
 
     run: function(compiler) {
       var database;
@@ -117,6 +127,7 @@ function Plugin(userConfig) {
           parserConfig: parserConfig,
           utils: compiler.utils,
           assetRoot: compiler.config.assetRoot,
+          emitter: emitter,
         }, function(err, _documents) {
           if (err) {
             return done(err);

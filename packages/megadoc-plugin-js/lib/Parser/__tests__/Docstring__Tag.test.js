@@ -1,6 +1,5 @@
 var Tag = require('../Docstring__Tag');
-// var dox = require('dox');
-// var commentParser = require('comment-parser/parser.js');
+var EventEmitter = require('events');
 var commentParser = require('../parseComment');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
@@ -9,7 +8,11 @@ var parse = function(strGenerator, options, filePath) {
   var comment = typeof strGenerator === 'function' ? multiline(strGenerator) : strGenerator;
   var node = commentParser(comment);
 
-  return new Tag(node[0].tags[0], options || {}, filePath);
+  return new Tag(node[0].tags[0], {
+    config: options || {},
+    filePath: filePath,
+    emitter: new EventEmitter()
+  });
 };
 
 describe('CJS::Parser::Docstring::Tag', function() {

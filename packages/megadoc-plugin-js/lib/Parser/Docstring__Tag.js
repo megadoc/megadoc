@@ -12,9 +12,11 @@ var TypeAliases = {
  * @param {Object} options.customTags
  * @param {Boolean} [options.namedReturnTags=true]
  *
- * @param {String} filePath
+ * @param {String} nodeLocation
  */
-function Tag(commentNode, options, filePath) {
+function Tag(commentNode, params) {
+  var options = params.config || {};
+  var nodeLocation = params.nodeLocation;
   var customTags = options.customTags;
 
   if (commentNode.errors && commentNode.errors.length) {
@@ -71,7 +73,7 @@ function Tag(commentNode, options, filePath) {
     case 'throws':
     case 'example':
     case 'interface':
-      this.typeInfo = TypeInfo(commentNode);
+      this.typeInfo = TypeInfo(commentNode, nodeLocation);
 
       // fixup for return tags when we're not expecting them to be named
       if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
@@ -82,12 +84,12 @@ function Tag(commentNode, options, filePath) {
       break;
 
     case 'type':
-      this.typeInfo = TypeInfo(commentNode);
+      this.typeInfo = TypeInfo(commentNode, nodeLocation);
 
       break;
 
     case 'method':
-      this.typeInfo = TypeInfo(commentNode);
+      this.typeInfo = TypeInfo(commentNode, nodeLocation);
       this.typeInfo.type = { name: K.TYPE_FUNCTION };
 
       break;
@@ -124,7 +126,7 @@ function Tag(commentNode, options, filePath) {
   }
 
   if (customTags && customTags.hasOwnProperty(this.type)) {
-    this.useCustomTagDefinition(commentNode, customTags[this.type], filePath);
+    this.useCustomTagDefinition(commentNode, customTags[this.type], nodeLocation);
   }
 
   return this;
@@ -140,15 +142,15 @@ Tag.prototype.toJSON = function() {
   }.bind(this), {});
 };
 
-Tag.prototype.useCustomTagDefinition = function(commentNode, customTag, filePath) {
+Tag.prototype.useCustomTagDefinition = function(commentNode, customTag, nodeLocation) {
   var customAttributes = customTag.attributes || [];
 
   if (customTag.withTypeInfo) {
-    this.typeInfo = TypeInfo(commentNode);
+    this.typeInfo = TypeInfo(commentNode, nodeLocation);
   }
 
   if (customTag.process instanceof Function) {
-    customTag.process(createCustomTagAPI(this, customAttributes), filePath);
+    customTag.process(createCustomTagAPI(this, customAttributes), nodeLocation);
   }
 };
 

@@ -73,6 +73,12 @@ function analyzeNode(node, path, filePath, config) {
   if (info.id) {
     info.addContextInfo(generateContext(info.$contextNode));
   }
+  else {
+    console.info("Unrecognized node '%s'. (Source: %s).",
+      node.type,
+      ASTUtils.dumpLocation(node, filePath)
+    );
+  }
 
   return info;
 }
@@ -239,14 +245,6 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
       info.id = lhs.property.name;
       info.receiver = lhs.object.name;
     }
-  }
-
-  if (!info.id) {
-    console.info("Unrecognized ExpressionStatement '%s' => '%s' (Source: %s).",
-      lhs ? lhs.type : expr.type,
-      rhs ? rhs.type : expr.type,
-      ASTUtils.dumpLocation(node, filePath)
-    );
   }
 }
 

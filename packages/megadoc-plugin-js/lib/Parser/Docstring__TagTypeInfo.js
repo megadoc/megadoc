@@ -1,6 +1,6 @@
 var parseTypes = require('./Docstring__parseTypeString');
 
-function TypeInfo(commentNode) {
+function TypeInfo(commentNode, nodeLocation) {
   var description = commentNode.description;
   var name = (commentNode.name || '').trim();
   var typeInfo = {};
@@ -32,7 +32,9 @@ function TypeInfo(commentNode) {
   //
   if (commentNode.tag === 'example' && !hasType) {
     if (commentNode.name.trim().length > 0) {
-      console.warn("Invalid @example tag: this tag does not support a name.");
+      console.warn("Invalid @example tag: this tag does not support a name. (Source: %s)",
+        nodeLocation
+      );
     }
     // description = commentNode.source.split('\n').slice(1).join('\n')
       // .replace(/^\n+/, '\n')

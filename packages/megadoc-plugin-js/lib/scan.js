@@ -11,7 +11,7 @@ module.exports = function scan(params, done) {
     console.log('megadoc-plugin-js[%s]: Parsing docs from %d files.', config.routeName, files.length);
   }
 
-  var parser = new Parser();
+  var parser = new Parser({ emitter: params.emitter });
 
   files.forEach(function(filePath) {
     parser.parseFile(filePath, parserConfig, params.assetRoot);
@@ -19,11 +19,7 @@ module.exports = function scan(params, done) {
 
   database = parser.toJSON();
 
-  if (parserConfig.postProcessors) {
-    parserConfig.postProcessors.forEach(function(postProcessor) {
-      postProcessor(database);
-    });
-  }
+  params.emitter.emit('postprocess', database);
 
   warnAboutOrphans(database);
   warnAboutUnknownContexts(database);
@@ -52,10 +48,10 @@ function warnAboutOrphans(database) {
 
 function warnAboutUnknownContexts(database) {
   database.forEach(function(doc) {
-    if (doc.type === K.TYPE_UNKNOWN) {
+    if (!doc.type || doc.type === K.TYPE_UNKNOWN) {
       console.info(
-        'Entity "%s" has no context. This probably means megadoc does not know ' +
-        'how to handle it yet. (Source: %s:%s)',
+        'Document "%s" is unidentified. This probably means megadoc does not ' +
+        'know how to handle it yet. (Source: %s:%s)',
         doc.id,
         doc.filePath, doc.line
       );

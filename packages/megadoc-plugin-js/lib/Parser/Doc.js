@@ -41,7 +41,7 @@ Doc.prototype.toJSON = function(registry) {
   doc.isModule = this.isModule();
 
   if (!doc.isModule) {
-    var resolvedContext = DocUtils.getReceiverAndScopeFor(this, registry);
+    var resolvedContext = DocUtils.resolveReceiverAndScopeFor(this, registry);
 
     doc.receiver = resolvedContext.receiver;
 

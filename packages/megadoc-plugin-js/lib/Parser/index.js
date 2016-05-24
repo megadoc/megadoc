@@ -4,17 +4,16 @@ var ASTUtils = require('./ASTUtils');
 var Doc = require('./Doc');
 var Docstring = require('./Docstring');
 var Registry = require('./Registry');
-var NodeAnalyzer = require('./NodeAnalyzer');
+var analyzeNode = require('./NodeAnalyzer__analyzeNode');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var babel = require('babel-core');
 var t = require('babel-types');
 
-var runAllSync = require('../utils/runAllSync');
-
-function Parser() {
+function Parser(params) {
   this.registry = new Registry();
+  this.emitter = params.emitter;
 }
 
 var Ppt = Parser.prototype;
@@ -49,7 +48,7 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
         this.ast = babel.transform(str, assign({
           filenameRelative: filePath,
           filename: absoluteFilePath,
-          code: false,
+          code: true,
           ast: true,
           babelrc: true,
           comments: true,
@@ -64,7 +63,7 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
       }
       else {
         console.warn("File could not be parsed, most likely due to a SyntaxError. (Source: '%s')", filePath);
-        console.warn(e);
+        console.warn(e && e.stack || e);
 
         return;
       }
@@ -84,9 +83,6 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'alias',
     'namedReturnTags',
   ]);
-
-  config.tagProcessors = config.tagProcessors || [];
-  config.namespaceDirMap = config.namespaceDirMap || {};
 
   debuglog('\nParsing: %s', filePath);
   debuglog(Array(80).join('-'));
@@ -186,7 +182,14 @@ Ppt.toJSON = function() {
 
 Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
-  var docstring = new Docstring('/*' + comment + '*/', config, nodeLocation);
+  var docstring = new Docstring('/*' + comment + '*/', {
+    config: config,
+    filePath: filePath,
+    nodeLocation: nodeLocation,
+    emitter: this.emitter
+  });
+
+  this.emitter.emit('process-docstring', docstring);
 
   if (docstring.isInternal()) {
     return false;
@@ -211,18 +214,11 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
     }
   }
 
-  if (config.docstringProcessors && config.docstringProcessors.length) {
-    runAllSync(config.docstringProcessors, [ docstring ]);
-  }
+  var nodeInfo = analyzeNode(contextNode, path, filePath, config);
 
-  var nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
+  this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
+
   var doc = new Doc(docstring, nodeInfo, filePath);
-
-  if (config.tagProcessors && config.tagProcessors.length) {
-    docstring.tags.forEach(function(tag) {
-      runAllSync(config.tagProcessors, [ tag ]);
-    });
-  }
 
   if (doc.id) {
     // Pre-defined aliases:
@@ -236,7 +232,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
       var modulePath = ASTUtils.findNearestPathWithComments(path);
 
       if (process.env.VERBOSE) {
-        console.log('\tFound a module "%s" (source: %s)', doc.id, nodeLocation);
+        console.info('[info] Found a module "%s" (source: %s)', doc.id, nodeLocation);
       }
 
       this.registry.addModuleDoc(doc, modulePath, filePath);
@@ -245,7 +241,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
       this.registry.addEntityDoc(doc, path);
 
       if (process.env.VERBOSE) {
-        console.log('\tFound an entity "%s" belonging to "%s" (source: %s)',
+        console.info('[info] Found an entity "%s" belonging to "%s" (source: %s)',
           doc.id,
           doc.nodeInfo.receiver || '<<unknown>>',
           nodeLocation

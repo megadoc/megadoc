@@ -1,4 +1,3 @@
-// var dox = require('dox');
 var parseComment = require('./parseComment');
 var assert = require('assert');
 var _ = require('lodash');
@@ -13,7 +12,7 @@ var collectDescription = require('./Docstring__collectDescription');
  * @param {String} comment
  *        The JSDoc-compatible comment string to build from.
  */
-function Docstring(comment, options, filePath) {
+function Docstring(comment, params) {
   var commentNode, idInfo;
 
   try {
@@ -32,8 +31,12 @@ function Docstring(comment, options, filePath) {
     'Source:\n' + comment
   );
 
-  this.tags = commentNode[0].tags.map(function(doxTag) {
-    return new Tag(doxTag, options || {}, filePath);
+  this.tags = commentNode[0].tags.map(function(tagNode) {
+    params.emitter.emit('preprocess-tag', tagNode);
+
+    return tap(new Tag(tagNode, params), function(tag) {
+      params.emitter.emit('process-tag', tag);
+    });
   });
 
   idInfo = extractIdInfo(this.tags);
@@ -52,7 +55,7 @@ function Docstring(comment, options, filePath) {
   this.$location = (
     (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
     (this.name || '') + ' in ' +
-    filePath
+    params.nodeLocation
   );
 
   return this;
@@ -163,4 +166,10 @@ function findByType(type) {
   return function(x) {
     return x.type === type;
   }
+}
+
+function tap(x, fn) {
+  fn(x);
+
+  return x;
 }

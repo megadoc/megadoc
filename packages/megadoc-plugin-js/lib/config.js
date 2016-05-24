@@ -221,5 +221,8 @@ module.exports = {
    * ]
    * ```
    */
-  builtInTypes: []
+  builtInTypes: [],
+
+  docstringProcessors: [],
+  tagProcessors: [],
 };

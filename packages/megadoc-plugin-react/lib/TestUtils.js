@@ -4,7 +4,8 @@ var correctifyFunctionScopes = require('./postProcessors/correctifyFunctionScope
 
 exports.parse = function(strGenerator) {
   return TestUtils.parseInline(strGenerator, {
-    nodeAnalyzers: [ nodeAnalyzer ],
-    postProcessors: [ correctifyFunctionScopes ],
+  }, null, function(parser) {
+    parser.emitter.on('process-node', nodeAnalyzer);
+    parser.emitter.on('postprocess', correctifyFunctionScopes)
   });
 };

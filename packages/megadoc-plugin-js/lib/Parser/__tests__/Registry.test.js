@@ -1,9 +1,9 @@
-var Parser = require('../index');
+var TestUtils = require('../TestUtils');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
 
 function parse(strGenerator) {
-  var parser = new Parser();
+  var parser = TestUtils.createParser();
 
   parser.parseString(multiline(strGenerator), { alias: {} }, '');
 

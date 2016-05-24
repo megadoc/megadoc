@@ -1,11 +1,14 @@
 var Docstring = require('../Docstring');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
+var EventEmitter = require('events');
 
-var parse = function(strGenerator, customTags, filePath) {
+function parse(strGenerator) {
   var comment = multiline(strGenerator);
 
-  return new Docstring(comment, customTags, filePath);
+  return new Docstring(comment, {
+    emitter: new EventEmitter()
+  });
 };
 
 describe('CJS::Parser::Docstring', function() {

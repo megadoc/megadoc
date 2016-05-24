@@ -47,7 +47,7 @@ exports.isModule = function(doc) {
   );
 };
 
-exports.getReceiverAndScopeFor = function(doc, registry) {
+exports.resolveReceiverAndScopeFor = function(doc, registry) {
   var receiver = doc.nodeInfo.receiver;
   var correctedScope, exportedModule, enclosingModule, receivingModule;
 
@@ -118,13 +118,6 @@ exports.getReceiverAndScopeFor = function(doc, registry) {
     if (receivingModule) {
       receiver = receivingModule.id;
     }
-  }
-
-  if (!receiver) {
-    console.warn(
-      "No receiver was found for the document '%s', it will be discarded.",
-      exports.getLocationOf(doc)
-    );
   }
 
   return { receiver: receiver, scope: correctedScope };

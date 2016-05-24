@@ -119,6 +119,7 @@ Utils.dumpLocation = function(node, filePath) {
   return [filePath, Utils.getLocation(node).start.line].join(':');
 };
 
+
 /**
  * Locates an Identifier node with a given name in the enclosing scopes.
  *

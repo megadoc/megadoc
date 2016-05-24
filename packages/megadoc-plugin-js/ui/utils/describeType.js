@@ -2,7 +2,6 @@ const K = require('../constants');
 
 module.exports = function renderType(type) {
   if (!type) {
-    console.warn("Invalid type!", (new Error()).trace)
     return '';
   }
 
