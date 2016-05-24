@@ -56,6 +56,9 @@ Doc.prototype.toJSON = function(registry) {
       else if (nodeInfo.isPrototypeEntity()) {
         doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
       }
+      else if (this.docstring.hasTag('method')) {
+        doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
+      }
       // blegh
       else if (
         ASTUtils.isFactoryModuleReturnEntity(
