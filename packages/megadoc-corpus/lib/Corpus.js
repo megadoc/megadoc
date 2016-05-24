@@ -183,6 +183,12 @@ function Corpus(config) {
     node.uid = UID(node);
     node.indices = buildIndices(node);
 
+    Types.getTypeChain(node.type).forEach(function(typeName) {
+      if (typeName in visitors) {
+        visitors[typeName].forEach(function(fn) { fn(node); });
+      }
+    });
+
     if (node.uid in nodes) {
       lenientAssert(false,
         'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
@@ -192,12 +198,6 @@ function Corpus(config) {
     }
 
     nodes[node.uid] = node;
-
-    Types.getTypeChain(node.type).forEach(function(typeName) {
-      if (typeName in visitors) {
-        visitors[typeName].forEach(function(fn) { fn(node); });
-      }
-    });
 
     if (node.documents) { // Namespace | Document
       node.documents.forEach(add);
