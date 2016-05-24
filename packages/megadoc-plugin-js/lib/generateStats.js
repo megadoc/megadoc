@@ -12,6 +12,10 @@ module.exports = function(database) {
   var stats = {};
 
   stats.count = 0;
+  stats.namespaces = {
+    count: 0
+  };
+
   stats.modules = {
     count: 0,
     types: {}
@@ -22,28 +26,47 @@ module.exports = function(database) {
     scopes: {}
   };
 
+  stats.tags = {
+    count: 0
+  };
+
   database.documents.forEach(statDoc);
 
   function statDoc(documentNode) {
     var doc = documentNode.properties;
 
-    stats.modules.count += doc ? 1 : 0;
-    stats.count += doc ? 1 : 0;
-
-    inc(stats.modules.types, doc && doc.type || K.TYPE_UNKNOWN);
-
-    (documentNode.entities || []).forEach(function(entityNode) {
-      var entityDoc = entityNode.properties;
-
-      stats.entities.count += 1;
+    if (!doc) {
+      stats.namespaces.count += 1;
+    }
+    else {
+      stats.modules.count += 1;
       stats.count += 1;
 
-      inc(stats.entities.scopes,
-        entityDoc.nodeInfo && entityDoc.nodeInfo.scope || K.SCOPE_UNSCOPED
-      );
-    });
+      inc(stats.modules.types, doc && doc.type || K.TYPE_UNKNOWN);
+      statTags(doc.tags);
+    }
 
+    documentNode.entities.forEach(statEntity);
     documentNode.documents.forEach(statDoc);
+  }
+
+  function statEntity(node) {
+    var doc = node.properties;
+
+    stats.entities.count += 1;
+    stats.count += 1;
+
+    inc(stats.entities.scopes, doc.nodeInfo && doc.nodeInfo.scope || K.SCOPE_UNSCOPED);
+
+    statTags(doc.tags);
+  }
+
+  function statTags(tags) {
+    stats.tags.count += tags.length;
+
+    tags.forEach(function(tag) {
+      inc(stats.tags, tag.type);
+    });
   }
 
   return stats;

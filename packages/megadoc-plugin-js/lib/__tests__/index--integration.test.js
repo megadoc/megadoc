@@ -79,6 +79,8 @@ describe("[Integration] megadoc-plugin-js", function() {
     suite.run(function(err, stats) {
       if (err) { return done(err); }
 
+      console.log(stats['js:test'])
+
       assert.equal(stats['js:test'].count, 3);
       assert.equal(stats['js:test'].modules.count, 2);
       assert.equal(stats['js:test'].entities.count, 1);

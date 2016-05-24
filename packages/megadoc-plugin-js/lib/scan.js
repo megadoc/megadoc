@@ -1,5 +1,6 @@
 var Parser = require('./Parser');
 var K = require('./Parser/constants');
+var DocUtils = require('./Parser/DocUtils');
 
 module.exports = function scan(params, done) {
   var database;
@@ -23,6 +24,7 @@ module.exports = function scan(params, done) {
 
   warnAboutOrphans(database);
   warnAboutUnknownContexts(database);
+  warnAboutUnknownTags(database, config);
 
   done(null, database);
 };
@@ -57,4 +59,36 @@ function warnAboutUnknownContexts(database) {
       );
     }
   });
+}
+
+function warnAboutUnknownTags(database, config) {
+  var KNOWN_TAGS = combine([
+    config.customTags || {},
+    K.KNOWN_TAGS.reduce(function(map, x) { map[x] = true; return map; }, {})
+  ]);
+
+  database.forEach(function(doc) {
+    if (doc && doc.tags) {
+      doc.tags.forEach(function(tag) {
+        if (!(tag.type in KNOWN_TAGS)) {
+          console.warn("Unknown tag '%s'. (Source: %s)",
+            tag.type,
+            (doc.filePath + (doc.line ? (':' + doc.line) : ''))
+          );
+        }
+      });
+    }
+  });
+}
+
+function combine(maps) {
+  return maps.reduce(function(map, x) {
+    Object.keys(x).forEach(function(y) {
+      if (!map[y]) {
+        map[y] = true;
+      }
+    });
+
+    return map;
+  }, {});
 }

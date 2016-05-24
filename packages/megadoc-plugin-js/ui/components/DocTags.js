@@ -10,6 +10,7 @@ var { where } = require('lodash');
 
 const HANDLED_TAGS = [
   'constructor',
+  'class',
   'example',
   'param',
   'return',

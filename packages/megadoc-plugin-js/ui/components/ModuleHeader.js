@@ -77,9 +77,12 @@ const ModuleHeader = React.createClass({
               <span>{DocClassifier.getDisplayType(documentNode)}</span>
             </Outlet>
 
-            {hasMixinTargets(documentNode) && documentNode.properties.mixinTargets.map(x => (
-              <span key={x.name}>, <span dangerouslySetInnerHTML={{__html: x.html}} /></span>
-            ))}
+            {hasMixinTargets(documentNode) && (
+              documentNode.properties.mixinTargets
+                .map(x => (
+                  <span key={x.name}>, <span dangerouslySetInnerHTML={{__html: x.html || x.name}} /></span>
+                ))
+            )}
           </span>
         </Heading>
 

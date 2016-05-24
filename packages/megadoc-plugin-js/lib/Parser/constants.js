@@ -50,3 +50,28 @@ exports.NO_DESCRIPTION_TAGS = {
   'private': true,
   'type': true,
 };
+
+exports.KNOWN_TAGS = [
+  'async',
+  'constructor',
+  'property',
+  'param',
+  'return',
+  'throws',
+  'example',
+  'interface',
+  'type',
+  'method',
+  'protected',
+  'private',
+  'memberOf',
+  'module',
+  'class',
+  'namespace',
+  'name',
+  'alias',
+  'lends',
+  'mixes',
+  'see',
+  'static',
+];
