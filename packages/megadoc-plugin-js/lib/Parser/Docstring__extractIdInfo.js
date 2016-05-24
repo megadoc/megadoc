@@ -4,7 +4,7 @@ var findWhere = require('lodash').findWhere;
 function extractIdInfo(tags) {
   var name, id;
   var namespace = getNameFromTag(tags, 'namespace');
-  var fqid = id = getNameFromTag(tags, 'module');
+  var fqid = id = getNameFromTag(tags, 'module') || getNameFromTag(tags, 'class');
 
   // check for inline namespaces found in a module id string
   if (fqid && fqid.indexOf(K.NAMESPACE_SEP) > -1) {

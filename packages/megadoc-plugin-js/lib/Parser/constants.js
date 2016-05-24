@@ -26,6 +26,7 @@ exports.TYPE_OVERRIDING_TAGS = {
   'method': true,
   'property': true,
   'type': true,
+  'class': true,
 };
 
 exports.TAGS_WITH_STRINGS = {

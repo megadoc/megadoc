@@ -92,7 +92,7 @@ Docstring.prototype.toJSON = function() {
 };
 
 Dpt.isModule = function() {
-  return this.hasTag('module');
+  return this.hasTag('module') || this.hasTag('class');
 };
 
 Dpt.isInternal = function() {

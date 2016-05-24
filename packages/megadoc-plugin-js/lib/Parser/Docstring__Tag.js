@@ -106,6 +106,12 @@ function Tag(commentNode, options, filePath) {
         this.typeInfo.name = commentNode.name.trim();
       }
       break;
+    case 'class':
+      this.typeInfo.type = K.TYPE_CLASS;
+      if (commentNode.name.trim().length > 0) {
+        this.typeInfo.name = commentNode.name.trim();
+      }
+      break;
 
     case 'namespace':
     case 'name':

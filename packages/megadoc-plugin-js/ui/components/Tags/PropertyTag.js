@@ -4,6 +4,7 @@ const HeadingAnchor = require('components/HeadingAnchor');
 const TypeNames = require('./TypeNames');
 const DefaultValue = require('./DefaultValue');
 const Doc = require('../Doc');
+const K = require('../../constants');
 const describeNode = require('../../utils/describeNode');
 
 const { shape, string, object } = React.PropTypes;
@@ -53,7 +54,7 @@ const PropertyTag = React.createClass({
           <DefaultValue defaultValue={defaultValue} />
         )}
 
-        {this.props.doc && typeInfo.type.name.toLowerCase() === 'function' && (
+        {this.props.doc && this.props.doc.type && this.props.doc.type === K.TYPE_FUNCTION && (
           <Doc
             withTitle={false}
             collapsible={false}

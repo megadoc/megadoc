@@ -218,13 +218,6 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   var nodeInfo = NodeAnalyzer.analyze(contextNode, path, filePath, config);
   var doc = new Doc(docstring, nodeInfo, filePath);
 
-  // Pre-defined aliases:
-  if (config.alias.hasOwnProperty(doc.id)) {
-    config.alias[doc.id].forEach(function(alias) {
-      doc.docstring.addAlias(alias);
-    });
-  }
-
   if (config.tagProcessors && config.tagProcessors.length) {
     docstring.tags.forEach(function(tag) {
       runAllSync(config.tagProcessors, [ tag ]);
@@ -232,6 +225,13 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   }
 
   if (doc.id) {
+    // Pre-defined aliases:
+    if (config.alias.hasOwnProperty(doc.id)) {
+      config.alias[doc.id].forEach(function(alias) {
+        doc.docstring.addAlias(alias);
+      });
+    }
+
     if (doc.isModule()) {
       var modulePath = ASTUtils.findNearestPathWithComments(path);
 

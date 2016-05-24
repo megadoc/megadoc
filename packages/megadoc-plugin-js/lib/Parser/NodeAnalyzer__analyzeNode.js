@@ -195,6 +195,11 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
       info.receiver = lhs.object.object.name;
       info.markAsPrototypeProperty();
     }
+    else if (t.isMemberExpression(expr.left) && t.isThisExpression(expr.left.object)) {
+      info.id = expr.left.property.name;
+      info.receiver = lhs.object.name;
+      info.markAsInstanceProperty();
+    }
     else {
       console.warn('Expected FunctionExpression to contain an "id", but it does not.');
       console.info(expr.left);

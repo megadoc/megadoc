@@ -30,7 +30,7 @@ exports.getTypeOf = function(doc) {
 exports.getTypeNameOf = function(doc) {
   var type = exports.getTypeOf(doc);
 
-  return type.name || type;
+  return type && type.name || type;
 };
 
 exports.isOfType = function(doc, expectedTypeName) {
