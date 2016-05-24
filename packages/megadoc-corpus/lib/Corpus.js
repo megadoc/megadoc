@@ -10,7 +10,7 @@ var b = Types.builders;
  *
  * The Corpus public API.
  */
-function Corpus() {
+function Corpus(config) {
   var exports = {};
   var nodes = {};
   var corpusNode = b.corpus({
@@ -20,6 +20,8 @@ function Corpus() {
   });
 
   var visitors = {};
+
+  config = config || {};
 
   /**
    * @method add
@@ -182,7 +184,7 @@ function Corpus() {
     node.indices = buildIndices(node);
 
     if (node.uid in nodes) {
-      assert(false,
+      lenientAssert(false,
         'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
         '\nPast definition: ' + dumpNodeFilePath(nodes[node.uid]) +
         '\nThis definition: ' + dumpNodeFilePath(node)
@@ -206,6 +208,17 @@ function Corpus() {
     }
 
     return node;
+  }
+
+  function lenientAssert(expr, message) {
+    if (config.strict !== false) {
+      assert(expr, message);
+    }
+    else {
+      if (!expr) {
+        console.warn(message);
+      }
+    }
   }
 
   return exports;
