@@ -137,7 +137,15 @@ function generatePluginEntry() {
 function getStyleOverrides() {
   var basePath = path.resolve(__dirname, 'packages');
 
-  return pluginNames.reduce(function(map, name) {
+  return pluginNames.concat([ 'userConfig' ]).reduce(function(map, name) {
+    if (name === 'userConfig') {
+      if (window.CONFIG.styleOverrides) {
+        assign(map, window.CONFIG.styleOverrides);
+      }
+
+      return map;
+    }
+
     var filePath = path.join(basePath, name, 'ui/styleOverrides.json');
 
     if (fs.existsSync(filePath)) {
