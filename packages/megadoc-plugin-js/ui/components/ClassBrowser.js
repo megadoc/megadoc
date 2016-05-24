@@ -3,6 +3,7 @@ const Link = require('components/Link');
 const classSet = require('utils/classSet');
 const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
+const Icon = require('components/Icon');
 const HotItemIndicator = require('components/HotItemIndicator');
 const { sortBy } = require('lodash');
 const isItemHot = require('utils/isItemHot');
@@ -81,7 +82,20 @@ var ClassBrowser = React.createClass({
   },
 
   renderNamespace(shouldDisplayName, ns) {
-    if (ns.documents.length === 0) {
+    let documents = ns.documents;
+
+    const shouldHidePrivateModules = (
+      this.props.namespaceNode.config.showPrivateModules === false ||
+      !Storage.get(K.CFG_CLASS_BROWSER_SHOW_PRIVATE)
+    );
+
+    if (shouldHidePrivateModules) {
+      documents = ns.documents.filter(x => {
+        return !DocClassifier.isPrivate(x.properties);
+      });
+    }
+
+    if (documents.length === 0) {
       return null;
     }
 
@@ -103,20 +117,15 @@ var ClassBrowser = React.createClass({
           this.renderModuleEntities(ns.entities)
         )}
 
-        {sortBy(ns.documents, 'id').map(this.renderModule)}
+        {sortBy(documents, 'id').map(this.renderModule)}
       </div>
     );
   },
 
   renderModule(docNode) {
     const doc = docNode.properties;
-    const isPrivate = DocClassifier.isPrivate(doc);
-
-    if (isPrivate && !Storage.get(PRIVATE_VISIBILITY_KEY)) {
-      return null;
-    }
-
     const { id } = doc;
+    const isPrivate = DocClassifier.isPrivate(doc);
     const isActive = this.props.documentNode === docNode;
     const className = classSet({
       'class-browser__entry': true,
@@ -128,8 +137,11 @@ var ClassBrowser = React.createClass({
         <Link ref={id} to={docNode} className="class-browser__entry-link">
           {doc.name}
 
-          {isPrivate && (
-            <span className="class-browser__entry-link--private"> (private)</span>
+          {isPrivate && this.props.namespaceNode.config.markPrivateModules !== false && (
+            <span
+              className="class-browser__entry-link--private"
+              title="This module is private"> <Icon className="icon-cube" />
+            </span>
           )}
 
           {doc.git && isItemHot(doc.git.lastCommittedAt) && <HotItemIndicator />}
