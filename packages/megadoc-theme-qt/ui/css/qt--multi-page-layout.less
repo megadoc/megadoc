@@ -1,9 +1,16 @@
 @import "~helpers";
 
 .root--with-multi-page-layout {
-  .root__screen {
-    margin-top: 90px;
 
+  &--with-banner .root__screen {
+    margin-top: 90px;
+  }
+
+  &.root--without-banner .root__screen {
+    margin-top: 2em;
+  }
+
+  .root__screen {
     .doc-content {
       padding: @spacing;
       margin-bottom: @spacing;
