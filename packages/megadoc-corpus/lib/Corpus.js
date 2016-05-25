@@ -2,6 +2,7 @@ var assert = require('assert');
 var resolveLink = require('./CorpusResolver');
 var buildIndices = require('./CorpusIndexer');
 var Types = require('./CorpusTypes');
+var integrityEnforcements = require('./CorpusIntegrityEnforcements');
 var assign = require('object-assign');
 var b = Types.builders;
 
@@ -179,6 +180,8 @@ function Corpus(config) {
     if (!node.meta) {
       node.meta = {};
     }
+
+    integrityEnforcements.apply(node);
 
     node.uid = UID(node);
     node.indices = buildIndices(node);

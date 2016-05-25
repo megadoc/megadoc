@@ -68,11 +68,16 @@ function createGitPlugin(userConfig) {
       compiler.corpus.visit({
         Document: function(node) {
           if (node.filePath) {
-            var filePath = compiler.utils.getAssetPath(node.filePath);
+            var filePath = path.join(compiler.config.assetRoot, node.filePath.replace(/^\//, ''));
 
             if (!files[filePath]) {
               files[filePath] = [];
             }
+
+            if (process.env.VERBOSE) {
+              console.log('[git] tracking file for statting:', filePath);
+            }
+
 
             files[filePath].push(node.uid);
           }
