@@ -63,7 +63,7 @@ var Browser = React.createClass({
 
   renderArticle(documentNode) {
     const article = documentNode.properties;
-    let { title } = article;
+    let title = article.title || '';
     const isActive = this.props.documentNode === documentNode || this.props.expanded;
 
     if (Storage.get(GROUP_BY_FOLDER) &&
