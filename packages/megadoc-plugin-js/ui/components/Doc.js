@@ -107,7 +107,7 @@ const Doc = React.createClass({
         )}
 
         <div className="doc-entity__description">
-          {deprecatedTag && deprecatedTag.string.length && (
+          {deprecatedTag && deprecatedTag.string.length > 0 && (
             <DeprecatedTag string={deprecatedTag.string} />
           )}
 
