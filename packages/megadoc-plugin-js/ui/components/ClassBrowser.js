@@ -44,6 +44,10 @@ var ClassBrowser = React.createClass({
       meta: {}
     };
 
+    const hasPrivateModules = rootDocuments.some(x => {
+      return x.documents.some(y => DocClassifier.isPrivate(y.properties));
+    });
+
     const namespaces = rootDocuments.reduce(function(list, node) {
       if (node.documents.length) {
         list.push(node);
@@ -68,7 +72,7 @@ var ClassBrowser = React.createClass({
       <nav className="class-browser__listing">
         {namespaces.map(this.renderNamespace.bind(null, shouldDisplayName))}
 
-        {this.props.withControls && (
+        {this.props.withControls && hasPrivateModules && (
           <div className="class-browser__controls">
             <Checkbox
               checked={!!Storage.get(PRIVATE_VISIBILITY_KEY)}
@@ -83,9 +87,9 @@ var ClassBrowser = React.createClass({
 
   renderNamespace(shouldDisplayName, ns) {
     let documents = ns.documents;
-
+    const { config } = this.props.namespaceNode;
     const shouldHidePrivateModules = (
-      this.props.namespaceNode.config.showPrivateModules === false ||
+      config.showPrivateModules === false ||
       !Storage.get(K.CFG_CLASS_BROWSER_SHOW_PRIVATE)
     );
 
@@ -99,7 +103,11 @@ var ClassBrowser = React.createClass({
       return null;
     }
 
-    const hasSelfDocument = ns.id !== '__general__' && (ns.properties || megadoc.hasCustomLayoutForDocument(ns));
+    const hasSelfDocument = ns.id !== '__general__' && (
+      ns.properties ||
+      megadoc.hasCustomLayoutForDocument(ns) ||
+      config.linkToNamespacesInBrowser
+    );
 
     return (
       <div key={ns.id} className="class-browser__category">

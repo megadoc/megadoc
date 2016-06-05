@@ -26,6 +26,7 @@ function Plugin(userConfig) {
     docstringProcessors: config.docstringProcessors || [],
     tagProcessors: config.tagProcessors || [],
     postProcessors: config.postProcessors || [],
+    tagAliases: config.tagAliases,
   };
 
   var emitter = new EventEmitter();

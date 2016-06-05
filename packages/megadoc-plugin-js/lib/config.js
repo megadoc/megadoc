@@ -242,4 +242,16 @@ module.exports = {
    *
    */
   tagAliases: {},
+
+  /**
+   * @property {Boolean}
+   *
+   * By default, Megadoc will generate a page for every namespace. That page
+   * contains an "index" of all the modules, functions, and entities found
+   * within that namespace. However, these pages are not accessible by default
+   * in the sidebar (the namespace names will not be anchors, but text) unless
+   * you turn this option on, in which case namespaces listed in the sidebar
+   * will become links and the user gets to view those namespace pages.
+   */
+  linkToNamespacesInBrowser: false,
 };
