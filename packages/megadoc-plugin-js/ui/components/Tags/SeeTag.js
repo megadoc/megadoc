@@ -12,7 +12,7 @@ const SeeTag = React.createClass({
   render() {
     return (
       <li className="see-tag">
-        <MarkdownText tagName="span">{this.props.typeInfo.string}</MarkdownText>
+        <MarkdownText tagName="span">{this.props.typeInfo.name}</MarkdownText>
       </li>
     );
   }
