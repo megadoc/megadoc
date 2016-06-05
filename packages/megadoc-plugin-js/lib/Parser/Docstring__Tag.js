@@ -27,7 +27,11 @@ function Tag(commentNode, params) {
    * @property {String}
    *           The type of this tag. This is always present.
    */
-  this.type = TypeAliases[commentNode.tag] || commentNode.tag;
+  this.type = (
+    TypeAliases[commentNode.tag] ||
+    (options.tagAliases && options.tagAliases[commentNode.tag]) ||
+    commentNode.tag
+  );
 
   /**
    * @property {String}

@@ -225,4 +225,21 @@ module.exports = {
 
   docstringProcessors: [],
   tagProcessors: [],
+
+  /**
+   * @property {Object.<String, String>}
+   *
+   * Alias custom tags to pre-defined Megadoc tags.
+   *
+   * @example
+   *
+   * Treat all `@returns` tags as `@return` and `@module` as @class`:
+   *
+   *     tagAliases = {
+   *       'returns': 'return',
+   *       'module': 'class',
+   *     }
+   *
+   */
+  tagAliases: {},
 };
