@@ -78,6 +78,7 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'nodeAnalyzers',
     'docstringProcessors',
     'tagProcessors',
+    'tagAliases',
     'customTags',
     'namespaceDirMap',
     'alias',
@@ -182,6 +183,14 @@ Ppt.toJSON = function() {
 
 Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
+
+  this.emitter.emit('preprocess-docstring', comment, {
+    nodeLocation: nodeLocation,
+    filePath: filePath
+  }, function(newComment) {
+    comment = newComment;
+  });
+
   var docstring = new Docstring('/*' + comment + '*/', {
     config: config,
     filePath: filePath,
