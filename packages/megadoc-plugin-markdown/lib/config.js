@@ -109,4 +109,9 @@ module.exports = {
    * will still be functional.
    */
   discardFileExtension: true,
+
+  /**
+   * @property {Boolean}
+   */
+  sanitize: true,
 };
