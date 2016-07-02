@@ -32,6 +32,7 @@ program
   .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
+  .option('--debug', 'Run in DEBUG mode to print debugging messages.')
   .option('--stats', 'Show scanner-related statistics.')
   .option('--tmp-dir [PATH]', 'Path to a directory megadoc will use for intermediatery files. Defaults to .megadoc/')
   .option('--no-purge', 'Do not purge the output directory.')
@@ -92,6 +93,10 @@ if (program.plugin.length > 0) {
 
 if (program.layout) {
   config.layout = program.layout;
+}
+
+if (program.debug === true) {
+  config.debug = true;
 }
 
 console.log('version %s', pkg.version);

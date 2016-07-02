@@ -94,7 +94,7 @@ var DocTags = React.createClass({
   renderTagString(tag) {
     return (
       <div key={tag.string} className="type-attention">
-        <pre>{JSON.stringify(tag, null, 2)}</pre>
+        <pre>{"Unknown tag:\n" + JSON.stringify(tag, null, 2)}</pre>
       </div>
     );
   }

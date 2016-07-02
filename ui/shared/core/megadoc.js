@@ -1,6 +1,5 @@
 const Outlet = require('components/Outlet');
 const CorpusAPI = require('./CorpusAPI');
-const invariant = require('utils/invariant');
 
 /**
  * @module megadoc
@@ -10,8 +9,6 @@ module.exports = function createMegadoc(config) {
   const corpusAPI = CorpusAPI(config.database || []);
   let exports = {};
   let previewHandlers = [];
-  let symbolIndexers = [];
-  const documentHandlers = {};
   let callbacks = [];
   let ran = 0;
 
@@ -22,18 +19,6 @@ module.exports = function createMegadoc(config) {
     registerPreviewHandler(fn) {
       previewHandlers.push(fn);
     },
-
-    registerSymbolIndexer(fn) {
-      symbolIndexers.push(fn);
-    },
-
-    registerDocumentHandler(namespaceId, fn) {
-      invariant(!documentHandlers[namespaceId],
-        `A document handler for the namespace '${namespaceId}' already exists!`
-      );
-
-      documentHandlers[namespaceId] = fn;
-    }
   };
 
   function seal() {
@@ -81,7 +66,10 @@ module.exports = function createMegadoc(config) {
       args = [ pluginAPI ];
     }
     else {
-      args = [ pluginAPI, exports.getRuntimeConfigs(pluginName) ];
+      args = [
+        pluginAPI,
+        corpusAPI.getNamespacesForPlugin(pluginName).map(x => x.config)
+      ];
     }
 
     try {
@@ -104,20 +92,8 @@ module.exports = function createMegadoc(config) {
     }
   };
 
-  exports.getRuntimeConfigs = function(pluginId) {
-    return corpusAPI.getNamespacesForPlugin(pluginId).map(x => x.config);
-  };
-
   exports.getPreviewHandlers = function() {
     return previewHandlers;
-  };
-
-  exports.getSymbolIndexers = function() {
-    return symbolIndexers;
-  };
-
-  exports.isPluginEnabled = function(name) {
-    return (config.pluginConfigs[name] || []).length > 0;
   };
 
   exports.onReady = function(callback) {
@@ -126,24 +102,6 @@ module.exports = function createMegadoc(config) {
     }
     else {
       callbacks.push(callback);
-    }
-  };
-
-  exports.getCorpus = function() {
-    return config.database;
-  };
-
-  exports.renderDocument = function(href) {
-    const node = corpusAPI.getByURI(href);
-
-    if (node) {
-      const nsNode = corpusAPI.getNamespaceOfDocument(node.uid);
-
-      if (nsNode) {
-        if (documentHandlers[nsNode.id]) {
-          return documentHandlers[nsNode.id](node, nsNode);
-        }
-      }
     }
   };
 

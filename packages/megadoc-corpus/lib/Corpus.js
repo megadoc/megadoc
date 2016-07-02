@@ -103,6 +103,11 @@ function Corpus(config) {
    *        The alias to use (should be fully-qualified.)
    */
   exports.alias = function(uid, alias) {
+    assert(uid in nodes,
+      "ArgumentError: attempting to alias a node '" + uid + "' to '" + alias + "' but no such node exists." +
+      (config.debug ? "\nAvailable UIDs:\n" + JSON.stringify(Object.keys(nodes), null, 2) : '')
+    );
+
     nodes[uid].indices[alias] = 1;
   };
 
