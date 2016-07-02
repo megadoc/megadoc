@@ -34,7 +34,7 @@ function reduce(compiler, config, documents) {
     config: config,
     meta: {
       // TODO: stop switching against null in CorpusVisitor - it's stupid
-      href: config.hasOwnProperty('baseURL') ? config.baseURL : undefined,
+      href: config.baseURL !== undefined ? config.baseURL : undefined,
       defaultLayouts: require('./defaultLayouts'),
     },
 

@@ -140,12 +140,18 @@ function HistoryLocation(options) {
   }
 }
 
-function HashLocation() {
+function HashLocation(options) {
+  const emitChange = options.onChange;
+
   return {
-    start() {},
+    start() {
+      window.addEventListener('hashchange', emitChange);
+    },
     transitionTo() {},
     refreshScroll() {},
-    stop() {},
+    stop() {
+      window.removeEventListener('hashchange', emitChange);
+    },
   }
 }
 

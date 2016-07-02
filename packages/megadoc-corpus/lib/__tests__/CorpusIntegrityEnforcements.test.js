@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var Corpus = require("../Corpus");
 var b = require('../CorpusTypes').builders;
 
-describe('Corpus::IntegrityEnforcements', function() {
+describe.skip('Corpus::IntegrityEnforcements', function() {
   var corpus;
 
   beforeEach(function() {

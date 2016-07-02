@@ -5,17 +5,11 @@ const NotFound = require('components/NotFound');
 const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
-const DocumentResolver = require('../DocumentResolver');
-const LayoutEngine = require('../LayoutEngine');
-
-const { node, shape, string, arrayOf, object, oneOfType } = React.PropTypes;
+const { shape, string, arrayOf, object, bool, } = React.PropTypes;
 
 const LayoutScreen = React.createClass({
   propTypes: {
-    children: node,
-    documentNode: object,
-    documentEntityNode: object,
-    namespaceNode: object,
+    hasSidebarElements: bool,
     regions: arrayOf(shape({
       name: string.isRequired,
       options: object,
@@ -23,37 +17,40 @@ const LayoutScreen = React.createClass({
       outlets: arrayOf(shape({
         name: string,
         options: object,
-        using: oneOfType([ string, arrayOf(string) ]),
+        using: string,
+        scope: shape({
+          documentEntityNode: object,
+          documentNode: object,
+          namespaceNode: object,
+        })
       }))
-    })),
+    })).isRequired,
   },
 
   render() {
-    const ctx = this.props;
-
     return (
       <div className="root__screen">
-        {ctx.hasSidebarElements ?
-          this.renderTwoColumnLayout(ctx) :
-          this.renderSingleColumnLayout(ctx)
+        {this.props.hasSidebarElements ?
+          this.renderTwoColumnLayout() :
+          this.renderSingleColumnLayout()
         }
       </div>
     );
   },
 
-  renderTwoColumnLayout(ctx) {
-    const navBar = this.renderNavBar(ctx);
+  renderTwoColumnLayout() {
+    const navBar = this.renderNavBar();
 
     return (
       <TwoColumnLayout>
         <TwoColumnLayout.LeftColumn>
           <div>
-            {this.renderElements(ctx, 'Layout::Sidebar')}
+            {this.renderRegion('Layout::Sidebar')}
           </div>
         </TwoColumnLayout.LeftColumn>
 
         <TwoColumnLayout.RightColumn>
-          {this.renderContent(ctx)}
+          {this.renderContent()}
         </TwoColumnLayout.RightColumn>
 
         {navBar && (
@@ -65,17 +62,17 @@ const LayoutScreen = React.createClass({
     );
   },
 
-  renderSingleColumnLayout(ctx) {
-    return this.renderContent(ctx);
+  renderSingleColumnLayout() {
+    return this.renderContent();
   },
 
-  renderContent(ctx) {
-    const ContentTag = this.getOutletTag(ctx.regions, 'Layout::Content');
+  renderContent() {
+    const ContentTag = this.getOutletTag('Layout::Content');
 
     return (
       <div>
         <ContentTag>
-          {this.renderElements(ctx, 'Layout::Content') || <NotFound />}
+          {this.renderRegion('Layout::Content') || <NotFound />}
         </ContentTag>
 
         <Footer />
@@ -83,52 +80,47 @@ const LayoutScreen = React.createClass({
     );
   },
 
-  renderNavBar(ctx) {
-    const ContentTag = this.getOutletTag(ctx.regions, 'Layout::NavBar');
-    const contents = this.renderElements(ctx, 'Layout::NavBar');
+  renderNavBar() {
+    const contents = this.renderRegion('Layout::NavBar');
 
     if (!contents) {
       return null;
     }
 
+    const ContentTag = this.getOutletTag('Layout::NavBar');
+
     return (
       <ContentTag>
         <p>Contents</p>
 
-        {this.renderElements(ctx, 'Layout::NavBar')}
+        {this.renderRegion('Layout::NavBar')}
       </ContentTag>
     );
   },
 
-  renderElements(ctx, regionName) {
-    const region = ctx.regions.filter(x => x.name === regionName)[0];
+  renderRegion(regionName) {
+    const region = this.props.regions.filter(x => x.name === regionName)[0];
 
     if (!region || !region.outlets) {
       return null;
     }
 
-    const children = region.outlets.filter(x => {
-      return !x.match || LayoutEngine.match(x, ctx);
-    });
 
-    children.forEach(function({ name }) {
-      if (!Outlet.isDefined(name)) {
-        console.warn(
-          "Outlet '%s' has not been defined, this is most likely " +
-          "a configuration error. Please verify the outlet name is correct.",
-          name
-        );
-      }
-    });
-
-    // console.log('matching outlets for region "%s":', regionName, children)
-
-    return children.map((x,i) => {
-      const overridenNodes = getNodesForOutlet(x);
-      const operatingNodes = overridenNodes || ctx;
+    return region.outlets.map((x,i) => {
+      const { scope } = x;
       const key = `${x.name}__${i}`;
 
-      if (x.using && !overridenNodes) {
+      if (!Outlet.isDefined(x.name)) {
+        return (
+          <ErrorMessage key={key}>
+            <p>
+              Outlet "{x.name}" has not been defined! This is most likely
+              a configuration error. Please verify the outlet name is correct.
+            </p>
+          </ErrorMessage>
+        );
+      }
+      else if (!scope) {
         return (
           <ErrorMessage key={key}>
             <p>
@@ -138,11 +130,6 @@ const LayoutScreen = React.createClass({
             </p>
           </ErrorMessage>
         );
-
-        // console.log(
-        //   `Rendering "${operatingNodes.documentNode.uid}" inside the outlet ` +
-        //   `"${x.name}" within the region "${region.name}".`
-        // );
       }
 
       return (
@@ -150,18 +137,14 @@ const LayoutScreen = React.createClass({
           key={key}
           name={x.name}
           options={x.options}
-          elementProps={{
-            documentNode: operatingNodes.documentNode,
-            documentEntityNode: operatingNodes.documentEntityNode,
-            namespaceNode: operatingNodes.namespaceNode,
-          }}
+          elementProps={scope}
         />
       );
     }).filter(x => !!x)
   },
 
-  getOutletTag(regions, regionName = 'Layout::Content') {
-    const spec = regions.filter(x => x.name === regionName)[0];
+  getOutletTag(regionName) {
+    const spec = this.props.regions.filter(x => x.name === regionName)[0];
 
     if (spec) {
       if (spec.options && spec.options.framed) {
@@ -174,13 +157,3 @@ const LayoutScreen = React.createClass({
 });
 
 module.exports = LayoutScreen;
-
-function getNodesForOutlet(outlet) {
-  if (outlet.using) {
-    const documentNode = megadoc.corpus.get(outlet.using);
-
-    if (documentNode) {
-      return DocumentResolver.buildDocumentContext(documentNode);
-    }
-  }
-};

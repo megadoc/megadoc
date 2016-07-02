@@ -15,7 +15,7 @@ const ExampleTag = React.createClass({
   },
 
   render() {
-    const { name, description } = this.props.typeInfo;
+    const { name, } = this.props.typeInfo;
 
     return (
       <div className="example-tag">

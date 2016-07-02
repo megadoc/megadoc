@@ -11,6 +11,7 @@ var { where } = require('lodash');
 const HANDLED_TAGS = [
   'constructor',
   'class',
+  'deprecated',
   'example',
   'param',
   'return',

@@ -1,10 +1,12 @@
 const Subject = require('../LayoutEngine');
 const { assert } = require('chai');
-const { assign } = require('lodash');
+const { assign, omit } = require('lodash');
 
 describe('megadoc::LayoutEngine', function() {
   describe('getRegionsForDocument', function() {
-    const subject = Subject.getRegionsForDocument;
+    const subject = function(params) {
+      return Subject.getRegionsForDocument(omit(params, 'layouts'), params.layouts);
+    };
 
     it('matches by url', function() {
       const layout = subject({

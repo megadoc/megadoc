@@ -1,6 +1,5 @@
 var Parser = require('./Parser');
 var K = require('./Parser/constants');
-var DocUtils = require('./Parser/DocUtils');
 
 module.exports = function scan(params, done) {
   var database;

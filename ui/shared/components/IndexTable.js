@@ -1,7 +1,11 @@
 const React = require('react');
+const { node } = React.PropTypes;
 
 exports.Table = React.createClass({
   displayName: 'IndexTable.Table',
+  propTypes: {
+    children: node,
+  },
 
   render() {
     return (
@@ -14,6 +18,9 @@ exports.Table = React.createClass({
 
 exports.Row = React.createClass({
   displayName: 'IndexTable.Row',
+  propTypes: {
+    children: node,
+  },
 
   render() {
     return (
@@ -24,6 +31,9 @@ exports.Row = React.createClass({
 
 exports.Column = React.createClass({
   displayName: 'IndexTable.Column',
+  propTypes: {
+    children: node,
+  },
 
   render() {
     return (

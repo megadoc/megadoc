@@ -6,6 +6,7 @@ const createMegadoc = require('core/megadoc');
 const Storage = require('core/Storage');
 const K = require('constants');
 const App = require('./screens/App');
+const { omit } = require('lodash');
 const megadoc = window.megadoc = createMegadoc(config);
 
 console.log('megadoc: version %s', config.version);
@@ -34,15 +35,19 @@ require('./outlets/SidebarHeaderOutlet')(megadoc);
 require('./outlets/ImageOutlet')(megadoc);
 
 megadoc.start = function(options = {}) {
-  megadoc.onReady(function(registrar) {
+  megadoc.onReady(function() {
     console.log('Ok, firing up.');
+    const appConfig = omit(config, [
+      'database',
+      'pluginConfigs'
+    ]);
 
     if (config.$static) {
       config.$static.readyCallback({
         render(href, done) {
           var markup = renderToString(
             <App
-              config={config}
+              config={appConfig}
               location={{
                 protocol: 'file:',
                 origin: "file://",
@@ -68,7 +73,7 @@ megadoc.start = function(options = {}) {
 
       render(
         <App
-          config={config}
+          config={appConfig}
           location={window.location}
         />,
         document.querySelector('#__app__')
@@ -78,7 +83,6 @@ megadoc.start = function(options = {}) {
 };
 
 module.exports = megadoc;
-
 
 function MountPath(currentDocument) {
   if (currentDocument) {

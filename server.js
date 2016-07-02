@@ -139,7 +139,7 @@ function getStyleOverrides() {
 
   return pluginNames.concat([ 'userConfig' ]).reduce(function(map, name) {
     if (name === 'userConfig') {
-      if (window.CONFIG.styleOverrides) {
+      if (window.CONFIG.styleOverrides && typeof window.CONFIG.styleOverrides === 'object') {
         assign(map, window.CONFIG.styleOverrides);
       }
 

@@ -10,7 +10,7 @@ const StatsOutlet = React.createClass({
   render() {
     const { documentNode } = this.props;
 
-    if (!documentNode.meta.gitStats) {
+    if (!documentNode || !documentNode.meta.gitStats) {
       return null;
     }
 
@@ -29,7 +29,7 @@ megadoc.outlets.add('Layout::Content', {
   key: 'Git::Stats',
   component: StatsOutlet,
   match(props) {
-    return !!props.documentNode.meta.gitStats;
+    return props.documentNode && !!props.documentNode.meta.gitStats;
   }
 });
 

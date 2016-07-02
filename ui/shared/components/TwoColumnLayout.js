@@ -59,13 +59,6 @@ const TwoColumnLayout = React.createClass({
   componentDidMount() {
     AppState.on('change', this.reload);
 
-    // so that we reset the sidebar width if storage was cleared
-    // Storage.on('change', () => {
-    //   this.setState({
-    //     sidebarWidth: Storage.get(CFG_SIDEBAR_WIDTH)
-    //   });
-    // });
-
     if (config.resizableSidebar) {
       this.resizableInstance = resizable(findDOMNode(this.refs.resizer), {
         onResize: this.updateSidebarWidth,
@@ -156,10 +149,9 @@ const TwoColumnLayout = React.createClass({
     this.setState({
       initialSidebarWidth: this.state.sidebarWidth
     });
-    // Storage.set(CFG_SIDEBAR_WIDTH, sidebarWidth);
   },
 
-  collapseSidebar(e) {
+  collapseSidebar() {
     this.setState({ sidebarCollapsed: !this.state.sidebarCollapsed });
   }
 });

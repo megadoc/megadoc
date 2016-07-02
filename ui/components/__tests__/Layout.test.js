@@ -1,6 +1,5 @@
 const Subject = require('../Layout');
 const reactSuite = require('test_helpers/reactSuite');
-const sinonSuite = require('test_helpers/sinonSuite');
 const stubCorpus = require('test_helpers/stubCorpus');
 const stubContext = require('test_helpers/stubContext');
 const { assert } = require('chai');
@@ -11,10 +10,18 @@ const ErrorMessage = require('components/ErrorMessage');
 const React = require('react');
 
 describe('megadoc::Components::Layout', function() {
-  const sinon = sinonSuite(this);
-
   const suite = reactSuite(this, stubContext(Subject), {
-    pathname: '/'
+    pathname: '/',
+    template: {
+      regions: [],
+      hasSidebarElements: false,
+    },
+
+    scope: {},
+  });
+
+  afterEach(function() {
+    Outlet.reset();
   });
 
   it('renders', function() {
@@ -25,54 +32,17 @@ describe('megadoc::Components::Layout', function() {
     assert.ok(drill(subject).has(NotFound));
   });
 
-  describe('@customLayouts', function() {
-    beforeEach(function() {
-      Outlet.reset('Foo');
-      Outlet.define('Foo');
-    });
-
-    it('matches by url', function() {
-      Outlet.add('Foo', {
-        key: 'asdf',
-        component: React.createClass({
-          render() {
-            return <p>Hello!</p>
-          }
-        })
-      });
-
-      suite.setProps({
-        pathname: '/foo',
-
-        customLayouts: [{
-          match: { by: 'url', on: '/foo' },
-          regions: [
-            {
-              name: 'Layout::Content',
-              outlets: [
-                {
-                  name: 'Foo'
-                }
-              ]
-            }
-          ]
-        }]
-      });
-
-      assert.include(drill(subject).node.textContent, 'Hello!');
-    });
-  });
-
   describe('@using', function() {
     stubCorpus(this, require('json!test_helpers/fixtures/corpus--small.json'));
 
     it('injects a custom documentNode into an outlet when specified', function() {
-      sinon.spy(megadoc.corpus, 'get');
-
       Outlet.define('TestOutlet');
       Outlet.add('TestOutlet', {
         key: 'asdf',
         component: React.createClass({
+          propTypes: {
+            documentNode: React.PropTypes.object,
+          },
           render() {
             return <p>Hello {this.props.documentNode.title}!</p>
           }
@@ -82,49 +52,72 @@ describe('megadoc::Components::Layout', function() {
       suite.setProps({
         pathname: '/foo',
 
-        customLayouts: [{
-          match: { by: 'url', on: '/foo' },
+        template: {
           regions: [
             {
               name: 'Layout::Content',
               outlets: [
                 {
                   name: 'TestOutlet',
-                  using: 'api/foo'
+                  using: 'api/foo',
+                  scope: {
+                    documentNode: megadoc.corpus.get('api/foo')
+                  }
                 }
               ]
             }
           ]
-        }]
+        }
       });
 
-      assert.calledWith(megadoc.corpus.get, 'api/foo');
       assert.include(drill(subject).node.textContent, "Hello Foo!");
     });
 
-    it('displays an error when no such document is found', function() {
-      sinon.spy(megadoc.corpus, 'get');
-
+    it('displays an error when the outlet is not defined', function() {
       suite.setProps({
         pathname: '/foo',
 
-        customLayouts: [{
-          match: { by: 'url', on: '/foo' },
+        template: {
           regions: [
             {
               name: 'Layout::Content',
               outlets: [
                 {
                   name: 'Foo',
-                  using: 'api/something'
+                  scope: {}
                 }
               ]
             }
           ]
-        }]
+        }
       });
 
-      assert.calledWith(megadoc.corpus.get, 'api/something');
+      drill(subject).find(ErrorMessage,
+        m.hasText('Outlet "Foo" has not been defined!')
+      );
+    });
+
+    it('displays an error when the document to be injected was not found', function() {
+      Outlet.define('Foo');
+
+      suite.setProps({
+        pathname: '/foo',
+
+        template: {
+          regions: [
+            {
+              name: 'Layout::Content',
+              outlets: [
+                {
+                  name: 'Foo',
+                  using: 'api/something',
+                  scope: null
+                }
+              ]
+            }
+          ]
+        }
+      });
 
       drill(subject).find(ErrorMessage,
         m.hasText('No document was found with the UID "api/something"')

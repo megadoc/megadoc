@@ -1,14 +1,14 @@
 const React = require("react");
 const Heading = require('components/Heading');
 const HeadingAnchor = require('components/HeadingAnchor');
-const { string, object, bool, number } = React.PropTypes;
+const { string, object, bool, number, oneOfType } = React.PropTypes;
 
 const ModuleHeader = React.createClass({
   propTypes: {
     doc: object,
     showSourcePaths: bool,
     anchorId: string,
-    level: number,
+    level: oneOfType([string, number]),
   },
 
   shouldComponentUpdate: function(prevProps) {

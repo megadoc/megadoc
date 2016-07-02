@@ -7,6 +7,7 @@ const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
 const DocumentResolver = require('../DocumentResolver');
+const LayoutTemplate = require('../LayoutTemplate');
 const ErrorMessage = require('components/ErrorMessage');
 const { object, func, } = React.PropTypes;
 
@@ -34,6 +35,7 @@ const Root = React.createClass({
 
   componentWillMount() {
     this.documentResolver = DocumentResolver(megadoc.corpus);
+    this.realizeTemplate = LayoutTemplate(megadoc, this.props.config);
   },
 
   componentDidMount() {
@@ -43,14 +45,17 @@ const Root = React.createClass({
     window.addEventListener('click', this.handleInternalLink, false);
   },
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.location.hash !== this.props.location.hash) {
-      console.warn('hash has changed from "%s" to "%s", forcing refresh!', prevProps.location.hash, this.props.location.hash);
+      console.debug('Hash has changed from "%s" to "%s" - forcing refresh!', prevProps.location.hash, this.props.location.hash);
       this.props.onRefreshScroll();
     }
   },
 
   componentWillUnmount() {
+    this.documentResolver = null;
+    this.realizeTemplate = null;
+
     window.removeEventListener('click', this.handleInternalLink, false);
 
     AppState.off('change', this.reload);
@@ -59,15 +64,19 @@ const Root = React.createClass({
 
   render() {
     const { config } = this.props;
-    let documentContext;
+    const pathname = this.getPathName();
+    let scope;
+    let template;
 
     if (!AppState.inSinglePageMode()) {
-      documentContext = this.resolveCurrentDocument();
+      scope = this.resolveCurrentDocument();
 
-      if (!documentContext) {
+      if (!scope) {
         return this.renderInternalError();
       }
     }
+
+    template = this.realizeTemplate(scope, this.getPathName());
 
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
@@ -79,7 +88,8 @@ const Root = React.createClass({
             active={AppState.isSpotlightOpen()}
             onOpen={AppState.openSpotlight}
             onClose={AppState.closeSpotlight}
-            documentNode={documentContext && documentContext.documentNode}
+            documentNode={scope && scope.documentNode}
+            pathname={pathname}
           />
         )}
 
@@ -89,8 +99,9 @@ const Root = React.createClass({
 
         <Layout
           {...config.layoutOptions}
-          pathname={this.getPathName()}
-          {...documentContext}
+          pathname={pathname}
+          scope={scope}
+          template={template}
         />
       </Outlet>
     );

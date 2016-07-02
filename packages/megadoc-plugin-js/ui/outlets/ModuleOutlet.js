@@ -11,7 +11,7 @@ megadoc.outlets.add('CJS::Module', {
     },
 
     render() {
-      if (!this.props.documentNode.properties) {
+      if (!this.props.documentNode || !this.props.documentNode.properties) {
         return null;
       }
 

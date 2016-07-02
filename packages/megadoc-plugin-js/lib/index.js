@@ -96,7 +96,7 @@ function Plugin(userConfig) {
     },
 
     addNodeAnalyzer: function(analyzer) {
-      emitter.on('analyze-node', analyzer);
+      emitter.on('process-node', analyzer);
       // parserConfig.nodeAnalyzers.push(analyzer);
     },
 

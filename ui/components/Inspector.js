@@ -4,7 +4,6 @@ const domContains = require('dom-contains');
 const config = require('config');
 const Tooltip = require('./InspectorTooltip');
 const Outlet = require('components/Outlet');
-const DocumentURI = require('core/DocumentURI');
 const { debounce } = require('lodash');
 const { hasMatchingElements } = Outlet;
 

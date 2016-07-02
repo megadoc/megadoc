@@ -8,7 +8,8 @@ const AnchorableHeading = React.createClass({
     href: string.isRequired,
     children: node.isRequired,
     withLink: bool,
-    level: oneOfType([ number, string ]).isRequired
+    level: oneOfType([ number, string ]).isRequired,
+    className: string,
   },
 
   getDefaultProps() {

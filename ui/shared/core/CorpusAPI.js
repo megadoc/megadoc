@@ -24,6 +24,13 @@ function CorpusAPI(shallowCorpus) {
   }, {});
 
   const length = Object.keys(corpus).length;
+  const rewrittenDocuments = Object.keys(corpus).reduce((map, x) => {
+    if (corpus[x].meta.hrefRewritten) {
+      map[corpus[x].meta.href] = x;
+    }
+
+    return map;
+  }, {});
 
   exports.getDocumentSearchIndex = function() {
     return documentSearchIndex;
@@ -54,6 +61,10 @@ function CorpusAPI(shallowCorpus) {
   };
 
   exports.getByURI = function(uri) {
+    if (rewrittenDocuments[uri]) {
+      return corpus[rewrittenDocuments[uri]];
+    }
+
     for (let uid in corpus) {
       if (getHref(corpus[uid]) === uri) {
         return corpus[uid];

@@ -4,7 +4,7 @@ module.exports = function(database, track) {
       return doc.isModule && doc.type === 'component';
     })
     .forEach(function(doc) {
-      track(doc.absoluteFilePath, doc.name);
+      track(doc.filePath, doc.name);
     })
   ;
 };

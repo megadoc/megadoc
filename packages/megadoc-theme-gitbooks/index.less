@@ -52,15 +52,18 @@ body {
   }
 
   .ui-resizable-handle {
-    width: 1px;
+    width: 5px;
   }
 
-  ul {
+  ul, ol {
+    padding-left: 0;
     list-style: none;
-    padding: 0;
+  }
 
-    ol {
-      list-style: none;
+  ul, ol {
+    li > ul,
+    li > ol {
+      padding-left: 1em;
     }
   }
 }

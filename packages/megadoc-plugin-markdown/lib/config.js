@@ -26,7 +26,7 @@ module.exports = {
    * A value of `/docs` would make a document file called `README.md` be
    * reachable at `/docs/readme.html`.
    */
-  baseURL: null,
+  baseURL: undefined,
 
   /**
    * @property {Array.<String>}

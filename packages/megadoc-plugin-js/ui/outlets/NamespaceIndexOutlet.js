@@ -12,7 +12,9 @@ megadoc.outlets.add('CJS::NamespaceIndex', {
 
     render() {
       return (
-        <NamespaceIndex {...this.props} />
+        <NamespaceIndex
+          documentNode={this.props.documentNode || this.props.namespaceNode}
+        />
       );
     }
   }),

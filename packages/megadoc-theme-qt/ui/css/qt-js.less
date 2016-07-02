@@ -1,3 +1,7 @@
+.doc-entity__description, .doc-entity__tags {
+  // margin-left: 2em;
+}
+
 .schemable({
   .doc-group__header {
     margin: 2em 0 1.5em;
@@ -126,5 +130,20 @@
       color: @solarized-cyan;
       font-style: normal;
     }
+  }
+
+  .doc-entity__modifier {
+    padding: 0.25em 0.5em;
+    font-size: 0.7em;
+    line-height: 1;
+    vertical-align: middle;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 1px @base3;
+  }
+
+  .doc-entity__protected,
+  .doc-entity__private {
+    background: @base2;
+    color: inherit;
   }
 });

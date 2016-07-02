@@ -53,7 +53,7 @@ exports.getDisplayType = function(documentNode) {
 };
 
 exports.isProperty = function(doc) {
-  return doc && doc.tags.some(x => x.type === 'property');
+  return doc && doc.tags && doc.tags.some(x => x.type === 'property');
 };
 
 exports.isStaticProperty = function(doc) {
@@ -68,9 +68,9 @@ exports.isMemberProperty = function(doc) {
 };
 
 exports.isPrivate = function(doc) {
-  return doc && doc.tags.some(x => x.type === 'private');
+  return doc && doc.tags && doc.tags.some(x => x.type === 'private');
 };
 
 exports.isProtected = function(doc) {
-  return doc && doc.tags.some(x => x.type === 'protected');
+  return doc && doc.tags && doc.tags.some(x => x.type === 'protected');
 };

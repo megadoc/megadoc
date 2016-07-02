@@ -11,6 +11,10 @@ megadoc.outlets.add('CJS::ModuleEntities', {
     },
 
     render() {
+      if (!this.props.documentNode) {
+        return null;
+      }
+
       return (
         <ClassEntityBrowser
           standalone

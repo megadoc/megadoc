@@ -1,5 +1,4 @@
 const React = require('react');
-const Router = require('core/Router');
 const Editor = require('./Editor');
 const LiveExampleTag = require('./LiveExampleTag');
 const Link = require('components/Link');

@@ -1,9 +1,6 @@
 const config = require('config');
 const extension = config.emittedFileExtension || '';
 const RE_FILE_EXTENSION = extension.length > 0 && new RegExp(extension + '$');
-const RE_OUTPUT_DIR = new RegExp('^' + config.outputDir);
-const RE_PUBLIC_PATH = new RegExp('^' + config.publicPath);
-const inFileProtocol = location.protocol === 'file:';
 
 function DocumentURI(uri) {
   if (uri.indexOf(config.mountPath) === 0) {

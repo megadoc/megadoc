@@ -51,9 +51,9 @@ exports.clear = function() {
 };
 
 exports.register = function(key, defaultValue) {
-  console.assert(!STORAGE_ITEMS.hasOwnProperty(key),
-    `Key ${key} is already taken.`
-  );
+  if (STORAGE_ITEMS.hasOwnProperty(key)) {
+    console.warn(`[Storage]: Key ${key} has already been registered.`);
+  }
 
   STORAGE_ITEMS[key] = defaultValue;
 };

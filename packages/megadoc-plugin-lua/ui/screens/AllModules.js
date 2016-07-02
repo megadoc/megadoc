@@ -5,7 +5,6 @@ const FunctionSignature = require('../components/FunctionSignature');
 const FunctionParams = require('../components/FunctionParams');
 const FunctionReturns = require('../components/FunctionReturns');
 const ExampleTags = require('../components/ExampleTags');
-const Router = require('core/Router');
 const { string, array, } = React.PropTypes;
 
 const AllModules = React.createClass({
@@ -49,12 +48,16 @@ const AllModules = React.createClass({
         <ModuleHeader
           doc={moduleDoc}
           anchorId={
+            undefined
+            /*
+            TODO: port to corpus
             Router.generateAnchorId({
               routeName: `${this.props.routeName}.module`,
               params: {
                 moduleId: moduleDoc.id
               }
             })
+            */
           }
         />
 
@@ -76,6 +79,8 @@ const AllModules = React.createClass({
           level="2"
           doc={doc}
           anchorId={
+            undefined
+            /* TODO: port to corpus
             Router.generateAnchorId({
               routeName: `${this.props.routeName}.module.entity`,
               params: {
@@ -83,6 +88,7 @@ const AllModules = React.createClass({
                 entityId: doc.symbol + doc.id
               }
             })
+            */
           }
         />
 

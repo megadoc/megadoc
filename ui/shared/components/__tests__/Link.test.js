@@ -4,11 +4,9 @@ const ReactDOM = require('react-dom');
 const sinonSuite = require('test_helpers/sinonSuite');
 const { assert } = require('chai');
 const CorpusAPI = require('core/CorpusAPI');
-const AppState = require('core/AppState');
 const { drill } = require('react-drill');
 const { string, func, shape, object, } = React.PropTypes;
 const { assign } = require('lodash');
-
 
 describe('megadoc::Components::Link', function() {
   let linkContext;
@@ -65,8 +63,6 @@ describe('megadoc::Components::Link', function() {
   });
 
   context('in SinglePageMode...', function() {
-    const config = { layoutOptions: { singlePageMode: true } };
-
     context('given @to...', function() {
       let corpus;
 

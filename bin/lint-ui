@@ -23,7 +23,7 @@ if [ -z $PACKAGE ]; then
 fi
 
 if [ -z $PACKAGE ]; then
-  SOURCES=(packages/*/ui)
+  SOURCES=(ui packages/*/ui)
 elif [ -d "packages/${PACKAGE}" ]; then
   SOURCES=("packages/${PACKAGE}/ui")
 elif [ -d "packages/megadoc-plugin-${PACKAGE}" ]; then

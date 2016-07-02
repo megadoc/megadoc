@@ -55,12 +55,9 @@ const invariant = require('utils/invariant');
  * @return {String}
  *         The UID of the document to use for the given location.
  */
-exports.getDocumentOverride = function(href, layoutConfig) {
+exports.getDocumentOverride = function(pathname, layoutConfig) {
   if (layoutConfig.customLayouts) {
-    const layoutOverride = getOverrideEntry({
-      pathname: href,
-      layouts: layoutConfig.customLayouts
-    });
+    const layoutOverride = getLayoutOverride({ pathname, }, layoutConfig.customLayouts);
 
     if (layoutOverride && layoutOverride.using) {
       return layoutOverride.using;
@@ -68,9 +65,7 @@ exports.getDocumentOverride = function(href, layoutConfig) {
   }
 };
 
-function getOverrideEntry(params) {
-  const { layouts } = params;
-
+function getLayoutOverride(scope, layouts) {
   if (!layouts) {
     return null;
   }
@@ -80,15 +75,15 @@ function getOverrideEntry(params) {
       "A custom layout must have a @match property defined!"
     );
 
-    return match(x, params);
+    return match(x, scope);
   })[0];
 }
 
-function getRegionsForDocument(params) {
-  const entry = getOverrideEntry(params);
+function getRegionsForDocument(scope, layouts) {
+  const layoutOverride = getLayoutOverride(scope, layouts);
 
-  if (entry) {
-    return entry.regions;
+  if (layoutOverride) {
+    return layoutOverride.regions;
   }
 }
 
@@ -96,7 +91,36 @@ function arrayWrap(x) {
   return Array.isArray(x) ? x : [].concat(x || []);
 }
 
-function matchURL(matchOn, pathname) {
+function match(entry, { documentNode, namespaceNode, pathname }) {
+  const matchBy = entry.match.by;
+  const matchOn = arrayWrap(entry.match.on);
+
+  return (
+    (
+      matchBy === 'type' &&
+      (
+        (documentNode && matchOn.indexOf(documentNode.type) > -1) ||
+        (namespaceNode && matchOn.indexOf(namespaceNode.type) > -1)
+      )
+    ) ||
+    (
+      documentNode &&
+      matchBy === 'uid' &&
+      matchOn.indexOf(documentNode.uid) > -1
+    ) ||
+    (
+      matchBy === 'url' &&
+      matchByURL(matchOn, pathname)
+    ) ||
+    (
+      matchBy === 'namespace' &&
+      namespaceNode &&
+      matchOn.indexOf(namespaceNode.uid) > -1
+    )
+  );
+};
+
+function matchByURL(matchOn, pathname) {
   const pathWithoutHash = pathname.split('#')[0];
 
   return matchOn.some(function(pattern) {
@@ -108,33 +132,5 @@ function matchURL(matchOn, pathname) {
   });
 }
 
-function match(entry, { documentNode, namespaceNode, pathname }) {
-  const matchBy = entry.match.by;
-  const matchOn = arrayWrap(entry.match.on);
-
-  return (
-    (
-      documentNode &&
-      matchBy === 'type' &&
-      matchOn.indexOf(documentNode.type) > -1
-    ) ||
-    (
-      documentNode &&
-      matchBy === 'uid' &&
-      matchOn.indexOf(documentNode.uid) > -1
-    ) ||
-    (
-      matchBy === 'url' &&
-      matchURL(matchOn, pathname)
-    ) ||
-    (
-      matchBy === 'namespace' &&
-      namespaceNode &&
-      matchOn.indexOf(namespaceNode.uid) > -1
-    )
-  );
-};
-
 exports.match = match;
-exports.getOverrideEntry = getOverrideEntry;
 exports.getRegionsForDocument = getRegionsForDocument;

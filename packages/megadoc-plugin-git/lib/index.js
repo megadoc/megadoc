@@ -68,7 +68,10 @@ function createGitPlugin(userConfig) {
       compiler.corpus.visit({
         Document: function(node) {
           if (node.filePath) {
-            var filePath = path.join(compiler.config.assetRoot, node.filePath.replace(/^\//, ''));
+            var filePath = node.filePath[0] === '/' ?
+              node.filePath :
+              path.join(compiler.config.assetRoot, node.filePath)
+            ;
 
             if (!files[filePath]) {
               files[filePath] = [];

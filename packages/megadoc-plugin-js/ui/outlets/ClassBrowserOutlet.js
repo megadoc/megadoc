@@ -4,6 +4,8 @@ const { object, } = React.PropTypes;
 
 megadoc.outlets.add('CJS::ClassBrowser', {
   key: 'CJS::ClassBrowser',
+  match(x) { return x.namespaceNode.name === 'megadoc-plugin-js'; },
+
   component: React.createClass({
     propTypes: {
       documentNode: object,

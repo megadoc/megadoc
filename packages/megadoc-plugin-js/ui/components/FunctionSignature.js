@@ -20,11 +20,11 @@ const FunctionSignature = React.createClass({
     const { withNames } = this.props;
     const html = this.props.doc.tags
       .filter(function(tag) {
-        return tag.type === 'param' && tag.typeInfo.name.indexOf('.') === -1;
+        return tag.type === 'param' && (tag.typeInfo.name || '?').indexOf('.') === -1;
       })
       .map(function(param) {
         if (withNames) {
-          return '<em>' + param.typeInfo.name + '</em>: ' + describeType(param.typeInfo.type);
+          return '<em>' + (param.typeInfo.name || '?') + '</em>: ' + describeType(param.typeInfo.type);
         }
         else {
           return describeType(param.typeInfo.type);

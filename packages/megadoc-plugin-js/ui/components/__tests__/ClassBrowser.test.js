@@ -8,6 +8,7 @@ const Link = require('components/Link');
 describe('JS::Components::ClassBrowser', function() {
   const suite = reactSuite(this, stubContext(Subject), {
     namespaceNode: {
+      config: {},
       documents: [
         {
           uid: 'Cache',

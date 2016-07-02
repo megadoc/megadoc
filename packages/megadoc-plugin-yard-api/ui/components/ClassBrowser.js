@@ -92,7 +92,9 @@ const APIClassBrowser = React.createClass({
   },
 
   isExpanded(documentNode) {
-    return Storage.get(EXPAND_ALL) || this.props.documentNode.uid === documentNode.uid;
+    return Storage.get(EXPAND_ALL) || (
+      this.props.documentNode && this.props.documentNode.uid === documentNode.uid
+    );
   }
 });
 

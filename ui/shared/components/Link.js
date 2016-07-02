@@ -13,7 +13,6 @@ const Link = React.createClass({
     }).isRequired,
 
     config: shape({
-      mountPath: string,
       layoutOptions: shape({
         singlePageMode: bool,
       }),
@@ -62,6 +61,10 @@ const Link = React.createClass({
 
   isActive(href) {
     const { location } = this.context;
+
+    if (this.inSinglePageMode()) {
+      return href === location.hash;
+    }
 
     return (
       href === location.pathname ||

@@ -7,7 +7,7 @@ function DocumentResolver(corpus) {
   var exports = {};
 
   exports.resolveFromLocation = function(location, config) {
-    let documentNode;
+    let node;
 
     invariant(typeof location.pathname === 'string',
       "Location @pathname must be present.");
@@ -28,9 +28,9 @@ function DocumentResolver(corpus) {
       const overriddenDocumentLink = LayoutEngine.getDocumentOverride(href, config.layoutOptions);
 
       if (overriddenDocumentLink) {
-        documentNode = getByUIDOrURI(corpus, overriddenDocumentLink);
+        node = getByUIDOrURI(corpus, overriddenDocumentLink);
 
-        if (!documentNode) {
+        if (!node) {
           console.warn(
             "A document '%s' specified as an override for the url '%s' could " +
             "not be found. This is most likely a configuration error.",
@@ -40,12 +40,12 @@ function DocumentResolver(corpus) {
       }
     }
 
-    if (!documentNode) {
-      documentNode = corpus.getByURI(href);
+    if (!node) {
+      node = corpus.getByURI(href);
     }
 
-    if (documentNode) {
-      return buildDocumentContext(documentNode);
+    if (node) {
+      return buildDocumentContext(node);
     }
     else {
       console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
@@ -63,12 +63,23 @@ function getByUIDOrURI(corpus, link) {
   return corpus.get(link) || corpus.getByURI(link);
 }
 
-function buildDocumentContext(documentNode) {
-  return {
-    documentNode: documentNode.type === 'DocumentEntity' ? documentNode.parentNode : documentNode,
-    documentEntityNode: documentNode.type === 'DocumentEntity' ? documentNode : undefined,
-    namespaceNode: CorpusAPI.getNamespaceOfNode(documentNode)
-  };
+function buildDocumentContext(node) {
+  const ctx = {};
+
+  if (node.type === 'DocumentEntity') {
+    ctx.documentEntityNode = node;
+    ctx.documentNode = node.parentNode;
+    ctx.namespaceNode = CorpusAPI.getNamespaceOfNode(node);
+  }
+  else if (node.type === 'Document') {
+    ctx.documentNode = node;
+    ctx.namespaceNode = CorpusAPI.getNamespaceOfNode(node);
+  }
+  else if (node.type === 'Namespace') {
+    ctx.namespaceNode = node;
+  }
+
+  return ctx;
 }
 
 module.exports = DocumentResolver;

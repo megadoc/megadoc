@@ -3,8 +3,7 @@ const { findDOMNode } = require('react-dom');
 const Spotlight = require('./Spotlight');
 const contains = require('dom-contains');
 const { KC_ESCAPE } = require('constants');
-const { bool, func, } = React.PropTypes;
-const config = require('config');
+const { bool, func, object, string, } = React.PropTypes;
 const DocumentURI = require('core/DocumentURI');
 
 const SpotlightManager = React.createClass({
@@ -12,6 +11,8 @@ const SpotlightManager = React.createClass({
     active: bool.isRequired,
     onOpen: func.isRequired,
     onClose: func.isRequired,
+    documentNode: object,
+    pathname: string.isRequired,
   },
 
   getInitialState() {
@@ -49,7 +50,7 @@ const SpotlightManager = React.createClass({
     if (this.props.active) {
       const symbols = this.props.documentNode ?
         getSymbolsForDocument(this.props.documentNode) :
-        getSymbolsForDocumentByURI(location.pathname)
+        getSymbolsForDocumentByURI(this.props.pathname)
       ;
 
       return (

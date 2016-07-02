@@ -1,5 +1,4 @@
 const Outlet = require('components/Outlet');
-const Layout = require('../../components/Layout');
 const CorpusAPI = require('./CorpusAPI');
 const invariant = require('utils/invariant');
 
@@ -10,21 +9,14 @@ const invariant = require('utils/invariant');
 module.exports = function createMegadoc(config) {
   const corpusAPI = CorpusAPI(config.database || []);
   let exports = {};
-  let routeSpecs = [];
   let previewHandlers = [];
   let symbolIndexers = [];
   const documentHandlers = {};
   let callbacks = [];
   let ran = 0;
-  let state = {
-    // getRouteMap() {
-    //   return buildRouteMap(routeSpecs);
-    // }
-  };
 
   const pluginAPI = {
     outlets: Outlet,
-    addRoutes,
     corpus: corpusAPI,
 
     registerPreviewHandler(fn) {
@@ -54,16 +46,7 @@ module.exports = function createMegadoc(config) {
     };
 
     callbacks.forEach(function(callback) {
-      callback(state);
-    });
-  }
-
-  function addRoutes(specs) {
-    invariant(false, "Disabled!")
-    specs.forEach(function(spec) {
-      // spec.ignoreScrollBehavior = spec.ignoreScrollBehavior !== false;
-      // // todo: validate spec
-      // routeSpecs.push(spec);
+      callback();
     });
   }
 
@@ -139,7 +122,7 @@ module.exports = function createMegadoc(config) {
 
   exports.onReady = function(callback) {
     if (ran === config.pluginCount) {
-      callback(state);
+      callback();
     }
     else {
       callbacks.push(callback);
@@ -169,10 +152,6 @@ module.exports = function createMegadoc(config) {
    *           The Corpus API for plugins to use.
    */
   exports.corpus = corpusAPI;
-
-  exports.hasCustomLayoutForDocument = function(node) {
-    return !!Layout.getRegionsForDocument(node, config.layoutOptions.layouts || []);
-  };
 
   exports.getRelativeFilePath = function(filePath) {
     if (filePath.indexOf(config.assetRoot) === 0) {

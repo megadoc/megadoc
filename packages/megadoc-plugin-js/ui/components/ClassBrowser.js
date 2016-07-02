@@ -105,7 +105,6 @@ var ClassBrowser = React.createClass({
 
     const hasSelfDocument = ns.id !== '__general__' && (
       ns.properties ||
-      megadoc.hasCustomLayoutForDocument(ns) ||
       config.linkToNamespacesInBrowser
     );
 
@@ -163,6 +162,10 @@ var ClassBrowser = React.createClass({
   renderModuleEntities(documentNode) {
     if (!documentNode.entities || !documentNode.entities.length) {
       return null;
+    }
+
+    if (!documentNode.properties.tags) {
+      console.log('weird docNode:', documentNode);
     }
 
     const entityDocuments = orderAwareSort.asNodes(documentNode, documentNode.entities, 'id');

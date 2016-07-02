@@ -4,6 +4,7 @@ var assert = require('assert');
 var createLiveExampleTagProcessor = require('./customTags/LiveExample');
 var correctifyFunctionScopes = require('./postProcessors/correctifyFunctionScopes');
 var trackComponentsWithoutLiveExamples = require('./postProcessors/trackComponentsWithoutLiveExamples');
+var assign = _.assign;
 
 /**
  * @module Config
@@ -179,7 +180,11 @@ function createReactPlugin(userConfig) {
       );
 
       if (config.compile) {
-        config.compile(compiler, liveExampleProcessor.getComponents(), function(err/*, filePath*/) {
+        config.compile(compiler, liveExampleProcessor.getComponents().map(function(x) {
+          return assign({}, x, {
+            filePath: path.join(compiler.config.assetRoot, x.filePath)
+          });
+        }), function(err/*, filePath*/) {
           if (err) {
             console.warn('react: custom compiler failed!!!');
             return done(err);

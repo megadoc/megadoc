@@ -14,12 +14,10 @@ megadoc.outlets.add('CJS::ModuleHeader', {
     },
 
     render() {
-      const { documentNode } = this.props;
-
       return (
         <div className="js-module-header-outlet">
           <ModuleHeader
-            documentNode={documentNode}
+            documentNode={this.props.documentNode || this.props.namespaceNode}
             showSourcePaths={this.props.$outletOptions.showFilePath !== false}
             generateAnchor={false}
           />

@@ -7,11 +7,16 @@ megadoc.outlets.add('Markdown::DocumentTOC', {
 
   component: React.createClass({
     propTypes: {
-      documentNode: object.isRequired,
       documentEntityNode: object,
+      documentNode: object.isRequired,
+      namespaceNode: object.isRequired,
     },
 
     render() {
+      if (this.props.namespaceNode.name !== 'megadoc-plugin-markdown') {
+        return null;
+      }
+
       return (
         <ArticleTOC flat {...this.props} />
       );
