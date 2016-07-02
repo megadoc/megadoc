@@ -28,6 +28,7 @@ var Browser = React.createClass({
     // activeArticleId: React.PropTypes.string,
     // routeName: React.PropTypes.string,
     expanded: React.PropTypes.bool,
+    flat: React.PropTypes.bool,
   },
 
   render() {
@@ -85,7 +86,7 @@ var Browser = React.createClass({
           )}
         </Link>
 
-        {isActive && this.renderTOC(documentNode)}
+        {isActive && !this.props.flat && this.renderTOC(documentNode)}
       </div>
     );
   },

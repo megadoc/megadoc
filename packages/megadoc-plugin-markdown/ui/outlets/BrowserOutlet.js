@@ -12,7 +12,7 @@ megadoc.outlets.add('Markdown::Browser', {
 
     render() {
       return (
-        <Browser {...this.props} />
+        <Browser {...this.props} flat={this.props.$outletOptions.flat} />
       );
     }
   })

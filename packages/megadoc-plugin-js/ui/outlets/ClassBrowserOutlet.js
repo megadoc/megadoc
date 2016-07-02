@@ -20,6 +20,7 @@ megadoc.outlets.add('CJS::ClassBrowser', {
           documentNode={this.props.documentNode}
           documentEntityNode={this.props.documentEntityNode}
           withControls={this.props.namespaceNode.enableSidebarControls !== false}
+          flat={this.props.$outletOptions.flat}
         />
       );
     }

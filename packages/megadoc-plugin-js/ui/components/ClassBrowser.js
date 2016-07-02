@@ -19,6 +19,7 @@ var ClassBrowser = React.createClass({
     documentNode: object,
     documentEntityNode: object,
     namespaceNode: object,
+    flat: bool,
   },
 
   getDefaultProps: function() {
@@ -154,7 +155,7 @@ var ClassBrowser = React.createClass({
           {doc.git && isItemHot(doc.git.lastCommittedAt) && <HotItemIndicator />}
         </Link>
 
-        {isActive && this.renderModuleEntities(docNode)}
+        {isActive && !this.props.flat && this.renderModuleEntities(docNode)}
       </div>
     );
   },
