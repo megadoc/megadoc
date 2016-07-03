@@ -9,12 +9,17 @@ const Sticky = React.createClass({
   },
 
   componentDidMount() {
-    this.offsetTop = findDOMNode(this).getBoundingClientRect().top;
-    this.debouncedApplyStickiness = throttle(this.applyStickiness, 5);
+    this.calculateInitialValues();
+    this.debouncedApplyStickiness = throttle(this.applyStickiness, 10);
 
     window.addEventListener('scroll', this.debouncedApplyStickiness, false);
     window.addEventListener('resize', this.debouncedApplyStickiness, false);
 
+    this.applyStickinessSync();
+  },
+
+  componentDidUpdate() {
+    this.calculateInitialValues();
     this.applyStickinessSync();
   },
 
@@ -31,6 +36,18 @@ const Sticky = React.createClass({
     );
   },
 
+  calculateInitialValues() {
+    const domNode = findDOMNode(this);
+
+    withRealDimensions(domNode, () => {
+      const bbox = domNode.getBoundingClientRect();
+
+      this.offsetTop = bbox.top + getScrollTop(window);
+      this.clientWidth = bbox.width;
+      this.clientHeight = bbox.height;
+    });
+  },
+
   applyStickiness() {
     window.requestAnimationFrame(this.applyStickinessSync);
   },
@@ -39,24 +56,24 @@ const Sticky = React.createClass({
     const domNode = findDOMNode(this);
     const scrollTop = getScrollTop(window);
     const offsetTop = this.offsetTop;
-    const bbox = domNode.getBoundingClientRect();
     const viewportHeight = (document.documentElement.clientHeight - offsetTop);
     const newStyle = {};
 
     if (scrollTop > offsetTop) {
-      newStyle.top = `${scrollTop}px`;
+      newStyle.position = 'fixed';
+      newStyle.top = `${offsetTop}px`;
+      newStyle.width = `${this.clientWidth}px`;
     }
     else if (scrollTop <= offsetTop) {
+      newStyle.position = 'relative';
       newStyle.top = '0px';
     }
 
-    if (bbox.height > viewportHeight) {
-      newStyle.position = 'absolute';
-      newStyle.height = `${bbox.height}px`;
+    if (this.clientHeight > viewportHeight) {
+      newStyle.height = `${viewportHeight}px`;
       newStyle.overflow = 'auto';
     }
     else {
-      newStyle.position = 'relative';
       newStyle.height = null;
       newStyle.overflow = null;
     }
@@ -73,10 +90,14 @@ function applyStyle(domNode, style) {
   const styleString = serializeCSSTextString(style);
 
   if (typeof domNode.style.cssText !== 'undefined') {
-    domNode.style.cssText = styleString;
+    if (domNode.style.cssText !== styleString) {
+      domNode.style.cssText = styleString;
+    }
   }
   else {
-    domNode.setAttribute('style', styleString);
+    if (domNode.getAttribute('style') !== styleString) {
+      domNode.setAttribute('style', styleString);
+    }
   }
 }
 
@@ -86,9 +107,37 @@ function serializeCSSTextString(style) {
       return s;
     }
     else {
-      return s + `${x}:${style[x]};`;
+      return s + `${x}: ${style[x]}; `;
     }
-  }, '');
+  }, '').replace(/\s$/, '');
 }
 
 module.exports = Sticky;
+
+
+function withRealDimensions(domNode, fn) {
+  const { position, height, width, top } = domNode.style;
+
+  let positionModified = false;
+
+  if (position === 'fixed' || position === 'absolute') {
+    domNode.style.position = 'static';
+    domNode.style.height = null;
+    domNode.style.width = null;
+    domNode.style.top = null;
+
+    positionModified = true;
+  }
+
+  try {
+    fn();
+  }
+  finally {
+    if (positionModified) {
+      domNode.style.position = position;
+      domNode.style.width = width;
+      domNode.style.height = height;
+      domNode.style.top = top;
+    }
+  }
+}

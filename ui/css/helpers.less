@@ -51,6 +51,12 @@
   }
 }
 
+.mega-widescreen(@rules) {
+  @media screen and (min-width: 1440px) {
+    @rules();
+  }
+}
+
 .ellipsify() {
   text-overflow: ellipsis;
   white-space: nowrap;
