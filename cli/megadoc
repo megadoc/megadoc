@@ -71,7 +71,14 @@ if (program.logLevel) {
 program.override.forEach(function(override) {
   var fragments = override.split(/\s*=\s*/);
   var key = fragments[0];
-  var value = JSON.parse(fragments[1]);
+  var value;
+
+  try {
+    value = JSON.parse(fragments[1]);
+  }
+  catch(e) {
+    value = fragments[1].toString();
+  }
 
   set(config, key, value);
 

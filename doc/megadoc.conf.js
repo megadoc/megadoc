@@ -19,12 +19,12 @@ var config = {
   ],
 
   alias: {
-    'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
-    'md__megadoc-plugin-js/readme': 'megadoc-plugin-js',
-    'md__megadoc-plugin-git/readme': 'megadoc-plugin-git',
-    'md__megadoc-plugin-lua/readme': 'megadoc-plugin-lua',
-    'md__megadoc-plugin-yard-api/readme': 'megadoc-plugin-yard-api',
-    'md__megadoc-corpus/readme#uids': 'CorpusUIDs'
+    // 'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
+    // 'md__megadoc-plugin-js/readme': 'megadoc-plugin-js',
+    // 'md__megadoc-plugin-git/readme': 'megadoc-plugin-git',
+    // 'md__megadoc-plugin-lua/readme': 'megadoc-plugin-lua',
+    // 'md__megadoc-plugin-yard-api/readme': 'megadoc-plugin-yard-api',
+    // 'md__megadoc-corpus/readme#uids': 'CorpusUIDs'
   },
 
   linkResolver: {
@@ -255,9 +255,17 @@ function addPackageDocumentation(pluginName, options) {
       {
         name: 'Layout::Sidebar',
         outlets: [
-          { name: 'Markdown::Browser', using: 'md__' + pluginName },
+          {
+            name: 'Markdown::Browser',
+            using: 'md__' + pluginName,
+            options: { flat: true }
+          },
           withJS && { name: 'Layout::SidebarHeader', options: { text: 'API' } },
-          withJS && { name: 'CJS::ClassBrowser', using: 'js__' + pluginName },
+          withJS && {
+            name: 'CJS::ClassBrowser',
+            using: 'js__' + pluginName,
+            options: { flat: true },
+          },
         ].filter(truthy)
       },
       {

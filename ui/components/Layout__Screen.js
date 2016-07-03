@@ -5,6 +5,7 @@ const NotFound = require('components/NotFound');
 const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
+const Sticky = require('components/Sticky');
 const { shape, string, arrayOf, object, bool, } = React.PropTypes;
 
 const LayoutScreen = React.createClass({
@@ -90,11 +91,13 @@ const LayoutScreen = React.createClass({
     const ContentTag = this.getOutletTag('Layout::NavBar');
 
     return (
-      <ContentTag>
-        <p>Contents</p>
+      <Sticky>
+        <ContentTag>
+          <p>Contents</p>
 
-        {this.renderRegion('Layout::NavBar')}
-      </ContentTag>
+          {this.renderRegion('Layout::NavBar')}
+        </ContentTag>
+      </Sticky>
     );
   },
 

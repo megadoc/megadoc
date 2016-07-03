@@ -1,8 +1,8 @@
 @import "~helpers";
 
 .root--with-multi-page-layout {
-  &--with-banner .root__screen {
-    margin-top: 90px;
+  &.root--with-banner .root__screen {
+    margin-top: @banner-height + @spacing;
   }
 
   &.root--without-banner .root__screen {

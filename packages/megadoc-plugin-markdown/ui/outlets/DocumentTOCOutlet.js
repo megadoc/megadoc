@@ -5,6 +5,14 @@ const { object } = React.PropTypes;
 megadoc.outlets.add('Markdown::DocumentTOC', {
   key: 'Markdown::DocumentTOC',
 
+  match(props) {
+    return (
+      props.namespaceNode &&
+      props.namespaceNode.name === 'megadoc-plugin-markdown' &&
+      !!props.documentNode
+    );
+  },
+
   component: React.createClass({
     propTypes: {
       documentEntityNode: object,
@@ -13,9 +21,6 @@ megadoc.outlets.add('Markdown::DocumentTOC', {
     },
 
     render() {
-      if (this.props.namespaceNode.name !== 'megadoc-plugin-markdown') {
-        return null;
-      }
 
       return (
         <ArticleTOC flat {...this.props} />
