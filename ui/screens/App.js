@@ -155,12 +155,18 @@ function HashLocation(options) {
   }
 }
 
-function FileLocation() {
+function FileLocation(options) {
+  const emitChange = options.onChange;
+
   return {
-    start() {},
+    start() {
+      window.addEventListener('hashchange', emitChange);
+    },
     transitionTo() {},
     refreshScroll() {},
-    stop() {},
+    stop() {
+      window.removeEventListener('hashchange', emitChange);
+    },
   }
 }
 
