@@ -27,14 +27,7 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('render', function(md, linkify, done) {
-        if (config.withFolders) {
-          database.documents.forEach(function(folderNode) {
-            folderNode.documents.forEach(render);
-          });
-        }
-        else {
-          database.documents.forEach(render);
-        }
+        database.documents.forEach(render);
 
         function render(documentNode) {
           var doc = documentNode.properties;
@@ -55,8 +48,6 @@ function MarkdownPlugin(userConfig) {
       });
 
       compiler.on('write', function(done) {
-        var runtimeConfig = config;
-
         compiler.assets.addStyleSheet(
           path.resolve(__dirname, '..', 'ui', 'css', 'index.less')
         );
@@ -65,24 +56,13 @@ function MarkdownPlugin(userConfig) {
           path.resolve(__dirname, '..', 'dist', 'megadoc-plugin-markdown.js')
         );
 
-        compiler.assets.addPluginRuntimeConfig('megadoc-plugin-markdown', runtimeConfig);
-
         done();
       });
 
       compiler.on('generateStats', function(stats, done) {
-        if (config.withFolders) {
-          stats['megadoc-plugin-markdown:' + config.id] = {
-            count: database.documents.reduce(function(acc, folder) {
-              return acc + folder.documents.length;
-            }, 0)
-          };
-        }
-        else {
-          stats['megadoc-plugin-markdown:' + config.id] = {
-            count: database.documents.length
-          };
-        }
+        stats['megadoc-plugin-markdown:' + config.id] = {
+          count: database.documents.length
+        };
 
         done();
       });

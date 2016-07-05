@@ -1,31 +1,7 @@
-var Corpus = require('megadoc-corpus').Corpus;
 var b = require('megadoc-corpus').Types.builders;
-var strHumanize = require('./utils/strHumanize');
-
-module.exports = reduce;
 
 function reduce(compiler, config, documents) {
-  var nodes;
-
-  if (config.withFolders) {
-    var folderConfigs = config.folders || [];
-    var folders = documents.reduce(function(map, doc) {
-      if (!map[doc.folder]) {
-        map[doc.folder] = reduceFolder(doc.folder);
-      }
-
-      Corpus.attachNode('documents', map[doc.folder], reduceDocument(doc))
-
-      return map;
-    }, {});
-
-    nodes = Object.keys(folders).map(function(x) {
-      return folders[x];
-    });
-  }
-  else {
-    nodes = documents.map(reduceDocument);
-  }
+  var nodes = documents.map(reduceDocument);
 
   return b.namespace({
     id: config.id,
@@ -40,23 +16,6 @@ function reduce(compiler, config, documents) {
 
     documents: nodes
   });
-
-  function reduceFolder(folderPath) {
-    var folderConfig = folderConfigs.filter(function(x) {
-      return x.path === folderPath;
-    })[0];
-
-    var title = folderConfig && folderConfig.title || generateFolderTitle(folderPath)
-
-    return b.document({
-      id: folderPath,
-      title: title,
-      meta: {
-        href: null
-      },
-      documents: []
-    });
-  }
 
   function reduceDocument(doc) {
     // omg omg, we're rendering everything twice now
@@ -83,19 +42,6 @@ function reduce(compiler, config, documents) {
       })
     })
   }
-
-  function generateFolderTitle(folderPath) {
-    if (config.fullFolderTitles) {
-      return folderPath
-        .replace(config.commonPrefix, '')
-        .split('/')
-        .map(strHumanize)
-        .join(config.fullFolderTitleDelimiter)
-      ;
-    }
-    else {
-      var fragments = folderPath.split('/');
-      return strHumanize(fragments[fragments.length-1]);
-    }
-  }
 }
+
+module.exports = reduce;
