@@ -50,6 +50,7 @@ module.exports = function reduceDocuments(options) {
           id: namespaceId,
           title: namespaceId,
           symbol: K.NAMESPACE_SEP,
+          indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
           filePath: x.filePath, // useful for error reporting when there's a UID clash
           loc: x.loc,
           documents: [],

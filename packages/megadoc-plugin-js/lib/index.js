@@ -97,22 +97,18 @@ function Plugin(userConfig) {
 
     addNodeAnalyzer: function(analyzer) {
       emitter.on('process-node', analyzer);
-      // parserConfig.nodeAnalyzers.push(analyzer);
     },
 
     addDocstringProcessor: function(processor) {
       emitter.on('process-docstring', processor);
-      // parserConfig.docstringProcessors.push(processor);
     },
 
     addTagProcessor: function(processor) {
       emitter.on('process-tag', processor);
-      // parserConfig.tagProcessors.push(processor);
     },
 
     addPostProcessor: function(fn) {
       emitter.on('postprocess', fn);
-      // parserConfig.postProcessors.push(postProcessor);
     },
 
     on: emitter.addListener.bind(emitter),
@@ -169,8 +165,6 @@ function Plugin(userConfig) {
         compiler.assets.addPluginScript(
           path.resolve(__dirname, '..', 'dist', plugin.name + '.js')
         );
-
-        // compiler.assets.addPluginRuntimeConfig(plugin.name, config);
 
         done();
       });

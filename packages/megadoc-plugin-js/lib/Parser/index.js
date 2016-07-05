@@ -20,7 +20,7 @@ var Ppt = Parser.prototype;
 
 Ppt.parseFile = function(filePath, config, assetRoot) {
   var relativeFilePath = filePath.indexOf(assetRoot) === 0 ?
-    filePath.substr(assetRoot.length) :
+    filePath.substr(assetRoot.length + 1 /* trailing slash */) :
     filePath
   ;
 
