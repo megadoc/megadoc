@@ -1,6 +1,6 @@
 const React = require('react');
 const Browser = require('../components/Browser')
-const { object } = React.PropTypes;
+const { object, shape, bool, } = React.PropTypes;
 
 megadoc.outlets.add('Markdown::Browser', {
   key: 'Markdown::Browser',
@@ -8,6 +8,9 @@ megadoc.outlets.add('Markdown::Browser', {
   component: React.createClass({
     propTypes: {
       namespaceNode: object,
+      $outletOptions: shape({
+        flat: bool,
+      })
     },
 
     render() {

@@ -1,6 +1,6 @@
 const React = require('react');
 const ClassBrowser = require('../components/ClassBrowser');
-const { object, } = React.PropTypes;
+const { object, shape, bool, } = React.PropTypes;
 
 megadoc.outlets.add('CJS::ClassBrowser', {
   key: 'CJS::ClassBrowser',
@@ -11,6 +11,9 @@ megadoc.outlets.add('CJS::ClassBrowser', {
       documentNode: object,
       namespaceNode: object,
       documentEntityNode: object,
+      $outletOptions: shape({
+        flat: bool,
+      })
     },
 
     render() {
