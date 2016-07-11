@@ -138,7 +138,7 @@ Dpt.getTypeOverride = function() {
   var typedTags = getTypeOverridingTags(this.tags);
 
   if (typedTags.length > 1) {
-    console.warn("Document has multiple type overrides! Source: %s",
+    console.warn("%s: Document has multiple type overrides!",
       this.$location
     );
   }

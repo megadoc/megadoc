@@ -85,10 +85,12 @@ exports.resolveReceiverAndScopeFor = function(doc, registry) {
     exportedModule = registry.findExportedModule(doc.filePath);
 
     if (exportedModule) {
-      console.log('Correcting receiver from "exports" to "%s". Source: %s',
-        exportedModule.id,
-        exports.getLocationOf(doc)
-      );
+      if (process.env.VERBOSE) {
+        console.log('%s: Correcting receiver from "exports" to "%s".',
+          exports.getLocationOf(doc),
+          exportedModule.id
+        );
+      }
 
       receiver = exportedModule.id;
     }
@@ -125,7 +127,7 @@ exports.resolveReceiverAndScopeFor = function(doc, registry) {
 
 exports.getLocationOf = function(doc) {
   return (
-    (doc.id || '<<unknown>>') + ' in ' +
-    doc.filePath + ':' + doc.nodeInfo.loc.start.line
+    doc.filePath + ':' + doc.nodeInfo.loc.start.line +
+    ': ' + (doc.id ? ('"' + doc.id + '"') : '<<unknown>>')
   );
 };

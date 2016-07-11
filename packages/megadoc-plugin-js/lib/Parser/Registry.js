@@ -26,9 +26,10 @@ Rpt.addModuleDoc = function(doc, path, filePath) {
   assert(!!doc.id, "A document must have an id!");
 
   if (this.get(doc.id)) {
-    console.warn('You are attempting to overwrite an existing doc entry! This is very bad.',
+    console.warn('%s: You are attempting to overwrite an existing document "%s"! This is bad. (Original definition: %s)',
+      filePath + ':' + ASTUtils.getLocation(path.node).start.line,
       doc.id,
-      filePath + ':' + ASTUtils.getLocation(path.node).start.line
+      DocUtils.getLocationOf(this.get(doc.id))
     );
   }
 

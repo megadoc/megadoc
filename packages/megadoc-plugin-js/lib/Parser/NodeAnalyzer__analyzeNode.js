@@ -74,10 +74,12 @@ function analyzeNode(node, path, filePath, config) {
     info.addContextInfo(generateContext(info.$contextNode));
   }
   else {
-    console.info("Unrecognized node '%s'. (Source: %s).",
-      node.type,
-      ASTUtils.dumpLocation(node, filePath)
-    );
+    if (process.env.VERBOSE) {
+      console.info("%s: Unrecognized node '%s'.",
+        ASTUtils.dumpLocation(node, filePath),
+        node.type
+      );
+    }
   }
 
   return info;

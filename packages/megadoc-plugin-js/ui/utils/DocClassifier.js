@@ -74,3 +74,10 @@ exports.isPrivate = function(doc) {
 exports.isProtected = function(doc) {
   return doc && doc.tags && doc.tags.some(x => x.type === 'protected');
 };
+
+exports.isPublic = function(doc) {
+  return (
+    !exports.isPrivate(doc) &&
+    !exports.isProtected(doc)
+  );
+};

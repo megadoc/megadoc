@@ -6,6 +6,7 @@ const DefaultValue = require('./DefaultValue');
 const Doc = require('../Doc');
 const K = require('../../constants');
 const describeNode = require('../../utils/describeNode');
+const DocClassifier = require('../../utils/DocClassifier');
 
 const { shape, string, object } = React.PropTypes;
 
@@ -37,6 +38,11 @@ const PropertyTag = React.createClass({
 
           <span className="property-tag__name">
             {typeInfo.name || doc.name}
+
+            {DocClassifier.isPrivate(doc) && (
+              <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
+            )}
+
           </span>
 
           {': '}

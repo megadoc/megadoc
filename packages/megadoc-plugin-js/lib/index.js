@@ -18,6 +18,7 @@ function Plugin(userConfig) {
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
+    moduleMap: config.moduleMap,
     alias: config.alias,
     parse: config.parse,
     parserOptions: config.parserOptions,

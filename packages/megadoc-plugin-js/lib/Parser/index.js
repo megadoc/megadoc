@@ -5,6 +5,7 @@ var Doc = require('./Doc');
 var Docstring = require('./Docstring');
 var Registry = require('./Registry');
 var analyzeNode = require('./NodeAnalyzer__analyzeNode');
+var NodeInfo = require('./NodeAnalyzer__NodeInfo');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var debuglog = require('megadoc/lib/Logger')('megadoc').info;
@@ -62,7 +63,7 @@ Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
         throw e;
       }
       else {
-        console.warn("File could not be parsed, most likely due to a SyntaxError. (Source: '%s')", filePath);
+        console.warn("%s: File could not be parsed, most likely due to a SyntaxError.", filePath);
         console.warn(e && e.stack || e);
 
         return;
@@ -81,6 +82,7 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'tagAliases',
     'customTags',
     'namespaceDirMap',
+    'moduleMap',
     'alias',
     'namedReturnTags',
   ]);
@@ -120,11 +122,13 @@ Ppt.walk = function(ast, inConfig, filePath) {
           return;
         }
 
-        commentPool.forEach(function(commentNode) {
+        commentPool.forEach(function(commentNode, index) {
           var comment = commentNode.value;
 
           if (comment[0] === '*') {
-            parser.parseComment(comment, path, path.node, config, filePath);
+            parser.parseComment(comment, path, config, filePath,
+              index < commentPool.length - 1
+            );
           }
         });
       }
@@ -181,7 +185,8 @@ Ppt.toJSON = function() {
   }, []);
 };
 
-Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
+Ppt.parseComment = function(comment, path, config, filePath, freeForm) {
+  var contextNode = path.node;
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
 
   this.emitter.emit('preprocess-docstring', comment, {
@@ -212,10 +217,10 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
 
   if (predefinedNamespace) {
     if (docstring.namespace) {
-      console.warn("Ignoring pre-defined namespace '%s' for module as it already specifies one ('%s'). (Source: '%s')",
+      console.warn("%s: Ignoring pre-defined namespace '%s' for module as it already specifies one ('%s').",
+        nodeLocation,
         predefinedNamespace,
-        docstring.namespace,
-        nodeLocation
+        docstring.namespace
       );
     }
     else {
@@ -223,9 +228,16 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
     }
   }
 
-  var nodeInfo = analyzeNode(contextNode, path, filePath, config);
+  var nodeInfo;
 
-  this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
+  if (!freeForm) {
+    nodeInfo = analyzeNode(contextNode, path, filePath, config);
+
+    this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
+  }
+  else {
+    nodeInfo = new NodeInfo(contextNode, filePath);
+  }
 
   var doc = new Doc(docstring, nodeInfo, filePath);
 
@@ -259,7 +271,7 @@ Ppt.parseComment = function(comment, path, contextNode, config, filePath) {
     }
   }
   else {
-    console.warn("No identifier was found for this document, it will be ignored! (Source: %s)",
+    console.warn("%s: No identifier was found for this document, it will be ignored!",
       nodeLocation
     );
   }

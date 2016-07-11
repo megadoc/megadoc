@@ -1,13 +1,9 @@
 var parseTypes = require('./Docstring__parseTypeString');
 
-function TypeInfo(commentNode, nodeLocation) {
+function TypeInfo(commentNode) {
   var description = commentNode.description;
   var name = (commentNode.name || '').trim();
   var typeInfo = {};
-
-  if (name.length > 0) {
-    typeInfo.name = name;
-  }
 
   var hasType = commentNode.type && commentNode.type.length > 0;
 
@@ -31,22 +27,18 @@ function TypeInfo(commentNode, nodeLocation) {
   //     }
   //
   if (commentNode.tag === 'example' && !hasType) {
-    if (commentNode.name.trim().length > 0) {
-      console.warn("Invalid @example tag: this tag does not support a name. (Source: %s)",
-        nodeLocation
-      );
-    }
-    // description = commentNode.source.split('\n').slice(1).join('\n')
-      // .replace(/^\n+/, '\n')
-      // .replace(/\n+$/, '\n')
-    ;
-    // description = (
-    //   commentNode.name +
-    //   (commentNode.name.match(/\s$/) ? '' : ' ') +
-    //   commentNode.description
-    // );
+    description = commentNode.source.replace(/^@example[ ]?/, '');
 
-    delete typeInfo.name;
+    if (commentNode.name.trim().length > 0) {
+      var descriptionLines = description.split('\n');
+
+      name = descriptionLines[0].trim();
+      description = descriptionLines.slice(1).join('\n');
+    }
+  }
+
+  if (name.length > 0) {
+    typeInfo.name = name;
   }
 
   if (description && description.length > 0) {

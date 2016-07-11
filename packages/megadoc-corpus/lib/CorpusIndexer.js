@@ -1,4 +1,5 @@
 var invariant = require('invariant');
+var dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
 
 // An index of value 0 is considered private and is accessible only to the node
 // and its "friends". Indices of higher values are not significant in their
@@ -15,18 +16,11 @@ module.exports = function buildIndices(node) {
       generateIdIndices(node, indices);
     }
     else if (field === '$filePath') {
-      // for entities, we want to index by the enclosing document's filepath
-      // followed by the id of the entity for links like:
-      //
-      //     /README.md#see-something
-      //     /lib/X.js@name
-      if (node.type === 'DocumentEntity') {
-        if (node.filePath || node.parentNode.filePath) {
-          indices[buildEntityFileIndex(node)] = 1;
-        }
-      }
-      else if (node.filePath) {
-        indices[ensureLeadingSlash(node.filePath)] = 1;
+      var filePathIndex = getFilePathIndex(node);
+
+      if (filePathIndex) {
+        indices[withLeadingSlash(filePathIndex)] = 1;
+        indices[withoutLeadingSlash(filePathIndex)] = 1;
       }
     }
     else {
@@ -38,8 +32,8 @@ module.exports = function buildIndices(node) {
 
         values.forEach(function(index) {
           invariant(typeof index === 'string',
-            "Index field must be a string, not '" + typeof index + "'. " +
-            "Source:" + node.uid + '[' + field + ']'
+            dumpNodeFilePath(node) + '[' + field + ']: ' +
+            "Index field must be a string, not '" + typeof index + "'. "
           );
 
           indices[index] = 1;
@@ -95,14 +89,34 @@ function resolveIndexFields(node) {
   } while ((anchorNode = anchorNode.parentNode));
 }
 
-function ensureLeadingSlash(x) {
+function withLeadingSlash(x) {
   return x[0] === '/' ? x : '/' + x;
+}
+
+function withoutLeadingSlash(x) {
+  return x[0] === '/' ? x.slice(1) : x;
 }
 
 function buildEntityFileIndex(node) {
   return (
-    ensureLeadingSlash(node.filePath || node.parentNode.filePath) +
+    (node.filePath || node.parentNode.filePath) +
     (node.parentNode.symbol || '') +
     node.id
   );
+}
+
+function getFilePathIndex(node) {
+  // for entities, we want to index by the enclosing document's filepath
+  // followed by the id of the entity for links like:
+  //
+  //     /README.md#see-something
+  //     /lib/X.js@name
+  if (node.type === 'DocumentEntity') {
+    if (node.filePath || node.parentNode.filePath) {
+      return buildEntityFileIndex(node);
+    }
+  }
+  else if (node.filePath) {
+    return node.filePath;
+  }
 }

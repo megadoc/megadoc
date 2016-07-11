@@ -1,6 +1,6 @@
 const React = require('react');
 const ArticleTOC = require('../components/ArticleTOC')
-const { object } = React.PropTypes;
+const { object, bool, shape, } = React.PropTypes;
 
 megadoc.outlets.add('Markdown::DocumentTOC', {
   key: 'Markdown::DocumentTOC',
@@ -18,12 +18,15 @@ megadoc.outlets.add('Markdown::DocumentTOC', {
       documentEntityNode: object,
       documentNode: object.isRequired,
       namespaceNode: object.isRequired,
+      $outletOptions: shape({
+        grouped: bool
+      }),
     },
 
     render() {
 
       return (
-        <ArticleTOC flat {...this.props} />
+        <ArticleTOC flat grouped={this.props.$outletOptions.grouped} {...this.props} />
       );
     }
   })

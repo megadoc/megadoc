@@ -10,6 +10,7 @@ const ArticleTOC = React.createClass({
     documentNode: React.PropTypes.object,
     documentEntityNode: React.PropTypes.object,
     flat: React.PropTypes.bool,
+    grouped: React.PropTypes.bool,
   },
 
   getInitialState() {
@@ -30,6 +31,14 @@ const ArticleTOC = React.createClass({
 
     if (!rootSections.length) {
       return null;
+    }
+
+    if (this.props.grouped) {
+      return (
+        <ul className="markdown-toc markdown-toc--flat">
+          {this.renderNodeInBranch(sections, rootSections[0].node)}
+        </ul>
+      )
     }
 
     return (

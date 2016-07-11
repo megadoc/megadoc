@@ -347,8 +347,8 @@ describe('CJS::Parser::Docstring::Tag', function() {
     });
   });
 
-  describe('neutralizing whitespace', function() {
-    it.skip('sample 1: an example with a name and code body', function() {
+  describe('@example', function() {
+    it('sample 1: an example with a name and code body', function() {
       var tag = parse(function() {;
         // /**
         //  * @example A child screen
@@ -366,6 +366,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(tag.typeInfo.name, 'A child screen');
       assert.deepEqual(tag.typeInfo.description, [
+        "",
         "    module.exports = {",
         "      name: 'author.user',",
         "      path: ':userId',",
@@ -373,6 +374,8 @@ describe('CJS::Parser::Docstring::Tag', function() {
         "    };",
         "",
         "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
+        "",
+        "",
       ].join('\n'));
     });
 
@@ -396,7 +399,8 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(tag.typeInfo.name, null);
       assert.deepEqual(tag.typeInfo.description, [
-        // "",
+        "",
+        "",
         "A child screen.",
         "",
         "    module.exports = {",
@@ -406,7 +410,28 @@ describe('CJS::Parser::Docstring::Tag', function() {
         "    };",
         "",
         "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
-        // "",
+        "",
+      ].join('\n'));
+    });
+
+    it('sample: with no name and a single line', function() {
+      var tag = parse(function() {;
+        // /**
+        //  * @example
+        //  *
+        //  *     HybridLink.transitionTo("author.course", this.props.courseId);
+        //  *
+        //  */
+      });
+
+
+      assert.equal(tag.typeInfo.name, null);
+      assert.deepEqual(tag.typeInfo.description, [
+        "",
+        "",
+        "    HybridLink.transitionTo(\"author.course\", this.props.courseId);",
+        "",
+        "",
       ].join('\n'));
     });
 
@@ -427,6 +452,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
 
       assert.equal(tag.typeInfo.name, null);
       assert.deepEqual(tag.typeInfo.description, [
+        "",
         "    module.exports = {",
         "      name: 'author.user',",
         "      path: ':userId',",
@@ -434,7 +460,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
         "    };",
         "",
         "    // visitable at \"/author/users/1\" or \"/author/users/:userId\"",
-        // ""
+        "",
       ].join('\n'));
     });
   });

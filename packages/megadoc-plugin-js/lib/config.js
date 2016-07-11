@@ -162,6 +162,8 @@ module.exports = {
    */
   namespaceDirMap: {},
 
+  moduleMap: {},
+
   /**
    * @property {Boolean}
    *
@@ -217,7 +219,10 @@ module.exports = {
    *   'Int32Array',
    *   'Float32Array',
    *   'Int16Array',
-   *   'Float64Array'
+   *   'Float64Array',
+   *   'Any',
+   *   'Mixed',
+   *   'void'
    * ]
    * ```
    */

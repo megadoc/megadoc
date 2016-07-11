@@ -126,7 +126,13 @@ function CorpusAPI(shallowCorpus) {
   }
 
   function buildDocumentSearchIndex() {
-    return Object.keys(corpus).filter(uid => !!getHref(corpus[uid])).map(uid => {
+    return Object.keys(corpus).filter(uid => {
+      return (
+        !!getHref(corpus[uid]) &&
+        // ignore documents that have no indices
+        Object.keys(corpus[uid].indices).length > 0
+      );
+    }).map(uid => {
       const node = corpus[uid];
 
       return {

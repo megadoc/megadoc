@@ -34,6 +34,7 @@ function reduce(compiler, config, documents) {
           id: section.scopedId,
           title: section.text,
           properties: section,
+          indexFields: section.level === 1 ? [] : undefined,
           meta: {
             indexDisplayName: Array(section.level * 2).join(' ') + section.text,
             anchor: section.scopedId

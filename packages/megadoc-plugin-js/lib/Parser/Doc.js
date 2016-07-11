@@ -72,7 +72,7 @@ Doc.prototype.toJSON = function(registry) {
     }
 
     doc.symbol = generateSymbol(this);
-    doc.id = doc.receiver + doc.symbol + this.id;
+    doc.id = (doc.receiver || '<<unknown>>') + doc.symbol + this.id;
   }
 
   doc.mixinTargets = doc.tags

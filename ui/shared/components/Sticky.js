@@ -78,6 +78,8 @@ const Sticky = React.createClass({
       newStyle.overflow = null;
     }
 
+    domNode.classList.toggle('sticky-container--sticky', newStyle.position === 'fixed');
+
     applyStyle(domNode, newStyle);
   }
 });

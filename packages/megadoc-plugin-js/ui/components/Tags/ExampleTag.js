@@ -15,7 +15,7 @@ const ExampleTag = React.createClass({
   },
 
   render() {
-    const { name, } = this.props.typeInfo;
+    const { name, description, } = this.props.typeInfo;
 
     return (
       <div className="example-tag">
@@ -29,7 +29,7 @@ const ExampleTag = React.createClass({
         {!name && (<p><strong>Example</strong></p>)}
 
         <HighlightedText className="example-tag__code">
-          {this.props.string}
+          {description}
         </HighlightedText>
       </div>
     );

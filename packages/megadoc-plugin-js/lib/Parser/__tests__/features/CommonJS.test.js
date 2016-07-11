@@ -1,5 +1,6 @@
 var assert = require('chai').assert;
 var TestUtils = require('../../TestUtils');
+var K = require('../../constants');
 var parseInline = TestUtils.parseInline;
 var MegaTestUtils = require('megadoc/lib/TestUtils');
 
@@ -84,8 +85,8 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
 
     assert.equal(docs.length, 2);
     assert.ok(docs[0].isModule, 'it marks the doc as module');
-    assert.ok(docs[1].id, 'capture');
-    assert.ok(docs[1].receiver, 'DragonHunter');
+    assert.equal(docs[1].id, 'DragonHunter.capture');
+    assert.equal(docs[1].receiver, 'DragonHunter');
   });
 
   it('var SomeModule = exports; exports.something = something;', function() {
@@ -106,7 +107,30 @@ describe('CJS::Parser - CommonJS automatic module identification', function() {
     });
 
     assert.equal(docs.length, 2);
-    assert.ok(docs[1].receiver, 'DragonHunter');
+    assert.equal(docs[1].receiver, 'DragonHunter');
+  });
+
+  it('/** @module Something */ /** Do something */ exports.something = function() {};', function() {
+    var docs = parseInline(function() {;
+      // /**
+      //  * @module DOMHelpers
+      //  *
+      //  * A bunch of DOM utils.
+      //  */
+      //
+      // /**
+      //  * Click it!
+      //  */
+      // exports.click = function() {};
+    });
+
+    assert.equal(docs.length, 2);
+    assert.equal(docs[0].isModule, true);
+    assert.equal(docs[0].id, 'DOMHelpers');
+    assert.equal(docs[0].nodeInfo.type, K.TYPE_UNKNOWN);
+
+    assert.equal(docs[1].id, 'DOMHelpers.click');
+    assert.equal(docs[1].receiver, 'DOMHelpers');
   });
 
   it('module.exports = {};', function() {

@@ -27,7 +27,10 @@ var BUILT_IN_TYPES = [
   'Int32Array',
   'Float32Array',
   'Int16Array',
-  'Float64Array'
+  'Float64Array',
+  'Any',
+  'Mixed',
+  'void'
 ];
 
 var EXPRESSION_TYPES = Object.freeze([

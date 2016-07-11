@@ -28,7 +28,16 @@ const ModuleIndex = React.createClass({
     const staticMembers = getByClassification(documentNode, [
       DocClassifier.isStaticMethod,
       DocClassifier.isStaticProperty,
-    ]);
+    ])
+
+    const publicStaticMembers = staticMembers
+      .filter(x => DocClassifier.isPublic(x.properties))
+    ;
+
+    const privateStaticMembers = staticMembers
+      .filter(x => !DocClassifier.isPublic(x.properties))
+    ;
+
     const others = getRemainingDocuments(documentNode, [
       staticMembers,
       memberFuctions,
@@ -39,7 +48,8 @@ const ModuleIndex = React.createClass({
       <div className="js-document-index">
         {memberFuctions.length > 0 && this.renderMethodGroup('Public Functions', memberFuctions)}
         {memberProperties.length > 0 && this.renderPropertyGroup('Public Properties', memberProperties)}
-        {staticMembers.length > 0 && this.renderMethodGroup('Public Static Members', staticMembers)}
+        {publicStaticMembers.length > 0 && this.renderMethodGroup('Public Static Members', publicStaticMembers)}
+        {privateStaticMembers.length > 0 && this.renderMethodGroup('Private Static Members', privateStaticMembers)}
         {others.length > 0 && this.renderGroupByContextType('Other', others)}
       </div>
     );

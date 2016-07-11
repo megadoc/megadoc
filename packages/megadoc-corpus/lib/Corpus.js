@@ -4,6 +4,7 @@ var buildIndices = require('./CorpusIndexer');
 var Types = require('./CorpusTypes');
 var integrityEnforcements = require('./CorpusIntegrityEnforcements');
 var assign = require('object-assign');
+var dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
 var b = Types.builders;
 
 /**
@@ -288,20 +289,6 @@ function getUID(node) {
 
 function hasValidNamespaceId(node) {
   return node.id && node.id[0] !== '/' && node.id[0] !== '.';
-}
-
-function dumpNodeFilePath(node) {
-  var buffer = '<<unknown>>';
-
-  if (node && node.filePath) {
-    buffer = node.filePath;
-
-    if (node.loc && node.loc.start && node.loc.start.line) {
-      buffer += ':' + node.loc.start.line;
-    }
-  }
-
-  return buffer;
 }
 
 module.exports = Corpus;
