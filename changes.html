@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="This is a very exciting release; a new model for representing the documents rendered by megadoc is introduced called the Corpus. This model enables
+us to analyze the database in a source-agnostic manner and provide many 
+features out-of-the-box such as automatic indexing, URI generation, and more!" />
+
+    <title>Changelog
+</title>
+
+    
+    <link rel="stylesheet" href="styles.css" />
+    
+  </head>
+
+  <body class="body--themed">
+    <div id="__app__"><div data-reactroot="" data-reactid="1" data-react-checksum="1525150853"><div data-reactid="2"><!-- react-empty: 3 --></div><!-- react-empty: 4 --><div class="root root--with-multi-page-layout root--with-fixed-sidebar root--with-two-column-layout root--with-banner" data-reactid="5"><div class="banner-wrapper" data-reactid="6"><header class="banner" data-reactid="7"><h1 class="banner__logo" data-reactid="8"><a href="index.html" class="" data-reactid="9">megadoc</a><!-- react-text: 10 --> <!-- /react-text --></h1><nav class="banner__navigation" data-reactid="11"><div class="banner__navigation-item" title="Quick-Jump (Ctrl+K or CMD+K)" data-reactid="12"><i class="icon icon-search" data-reactid="13"></i></div><span data-reactid="14"><div class="banner__navigation-item" data-reactid="15"><a href="usage/readme.html" class="" data-reactid="16">Usage</a></div><div class="banner__navigation-item" data-reactid="17"><div class="banner__menu" data-reactid="18"><span class="banner__menu-title" data-reactid="19"><span data-reactid="20"><!-- react-text: 21 -->Plugins<!-- /react-text --><!-- react-text: 22 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="23"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="24"><div class="banner__menu" data-reactid="25"><span class="banner__menu-title" data-reactid="26"><span data-reactid="27"><!-- react-text: 28 -->Developers<!-- /react-text --><!-- react-text: 29 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="30"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="31"><a href="" class="active" data-reactid="32">Changes</a></div></span></nav></header></div><div class="root__screen" data-reactid="33"><div class="two-column-layout" data-reactid="34"><div class="two-column-layout__left" style="width:240px;" data-reactid="35"><div class="resizable-panel" data-reactid="36"><div class="resizable-panel__content" data-reactid="37"><div data-reactid="38"><div data-reactid="39"><div data-reactid="40"><ul class="markdown-toc markdown-toc--flat" data-reactid="41"><li class="markdown-toc__entry" data-reactid="42"><a href="#6-0-0" class="" data-reactid="43">6.0.0</a></li><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="44"><i class="icon icon-arrow-right" data-reactid="45"></i><a href="#5-0-0" class="" data-reactid="46">5.0.0</a><ul class="markdown-toc" data-reactid="47"><li class="markdown-toc__entry" data-reactid="48"><a href="#new-feature-spotlight" class="" data-reactid="49">New Feature - Spotlight</a></li><li class="markdown-toc__entry" data-reactid="50"><a href="#new-feature-preview-tooltips" class="" data-reactid="51">New Feature - Preview Tooltips</a></li><li class="markdown-toc__entry" data-reactid="52"><a href="#new-plugin-megadoc-plugin-static" class="" data-reactid="53">New Plugin - megadoc-plugin-static</a></li><li class="markdown-toc__entry" data-reactid="54"><a href="#new-plugin-megadoc-layout-single-page" class="" data-reactid="55">New Plugin - megadoc-layout-single-page</a></li><li class="markdown-toc__entry" data-reactid="56"><a href="#new-plugin-megadoc-layout-multi-page" class="" data-reactid="57">New Plugin - megadoc-layout-multi-page</a></li><li class="markdown-toc__entry" data-reactid="58"><a href="#new-plugin-megadoc-theme-qt" class="" data-reactid="59">New Plugin - megadoc-theme-qt</a></li><li class="markdown-toc__entry" data-reactid="60"><a href="#new-plugin-megadoc-plugin-reference-graph" class="" data-reactid="61">New Plugin - megadoc-plugin-reference-graph</a></li><li class="markdown-toc__entry" data-reactid="62"><a href="#plugin-api-changes" class="" data-reactid="63">Plugin API changes</a></li><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="64"><i class="icon icon-arrow-right" data-reactid="65"></i><a href="#plugin-changes" class="" data-reactid="66">Plugin Changes</a><ul class="markdown-toc" data-reactid="67"><li class="markdown-toc__entry" data-reactid="68"><a href="#megadoc-plugin-js" class="" data-reactid="69">megadoc-plugin-js</a></li><li class="markdown-toc__entry" data-reactid="70"><a href="#megadoc-plugin-react" class="" data-reactid="71">megadoc-plugin-react</a></li><li class="markdown-toc__entry" data-reactid="72"><a href="#megadoc-plugin-yard-api" class="" data-reactid="73">megadoc-plugin-yard-api</a></li><li class="markdown-toc__entry" data-reactid="74"><a href="#megadoc-plugin-markdown" class="" data-reactid="75">megadoc-plugin-markdown</a></li></ul></li></ul></li><li class="markdown-toc__entry" data-reactid="76"><a href="#4-0-1" class="" data-reactid="77">4.0.1</a></li><li class="markdown-toc__entry" data-reactid="78"><a href="#4-0-0" class="" data-reactid="79">4.0.0</a></li><li class="markdown-toc__entry" data-reactid="80"><a href="#3-2-0" class="" data-reactid="81">3.2.0</a></li><li class="markdown-toc__entry" data-reactid="82"><a href="#3-1-0" class="" data-reactid="83">3.1.0</a></li><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="84"><i class="icon icon-arrow-right" data-reactid="85"></i><a href="#3-0-0" class="" data-reactid="86">3.0.0</a><ul class="markdown-toc" data-reactid="87"><li class="markdown-toc__entry" data-reactid="88"><a href="#major-changes-to-the-plugin-architecture" class="" data-reactid="89">Major changes to the plugin architecture</a></li><li class="markdown-toc__entry" data-reactid="90"><a href="#compilation-changes" class="" data-reactid="91">Compilation changes</a></li><li class="markdown-toc__entry" data-reactid="92"><a href="#breaking-plugin-api-changes" class="" data-reactid="93">Breaking plugin API changes</a></li><li class="markdown-toc__entry" data-reactid="94"><a href="#cli-changes" class="" data-reactid="95">CLI changes</a></li><li class="markdown-toc__entry" data-reactid="96"><a href="#internal-api-changes" class="" data-reactid="97">Internal API changes</a></li><li class="markdown-toc__entry" data-reactid="98"><a href="#cjs-plugin-changes" class="" data-reactid="99">CJS Plugin changes</a></li><li class="markdown-toc__entry" data-reactid="100"><a href="#new-options" class="" data-reactid="101">New options</a></li><li class="markdown-toc__entry" data-reactid="102"><a href="#bugfixes" class="" data-reactid="103">Bugfixes</a></li></ul></li><li class="markdown-toc__entry" data-reactid="104"><a href="#2-3-0" class="" data-reactid="105">2.3.0</a></li><li class="markdown-toc__entry" data-reactid="106"><a href="#2-2-4" class="" data-reactid="107">2.2.4</a></li><li class="markdown-toc__entry" data-reactid="108"><a href="#2-2-3" class="" data-reactid="109">2.2.3</a></li><li class="markdown-toc__entry" data-reactid="110"><a href="#2-2-0" class="" data-reactid="111">2.2.0</a></li><li class="markdown-toc__entry" data-reactid="112"><a href="#2-1-5" class="" data-reactid="113">2.1.5</a></li><li class="markdown-toc__entry" data-reactid="114"><a href="#2-1-4" class="" data-reactid="115">2.1.4</a></li><li class="markdown-toc__entry" data-reactid="116"><a href="#2-1-3" class="" data-reactid="117">2.1.3</a></li><li class="markdown-toc__entry" data-reactid="118"><a href="#2-1-2" class="" data-reactid="119">2.1.2</a></li><li class="markdown-toc__entry" data-reactid="120"><a href="#2-1-1" class="" data-reactid="121">2.1.1</a></li><li class="markdown-toc__entry" data-reactid="122"><a href="#2-1-0" class="" data-reactid="123">2.1.0</a></li><li class="markdown-toc__entry" data-reactid="124"><a href="#2-0-22" class="" data-reactid="125">2.0.22</a></li><li class="markdown-toc__entry" data-reactid="126"><a href="#2-0-21" class="" data-reactid="127">2.0.21</a></li><li class="markdown-toc__entry" data-reactid="128"><a href="#2-0-20" class="" data-reactid="129">2.0.20</a></li><li class="markdown-toc__entry" data-reactid="130"><a href="#2-0-19" class="" data-reactid="131">2.0.19</a></li><li class="markdown-toc__entry" data-reactid="132"><a href="#2-0-15" class="" data-reactid="133">2.0.15</a></li><li class="markdown-toc__entry" data-reactid="134"><a href="#2-0-14" class="" data-reactid="135">2.0.14</a></li></ul></div></div></div></div><div class="ui-resizable-handle ui-resizable-e" data-reactid="136"></div></div></div><div class="two-column-layout__right" style="margin-left:240px;" data-reactid="137"><div data-reactid="138"><div class="doc-content" data-reactid="139"><div data-reactid="140"><div data-reactid="141"><div class="highlighted-text " data-reactid="142">
+    <h1 class="anchorable-heading">
+      <a name="changelog" class="anchorable-heading__anchor"></a>
+      <a href="#changelog" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Changelog</span>
+    </h1>
+  
+    <h2 class="anchorable-heading">
+      <a name="6-0-0" class="anchorable-heading__anchor"></a>
+      <a href="#6-0-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">6.0.0</span>
+    </h2>
+  <p>This is a very exciting release; a new model for representing the documents rendered by megadoc is introduced called the <a href="dev/corpus/T/Corpus.html" title="The root corpus node. You do not directly build or interact with this node, only through the ../lib/Corpus.js public api." class="mega-link--internal">T.Corpus</a>. This model enables
+us to analyze the database in a source-agnostic manner and provide many 
+features out-of-the-box such as automatic indexing, URI generation, and more!</p>
+<p>Probably the more exciting part is that we&#39;re now able to pre-render the 
+documents to raw .html files, resulting in a greater level of accessibility 
+and runtime performance.</p>
+<ul>
+<li>(semver-minor) Now using <a href="https://github.com/medialize/URI.js/" target="_blank">urijs</a> for manipulating URIs</li>
+<li>(semver-major) Generated URLs to internal documents are now relative</li>
+<li>(semver-minor) A suffix may be appended to document URLs, like <code>.html</code>, see <a href="" class="mega-link--internal mega-link--broken">Config.format</a></li>
+<li>(semver-minor) HTMLSerializer is now able to pre-render and emit an html file for every document! A boon to SEO and No-JavaScript browsers. See <a href="dev/api/Config.html#js__core-Config.emitFiles" class="mega-link--internal">Config.emitFiles</a> and <a href="" class="mega-link--internal mega-link--broken">Config.emittedFileExtension</a></li>
+<li>(semver-minor) runtime config now contains a <code>pluginNames</code> list of the registered plugin names (inferred from the distributable JS files)</li>
+<li><del>(semver-major) megadoc-plugin-static now requires a <code>title</code> config item</del></li>
+<li><del>(semver-minor) megadoc-plugin-static now integrates with the corpus for indexing</del></li>
+<li>(semver-major) megadoc-plugin-static <strong>has been dropped</strong> - it was duplicating functionality that could be achieved using other plugins like <a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a>. Now with the new layouting engine, it is possible to achieve the same effect.</li>
+<li>(semver-major) links to document entities are now represented as a hash-tag following the document&#39;s URI</li>
+<li>(semver-patch) <code>bin/devserver.sh</code> has been modified to use <a href="https://github.com/senchalabs/connect" target="_blank">connect</a> with <a href="https://github.com/glenjamin/webpack-hot-middleware" target="_blank">webpack-hot-middleware</a> for local development. Also, <code>/.local</code> file support has been dropped; the server will now automatically resolve which plugins to use and use the local versions of them</li>
+<li>(semver-patch) introduced a few localized hacks to react-router to make it ignore any suffixes in links (file extension)</li>
+<li>(semver-major) <a href="" class="mega-link--internal mega-link--broken">megadoc-ui</a>: no longer using the HashLocation</li>
+<li>(semver-major) <a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a> will now discard file extensions by default (this will cause URLs to change unless you opt-out)</li>
+<li>(semver-major) <a href="dev/api/megadoc.html" title="Perform a megadoc compilation." class="mega-link--internal">megadoc</a> no longer accepts a <code>readme</code> config; use the markdown plugin with a rewrite for serving such a file</li>
+<li><p>(semver-major) <a href="dev/api/megadoc.html" title="Perform a megadoc compilation." class="mega-link--internal">megadoc</a> no longer accepts a <code>home</code> config for redirecting</p>
+
+    <h2 class="anchorable-heading">
+      <a name="5-0-0" class="anchorable-heading__anchor"></a>
+      <a href="#5-0-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">5.0.0</span>
+    </h2>
+  </li>
+<li><p>Markdown renderer now accepts a <code>anchorableHeadings: Boolean</code> option that
+controls whether the <code>&lt;h{1..4} /&gt;</code> tags should have anchors. This affects
+the <code>renderMarkdown</code> routines passed to the <code>render</code> phase plugins.</p>
+</li>
+<li>layout capabilities are no longer in core, instead we have two primary layout
+plugins; read more about this below</li>
+<li>a few of the compiler phases are now <em>parallelized</em> which should greatly speed the compilation up if you&#39;re using many plugins</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="new-feature-spotlight" class="anchorable-heading__anchor"></a>
+      <a href="#new-feature-spotlight" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Feature - Spotlight</span>
+    </h3>
+  <p>Spotlight is here! All the indexed documents have a chance to enter the Spotlight (engaged using <code>Ctrl+K</code> or <code>CMD+K</code>) and allow the user to quickly find the document they&#39;re looking for, or other related documents thanks to the <a href="https://github.com/jeancroy/fuzzaldrin-plus" target="_blank">fuzzy search algorithm</a> it utilizes.</p>
+<p>The Spotlight can operate in two useful modes:</p>
+<ul>
+<li>&quot;Jump-to-Document&quot; mode (default) in which the <em>corpus</em> is composed of all the documents in the database</li>
+<li>&quot;Jump-to-Symbol&quot; mode, engaged by typing <code>@</code> as the first character of the query, or by using <code>Ctrl+.</code> or <code>CMD+.</code>, in which the corpus is the set of entities for that document (what this means depends on the document type; for a markdown article, this would be the headings, for a JS module, this would be its functions/properties, etc.)</li>
+</ul>
+<p>The Spotlight also sports an intuitive keyboard navigation interface.</p>
+<p>Currently supported plugins:</p>
+<ul>
+<li><a href="#megadoc-plugin-js" class="mega-link--internal">megadoc-plugin-js</a></li>
+<li><a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a></li>
+<li><a href="#megadoc-plugin-react" class="mega-link--internal">megadoc-plugin-react</a></li>
+<li><a href="#megadoc-plugin-yard-api" class="mega-link--internal">megadoc-plugin-yard-api</a></li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="new-feature-preview-tooltips" class="anchorable-heading__anchor"></a>
+      <a href="#new-feature-preview-tooltips" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Feature - Preview Tooltips</span>
+    </h3>
+  <p>Anytime you&#39;re hovering over a link to an internal document, megadoc will now show a small tooltip that gives the reader a brief description of that document.</p>
+<p>Very helpful for the times when you are not yet ready to leave the document you&#39;re currently reading, but have no idea what the referenced document is.</p>
+<p>Currently supported plugins:</p>
+<ul>
+<li><a href="#megadoc-plugin-js" class="mega-link--internal">megadoc-plugin-js</a></li>
+<li><a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a></li>
+<li><a href="#megadoc-plugin-react" class="mega-link--internal">megadoc-plugin-react</a></li>
+<li><a href="#megadoc-plugin-yard-api" class="mega-link--internal">megadoc-plugin-yard-api</a></li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="new-plugin-megadoc-plugin-static" class="anchorable-heading__anchor"></a>
+      <a href="#new-plugin-megadoc-plugin-static" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Plugin - <a href="" class="mega-link--internal mega-link--broken">megadoc-plugin-static</a></span>
+    </h3>
+  <p>A new plugin for rendering static files at arbitrary URLs. Useful for rendering
+landing pages for other plugins, like js/markdown/API.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="new-plugin-megadoc-layout-single-page" class="anchorable-heading__anchor"></a>
+      <a href="#new-plugin-megadoc-layout-single-page" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Plugin - <a href="" class="mega-link--internal mega-link--broken">megadoc-layout-single-page</a></span>
+    </h3>
+  <p>A plugin for rendering all the content in a single page. Useful for small
+projects orlibraries that consist of a bunch of files and a single API
+reference.</p>
+<p>Navigation is done using a static/fixed sidebar to the left.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="new-plugin-megadoc-layout-multi-page" class="anchorable-heading__anchor"></a>
+      <a href="#new-plugin-megadoc-layout-multi-page" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Plugin - <a href="" class="mega-link--internal mega-link--broken">megadoc-layout-multi-page</a></span>
+    </h3>
+  <p>A plugin for rendering content in multiple pages. Primary navigation is 
+achieved using a banner on the top, which supports arbitrary links and menus
+of links, and sub-navigation using a sidebar.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="new-plugin-megadoc-theme-qt" class="anchorable-heading__anchor"></a>
+      <a href="#new-plugin-megadoc-theme-qt" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Plugin - <a href="" class="mega-link--internal mega-link--broken">megadoc-theme-qt</a></span>
+    </h3>
+  <p>A new theme plugin that mimics <a href="http://doc.qt.io" target="_blank">Qt docs</a>. Very nice looking
+for multi-page layouts.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="new-plugin-megadoc-plugin-reference-graph" class="anchorable-heading__anchor"></a>
+      <a href="#new-plugin-megadoc-plugin-reference-graph" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New Plugin - <a href="" class="mega-link--internal mega-link--broken">megadoc-plugin-reference-graph</a></span>
+    </h3>
+  <p>This plugin will build an internal graph of all the inter-document links in the database. When viewing a document, a list of external documents that talk about the current one will be displayed. This helps the reader find related articles and explore the document database.</p>
+<p>Currently supported plugins:</p>
+<ul>
+<li><a href="#megadoc-plugin-js" class="mega-link--internal">megadoc-plugin-js</a></li>
+<li><a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a></li>
+<li><a href="#megadoc-plugin-react" class="mega-link--internal">megadoc-plugin-react</a></li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="plugin-api-changes" class="anchorable-heading__anchor"></a>
+      <a href="#plugin-api-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Plugin API changes</span>
+    </h3>
+  <p><strong><code>megadoc.use</code> signature change</strong></p>
+<p>The new signature is:</p>
+<pre class="language-javascript"><code>megadoc<span class="token punctuation" >.</span><span class="token function" >use</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> Function<span class="token punctuation" >)</span> <span class="token operator" >-</span><span class="token operator" >></span> <span class="token keyword" >void</span></code></pre><p>And the function will be passed two arguments, the first is the plugin API,
+and the second is the runtime configs registered for that plugin. This is for
+convenience instead of having to reach out to <code>megadoc.getRuntimeConfigs(...)</code>
+and is (currently) backwards compatible.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="plugin-changes" class="anchorable-heading__anchor"></a>
+      <a href="#plugin-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Plugin Changes</span>
+    </h3>
+  
+    <h4 class="anchorable-heading">
+      <a name="megadoc-plugin-js" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-plugin-js" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><a href="#megadoc-plugin-js" class="mega-link--internal">megadoc-plugin-js</a></span>
+    </h4>
+  <ul>
+<li>now using <a href="https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md" target="_blank">babeljs</a> instead of recast for parsing code</li>
+<li>now supports an outlet <code>CJS::Landing</code> for rendering custom landing content</li>
+<li>the plugin no longer defines any links in the banner, hence the config parameters <code>config.navigationLabel</code> and <code>config.icon</code> were dropped. Instead, use the layout for defining links.</li>
+<li>Spotlight support for indexing modules and their properties, static methods and instance methods</li>
+<li>Tooltip Preview support for modules and all their entities. The tooltips should the document&#39;s type, its summary, and its corpus context.</li>
+<li>some style updates for better readability, especially when method parameters are involved</li>
+<li>interoperability with <code>megadoc-plugin-reference-graph</code> for generating a &quot;Related Documents&quot; list for modules</li>
+<li>new config param, <code>alias: Object&lt;String,Array.&lt;String&gt;&gt;</code> that supports explicit aliasing of modules. Very useful when you do not control the source code for those modules, or do not want to change it.</li>
+</ul>
+
+    <h4 class="anchorable-heading">
+      <a name="megadoc-plugin-react" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-plugin-react" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><a href="#megadoc-plugin-react" class="mega-link--internal">megadoc-plugin-react</a></span>
+    </h4>
+  <ul>
+<li>now using <a href="https://github.com/thejameskyle/babel-handbook/blob/master/translations/en/README.md" target="_blank">babeljs</a> instead of recast for parsing code</li>
+</ul>
+
+    <h4 class="anchorable-heading">
+      <a name="megadoc-plugin-yard-api" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-plugin-yard-api" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><a href="#megadoc-plugin-yard-api" class="mega-link--internal">megadoc-plugin-yard-api</a></span>
+    </h4>
+  <ul>
+<li>now supports an outlet <code>yard-api::Landing</code> for rendering custom landing content</li>
+<li>fixed a styling issue when scrolling or using anchors to API objects that caused the heading of those objects to be outside of the visible viewport</li>
+</ul>
+
+    <h4 class="anchorable-heading">
+      <a name="megadoc-plugin-markdown" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-plugin-markdown" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><a href="#megadoc-plugin-markdown" class="mega-link--internal">megadoc-plugin-markdown</a></span>
+    </h4>
+  <ul>
+<li>the <code>&lt;meta name=&quot;description&quot;&gt;</code> is now modified to reflect the current article&#39;s summary. Very link when you&#39;re linking to megadoc documents in Slack or such that utilize the meta of the document when displaying those links.</li>
+<li>Spotlight support for indexing articles and their headings</li>
+<li>Spotlight Symbol-Jumping support for scanning and jumping between sections of the current article quickly</li>
+<li>Tooltip Preview support: the name of the article plus an estimated reading time in minutes</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="4-0-1" class="anchorable-heading__anchor"></a>
+      <a href="#4-0-1" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">4.0.1</span>
+    </h2>
+  <ul>
+<li><code>megadoc-run</code> or <code>megadoc run</code> binary was restored to just <code>megadoc</code></li>
+<li><code>megadoc compile</code> is no longer a thing, use the <code>megadoc-compile</code> binary directly instead</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="4-0-0" class="anchorable-heading__anchor"></a>
+      <a href="#4-0-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">4.0.0</span>
+    </h2>
+  <p>Pulled out the plugins that were previously in core into their own packages:</p>
+<ul>
+<li><code>megadoc/plugins/cjs</code> is now in <code>megadoc-plugin-js</code></li>
+<li><code>megadoc/plugins/yard-api</code> is now in <code>megadoc-plugin-yard-api</code></li>
+<li><code>megadoc/plugins/markdown</code> is now in <code>megadoc-plugin-markdown</code></li>
+<li><code>megadoc/plugins/git</code> is now in <code>megadoc-plugin-git</code></li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="3-2-0" class="anchorable-heading__anchor"></a>
+      <a href="#3-2-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">3.2.0</span>
+    </h2>
+  <p>This patch was mainly concerned with file-size and run-time performance.</p>
+<ul>
+<li>jQuery and jQueryUI dependencies were dropped</li>
+<li>introduced a helper module for performing ScrollSpy functionality</li>
+<li>now using an internal <code>scrollIntoView</code> implementation</li>
+<li>now using an internal <code>resizable</code> implementation</li>
+<li>a new component <code>CollapsibleGroup</code> was extracted from the CJS plugin and is now in core UI</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="3-1-0" class="anchorable-heading__anchor"></a>
+      <a href="#3-1-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">3.1.0</span>
+    </h2>
+  <p>This patch introduces a Single-Page layout in which all the documents are 
+displayed in a single page. This is very useful for small projects that do not 
+need the navigation functionality in the regular, multi-page layout.</p>
+<p>One can toggle this layout by either specifying <code>--layout=&quot;single-page&quot;</code> on 
+the command-line, or adding <code>layout: &quot;single-page&quot;</code> to the config file.</p>
+<p>Only the CJS and Markdown plugins currently support the single-page layout.</p>
+<p><strong>Changes</strong></p>
+<ul>
+<li>many performance improvements that were necessary in order to support the single-page rendering</li>
+<li>CJS: fixed an issue that was preventing the option <code>inferModuleIdFromFileName</code> from being respected</li>
+<li>CJS: can now link to modules using their relative file path</li>
+<li>CJS: instance and prototype properties are now displayed in the same group in the UI</li>
+<li>Core: externals links were incorrectly being highlighted in the UI</li>
+<li>fixed an issue with some markdown headings not being properly rendered to plain-text</li>
+</ul>
+<p><strong>(BREAKING) Internal changes</strong></p>
+<ul>
+<li>megadoc&#39;s plugin registrar API has changed:<ul>
+<li><code>registerRoutes</code> has been renamed to <code>addRoutes</code></li>
+<li><code>registerOutletElement</code> was dropped; use <code>Outlet.add</code> directly instead</li>
+</ul>
+</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="3-0-0" class="anchorable-heading__anchor"></a>
+      <a href="#3-0-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">3.0.0</span>
+    </h2>
+  <p>This release brings a whole lot of improvements to the robustness of megadoc&#39;s parsers, the UI, and runtime performance since we now do all the content rendering at compile-time instead.</p>
+<p>Also, plugins have been revisited and it&#39;s now very easy to write a custom plugin and hook it into the system.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="major-changes-to-the-plugin-architecture" class="anchorable-heading__anchor"></a>
+      <a href="#major-changes-to-the-plugin-architecture" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Major changes to the plugin architecture</span>
+    </h3>
+  <ol>
+<li>megadoc no longer configures plugins by itself, instead the caller configures each plugin manually.</li>
+<li>a plugin is now any object that contains a <code>run</code> function</li>
+<li>a plugin&#39;s UI runtime context is no longer saved in a separate file and exposed to an arbitrary global. Instead, a plugin registers its runtime config at write-time and it can later retrieve it at runtime through a custom API.</li>
+</ol>
+<p>Thanks to #3 above, the same plugin can now be used more than once with different configs.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="compilation-changes" class="anchorable-heading__anchor"></a>
+      <a href="#compilation-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Compilation changes</span>
+    </h3>
+  <p>The compilation now has two more phases:</p>
+<ol>
+<li><code>index</code> in which all the linkable entities may be indexed</li>
+<li><code>render</code> in which all plugins are expected to render their content to something the UI can display (mainly: markdown -&gt; html and linkifying everything in that content)</li>
+</ol>
+
+    <h3 class="anchorable-heading">
+      <a name="breaking-plugin-api-changes" class="anchorable-heading__anchor"></a>
+      <a href="#breaking-plugin-api-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Breaking plugin API changes</span>
+    </h3>
+  <ul>
+<li>the <code>compilation</code> object that was being passed to all stage processors has been dropped</li>
+<li>the <code>$inject</code> and <code>$defaults</code> properties are no longer supported. A plugin&#39;s runner will receive the compiler as the only argument, and from there it can reach whatever dependencies it requires.</li>
+<li>the <code>emitter</code> module is now the same as the compiler; just use <code>compiler.on()</code>.</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="cli-changes" class="anchorable-heading__anchor"></a>
+      <a href="#cli-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">CLI changes</span>
+    </h3>
+  <ul>
+<li>the <code>megadoc</code> binary now supports two commands: <code>run</code> for generating the docs, and <code>compile</code> for compiling external plugins</li>
+<li>The output directory is now purged before writing unless you pass in <code>--no-purge</code> to <code>run</code></li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="internal-api-changes" class="anchorable-heading__anchor"></a>
+      <a href="#internal-api-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Internal API changes</span>
+    </h3>
+  <ul>
+<li>New utility helper for generating temporary files, <a href="dev/api/AssetUtils.html#js__core-AssetUtils#writeTmpFile" title="Write some contents to an arbitrary temporary file and get a handle to its filepath." class="mega-link--internal">AssetUtils#writeTmpFile</a></li>
+<li>A new Assets API for plugins to register different kinds of assets they generate. See <a href="dev/api/Assets.html" title="A registry for all static assets that need to be present at run-time, like stylesheets, JavaScript scripts, image files, or whatever." class="mega-link--internal">Assets</a>.</li>
+<li>Markdown plugin now supports multiple instances</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="cjs-plugin-changes" class="anchorable-heading__anchor"></a>
+      <a href="#cjs-plugin-changes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">CJS Plugin changes</span>
+    </h3>
+  <ul>
+<li>parsing was switched to an AST-based implementation using <a href="https://github.com/benjamn/recast" target="_blank">recast</a>. We still use <a href="https://github.com/tj/dox" target="_blank">dox</a> for parsing docstrings.</li>
+<li>the plugin can now accept custom tag definitions, see <a href="plugins/megadoc-plugin-js/Plugin.html#js__megadoc-plugin-js-Plugin#defineCustomTag" title="Add a custom-tag definition." class="mega-link--internal">Plugin#defineCustomTag</a></li>
+<li>the plugin can now accept custom processors for the following entities:<ul>
+<li>tags: <a href="" class="mega-link--internal mega-link--broken">js__megadoc-plugin-js/Plugin#addTagProcessor</a></li>
+<li>docs (the entire database): <a href="" class="mega-link--internal mega-link--broken">js__megadoc-plugin-js/Plugin#addPostProcessor</a></li>
+<li>recast node analyzer: <a href="" class="mega-link--internal mega-link--broken">js__megadoc-plugin-js/Plugin#addNodeAnalyzer</a></li>
+<li>dox docstring processor: <a href="" class="mega-link--internal mega-link--broken">js__megadoc-plugin-js/Plugin#addDocstringProcessor</a></li>
+</ul>
+</li>
+<li>much better <code>@lends</code> support:<ul>
+<li>you can now lend to a prototype: <code>@lends SomeObject.prototype</code></li>
+<li>or lend to an instance: <code>@lends exports</code></li>
+<li>or to an object: <code>@lends SomeObject</code></li>
+</ul>
+</li>
+<li>The following tags now support typeInfo (like name, type, and description):<ul>
+<li><code>@throws</code></li>
+<li><code>@example</code></li>
+</ul>
+</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="new-options" class="anchorable-heading__anchor"></a>
+      <a href="#new-options" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">New options</span>
+    </h3>
+  <ul>
+<li>new core option <code>motto: String</code> for tuning the motto/slogan next to the title</li>
+<li>new core option <code>metaDescription: String</code> for tuning the <code>&lt;meta description /&gt;</code> tag</li>
+<li>new JS plugin option: <code>showSourcePaths: Boolean</code> for displaying the file path inside the module header</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="bugfixes" class="anchorable-heading__anchor"></a>
+      <a href="#bugfixes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Bugfixes</span>
+    </h3>
+  <ul>
+<li>Fixed an issue that was causing the compiler to silently fail when facing fatal errors during the write phase</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-3-0" class="anchorable-heading__anchor"></a>
+      <a href="#2-3-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.3.0</span>
+    </h2>
+  <ul>
+<li>CJS parsing is now done using a custom AST-based parser instead of dox.</li>
+<li>UI: better JSX syntax highlighting</li>
+<li>new runtime option <code>--stats</code> for generating compile-time stats</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-2-4" class="anchorable-heading__anchor"></a>
+      <a href="#2-2-4" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.2.4</span>
+    </h2>
+  <ul>
+<li>CJS: support for the <code>@alias</code> tag</li>
+<li>fixed an issue that was causing links not to be intercepted when running in history location mode</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-2-3" class="anchorable-heading__anchor"></a>
+      <a href="#2-2-3" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.2.3</span>
+    </h2>
+  <ul>
+<li>more whitespace around the content panel</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-2-0" class="anchorable-heading__anchor"></a>
+      <a href="#2-2-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.2.0</span>
+    </h2>
+  <ul>
+<li>compile-time indexing of link tokens, this allows for linting in the future</li>
+<li>(UI) global plugin hook <code>megadocReact.use</code> renamed to <code>megadoc.use</code></li>
+<li>fixed an issue that was causing some markdown headings to be out-of-sync with their links/anchors</li>
+<li>fixed an issue that was causing CJS entities not to be reachable via sidebar links</li>
+</ul>
+<p>Internal changes:</p>
+<ul>
+<li>UI tests can now be run using <code>/bin/test-ui.sh</code> or <code>karma start ui/karma.conf.js</code></li>
+<li><code>npm test</code> (and <code>npm publish</code>) will now fail if there are any eslint, core-test, or ui-test failures</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-5" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-5" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.5</span>
+    </h2>
+  <ul>
+<li>functional sidebar resizing using jQueryUI.resizable</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-4" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-4" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.4</span>
+    </h2>
+  <ul>
+<li>clicking a link with the CTRL or META keys held down will now work properly</li>
+<li>adjusted the class/module browser to show list bullets &amp; squares to improve readability</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-3" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-3" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.3</span>
+    </h2>
+  <ul>
+<li>Fixed an issue with double-HTML escaping in links</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-2" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-2" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.2</span>
+    </h2>
+  <ul>
+<li>new markdown option: <code>discardIdPrefix</code></li>
+<li>new UI option: <code>launchExternalLinksInNewTabs</code></li>
+<li>external links are now highlighted by a small icon</li>
+<li>links and markdown headings will now contain only plain-text, no weird markdown artficats</li>
+<li>improved markdown linking</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-1" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-1" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.1</span>
+    </h2>
+  <ul>
+<li>support for custom link titles in the format: <code>[/path/to/entity Custom Title]()</code></li>
+<li>new markdown option: <code>allowLeadingSlashInLinks</code></li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-1-0" class="anchorable-heading__anchor"></a>
+      <a href="#2-1-0" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.1.0</span>
+    </h2>
+  <ul>
+<li>markdown no longer accepts multiple &quot;collections&quot;</li>
+<li>Utils#assetPath renamed to Utils#getAssetPath</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-22" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-22" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.22</span>
+    </h2>
+  <ul>
+<li><code>cjs</code> plugin: module &quot;static&quot; methods (like <code>exports.something = function()</code>) are now linked to using the <code>.</code> symbol. For example: <code>[exports.something]()</code> instead of <code>[exports#something]()</code></li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-21" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-21" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.21</span>
+    </h2>
+  <ul>
+<li><code>cjs</code> plugin now supports the <code>@memberOf</code> tag for documenting a module defined in a different file</li>
+<li>the CLI now accepts a <code>--plugin</code> parameter for filtering active plugins at run-time</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-20" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-20" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.20</span>
+    </h2>
+  <ul>
+<li><code>git</code> plugin now accepts a <code>transform()</code> function that can post-process a 
+commit message&#39;s body for display in the Recent Activity section</li>
+<li>fixed an issue that was preventing hot items from being marked as such</li>
+<li><code>git</code> team leaderboard now displays the member count as well as the age of 
+the team (based on their first and last commit timestamps)</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-19" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-19" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.19</span>
+    </h2>
+  <ul>
+<li>node 0.10 compatibility</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-15" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-15" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.15</span>
+    </h2>
+  <ul>
+<li>git-stat parser now works in bulk-mode, should no longer cause issues of spawning too many child processes</li>
+<li>CLI now accepts <code>--verbose</code> and <code>--debug</code> flags</li>
+<li>JS sources now display git authors</li>
+</ul>
+
+    <h2 class="anchorable-heading">
+      <a name="2-0-14" class="anchorable-heading__anchor"></a>
+      <a href="#2-0-14" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">2.0.14</span>
+    </h2>
+  <ul>
+<li>When not using the Hash location, internals links are now intercepted to prevent the browser from refreshing the page when navigating.</li>
+<li>If <code>config.publicPath</code> is set to an empty string <code>&quot;&quot;</code>, the router will start serving from <code>/</code> and will no longer complain that no route matches <code>/</code>.</li>
+</ul>
+</div><!-- react-empty: 143 --></div></div></div><div class="footer" data-reactid="144"><div class="markdown-text " data-reactid="145"><p>Made with &#9829; using <a href="https://github.com/megadoc" target="_blank">megadoc</a>.</p>
+</div></div></div></div></div></div></div></div></div>
+    
+    <script type="text/javascript" src="config.js"></script>
+    
+    <script type="text/javascript" src="megadoc__vendor.js"></script>
+    
+    <script type="text/javascript" src="megadoc.js"></script>
+    
+    <script type="text/javascript" src="plugins/megadoc-plugin-js.js"></script>
+    
+    <script type="text/javascript" src="plugins/megadoc-plugin-markdown.js"></script>
+    
+    <script type="text/javascript" src="plugins/megadoc-theme-qt.js"></script>
+    
+    <script type="text/javascript" src="plugins/megadoc-plugin-dot.js"></script>
+    
+    <script type="text/javascript">
+      megadoc.start({
+        startingDocumentUID: "md__core/changes"
+      });
+    </script>
+  </body>
+</html>

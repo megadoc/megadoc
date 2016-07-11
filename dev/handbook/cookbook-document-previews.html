@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="" />
+
+    <title>Previewing documents in tooltips
+</title>
+
+    
+    <link rel="stylesheet" href="../../styles.css" />
+    
+  </head>
+
+  <body class="body--themed">
+    <div id="__app__"><div data-reactroot="" data-reactid="1" data-react-checksum="-1355855931"><div data-reactid="2"><!-- react-empty: 3 --></div><!-- react-empty: 4 --><div class="root root--with-multi-page-layout root--with-fixed-sidebar root--with-two-column-layout root--with-banner" data-reactid="5"><div class="banner-wrapper" data-reactid="6"><header class="banner" data-reactid="7"><h1 class="banner__logo" data-reactid="8"><a href="../../index.html" class="" data-reactid="9">megadoc</a><!-- react-text: 10 --> <!-- /react-text --></h1><nav class="banner__navigation" data-reactid="11"><div class="banner__navigation-item" title="Quick-Jump (Ctrl+K or CMD+K)" data-reactid="12"><i class="icon icon-search" data-reactid="13"></i></div><span data-reactid="14"><div class="banner__navigation-item" data-reactid="15"><a href="../../usage/readme.html" class="" data-reactid="16">Usage</a></div><div class="banner__navigation-item" data-reactid="17"><div class="banner__menu" data-reactid="18"><span class="banner__menu-title" data-reactid="19"><span data-reactid="20"><!-- react-text: 21 -->Plugins<!-- /react-text --><!-- react-text: 22 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="23"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="24"><div class="banner__menu" data-reactid="25"><span class="banner__menu-title" data-reactid="26"><span data-reactid="27"><!-- react-text: 28 -->Developers<!-- /react-text --><!-- react-text: 29 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="30"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="31"><a href="../../changes.html" class="" data-reactid="32">Changes</a></div></span></nav></header></div><div class="root__screen" data-reactid="33"><div class="two-column-layout" data-reactid="34"><div class="two-column-layout__left" style="width:240px;" data-reactid="35"><div class="resizable-panel" data-reactid="36"><div class="resizable-panel__content" data-reactid="37"><div data-reactid="38"><div data-reactid="39"><nav data-reactid="40"><div data-reactid="41"><div data-reactid="42"><a href="building-interfaces.html" class="class-browser__entry-link" data-reactid="43"><!-- react-text: 44 -->Building the HTML UI
+<!-- /react-text --></a></div><div data-reactid="45"><a href="defining-link-schemes.html" class="class-browser__entry-link" data-reactid="46"><!-- react-text: 47 -->Defining Link Schemes
+<!-- /react-text --></a></div><div data-reactid="48"><a href="env.html" class="class-browser__entry-link" data-reactid="49"><!-- react-text: 50 -->Setting up the development environment
+<!-- /react-text --></a></div><div data-reactid="51"><a href="plugin-helper-scripts.html" class="class-browser__entry-link" data-reactid="52"><!-- react-text: 53 -->Plugin helper scripts
+<!-- /react-text --></a></div><div data-reactid="54"><a href="readme.html" class="class-browser__entry-link" data-reactid="55"><!-- react-text: 56 -->Megadoc Developer&#x27;s Handbook
+<!-- /react-text --></a></div><div data-reactid="57"><a href="using-the-corpus.html" class="class-browser__entry-link" data-reactid="58"><!-- react-text: 59 -->Using the Corpus
+<!-- /react-text --></a></div><div data-reactid="60"><a href="" class="class-browser__entry-link active" data-reactid="61"><!-- react-text: 62 -->Previewing documents in tooltips
+<!-- /react-text --></a><div data-reactid="63"></div></div><div data-reactid="64"><a href="cookbook-overriding-styles.html" class="class-browser__entry-link" data-reactid="65"><!-- react-text: 66 -->Overriding style variables
+<!-- /react-text --></a></div></div></nav></div><div data-reactid="67"></div></div></div><div class="ui-resizable-handle ui-resizable-e" data-reactid="68"></div></div></div><div class="two-column-layout__right" style="margin-left:240px;" data-reactid="69"><div data-reactid="70"><div class="doc-content" data-reactid="71"><div data-reactid="72"><div data-reactid="73"><div class="highlighted-text " data-reactid="74">
+    <h1 class="anchorable-heading">
+      <a name="previewing-documents-in-tooltips" class="anchorable-heading__anchor"></a>
+      <a href="#previewing-documents-in-tooltips" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Previewing documents in tooltips</span>
+    </h1>
+  <pre class="language-javascript"><code>megadoc<span class="token punctuation" >.</span>outlets<span class="token punctuation" >.</span><span class="token function" >add</span><span class="token punctuation" >(</span><span class="token string" >"Inspector"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  key<span class="token punctuation" >:</span> <span class="token string" >'js'</span><span class="token punctuation" >,</span>
+
+  <span class="token function" >match</span><span class="token punctuation" >(</span>props<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+    <span class="token keyword" >return</span> props<span class="token punctuation" >.</span>namespaceNode<span class="token punctuation" >.</span>id <span class="token operator" >===</span> <span class="token string" >"js"</span><span class="token punctuation" >;</span>
+  <span class="token punctuation" >}</span><span class="token punctuation" >,</span>
+
+  <span class="token function" >render</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+    <span class="token keyword" >const</span> <span class="token punctuation" >{</span> documentNode<span class="token punctuation" >,</span> namespaceNode <span class="token punctuation" >}</span> <span class="token operator" >=</span> <span class="token keyword" >this</span><span class="token punctuation" >.</span>props<span class="token punctuation" >;</span>
+
+    <span class="token keyword" >return</span> <span class="token punctuation" >(</span>
+      <span class="token operator" >&lt;</span>div<span class="token operator" >></span>
+        <span class="token operator" >&lt;</span>div className<span class="token operator" >=</span><span class="token string" >"tooltip__title"</span><span class="token operator" >></span>
+          <span class="token punctuation" >{</span>documentNode<span class="token punctuation" >.</span>id<span class="token punctuation" >}</span> <span class="token punctuation" >(</span><span class="token keyword" >in</span> <span class="token punctuation" >{</span>namespaceNode<span class="token punctuation" >.</span>corpusContext<span class="token punctuation" >}</span><span class="token punctuation" >)</span>
+        <span class="token operator" >&lt;</span><span class="token operator" >/</span>div<span class="token operator" >></span>
+
+        <span class="token operator" >&lt;</span>p children<span class="token operator" >=</span><span class="token punctuation" >{</span>documentNode<span class="token punctuation" >.</span>summary<span class="token punctuation" >}</span> <span class="token operator" >/</span><span class="token operator" >></span>
+      <span class="token operator" >&lt;</span><span class="token operator" >/</span>div<span class="token operator" >></span>
+    <span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre></div><!-- react-empty: 75 --></div></div><div data-reactid="76"></div></div><div class="footer" data-reactid="77"><div class="markdown-text " data-reactid="78"><p>Made with &#9829; using <a href="https://github.com/megadoc" target="_blank">megadoc</a>.</p>
+</div></div></div></div></div></div></div></div></div>
+    
+    <script type="text/javascript" src="../../config.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc__vendor.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-js.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-markdown.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-theme-qt.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-dot.js"></script>
+    
+    <script type="text/javascript">
+      megadoc.start({
+        startingDocumentUID: "md__plugins/cookbook-document-previews"
+      });
+    </script>
+  </body>
+</html>

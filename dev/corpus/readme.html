@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="The corpus is megadoc&#39;s model for indexing documents. It is a database (or, a 
+graph) of abstract representations of documentation." />
+
+    <title>megadoc-corpus
+</title>
+
+    
+    <link rel="stylesheet" href="../../styles.css" />
+    
+  </head>
+
+  <body class="body--themed">
+    <div id="__app__"><div data-reactroot="" data-reactid="1" data-react-checksum="529828465"><div data-reactid="2"><!-- react-empty: 3 --></div><!-- react-empty: 4 --><div class="root root--with-multi-page-layout root--with-fixed-sidebar root--with-two-column-layout root--with-banner" data-reactid="5"><div class="banner-wrapper" data-reactid="6"><header class="banner" data-reactid="7"><h1 class="banner__logo" data-reactid="8"><a href="../../index.html" class="" data-reactid="9">megadoc</a><!-- react-text: 10 --> <!-- /react-text --></h1><nav class="banner__navigation" data-reactid="11"><div class="banner__navigation-item" title="Quick-Jump (Ctrl+K or CMD+K)" data-reactid="12"><i class="icon icon-search" data-reactid="13"></i></div><span data-reactid="14"><div class="banner__navigation-item" data-reactid="15"><a href="../../usage/readme.html" class="" data-reactid="16">Usage</a></div><div class="banner__navigation-item" data-reactid="17"><div class="banner__menu" data-reactid="18"><span class="banner__menu-title" data-reactid="19"><span data-reactid="20"><!-- react-text: 21 -->Plugins<!-- /react-text --><!-- react-text: 22 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="23"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="24"><div class="banner__menu banner__menu--active" data-reactid="25"><span class="banner__menu-title" data-reactid="26"><span data-reactid="27"><!-- react-text: 28 -->Developers<!-- /react-text --><!-- react-text: 29 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="30"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="31"><a href="../../changes.html" class="" data-reactid="32">Changes</a></div></span></nav></header></div><div class="root__screen" data-reactid="33"><div class="two-column-layout two-column-layout--with-nav" data-reactid="34"><div class="two-column-layout__left" style="width:240px;" data-reactid="35"><div class="resizable-panel" data-reactid="36"><div class="resizable-panel__content" data-reactid="37"><div data-reactid="38"><div data-reactid="39"><nav data-reactid="40"><div data-reactid="41"><div data-reactid="42"><a href="" class="class-browser__entry-link active" data-reactid="43"><!-- react-text: 44 -->megadoc-corpus
+<!-- /react-text --></a></div></div></nav></div><div data-reactid="45"><h3 class="layout__sidebar-header" data-reactid="46">API</h3></div><div data-reactid="47"><nav class="class-browser__listing" data-reactid="48"><div class="class-browser__category" data-reactid="49"><h3 class="class-browser__category-name" data-reactid="50">T</h3><div class="class-browser__entry" data-reactid="51"><a href="T/Corpus.html" class="class-browser__entry-link" data-reactid="52"><!-- react-text: 53 -->Corpus<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="54"><a href="T/Document.html" class="class-browser__entry-link" data-reactid="55"><!-- react-text: 56 -->Document<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="57"><a href="T/DocumentEntity.html" class="class-browser__entry-link" data-reactid="58"><!-- react-text: 59 -->DocumentEntity<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="60"><a href="T/Namespace.html" class="class-browser__entry-link" data-reactid="61"><!-- react-text: 62 -->Namespace<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="63"><a href="T/Node.html" class="class-browser__entry-link" data-reactid="64"><!-- react-text: 65 -->Node<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="66"><a href="T/Property.html" class="class-browser__entry-link" data-reactid="67"><!-- react-text: 68 -->Property<!-- /react-text --></a></div></div><div class="class-browser__category" data-reactid="69"><h3 class="class-browser__category-name" data-reactid="70">[General]</h3><div class="class-browser__entry" data-reactid="71"><a href="Corpus.html" class="class-browser__entry-link" data-reactid="72"><!-- react-text: 73 -->Corpus<!-- /react-text --></a></div><div class="class-browser__entry" data-reactid="74"><a href="CorpusTypes.html" class="class-browser__entry-link" data-reactid="75"><!-- react-text: 76 -->CorpusTypes<!-- /react-text --></a></div></div></nav></div></div></div><div class="ui-resizable-handle ui-resizable-e" data-reactid="77"></div></div></div><div class="two-column-layout__right" style="margin-left:240px;" data-reactid="78"><div data-reactid="79"><div class="doc-content" data-reactid="80"><div data-reactid="81"><div data-reactid="82"><div class="highlighted-text " data-reactid="83">
+    <h1 class="anchorable-heading">
+      <a name="megadoc-corpus" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-corpus" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">megadoc-corpus</span>
+    </h1>
+  <p>The corpus is megadoc&#39;s model for indexing documents. It is a database (or, a 
+graph) of <em>abstract</em> representations of documentation.</p>
+<p>The corpus has enough semantics to provide a powerful and intuitive 
+implementation for resolving links, among other things like plotting
+dependency and co-relation graphs between documents.</p>
+<p>Megadoc&#39;s HTML serializer is entirely powered by the corpus and exposes 
+<a href="" class="mega-link--internal mega-link--broken">an API</a> for interacting with it - so as an upstream 
+developer, learning how to use and utilize the corpus will pay off greatly.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="design" class="anchorable-heading__anchor"></a>
+      <a href="#design" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Design</span>
+    </h2>
+  <p>The corpus is formed initially as a tree of nodes, each representing either a
+document or an entity inside a document, grouped by what are called <em>namespace</em>
+nodes.</p>
+<p>What a document or document entity is is context-specific and, in practice, 
+irrelevant to the corpus - all it cares about is an abstract representation of 
+those documents that allows us to treat the database in a generic manner.</p>
+<p>The distinction in the codebase and this documentation between documents or 
+document entities themselves and their corpus representation is made by the 
+use of the word &quot;node&quot;. So, when we&#39;re talking about a node, it would mean the
+abstract node in the corpus and not the underlying document. The actual 
+documents and document entities themselves referred to as, simply, a document, 
+a document entity, or an entity for brevity.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="the-abstract-document-tree-adt" class="anchorable-heading__anchor"></a>
+      <a href="#the-abstract-document-tree-adt" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The Abstract Document Tree (ADT)</span>
+    </h3>
+  <p>Each node in the corpus must have an id and a type. Types are pre-defined and
+may be one of <code>Namespace</code>, <code>Document</code>, or <code>DocumentEntity</code>.</p>
+<p>At the root of the corpus, we have a singleton node of type <code>Corpus</code> that
+houses a set of <code>Namespace</code> nodes. Each plugin that registers with the corpus
+has to define its own unique <code>Namespace</code> node and nest its documents underneath
+it.</p>
+<div class="plugin-dot__container"><svg version="1.1" baseProfile="full" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" style="font-weight:bold; font-size:10pt; font-family:'Monospace', Helvetica, sans-serif;;stroke-width:1;stroke-linejoin:round;stroke-linecap:round"><rect x="13.5" y="13.5" height="360" width="349" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="21.5" y="32.8" style="">Corpus Model</text>
+<path d="M13.5 42.5 L123.5 42.5 L138 28 L138 13.5" style="stroke:#404244;fill:none;"></path>
+<path d="M183.7 84.5 L144 104.5 L144 124.5 L144 124.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M138.7 111.2 L144 117.8 L149.3 111.2 L144 124.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M246 82.8 L303 104.5 L303 124.5 L303 124.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M297.7 111.2 L303 117.8 L308.3 111.2 L303 124.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M105.1 153.5 L51.5 173.5 L51.5 193.5 L51.5 193.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M46.2 180.2 L51.5 186.8 L56.8 180.2 L51.5 193.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M51.5 222.5 L51.5 242.5 L51.5 262.5 L51.5 262.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M46.2 249.2 L51.5 255.8 L56.8 249.2 L51.5 262.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M51.5 291.5 L51.5 311.5 L51.5 331.5 L51.5 331.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M46.2 318.2 L51.5 324.8 L56.8 318.2 L51.5 331.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M161.2 153.5 L185 173.5 L185 193.5 L185 193.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M179.7 180.2 L185 186.8 L190.3 180.2 L185 193.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M172.5 216.4 L133.5 242.5 L133.5 262.5 L133.5 262.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M128.2 249.2 L133.5 255.8 L138.8 249.2 L133.5 262.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M197.5 216.4 L236.5 242.5 L236.5 262.5 L236.5 262.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M231.2 249.2 L236.5 255.8 L241.8 249.2 L236.5 262.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M303 153.5 L303 173.5 L303 193.5 L303 193.5 " style="stroke:#404244;fill:none;"></path>
+<path d="M297.7 180.2 L303 186.8 L308.3 180.2 L303 193.5 Z" style="stroke:#404244;fill:#404244;"></path>
+<rect x="179.5" y="55.5" height="29" width="67" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="187.5" y="74.8" style="">Corpus</text>
+<rect x="89.5" y="124.5" height="29" width="110" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="97.8" y="143.8" style="">JavaScripts</text>
+<rect x="261.5" y="124.5" height="29" width="84" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="269.5" y="143.8" style="">Markdown</text>
+<rect x="26.5" y="193.5" height="29" width="50" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="34.5" y="212.8" style="">Core</text>
+<rect x="39.5" y="262.5" height="29" width="25" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="47.8" y="281.8" style="">X</text>
+<rect x="26.5" y="331.5" height="29" width="50" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="34.5" y="350.8" style="">#add</text>
+<rect x="172.5" y="193.5" height="29" width="25" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="180.8" y="212.8" style="">Y</text>
+<rect x="104.5" y="262.5" height="29" width="59" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="112.8" y="281.8" style="">@name</text>
+<rect x="203.5" y="262.5" height="29" width="67" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="211.5" y="281.8" style="">#speak</text>
+<rect x="256.5" y="193.5" height="29" width="93" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="264.8" y="212.8" style="">Article A</text></svg></div><p>A <code>Namespace</code> node is the direct owner of a plugin&#39;s <code>Document</code> nodes. However,
+from that point down, the hierarchy is flexible in that a <code>Document</code> node may
+contain either <code>Document</code> nodes as children (namespacing at the plugin level)
+or leaf <code>DocumentEntity</code> nodes.</p>
+<p>This architecture is flexible enough to support a wide array of documentation 
+schemes; most kinds of textual documentation, public API references, library 
+documentation, etc., can be structured within this model.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="uids" class="anchorable-heading__anchor"></a>
+      <a href="#uids" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">UIDs</span>
+    </h3>
+  <p>Each node added to the corpus is stamped with a <code>uid</code> - an identifier that is
+guaranteed to be unique among all nodes and can always be used to reference 
+the exact document, although it&#39;s usually not human-friendly. To address that,
+we get to indexing...</p>
+
+    <h2 class="anchorable-heading">
+      <a name="indexing" class="anchorable-heading__anchor"></a>
+      <a href="#indexing" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Indexing</span>
+    </h2>
+  <p>A lot of care has gone into making the algorithm and heuristics behind 
+resolving links to documents provide for an <em>intuitive</em> and natural experience 
+for the author. The effect it strives to achieve is that &quot;It Just Works&quot;. For 
+this reason, the implementation is heavily influenced by the node from which a 
+link is being made - the <em>context node</em>.</p>
+<p>For every node added to the corpus, a list of <em>indices</em> is built. An index
+represents a <strong>term that can be used to link to a node</strong> - but only from a 
+specific context. Some indices are <em>private</em>, a semantic for indicating that 
+the term may only be used by the document itself (i.e. when referencing its 
+entities), entities amongst each other, and <em>friends</em> which we&#39;ll touch upon
+later.</p>
+<p>The indices generated for a node are customizable. We cover the process in
+great detail over in the <a href="../handbook/using-the-corpus.html#tuning-the-indexer" class="mega-link--internal">corpus usage guide</a>.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="the-resolver" class="anchorable-heading__anchor"></a>
+      <a href="#the-resolver" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The resolver</span>
+    </h3>
+  <p>The corpus resolver performs a depth-first search in the ADT to resolve the 
+node that is being linked to. The parameters needed for resolving are the 
+term, and the <em>context node</em>.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="constraints" class="anchorable-heading__anchor"></a>
+      <a href="#constraints" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Constraints</span>
+    </h3>
+  <ul>
+<li>Document identifiers MUST NOT begin with any of the following characters:<ol>
+<li><code>./</code> (a dot followed by a forward slash)</li>
+<li><code>/</code> (a forward slash)</li>
+</ol>
+</li>
+</ul>
+
+    <h3 class="anchorable-heading">
+      <a name="private-contextual-resolving" class="anchorable-heading__anchor"></a>
+      <a href="#private-contextual-resolving" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Private contextual resolving</span>
+    </h3>
+  <p>A link could be formed using a short-hand notation when it points to an 
+<em>entity</em> within the same document (aka, a private link). The index used for
+resolving such links is kept <em>private</em> in the sense that external documents
+will not be able to reference the entities using this notation.</p>
+<p>For example, within the context of a document <code>X</code>, linking to <code>#someMethod</code> 
+should resolve to <code>X#someMethod</code> if that entity exists, but linking to that 
+same entity from a different document, <code>Y</code>, yields nothing.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="resolving-by-relative-filepath" class="anchorable-heading__anchor"></a>
+      <a href="#resolving-by-relative-filepath" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Resolving by (relative) filepath</span>
+    </h3>
+  <p>Any link that begins with <code>./</code> is expected to point to a document that can be
+found relative from the current document&#39;s filepath:</p>
+<pre class="language-javascript"><code><span class="token punctuation" >[</span><span class="token punctuation" >.</span><span class="token operator" >/</span>path<span class="token operator" >/</span>to<span class="token operator" >/</span>file<span class="token punctuation" >]</span><span class="token punctuation" >(</span>mega<span class="token punctuation" >:</span><span class="token operator" >/</span><span class="token operator" >/</span><span class="token punctuation" >)</span></code></pre>
+    <h3 class="anchorable-heading">
+      <a name="resolving-by-absolute-filepath" class="anchorable-heading__anchor"></a>
+      <a href="#resolving-by-absolute-filepath" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Resolving by (absolute) filepath</span>
+    </h3>
+  <p>Any link that begins with <code>/</code> is expected to point to a document that can be
+found at that path, relative to the <a href="" class="mega-link--internal mega-link--broken">Config@assetRoot</a>:</p>
+<pre class="language-javascript"><code><span class="token punctuation" >[</span><span class="token operator" >/</span>path<span class="token operator" >/</span>to<span class="token operator" >/</span>file<span class="token punctuation" >]</span><span class="token punctuation" >(</span>mega<span class="token punctuation" >:</span><span class="token operator" >/</span><span class="token operator" >/</span><span class="token punctuation" >)</span></code></pre><p>Let&#39;s look at an example corpus with the following contents:</p>
+<pre class="language-javascript"><code><span class="token operator" >-</span> corpus
+<span class="token operator" >|</span>
+<span class="token operator" >|</span> <span class="token operator" >-</span> megadoc<span class="token operator" >-</span>plugin<span class="token operator" >-</span>markdown <span class="token punctuation" >(</span>namespace id <span class="token operator" >=</span> MD<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> X <span class="token punctuation" >(</span>doc<span class="token operator" >/</span>X<span class="token punctuation" >.</span>md<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> Y <span class="token punctuation" >(</span>doc<span class="token operator" >/</span>Y<span class="token punctuation" >.</span>md<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> Z <span class="token punctuation" >(</span>doc<span class="token operator" >/</span>Z<span class="token punctuation" >.</span>md<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   
+<span class="token operator" >|</span> <span class="token operator" >-</span> megadoc<span class="token operator" >-</span>plugin<span class="token operator" >-</span>js       <span class="token punctuation" >(</span>namespace id <span class="token operator" >=</span> JS<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> X                   <span class="token punctuation" >(</span>filePath <span class="token operator" >=</span> js<span class="token operator" >/</span>lib<span class="token operator" >/</span>X<span class="token punctuation" >.</span>js<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> Core<span class="token punctuation" >.</span>X              <span class="token punctuation" >(</span>filePath <span class="token operator" >=</span> js<span class="token operator" >/</span>lib<span class="token operator" >/</span>core<span class="token operator" >/</span>X<span class="token punctuation" >.</span>js<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> @id
+<span class="token operator" >|</span>   <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> #add
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> Core<span class="token punctuation" >.</span>Y              <span class="token punctuation" >(</span>filePath <span class="token operator" >=</span> js<span class="token operator" >/</span>lib<span class="token operator" >/</span>core<span class="token operator" >/</span>Y<span class="token punctuation" >.</span>js<span class="token punctuation" >)</span>
+<span class="token operator" >|</span>   <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> @id
+<span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> Z                   <span class="token punctuation" >(</span>filePath <span class="token operator" >=</span> js<span class="token operator" >/</span>lib<span class="token operator" >/</span>Z<span class="token punctuation" >.</span>js<span class="token punctuation" >)</span></code></pre><p>The following table shows the resolving behavior:</p>
+<table>
+<thead>
+<tr>
+<th>Context Node</th>
+<th>Link</th>
+<th>Resolved Node</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JS/Core.X@id</td>
+<td>X</td>
+<td>JS/Core.X</td>
+</tr>
+<tr>
+<td>JS/Core.X@id</td>
+<td>JS/X</td>
+<td>JS/X</td>
+</tr>
+<tr>
+<td>JS/Core.X@id</td>
+<td>MD/X</td>
+<td>MD/X</td>
+</tr>
+<tr>
+<td>JS/Core.X#add</td>
+<td>@id</td>
+<td>JS/Core.X@id</td>
+</tr>
+<tr>
+<td>JS/Core.X#add</td>
+<td>Y@id</td>
+<td>JS/Core.Y@id</td>
+</tr>
+<tr>
+<td>JS/Core.X#add</td>
+<td>Core.Y@id</td>
+<td>JS/Core.Y@id</td>
+</tr>
+<tr>
+<td>JS/Core.X#add</td>
+<td>JS/Core.Y@id</td>
+<td>JS/Core.Y@id</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>X</td>
+<td>JS/Core.X</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>#add</td>
+<td>! (unknown)</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>X#add</td>
+<td>JS/Core.X#add</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>X.js</td>
+<td>! (ambiguous)</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>./X.js</td>
+<td>JS/Core.X</td>
+</tr>
+<tr>
+<td>JS/Core.Y</td>
+<td>../X.js</td>
+<td>JS/X</td>
+</tr>
+<tr>
+<td>JS/Z</td>
+<td>X</td>
+<td>JS/X</td>
+</tr>
+<tr>
+<td>MD/X</td>
+<td>X</td>
+<td>MD/X</td>
+</tr>
+<tr>
+<td>MD/X</td>
+<td>Core.X</td>
+<td>JS/Core.X</td>
+</tr>
+<tr>
+<td>MD/Y</td>
+<td>X</td>
+<td>MD/X</td>
+</tr>
+</tbody>
+</table>
+<p>Here&#39;s a visual example (although it does not fully conform to the table
+above):</p>
+<p><img src="/images/corpus-resolver.png" alt="A visualization of the table above"></p>
+
+    <h3 class="anchorable-heading">
+      <a name="friend-nodes" class="anchorable-heading__anchor"></a>
+      <a href="#friend-nodes" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Friend nodes</span>
+    </h3>
+  <p>When resolving an index from a certain context node, we will consider the 
+indices in a binary fashion: either indices that are private or public. Private
+indices are ones that are semantically too specific to be linked to outside the
+scope they were defined in; in our example above, <code>JS/Core.X@id</code> would have
+a private index of <code>@id</code> which would not make much sense once we&#39;re outside of
+<code>JS/Core.X</code>.</p>
+<p>However, this rule is broken in one case, and is modeled as a friendship 
+between nodes. Nodes that are considered &quot;friends&quot; can peek into each others&#39;
+private indices but <em>not</em> their entity indices. The reason for this will be
+explained after we look at the following table:</p>
+<pre class="language-javascript"><code><span class="token operator" >|</span> <span class="token operator" >--</span> JS
+<span class="token operator" >|</span>    <span class="token operator" >|</span><span class="token operator" >--</span> X
+<span class="token operator" >|</span>    <span class="token operator" >|</span><span class="token operator" >--</span> Y
+<span class="token operator" >|</span>    <span class="token operator" >|</span><span class="token operator" >--</span> Core
+<span class="token operator" >|</span>        <span class="token operator" >|</span><span class="token operator" >--</span> X         <span class="token operator" >&lt;</span><span class="token operator" >-</span> friends<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>Core<span class="token punctuation" >]</span><span class="token punctuation" >,</span> can access Core<span class="token punctuation" >.</span>Y using <span class="token string" >"Y"</span>
+<span class="token operator" >|</span>        <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> @id   <span class="token operator" >&lt;</span><span class="token operator" >-</span> friends<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>X<span class="token punctuation" >,</span> Core<span class="token punctuation" >]</span><span class="token punctuation" >,</span> can access Core<span class="token punctuation" >.</span>X#add using <span class="token string" >"#add"</span>
+<span class="token operator" >|</span>        <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> #add
+<span class="token operator" >|</span>        <span class="token operator" >|</span><span class="token operator" >--</span> Y         <span class="token operator" >&lt;</span><span class="token operator" >-</span> friends<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>Core<span class="token punctuation" >]</span><span class="token punctuation" >,</span> can access Core<span class="token punctuation" >.</span>X using <span class="token string" >"X"</span>
+<span class="token operator" >|</span>        <span class="token operator" >|</span>   <span class="token operator" >|</span><span class="token operator" >--</span> @name <span class="token operator" >&lt;</span><span class="token operator" >-</span> friends<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>Y<span class="token punctuation" >,</span> Core<span class="token punctuation" >]</span><span class="token punctuation" >,</span> can NOT access Core<span class="token punctuation" >.</span>X#add using <span class="token string" >"#add"</span><span class="token operator" >!</span><span class="token operator" >!</span><span class="token operator" >!</span>
+<span class="token operator" >|</span>    <span class="token operator" >|</span><span class="token operator" >--</span> Z             <span class="token operator" >&lt;</span><span class="token operator" >-</span> friends<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>NS1<span class="token punctuation" >]</span></code></pre><p>It so happens that when you&#39;re authoring docs in a context like the <code>Core.X</code> 
+document above, you would naturally want to link to other related documents by
+their &quot;short names&quot;, which to the corpus are private indices. For this reason,
+<code>Core.X</code> is considered a friend of Core.Y and may call it by its &quot;short name&quot;,
+<code>Y</code>.</p>
+<p>In order to support this style of linking, but still protect from <em>invalid</em> 
+links, we prohibit nodes from accessing their friends&#39; entity indices. So,
+in <code>Core.X</code>, you may not link to <code>@name</code> which resides in <code>Y</code> - only using
+<code>Y@name</code>.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="adt-types" class="anchorable-heading__anchor"></a>
+      <a href="#adt-types" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">ADT Types</span>
+    </h2>
+  <pre class="language-javascript"><code><span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"Corpus"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    namespaces<span class="token punctuation" >:</span> <span class="token function" >array</span><span class="token punctuation" >(</span><span class="token string" >"Namespace"</span><span class="token punctuation" >)</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+<span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"Namespace"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    id<span class="token punctuation" >:</span> String<span class="token punctuation" >,</span>
+    symbol<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span> <span class="token comment" spellcheck="true">// defaults to "/"</span>
+    corpusContext<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    documents<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span><span class="token function" >array</span><span class="token punctuation" >(</span><span class="token string" >"Document"</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    parentNode<span class="token punctuation" >:</span> <span class="token string" >"Corpus"</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+<span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"Node"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    id<span class="token punctuation" >:</span> String<span class="token punctuation" >,</span>
+    href<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    title<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    summary<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    filePath<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    properties<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span><span class="token function" >array</span><span class="token punctuation" >(</span><span class="token string" >"Property"</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+<span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"Document"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  base<span class="token punctuation" >:</span> <span class="token string" >"Node"</span><span class="token punctuation" >,</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    symbol<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    parentNode<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span><span class="token string" >"Namespace"</span><span class="token punctuation" >,</span> <span class="token string" >"Document"</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    documents<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span><span class="token function" >array</span><span class="token punctuation" >(</span><span class="token string" >"Document"</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+    entities<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span><span class="token function" >array</span><span class="token punctuation" >(</span><span class="token string" >"DocumentEntity"</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+<span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"DocumentEntity"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// terminal</span>
+  base<span class="token punctuation" >:</span> <span class="token string" >"Node"</span><span class="token punctuation" >,</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    parentNode<span class="token punctuation" >:</span> <span class="token string" >"Document"</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+<span class="token function" >def</span><span class="token punctuation" >(</span><span class="token string" >"Property"</span><span class="token punctuation" >,</span> <span class="token punctuation" >{</span>
+  build<span class="token punctuation" >:</span> <span class="token punctuation" >[</span> <span class="token string" >'key'</span><span class="token punctuation" >,</span> <span class="token string" >'value'</span> <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+  fields<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+    key<span class="token punctuation" >:</span> String<span class="token punctuation" >,</span>
+    value<span class="token punctuation" >:</span> <span class="token function" >or</span><span class="token punctuation" >(</span>String<span class="token punctuation" >,</span> Number<span class="token punctuation" >,</span> Boolean<span class="token punctuation" >,</span> RegExp<span class="token punctuation" >,</span> Array<span class="token punctuation" >,</span> Object<span class="token punctuation" >,</span> <span class="token keyword" >null</span><span class="token punctuation" >)</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre><p>A sample AST for the example above:</p>
+<pre class="language-javascript"><code><span class="token comment" spellcheck="true">// JS/Core.X@id -> [[X]] -> JS/Core.X</span>
+<span class="token comment" spellcheck="true">// JS/Core.X@id -> [[@id]] -> JS/Core@id</span>
+<span class="token comment" spellcheck="true">// JS/Core.X@id -> [[#add]] -> JS/Core#add</span>
+
+<span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// DocumentEntity</span>
+  type<span class="token punctuation" >:</span> <span class="token string" >"DocumentEntity"</span><span class="token punctuation" >,</span>
+  id<span class="token punctuation" >:</span> <span class="token string" >"@id"</span><span class="token punctuation" >,</span>
+  uid<span class="token punctuation" >:</span> <span class="token string" >"JS/Core.X@id"</span><span class="token punctuation" >,</span>
+  indices<span class="token punctuation" >:</span> <span class="token punctuation" >{</span> <span class="token string" >"@id"</span><span class="token punctuation" >:</span> <span class="token number" >1</span><span class="token punctuation" >,</span> <span class="token string" >"X@id"</span><span class="token punctuation" >:</span> <span class="token number" >2</span><span class="token punctuation" >,</span> <span class="token string" >"Core.X@id"</span><span class="token punctuation" >:</span> <span class="token number" >3</span> <span class="token punctuation" >}</span><span class="token punctuation" >,</span>
+  parentNode<span class="token punctuation" >:</span> <span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// Document</span>
+    type<span class="token punctuation" >:</span> <span class="token string" >"Document"</span><span class="token punctuation" >,</span>
+    id<span class="token punctuation" >:</span> <span class="token string" >"X"</span><span class="token punctuation" >,</span>
+    uid<span class="token punctuation" >:</span> <span class="token string" >"JS/Core.X"</span><span class="token punctuation" >,</span>
+    indices<span class="token punctuation" >:</span> <span class="token punctuation" >[</span> <span class="token string" >"X"</span><span class="token punctuation" >,</span> <span class="token string" >"Core.X"</span> <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+    entities<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+      <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+    <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+    parentNode<span class="token punctuation" >:</span> <span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// Document</span>
+      type<span class="token punctuation" >:</span> <span class="token string" >"Document"</span><span class="token punctuation" >,</span>
+      id<span class="token punctuation" >:</span> <span class="token string" >"Core"</span><span class="token punctuation" >,</span>
+      uid<span class="token punctuation" >:</span> <span class="token string" >"JS/Core"</span><span class="token punctuation" >,</span>
+      symbol<span class="token punctuation" >:</span> <span class="token string" >"."</span><span class="token punctuation" >,</span>
+      entities<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+        <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+      <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+      documents<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+        <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+      <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+      properties<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+        <span class="token punctuation" >{</span>
+          key<span class="token punctuation" >:</span> <span class="token string" >"namespace"</span><span class="token punctuation" >,</span>
+          value<span class="token punctuation" >:</span> <span class="token boolean" >true</span>
+        <span class="token punctuation" >}</span>
+      <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+      parentNode<span class="token punctuation" >:</span> <span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// Namespace</span>
+        type<span class="token punctuation" >:</span> <span class="token string" >"Namespace"</span><span class="token punctuation" >,</span>
+        id<span class="token punctuation" >:</span> <span class="token string" >"JS"</span><span class="token punctuation" >,</span>
+        uid<span class="token punctuation" >:</span> <span class="token string" >"JS"</span><span class="token punctuation" >,</span>
+        symbol<span class="token punctuation" >:</span> <span class="token string" >"/"</span><span class="token punctuation" >,</span>
+        corpusContext<span class="token punctuation" >:</span> <span class="token string" >"JavaScript Modules"</span><span class="token punctuation" >,</span>
+        documents<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+          <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+        <span class="token punctuation" >]</span><span class="token punctuation" >,</span>
+        parentNode<span class="token punctuation" >:</span> <span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// Corpus</span>
+          type<span class="token punctuation" >:</span> <span class="token string" >"Corpus"</span><span class="token punctuation" >,</span>
+          namespaces<span class="token punctuation" >:</span> <span class="token punctuation" >[</span>
+            <span class="token punctuation" >.</span><span class="token punctuation" >.</span><span class="token punctuation" >.</span>
+          <span class="token punctuation" >]</span>
+        <span class="token punctuation" >}</span>
+      <span class="token punctuation" >}</span>
+    <span class="token punctuation" >}</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >;</span></code></pre>
+    <h2 class="anchorable-heading">
+      <a name="todo" class="anchorable-heading__anchor"></a>
+      <a href="#todo" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">TODO</span>
+    </h2>
+  <ul>
+<li>resolved link title should be tuned based on the contextNode&#39;s scope - private scopes should not use the FQN-index and so on</li>
+</ul>
+</div><!-- react-empty: 84 --></div></div></div><div class="footer" data-reactid="85"><div class="markdown-text " data-reactid="86"><p>Made with &#9829; using <a href="https://github.com/megadoc" target="_blank">megadoc</a>.</p>
+</div></div></div></div><div class="two-column-layout__nav" data-reactid="87"><div class="sticky-container" data-reactid="88"><div class="doc-content" data-reactid="89"><p data-reactid="90">Contents</p><div data-reactid="91"><div data-reactid="92"><ul class="markdown-toc markdown-toc--flat" data-reactid="93"><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="94"><i class="icon icon-arrow-right" data-reactid="95"></i><a href="#design" class="" data-reactid="96">Design</a><ul class="markdown-toc" data-reactid="97"><li class="markdown-toc__entry" data-reactid="98"><a href="#the-abstract-document-tree-adt" class="" data-reactid="99">The Abstract Document Tree (ADT)</a></li><li class="markdown-toc__entry" data-reactid="100"><a href="#uids" class="" data-reactid="101">UIDs</a></li></ul></li><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="102"><i class="icon icon-arrow-right" data-reactid="103"></i><a href="#indexing" class="" data-reactid="104">Indexing</a><ul class="markdown-toc" data-reactid="105"><li class="markdown-toc__entry" data-reactid="106"><a href="#the-resolver" class="" data-reactid="107">The resolver</a></li><li class="markdown-toc__entry" data-reactid="108"><a href="#constraints" class="" data-reactid="109">Constraints</a></li><li class="markdown-toc__entry" data-reactid="110"><a href="#private-contextual-resolving" class="" data-reactid="111">Private contextual resolving</a></li><li class="markdown-toc__entry" data-reactid="112"><a href="#resolving-by-relative-filepath" class="" data-reactid="113">Resolving by (relative) filepath</a></li><li class="markdown-toc__entry" data-reactid="114"><a href="#resolving-by-absolute-filepath" class="" data-reactid="115">Resolving by (absolute) filepath</a></li><li class="markdown-toc__entry" data-reactid="116"><a href="#friend-nodes" class="" data-reactid="117">Friend nodes</a></li></ul></li><li class="markdown-toc__entry" data-reactid="118"><a href="#adt-types" class="" data-reactid="119">ADT Types</a></li><li class="markdown-toc__entry" data-reactid="120"><a href="#todo" class="" data-reactid="121">TODO</a></li></ul></div></div></div></div></div></div></div></div></div></div>
+    
+    <script type="text/javascript" src="../../config.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc__vendor.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-js.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-markdown.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-theme-qt.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-dot.js"></script>
+    
+    <script type="text/javascript">
+      megadoc.start({
+        startingDocumentUID: "md__megadoc-corpus/readme"
+      });
+    </script>
+  </body>
+</html>

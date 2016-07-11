@@ -1,7 +1,0 @@
-/node_modules
-
-# /dist is where we compile the plugin run-time scripts, if any
-/dist
-
-# /doc/compiled is the output directory for the plugin's generated documentation
-/doc/compiled

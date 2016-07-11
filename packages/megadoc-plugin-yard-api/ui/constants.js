@@ -1,1 +1,0 @@
-exports.CFG_CLASS_BROWSER_EXPAND_ALL = 'yard-api:classBrowser:expandAll';

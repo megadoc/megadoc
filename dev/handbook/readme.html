@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Megadoc was built from the ground-up to be extensible. In fact, its core is
+unable to do anything useful beyond orchestrating plugins." />
+
+    <title>Megadoc Developer&#39;s Handbook
+</title>
+
+    
+    <link rel="stylesheet" href="../../styles.css" />
+    
+  </head>
+
+  <body class="body--themed">
+    <div id="__app__"><div data-reactroot="" data-reactid="1" data-react-checksum="1210044966"><div data-reactid="2"><!-- react-empty: 3 --></div><!-- react-empty: 4 --><div class="root root--with-multi-page-layout root--with-fixed-sidebar root--with-two-column-layout root--with-banner" data-reactid="5"><div class="banner-wrapper" data-reactid="6"><header class="banner" data-reactid="7"><h1 class="banner__logo" data-reactid="8"><a href="../../index.html" class="" data-reactid="9">megadoc</a><!-- react-text: 10 --> <!-- /react-text --></h1><nav class="banner__navigation" data-reactid="11"><div class="banner__navigation-item" title="Quick-Jump (Ctrl+K or CMD+K)" data-reactid="12"><i class="icon icon-search" data-reactid="13"></i></div><span data-reactid="14"><div class="banner__navigation-item" data-reactid="15"><a href="../../usage/readme.html" class="" data-reactid="16">Usage</a></div><div class="banner__navigation-item" data-reactid="17"><div class="banner__menu" data-reactid="18"><span class="banner__menu-title" data-reactid="19"><span data-reactid="20"><!-- react-text: 21 -->Plugins<!-- /react-text --><!-- react-text: 22 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="23"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="24"><div class="banner__menu banner__menu--active" data-reactid="25"><span class="banner__menu-title" data-reactid="26"><span data-reactid="27"><!-- react-text: 28 -->Developers<!-- /react-text --><!-- react-text: 29 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="30"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="31"><a href="../../changes.html" class="" data-reactid="32">Changes</a></div></span></nav></header></div><div class="root__screen" data-reactid="33"><div class="two-column-layout" data-reactid="34"><div class="two-column-layout__left" style="width:240px;" data-reactid="35"><div class="resizable-panel" data-reactid="36"><div class="resizable-panel__content" data-reactid="37"><div data-reactid="38"><div data-reactid="39"><nav data-reactid="40"><div data-reactid="41"><div data-reactid="42"><a href="building-interfaces.html" class="class-browser__entry-link" data-reactid="43"><!-- react-text: 44 -->Building the HTML UI
+<!-- /react-text --></a></div><div data-reactid="45"><a href="defining-link-schemes.html" class="class-browser__entry-link" data-reactid="46"><!-- react-text: 47 -->Defining Link Schemes
+<!-- /react-text --></a></div><div data-reactid="48"><a href="env.html" class="class-browser__entry-link" data-reactid="49"><!-- react-text: 50 -->Setting up the development environment
+<!-- /react-text --></a></div><div data-reactid="51"><a href="plugin-helper-scripts.html" class="class-browser__entry-link" data-reactid="52"><!-- react-text: 53 -->Plugin helper scripts
+<!-- /react-text --></a></div><div data-reactid="54"><a href="" class="class-browser__entry-link active" data-reactid="55"><!-- react-text: 56 -->Megadoc Developer&#x27;s Handbook
+<!-- /react-text --></a><div data-reactid="57"><ul class="markdown-toc" data-reactid="58"><li class="markdown-toc__entry" data-reactid="59"><a href="#plugin-file-structure" class="" data-reactid="60">Plugin file structure</a></li><li class="markdown-toc__entry" data-reactid="61"><a href="#defining-a-plugin" class="" data-reactid="62">Defining a plugin</a></li><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="63"><i class="icon icon-arrow-right" data-reactid="64"></i><a href="#the-compilation" class="" data-reactid="65">The compilation</a><ul class="markdown-toc" data-reactid="66"><li class="markdown-toc__entry markdown-toc__entry--collapsible" data-reactid="67"><i class="icon icon-arrow-right" data-reactid="68"></i><a href="#the-scan-phase" class="" data-reactid="69">The scan phase</a><ul class="markdown-toc" data-reactid="70"><li class="markdown-toc__entry" data-reactid="71"><a href="#example-a-basic-markdown-scanner" class="" data-reactid="72">Example: a basic Markdown scanner</a></li></ul></li><li class="markdown-toc__entry" data-reactid="73"><a href="#the-render-phase" class="" data-reactid="74">The render phase</a></li><li class="markdown-toc__entry" data-reactid="75"><a href="#the-write-phase" class="" data-reactid="76">The write phase</a></li></ul></li><li class="markdown-toc__entry" data-reactid="77"><a href="#the-ui" class="" data-reactid="78">The UI</a></li><li class="markdown-toc__entry" data-reactid="79"><a href="#where-to-go-from-here" class="" data-reactid="80">Where to go from here</a></li></ul></div></div><div data-reactid="81"><a href="using-the-corpus.html" class="class-browser__entry-link" data-reactid="82"><!-- react-text: 83 -->Using the Corpus
+<!-- /react-text --></a></div><div data-reactid="84"><a href="cookbook-document-previews.html" class="class-browser__entry-link" data-reactid="85"><!-- react-text: 86 -->Previewing documents in tooltips
+<!-- /react-text --></a></div><div data-reactid="87"><a href="cookbook-overriding-styles.html" class="class-browser__entry-link" data-reactid="88"><!-- react-text: 89 -->Overriding style variables
+<!-- /react-text --></a></div></div></nav></div><div data-reactid="90"></div></div></div><div class="ui-resizable-handle ui-resizable-e" data-reactid="91"></div></div></div><div class="two-column-layout__right" style="margin-left:240px;" data-reactid="92"><div data-reactid="93"><div class="doc-content" data-reactid="94"><div data-reactid="95"><div data-reactid="96"><div class="highlighted-text " data-reactid="97">
+    <h1 class="anchorable-heading">
+      <a name="megadoc-developer-s-handbook" class="anchorable-heading__anchor"></a>
+      <a href="#megadoc-developer-s-handbook" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Megadoc Developer&#39;s Handbook</span>
+    </h1>
+  <p>Megadoc was built from the ground-up to be extensible. In fact, its core is
+unable to do anything useful beyond orchestrating plugins.</p>
+<p>What the core does provide is a compiler that is equipped and configured 
+with several modules your plugin can interact with:</p>
+<ul>
+<li>the <a href="../api/Compiler.html#js__core-Compiler@assets" class="mega-link--internal">asset registry</a> for registering static assets for serving at run-time, like images and free-form JS scripts (perhaps a Google Analytics snippet)</li>
+<li>the <a href="../api/Compiler.html#js__core-Compiler@linkResolver" class="mega-link--internal">link-resolver</a> for &quot;linkifying&quot; blocks of documentation</li>
+<li>the <a href="../api/Compiler.html#js__core-Compiler@renderer" class="mega-link--internal">renderer</a> for rendering Markdown to HTML</li>
+<li>the <a href="../api/Compiler.html#js__core-Compiler@corpus" class="mega-link--internal">corpus</a> instance for the current compilation</li>
+</ul>
+<p>In this guide, we&#39;ll create a very basic plugin that reads Markdown files and
+presents them in the UI.</p>
+<p>Before we start, make sure you have your <a href="env.html" title="This article will go over the things needed to get Megadoc set-up locally for development purposes." class="mega-link--internal">local environment</a> set up 
+and ready to start developing plugins.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="plugin-file-structure" class="anchorable-heading__anchor"></a>
+      <a href="#plugin-file-structure" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Plugin file structure</span>
+    </h2>
+  <p>The following is the required plugin file-structure - most of the development
+tools expect plugins to be structured this way so it&#39;s good to stick to the
+conventions for things to work out.</p>
+<p>For a plugin named &quot;X&quot;, the package must be named one of the following based on
+what it is:</p>
+<ul>
+<li><code>megadoc-theme-x</code> if it&#39;s a theme plugin</li>
+<li><code>megadoc-serializer-x</code> if it&#39;s a serializer (like a JSON serializer, <code>man</code>, etc.)</li>
+<li><code>megadoc-plugin-x</code> otherwise (most common)</li>
+</ul>
+<pre class="language-bash"><code><span class="token comment" spellcheck="true"># megadoc-plugin-x</span>
+<span class="token operator" >|</span> + dist
+<span class="token operator" >|</span>   <span class="token operator" >|</span> - megadoc-plugin-x.js
+<span class="token operator" >|</span> + lib
+<span class="token operator" >|</span>   <span class="token operator" >|</span> - config.js
+<span class="token operator" >|</span>   <span class="token operator" >|</span> - index.js
+<span class="token operator" >|</span> + ui
+<span class="token operator" >|</span>   <span class="token operator" >|</span> + css/
+<span class="token operator" >|</span>   <span class="token operator" >|</span> + components/
+<span class="token operator" >|</span>   <span class="token operator" >|</span> + outlets/
+<span class="token operator" >|</span>   <span class="token operator" >|</span> - index.js
+<span class="token operator" >|</span>   <span class="token operator" >|</span> - index.less
+<span class="token operator" >|</span> - package.json
+<span class="token operator" >|</span> - README.md</code></pre><ul>
+<li><code>dist/</code> is optional unless you have any UI scripts, then it&#39;s mandatory. It
+contains the compiled UI scripts for your plugin which are generated using
+<a href="" class="mega-link--internal mega-link--broken">/cli/megadoc-compile</a>.</li>
+<li><code>lib/</code> contains the plugin implementation files.</li>
+<li><code>lib/config.js</code> must contain all the configuration parameters your plugin accepts and they should be documented</li>
+<li><code>lib/index.js</code> is the entry point for your plugin - the one that the users will be using so it should export a function</li>
+<li><code>ui/</code> contains the plugin HTML UI implementation files.</li>
+<li><code>package.json</code> must contain a <code>peerDependency</code> on the version of megadoc you&#39;re working with</li>
+</ul>
+<p>For convenience, you can also clone the <a href="https://github.com/megadoc/megadoc/tree/master/packages/megadoc-plugin-skeleton" target="_blank">megadoc-plugin-skeleton</a> 
+package which has this wrapped up for you.</p>
+<p>Okay, time to get started!</p>
+
+    <h2 class="anchorable-heading">
+      <a name="defining-a-plugin" class="anchorable-heading__anchor"></a>
+      <a href="#defining-a-plugin" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Defining a plugin</span>
+    </h2>
+  <p>The only requirement for a plugin to function is to expose a <code>#run</code> function
+that accepts a single argument; the <a href="../api/Compiler.html" title="The module that compiles the docs." class="mega-link--internal">Compiler</a> instance.</p>
+<pre class="language-javascript"><code><span class="token comment" spellcheck="true">// @file: megadoc-plugin-markdown/lib/index.js</span>
+module<span class="token punctuation" >.</span>exports <span class="token operator" >=</span> <span class="token keyword" >function</span> <span class="token function" >MarkdownPlugin</span><span class="token punctuation" >(</span>userConfig<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+  <span class="token keyword" >return</span> <span class="token punctuation" >{</span>
+    run<span class="token punctuation" >:</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>compiler<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+    <span class="token punctuation" >}</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span></code></pre><p>Within the <code>#run</code> routine, you have the chance to define any state you may
+need, accept user configuration, validate the config, and so on.</p>
+<p>Let&#39;s get to what a regular Megadoc compilation looks like.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="the-compilation" class="anchorable-heading__anchor"></a>
+      <a href="#the-compilation" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The compilation</span>
+    </h2>
+  <p>A compilation is basically a serial process composed of separate phases.</p>
+<div class="plugin-dot__container"><svg version="1.1" baseProfile="full" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" style="font-weight:bold; font-size:10pt; font-family:'Monospace', Helvetica, sans-serif;;stroke-width:1;stroke-linejoin:round;stroke-linecap:round"><path d="M63.5 28 L83.5 28 L103.5 28 L103.5 28 " style="stroke:#404244;fill:none;"></path>
+<path d="M90.2 33.3 L96.8 28 L90.2 22.7 L103.5 28 Z" style="stroke:#404244;fill:#404244;"></path>
+<path d="M170.5 28 L190.5 28 L210.5 28 L210.5 28 " style="stroke:#404244;fill:none;"></path>
+<path d="M197.2 33.3 L203.8 28 L197.2 22.7 L210.5 28 Z" style="stroke:#404244;fill:#404244;"></path>
+<rect x="13.5" y="13.5" height="29" width="50" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="21.5" y="32.8" style="">scan</text>
+<rect x="103.5" y="13.5" height="29" width="67" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="111.5" y="32.8" style="">render</text>
+<rect x="210.5" y="13.5" height="29" width="59" style="stroke:#404244;fill:#f4f4f4;"></rect>
+<text x="218.8" y="32.8" style="">write</text></svg></div><p>Your plugin may hook into any of these stages using the compiler&#39;s
+<a href="../api/Compiler.html#js__core-Compiler#on" title="Register a compilation event handler." class="mega-link--internal">#on</a> routine.</p>
+<pre class="language-javascript"><code><span class="token punctuation" >{</span> <span class="token comment" spellcheck="true">// ...</span>
+  run<span class="token punctuation" >:</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>compiler<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+    compiler<span class="token punctuation" >.</span><span class="token function" >on</span><span class="token punctuation" >(</span><span class="token string" >'some-hook'</span><span class="token punctuation" >,</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+      <span class="token comment" spellcheck="true">// ...</span>
+    <span class="token punctuation" >}</span><span class="token punctuation" >)</span>
+  <span class="token punctuation" >}</span>
+<span class="token punctuation" >}</span></code></pre><p>From now on, the example snippets will assume we&#39;re inside the definition of
+the <code>#run</code> routine for brevity.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="the-scan-phase" class="anchorable-heading__anchor"></a>
+      <a href="#the-scan-phase" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The <code>scan</code> phase</span>
+    </h3>
+  <p>The scan phase is where we analyze source files and populate the corpus with
+documents. You&#39;d usually use a source analyzer (like for generating an AST or 
+some form of structured output from the source files your plugin covers) and 
+then <em>reduce</em> those structures into corpus nodes.</p>
+<p>Check out the <a href="using-the-corpus.html" title="By default, the indexer will index a node using its uid and its filePath values. However, it is possible to specify additional fields to index the node  by, or change the default fields by overriding the indexFields property." class="mega-link--internal">Using the Corpus
+</a> guide for more information on 
+reduction.</p>
+
+    <h4 class="anchorable-heading">
+      <a name="example-a-basic-markdown-scanner" class="anchorable-heading__anchor"></a>
+      <a href="#example-a-basic-markdown-scanner" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Example: a basic Markdown scanner</span>
+    </h4>
+  <pre class="language-javascript"><code><span class="token keyword" >var</span> config <span class="token operator" >=</span> <span class="token punctuation" >{</span>
+  id<span class="token punctuation" >:</span> <span class="token string" >'articles'</span><span class="token punctuation" >,</span>
+  sources<span class="token punctuation" >:</span> <span class="token string" >'**/*.md'</span><span class="token punctuation" >,</span>
+  exclude<span class="token punctuation" >:</span> <span class="token punctuation" >[</span> <span class="token operator" >/</span>vendor<span class="token operator" >/</span> <span class="token punctuation" >]</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >;</span>
+
+compiler<span class="token punctuation" >.</span><span class="token function" >on</span><span class="token punctuation" >(</span><span class="token string" >'scan'</span><span class="token punctuation" >,</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>done<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+  <span class="token comment" spellcheck="true">// shortcut to access the CorpusTypes@builders</span>
+  <span class="token keyword" >var</span> b <span class="token operator" >=</span> compiler<span class="token punctuation" >.</span>corpus<span class="token punctuation" >.</span>b<span class="token punctuation" >;</span>
+
+  <span class="token comment" spellcheck="true">// Build the list of file paths we'll be reading from. See note below on</span>
+  <span class="token comment" spellcheck="true">// utilizing the AssetUtils helpers here.</span>
+  <span class="token keyword" >var</span> filePaths <span class="token operator" >=</span> compiler<span class="token punctuation" >.</span>utils<span class="token punctuation" >.</span><span class="token function" >globAndFilter</span><span class="token punctuation" >(</span>config<span class="token punctuation" >.</span>sources<span class="token punctuation" >,</span> config<span class="token punctuation" >.</span>exclude<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+  <span class="token comment" spellcheck="true">// Create our T.Namespace node:</span>
+  <span class="token keyword" >var</span> namespaceNode <span class="token operator" >=</span> b<span class="token punctuation" >.</span><span class="token function" >namespace</span><span class="token punctuation" >(</span><span class="token punctuation" >{</span>
+    id<span class="token punctuation" >:</span> config<span class="token punctuation" >.</span>id<span class="token punctuation" >,</span>
+    name<span class="token punctuation" >:</span> <span class="token string" >'megadoc-plugin-markdown'</span><span class="token punctuation" >,</span>
+
+    <span class="token comment" spellcheck="true">// Create a T.Document node for every Markdown document we scan:</span>
+    documents<span class="token punctuation" >:</span> filePaths<span class="token punctuation" >.</span><span class="token function" >map</span><span class="token punctuation" >(</span><span class="token keyword" >function</span><span class="token punctuation" >(</span>filePath<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+      <span class="token keyword" >return</span> b<span class="token punctuation" >.</span><span class="token function" >document</span><span class="token punctuation" >(</span><span class="token punctuation" >{</span>
+        id<span class="token punctuation" >:</span> path<span class="token punctuation" >.</span><span class="token function" >basename</span><span class="token punctuation" >(</span>filePath<span class="token punctuation" >)</span><span class="token punctuation" >,</span>
+        filePath<span class="token punctuation" >:</span> filePath<span class="token punctuation" >,</span>
+        properties<span class="token punctuation" >:</span> <span class="token punctuation" >{</span>
+          contents<span class="token punctuation" >:</span> fs<span class="token punctuation" >.</span><span class="token function" >readFileSync</span><span class="token punctuation" >(</span>filePath<span class="token punctuation" >,</span> <span class="token string" >'utf-8'</span><span class="token punctuation" >)</span>
+        <span class="token punctuation" >}</span>
+      <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+    <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+  <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+  <span class="token comment" spellcheck="true">// Finally, we register our namespaceNode with the corpus</span>
+  compiler<span class="token punctuation" >.</span>corpus<span class="token punctuation" >.</span><span class="token function" >add</span><span class="token punctuation" >(</span>namespaceNode<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre><p>The <a href="../api/AssetUtils.html" title="A bunch of utilities for dealing with asset files." class="mega-link--internal">AssetUtils</a> contains a number of helpers for dealing with source files
+and emitted files. The compiler has an instance of that factory configured for
+the current compilation which you can access using
+<a href="../api/Compiler.html#js__core-Compiler@utils" class="mega-link--internal">compiler.utils</a>.</p>
+<p>Okay! Now we have scanned the markdown files the user had listed and built a 
+set of abstract representations of them for use in the Corpus. However, we 
+didn&#39;t really do any form of analysis on the sources; we could&#39;ve inferred a
+title for each document, counted the number of words, etc.</p>
+<p>For the purposes of our tutorial, we&#39;ll let go of these details and focus
+on what the process generally looks like. What we need to do now is to
+linkify the contents of those documents and render the markdown source to HTML.</p>
+<p>On to the render phase...</p>
+
+    <h3 class="anchorable-heading">
+      <a name="the-render-phase" class="anchorable-heading__anchor"></a>
+      <a href="#the-render-phase" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The <code>render</code> phase</span>
+    </h3>
+  <p>This phase deals with two things: converting internal links found in content to
+valid links and compiling that content down to HTML.</p>
+<p>Megadoc doesn&#39;t know where your content is, or how to get to it, but you do. 
+So, it exposes a few helpers that you can use to perform these tasks. Let&#39;s
+see:</p>
+<pre class="language-javascript"><code>compiler<span class="token punctuation" >.</span><span class="token function" >on</span><span class="token punctuation" >(</span><span class="token string" >'render'</span><span class="token punctuation" >,</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>md<span class="token punctuation" >,</span> linkify<span class="token punctuation" >,</span> done<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+  <span class="token function" >done</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre><p>The <a href="../api/Renderer.html#js__core-Renderer#renderMarkdown" title="Render Markdown to HTML." class="mega-link--internal">md</a> parameter will compile Markdown to HTML, 
+while <a href="../api/LinkResolver.html#js__core-LinkResolver#linkify" title="Linkify all internal links found in a block of text." class="mega-link--internal">linkify</a> will convert links to internal documents
+to either: Markdown (the default), assuming you will render the source into 
+HTML, or to HTML directly[1].</p>
+<p>Following up with our example plugin:</p>
+<pre class="language-javascript"><code>compiler<span class="token punctuation" >.</span><span class="token function" >on</span><span class="token punctuation" >(</span><span class="token string" >'render'</span><span class="token punctuation" >,</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>md<span class="token punctuation" >,</span> linkify<span class="token punctuation" >,</span> done<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+  <span class="token comment" spellcheck="true">// Grab on to the T.Namespace node we registered with the Corpus earlier in</span>
+  <span class="token comment" spellcheck="true">// #scan:</span>
+  <span class="token keyword" >var</span> namespaceNode <span class="token operator" >=</span> compiler<span class="token punctuation" >.</span>corpus<span class="token punctuation" >.</span><span class="token keyword" >get</span><span class="token punctuation" >(</span>config<span class="token punctuation" >.</span>id<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+  namespaceNode<span class="token punctuation" >.</span>documents<span class="token punctuation" >.</span><span class="token function" >forEach</span><span class="token punctuation" >(</span><span class="token keyword" >function</span><span class="token punctuation" >(</span>documentNode<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+    <span class="token comment" spellcheck="true">// Grab the source, raw Markdown we got in our scan phase:</span>
+    <span class="token keyword" >var</span> sourceContents <span class="token operator" >=</span> documentNode<span class="token punctuation" >.</span>properties<span class="token punctuation" >.</span>contents<span class="token punctuation" >;</span>
+
+    <span class="token comment" spellcheck="true">// Linkify it:</span>
+    <span class="token keyword" >var</span> linkedContents <span class="token operator" >=</span> <span class="token function" >linkify</span><span class="token punctuation" >(</span><span class="token punctuation" >{</span>
+      text<span class="token punctuation" >:</span> sourceContents<span class="token punctuation" >,</span>
+      contextNode<span class="token punctuation" >:</span> documentNode
+    <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+    <span class="token comment" spellcheck="true">// Render it to HTML:</span>
+    <span class="token keyword" >var</span> htmlContents <span class="token operator" >=</span> <span class="token function" >md</span><span class="token punctuation" >(</span>linkedContents<span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+    <span class="token comment" spellcheck="true">// Finally, attach the rendered version to our documentNode so we can use </span>
+    <span class="token comment" spellcheck="true">// it in the UI[2]:</span>
+    documentNode<span class="token punctuation" >.</span>properties<span class="token punctuation" >.</span>html <span class="token operator" >=</span> htmlContents<span class="token punctuation" >;</span>
+  <span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+
+  <span class="token function" >done</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre><p>Finally, it&#39;s worth noting here that the link &quot;schemes&quot; (i.e. the notation 
+used to define an internal link) <a href="defining-link-schemes.html" title="null" class="mega-link--internal">can be customized</a> to support different schemes, like a MediaWiki scheme (<code>[[Object]]</code> or 
+<code>[[Custom Text | Object]]</code>).</p>
+<p>This may be necessary if you&#39;re parsing docs from an external source, maybe 
+like <a href="http://yardoc.org/" target="_blank">YARD</a> for Ruby which uses a different notation for 
+links and you can&#39;t require users to change all their docs - instead, you tell 
+Megadoc how to parse these links and support will be added transparently.</p>
+<p>[1]: This is useful if you have links found in blocks that are already HTML, or
+should not be passed through the Markdown renderer.</p>
+<p>[2]: You can choose to overwrite <code>properties.contents</code> to save space if you do 
+not need the source any longer.</p>
+
+    <h3 class="anchorable-heading">
+      <a name="the-write-phase" class="anchorable-heading__anchor"></a>
+      <a href="#the-write-phase" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The <code>write</code> phase</span>
+    </h3>
+  <p>By this point, the corpus contains all the documents that are ready to be
+rendered by a web browser. Our <a href="../api/HTMLSerializer.html" class="mega-link--internal">serializer</a> now renders the 
+corpus into the output format, and we emit any assets we may require at 
+run-time.</p>
+<p>The write phase signature is as such:</p>
+<pre class="language-javascript"><code>compiler<span class="token punctuation" >.</span><span class="token function" >on</span><span class="token punctuation" >(</span><span class="token string" >'write'</span><span class="token punctuation" >,</span> <span class="token keyword" >function</span><span class="token punctuation" >(</span>done<span class="token punctuation" >)</span> <span class="token punctuation" >{</span>
+  <span class="token function" >done</span><span class="token punctuation" >(</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span> <span class="token comment" spellcheck="true">// make SURE you call done!</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >)</span><span class="token punctuation" >;</span></code></pre><p>In our example, we do not have any assets to write (yet). We will come back to
+this phase later when we have developed our UI and are ready to integrate it
+into Megadoc&#39;s HTML UI.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="the-ui" class="anchorable-heading__anchor"></a>
+      <a href="#the-ui" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">The UI</span>
+    </h2>
+  <p>We&#39;re now ready to get to the UI of our plugin - present the Markdown documents
+we&#39;ve rendered as beautiful HTML.</p>
+<p>The UI of megadoc is written in <a href="https://facebook.github.io/react/" target="_blank">React</a> and is extensible through different means which is covered extensively in
+<a href="building-interfaces.html" class="mega-link--internal">Building the HTML UI
+</a>.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="where-to-go-from-here" class="anchorable-heading__anchor"></a>
+      <a href="#where-to-go-from-here" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Where to go from here</span>
+    </h2>
+  </div><!-- react-empty: 98 --></div></div><div data-reactid="99"></div></div><div class="footer" data-reactid="100"><div class="markdown-text " data-reactid="101"><p>Made with &#9829; using <a href="https://github.com/megadoc" target="_blank">megadoc</a>.</p>
+</div></div></div></div></div></div></div></div></div>
+    
+    <script type="text/javascript" src="../../config.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc__vendor.js"></script>
+    
+    <script type="text/javascript" src="../../megadoc.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-js.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-markdown.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-theme-qt.js"></script>
+    
+    <script type="text/javascript" src="../../plugins/megadoc-plugin-dot.js"></script>
+    
+    <script type="text/javascript">
+      megadoc.start({
+        startingDocumentUID: "md__plugins/readme"
+      });
+    </script>
+  </body>
+</html>

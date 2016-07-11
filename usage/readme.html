@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="This guide will get you up and running with Megadoc to turn those cold,
+colorless blocks of text into a beautiful compilation of documentation." />
+
+    <title>Usage
+</title>
+
+    
+    <link rel="stylesheet" href="../styles.css" />
+    
+  </head>
+
+  <body class="body--themed">
+    <div id="__app__"><div data-reactroot="" data-reactid="1" data-react-checksum="-1528349780"><div data-reactid="2"><!-- react-empty: 3 --></div><!-- react-empty: 4 --><div class="root root--with-multi-page-layout root--with-fixed-sidebar root--with-two-column-layout root--with-banner" data-reactid="5"><div class="banner-wrapper" data-reactid="6"><header class="banner" data-reactid="7"><h1 class="banner__logo" data-reactid="8"><a href="../index.html" class="" data-reactid="9">megadoc</a><!-- react-text: 10 --> <!-- /react-text --></h1><nav class="banner__navigation" data-reactid="11"><div class="banner__navigation-item" title="Quick-Jump (Ctrl+K or CMD+K)" data-reactid="12"><i class="icon icon-search" data-reactid="13"></i></div><span data-reactid="14"><div class="banner__navigation-item" data-reactid="15"><a href="" class="active" data-reactid="16">Usage</a></div><div class="banner__navigation-item" data-reactid="17"><div class="banner__menu" data-reactid="18"><span class="banner__menu-title" data-reactid="19"><span data-reactid="20"><!-- react-text: 21 -->Plugins<!-- /react-text --><!-- react-text: 22 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="23"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="24"><div class="banner__menu" data-reactid="25"><span class="banner__menu-title" data-reactid="26"><span data-reactid="27"><!-- react-text: 28 -->Developers<!-- /react-text --><!-- react-text: 29 --> <!-- /react-text --><i class="icon icon-arrow-down" data-reactid="30"></i></span></span></div></div><div class="banner__navigation-item" data-reactid="31"><a href="../changes.html" class="" data-reactid="32">Changes</a></div></span></nav></header></div><div class="root__screen" data-reactid="33"><div class="two-column-layout" data-reactid="34"><div class="two-column-layout__left" style="width:240px;" data-reactid="35"><div class="resizable-panel" data-reactid="36"><div class="resizable-panel__content" data-reactid="37"><div data-reactid="38"><div data-reactid="39"><nav data-reactid="40"><div data-reactid="41"><div data-reactid="42"><a href="linking.html" class="class-browser__entry-link" data-reactid="43"><!-- react-text: 44 -->Linking to internal ocuments
+<!-- /react-text --></a></div><div data-reactid="45"><a href="" class="class-browser__entry-link active" data-reactid="46"><!-- react-text: 47 -->Usage
+<!-- /react-text --></a><div data-reactid="48"><ul class="markdown-toc" data-reactid="49"><li class="markdown-toc__entry" data-reactid="50"><a href="#installation" class="" data-reactid="51">Installation</a></li><li class="markdown-toc__entry" data-reactid="52"><a href="#our-first-exciting-and-dull-compilation" class="" data-reactid="53">Our first exciting (and dull) compilation</a></li><li class="markdown-toc__entry" data-reactid="54"><a href="#plugins" class="" data-reactid="55">Plugins</a></li></ul></div></div></div></nav></div><div data-reactid="56"></div></div></div><div class="ui-resizable-handle ui-resizable-e" data-reactid="57"></div></div></div><div class="two-column-layout__right" style="margin-left:240px;" data-reactid="58"><div data-reactid="59"><div class="doc-content" data-reactid="60"><div data-reactid="61"><div data-reactid="62"><div class="highlighted-text " data-reactid="63">
+    <h1 class="anchorable-heading">
+      <a name="usage" class="anchorable-heading__anchor"></a>
+      <a href="#usage" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Usage</span>
+    </h1>
+  <p>This guide will get you up and running with Megadoc to turn those cold,
+colorless blocks of text into a beautiful compilation of documentation.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="installation" class="anchorable-heading__anchor"></a>
+      <a href="#installation" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Installation</span>
+    </h2>
+  <p>You need to have <a href="https://nodejs.org" target="_blank">Node.js</a> installed (version 4 or newer).</p>
+<p>Running the following command should get Megadoc installed locally and
+expose a binary called <code>megadoc</code> which you&#39;ll use to compile your 
+documentation</p>
+<pre class="language-javascript"><code>npm install <span class="token operator" >-</span>g megadoc</code></pre><blockquote>
+<p>You may have to use <code>sudo</code> for that command.</p>
+</blockquote>
+<p>Run <code>megadoc --version</code> to verify the package was properly installed, you
+can also run <code>megadoc --help</code> to see what kind of options there are for the
+CLI. Let&#39;s move on.</p>
+
+    <h2 class="anchorable-heading">
+      <a name="our-first-exciting-and-dull-compilation" class="anchorable-heading__anchor"></a>
+      <a href="#our-first-exciting-and-dull-compilation" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Our first exciting (and dull) compilation</span>
+    </h2>
+  <p>Before we start, it&#39;s worth touching up on Megadoc&#39;s philosophy: power in
+the form of sane defaults (so that it &quot;It Just Works&quot;) and true power in
+the form of allowing for <em>so much</em> customization (for the cases when it 
+doesn&#39;t!)</p>
+<p>Fire up your editor and create a new file, call it <code>megadoc.conf.js</code>. By
+default, Megadoc will look such a file in the CWD when it is run.</p>
+<pre class="language-javascript"><code><span class="token comment" spellcheck="true">// @file: megadoc.conf.js</span>
+module<span class="token punctuation" >.</span>exports <span class="token operator" >=</span> <span class="token punctuation" >{</span>
+  <span class="token comment" spellcheck="true">// your configuration goes here</span>
+  outputDir<span class="token punctuation" >:</span> <span class="token string" >'public/docs'</span><span class="token punctuation" >,</span>
+  plugins<span class="token punctuation" >:</span> <span class="token punctuation" >[</span><span class="token punctuation" >]</span>
+<span class="token punctuation" >}</span><span class="token punctuation" >;</span></code></pre><p>The configuration can be broken down into two layers - the first layer has
+to do with general output and formatter settings (e.g. HTML), while the other
+layer has to do with <em>plugins</em> for feeding our input into Megadoc as we&#39;ll see
+later.</p>
+<p>To see what settings are available, refer to the <a href="../dev/api/Config.html" class="mega-link--internal">Config</a> reference page.
+In our example, we have requested the docs to be emitted in the <code>public/docs</code>
+directory, relative to where we stored our <code>megadoc.conf.js</code> file.</p>
+<p>Now now, before we get to the beef, let&#39;s try running the compiler and verify
+that it&#39;s picking up our config file. Note that at this point, Megadoc will
+not be presenting anything as we haven&#39;t fed it any input yet.</p>
+<pre class="language-javascript"><code>megadoc</code></pre><p>Hopefully, the command ran successfully and you see some files written to
+<code>public/docs</code>:</p>
+<pre class="language-bash"><code>$ <span class="token function" >ls</span> public/docs
+<span class="token keyword" >.</span>                  <span class="token punctuation" >..</span>                 404.html           config.js
+index.html         styles.css         megadoc.js         megadoc__vendor.js</code></pre><p>Okay, beef time!</p>
+
+    <h2 class="anchorable-heading">
+      <a name="plugins" class="anchorable-heading__anchor"></a>
+      <a href="#plugins" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text">Plugins</span>
+    </h2>
+  <p>At its core, Megadoc is extensible and hardly does much on its own without the
+help of <em>plugins</em>. Plugins are generally concerned with scanning and compiling
+documentation found in input sources, like Markdown or source-code files.</p>
+<p>Other types of plugins exist that provide extra functionality to the UI, like
+drawing reference graphs between documents, or maybe changing the Look and
+Feel of the UI.</p>
+<p>For now, we&#39;ll introduce ourselves to the first type of plugins - ones 
+that let us get some source files scanned and rendered. Choose from one of
+the following guides based on what kind of content you have:</p>
+<ul>
+<li><a href="../plugins/megadoc-plugin-markdown/readme.html" title="Read markdown files and render them as HTML with syntax highlighting and linking." class="mega-link--internal">Markdown documents</a></li>
+<li><a href="../plugins/megadoc-plugin-js/readme.html" class="mega-link--internal">JavaScript source files</a></li>
+<li><a href="../plugins/megadoc-plugin-yard-api/readme.html" title="This plugin parses Rails controllers that are documented in the YARD-API format." class="mega-link--internal">Rails APIs</a></li>
+<li><a href="../plugins/megadoc-plugin-lua/readme.html" class="mega-link--internal">Lua source files</a></li>
+</ul>
+</div><!-- react-empty: 64 --></div></div><div data-reactid="65"></div></div><div class="footer" data-reactid="66"><div class="markdown-text " data-reactid="67"><p>Made with &#9829; using <a href="https://github.com/megadoc" target="_blank">megadoc</a>.</p>
+</div></div></div></div></div></div></div></div></div>
+    
+    <script type="text/javascript" src="../config.js"></script>
+    
+    <script type="text/javascript" src="../megadoc__vendor.js"></script>
+    
+    <script type="text/javascript" src="../megadoc.js"></script>
+    
+    <script type="text/javascript" src="../plugins/megadoc-plugin-js.js"></script>
+    
+    <script type="text/javascript" src="../plugins/megadoc-plugin-markdown.js"></script>
+    
+    <script type="text/javascript" src="../plugins/megadoc-theme-qt.js"></script>
+    
+    <script type="text/javascript" src="../plugins/megadoc-plugin-dot.js"></script>
+    
+    <script type="text/javascript">
+      megadoc.start({
+        startingDocumentUID: "md__usage/readme"
+      });
+    </script>
+  </body>
+</html>
