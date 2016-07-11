@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-markdown",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Markdown documentation generator for megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -26,6 +26,7 @@
   },
 
   "peerDependencies": {
-    "megadoc": "5.x"
+    "megadoc": "5.x",
+    "megadoc-corpus": "5.x"
   }
 }

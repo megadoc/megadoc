@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-js",
-  "version": "5.0.0",
+  "version": "5.0.2",
   "description": "megadoc plugin for JavaScript sources.",
   "main": "lib/index.js",
   "repository": {
@@ -23,14 +23,16 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
+    "babel-core": "6.9.0",
     "babel-types": "6.9.0",
     "catharsis": "0.8.8",
     "comment-parser": "0.4.0",
     "lodash": "3.10.1",
-    "weakmap": "0.0.6",
-    "weakset": "0.2.1"
+    "megadoc-docstring": "1.0.1",
+    "weakmap": "0.0.6"
   },
   "peerDependencies": {
-    "megadoc": "5.x"
+    "megadoc": "5.x",
+    "megadoc-corpus": "5.x"
   }
 }

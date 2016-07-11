@@ -38,6 +38,7 @@ fi
 
 PACKAGE_NAME="${PACKAGE}"
 PACKAGE_ROOT="packages/${PACKAGE_NAME}"
+PROVIDED_UI_LIBRARIES="react"
 IGNORED=()
 
 if [ ! -d "${PACKAGE_ROOT}" ]; then
@@ -77,6 +78,31 @@ function link_local_dependencies {
       echo "Linking local version of '${dep}'..."
       npm link --ignore-scripts "../${dep}"
     done
+  }
+}
+
+function ensure_no_unlisted_dependencies {
+  [ -f $PACKAGE_ROOT/package.json ] && {
+    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,ui" --json)
+
+    # for some reason the --ignores flag is, well, being ignored by depcheck
+    # so we resort to doing this manually in JS land:
+    node -e "
+      var IGNORED = [ 'multiline-slash' ];
+      var deps = JSON.parse(process.argv[1]);
+      var missingDeps = Object.keys(deps.missing || {})
+        .filter(function(x) {
+          return IGNORED.indexOf(x) === -1;
+        })
+      ;
+
+      if (missingDeps.length > 0) {
+        console.error('Missing dependencies:', missingDeps.map(function(x) { return '\n  * ' + x; }).join(''));
+        process.exit(1);
+      }
+    " "${out}"
+
+    return $?
   }
 }
 
@@ -153,6 +179,7 @@ if [ "${PRELINK}" == "1" ]; then
   run_task link_local_dependencies
 fi
 
+shouldRun "check" && run_task ensure_no_unlisted_dependencies
 shouldRun "update" && run_task refresh_dependencies
 shouldRun "lint" && run_task lint_sources && run_task lint_ui_sources
 shouldRun "test" && run_task run_tests

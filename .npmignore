@@ -1,4 +1,6 @@
 /.local.js
+/.local
+/tmp
 /.megadoc
 /packages
 /node_modules

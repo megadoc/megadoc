@@ -1,11 +1,13 @@
 {
   "name": "megadoc-corpus",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "description": "",
   "main": "index.js",
   "author": "Ahmad Amireh",
   "license": "MIT",
   "dependencies": {
+    "invariant": "2.2.1",
+    "lodash": "3.10.1",
     "object-assign": "4.0.1"
   }
 }

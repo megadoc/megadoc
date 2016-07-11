@@ -1,6 +1,6 @@
 {
   "name": "megadoc",
-  "version": "5.0.1",
+  "version": "5.0.3",
   "description": "Fast and sleek and modular documentation generator.",
   "main": "lib/index.js",
   "bin": {
@@ -52,6 +52,7 @@
     "less-loader": "2.0.0",
     "lodash": "3.10.1",
     "marked": "0.3.3",
+    "megadoc-corpus": "5.0.0",
     "multiline-slash": "2.0.0",
     "nomnoml": "0.0.4",
     "normalize.css": "^3.0.3",
@@ -70,6 +71,7 @@
     "connect": "3.4.1",
     "connect-modrewrite": "0.9.0",
     "coveralls": "^2.11.4",
+    "depcheck": "0.6.3",
     "eslint": "^1.4.3",
     "eslint-plugin-react": "^3.4.1",
     "html": "0.0.10",
