@@ -25,6 +25,7 @@
     "lodash": "3.10.1"
   },
   "peerDependencies": {
-    "megadoc": "5.x"
+    "megadoc": "5.x",
+    "megadoc-corpus": "5.x"
   }
 }

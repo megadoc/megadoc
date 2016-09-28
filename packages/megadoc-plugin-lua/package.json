@@ -26,6 +26,7 @@
 
   "peerDependencies": {
     "megadoc": "5.x",
+    "megadoc-corpus": "5.x",
     "megadoc-docstring": "1.0.x"
   }
 }

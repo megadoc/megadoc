@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
+    "babel-core": "6.9.0",
     "babel-generator": "6.9.0",
     "babel-types": "6.9.0",
     "lodash": "3.10.1"

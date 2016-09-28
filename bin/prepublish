@@ -83,7 +83,7 @@ function link_local_dependencies {
 
 function ensure_no_unlisted_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
-    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,ui" --json)
+    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,ui,doc" --json)
 
     # for some reason the --ignores flag is, well, being ignored by depcheck
     # so we resort to doing this manually in JS land:
