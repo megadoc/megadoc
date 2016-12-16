@@ -15,23 +15,27 @@ describe('megadoc-plugin-lua::parseFn', function() {
 describe('[integration] megadoc-plugin-lua', function() {
   const fileSuite = FileSuite(this);
 
-  describe('#parseFn', function() {
-    it('works', function(done) {
-      const sourceFile = fileSuite.createFile('source.lua', ``);
+  it('works', function(done) {
+    const sourceFile = fileSuite.createFile('source.lua', `
+      --- @module
+      --- This here be our CLI module.
+      local cli = {}
 
-      compiler.run({
-        tmpDir: path.resolve(fileSuite.getRootDirectory(), 'tmp'),
+      return cli
+    `);
 
-        sources: [
-          {
-            pattern: /\.lua$/,
-            include: [ path.dirname(sourceFile.path) ],
-            processor: {
-              name: path.resolve(__dirname, '../xindex.js')
-            }
+    compiler.run({
+      tmpDir: path.resolve(fileSuite.getRootDirectory(), 'tmp'),
+
+      sources: [
+        {
+          pattern: /\.lua$/,
+          include: [ path.dirname(sourceFile.path) ],
+          processor: {
+            name: path.resolve(__dirname, '../xindex.js')
           }
-        ]
-      }, done)
-    });
+        }
+      ]
+    }, done)
   });
 });

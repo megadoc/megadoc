@@ -24,12 +24,19 @@ const XCompiler = exports;
 exports.run = function(config, done) {
   const { tmpDir } = config;
   const stats = {};
-  const processingLists = config.sources.map(XCompiler.createProcessingList);
+  const processingStates = config.sources.map(XCompiler.createProcessingList);
 
   fs.ensureDirSync(tmpDir);
 
-  XCompiler.parse(config, processingLists, function(err) {
+  const compile = async.compose(
+    partial(XCompiler.reduce, config),
+    partial(XCompiler.parse, config)
+  );
+
+  compile(processingStates, function(err, rawDocumentLists) {
     fs.removeSync(tmpDir);
+
+    console.log(JSON.stringify(rawDocumentLists, null, 4))
 
     if (err) {
       return done(err);
@@ -64,13 +71,14 @@ function inferProcessorMetaData(processorEntry) {
     bulk: !hasAtomicParser && hasBulkParser,
     options: processorOptions,
     parseFnPath: processorSpec.parseFnPath,
-    parseBulkFnPath: processorSpec.parseBulkFnPath
+    parseBulkFnPath: processorSpec.parseBulkFnPath,
+    reduceFnPath: processorSpec.reduceFnPath,
   };
 }
 
 // TODO: apply decorators
-XCompiler.parse = function(config, processingLists, done) {
-  async.map(processingLists, function(list, listCallback) {
+XCompiler.parse = function(config, processingStates, done) {
+  async.map(processingStates, function(list, listCallback) {
     const { processor, files } = list;
     const parseOptions = {
       common: config,
@@ -82,9 +90,37 @@ XCompiler.parse = function(config, processingLists, done) {
       [ parseBulk, processor.parseBulkFnPath ]
     ;
 
-    applier(parseOptions, files, fn, asyncMaybe(flattenArray, listCallback));
+    applier(parseOptions, files, fn, asyncMaybe(function(rawDocuments) {
+      return {
+        processingState: list,
+        rawDocuments: flattenArray(rawDocuments),
+      };
+    }, listCallback));
   }, done);
-}
+};
+
+XCompiler.reduce = function(config, rawDocumentLists, done) {
+  async.map(rawDocumentLists, function(parseState, callback) {
+    const { processor } = parseState.processingState;
+    const { rawDocuments } = parseState;
+
+    const reduceOptions = {
+      common: config,
+      processor: processor.options
+    };
+
+    if (!processor.reduceFnPath) {
+      return callback(null, null);
+    }
+
+    reduceEach(reduceOptions, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
+      return {
+        processingState: parseState.processingState,
+        documents: flattenArray(documents),
+      };
+    }, callback));
+  }, done);
+};
 
 // TODO: distribute
 function parseEach(options, files, fnPath, done) {
@@ -106,6 +142,17 @@ function parseBulk(options, files, fnPath, done) {
   const fn = partial(require(fnPath), options);
 
   fn(files, done);
+}
+
+// TODO: distribute
+function reduceEach(options, files, fnPath, done) {
+  invariant(typeof fnPath === 'string',
+    "Expected 'reduceFnPath' to point to a file, but it doesn't."
+  );
+
+  const fn = partial(require(fnPath), options);
+
+  async.mapLimit(files, 10, fn, done);
 }
 
 function flattenArray(list) {

@@ -72,7 +72,7 @@ describe('XCompiler', function() {
           }
         ];
 
-        Subject.parse({}, processingList, function(err, [ rawDocuments ]) {
+        Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
           if (err) {
             done(err);
           }
@@ -105,7 +105,7 @@ describe('XCompiler', function() {
           }
         ];
 
-        Subject.parse({}, processingList, function(err, [ rawDocuments ]) {
+        Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
           if (err) {
             done(err);
           }
@@ -140,7 +140,7 @@ describe('XCompiler', function() {
         }
       ];
 
-      Subject.parse({}, processingList, function(err, [ rawDocuments ]) {
+      Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
         if (err) {
           done(err);
         }
@@ -156,4 +156,48 @@ describe('XCompiler', function() {
       });
     });
   });
+
+  describe('#reduce', function() {
+    it('should pass each file through to the reducer', function(done) {
+      const reduceFnFile = fileSuite.createFile('reduceFn.js', `
+        module.exports = function(options, rawDocument, done) {
+          done(null, { id: rawDocument.id, name: rawDocument.id + '__name' });
+        };
+      `);
+
+      const parseState = {
+        processingState: {
+          files: [
+            'a',
+            'b',
+          ],
+          processor: {
+            reduceFnPath: reduceFnFile.path,
+          }
+        },
+
+        rawDocuments: [
+          {
+            id: '1'
+          }
+        ]
+      };
+
+      Subject.reduce({}, [parseState], function(err, [{ documents }]) {
+        if (err) {
+          done(err);
+        }
+        else {
+          assert.equal(documents.length, 1);
+          assert.include(documents[0], {
+            id: '1',
+            name: '1__name'
+          });
+
+          done();
+        }
+      });
+    });
+  });
+
 });
