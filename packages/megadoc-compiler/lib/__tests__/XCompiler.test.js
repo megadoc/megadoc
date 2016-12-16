@@ -166,14 +166,13 @@ describe('XCompiler', function() {
       `);
 
       const parseState = {
-        processingState: {
-          files: [
-            'a',
-            'b',
-          ],
-          processor: {
-            reduceFnPath: reduceFnFile.path,
-          }
+        files: [
+          'a',
+          'b',
+        ],
+
+        processor: {
+          reduceFnPath: reduceFnFile.path,
         },
 
         rawDocuments: [

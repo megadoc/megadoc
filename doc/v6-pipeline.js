@@ -37,6 +37,8 @@ const config = {
       processor: {
         name: 'megadoc-plugin-js',
         options: {
+          id: 'js',
+          name: 'JavaScript API',
           // ...
         },
       },

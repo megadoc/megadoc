@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const async = require('async');
 const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
+const b = require('megadoc-corpus').builders;
 
 const XCompiler = exports;
 
@@ -29,6 +30,7 @@ exports.run = function(config, done) {
   fs.ensureDirSync(tmpDir);
 
   const compile = async.compose(
+    partial(XCompiler.reduceTree, config),
     partial(XCompiler.reduce, config),
     partial(XCompiler.parse, config)
   );
@@ -56,53 +58,31 @@ XCompiler.createProcessingList = function(source) {
   };
 };
 
-function inferProcessorMetaData(processorEntry) {
-  const processorSpec = require(processorEntry.name);
-  const processorOptions = processorEntry.options || {};
-  const hasAtomicParser = typeof processorSpec.parseFnPath === 'string';
-  const hasBulkParser = typeof processorSpec.parseBulkFnPath === 'string';
-
-  invariant(hasAtomicParser || hasBulkParser,
-    "A processor must define either a parseFn or parseBulkFn parsing routine."
-  );
-
-  return {
-    atomic: hasAtomicParser,
-    bulk: !hasAtomicParser && hasBulkParser,
-    options: processorOptions,
-    parseFnPath: processorSpec.parseFnPath,
-    parseBulkFnPath: processorSpec.parseBulkFnPath,
-    reduceFnPath: processorSpec.reduceFnPath,
-  };
-}
-
 // TODO: apply decorators
-XCompiler.parse = function(config, processingStates, done) {
-  async.map(processingStates, function(list, listCallback) {
-    const { processor, files } = list;
+XCompiler.parse = function(config, sourceFileLists, done) {
+  async.map(sourceFileLists, function(initialState, listCallback) {
+    const { processor, files } = initialState;
     const parseOptions = {
       common: config,
       processor: processor.options
     };
 
-    const [ applier, fn ] = processor.atomic ?
+    const [ applier, fn ] = processor.parseFnPath ?
       [ parseEach, processor.parseFnPath ] :
       [ parseBulk, processor.parseBulkFnPath ]
     ;
 
     applier(parseOptions, files, fn, asyncMaybe(function(rawDocuments) {
-      return {
-        processingState: list,
+      return Object.assign({}, initialState, {
         rawDocuments: flattenArray(rawDocuments),
-      };
+      });
     }, listCallback));
   }, done);
 };
 
 XCompiler.reduce = function(config, rawDocumentLists, done) {
   async.map(rawDocumentLists, function(parseState, callback) {
-    const { processor } = parseState.processingState;
-    const { rawDocuments } = parseState;
+    const { processor, rawDocuments } = parseState;
 
     const reduceOptions = {
       common: config,
@@ -114,13 +94,53 @@ XCompiler.reduce = function(config, rawDocumentLists, done) {
     }
 
     reduceEach(reduceOptions, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
-      return {
-        processingState: parseState.processingState,
+      return Object.assign({}, parseState, {
         documents: flattenArray(documents),
-      };
+      });
     }, callback));
   }, done);
 };
+
+XCompiler.reduceTree = function(config, documentLists, reduceTreeDone) {
+  async.map(documentLists, function(reduceState, callback) {
+    const { documents, processor } = reduceState;
+
+    let treeOperations = [];
+
+    if (processor.reduceTreeFnPath) {
+      const fn = require(processor.reduceTreeFnPath);
+      const reduceTreeOptions = {
+        common: config,
+        processor: processor.options
+      };
+
+      treeOperations = fn(reduceTreeOptions, documents);
+    }
+
+    callback(null, Object.assign({}, reduceState, {
+      treeOperations
+    }));
+  }, reduceTreeDone);
+};
+
+function inferProcessorMetaData(processorEntry) {
+  const processorSpec = require(processorEntry.name);
+  const processorOptions = processorEntry.options || {};
+  const hasAtomicParser = typeof processorSpec.parseFnPath === 'string';
+  const hasBulkParser = typeof processorSpec.parseBulkFnPath === 'string';
+
+  invariant(hasAtomicParser || hasBulkParser,
+    "A processor must define either a parseFn or parseBulkFn parsing routine."
+  );
+
+  return {
+    options: processorOptions,
+    parseFnPath: processorSpec.parseFnPath,
+    parseBulkFnPath: processorSpec.parseBulkFnPath,
+    reduceFnPath: processorSpec.reduceFnPath,
+    reduceTreeFnPath: processorSpec.reduceTreeFnPath,
+  };
+}
 
 // TODO: distribute
 function parseEach(options, files, fnPath, done) {
