@@ -118,7 +118,42 @@ describe('XCompiler', function() {
           }
         });
       });
+    });
 
+    it('should flatten lists of raw documents emitted by the parser', function(done) {
+      const parseFnFile = fileSuite.createFile('parse.js', `
+        module.exports = function(options, filePath, done) {
+          done(null, [ '1', '2' ]);
+        };
+      `);
+
+      const processingList = [
+        {
+          files: [
+            'a',
+            'b',
+          ],
+          processor: {
+            atomic: true,
+            parseFnPath: parseFnFile.path,
+          }
+        }
+      ];
+
+      Subject.parse({}, processingList, function(err, [ rawDocuments ]) {
+        if (err) {
+          done(err);
+        }
+        else {
+          assert.equal(rawDocuments.length, 4);
+          assert.equal(rawDocuments[0], '1');
+          assert.equal(rawDocuments[1], '2');
+          assert.equal(rawDocuments[2], '1');
+          assert.equal(rawDocuments[3], '2');
+
+          done();
+        }
+      });
     });
   });
 });
