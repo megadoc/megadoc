@@ -30,6 +30,7 @@ exports.run = function(config, done) {
   fs.ensureDirSync(tmpDir);
 
   const compile = async.compose(
+    partial(XCompiler.render, config),
     partial(XCompiler.reduceTree, config),
     partial(XCompiler.reduce, config),
     partial(XCompiler.parse, config)
@@ -77,7 +78,7 @@ XCompiler.parse = function(config, sourceFileLists, done) {
         rawDocuments: flattenArray(rawDocuments),
       });
     }, listCallback));
-  }, done);
+  }, asyncEscapeStack(done));
 };
 
 XCompiler.reduce = function(config, rawDocumentLists, done) {
@@ -98,7 +99,7 @@ XCompiler.reduce = function(config, rawDocumentLists, done) {
         documents: flattenArray(documents),
       });
     }, callback));
-  }, done);
+  }, asyncEscapeStack(done));
 };
 
 XCompiler.reduceTree = function(config, documentLists, reduceTreeDone) {
@@ -120,7 +121,39 @@ XCompiler.reduceTree = function(config, documentLists, reduceTreeDone) {
     callback(null, Object.assign({}, reduceState, {
       treeOperations
     }));
-  }, reduceTreeDone);
+  }, asyncEscapeStack(reduceTreeDone));
+};
+
+XCompiler.render = function(config, documentLists, renderDone) {
+  async.map(documentLists, function(reduceState, callback) {
+    const { documents, processor } = reduceState;
+
+    let renderOperations = {};
+
+    if (processor.renderFnPath) {
+      const fn = require(processor.renderFnPath);
+      const renderOptions = {
+        common: config,
+        processor: processor.options
+      };
+
+      const renderRoutines = { markdown, linkify };
+
+      renderOperations = documents.reduce(function(map, document) {
+        const documentRenderingDescriptor = fn(renderOptions, renderRoutines, document);
+
+        if (documentRenderingDescriptor) {
+          map[document.id] = documentRenderingDescriptor;
+        }
+
+        return map;
+      }, {})
+    }
+
+    callback(null, Object.assign({}, reduceState, {
+      renderOperations
+    }));
+  }, asyncEscapeStack(renderDone));
 };
 
 function inferProcessorMetaData(processorEntry) {
@@ -139,6 +172,7 @@ function inferProcessorMetaData(processorEntry) {
     parseBulkFnPath: processorSpec.parseBulkFnPath,
     reduceFnPath: processorSpec.reduceFnPath,
     reduceTreeFnPath: processorSpec.reduceTreeFnPath,
+    renderFnPath: processorSpec.renderFnPath,
   };
 }
 
@@ -190,6 +224,25 @@ function asyncMaybe(f, done) {
   }
 }
 
+function asyncEscapeStack(f) {
+  return (err, x) => async.nextTick(() => f(err, x));
+}
+
 function partial(fn, x) {
   return fn.bind(null, x);
+}
+
+function markdown(value) {
+  return {
+    $__type: 'CONVER_MARKDOWN_TO_HTML',
+    $__value: value
+  };
+}
+
+// TODO: is it possible to stop accepting custom contextNodes?
+function linkify({ text, contextNode }) {
+  return {
+    $__type: 'LINKIFY_STRING',
+    $__value: { text, contextNodeId: contextNode.id }
+  };
 }
