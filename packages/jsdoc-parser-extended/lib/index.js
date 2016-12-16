@@ -8,8 +8,8 @@ var analyzeNode = require('./NodeAnalyzer__analyzeNode');
 var NodeInfo = require('./NodeAnalyzer__NodeInfo');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
-var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var babel = require('babel-core');
+var K = require('./constants');
 var t = require('babel-types');
 
 function Parser(params) {
@@ -87,8 +87,10 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'namedReturnTags',
   ]);
 
-  debuglog('\nParsing: %s', filePath);
-  debuglog(Array(80).join('-'));
+  if (process.env.MEGADOC_DEBUG === '1') {
+    console.log('\nParsing: %s', filePath);
+    console.log(Array(80).join('-'));
+  }
 
   babel.traverse(ast, {
     enter: function(path) {

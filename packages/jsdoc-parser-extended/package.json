@@ -1,8 +1,8 @@
 {
-  "name": "megadoc-plugin-js",
-  "version": "5.0.2",
-  "description": "megadoc plugin for JavaScript sources.",
-  "main": "lib/index.js",
+  "name": "jsdoc-parser-extended",
+  "version": "1.0.0",
+  "description": "Extended JSDoc parser.",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/megadoc/megadoc.git"
@@ -25,12 +25,15 @@
   "dependencies": {
     "babel-core": "6.9.0",
     "babel-types": "6.9.0",
-    "jsdoc-parser-extended": "1.0.0",
+    "catharsis": "0.8.8",
+    "comment-parser": "0.4.0",
     "lodash": "3.10.1",
+    "megadoc-docstring": "^1.0.1",
     "weakmap": "0.0.6"
   },
-  "peerDependencies": {
-    "megadoc": "5.x",
-    "megadoc-corpus": "5.x"
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "megadoc": "^5.0",
+    "multiline-slash": "^2.0.0"
   }
 }

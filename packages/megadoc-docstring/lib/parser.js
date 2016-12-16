@@ -384,23 +384,23 @@ exports.parseTagTypes = function(str, tag) {
   var Builder = require('jsdoctypeparser').Builder;
   var result = new JSDParser().parse(str.substr(1, str.length - 2));
 
-  var types = (function transform(type) {
-    if (type instanceof Builder.TypeUnion) {
-      return type.types.map(transform);
+  var types = (function transform(typeStruct) {
+    if (typeStruct instanceof Builder.TypeUnion) {
+      return typeStruct.types.map(transform);
     }
-    else if (type instanceof Builder.TypeName) {
-      return type.name;
+    else if (typeStruct instanceof Builder.TypeName) {
+      return typeStruct.name;
     }
-    else if (type instanceof Builder.RecordType) {
-      return type.entries.reduce(function(obj, entry) {
+    else if (typeStruct instanceof Builder.RecordType) {
+      return typeStruct.entries.reduce(function(obj, entry) {
         obj[entry.name] = transform(entry.typeUnion);
         return obj;
       }, {});
     }
     else {
-      return type.toString();
+      return typeStruct.toString();
     }
-  }(result));
+  }(result)).filter(function(x) { return !!x; });
 
   if (tag) {
     tag.types = types;

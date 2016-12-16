@@ -1,5 +1,5 @@
 var assert = require('chai').assert;
-var TestUtils = require('../Parser/TestUtils');
+var TestUtils = require('jsdoc-parser-extended/lib/TestUtils');
 var reduceDocuments = require('../reduce');
 var Corpus = require('megadoc-corpus').Corpus;
 

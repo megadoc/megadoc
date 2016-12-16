@@ -58,9 +58,9 @@ const BannerMenu = React.createClass({
           onClick={this.toggle}
         >
           {this.props.href ? (
-            <a href={this.props.href} className={isActive ? 'active' : undefined}>
+            <Link href={DocumentURI.withExtension(this.props.href)} active={isActive}>
               {this.props.text} {icon}
-            </a>
+            </Link>
           ) : (
             <span>{this.props.text} {icon}</span>
           )}

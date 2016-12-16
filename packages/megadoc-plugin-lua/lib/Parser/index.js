@@ -8,21 +8,34 @@ var parseNode = require('./parseNode');
 
 var docstringParser = new Docstring.Parser();
 
-docstringParser.defineTag('module', 'withName');
-docstringParser.defineTag('param', 'withNameAndType');
-docstringParser.defineTag('return', 'withNameAndType');
+docstringParser.defineTag('author', 'withName');
+docstringParser.defineTag('class', 'withName');
+docstringParser.defineTag('copyright', 'withName');
 docstringParser.defineTag('example', 'withName');
+docstringParser.defineTag('field', 'withName');
+docstringParser.defineTag('function', 'withName');
+docstringParser.defineTag('module', 'withName');
+docstringParser.defineTag('name', 'withName');
+docstringParser.defineTag('param', 'withNameAndType');
 docstringParser.defineTag('property', 'withNameAndType');
+docstringParser.defineTag('release', 'withName');
+docstringParser.defineTag('return', 'withNameAndType');
+docstringParser.defineTag('see', 'withName');
+docstringParser.defineTag('tparam', 'withName');
+docstringParser.defineTag('treturn', 'withName');
+docstringParser.defineTag('usage', 'withName');
 
-exports.parseFile = function(filePath) {
+exports.parseFile = function(filePath, config) {
   var sourceCode = fs.readFileSync(filePath, 'utf-8');
 
-  return exports.parseString(sourceCode);
+  return exports.parseString(sourceCode, config);
 };
 
-exports.parseString = function(sourceCode) {
+exports.parseString = function(sourceCode, config) {
   var docs = [];
   var lineNodes = {};
+
+  config = config || { strict: true };
 
   var ast = parser.parse(sourceCode, {
     comments: true,
@@ -46,7 +59,10 @@ exports.parseString = function(sourceCode) {
       }
     });
 
-    if (node) {
+    if (commentNode.raw.match(/^\-\-\s+vim:/)) {
+      return set;
+    }
+    else if (node) {
       node.comments = node.comments || [];
       node.comments.push(commentNode.value);
 
@@ -67,7 +83,20 @@ exports.parseString = function(sourceCode) {
         return line.replace(/^\-?\s?/, '');
       }).join('\n');
 
-      var docstring = docstringParser.parseComment(comment);
+      var docstring;
+
+      try {
+        docstring = docstringParser.parseComment(comment, {
+          strict: config.strict
+        });
+      }
+      catch (e) {
+        console.error("Unable to parse comment docstring:", comment.slice(0, 80));
+        console.error(e && e.message || e);
+
+        return;
+      }
+
       var nodeInfo = parseNode(node);
 
       assign(docstring, nodeInfo);

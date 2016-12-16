@@ -1,6 +1,6 @@
 {
   "name": "megadoc",
-  "version": "5.0.3",
+  "version": "5.0.4",
   "description": "Fast and sleek and modular documentation generator.",
   "main": "lib/index.js",
   "bin": {

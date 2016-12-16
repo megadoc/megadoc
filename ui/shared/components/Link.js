@@ -32,11 +32,12 @@ const Link = React.createClass({
     onClick: func,
     className: string,
     children: node,
+    active: bool,
   },
 
   render() {
     const href = this.getHref();
-    const isActive = this.isActive(href);
+    const isActive = this.props.active || this.isActive(href);
 
     return (
       <a

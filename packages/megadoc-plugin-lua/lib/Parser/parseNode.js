@@ -37,7 +37,7 @@ function parseNode(node) {
   }
   else {
     console.info('Unknown node type "%s"', node.type);
-    return {};
+    return { ctx: ctx };
   }
 }
 

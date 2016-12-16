@@ -1,5 +1,5 @@
 var assert = require('assert');
-var K = require('./Parser/constants');
+var K = require('jsdoc-parser-extended').Constants;
 var BUILT_IN_TYPES = [
   'Error',
   'String',

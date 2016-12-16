@@ -1,5 +1,5 @@
-var Parser = require('./Parser');
-var K = require('./Parser/constants');
+var Parser = require('jsdoc-parser-extended').Parser;
+var K = require('jsdoc-parser-extended').Constants;
 
 module.exports = function scan(params, done) {
   var database;

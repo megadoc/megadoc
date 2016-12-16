@@ -30,9 +30,11 @@ megadoc.outlets.define('Layout::SidebarHeader');
 megadoc.outlets.define('Layout::Footer');
 megadoc.outlets.define('Inspector');
 megadoc.outlets.define('Image');
+megadoc.outlets.define('Link');
 
 require('./outlets/SidebarHeaderOutlet')(megadoc);
 require('./outlets/ImageOutlet')(megadoc);
+require('./outlets/LinkOutlet')(megadoc);
 
 megadoc.start = function(options = {}) {
   megadoc.onReady(function() {

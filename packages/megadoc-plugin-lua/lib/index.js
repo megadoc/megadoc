@@ -16,13 +16,14 @@ module.exports = function LuaPlugin(userConfig) {
     run: function(compiler) {
       var utils = compiler.utils;
       var database;
+      var parserConfig = { strict: config.strict };
 
       compiler.on('scan', function(done) {
         var files = utils.globAndFilter(config.source, config.exclude);
         var assetRoot = compiler.config.assetRoot;
 
         var documents = files.reduce(function(set, file) {
-          return set.concat(Parser.parseFile(file).map(function(doc) {
+          return set.concat(Parser.parseFile(file, parserConfig).map(function(doc) {
             doc.filePath = file.replace(assetRoot, '');
             return doc;
           }));
@@ -38,6 +39,14 @@ module.exports = function LuaPlugin(userConfig) {
           },
           documents: documents
             .filter(function(x) { return !x.receiver; })
+            .filter(function(x) {
+              if (!x.id) {
+                console.warn("Document has no identifier!");
+                return false;
+              }
+
+              return true;
+            })
             .map(reduceModule(documents))
         });
 

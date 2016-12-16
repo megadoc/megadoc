@@ -1,5 +1,5 @@
 var where = require('lodash').where;
-var K = require('megadoc-plugin-js/lib/Parser/constants');
+var K = require('jsdoc-parser-extended').Constants;
 
 module.exports = function(database) {
   database

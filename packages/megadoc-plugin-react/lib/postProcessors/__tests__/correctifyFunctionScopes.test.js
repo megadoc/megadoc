@@ -1,6 +1,6 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
-var K = require('megadoc-plugin-js/lib/Parser/constants');
+var K = require('jsdoc-parser-extended').Constants;
 var findWhere = require('lodash').findWhere;
 
 describe('analyzeReactNode - statics', function() {

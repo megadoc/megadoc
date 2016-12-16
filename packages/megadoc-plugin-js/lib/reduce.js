@@ -1,8 +1,8 @@
 var Corpus = require('megadoc-corpus').Corpus;
 var CorpusTypes = require('megadoc-corpus').Types;
-var b = CorpusTypes.builders;
-var K = require('./Parser/constants');
+var K = require('jsdoc-parser-extended').Constants;
 var RendererUtils = require('megadoc/lib/RendererUtils');
+var b = CorpusTypes.builders;
 
 module.exports = function reduceDocuments(options) {
   var rawDocuments = options.documents;

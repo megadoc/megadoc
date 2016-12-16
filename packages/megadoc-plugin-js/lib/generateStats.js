@@ -1,4 +1,4 @@
-var K = require('./Parser/constants');
+var K = require('jsdoc-parser-extended').Constants;
 
 function inc(set, key) {
   if (!set[key]) {

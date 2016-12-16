@@ -1,6 +1,6 @@
 var render = require('../render');
 var assert = require('chai').assert;
-var TestUtils = require('../Parser/TestUtils');
+var TestUtils = require('jsdoc-parser-extended/lib/TestUtils');
 var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
 var createCompiler = require('megadoc/lib/TestUtils').createCompiler;
 var reduceDocuments = require('../reduce');

@@ -1,4 +1,4 @@
-const PLUGIN_CONSTANTS = require('../lib/Parser/constants');
+const PLUGIN_CONSTANTS = require('../../jsdoc-parser-extended/lib/constants');
 const { assign } = require('lodash');
 
 assign(exports, PLUGIN_CONSTANTS, {
