@@ -1,0 +1,10 @@
+{
+  "name": "megadoc-test-utils",
+  "version": "6.0.0",
+  "dependencies": {
+    "chai": "3.5.0",
+    "fs-extra": "1.0.0",
+    "multiline-slash": "2.0.0",
+    "sinon": "1.17.6"
+  }
+}

@@ -4,6 +4,19 @@
     "mocha": true
   },
 
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "arrowFunctions": true,
+    "classes": true,
+    "templateStrings": true,
+    "destructuring": true,
+    "objectLiteralShorthandMethods": true,
+    "objectLiteralComputedProperties": true,
+    "spread": true,
+    "restParams": true,
+    "jsx": true,
+  },
+
   "rules": {
     "no-trailing-spaces": 2,
     "indent": [2, 2, {
