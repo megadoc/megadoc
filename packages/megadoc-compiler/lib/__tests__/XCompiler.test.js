@@ -6,7 +6,7 @@ const FileSuite = require('megadoc-test-utils/FileSuite');
 describe('XCompiler', function() {
   const fileSuite = FileSuite(this);
 
-  describe('.createProcessingList', function() {
+  describe('.createCompilation', function() {
     let processorSpec, output;
 
     beforeEach(function() {
@@ -18,21 +18,25 @@ describe('XCompiler', function() {
 
         module.exports = {
           parseFnPath: path.resolve(__dirname, './parseFn.js'),
+          reduceFnPath: path.resolve(__dirname, './reduceFn.js'),
         };
       `);
 
-      output = Subject.createProcessingList({
-        pattern: /\.js$/,
-        include: [
-          path.join(fileSuite.getRootDirectory(), 'sources'),
-        ],
-        processor: {
-          name: processorSpec.path,
-          options: {
-            foo: 'bar'
+      output = Subject.createCompilation(
+        { commonOption: 1 },
+        {
+          pattern: /\.js$/,
+          include: [
+            path.join(fileSuite.getRootDirectory(), 'sources'),
+          ],
+          processor: {
+            name: processorSpec.path,
+            options: {
+              foo: 'bar'
+            }
           }
         }
-      });
+      );
     });
 
     it('should include the matching files', function() {
@@ -45,8 +49,12 @@ describe('XCompiler', function() {
       );
     });
 
+    it('should store the common options', function() {
+      assert.deepEqual(output.options.common, { commonOption: 1 });
+    });
+
     it('should store the processor options', function() {
-      assert.deepEqual(output.processor.options, { foo: 'bar' });
+      assert.deepEqual(output.options.processor, { foo: 'bar' });
     });
   });
 
@@ -59,20 +67,18 @@ describe('XCompiler', function() {
           };
         `);
 
-        const processingList = [
-          {
-            files: [
-              'a',
-              'b',
-            ],
-            processor: {
-              atomic: true,
-              parseFnPath: parseFnFile.path,
-            }
+        const compilation = {
+          files: [
+            'a',
+            'b',
+          ],
+          processor: {
+            atomic: true,
+            parseFnPath: parseFnFile.path,
           }
-        ];
+        };
 
-        Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
+        Subject.parse({}, compilation, function(err, { rawDocuments }) {
           if (err) {
             done(err);
           }
@@ -92,20 +98,18 @@ describe('XCompiler', function() {
           };
         `);
 
-        const processingList = [
-          {
-            files: [
-              'a',
-              'b',
-            ],
-            processor: {
-              atomic: false,
-              parseBulkFnPath: parseBulkFnFile.path,
-            }
+        const compilation = {
+          files: [
+            'a',
+            'b',
+          ],
+          processor: {
+            atomic: false,
+            parseBulkFnPath: parseBulkFnFile.path,
           }
-        ];
+        };
 
-        Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
+        Subject.parse({}, compilation, function(err, { rawDocuments }) {
           if (err) {
             done(err);
           }
@@ -127,20 +131,18 @@ describe('XCompiler', function() {
         };
       `);
 
-      const processingList = [
-        {
-          files: [
-            'a',
-            'b',
-          ],
-          processor: {
-            atomic: true,
-            parseFnPath: parseFnFile.path,
-          }
+      const compilation = {
+        files: [
+          'a',
+          'b',
+        ],
+        processor: {
+          atomic: true,
+          parseFnPath: parseFnFile.path,
         }
-      ];
+      };
 
-      Subject.parse({}, processingList, function(err, [{ rawDocuments }]) {
+      Subject.parse({}, compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -165,7 +167,7 @@ describe('XCompiler', function() {
         };
       `);
 
-      const parseState = {
+      const compilation = {
         files: [
           'a',
           'b',
@@ -182,7 +184,7 @@ describe('XCompiler', function() {
         ]
       };
 
-      Subject.reduce({}, [parseState], function(err, [{ documents }]) {
+      Subject.reduce({}, compilation, function(err, { documents }) {
         if (err) {
           done(err);
         }

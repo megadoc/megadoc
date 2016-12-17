@@ -4,6 +4,7 @@ const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
 const TreeComposer = require('./TreeComposer');
 const renderRoutines = require('./renderRoutines');
+const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const util = require('util');
 
@@ -25,15 +26,14 @@ const XCompiler = exports;
  * @param {Boolean} [runOptions.stats=false]
  *        Turn this on if you want to generate compile-time statistics.
  */
-exports.run = function(config, done) {
+XCompiler.run = function(config, done) {
   const tmpDir = config.tmpDir;
-  const stats = {};
-  const processingStates = config.sources.map(XCompiler.createProcessingList);
+  const commonOptions = config; // TODO
+  const compilations = config.sources.map(partial(XCompiler.createCompilation, commonOptions));
 
   fs.ensureDirSync(tmpDir);
 
   const compile = async.compose(
-    partial(XCompiler.renderTree, config),
     partial(XCompiler.composeTree, config),
     partial(XCompiler.render, config),
     partial(XCompiler.reduceTree, config),
@@ -41,166 +41,150 @@ exports.run = function(config, done) {
     partial(XCompiler.parse, config)
   );
 
-  compile(processingStates, function(err, rawDocumentLists) {
+  const renderTrees = (x,y) => {
+    async.map(x, partial(XCompiler.renderTree, config), y);
+  };
+
+  const cleanUpAndEmitDone = function(err, finishedCompilations) {
     fs.removeSync(tmpDir);
 
     // console.log(JSON.stringify(rawDocumentLists, null, 4))
-    console.log(util.inspect(rawDocumentLists, { showHidden: true, depth: null }))
+    console.log(util.inspect(finishedCompilations, { showHidden: true, depth: null }))
 
     if (err) {
       return done(err);
     }
+    else {
+      done(null, finishedCompilations);
+    }
+  };
 
-    done(null, stats);
+  async.map(compilations, compile, function(err, trees) {
+    if (err) {
+      cleanUpAndEmitDone(err);
+    }
+    else {
+      renderTrees(trees, cleanUpAndEmitDone);
+    }
   });
 };
 
 // TODO: extract decorators
-XCompiler.createProcessingList = function(source) {
+XCompiler.createCompilation = function(commonOptions, source) {
   const files = scanSources(source.pattern, source.include, source.exclude);
 
   return {
+    documents: null,
     files,
-    processor: inferProcessorMetaData(source.processor),
+    options: {
+      common: commonOptions,
+      processor: source.processor.options || {},
+    },
+    processor: extractProcessingFunctionPaths(source.processor),
+    rawDocuments: null,
+    renderOperations: null,
+    renderedTree: null,
+    stats: {},
+    tree: null,
+    treeOperations: null,
   };
 };
 
 // TODO: apply decorators
-XCompiler.parse = function(config, sourceFileLists, done) {
-  async.map(sourceFileLists, function(initialState, listCallback) {
-    const { processor, files } = initialState;
-    const parseOptions = {
-      common: config,
-      processor: processor.options
-    };
+XCompiler.parse = function(config, compilation, done) {
+  const { processor, files, options } = compilation;
 
-    const applier = processor.parseFnPath ? parseEach : parseBulk;
-    const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
+  const applier = processor.parseFnPath ? parseEach : parseBulk;
+  const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
 
-    applier(parseOptions, files, fn, asyncMaybe(function(rawDocuments) {
-      return Object.assign({}, initialState, {
-        rawDocuments: flattenArray(rawDocuments),
-      });
-    }, listCallback));
-  }, asyncEscapeStack(done));
+  applier(options, files, fn, asyncMaybe(function(rawDocuments) {
+    return mergeObject(compilation, {
+      rawDocuments: flattenArray(rawDocuments),
+    });
+  }, done));
 };
 
-XCompiler.reduce = function(config, rawDocumentLists, done) {
-  async.map(rawDocumentLists, function(parseState, callback) {
-    const { processor, rawDocuments } = parseState;
+XCompiler.reduce = function(config, compilation, done) {
+  const { processor, rawDocuments, options } = compilation;
 
-    const reduceOptions = {
-      common: config,
-      processor: processor.options
-    };
-
-    if (!processor.reduceFnPath) {
-      return callback(null, null);
-    }
-
-    reduceEach(reduceOptions, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
-      return Object.assign({}, parseState, {
-        documents: flattenArray(documents),
-      });
-    }, callback));
-  }, asyncEscapeStack(done));
+  reduceEach(options, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
+    return mergeObject(compilation, {
+      documents: flattenArray(documents),
+    });
+  }, done));
 };
 
-XCompiler.reduceTree = function(config, documentLists, reduceTreeDone) {
-  async.map(documentLists, function(reduceState, callback) {
-    const { documents, processor } = reduceState;
+XCompiler.reduceTree = function(config, compilation, done) {
+  const { documents, processor, options } = compilation;
 
-    let treeOperations = [];
+  let treeOperations = [];
 
-    if (processor.reduceTreeFnPath) {
-      const fn = require(processor.reduceTreeFnPath);
-      const reduceTreeOptions = {
-        common: config,
-        processor: processor.options
-      };
+  if (processor.reduceTreeFnPath) {
+    const fn = require(processor.reduceTreeFnPath);
 
-      treeOperations = fn(reduceTreeOptions, documents);
-    }
+    treeOperations = fn(options, documents);
+  }
 
-    callback(null, Object.assign({}, reduceState, {
-      treeOperations
-    }));
-  }, asyncEscapeStack(reduceTreeDone));
+  done(null, mergeObject(compilation, { treeOperations: treeOperations }));
 };
 
-XCompiler.render = function(config, documentLists, renderDone) {
-  async.map(documentLists, function(reduceState, callback) {
-    const { documents, processor } = reduceState;
+XCompiler.render = function(config, compilation, done) {
+  const { documents, processor, options } = compilation;
 
-    let renderOperations = {};
+  let renderOperations = {};
 
-    if (processor.renderFnPath) {
-      const fn = require(processor.renderFnPath);
-      const renderOptions = {
-        common: config,
-        processor: processor.options
-      };
+  if (processor.renderFnPath) {
+    const fn = require(processor.renderFnPath);
 
-      renderOperations = documents.reduce(function(map, document) {
-        const documentRenderingDescriptor = fn(renderOptions, renderRoutines, document);
+    renderOperations = documents.reduce(function(map, document) {
+      const documentRenderingDescriptor = fn(options, renderRoutines, document);
 
-        if (documentRenderingDescriptor) {
-          map[document.id] = documentRenderingDescriptor;
-        }
+      if (documentRenderingDescriptor) {
+        map[document.id] = documentRenderingDescriptor;
+      }
 
-        return map;
-      }, {})
-    }
+      return map;
+    }, {})
+  }
 
-    callback(null, Object.assign({}, reduceState, {
-      renderOperations
-    }));
-  }, asyncEscapeStack(renderDone));
+  done(null, mergeObject(compilation, { renderOperations: renderOperations }));
 };
 
-XCompiler.composeTree = function(config, renderStates, composeTreeDone) {
-  async.map(renderStates, function(renderState, callback) {
-    const options = {
-      common: config,
-      processor: renderState.processor.options
-    };
+XCompiler.composeTree = function(config, compilation, done) {
+  const { documents, treeOperations, options } = compilation;
 
-    callback(null, Object.assign({}, renderState, {
-      tree: TreeComposer.composeTree(options, renderState.documents, renderState.treeOperations)
-    }))
-  }, composeTreeDone);
+  done(null, mergeObject(compilation, {
+    tree: TreeComposer.composeTree(options, documents, treeOperations)
+  }))
 };
 
-XCompiler.renderTree = function(config, composeTreeStates, renderTreeDone) {
-  async.map(composeTreeStates, function(state, callback) {
-    const options = {
-      common: config,
-      processor: state.processor.options
-    };
+XCompiler.renderTree = function(config, compilation, done) {
+  const { options, tree, renderOperations } = compilation;
 
-    callback(null, Object.assign({}, state, {
-      renderedTree: TreeComposer.composeRenderedTree(options, state.tree, state.renderOperations)
-    }))
-  }, renderTreeDone);
+  done(null, mergeObject(compilation, {
+    renderedTree: TreeComposer.composeRenderedTree(options, tree, renderOperations)
+  }))
 };
 
-function inferProcessorMetaData(processorEntry) {
-  const processorSpec = require(processorEntry.name);
-  const processorOptions = processorEntry.options || {};
-  const hasAtomicParser = typeof processorSpec.parseFnPath === 'string';
-  const hasBulkParser = typeof processorSpec.parseBulkFnPath === 'string';
+function extractProcessingFunctionPaths(processorEntry) {
+  const spec = require(processorEntry.name);
+  const hasAtomicParser = typeof spec.parseFnPath === 'string';
+  const hasBulkParser = typeof spec.parseBulkFnPath === 'string';
 
   invariant(hasAtomicParser || hasBulkParser,
     "A processor must define either a parseFn or parseBulkFn parsing routine."
   );
 
+  invariant(typeof spec.reduceFnPath === 'string',
+    "A processor must define a reducing routine found in 'reduceFnPath'."
+  );
+
   return {
-    options: processorOptions,
-    parseFnPath: processorSpec.parseFnPath,
-    parseBulkFnPath: processorSpec.parseBulkFnPath,
-    reduceFnPath: processorSpec.reduceFnPath,
-    reduceTreeFnPath: processorSpec.reduceTreeFnPath,
-    renderFnPath: processorSpec.renderFnPath,
+    parseFnPath: spec.parseFnPath,
+    parseBulkFnPath: spec.parseBulkFnPath,
+    reduceFnPath: spec.reduceFnPath,
+    reduceTreeFnPath: spec.reduceTreeFnPath,
+    renderFnPath: spec.renderFnPath,
   };
 }
 
@@ -237,10 +221,6 @@ function reduceEach(options, files, fnPath, done) {
   async.mapLimit(files, 10, fn, done);
 }
 
-function flattenArray(list) {
-  return list.reduce(function(flatList, x) { return flatList.concat(x); }, []);
-}
-
 function asyncMaybe(f, done) {
   return (err, x) => {
     if (err) {
@@ -252,6 +232,6 @@ function asyncMaybe(f, done) {
   }
 }
 
-function asyncEscapeStack(f) {
-  return (err, x) => async.nextTick(() => f(err, x));
+function mergeObject(object, nextAttributes) {
+  return Object.assign({}, object, nextAttributes);
 }
