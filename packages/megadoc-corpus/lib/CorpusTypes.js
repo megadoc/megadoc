@@ -60,8 +60,6 @@ function createTypeBuilder(typeName, typeDef) {
 
     // verify all required fields are present
     requiredFields.forEach(function(field) {
-      if (field === 'parentNode') { return; }
-
       assert(field in fields,
         "Field '" + field + "' is missing for a node of type '" + typeName + "'."
       );
@@ -80,6 +78,14 @@ function createTypeBuilder(typeName, typeDef) {
 
       return map;
     }.bind(this), {});
+  };
+
+  TypeBuilder.prototype.merge = function(nextFields) {
+    return new TypeBuilder(knownFields.reduce((map, key) => {
+      map[key] = nextFields.hasOwnProperty(key) ? nextFields[key] : this[key];
+
+      return map;
+    }, {}));
   };
 
   TypeBuilder.prototype.consumeFields = function(fields) {
@@ -319,7 +325,7 @@ builtInTypes["regExp"] = BuiltInTypeChecker('RegExp', function(x) {
 });
 
 builtInTypes["null"] = BuiltInTypeChecker('null', function(x) {
-  return x === null;
+  return x === null || x === undefined;
 });
 
 builtInTypes["array"] = BuiltInTypeChecker('Array', function(x) {

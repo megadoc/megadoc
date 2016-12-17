@@ -171,7 +171,7 @@ def("Namespace", {
      *
      * @private
      */
-    parentNode: "Corpus",
+    parentNode: or("Corpus", null),
   }
 });
 
@@ -279,7 +279,7 @@ def("Document", {
      * document is a top-level one.
      *
      */
-    parentNode: or("Namespace", "Document"),
+    parentNode: or("Namespace", "Document", null),
     documents: or(array("Document"), null),
     entities: or(array("DocumentEntity"), null),
   }
@@ -312,7 +312,7 @@ def("DocumentEntity", { // terminal
      *
      * The documentNode that this entity belongs to.
      */
-    parentNode: "Document"
+    parentNode: or("Document", null)
   }
 });
 

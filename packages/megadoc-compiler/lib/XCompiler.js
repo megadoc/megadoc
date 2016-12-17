@@ -2,7 +2,8 @@ const fs = require('fs-extra');
 const async = require('async');
 const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
-const b = require('megadoc-corpus').builders;
+const TreeComposer = require('./TreeComposer');
+const util = require('util');
 
 const XCompiler = exports;
 
@@ -30,6 +31,7 @@ exports.run = function(config, done) {
   fs.ensureDirSync(tmpDir);
 
   const compile = async.compose(
+    partial(XCompiler.composeTree, config),
     partial(XCompiler.render, config),
     partial(XCompiler.reduceTree, config),
     partial(XCompiler.reduce, config),
@@ -39,7 +41,8 @@ exports.run = function(config, done) {
   compile(processingStates, function(err, rawDocumentLists) {
     fs.removeSync(tmpDir);
 
-    console.log(JSON.stringify(rawDocumentLists, null, 4))
+    // console.log(JSON.stringify(rawDocumentLists, null, 4))
+    // console.log(util.inspect(rawDocumentLists, { showHidden: true, depth: null }))
 
     if (err) {
       return done(err);
@@ -154,6 +157,19 @@ XCompiler.render = function(config, documentLists, renderDone) {
       renderOperations
     }));
   }, asyncEscapeStack(renderDone));
+};
+
+XCompiler.composeTree = function(config, renderStates, composeTreeDone) {
+  async.map(renderStates, function(renderState, callback) {
+    const options = {
+      common: config,
+      processor: renderState.processor.options
+    };
+
+    callback(null, Object.assign({}, renderState, {
+      tree: TreeComposer.composeTree(options, renderState.documents, renderState.treeOperations)
+    }))
+  }, composeTreeDone);
 };
 
 function inferProcessorMetaData(processorEntry) {

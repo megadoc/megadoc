@@ -69,7 +69,11 @@ describe('[integration] megadoc-plugin-lua', function() {
           pattern: /\.lua$/,
           include: [ path.dirname(sourceFile.path) ],
           processor: {
-            name: path.resolve(__dirname, '../xindex.js')
+            name: path.resolve(__dirname, '../xindex.js'),
+            options: {
+              id: 'lua',
+              name: 'Lua',
+            }
           }
         }
       ]
