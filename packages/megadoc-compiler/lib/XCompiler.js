@@ -3,10 +3,11 @@ const async = require('async');
 const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
 const TreeComposer = require('./TreeComposer');
+const TreeRenderer = require('./TreeRenderer');
 const renderRoutines = require('./renderRoutines');
 const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
-const util = require('util');
+// const util = require('util');
 
 const XCompiler = exports;
 
@@ -49,7 +50,7 @@ XCompiler.run = function(config, done) {
     fs.removeSync(tmpDir);
 
     // console.log(JSON.stringify(rawDocumentLists, null, 4))
-    console.log(util.inspect(finishedCompilations, { showHidden: true, depth: null }))
+    // console.log(util.inspect(finishedCompilations, { showHidden: true, depth: null }))
 
     if (err) {
       return done(err);
@@ -162,7 +163,7 @@ XCompiler.renderTree = function(config, compilation, done) {
   const { options, tree, renderOperations } = compilation;
 
   done(null, mergeObject(compilation, {
-    renderedTree: TreeComposer.composeRenderedTree(options, tree, renderOperations)
+    renderedTree: TreeRenderer.renderTree(options, tree, renderOperations)
   }))
 };
 

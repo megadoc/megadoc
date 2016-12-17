@@ -1,4 +1,5 @@
 const glob = require('glob');
+const wrapArray = require('./wrapArray');
 
 /**
  * Glob a bunch of (relative) source paths for files and optionally filter
@@ -16,10 +17,11 @@ const glob = require('glob');
  * @return {String[]}
  *         A list of matched files.
  */
-module.exports = function globAndFilter(pattern, include, exclude) {
+module.exports = function globAndFilter(pattern, include, _exclude) {
   const globOptions = { nodir: true };
+  const exclude = wrapArray(_exclude);
 
-  return include.reduce(function(fileList, sourceDir) {
+  return wrapArray(include).reduce(function(fileList, sourceDir) {
     return fileList.concat(glob.sync(`${sourceDir}/**/*`, globOptions))
   }, []).filter(function(filePath) {
     if (pattern && !filePath.match(pattern)) {

@@ -1,10 +1,10 @@
 const { assert } = require('chai');
-const Subject = require('../TreeComposer');
+const Subject = require('../TreeRenderer');
 const b = require('megadoc-corpus').builders;
 const { markdown, linkify } = require('../renderRoutines');
 
-describe('TreeComposer', function() {
-  describe('.composeRenderedTree', function() {
+describe('TreeRenderer', function() {
+  describe('.renderTree', function() {
     it('transform properties', function() {
       const tree = b.namespace({
         id: 'test',
@@ -29,7 +29,7 @@ describe('TreeComposer', function() {
         }
       };
 
-      const renderedTree = Subject.composeRenderedTree({}, tree, treeOperations);
+      const renderedTree = Subject.renderTree({}, tree, treeOperations);
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });
