@@ -92,27 +92,30 @@ function createTypeBuilder(typeName, typeDef) {
     var that = this;
 
     // reject unrecognized fields and validate recognized ones
-    Object.keys(fields).forEach(function(field) {
+    Object.keys(fields).forEach(function(fieldName) {
+      var fieldValue = fields[fieldName];
       var typeError;
 
-      assert(field in typeDef.fields,
-        "Field '" + field + "' is unrecognized for a node of type '" + typeName + "'."
+      assert(fieldName in typeDef.fields,
+        "Field '" + fieldName + "' is unrecognized for a node of type '" + typeName + "'."
       );
 
-      typeError = typeCheckers[typeName][field](fields[field]);
+      typeError = typeCheckers[typeName][fieldName](fieldValue);
 
       if (typeError) {
-        assert(false, "TypeError: " + typeError + " (source: " + typeName + "[\"" + field + "\"])");
+        assert(false, "TypeError: " + typeError + " (source: " + typeName + "[\"" + fieldName + "\"])");
       }
 
-      if (Array.isArray(fields[field])) {
-        fields[field].forEach(assignParentNode);
-      }
-      else {
-        assignParentNode(fields[field]);
+      if (fieldName !== 'parentNode') {
+        if (Array.isArray(fieldValue)) {
+          fieldValue.forEach(assignParentNode);
+        }
+        else {
+          assignParentNode(fieldValue);
+        }
       }
 
-      that[field] = fields[field];
+      that[fieldName] = fieldValue;
     });
 
     function assignParentNode(x) {

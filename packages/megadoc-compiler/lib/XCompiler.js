@@ -3,6 +3,8 @@ const async = require('async');
 const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
 const TreeComposer = require('./TreeComposer');
+const renderRoutines = require('./renderRoutines');
+const partial = require('./utils/partial');
 const util = require('util');
 
 const XCompiler = exports;
@@ -24,13 +26,14 @@ const XCompiler = exports;
  *        Turn this on if you want to generate compile-time statistics.
  */
 exports.run = function(config, done) {
-  const { tmpDir } = config;
+  const tmpDir = config.tmpDir;
   const stats = {};
   const processingStates = config.sources.map(XCompiler.createProcessingList);
 
   fs.ensureDirSync(tmpDir);
 
   const compile = async.compose(
+    partial(XCompiler.renderTree, config),
     partial(XCompiler.composeTree, config),
     partial(XCompiler.render, config),
     partial(XCompiler.reduceTree, config),
@@ -42,7 +45,7 @@ exports.run = function(config, done) {
     fs.removeSync(tmpDir);
 
     // console.log(JSON.stringify(rawDocumentLists, null, 4))
-    // console.log(util.inspect(rawDocumentLists, { showHidden: true, depth: null }))
+    console.log(util.inspect(rawDocumentLists, { showHidden: true, depth: null }))
 
     if (err) {
       return done(err);
@@ -71,10 +74,8 @@ XCompiler.parse = function(config, sourceFileLists, done) {
       processor: processor.options
     };
 
-    const [ applier, fn ] = processor.parseFnPath ?
-      [ parseEach, processor.parseFnPath ] :
-      [ parseBulk, processor.parseBulkFnPath ]
-    ;
+    const applier = processor.parseFnPath ? parseEach : parseBulk;
+    const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
 
     applier(parseOptions, files, fn, asyncMaybe(function(rawDocuments) {
       return Object.assign({}, initialState, {
@@ -140,8 +141,6 @@ XCompiler.render = function(config, documentLists, renderDone) {
         processor: processor.options
       };
 
-      const renderRoutines = { markdown, linkify };
-
       renderOperations = documents.reduce(function(map, document) {
         const documentRenderingDescriptor = fn(renderOptions, renderRoutines, document);
 
@@ -170,6 +169,19 @@ XCompiler.composeTree = function(config, renderStates, composeTreeDone) {
       tree: TreeComposer.composeTree(options, renderState.documents, renderState.treeOperations)
     }))
   }, composeTreeDone);
+};
+
+XCompiler.renderTree = function(config, composeTreeStates, renderTreeDone) {
+  async.map(composeTreeStates, function(state, callback) {
+    const options = {
+      common: config,
+      processor: state.processor.options
+    };
+
+    callback(null, Object.assign({}, state, {
+      renderedTree: TreeComposer.composeRenderedTree(options, state.tree, state.renderOperations)
+    }))
+  }, renderTreeDone);
 };
 
 function inferProcessorMetaData(processorEntry) {
@@ -242,23 +254,4 @@ function asyncMaybe(f, done) {
 
 function asyncEscapeStack(f) {
   return (err, x) => async.nextTick(() => f(err, x));
-}
-
-function partial(fn, x) {
-  return fn.bind(null, x);
-}
-
-function markdown(value) {
-  return {
-    $__type: 'CONVER_MARKDOWN_TO_HTML',
-    $__value: value
-  };
-}
-
-// TODO: is it possible to stop accepting custom contextNodes?
-function linkify({ text, contextNode }) {
-  return {
-    $__type: 'LINKIFY_STRING',
-    $__value: { text, contextNodeId: contextNode.id }
-  };
 }
