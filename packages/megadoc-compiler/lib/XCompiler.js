@@ -96,7 +96,15 @@ Compiler.run = function(config, done) {
     },
   ], function(err, results) {
     if (err) {
-      done(err);
+      try {
+        serializer.stop(Function.prototype);
+      }
+      catch (_err) {
+        //
+      }
+      finally {
+        done(err);
+      }
     }
     else {
       done(null, results[1]);

@@ -85,8 +85,8 @@ function copyAppScripts(config, state, done) {
 }
 
 function generateRuntimeConfigScript(config, state, done) {
-  const runtimeConfig = Object.assign(generateRuntimeConfig(config, state), {
-    database: state.corpusTree,
+  const runtimeConfig = Object.assign(generateRuntimeConfig(config, state.assets), {
+    database: state.flatCorpus,
   });
 
   if (config.verbose) {

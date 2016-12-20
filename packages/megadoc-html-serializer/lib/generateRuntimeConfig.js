@@ -1,7 +1,7 @@
 const VERSION = require('./constants').VERSION;
 const path = require('path');
 
-module.exports = function generateRuntimeConfig(config, state) {
+module.exports = function generateRuntimeConfig(config, assets) {
   return {
     collapsibleSidebar: !!config.collapsibleSidebar,
 
@@ -14,14 +14,14 @@ module.exports = function generateRuntimeConfig(config, state) {
     metaDescription: config.metaDescription,
     motto: config.motto,
 
-    pluginCount: state.assets.pluginScripts.length,
-    pluginConfigs: state.assets.runtimeConfigs,
-    pluginNames: state.assets.pluginScripts.map(getPluginName),
+    pluginCount: assets.pluginScripts.length,
+    pluginConfigs: assets.runtimeConfigs,
+    pluginNames: assets.pluginScripts.map(getPluginName),
 
     resizableSidebar: !!config.resizableSidebar,
 
     scrollSpying: !!config.scrollSpying,
-    sourceStyleSheets: state.assets.styleSheets,
+    sourceStyleSheets: assets.styleSheets,
     spotlight: !!config.spotlight,
 
     themeOptions: config.themeOptions,

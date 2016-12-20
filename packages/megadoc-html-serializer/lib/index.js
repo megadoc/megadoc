@@ -1,20 +1,12 @@
 const async = require('async');
 const path = require('path');
-const jsdom = require('jsdom');
-const K = require('./constants');
-const generateHTMLFile = require('./generateHTMLFile');
-const FakeWindowContext = require('./FakeWindowContext');
-const CorpusVisitor = require('./CorpusVisitor');
-const DocumentFileEmitter = require('./DocumentFileEmitter');
-const Assets = require('./Assets');
-const AssetUtils = require('./AssetUtils');
-const VENDOR_BUNDLE = path.join(K.BUNDLE_DIR, K.VENDOR_BUNDLE);
-const MAIN_BUNDLE = path.join(K.BUNDLE_DIR, K.MAIN_BUNDLE);
 const MegadocCorpus = require('megadoc-corpus');
+const AssetUtils = require('./AssetUtils');
+const DocumentFileEmitter = require('./DocumentFileEmitter');
+const ClientSandbox = require('./ClientSandbox');
+const NodeURIDecorator = require('./NodeURIDecorator');
+const createAssets = require('./createAssets');
 const emitAssets = require('./emitAssets');
-const generateRuntimeConfig = require('./generateRuntimeConfig');
-const util = require('util')
-const ConfigUtils = require('megadoc-config-utils');
 
 const DefaultConfig = {
   /**
@@ -194,69 +186,76 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
 
   this.assetUtils = new AssetUtils(this.compilerConfig);
   this.config = Object.assign({}, DefaultConfig, userSerializerOptions);
-  this.corpusVisitor = CorpusVisitor(this.config);
+  this.corpusVisitor = NodeURIDecorator(this.config);
 
   this.state = {
     assets: null,
-    dom: null,
-    fakeWindowContext: null,
-    ui: null,
-    window: null,
+    clientSandbox: new ClientSandbox(this.config),
   };
 }
 
 HTMLSerializer.prototype.start = function(compilations, done) {
-  this.state.assets = createAssets(this, compilations);
-  this.state.dom = jsdom.jsdom(generateHTMLFile({
-    params: {
-      scripts: [],
-      styleSheets: [ K.STYLE_BUNDLE ],
-    },
-    sourceFile: this.config.htmlFile,
-    assets: this.state.assets,
-    distanceFromRoot: 0
-  }), {
-    url: 'http://localhost'
-  });
-
-  const window = this.state.dom.defaultView;
-
-  this.state.window = window;
-  this.state.fakeWindowContext = FakeWindowContext(window, global);
-  this.state.fakeWindowContext.install();
-
-  require(VENDOR_BUNDLE);
-
-  this.state.fakeWindowContext.expose('webpackJsonp_megadoc', window.webpackJsonp_megadoc);
-  this.state.fakeWindowContext.expose('console.debug', Function.prototype);
-
-  // TODO DRY alert, see HTMLSerializer__write.js
-  window.CONFIG = Object.assign(generateRuntimeConfig(this.config, this.state), {
-    $static: {
-      readyCallback: (ui) => {
-        this.state.ui = ui;
-
-        done();
-      },
-    },
-  });
-
-  require(MAIN_BUNDLE);
-
-  this.state.fakeWindowContext.expose('megadoc', window.megadoc);
-
-  window.megadoc.start();
-
-  this.state.assets.pluginScripts.forEach(require);
+  this.state.assets = createAssets(this.config, compilations);
+  this.state.clientSandbox.start(this.state.assets, done);
 };
 
 HTMLSerializer.prototype.emitCorpusDocuments = function(compilations, done) {
-  const corpus = MegadocCorpus.Corpus({
-    strict: this.compilerConfig.strict,
-    debug: this.compilerConfig.debug
+  const corpus = aggregateTreesIntoCorpus(this, compilations);
+  const flatCorpus = corpus.toJSON();
+
+  this.state.clientSandbox.exposeCorpus(flatCorpus);
+
+  const emitDocumentFile = DocumentFileEmitter({
+    assets: this.state.assets,
+    assetUtils: this.assetUtils,
+    corpus: flatCorpus,
+    htmlFile: this.config.htmlFile,
+    ui: this.state.clientSandbox.getDelegate(),
+    verbose: this.compilerConfig.verbose,
   });
 
-  corpus.visit(this.corpusVisitor);
+  const documentUIDs = Object.keys(flatCorpus);
+
+  emitAssets(
+    Object.assign({}, this.config, {
+      verbose: this.compilerConfig.verbose,
+    }),
+    {
+      assets: this.state.assets,
+      flatCorpus: flatCorpus,
+      assetUtils: this.assetUtils,
+    },
+    function(err) {
+      if (err) {
+        return done(err);
+      }
+      else {
+        async.eachSeries(documentUIDs, emitDocumentFile, done);
+      }
+    }
+  )
+};
+
+HTMLSerializer.prototype.stop = function(done) {
+  this.state.clientSandbox.stop(this.state.assets, (err) => {
+    if (err) {
+      done(err);
+    }
+    else {
+      this.state = {};
+
+      done();
+    }
+  })
+};
+
+function aggregateTreesIntoCorpus(serializer, compilations) {
+  const corpus = MegadocCorpus.Corpus({
+    strict: serializer.compilerConfig.strict,
+    debug: serializer.compilerConfig.debug
+  });
+
+  corpus.visit(serializer.corpusVisitor);
 
   compilations.forEach(function(compilation) {
     const serializerOptions = compilation.processor.serializerOptions.html || {};
@@ -266,123 +265,7 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(compilations, done) {
     corpus.add(compilation.renderedTree);
   });
 
-  const corpusTree = corpus.toJSON();
-  const emitDocumentFile = DocumentFileEmitter({
-    assets: this.state.assets,
-    assetUtils: this.assetUtils,
-    corpus: corpusTree,
-    htmlFile: this.config.htmlFile,
-    ui: this.state.ui,
-    verbose: this.compilerConfig.verbose,
-  });
-
-  const fileList = Object.keys(corpusTree);
-
-  // TODO DRY alert, see HTMLSerializer__write.js
-  Object.assign(this.state.window.CONFIG, {
-    database: corpusTree,
-  });
-
-  this.state.window.megadoc.regenerateCorpus(corpusTree);
-
-  emitAssets(
-    Object.assign({}, this.config, {
-      verbose: this.compilerConfig.verbose,
-    }),
-    {
-      assets: this.state.assets,
-      corpusTree: corpusTree,
-      assetUtils: this.assetUtils,
-    },
-    function(err) {
-      if (err) {
-        return done(err);
-      }
-      else {
-        async.eachSeries(fileList, emitDocumentFile, done);
-      }
-    }
-  )
-};
-
-HTMLSerializer.prototype.stop = function(done) {
-  this.state.fakeWindowContext.restore();
-  this.state.assets.pluginScripts.concat([
-    MAIN_BUNDLE,
-    VENDOR_BUNDLE,
-  ]).forEach(unloadModule);
-
-  this.state = {};
-
-  done();
-};
+  return corpus;
+}
 
 module.exports = HTMLSerializer;
-
-function unloadModule(fileName) {
-  delete require.cache[require.resolve(fileName)];
-}
-
-function createAssets(serializer, compilations) {
-  const assets = new Assets();
-  const themeSpec = ConfigUtils.getConfigurablePair(serializer.config.theme);
-  const themePlugin = themeSpec ? require(themeSpec.name) : {
-    assets: null,
-    pluginScripts: null,
-    styleOverrides: null,
-    styleSheets: null,
-  };
-
-  const { staticAssets, styleSheets, pluginScripts } = compilations.map(x => x.processor.serializerOptions.html || {}).reduce(function(map, options) {
-    if (options.pluginScripts) {
-      options.pluginScripts.forEach(x => map.pluginScripts.push(x));
-    }
-
-    if (options.styleSheets) {
-      options.styleSheets.forEach(x => map.styleSheets.push(x));
-    }
-
-    if (options.assets) {
-      options.staticAssets.forEach(x => map.staticAssets.push(x));
-    }
-
-    return map;
-  }, {
-    staticAssets: [].concat(
-      serializer.config.assets || []
-    ).concat(
-      themePlugin.assets || []
-    ),
-    styleSheets: [
-      K.CORE_STYLE_ENTRY,
-      serializer.config.styleSheet || serializer.config.stylesheet
-    ],
-    pluginScripts: [],
-  })
-
-  assets.addStyleOverrides(createStyleOverrides(serializer.config, themePlugin));
-
-  staticAssets.filter(isTruthy).forEach(x => { assets.add(x); });
-  styleSheets.filter(isTruthy).forEach(x => { assets.addStyleSheet(x); });
-  pluginScripts.filter(isTruthy).forEach(x => { assets.addPluginScript(x); });
-
-  return assets;
-}
-
-function createStyleOverrides(config, themePlugin) {
-  const styleOverrides = {};
-
-  if (themePlugin && themePlugin.styleOverrides) {
-    Object.assign(styleOverrides, themePlugin.styleOverrides);
-  }
-
-  if (config.styleOverrides) {
-    Object.assign(styleOverrides, config.styleOverrides);
-  }
-
-  return styleOverrides;
-}
-
-function isTruthy(x) {
-  return !!x;
-}

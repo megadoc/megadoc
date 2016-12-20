@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const subject = require('../stage5/transformValue');
+const subject = require('../transformValue');
 const useNext = (a,b) => b;
 
 describe('megadoc-compiler::utils::transformValue', function() {

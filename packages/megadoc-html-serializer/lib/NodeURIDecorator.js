@@ -1,6 +1,6 @@
 var compose = require('lodash').compose;
 
-module.exports = function(config) {
+module.exports = function NodeURIDecorator(config) {
   var g = config.layoutOptions.singlePageMode ?
     HashBasedURIGenerator(config) :
     FileBasedURIGenerator(config)
