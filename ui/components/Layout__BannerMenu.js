@@ -17,6 +17,10 @@ const BannerMenu = React.createClass({
     })).isRequired,
   },
 
+  contextTypes: {
+    documentURI: React.PropTypes.instanceOf(DocumentURI).isRequired,
+  },
+
   getDefaultProps() {
     return {
       openStrategy: 'hover'
@@ -58,7 +62,10 @@ const BannerMenu = React.createClass({
           onClick={this.toggle}
         >
           {this.props.href ? (
-            <Link href={DocumentURI.withExtension(this.props.href)} active={isActive}>
+            <Link
+              href={this.context.documentURI.withExtension(this.props.href)}
+              active={isActive}
+            >
               {this.props.text} {icon}
             </Link>
           ) : (
@@ -79,7 +86,7 @@ const BannerMenu = React.createClass({
   renderLink(link) {
     return (
       <li key={link.href + link.text} className="banner__menu-list-item">
-        <Link href={DocumentURI.withExtension(link.href)}>{link.text}</Link>
+        <Link href={this.context.documentURI.withExtension(link.href)}>{link.text}</Link>
       </li>
     );
   },

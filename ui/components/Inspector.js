@@ -1,13 +1,17 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 const domContains = require('dom-contains');
-const config = require('config');
 const Tooltip = require('./InspectorTooltip');
 const Outlet = require('components/Outlet');
 const { debounce } = require('lodash');
 const { hasMatchingElements } = Outlet;
+const { PropTypes } = React;
 
 const Inspector = React.createClass({
+  propTypes: {
+    inSinglePageMode: PropTypes.bool,
+  },
+
   getInitialState() {
     return {
       element: null
@@ -66,7 +70,7 @@ const Inspector = React.createClass({
   },
 
   getContainerDOMNode() {
-    return config.layout === 'single-page' ?
+    return this.props.inSinglePageMode ?
       document.querySelector('.single-page-layout__content') :
       document.querySelector('.two-column-layout__right') ||
       document.querySelector('.root__screen')

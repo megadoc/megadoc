@@ -200,5 +200,4 @@ describe('XCompiler', function() {
       });
     });
   });
-
 });

@@ -1,13 +1,13 @@
 const fs = require('fs-extra');
 const async = require('async');
-const scanSources = require('./utils/scanSources');
 const invariant = require('invariant');
 const TreeComposer = require('./TreeComposer');
 const TreeRenderer = require('./TreeRenderer');
-const renderRoutines = require('./renderRoutines');
 const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
-// const util = require('util');
+const renderRoutines = require('./renderRoutines');
+const scanSources = require('./utils/scanSources');
+const ConfigUtils = require('megadoc-config-utils');
 
 const XCompiler = exports;
 
@@ -30,44 +30,96 @@ const XCompiler = exports;
 XCompiler.run = function(config, done) {
   const tmpDir = config.tmpDir;
   const commonOptions = config; // TODO
+  const serializerSpec = ConfigUtils.getConfigurablePair(config.serializer) || { name: 'megadoc-html-serializer' };
+  const Serializer = require(serializerSpec.name);
+  const serializer = new Serializer(config, serializerSpec.options);
+
+  /**
+   * @property {Assets}
+   *
+   * The asset registry.
+   */
+  // const assets = new Assets();
   const compilations = config.sources.map(partial(XCompiler.createCompilation, commonOptions));
 
-  fs.ensureDirSync(tmpDir);
-
-  const compile = async.compose(
-    partial(XCompiler.composeTree, config),
-    partial(XCompiler.render, config),
-    partial(XCompiler.reduceTree, config),
-    partial(XCompiler.reduce, config),
-    partial(XCompiler.parse, config)
-  );
-
-  const renderTrees = (x,y) => {
-    async.map(x, partial(XCompiler.renderTree, config), y);
-  };
-
-  const cleanUpAndEmitDone = function(err, finishedCompilations) {
-    fs.removeSync(tmpDir);
-
-    // console.log(JSON.stringify(rawDocumentLists, null, 4))
-    // console.log(util.inspect(finishedCompilations, { showHidden: true, depth: null }))
-
-    if (err) {
-      return done(err);
-    }
-    else {
-      done(null, finishedCompilations);
-    }
-  };
-
-  async.map(compilations, compile, function(err, trees) {
-    if (err) {
-      cleanUpAndEmitDone(err);
-    }
-    else {
-      renderTrees(trees, cleanUpAndEmitDone);
-    }
+  /**
+   * @property {LinkResolver}
+   *
+   * The link resolver for this compilation and corpus.
+   */
+  const linkResolver = new LinkResolver(this.corpus, {
+    relativeLinks: !this.inSinglePageMode(),
+    ignore: config.linkResolver.ignore
   });
+
+  /**
+   * @property {Renderer}
+   *
+   * The renderer instance configured for this compilation.
+   */
+  const renderer = new Renderer(config);
+
+  async.series([
+    function startSerializer(callback) {
+      serializer.start(compilations, callback);
+    },
+
+    function doCompile(callback) {
+      fs.ensureDirSync(tmpDir);
+
+      const compile = async.compose(
+        partial(XCompiler.composeTree, config),
+        partial(XCompiler.render, config),
+        partial(XCompiler.reduceTree, config),
+        partial(XCompiler.reduce, config),
+        partial(XCompiler.parse, config)
+      );
+
+      const cleanUpAndEmitDone = function(finishedCompilations) {
+        fs.removeSync(tmpDir);
+
+        // console.log(JSON.stringify(rawDocumentLists, null, 4))
+        // console.log(util.inspect(finishedCompilations, { showHidden: true, depth: null }))
+
+        callback(null, finishedCompilations);
+      };
+
+      const emitAssets = withRenderedTrees => {
+        serializer.emitCorpusDocuments(withRenderedTrees, function(err) {
+          if (err) {
+            cleanUpAndEmitDone(err);
+          }
+          else {
+            cleanUpAndEmitDone(null, withRenderedTrees);
+          }
+        });
+      };
+
+      const renderTrees = withTrees => {
+        async.map(withTrees, partial(XCompiler.renderTree, config), function(err, withRenderedTrees) {
+          if (err) {
+            cleanUpAndEmitDone(err);
+          }
+          else {
+            emitAssets(withRenderedTrees);
+          }
+        });
+      };
+
+      async.map(compilations, compile, function(err, withTrees) {
+        if (err) {
+          cleanUpAndEmitDone(err);
+        }
+        else {
+          renderTrees(withTrees, emitAssets);
+        }
+      });
+    },
+
+    function stopSerializer(callback) {
+      serializer.stop(callback);
+    },
+  ], done);
 };
 
 // TODO: extract decorators
@@ -186,6 +238,7 @@ function extractProcessingFunctionPaths(processorEntry) {
     reduceFnPath: spec.reduceFnPath,
     reduceTreeFnPath: spec.reduceTreeFnPath,
     renderFnPath: spec.renderFnPath,
+    serializerOptions: spec.serializerOptions || {},
   };
 }
 

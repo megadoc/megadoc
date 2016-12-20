@@ -1,17 +1,43 @@
 const React = require('react');
 const Root = require('./Root');
 const DocumentURI = require('core/DocumentURI');
+const DocumentResolver = require('../DocumentResolver');
 
-const { object, } = React.PropTypes;
+const { PropTypes } = React;
 
 const App = React.createClass({
   propTypes: {
-    config: object.isRequired,
+    config: PropTypes.object.isRequired,
     location: require('schemas/Location').isRequired,
+  },
+
+  childContextTypes: {
+    documentResolver: PropTypes.instanceOf(DocumentResolver),
+    documentURI: PropTypes.instanceOf(DocumentURI),
+  },
+
+  getInitialState() {
+    return {
+      hashDisabled: true,
+    };
+  },
+
+  getChildContext() {
+    return {
+      documentURI: this.documentURI,
+      documentResolver: this.documentResolver,
+    };
   },
 
   componentWillMount() {
     const { config } = this.props;
+
+    this.documentURI = new DocumentURI(config);
+    this.documentResolver = new DocumentResolver({
+      config: config,
+      corpus: megadoc.corpus,
+      documentURI: this.documentURI
+    });
 
     let locationAPI;
 
@@ -33,6 +59,13 @@ const App = React.createClass({
     this.locationAPI.start();
   },
 
+  componentDidMount() {
+    // this is to avoid discrepancy with the server-rendered version since it
+    // will not have a hash fragment and the client would (hash fragment may
+    // change the UI if it's pointing to a DocumentEntity)
+    this.setState({ hashDisabled: false });
+  },
+
   componentWillUnmount() {
     this.locationAPI.stop();
   },
@@ -46,8 +79,8 @@ const App = React.createClass({
         onRefreshScroll={this.locationAPI.refreshScroll}
         config={this.props.config}
         location={{
-          pathname: DocumentURI(location.pathname),
-          hash: location.hash,
+          pathname: this.documentURI.normalize(location.pathname),
+          hash: this.state.hashDisabled ? '' : location.hash,
           origin: location.origin,
           protocol: location.protocol,
         }}

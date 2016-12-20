@@ -4,7 +4,6 @@ const findChildByType = require('utils/findChildByType');
 const AppState = require('core/AppState');
 const resizable = require('utils/resizable');
 const classSet = require('utils/classSet');
-const config = require('config');
 const Icon = require('components/Icon');
 const Button = require('components/Button');
 const {
@@ -12,7 +11,7 @@ const {
   INITIAL_SIDEBAR_WIDTH
 } = require('constants');
 
-
+const { PropTypes } = React;
 const LeftColumn = React.createClass({
   propTypes: {
     children: React.PropTypes.any,
@@ -46,6 +45,8 @@ const NavColumn = React.createClass({
 const TwoColumnLayout = React.createClass({
   propTypes: {
     children: React.PropTypes.any,
+    resizable: PropTypes.bool,
+    collapsible: PropTypes.bool,
   },
 
   getInitialState() {
@@ -59,7 +60,7 @@ const TwoColumnLayout = React.createClass({
   componentDidMount() {
     AppState.on('change', this.reload);
 
-    if (config.resizableSidebar) {
+    if (this.props.resizable) {
       this.resizableInstance = resizable(findDOMNode(this.refs.resizer), {
         onResize: this.updateSidebarWidth,
         onResizeStop: this.updateAndSaveSidebarWidth
@@ -70,7 +71,7 @@ const TwoColumnLayout = React.createClass({
   componentWillUnmount() {
     AppState.off('change', this.reload);
 
-    if (config.resizableSidebar) {
+    if (this.props.resizable) {
       this.resizableInstance.destroy();
     }
   },
@@ -101,7 +102,7 @@ const TwoColumnLayout = React.createClass({
           style={{ width: sidebarWidth }}
         >
           <div className="resizable-panel">
-            {config.collapsibleSidebar && (
+            {this.props.collapsible && (
               <Button
                 onClick={this.collapseSidebar}
                 className="two-column-layout__collapse-btn">

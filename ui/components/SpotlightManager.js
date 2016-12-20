@@ -15,6 +15,10 @@ const SpotlightManager = React.createClass({
     pathname: string.isRequired,
   },
 
+  contextTypes: {
+    documentURI: React.PropTypes.instanceOf(DocumentURI).isRequired,
+  },
+
   getInitialState() {
     return {
       openedInSymbolMode: false
@@ -123,7 +127,7 @@ function getSymbolsForDocument(documentNode) {
 }
 
 function getSymbolsForDocumentByURI(uri) {
-  const documentNode = megadoc.corpus.getByURI(DocumentURI(uri));
+  const documentNode = megadoc.corpus.getByURI(this.context.documentURI.normalize(uri));
 
   if (documentNode) {
     return getSymbolsForDocument(documentNode);

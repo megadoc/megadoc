@@ -49,7 +49,7 @@ describe('megadoc-plugin-lua::reduceTreeFn', function() {
 describe('[integration] megadoc-plugin-lua', function() {
   const fileSuite = FileSuite(this);
 
-  it('works', function(done) {
+  it.only('works', function(done) {
     const sourceFile = fileSuite.createFile('source.lua', `
       --- @module
       --- This here be our CLI module.
@@ -63,6 +63,8 @@ describe('[integration] megadoc-plugin-lua', function() {
 
     compiler.run({
       tmpDir: path.resolve(fileSuite.getRootDirectory(), 'tmp'),
+      outputDir: path.resolve(fileSuite.getRootDirectory(), 'dist'),
+      verbose: true,
 
       sources: [
         {

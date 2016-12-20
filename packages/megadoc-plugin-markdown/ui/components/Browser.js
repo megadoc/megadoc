@@ -4,7 +4,6 @@ const HotItemIndicator = require('components/HotItemIndicator');
 const Storage = require('core/Storage');
 const GROUP_BY_FOLDER = require('constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const { ROOT_FOLDER_ID } = require('constants');
-const isItemHot = require('utils/isItemHot');
 const ArticleTOC = require('./ArticleTOC');
 const { object } = React.PropTypes;
 
@@ -75,8 +74,8 @@ var Browser = React.createClass({
         <Link to={documentNode} className="class-browser__entry-link">
           {article.plainTitle}
 
-          {documentNode.meta.gitStats && isItemHot(documentNode.meta.gitStats.lastCommittedAt) && (
-            <HotItemIndicator />
+          {documentNode.meta.gitStats && (
+            <HotItemIndicator timestamp={documentNode.meta.gitStats.lastCommittedAt} />
           )}
         </Link>
 

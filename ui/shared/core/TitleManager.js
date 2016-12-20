@@ -1,5 +1,4 @@
 var invariant = require('utils/invariant');
-var config = require('config');
 
 /**
  * A module for adjusting the document's title for a while then restoring it.
@@ -10,7 +9,7 @@ var config = require('config');
  *
  * @return {Object} titleMgr
  */
-function TitleManager(generateTitle) {
+function TitleManager(generateTitle, { defaultTitle }) {
   var previousTitle; // we'll track it on the first call to #update()
 
   invariant(generateTitle instanceof Function,
@@ -33,7 +32,7 @@ function TitleManager(generateTitle) {
           previousTitle = document.title;
         }
 
-        document.title = newTitle + ' - ' + config.title;
+        document.title = newTitle + ' - ' + defaultTitle;
 
         return true;
       }

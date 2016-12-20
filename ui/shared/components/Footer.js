@@ -1,13 +1,17 @@
 const React = require('react');
-const config = require('config');
 const MarkdownText = require('components/MarkdownText');
+const { PropTypes } = React;
 
 const Footer = React.createClass({
+  propTypes: {
+    children: PropTypes.string,
+  },
+
   render() {
     return (
       <div className="footer">
         <MarkdownText>
-          {config.footer}
+          {this.props.children || ''}
         </MarkdownText>
       </div>
     );

@@ -6,11 +6,11 @@ const CorpusAPI = require('./CorpusAPI');
  * @singleton
  */
 module.exports = function createMegadoc(config) {
-  const corpusAPI = CorpusAPI(config.database || []);
   let exports = {};
   let previewHandlers = [];
   let callbacks = [];
   let ran = 0;
+  let corpusAPI = CorpusAPI(config.database || []);
 
   const pluginAPI = {
     outlets: Outlet,
@@ -53,6 +53,38 @@ module.exports = function createMegadoc(config) {
       }
       else {
         use(pluginName);
+      }
+    }, 0);
+  };
+
+  /**
+   * @method megadoc.use
+   *
+   * @param {Function} pluginEntryRunner
+   *        The function that will register your plugin.
+   *
+   * @param {PluginRegistrar} pluginEntryRunner.api
+   *        The plugin registration API you can use.
+   */
+  exports.useTheme = function(themeName, plugin) {
+    setTimeout(function() {
+      try {
+        console.log('Loading theme plugin "%s".', themeName);
+
+        plugin(pluginAPI, config.themeOptions || {});
+      }
+      catch (e) {
+        console.error('A plugin (%s) failed to load, it will be ignored.', themeName);
+        console.error(e.stack || e);
+      }
+      finally {
+        console.log('Plugin "%s" has been loaded - %d remain.', themeName, config.pluginCount - ran - 1);
+
+        if (++ran === config.pluginCount) {
+          console.log('All %d/%d plugins have been loaded, no more may be loaded from now on.', ran, config.pluginCount);
+
+          seal();
+        }
       }
     }, 0);
   };
@@ -118,7 +150,12 @@ module.exports = function createMegadoc(config) {
     else {
       return filePath;
     }
-  }
+  };
+
+  exports.regenerateCorpus = function(nextShallowCorpus) {
+    console.log('regenerating corpus...');
+    exports.corpus = corpusAPI = CorpusAPI(nextShallowCorpus);
+  };
 
   return exports;
 };

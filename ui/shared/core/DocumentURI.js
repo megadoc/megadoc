@@ -1,36 +1,41 @@
-const config = require('config');
-const extension = config.emittedFileExtension || '';
-const RE_FILE_EXTENSION = extension.length > 0 && new RegExp(extension + '$');
+function DocumentURI(config) {
+  this.mountPath = config.mountPath;
+  this.extension = config.emittedFileExtension || '';
+  this.fileExtensionRegExp = this.extension.length > 0 ?
+    new RegExp(this.extension + '$') :
+    null
+  ;
+}
 
-function DocumentURI(uri) {
-  if (uri.indexOf(config.mountPath) === 0) {
-    return ensureLeadingSlash(uri.slice(config.mountPath.length));
+DocumentURI.prototype.normalize = function(uri) {
+  if (uri.indexOf(this.mountPath) === 0) {
+    return ensureLeadingSlash(uri.slice(this.mountPath.length));
   }
   else {
     return uri;
   }
 };
 
-DocumentURI.withExtension = function(uri) {
-  if (!uri.match(RE_FILE_EXTENSION)) {
-    return uri + extension;
+DocumentURI.prototype.withExtension = function(uri) {
+  if (!uri.match(this.fileExtensionRegExp)) {
+    return uri + this.extension;
   }
   else {
     return uri;
   }
 };
 
-DocumentURI.withoutExtension = function(uri) {
-  if (RE_FILE_EXTENSION) {
-    return uri.replace(RE_FILE_EXTENSION, '');
+DocumentURI.prototype.withoutExtension = function(uri) {
+  if (this.fileExtensionRegExp) {
+    return uri.replace(this.fileExtensionRegExp, '');
   }
   else {
     return uri;
   }
 };
 
-DocumentURI.getCurrentPathName = function() {
-  return DocumentURI(ensureLeadingSlash(window.location.pathname));
+DocumentURI.prototype.getCurrentPathName = function() {
+  return this.normalize(ensureLeadingSlash(window.location.pathname));
 };
 
 function ensureLeadingSlash(x) {

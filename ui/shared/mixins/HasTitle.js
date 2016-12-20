@@ -1,5 +1,6 @@
-var TitleManager = require('core/TitleManager');
-var IDENTITY = function(arg) {
+const TitleManager = require('core/TitleManager');
+const { PropTypes } = require('react');
+const IDENTITY = function(arg) {
   return arg;
 };
 
@@ -11,8 +12,16 @@ module.exports = function(generateTitle) {
   }
 
   return {
+    contextTypes: {
+      config: PropTypes.shape({
+        title: PropTypes.string,
+      }).isRequired,
+    },
+
     componentWillMount: function() {
-      titleManager = new TitleManager(generateTitle.bind(this));
+      titleManager = new TitleManager(generateTitle.bind(this), {
+        defaultTitle: this.context.config.title,
+      });
     },
 
     componentDidMount: function() {

@@ -7,6 +7,7 @@ const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
 const ScrollSpy = require('../components/ScrollSpy');
 const DocumentResolver = require('../DocumentResolver');
+const DocumentURI = require('core/DocumentURI');
 const LayoutTemplate = require('../LayoutTemplate');
 const ErrorMessage = require('components/ErrorMessage');
 const { object, func, } = React.PropTypes;
@@ -25,6 +26,11 @@ const Root = React.createClass({
     onRefreshScroll: func,
   },
 
+  contextTypes: {
+    documentURI: React.PropTypes.instanceOf(DocumentURI).isRequired,
+    documentResolver: React.PropTypes.instanceOf(DocumentResolver).isRequired,
+  },
+
   getChildContext() {
     return {
       location: this.props.location,
@@ -34,7 +40,6 @@ const Root = React.createClass({
   },
 
   componentWillMount() {
-    this.documentResolver = DocumentResolver(megadoc.corpus);
     this.realizeTemplate = LayoutTemplate(megadoc, this.props.config);
   },
 
@@ -53,7 +58,6 @@ const Root = React.createClass({
   },
 
   componentWillUnmount() {
-    this.documentResolver = null;
     this.realizeTemplate = null;
 
     window.removeEventListener('click', this.handleInternalLink, false);
@@ -82,7 +86,11 @@ const Root = React.createClass({
       <Outlet name="LayoutWrapper" forwardChildren>
         <Outlet name="Meta" />
 
-        {config.tooltipPreviews && (<Inspector />)}
+        {config.tooltipPreviews && (
+          <Inspector
+            inSinglePageMode={config.layoutOptions && config.layoutOptions.singlePageMode}
+          />
+        )}
         {config.spotlight && (
           <SpotlightManager
             active={AppState.isSpotlightOpen()}
@@ -141,11 +149,14 @@ const Root = React.createClass({
   },
 
   resolveCurrentDocument() {
-    return this.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
+    return this.context.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
   },
 
   getPathName() {
-    return DocumentResolver.getProtocolAgnosticPathName(this.getLocation());
+    return this.context.documentResolver.getProtocolAgnosticPathName(
+      this.getLocation(),
+      this.context.documentURI
+    );
   },
 
   getLocation() {

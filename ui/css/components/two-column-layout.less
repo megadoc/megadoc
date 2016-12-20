@@ -3,10 +3,6 @@
     right: 0;
   }
 
-  .root--with-banner &__left {
-    top: @content-top-offset;
-  }
-
   &__left {
     top: 0;
     bottom: 0;
@@ -64,6 +60,10 @@
       visibility: hidden;
     }
   }
+}
+
+.root--with-banner .two-column-layout__left {
+  top: @content-top-offset;
 }
 
 .schemable({

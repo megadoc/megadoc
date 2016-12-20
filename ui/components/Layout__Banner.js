@@ -1,13 +1,21 @@
 const React = require("react");
 const Link = require("components/Link");
 const Outlet = require("components/Outlet");
-const config = require('config');
 const Icon = require('components/Icon');
+const ConfigReceiver = require('components/ConfigReceiver');
 const AppState = require('core/AppState');
 const DocumentURI = require('core/DocumentURI');
-const { string, any, arrayOf, object, } = React.PropTypes;
 const BannerItem = require('./Layout__BannerItem');
 const BannerMenu = require('./Layout__BannerMenu');
+const { string, any, arrayOf, object, } = React.PropTypes;
+const { PropTypes } = React;
+
+const ConfigType = {
+  motto: PropTypes.string,
+  title: PropTypes.string,
+  spotlight: PropTypes.bool,
+  showSettingsLinkInBanner: PropTypes.bool,
+};
 
 const Banner = React.createClass({
   statics: { BannerItem: BannerItem },
@@ -16,9 +24,16 @@ const Banner = React.createClass({
     children: any,
     currentPath: string,
     links: arrayOf(object),
+    config: PropTypes.shape(ConfigType),
+  },
+
+  contextTypes: {
+    documentURI: PropTypes.instanceOf(DocumentURI).isRequired,
   },
 
   render() {
+    const { config } = this.props;
+
     return (
       <div className="banner-wrapper">
         <header className="banner">
@@ -86,7 +101,7 @@ const Banner = React.createClass({
 
     return (
       <BannerItem key={link.text}>
-        <Link href={DocumentURI.withExtension(link.href)}>{link.text}</Link>
+        <Link href={this.context.documentURI.withExtension(link.href)}>{link.text}</Link>
       </BannerItem>
     );
   },
@@ -101,4 +116,4 @@ const Banner = React.createClass({
   }
 });
 
-module.exports = Banner;
+module.exports = ConfigReceiver(Banner, ConfigType);

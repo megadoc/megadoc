@@ -67,5 +67,5 @@ How?
     - we store the rendering mutations in memory
       - the rendered tree is computed by applying the rendering mutations against the reduced tree
       - the rendered tree will give us edge information
-        - edge information can be used to find out which documents to re-render on
+        - edge information can be used to find out which documents to re-parse on
           file change (for watch)

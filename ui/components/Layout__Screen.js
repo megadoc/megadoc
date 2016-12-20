@@ -6,7 +6,15 @@ const Document = require('components/Document');
 const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
 const Sticky = require('components/Sticky');
+const ConfigReceiver = require('components/ConfigReceiver');
 const { shape, string, arrayOf, object, bool, } = React.PropTypes;
+const { PropTypes } = React;
+
+const ConfigType = {
+  collapsibleSidebar: PropTypes.bool,
+  footer: PropTypes.string,
+  resizableSidebar: PropTypes.bool,
+};
 
 const LayoutScreen = React.createClass({
   propTypes: {
@@ -26,6 +34,8 @@ const LayoutScreen = React.createClass({
         })
       }))
     })).isRequired,
+
+    config: shape(ConfigType)
   },
 
   render() {
@@ -41,9 +51,13 @@ const LayoutScreen = React.createClass({
 
   renderTwoColumnLayout() {
     const navBar = this.renderNavBar();
+    const { config } = this.props;
 
     return (
-      <TwoColumnLayout>
+      <TwoColumnLayout
+        resizable={config.resizableSidebar}
+        collapsible={config.collapsibleSidebar}
+      >
         <TwoColumnLayout.LeftColumn>
           <div>
             {this.renderRegion('Layout::Sidebar')}
@@ -76,7 +90,7 @@ const LayoutScreen = React.createClass({
           {this.renderRegion('Layout::Content') || <NotFound />}
         </ContentTag>
 
-        <Footer />
+        <Footer>{this.props.config.footer}</Footer>
       </div>
     );
   },
@@ -159,4 +173,4 @@ const LayoutScreen = React.createClass({
   },
 });
 
-module.exports = LayoutScreen;
+module.exports = ConfigReceiver(LayoutScreen, ConfigType);

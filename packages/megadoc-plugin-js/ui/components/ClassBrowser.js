@@ -6,7 +6,6 @@ const Checkbox = require('components/Checkbox');
 const Icon = require('components/Icon');
 const HotItemIndicator = require('components/HotItemIndicator');
 const { sortBy } = require('lodash');
-const isItemHot = require('utils/isItemHot');
 const K = require('../constants');
 const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
 const orderAwareSort = require('../utils/orderAwareSort');
@@ -152,7 +151,7 @@ var ClassBrowser = React.createClass({
             </span>
           )}
 
-          {doc.git && isItemHot(doc.git.lastCommittedAt) && <HotItemIndicator />}
+          {doc.git && <HotItemIndicator timestamp={doc.git.lastCommittedAt} />}
         </Link>
 
         {isActive && !this.props.flat && this.renderModuleEntities(docNode)}

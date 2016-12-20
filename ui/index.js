@@ -64,6 +64,10 @@ megadoc.start = function(options = {}) {
 
         dumpRoutes: function() {
           return [];
+        },
+
+        regenerateCorpus: function(shallowCorpus) {
+          megadoc.regenerateCorpus(shallowCorpus);
         }
       });
 

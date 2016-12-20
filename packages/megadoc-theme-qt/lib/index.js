@@ -1,20 +1,18 @@
-var path = require('path');
-var root = path.resolve(__dirname, '..');
-var defaults = require('./config');
+const path = require('path');
+const root = path.resolve(__dirname, '..');
 
-module.exports = function(userConfig) {
-  return {
-    run: function(compiler) {
-      var config = compiler.utils.getWithDefaults(userConfig, defaults);
+module.exports = {
+  options: {
+    invertedSidebar: false
+  },
 
-      compiler.on('write', function(done) {
-        compiler.assets.addStyleSheet(path.join(root, 'ui/index.less'));
-        compiler.assets.addStyleOverrides(require('../ui/styleOverrides'));
-        compiler.assets.addPluginScript(path.join(root, 'dist/megadoc-theme-qt.js'));
-        compiler.assets.addPluginRuntimeConfig('megadoc-theme-qt', config);
+  pluginScripts: [
+    path.join(root, 'dist/megadoc-theme-qt.js')
+  ],
 
-        done();
-      });
-    }
-  }
-}
+  styleSheets: [
+    path.join(root, 'ui/index.less'),
+  ],
+
+  styleOverrides: require('../ui/styleOverrides'),
+};
