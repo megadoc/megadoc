@@ -1,10 +1,12 @@
 const { assert } = require('chai');
-const Subject = require('../XCompiler');
+const subject = require('../stage06__emit');
 const FileSuite = require('megadoc-test-utils/FileSuite');
+const SinonSuite = require('megadoc-test-utils/SinonSuite');
 const b = require('megadoc-corpus').builders;
 
-describe('XCompiler#emit', function() {
+describe('stage06__emit', function() {
   const fileSuite = FileSuite(this);
+  const sinon = SinonSuite(this);
 
   it('should pass all compilations through to the serializer', function(done) {
     const emitFn = fileSuite.createFile('reduceFn.js', `
@@ -39,16 +41,21 @@ describe('XCompiler#emit', function() {
       })
     };
 
-    Subject.emit({}, compilation, function(err, { documents }) {
+    const serializer = {
+      emitCorpusDocuments: sinon.spy(function(renderedTrees, callback) {
+        callback();
+      }),
+    };
+
+    subject(serializer, compilation, function(err, output) {
       if (err) {
         done(err);
       }
       else {
-        // assert.equal(documents.length, 1);
-        // assert.include(documents[0], {
-        //   id: '1',
-        //   name: '1__name'
-        // });
+        assert.calledWith(serializer.emitCorpusDocuments, compilation)
+        assert.equal(output, compilation,
+          "it passes the compilation through as-is"
+        );
 
         done();
       }

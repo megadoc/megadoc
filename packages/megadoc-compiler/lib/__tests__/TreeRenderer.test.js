@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const Subject = require('../TreeRenderer');
+const Subject = require('../stage5/TreeRenderer');
 const b = require('megadoc-corpus').builders;
 const { markdown, linkify } = require('../renderRoutines');
 

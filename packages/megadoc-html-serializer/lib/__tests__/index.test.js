@@ -1,7 +1,7 @@
 const HTMLSerializer = require('../');
 const FileSuite = require('megadoc-test-utils/FileSuite');
 
-describe('HTMLSerializer', function() {
+describe.skip('HTMLSerializer', function() {
   const fileSuite = FileSuite(this);
 
   let subject, defaultConfig, defaultAssets;
