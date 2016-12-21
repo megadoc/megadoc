@@ -22,7 +22,4 @@ const AllModulesOutlet = React.createClass({
   }
 });
 
-megadoc.outlets.add('Lua::AllModules', {
-  key: 'source',
-  component: AllModulesOutlet
-});
+module.exports = AllModulesOutlet;

@@ -5,6 +5,7 @@ const ConfigReceiver = (Component, schema) => {
   const keys = Object.keys(schema);
 
   return React.createClass({
+    displayName: `ConfigReceiver(${Component.displayName})`,
     contextTypes: {
       config: PropTypes.shape(schema).isRequired,
     },

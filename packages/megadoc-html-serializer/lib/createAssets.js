@@ -36,7 +36,7 @@ module.exports =  function createAssets(config, compilations) {
       K.CORE_STYLE_ENTRY,
       config.styleSheet || config.stylesheet
     ],
-    pluginScripts: [],
+    pluginScripts: themePlugin.pluginScripts || [],
   })
 
   assets.addStyleOverrides(createStyleOverrides(config, themePlugin));

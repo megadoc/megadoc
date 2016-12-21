@@ -1,6 +1,5 @@
 const React = require("react");
-const Outlet = require('components/Outlet');
-const AppState = require('core/AppState');
+const { Outlet } = require('react-transclusion');
 const Storage = require('core/Storage');
 const SpotlightManager = require('../components/SpotlightManager');
 const Inspector = require('../components/Inspector');
@@ -20,7 +19,9 @@ const Root = React.createClass({
   },
 
   propTypes: {
+    appState: object.isRequired,
     config: object,
+    corpus: object.isRequired,
     location: require('schemas/Location'),
     onNavigate: func,
     onRefreshScroll: func,
@@ -40,12 +41,12 @@ const Root = React.createClass({
   },
 
   componentWillMount() {
-    this.realizeTemplate = LayoutTemplate(megadoc, this.props.config);
+    this.realizeTemplate = LayoutTemplate(this.props.corpus, this.props.config);
   },
 
   componentDidMount() {
     Storage.on('change', this.reload);
-    AppState.on('change', this.reload);
+    this.props.appState.on('change', this.reload);
 
     window.addEventListener('click', this.handleInternalLink, false);
   },
@@ -62,7 +63,7 @@ const Root = React.createClass({
 
     window.removeEventListener('click', this.handleInternalLink, false);
 
-    AppState.off('change', this.reload);
+    this.props.appState.off('change', this.reload);
     Storage.off('change', this.reload);
   },
 
@@ -72,7 +73,7 @@ const Root = React.createClass({
     let scope;
     let template;
 
-    if (!AppState.inSinglePageMode()) {
+    if (!this.props.appState.inSinglePageMode()) {
       scope = this.resolveCurrentDocument();
 
       if (!scope) {
@@ -88,14 +89,16 @@ const Root = React.createClass({
 
         {config.tooltipPreviews && (
           <Inspector
+            corpus={this.props.corpus}
             inSinglePageMode={config.layoutOptions && config.layoutOptions.singlePageMode}
           />
         )}
         {config.spotlight && (
           <SpotlightManager
-            active={AppState.isSpotlightOpen()}
-            onOpen={AppState.openSpotlight}
-            onClose={AppState.closeSpotlight}
+            corpus={this.props.corpus}
+            active={this.props.appState.isSpotlightOpen()}
+            onOpen={this.props.appState.openSpotlight}
+            onClose={this.props.appState.closeSpotlight}
             documentNode={scope && scope.documentNode}
             pathname={pathname}
           />
@@ -125,7 +128,7 @@ const Root = React.createClass({
         <p>Debugging information:</p>
 
         <pre>
-          Corpus size: {megadoc.corpus.length}
+          Corpus size: {this.props.corpus.length}
           {"\n"}
           Location: {JSON.stringify(this.getLocation(), null, 2)}
         </pre>

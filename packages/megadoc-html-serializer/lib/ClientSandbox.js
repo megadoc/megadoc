@@ -3,8 +3,9 @@ const jsdom = require('jsdom');
 const K = require('./constants');
 const generateHTMLFile = require('./generateHTMLFile');
 const FakeWindowContext = require('./FakeWindowContext');
-const VENDOR_BUNDLE = path.join(K.BUNDLE_DIR, K.VENDOR_BUNDLE);
+const COMMON_BUNDLE = path.join(K.BUNDLE_DIR, K.COMMON_BUNDLE);
 const MAIN_BUNDLE = path.join(K.BUNDLE_DIR, K.MAIN_BUNDLE);
+const VENDOR_BUNDLE = path.join(K.BUNDLE_DIR, K.VENDOR_BUNDLE);
 const generateRuntimeConfig = require('./generateRuntimeConfig');
 
 // TODO: investigate using node vm module for this?
@@ -42,42 +43,40 @@ ClientSandbox.prototype.start = function(assets, done) {
   fakeWindowContext.expose('webpackJsonp_megadoc', window.webpackJsonp_megadoc);
   fakeWindowContext.expose('console.debug', Function.prototype);
 
-  // TODO DRY alert, see HTMLSerializer__write.js
-  window.CONFIG = Object.assign(generateRuntimeConfig(this.config, assets), {
-    $static: {
-      readyCallback: (ui) => {
-        this.state.ui = ui;
+  if (!console.debug) {
+    console.debug = Function.prototype;
+  }
 
-        done();
-      },
-    },
+  const commonModules = require(COMMON_BUNDLE);
+
+  fakeWindowContext.expose('MEGADOC_PUBLIC_MODULES', commonModules);
+
+  this.state.megadocClient = require(MAIN_BUNDLE);
+
+  // fakeWindowContext.expose('megadoc', window.megadoc);
+
+  this.state.runtimePlugins = assets.pluginScripts.map(function(filePath) {
+    const pluginExports = require(filePath);
+
+    return pluginExports[Object.keys(pluginExports)[0]];
   });
-
-  require(MAIN_BUNDLE);
-
-  fakeWindowContext.expose('megadoc', window.megadoc);
-
-  window.megadoc.start();
-
-  assets.pluginScripts.forEach(require);
 
   this.state.dom = dom;
   this.state.window = window;
   this.state.fakeWindowContext = fakeWindowContext;
+
+  done();
 };
 
-ClientSandbox.prototype.exposeCorpus = function(flatCorpus) {
+ClientSandbox.prototype.createClient = function(assets, corpus) {
   // TODO DRY alert, see HTMLSerializer__write.js
-  Object.assign(this.state.window.CONFIG, {
-    database: flatCorpus,
+  const runtimeConfig = Object.assign(generateRuntimeConfig(this.config, assets), {
+    plugins: this.state.runtimePlugins,
+    database: corpus
   });
 
-  this.state.window.megadoc.regenerateCorpus(flatCorpus);
+  return this.state.megadocClient.createClient(runtimeConfig);
 };
-
-ClientSandbox.prototype.getDelegate = function() {
-  return this.state.ui;
-}
 
 ClientSandbox.prototype.stop = function(assets, done) {
   assets.pluginScripts.concat([ MAIN_BUNDLE, VENDOR_BUNDLE, ]).forEach(unloadModule);

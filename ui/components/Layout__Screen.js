@@ -1,5 +1,4 @@
 const React = require("react");
-const Outlet = require('components/Outlet');
 const TwoColumnLayout = require('components/TwoColumnLayout');
 const NotFound = require('components/NotFound');
 const Document = require('components/Document');
@@ -7,7 +6,7 @@ const ErrorMessage = require('components/ErrorMessage');
 const Footer = require('components/Footer');
 const Sticky = require('components/Sticky');
 const ConfigReceiver = require('components/ConfigReceiver');
-const { shape, string, arrayOf, object, bool, } = React.PropTypes;
+const { OutletRenderer, Outlet } = require('react-transclusion');
 const { PropTypes } = React;
 
 const ConfigType = {
@@ -18,24 +17,25 @@ const ConfigType = {
 
 const LayoutScreen = React.createClass({
   propTypes: {
-    hasSidebarElements: bool,
-    regions: arrayOf(shape({
-      name: string.isRequired,
-      options: object,
+    hasSidebarElements: PropTypes.bool,
+    isOutletDefined: PropTypes.func,
+    regions: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      options: PropTypes.object,
 
-      outlets: arrayOf(shape({
-        name: string,
-        options: object,
-        using: string,
-        scope: shape({
-          documentEntityNode: object,
-          documentNode: object,
-          namespaceNode: object,
+      outlets: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string,
+        options: PropTypes.object,
+        using: PropTypes.string,
+        scope: PropTypes.shape({
+          documentEntityNode: PropTypes.object,
+          documentNode: PropTypes.object,
+          namespaceNode: PropTypes.object,
         })
       }))
     })).isRequired,
 
-    config: shape(ConfigType)
+    config: PropTypes.shape(ConfigType)
   },
 
   render() {
@@ -127,7 +127,7 @@ const LayoutScreen = React.createClass({
       const { scope } = x;
       const key = `${x.name}__${i}`;
 
-      if (!Outlet.isDefined(x.name)) {
+      if (!this.props.isOutletDefined(x.name)) {
         return (
           <ErrorMessage key={key}>
             <p>
@@ -173,4 +173,4 @@ const LayoutScreen = React.createClass({
   },
 });
 
-module.exports = ConfigReceiver(LayoutScreen, ConfigType);
+module.exports = OutletRenderer(ConfigReceiver(LayoutScreen, ConfigType));

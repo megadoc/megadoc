@@ -1,9 +1,8 @@
 const React = require("react");
 const Link = require("components/Link");
-const Outlet = require("components/Outlet");
+const { Outlet } = require('react-transclusion');
 const Icon = require('components/Icon');
 const ConfigReceiver = require('components/ConfigReceiver');
-const AppState = require('core/AppState');
 const DocumentURI = require('core/DocumentURI');
 const BannerItem = require('./Layout__BannerItem');
 const BannerMenu = require('./Layout__BannerMenu');
@@ -28,6 +27,7 @@ const Banner = React.createClass({
   },
 
   contextTypes: {
+    appState: PropTypes.object.isRequired,
     documentURI: PropTypes.instanceOf(DocumentURI).isRequired,
   },
 
@@ -107,11 +107,11 @@ const Banner = React.createClass({
   },
 
   toggleSpotlight() {
-    if (AppState.isSpotlightOpen()) {
-      AppState.closeSpotlight();
+    if (this.context.appState.isSpotlightOpen()) {
+      this.context.appState.closeSpotlight();
     }
     else {
-      AppState.openSpotlight();
+      this.context.appState.openSpotlight();
     }
   }
 });

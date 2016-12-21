@@ -1,8 +1,3 @@
-const { OutletManager, OutletFactory } = require('react-transclusion');
+const { Outlet } = require('react-transclusion');
 
-module.exports = OutletFactory(
-  OutletManager({
-    strict: true,
-    verbose: false
-  })
-);
+module.exports = Outlet;

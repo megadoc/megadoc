@@ -2,16 +2,21 @@ const React = require('react');
 const Root = require('./Root');
 const DocumentURI = require('core/DocumentURI');
 const DocumentResolver = require('../DocumentResolver');
+const { OutletProvider } = require('react-transclusion');
 
 const { PropTypes } = React;
 
 const App = React.createClass({
   propTypes: {
+    appState: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
+    corpus: PropTypes.object.isRequired,
     location: require('schemas/Location').isRequired,
   },
 
   childContextTypes: {
+    appState: PropTypes.object,
+    corpus: PropTypes.object,
     documentResolver: PropTypes.instanceOf(DocumentResolver),
     documentURI: PropTypes.instanceOf(DocumentURI),
   },
@@ -24,6 +29,8 @@ const App = React.createClass({
 
   getChildContext() {
     return {
+      appState: this.props.appState,
+      corpus: this.props.corpus,
       documentURI: this.documentURI,
       documentResolver: this.documentResolver,
     };
@@ -35,7 +42,7 @@ const App = React.createClass({
     this.documentURI = new DocumentURI(config);
     this.documentResolver = new DocumentResolver({
       config: config,
-      corpus: megadoc.corpus,
+      corpus: this.props.corpus,
       documentURI: this.documentURI
     });
 
@@ -74,17 +81,21 @@ const App = React.createClass({
     const { location } = this.props;
 
     return (
-      <Root
-        onNavigate={this.navigate}
-        onRefreshScroll={this.locationAPI.refreshScroll}
-        config={this.props.config}
-        location={{
-          pathname: this.documentURI.normalize(location.pathname),
-          hash: this.state.hashDisabled ? '' : location.hash,
-          origin: location.origin,
-          protocol: location.protocol,
-        }}
-      />
+      <OutletProvider outletManager={this.props.outletManager}>
+        <Root
+          onNavigate={this.navigate}
+          onRefreshScroll={this.locationAPI.refreshScroll}
+          config={this.props.config}
+          corpus={this.props.corpus}
+          appState={this.props.appState}
+          location={{
+            pathname: this.documentURI.normalize(location.pathname),
+            hash: this.state.hashDisabled ? '' : location.hash,
+            origin: location.origin,
+            protocol: location.protocol,
+          }}
+        />
+      </OutletProvider>
     );
   },
 

@@ -3,7 +3,6 @@ const classSet = require('utils/classSet');
 const Banner = require('./Layout__Banner');
 const LayoutScreen = require('./Layout__Screen');
 const scrollToTop = require('utils/scrollToTop');
-const AppState = require('core/AppState');
 
 const { node, shape, string, arrayOf, array, object, bool, } = React.PropTypes;
 const Link = shape({
@@ -13,6 +12,10 @@ const Link = shape({
 });
 
 const Layout = React.createClass({
+  contextTypes: {
+    appState: object.isRequired,
+  },
+
   propTypes: {
     children: node,
     pathname: string.isRequired,
@@ -42,7 +45,7 @@ const Layout = React.createClass({
   },
 
   componentWillUpdate(nextProps) {
-    if (!AppState.inSinglePageMode()) {
+    if (!this.context.appState.inSinglePageMode()) {
       if (nextProps.scope.documentNode !== this.props.scope.documentNode) {
         scrollToTop();
       }

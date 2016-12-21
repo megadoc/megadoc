@@ -1,7 +1,9 @@
-const AppState = require('core/AppState');
-
-megadoc.useTheme('megadoc-theme-qt', function ThemeQt(themeOptions) {
-  if (themeOptions.invertedSidebar) {
-    AppState.invertTwoColumnLayout();
+module.exports = {
+  type: 'theme',
+  name: 'megadoc-theme-qt',
+  register: function(themeOptions, appState) {
+    if (themeOptions.invertedSidebar) {
+      appState.invertTwoColumnLayout();
+    }
   }
-});
+};

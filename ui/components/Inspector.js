@@ -2,9 +2,8 @@ const React = require('react');
 const { findDOMNode } = require('react-dom');
 const domContains = require('dom-contains');
 const Tooltip = require('./InspectorTooltip');
-const Outlet = require('components/Outlet');
+const { Outlet, OutletRenderer } = require('react-transclusion');
 const { debounce } = require('lodash');
-const { hasMatchingElements } = Outlet;
 const { PropTypes } = React;
 
 const Inspector = React.createClass({
@@ -36,7 +35,7 @@ const Inspector = React.createClass({
       return null;
     }
 
-    const content = inspectElement(this.state.element);
+    const content = this.inspectElement(this.props.corpus, this.state.element);
 
     if (!content) {
       return null;
@@ -77,6 +76,22 @@ const Inspector = React.createClass({
     ;
   },
 
+  inspectElement(corpus, el) {
+    const href = decodeURIComponent(el.href.replace(location.origin, ''));
+    const documentNode = corpus.getByURI(href);
+
+    if (documentNode) {
+      const context = {
+        documentNode,
+        namespaceNode: corpus.getNamespaceOfDocument(documentNode),
+      };
+
+      if (this.props.isOutledOccupied({ name: 'Inspector', elementProps: context })) {
+        return <Outlet name="Inspector" elementProps={context} />;
+      }
+    }
+  }
+
 });
 
 function isApplicable(containerNode, node) {
@@ -86,36 +101,4 @@ function isApplicable(containerNode, node) {
   );
 }
 
-function inspectElement(el) {
-  const { corpus } = megadoc;
-  const href = decodeURIComponent(el.href.replace(location.origin, ''));
-  const documentNode = corpus.getByURI(href);
-
-
-  if (documentNode) {
-    const context = {
-      documentNode,
-      namespaceNode: megadoc.corpus.getNamespaceOfDocument(documentNode),
-    };
-
-    if (hasMatchingElements({ name: 'Inspector', elementProps: context })) {
-      return <Outlet name="Inspector" elementProps={context} />;
-    }
-  }
-
-  return legacy__inspectElement(href);
-}
-
-function legacy__inspectElement(href) {
-  let content;
-
-  megadoc.getPreviewHandlers().some(function(fn) {
-    content = fn(href);
-    return !!content;
-  });
-
-  return content;
-}
-
-
-module.exports = Inspector;
+module.exports = OutletRenderer(Inspector);

@@ -1,94 +1,139 @@
 const React = require('react');
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
-const config = require('config');
-const createMegadoc = require('core/megadoc');
 const Storage = require('core/Storage');
+const AppState = require('core/AppState');
 const K = require('constants');
 const App = require('./screens/App');
 const { omit } = require('lodash');
-const megadoc = window.megadoc = createMegadoc(config);
+const CorpusAPI = require('core/CorpusAPI');
+const { OutletManager } = require('react-transclusion');
 
-console.log('megadoc: version %s', config.version);
+function createMegadoc(config) {
+  console.log('megadoc: version %s', config.version);
+  const outlets = OutletManager({
+    strict: true,
+    verbose: false
+  });
 
-Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
-Storage.register(K.CFG_SIDEBAR_WIDTH, K.INITIAL_SIDEBAR_WIDTH);
+  const corpus = CorpusAPI(config.database || []);
 
-megadoc.publicModules = require('../tmp/publicModules');
+  const megadoc = {
+    corpus: corpus
+  };
 
-// expose this to plugins so that we can move to a non-global version in the
-// future
-megadoc.outlets = require('components/Outlet');
-megadoc.outlets.define('Meta');
-megadoc.outlets.define('LayoutWrapper');
-megadoc.outlets.define('Layout');
-megadoc.outlets.define('Layout::Banner');
-megadoc.outlets.define('Layout::Content');
-megadoc.outlets.define('Layout::Sidebar');
-megadoc.outlets.define('Layout::NavBar');
-megadoc.outlets.define('Layout::SidebarHeader');
-megadoc.outlets.define('Layout::Footer');
-megadoc.outlets.define('Inspector');
-megadoc.outlets.define('Image');
-megadoc.outlets.define('Link');
+  Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
+  Storage.register(K.CFG_SIDEBAR_WIDTH, K.INITIAL_SIDEBAR_WIDTH);
 
-require('./outlets/SidebarHeaderOutlet')(megadoc);
-require('./outlets/ImageOutlet')(megadoc);
-require('./outlets/LinkOutlet')(megadoc);
+  // expose this to plugins so that we can move to a non-global version in the
+  // future
+  megadoc.outlets = outlets;
+  megadoc.outlets.define('Meta');
+  megadoc.outlets.define('LayoutWrapper');
+  megadoc.outlets.define('Layout');
+  megadoc.outlets.define('Layout::Banner');
+  megadoc.outlets.define('Layout::Content');
+  megadoc.outlets.define('Layout::Sidebar');
+  megadoc.outlets.define('Layout::NavBar');
+  megadoc.outlets.define('Layout::SidebarHeader');
+  megadoc.outlets.define('Layout::Footer');
+  megadoc.outlets.define('Inspector');
+  megadoc.outlets.define('Image');
+  megadoc.outlets.define('Link');
 
-megadoc.start = function(options = {}) {
-  megadoc.onReady(function() {
-    console.log('Ok, firing up.');
-    const appConfig = omit(config, [
-      'database',
-      'pluginConfigs'
-    ]);
+  require('./outlets/SidebarHeaderOutlet')(megadoc);
+  require('./outlets/ImageOutlet')(megadoc);
+  require('./outlets/LinkOutlet')(megadoc);
 
-    if (config.$static) {
-      config.$static.readyCallback({
-        render(href, done) {
-          var markup = renderToString(
-            <App
-              config={appConfig}
-              location={{
-                protocol: 'file:',
-                origin: "file://",
-                pathname: href.replace(/^#/, ''),
-                hash: '', // do we have to handle this? :o
-              }}
-            />
-          );
+  console.log('Firing up.');
+  console.log('Loading %d external plugins.', config.plugins.length)
 
-          done(null, markup);
-        },
+  const pluginAPI = { corpus };
 
-        dumpRoutes: function() {
-          return [];
-        },
+  config.plugins.forEach(function(plugin) {
+    const pluginConfig = corpus.getNamespacesForPlugin(plugin.name).map(x => x.config);
 
-        regenerateCorpus: function(shallowCorpus) {
-          megadoc.regenerateCorpus(shallowCorpus);
-        }
-      });
-
+    if (plugin.register) {
+      plugin.register(pluginAPI, pluginConfig)
     }
-    else {
-      const mountPath = MountPath(megadoc.corpus.get(options.startingDocumentUID));
 
-      console.log('Mount path = "%s".', mountPath);
+    if (plugin.outlets) {
+      plugin.outlets.forEach(function(outletSpec) {
+        if (typeof outletSpec === 'string') {
+          outlets.define(outletSpec)
+        }
+        else {
+          // TODO ?
+        }
+      })
+    }
 
-      render(
-        <App
-          config={Object.assign({}, appConfig, { mountPath })}
-          location={window.location}
-        />,
-        document.querySelector('#__app__')
-      );
+    if (plugin.outletOccupants) {
+      plugin.outletOccupants.forEach(function(occupantSpec) {
+        outlets.add(occupantSpec.name, {
+          key: occupantSpec.key || 'default',
+          component: occupantSpec.component,
+        })
+      })
     }
   });
+
+  const appConfig = omit(config, [
+    'database',
+    'plugins',
+    'startingDocumentUID',
+    'pluginConfigs'
+  ]);
+
+  const appState = AppState(config);
+
+  return { appConfig, appState, outlets, corpus };
+}
+
+exports.createClient = function(config) {
+  const megadoc = createMegadoc(config);
+
+  return {
+    render: function(href, done) {
+      done(null, renderToString(
+        <App
+          config={megadoc.appConfig}
+          appState={megadoc.appState}
+          corpus={megadoc.corpus}
+          outletManager={megadoc.outlets}
+          location={{
+            protocol: 'file:',
+            origin: "file://",
+            pathname: href.replace(/^#/, ''),
+            hash: '', // do we have to handle this? :o
+          }}
+        />
+      ));
+    },
+  };
 };
 
-module.exports = megadoc;
+exports.startApp = function(config) {
+  const megadoc = createMegadoc(config);
+  const mountPath = MountPath(megadoc.corpus.get(config.startingDocumentUID));
+
+  console.log('Mount path = "%s".', mountPath);
+
+  render(
+    <App
+      config={Object.assign({}, megadoc.appConfig, { mountPath })}
+      appState={megadoc.appState}
+      corpus={megadoc.corpus}
+      outletManager={megadoc.outlets}
+      location={window.location}
+    />,
+    document.querySelector('#__app__')
+  );
+};
+
+// const megadoc = window.megadoc = createMegadoc(config);
+
+// module.exports = megadoc;
 
 function MountPath(currentDocument) {
   if (currentDocument) {

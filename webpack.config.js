@@ -4,9 +4,13 @@ var commonConfig = require('./webpack/common');
 var nodeEnv = process.env.NODE_ENV || 'development';
 var K = require('./lib/HTMLSerializer__constants');
 var entry = {};
+var ExternalsPlugin = require('./webpack/ExternalsPlugin');
+
+ExternalsPlugin.apply();
 
 entry[K.MAIN_BUNDLE] = path.resolve(__dirname, 'ui/index.js');
 entry[K.VENDOR_BUNDLE] = require('./webpack/vendorModules');
+entry[K.COMMON_BUNDLE] = path.resolve(__dirname, './tmp/publicModules');
 
 var config = {
   entry: entry,
@@ -14,7 +18,8 @@ var config = {
   output: {
     path: K.BUNDLE_DIR,
     filename: '[name].js',
-    libraryTarget: 'var',
+    libraryTarget: 'umd',
+    library: '[name]',
     jsonpFunction: 'webpackJsonp_megadoc'
   },
 
@@ -25,8 +30,6 @@ var config = {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(nodeEnv)
     }),
-
-    require('./webpack/ExternalsPlugin'),
   ]
 };
 

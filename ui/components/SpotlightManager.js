@@ -51,16 +51,18 @@ const SpotlightManager = React.createClass({
   },
 
   render() {
+    const { corpus } = this.props;
+
     if (this.props.active) {
       const symbols = this.props.documentNode ?
-        getSymbolsForDocument(this.props.documentNode) :
-        getSymbolsForDocumentByURI(this.context.documentURI.normalize(this.props.pathname))
+        getSymbolsForDocument(corpus, this.props.documentNode) :
+        getSymbolsForDocumentByURI(corpus, this.context.documentURI.normalize(this.props.pathname))
       ;
 
       return (
         <Spotlight
           startInSymbolMode={this.state.openedInSymbolMode}
-          corpus={megadoc.corpus.getDocumentSearchIndex()}
+          corpus={corpus.getDocumentSearchIndex()}
           symbols={symbols}
           onActivate={this.closeSpotlight}
         />
@@ -122,15 +124,15 @@ const SpotlightManager = React.createClass({
   },
 });
 
-function getSymbolsForDocument(documentNode) {
-  return megadoc.corpus.getDocumentEntitySearchIndex(documentNode.uid);
+function getSymbolsForDocument(corpus, documentNode) {
+  return corpus.getDocumentEntitySearchIndex(documentNode.uid);
 }
 
-function getSymbolsForDocumentByURI(uri) {
-  const documentNode = megadoc.corpus.getByURI(uri);
+function getSymbolsForDocumentByURI(corpus, uri) {
+  const documentNode = corpus.getByURI(uri);
 
   if (documentNode) {
-    return getSymbolsForDocument(documentNode);
+    return getSymbolsForDocument(corpus, documentNode);
   }
 }
 

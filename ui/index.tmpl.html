@@ -14,13 +14,50 @@
 
   <body class="body--themed">
     <div id="__app__"><%= obj.contents %></div>
-    <% _.forEach(scripts, function(script) { %>
+
+    <!-- Prepare UMD container -->
+    <script>
+      window.exports = {};
+    </script>
+
+    <!-- Megadoc core scripts -->
+    <% _.forEach(coreScripts, function(script) { %>
     <script type="text/javascript" src="<%- script %>"></script>
     <% }); %>
-    <script type="text/javascript">
-      megadoc.start({
-        startingDocumentUID: "<%- obj.startingDocumentUID || null %>"
-      });
+
+    <!-- Re-export common modules into MEGADOC_PUBLIC_MODULES -->
+    <script type="text/javascript" src="<%- commonModuleScript %>"></script>
+    <script>
+      window.MEGADOC_PUBLIC_MODULES = exports['megadoc__common'];
+    </script>
+
+    <!-- Collect plugin script exports -->
+    <% _.forEach(pluginScripts, function(script) { %>
+    <script type="text/javascript" src="<%- script %>"></script>
+    <% }); %>
+
+    <!-- Load the plugins and start the client -->
+    <script>
+      window.MEGADOC_PLUGINS = Object.keys(exports)
+        .filter(function(key) {
+          var obj = exports[key];
+
+          return (
+            obj &&
+            typeof obj === 'object' &&
+            typeof obj.name === 'string' &&
+            /megadoc-(theme|plugin)-/.test(obj.name)
+          );
+        })
+        .map(function(key) {
+          return exports[key];
+        })
+      ;
+
+      exports['megadoc'].startApp(Object.assign({}, exports['megadoc__config'], {
+        startingDocumentUID: "<%- obj.startingDocumentUID || null %>",
+        plugins: window.MEGADOC_PLUGINS,
+      }));
     </script>
   </body>
 </html>

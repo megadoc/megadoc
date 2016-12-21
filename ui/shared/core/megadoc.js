@@ -129,6 +129,8 @@ module.exports = function createMegadoc(config) {
   };
 
   exports.onReady = function(callback) {
+    console.log('Will start as soon as %d plugins are loaded.', config.pluginCount - ran)
+
     if (ran === config.pluginCount) {
       callback();
     }

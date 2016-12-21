@@ -1,7 +1,6 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 const findChildByType = require('utils/findChildByType');
-const AppState = require('core/AppState');
 const resizable = require('utils/resizable');
 const classSet = require('utils/classSet');
 const Icon = require('components/Icon');
@@ -43,6 +42,10 @@ const NavColumn = React.createClass({
 });
 
 const TwoColumnLayout = React.createClass({
+  contextTypes: {
+    appState: React.PropTypes.object.isRequired,
+  },
+
   propTypes: {
     children: React.PropTypes.any,
     resizable: PropTypes.bool,
@@ -58,7 +61,7 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentDidMount() {
-    AppState.on('change', this.reload);
+    this.context.appState.on('change', this.reload);
 
     if (this.props.resizable) {
       this.resizableInstance = resizable(findDOMNode(this.refs.resizer), {
@@ -69,7 +72,7 @@ const TwoColumnLayout = React.createClass({
   },
 
   componentWillUnmount() {
-    AppState.off('change', this.reload);
+    this.context.appState.off('change', this.reload);
 
     if (this.props.resizable) {
       this.resizableInstance.destroy();
@@ -87,7 +90,7 @@ const TwoColumnLayout = React.createClass({
       'two-column-layout__left--collapsed': this.state.sidebarCollapsed
     });
 
-    const inverted = AppState.isTwoColumnLayoutInverted();
+    const inverted = this.context.appState.isTwoColumnLayoutInverted();
 
     return (
       <div

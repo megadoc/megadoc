@@ -1,8 +1,6 @@
 var path = require('path');
 var glob = require('glob');
 var root = path.resolve(__dirname, '..', 'ui');
-
-var GLOBAL = 'MEGADOC_PUBLIC_MODULES';
 var vendorModules = require('./vendorModules');
 
 var sharedModuleDirs = [
@@ -12,8 +10,10 @@ var sharedModuleDirs = [
   'utils',
 ];
 
+var moduleIds = [];
+
 vendorModules.forEach(function(moduleId) {
-  exports[moduleId] = GLOBAL + '["' + moduleId + '"]';
+  moduleIds.push(moduleId);
 });
 
 sharedModuleDirs.forEach(function(dir) {
@@ -23,8 +23,9 @@ sharedModuleDirs.forEach(function(dir) {
       return !file.match('.test.js');
     }).forEach(function(file) {
       var moduleId = file.replace(/^\.\/|\.js$/g, '');
-      exports[moduleId] = GLOBAL + '["' + moduleId + '"]';
+      moduleIds.push(moduleId);
     })
   ;
 });
 
+module.exports = moduleIds;

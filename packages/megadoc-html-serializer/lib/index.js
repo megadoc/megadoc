@@ -92,13 +92,14 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
 HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
   const flatCorpus = corpusInfo.corpus.toJSON();
   const documentUIDs = Object.keys(flatCorpus);
+  const client = this.state.clientSandbox.createClient(this.state.assets, flatCorpus);
   const emitDocumentFile = DocumentFileEmitter({
     assetRoot: this.compilerConfig.outputDir,
     assetUtils: this.assetUtils,
     assets: this.state.assets,
     corpus: flatCorpus,
     htmlFile: this.config.htmlFile,
-    ui: this.state.clientSandbox.getDelegate(),
+    ui: client,
     verbose: this.compilerConfig.verbose,
   });
 
@@ -117,8 +118,6 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
         return done(err);
       }
       else {
-        this.state.clientSandbox.exposeCorpus(flatCorpus);
-
         async.eachSeries(documentUIDs, emitDocumentFile, done);
       }
     }

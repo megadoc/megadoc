@@ -6,6 +6,7 @@ const invariant = require('invariant');
 const CORE_SCRIPTS = [
   K.CONFIG_FILE,
   K.VENDOR_BUNDLE + '.js',
+  // K.COMMON_BUNDLE + '.js',
   K.MAIN_BUNDLE + '.js'
 ];
 
@@ -32,7 +33,7 @@ module.exports = function generateHTMLFile(params) {
   //   "Expected @styleSheets to be assigned.");
 
 
-  const scripts = CORE_SCRIPTS
+  const scripts = []
     .concat(assets.runtimeScripts)
     .concat(
       assets.pluginScripts.map(function(filePath) {
@@ -45,7 +46,9 @@ module.exports = function generateHTMLFile(params) {
   const tmpl = template(fs.readFileSync(params.sourceFile, 'utf-8'));
 
   return tmpl(Object.assign({
-    scripts: buildRelativeAssetList(scripts, distanceFromRoot),
+    coreScripts: buildRelativeAssetList(CORE_SCRIPTS, distanceFromRoot),
+    commonModuleScript: buildRelativeAssetList([ K.COMMON_BUNDLE + '.js' ], distanceFromRoot),
+    pluginScripts: buildRelativeAssetList(scripts, distanceFromRoot),
     styleSheets: buildRelativeAssetList(styleSheets, distanceFromRoot),
   }, params.params));
 };

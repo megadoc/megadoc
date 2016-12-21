@@ -76,6 +76,7 @@ function emitIndexHTMLFile(config, state, done) {
 function copyAppScripts(config, state, done) {
   [
     K.VENDOR_BUNDLE + '.js',
+    K.COMMON_BUNDLE + '.js',
     K.MAIN_BUNDLE + '.js',
   ].forEach(function(file) {
     fs.copySync(path.join(K.BUNDLE_DIR, file), state.assetUtils.getOutputPath(file));
@@ -99,7 +100,7 @@ function emitRuntimeConfigScript(config, state, done) {
 
   // write the runtime config file
   state.assetUtils.writeAsset(K.CONFIG_FILE,
-    'window.CONFIG=' + JSON.stringify(runtimeConfig) + ';'
+    'window.exports["megadoc__config"] = ' + JSON.stringify(runtimeConfig) + ';'
   );
 
   done();
