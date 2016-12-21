@@ -31,8 +31,8 @@ describe('TreeRenderer', function() {
       };
 
       const renderedTree = Subject.renderTree({
-        markdownRenderer: new Renderer({ layoutOptions: {} })
-      }, {}, tree, treeOperations);
+        markdownRenderer: new Renderer({})
+      }, tree, treeOperations);
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });

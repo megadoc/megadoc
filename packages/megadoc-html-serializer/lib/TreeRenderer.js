@@ -1,7 +1,7 @@
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
 
-exports.renderTree = function(state, options, tree, renderOperations) {
+exports.renderTree = function(state, tree, renderOperations) {
   const reducers = {
     CONVER_MARKDOWN_TO_HTML: function(x) {
       return state.markdownRenderer(x);

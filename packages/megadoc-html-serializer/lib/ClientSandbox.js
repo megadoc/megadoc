@@ -7,6 +7,7 @@ const VENDOR_BUNDLE = path.join(K.BUNDLE_DIR, K.VENDOR_BUNDLE);
 const MAIN_BUNDLE = path.join(K.BUNDLE_DIR, K.MAIN_BUNDLE);
 const generateRuntimeConfig = require('./generateRuntimeConfig');
 
+// TODO: investigate using node vm module for this?
 function ClientSandbox(serializerConfig) {
   this.config = serializerConfig;
 
