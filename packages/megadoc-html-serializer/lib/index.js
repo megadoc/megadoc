@@ -5,8 +5,11 @@ const AssetUtils = require('./AssetUtils');
 const DocumentFileEmitter = require('./DocumentFileEmitter');
 const ClientSandbox = require('./ClientSandbox');
 const NodeURIDecorator = require('./NodeURIDecorator');
+const TreeRenderer = require('./TreeRenderer');
 const createAssets = require('./createAssets');
 const emitAssets = require('./emitAssets');
+const Renderer = require('megadoc/lib/Renderer');
+const renderRoutines = require('./renderRoutines');
 
 const DefaultConfig = {
   /**
@@ -188,20 +191,64 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
   this.config = Object.assign({}, DefaultConfig, userSerializerOptions);
   this.corpusVisitor = NodeURIDecorator(this.config);
 
+  this.markdownRenderer = new Renderer({
+    layoutOptions: this.config.layoutOptions,
+  });
+
   this.state = {
     assets: null,
     clientSandbox: new ClientSandbox(this.config),
   };
-}
+};
+
+HTMLSerializer.prototype.renderRoutines = renderRoutines;
 
 HTMLSerializer.prototype.start = function(compilations, done) {
   this.state.assets = createAssets(this.config, compilations);
   this.state.clientSandbox.start(this.state.assets, done);
 };
 
-HTMLSerializer.prototype.emitCorpusDocuments = function(compilations, done) {
-  const corpus = aggregateTreesIntoCorpus(this, compilations);
-  const flatCorpus = corpus.toJSON();
+HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
+  const corpusInfo = aggregateTreesIntoCorpus(this, withTrees);
+  const corpus = corpusInfo.corpus;
+  const rootNodes = corpusInfo.rootNodes;
+
+  const withNodes = rootNodes.map((node, index) => {
+    return { node: node, compilation: withTrees[index] };
+  });
+
+  const state = {
+    markdownRenderer: this.markdownRenderer,
+    linkResolver: null,
+    corpus: corpus,
+  };
+
+  // todo: distribute
+  async.map(withNodes, renderTree, (err, renderedNodes) => {
+    if (err) {
+      done(err);
+    }
+    else {
+      const renderedCorpus = aggregateRenderedTreesIntoCorpus(this, renderedNodes);
+
+      done(null, {
+        corpus: renderedCorpus,
+        edgeGraph: null
+      });
+    }
+  });
+
+  function renderTree(compilationWithNode, callback) {
+    const node = compilationWithNode.node;
+    const compilation = compilationWithNode.compilation;
+    const { options, renderOperations } = compilation;
+
+    callback(null, TreeRenderer.renderTree(state, options, node, renderOperations));
+  }
+};
+
+HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
+  const flatCorpus = corpusInfo.corpus.toJSON();
 
   this.state.clientSandbox.exposeCorpus(flatCorpus);
 
@@ -257,12 +304,25 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
 
   corpus.visit(serializer.corpusVisitor);
 
-  compilations.forEach(function(compilation) {
+  const rootNodes = compilations.map(function(compilation) {
     const serializerOptions = compilation.processor.serializerOptions.html || {};
 
-    compilation.renderedTree.meta.defaultLayouts = serializerOptions.defaultLayouts;
+    compilation.tree.meta.defaultLayouts = serializerOptions.defaultLayouts;
 
-    corpus.add(compilation.renderedTree);
+    return corpus.add(compilation.tree);
+  });
+
+  return { corpus: corpus, rootNodes: rootNodes };
+}
+
+function aggregateRenderedTreesIntoCorpus(serializer, trees) {
+  const corpus = MegadocCorpus.Corpus({
+    strict: serializer.compilerConfig.strict,
+    debug: serializer.compilerConfig.debug
+  });
+
+  trees.forEach(function(tree) {
+    corpus.add(tree);
   });
 
   return corpus;

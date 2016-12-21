@@ -1,10 +1,10 @@
 const { assert } = require('chai');
-const subject = require('../stage06__emit');
+const subject = require('../stage05__emit');
 const FileSuite = require('megadoc-test-utils/FileSuite');
 const SinonSuite = require('megadoc-test-utils/SinonSuite');
 const b = require('megadoc-corpus').builders;
 
-describe('stage06__emit', function() {
+describe('stage05__emit', function() {
   const fileSuite = FileSuite(this);
   const sinon = SinonSuite(this);
 
@@ -16,11 +16,11 @@ describe('stage06__emit', function() {
     `);
 
     const compilation = {
-      serializer: {
-        emitFnPath: emitFn.path,
-      },
+      // serializer: {
+      //   emitFnPath: emitFn.path,
+      // },
 
-      renderedTree: b.namespace({
+      corpus: b.namespace({
         id: 'test',
         name: 'Test',
         documents: [
@@ -43,7 +43,7 @@ describe('stage06__emit', function() {
 
     const serializer = {
       emitCorpusDocuments: sinon.spy(function(renderedTrees, callback) {
-        callback();
+        callback(null, renderedTrees);
       }),
     };
 

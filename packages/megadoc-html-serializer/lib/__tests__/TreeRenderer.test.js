@@ -2,6 +2,7 @@ const { assert } = require('chai');
 const Subject = require('../TreeRenderer');
 const b = require('megadoc-corpus').builders;
 const { markdown, linkify } = require('../renderRoutines');
+const Renderer = require('megadoc/lib/Renderer')
 
 describe('TreeRenderer', function() {
   describe('.renderTree', function() {
@@ -29,7 +30,9 @@ describe('TreeRenderer', function() {
         }
       };
 
-      const renderedTree = Subject.renderTree({}, tree, treeOperations);
+      const renderedTree = Subject.renderTree({
+        markdownRenderer: new Renderer({ layoutOptions: {} })
+      }, {}, tree, treeOperations);
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });

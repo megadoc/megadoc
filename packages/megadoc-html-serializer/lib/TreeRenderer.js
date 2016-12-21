@@ -1,16 +1,11 @@
-const Renderer = require('megadoc/lib/Renderer');
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
 
-// TODO: take from compilation config
-const markdownRenderer = new Renderer({
-  layoutOptions: {},
-})
 
-exports.renderTree = function(options, tree, renderOperations) {
+exports.renderTree = function(state, options, tree, renderOperations) {
   const reducers = {
     CONVER_MARKDOWN_TO_HTML: function(x) {
-      return markdownRenderer(x);
+      return state.markdownRenderer(x);
     },
 
     LINKIFY_STRING: function(x, reduce) { // TODO

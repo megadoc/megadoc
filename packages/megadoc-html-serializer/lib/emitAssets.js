@@ -12,8 +12,8 @@ module.exports = function emitAssets(config, state, done) {
     config.favicon && copyFavicon,
     copyAssets,
     copyAppScripts,
-    !config.emitFiles && generateIndexHTMLFile,
-    generateRuntimeConfigScript,
+    !config.emitFiles && emitIndexHTMLFile,
+    emitRuntimeConfigScript,
   ].filter(x => !!x), config, state, done);
 };
 
@@ -56,7 +56,7 @@ function copyAssets(config, state, done) {
   done();
 }
 
-function generateIndexHTMLFile(config, state, done) {
+function emitIndexHTMLFile(config, state, done) {
   const html = generateHTMLFile({
     params: {
       title: config.title,
@@ -84,7 +84,7 @@ function copyAppScripts(config, state, done) {
   done();
 }
 
-function generateRuntimeConfigScript(config, state, done) {
+function emitRuntimeConfigScript(config, state, done) {
   const runtimeConfig = Object.assign(generateRuntimeConfig(config, state.assets), {
     database: state.flatCorpus,
   });

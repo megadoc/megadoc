@@ -1,7 +1,6 @@
 const mergeObject = require('./utils/mergeObject');
-const renderRoutines = require('./renderRoutines');
 
-module.exports = function render(config, compilation, done) {
+module.exports = function render(renderRoutines, compilation, done) {
   const { documents, processor, options } = compilation;
 
   let renderOperations = {};

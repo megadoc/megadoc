@@ -1,3 +1,5 @@
-module.exports = function partial(fn, x) {
-  return fn.bind(null, x);
+module.exports = function partial(fn) {
+  const applications = [].slice.call(arguments, 1);
+
+  return fn.bind.apply(fn, [ null ].concat(applications));
 }

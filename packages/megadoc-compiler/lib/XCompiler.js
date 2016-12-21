@@ -11,9 +11,8 @@ const reduce = require('./stage01__reduce');
 const render = require('./stage01__render');
 const reduceTree = require('./stage02__reduceTree');
 const composeTree = require('./stage03__composeTree');
-const buildCorpus = require('./stage04__buildCorpus');
-const renderTrees = require('./stage05__renderCorpus');
-const emit = require('./stage06__emit');
+const renderCorpus = require('./stage04__renderCorpus');
+const emit = require('./stage05__emit');
 
 /**
  * Perform the compilation.
@@ -44,32 +43,15 @@ Compiler.run = function(config, done) {
   const compileTree = async.compose(
     partial(composeTree, config),
     partial(reduceTree, config),
-    partial(render, config),
+    partial(render, serializer.renderRoutines),
     partial(reduce, config),
     partial(parse, config)
   );
 
   const compileTreesIntoCorpus = async.compose(
     partial(emit, serializer),
-    partial(renderTrees, config)
+    partial(renderCorpus, serializer)
   );
-
-  // /**
-  //  * @property {LinkResolver}
-  //  *
-  //  * The link resolver for this compilation and corpus.
-  //  */
-  // const linkResolver = new LinkResolver(this.corpus, {
-  //   relativeLinks: !this.inSinglePageMode(),
-  //   ignore: config.linkResolver.ignore
-  // });
-
-  // /**
-  //  * @property {Renderer}
-  //  *
-  //  * The renderer instance configured for this compilation.
-  //  */
-  // const renderer = new Renderer(config);
 
   async.series([
     function setup(callback) {

@@ -1,5 +1,5 @@
 const invariant = require('invariant');
-const partial = require('./utils/partial');
+const partial = require('lodash').partial;
 
 exports.create = function(type, value) {
   return { $__type: type, $__value: value };

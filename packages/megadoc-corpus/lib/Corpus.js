@@ -60,6 +60,10 @@ function Corpus(config) {
     return nodes[uid];
   };
 
+  exports.getNamespaceNodes = function() {
+    return corpusNode.namespaces;
+  };
+
   /**
    * Resolve a link to a document.
    *
