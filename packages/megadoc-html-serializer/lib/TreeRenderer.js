@@ -1,15 +1,14 @@
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
 
-
 exports.renderTree = function(state, options, tree, renderOperations) {
   const reducers = {
     CONVER_MARKDOWN_TO_HTML: function(x) {
       return state.markdownRenderer(x);
     },
 
-    LINKIFY_STRING: function(x, reduce) { // TODO
-      return reduce(x.text);
+    LINKIFY_STRING: function(x, reduce) {
+      return reduce(state.linkResolver.linkify(x));
     }
   };
 

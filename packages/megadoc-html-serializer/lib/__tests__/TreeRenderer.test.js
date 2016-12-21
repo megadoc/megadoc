@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const Subject = require('../TreeRenderer');
 const b = require('megadoc-corpus').builders;
 const { markdown, linkify } = require('../renderRoutines');
-const Renderer = require('megadoc/lib/Renderer')
+const Renderer = require('../Renderer')
 
 describe('TreeRenderer', function() {
   describe('.renderTree', function() {

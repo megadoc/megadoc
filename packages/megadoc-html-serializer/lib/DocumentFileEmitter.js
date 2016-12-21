@@ -32,6 +32,9 @@ module.exports = function DocumentFileEmitter(params) {
 
       const distanceFromRoot = href.split('/').length - 1;
       const docHTML = generateHTMLFile({
+        assetRoot: params.assetRoot,
+        assets: params.assets,
+        distanceFromRoot: distanceFromRoot,
         params: {
           title: node.title,
           metaDescription: node.summary,
@@ -39,8 +42,6 @@ module.exports = function DocumentFileEmitter(params) {
           startingDocumentUID: node.uid,
         },
         sourceFile: params.htmlFile,
-        assets: params.assets,
-        distanceFromRoot: distanceFromRoot
       });
 
       const rc = params.assetUtils.writeAsset(filePath, docHTML, {

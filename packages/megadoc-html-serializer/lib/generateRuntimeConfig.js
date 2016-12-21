@@ -3,6 +3,8 @@ const path = require('path');
 
 module.exports = function generateRuntimeConfig(config, assets) {
   return {
+    assetRoot: config.assetRoot,
+
     collapsibleSidebar: !!config.collapsibleSidebar,
 
     emittedFileExtension: config.emittedFileExtension,

@@ -153,7 +153,6 @@ module.exports = function createMegadoc(config) {
   };
 
   exports.regenerateCorpus = function(nextShallowCorpus) {
-    console.log('regenerating corpus...');
     exports.corpus = corpusAPI = CorpusAPI(nextShallowCorpus);
   };
 

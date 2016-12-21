@@ -8,7 +8,8 @@ const NodeURIDecorator = require('./NodeURIDecorator');
 const TreeRenderer = require('./TreeRenderer');
 const createAssets = require('./createAssets');
 const emitAssets = require('./emitAssets');
-const Renderer = require('megadoc/lib/Renderer');
+const Renderer = require('./Renderer');
+const LinkResolver = require('./LinkResolver');
 const renderRoutines = require('./renderRoutines');
 
 const DefaultConfig = {
@@ -104,6 +105,18 @@ const DefaultConfig = {
     bannerLinks: []
   },
 
+  /**
+   * @property {Boolean}
+   *
+   * Whether links to external sites should be opened in new tabs.
+   */
+  launchExternalLinksInNewTabs: true,
+
+  linkResolver: {
+    strategies: [ 'Megadoc', 'MediaWiki' ],
+    ignore: {},
+  },
+
   metaDescription: '',
 
   /**
@@ -166,6 +179,93 @@ const DefaultConfig = {
    */
   styleOverrides: null,
 
+  /**
+   * @property {Object}
+   *
+   * Configuration for the syntax highlighter, which uses
+   * [Prism.js](http://prismjs.com/).
+   */
+  syntaxHighlighting: {
+    defaultLanguage: 'javascript',
+
+    /**
+     * @property {Array.<String>} syntaxHighlighting.languages
+     *
+     * A list of language definitions to enable highlighting for. This has to
+     * map to Prism's available grammars, which you can find at http://prismjs.com/#languages-list.
+     */
+    languages: [
+      'bash',
+      'clike',
+      'c',
+      'javascript',
+      'markdown',
+      'ruby',
+    ],
+
+    /**
+     * @property {Object.<String,String>} syntaxHighlighting.aliases
+     *
+     * A map of language names to alias. For example, if you're used to using
+     * "shell" as a language but Prism only has "bash", this map allows you to
+     * alias "bash" as "shell".
+     */
+    aliases: {
+      'shell': 'bash'
+    },
+
+    /**
+     * @property {Array.<Config~Template>}
+     *
+     * @typedef {Config~Template}
+     *
+     * A layout override configuration object. This object describes how to render
+     * a certain page. By default, megadoc will compute a preferred layout based on
+     * the type of document that is being rendered.
+     *
+     * @property {!Object} match
+     *           The parameters that control when this configuration applies.
+     *
+     * @property {("url"|"uid"|"type"|"namespace")} match.by
+     *           What we should match on.
+     *
+     * @property {String} match.on
+     *           The value for matching:
+     *
+     *           - If `match.by` was set to `url`, this would be the URL(s) of the
+     *           pages.
+     *           - If `match.by` was set to `uid`, this would be the corpus UIDs
+     *           of the documents.
+     *           - If `match.by` was set to `type`, this would be the corpus ADT
+     *           node type. See [[T]].
+     *
+     * @property {?String} using
+     * @property {Array.<Config~TemplateRegion>} regions
+     *
+     * @typedef {Config~TemplateRegion}
+     *
+     * A configuration object for a specific layout region.
+     *
+     * @property {!String} name
+     *           The name of the region. See [[Layout]] for the regions it defines.
+     *
+     * @property {?Object} options
+     *           Options to customize how the region looks like. Refer to each
+     *           region's documentation to know what options it supports.
+     *
+     * @property {Array.<Config~TemplateRegionOutlet>} outlets
+     *           The outlets to fill the region with.
+     *
+     * @typedef {Config~TemplateRegionOutlet}
+     *
+     * @property {!String} name
+     * @property {?Object} options
+     * @property {?String} using
+     * @property {?("cascade"|"fix")} [injectionStrategy="cascade"]
+     */
+    customLayouts: null
+  },
+
   tooltipPreviews: true,
 
   /**
@@ -192,12 +292,15 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
   this.corpusVisitor = NodeURIDecorator(this.config);
 
   this.markdownRenderer = new Renderer({
-    layoutOptions: this.config.layoutOptions,
+    launchExternalLinksInNewTabs: this.config.launchExternalLinksInNewTabs,
+    shortURLs: !this.config.layoutOptions.singlePageMode,
+    syntaxHighlighting: this.config.syntaxHighlighting,
   });
 
   this.state = {
     assets: null,
     clientSandbox: new ClientSandbox(this.config),
+    linkResolver: null,
   };
 };
 
@@ -217,9 +320,15 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
     return { node: node, compilation: withTrees[index] };
   });
 
+  this.state.linkResolver = new LinkResolver(corpus, {
+    relativeLinks: !this.config.layoutOptions.singlePageMode,
+    ignore: this.config.linkResolver.ignore,
+    injectors: this.config.linkResolver.injectors,
+  });
+
   const state = {
     markdownRenderer: this.markdownRenderer,
-    linkResolver: null,
+    linkResolver: this.state.linkResolver,
     corpus: corpus,
   };
 
@@ -253,8 +362,9 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
   this.state.clientSandbox.exposeCorpus(flatCorpus);
 
   const emitDocumentFile = DocumentFileEmitter({
-    assets: this.state.assets,
+    assetRoot: this.compilerConfig.outputDir,
     assetUtils: this.assetUtils,
+    assets: this.state.assets,
     corpus: flatCorpus,
     htmlFile: this.config.htmlFile,
     ui: this.state.clientSandbox.getDelegate(),
@@ -265,6 +375,7 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
 
   emitAssets(
     Object.assign({}, this.config, {
+      assetRoot: this.compilerConfig.outputDir,
       verbose: this.compilerConfig.verbose,
     }),
     {

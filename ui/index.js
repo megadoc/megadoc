@@ -73,13 +73,13 @@ megadoc.start = function(options = {}) {
 
     }
     else {
-      config.mountPath = MountPath(megadoc.corpus.get(options.startingDocumentUID));
+      const mountPath = MountPath(megadoc.corpus.get(options.startingDocumentUID));
 
-      console.log('Mount path = "%s".', config.mountPath);
+      console.log('Mount path = "%s".', mountPath);
 
       render(
         <App
-          config={appConfig}
+          config={Object.assign({}, appConfig, { mountPath })}
           location={window.location}
         />,
         document.querySelector('#__app__')

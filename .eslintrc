@@ -100,8 +100,4 @@
     "no-shadow": 2,
     "no-extra-bind": 2,
   },
-
-  "globals": {
-    "TestUtils": false,
-  }
 }

@@ -8,3 +8,4 @@ CorpusTypes.finalize();
 exports.Corpus = Corpus;
 exports.Types = CorpusTypes;
 exports.builders = CorpusTypes.builders;
+exports.dumpNodeFilePath = Corpus.dumpNodeFilePath;
