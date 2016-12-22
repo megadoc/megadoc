@@ -29,7 +29,7 @@ function reduceNamespaceDocument(doc) {
 
 function reduceModuleDocument(doc) {
   return b.document({
-    id: doc.name,
+    id: doc.id,
     title: doc.id,
     summary: doc.description,
     filePath: doc.filePath,
@@ -41,7 +41,7 @@ function reduceModuleDocument(doc) {
 
 function reduceEntityDocument(doc) {
   return b.documentEntity({
-    id: doc.symbol + doc.name,
+    id: doc.id,
     title: doc.id,
     summary: doc.description,
     filePath: doc.filePath,

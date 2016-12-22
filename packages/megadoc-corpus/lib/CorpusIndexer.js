@@ -27,7 +27,7 @@ module.exports = function buildIndices(node) {
       var fieldName = field[0] === '$' ? field.slice(1) : field;
       var valuePool = field[0] === '$' ? node : node.properties;
 
-      if (valuePool && valuePool.hasOwnProperty(fieldName)) {
+      if (valuePool && valuePool[fieldName]) {
         var values = [].concat(valuePool[fieldName]);
 
         values.forEach(function(index) {

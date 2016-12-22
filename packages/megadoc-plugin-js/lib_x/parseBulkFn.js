@@ -37,31 +37,43 @@ module.exports = function parseBulkFn(context, filePaths, done) {
 
   emitter.emit('postprocess', withNamespaces);
 
-  warnAboutOrphans(withNamespaces);
+  var withoutOrphans = discrdOrphans(withNamespaces, {
+    warn: config.strict,
+  });
 
   if (config.verbose) {
-    warnAboutUnknownContexts(withNamespaces);
+    warnAboutUnknownContexts(withoutOrphans);
   }
 
-  warnAboutUnknownTags(withNamespaces, config);
+  warnAboutUnknownTags(withoutOrphans, config);
 
-  done(null, withNamespaces);
+  done(null, withoutOrphans);
 };
 
-function warnAboutOrphans(database) {
-  var ids = database.reduce(function(map, doc) {
+function discrdOrphans(database, options) {
+  const shouldWarn = options.warn;
+
+  const idMap = database.reduce(function(map, doc) {
     map[doc.id] = true;
     return map;
   }, {});
 
-  database.forEach(function(doc) {
-    if (!doc.isModule && (!doc.receiver || !(doc.receiver in ids))) {
+  return database.filter(function(doc) {
+    const isOrphan = (
+      !doc.isModule &&
+      !doc.isNamespace &&
+      (!doc.receiver || !idMap.hasOwnProperty(doc.receiver))
+    );
+
+    if (isOrphan && shouldWarn) {
       console.warn(
         '%s: Unable to map "%s" to any module, it will be discarded.',
         dumpDocPath(doc),
         doc.id
       );
     }
+
+    return !isOrphan;
   })
 }
 

@@ -32,6 +32,10 @@ NodeInfo.prototype.toJSON = function() {
   };
 };
 
+NodeInfo.prototype.getContext = function() {
+  return this.ctx;
+};
+
 NodeInfo.prototype.setContext = function(ctx) {
   this.ctx = ctx;
 };

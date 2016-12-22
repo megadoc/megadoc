@@ -60,6 +60,7 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
   });
 
   const state = {
+    commonOptions: this.compilerConfig,
     markdownRenderer: this.markdownRenderer,
     linkResolver: linkResolver,
     corpus: corpus,

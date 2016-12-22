@@ -14,7 +14,7 @@ exports.composeTree = function(context, documentList, treeOperations) {
   const namespaceAttributes = {};
   const blacklisted = {};
   const maybeThrowError = msg => {
-    if (context.commonOptions.strict) {
+    if (context.commonOptions.strict >= 2) {
       throw new Error(msg);
     }
     else {

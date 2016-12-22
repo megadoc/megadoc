@@ -1,11 +1,12 @@
 const { assert } = require('chai');
 const Subject = require('../TreeRenderer');
-const b = require('megadoc-corpus').builders;
+const { builders: b, Corpus } = require('megadoc-corpus');
 const { markdown, linkify } = require('../renderRoutines');
 const Renderer = require('../Renderer')
+const LinkResolver = require('../LinkResolver')
 
 describe('TreeRenderer', function() {
-  describe('.renderTree', function() {
+  describe('.markdown', function() {
     it('transform properties', function() {
       const tree = b.namespace({
         id: 'test',
@@ -31,10 +32,73 @@ describe('TreeRenderer', function() {
       };
 
       const renderedTree = Subject.renderTree({
+        commonOptions: { strict: true },
         markdownRenderer: new Renderer({})
       }, tree, treeOperations);
 
+      console.log(renderedTree.documents[0].properties)
+
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
+    });
+  });
+
+  describe('.linkify', function() {
+    it('works', function() {
+      const tree = b.namespace({
+        id: 'test',
+        name: 'Test',
+        documents: [
+          b.document({
+            id: 'moduleA',
+            title: 'Module A',
+            meta: {
+              href: 'moduleA.html',
+            },
+            properties: {
+              text: 'Hello *World*!',
+            }
+          }),
+
+          b.document({
+            id: 'moduleB',
+            properties: {
+              text: 'See [[moduleA]]'
+            }
+          })
+        ]
+      });
+
+      const corpus = Corpus({
+        strict: true,
+        debug: false,
+      });
+
+      corpus.add(tree);
+
+      const treeOperations = {
+        'moduleA': {
+          text: markdown(tree.documents[0].properties.text)
+        },
+        'moduleB': {
+          text: markdown(linkify(tree.documents[1].properties.text)),
+        },
+      };
+
+      const linkResolver = new LinkResolver(corpus, {
+        relativeLinks: false,
+        ignore: [],
+        injectors: null,
+      });
+
+      const renderedTree = Subject.renderTree({
+        commonOptions: { strict: true },
+        markdownRenderer: new Renderer({}),
+        linkResolver: linkResolver,
+      }, tree, treeOperations);
+
+      assert.include(renderedTree.documents[1].properties.text,
+        'See <a href="moduleA.html" class="mega-link--internal">Module A</a>'
+      )
     });
   });
 });

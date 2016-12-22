@@ -5,6 +5,7 @@ module.exports = {
   parseBulkFnPath: path.resolve(__dirname, './parseBulkFn.js'),
   reduceFnPath: path.resolve(__dirname, './reduceFn.js'),
   reduceTreeFnPath: path.resolve(__dirname, './reduceTreeFn.js'),
+  renderFnPath: path.resolve(__dirname, './renderFn.js'),
   serializerOptions: {
     html: {
       defaultLayouts: require('./defaultLayouts'),

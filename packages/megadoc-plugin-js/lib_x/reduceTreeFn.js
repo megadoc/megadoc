@@ -14,20 +14,12 @@ module.exports = function reduceTree(context, documents) {
     }
   });
 
-  const documentTitleMap = documents.reduce(function(map, document) {
-    if (document.type !== 'DocumentEntity') {
-      map[document.title] = document.id;
-    }
-
-    return map;
-  }, {});
-
   documents.filter(x => x.type === 'DocumentEntity').forEach(function(x) {
     descriptors.push({
       type: 'CHANGE_NODE_PARENT',
       data: {
         id: x.id,
-        parentId: documentTitleMap[x.properties.receiver]
+        parentId: x.properties.receiver
       }
     });
   });

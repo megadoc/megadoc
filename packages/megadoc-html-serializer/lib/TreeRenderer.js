@@ -3,12 +3,33 @@ const transformValue = require('./transformValue');
 
 exports.renderTree = function(state, tree, renderOperations) {
   const reducers = {
-    CONVER_MARKDOWN_TO_HTML: function(x) {
-      return state.markdownRenderer(x);
+    CONVER_MARKDOWN_TO_HTML: function(data, reduce) {
+      return reduce(state.markdownRenderer(data));
     },
 
-    LINKIFY_STRING: function(x, reduce) {
-      return reduce(state.linkResolver.linkify(x));
+    LINKIFY_STRING: function(data, reduce) {
+      const linkifyData = Object.assign({
+        strict: state.commonOptions.strict,
+      }, data);
+
+      return reduce(state.linkResolver.linkify(linkifyData));
+    },
+
+    LINKIFY_FRAGMENT: function(data, reduce) {
+      return reduce(
+        state.linkResolver.renderLink(
+          {
+            strict: data.hasOwnProperty('strict') ? data.strict : state.commonOptions.strict,
+            format: data.format,
+            contextNode: data.contextNode,
+          },
+          {
+            path: data.path || data.text,
+            text: data.text,
+            source: data.source || data.text,
+          }
+        )
+      );
     }
   };
 
@@ -28,6 +49,14 @@ exports.renderTree = function(state, tree, renderOperations) {
 
       if (nextDocuments.some((x, i) => x !== node.documents[i])) {
         nextData.documents = nextDocuments;
+      }
+    }
+
+    if (node.entities) {
+      const nextEntities = node.entities.map(visitNode);
+
+      if (nextEntities.some((x, i) => x !== node.entities[i])) {
+        nextData.entities = nextEntities;
       }
     }
 

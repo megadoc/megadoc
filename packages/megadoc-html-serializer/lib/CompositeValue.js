@@ -31,6 +31,8 @@ exports.compute = function computeCompositeValue(reducers, nextValue) {
   return nextValue;
 };
 
+exports.isCompositeValue = isCompositeValue;
+
 function isCompositeValue(x) {
   return (
     x

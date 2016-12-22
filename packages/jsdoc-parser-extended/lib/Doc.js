@@ -1,9 +1,7 @@
 var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
-var _ = require('lodash');
 var DocUtils = require('./DocUtils');
 var ASTUtils = require('./ASTUtils');
-var assign = _.assign;
 
 /**
  * @param {Docstring} docstring
@@ -26,19 +24,26 @@ Object.defineProperty(Doc.prototype, 'id', {
 });
 
 Doc.prototype.toJSON = function(registry) {
-  var nodeInfo = this.nodeInfo;
-  var doc = assign({},
-    this.docstring.toJSON(),
-    this.nodeInfo.toJSON()
-  );
+  var plainNodeInfo = this.nodeInfo.toJSON();
+  var plainDocstring = this.docstring.toJSON();
 
-  doc.type = DocUtils.getTypeNameOf(this);
-  doc.nodeInfo = this.nodeInfo.ctx;
-
-  doc.id = this.id;
-  doc.name = DocUtils.getNameOf(this);
-  doc.filePath = this.filePath;
-  doc.isModule = this.isModule();
+  var doc = {
+    aliases: null,
+    description: plainDocstring.description,
+    filePath: this.filePath,
+    id: DocUtils.getIdOf(this),
+    isModule: this.isModule(),
+    loc: plainNodeInfo.loc,
+    line: null,
+    mixinTargets: null,
+    name: DocUtils.getNameOf(this),
+    namespace: plainDocstring.namespace,
+    nodeInfo: this.nodeInfo.getContext(),
+    receiver: plainNodeInfo.receiver,
+    symbol: null,
+    tags: plainDocstring.tags,
+    type: DocUtils.getTypeNameOf(this),
+  };
 
   if (!doc.isModule) {
     var resolvedContext = DocUtils.resolveReceiverAndScopeFor(this, registry);
@@ -50,10 +55,10 @@ Doc.prototype.toJSON = function(registry) {
       doc.nodeInfo.scope = resolvedContext.scope;
     }
     else {
-      if (nodeInfo.isInstanceEntity()) {
+      if (this.nodeInfo.isInstanceEntity()) {
         doc.nodeInfo.scope = K.SCOPE_INSTANCE;
       }
-      else if (nodeInfo.isPrototypeEntity()) {
+      else if (this.nodeInfo.isPrototypeEntity()) {
         doc.nodeInfo.scope = K.SCOPE_PROTOTYPE;
       }
       else if (this.docstring.hasTag('method')) {

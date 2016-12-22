@@ -4,7 +4,7 @@ const subject = require('../reduceFn');
 describe('megadoc-plugin-js::reduceFn', function() {
   it('works with a module document', function(done) {
     const rawDocument = {
-      name: 'beep',
+      id: 'beep',
       isModule: true
     };
 
@@ -16,7 +16,7 @@ describe('megadoc-plugin-js::reduceFn', function() {
         assert.include(document, {
           id: 'beep',
           type: 'Document'
-        }, 'it uses the name as an @id');
+        }, 'it uses the id as an @id');
 
         done();
       }
@@ -48,8 +48,7 @@ describe('megadoc-plugin-js::reduceFn', function() {
 
   it('works with an entity document', function(done) {
     const rawDocument = {
-      name: 'beep',
-      symbol: '#',
+      id: 'Truck#beep',
       isModule: false
     };
 
@@ -59,9 +58,9 @@ describe('megadoc-plugin-js::reduceFn', function() {
       }
       else {
         assert.include(document, {
-          id: '#beep',
+          id: 'Truck#beep',
           type: 'DocumentEntity'
-        }, 'it uses the symbol and the name for an @id');
+        }, 'it uses the symbol and the id for an @id');
 
         done();
       }
