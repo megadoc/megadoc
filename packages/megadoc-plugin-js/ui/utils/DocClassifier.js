@@ -35,7 +35,7 @@ exports.getDisplayType = function(documentNode) {
     return 'Library';
   }
 
-  if (!documentNode.properties) {
+  if (documentNode.properties.isNamespace) {
     return 'Namespace';
   }
   else if (documentNode.entities.some(n => isClassEntity(n.properties))) {
@@ -80,4 +80,8 @@ exports.isPublic = function(doc) {
     !exports.isPrivate(doc) &&
     !exports.isProtected(doc)
   );
+};
+
+exports.isNamespaceDocument = function(doc) {
+  return doc && doc.isNamespace;
 };

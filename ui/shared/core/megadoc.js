@@ -145,15 +145,6 @@ module.exports = function createMegadoc(config) {
    */
   exports.corpus = corpusAPI;
 
-  exports.getRelativeFilePath = function(filePath) {
-    if (filePath.indexOf(config.assetRoot) === 0) {
-      return filePath.slice(config.assetRoot.length + 1);
-    }
-    else {
-      return filePath;
-    }
-  };
-
   exports.regenerateCorpus = function(nextShallowCorpus) {
     exports.corpus = corpusAPI = CorpusAPI(nextShallowCorpus);
   };

@@ -3,7 +3,8 @@ const { object, shape, bool, } = React.PropTypes;
 const NamespaceIndex = require('../components/NamespaceIndex');
 const ModuleIndex = require('../components/ModuleIndex');
 
-megadoc.outlets.add('CJS::ModuleIndex', {
+module.exports = {
+  name: 'CJS::ModuleIndex',
   key: 'CJS::ModuleIndex',
   component: React.createClass({
     propTypes: {
@@ -32,4 +33,4 @@ megadoc.outlets.add('CJS::ModuleIndex', {
       );
     }
   }),
-});
+};

@@ -6,13 +6,18 @@ const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
 
 // TODO: apply decorators
-module.exports = function parse(config, compilation, done) {
-  const { processor, files, options } = compilation;
+module.exports = function parse(compilation, done) {
+  const { processor, files } = compilation;
 
   const applier = processor.parseFnPath ? parseEach : parseBulk;
   const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
+  const context = {
+    commonOptions: compilation.commonOptions,
+    options: compilation.processorOptions,
+    state: compilation.processorState,
+  };
 
-  applier(options, files, fn, asyncMaybe(function(rawDocuments) {
+  applier(context, files, fn, asyncMaybe(function(rawDocuments) {
     return mergeObject(compilation, {
       rawDocuments: flattenArray(rawDocuments),
     });
@@ -20,23 +25,23 @@ module.exports = function parse(config, compilation, done) {
 };
 
 // TODO: distribute
-function parseEach(options, files, fnPath, done) {
+function parseEach(context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), options);
+  const fn = partial(require(fnPath), context);
 
   async.mapLimit(files, 10, fn, done);
 }
 
 // TODO: apply in background
-function parseBulk(options, files, fnPath, done) {
+function parseBulk(context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseBulkFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), options);
+  const fn = partial(require(fnPath), context);
 
   fn(files, done);
 }

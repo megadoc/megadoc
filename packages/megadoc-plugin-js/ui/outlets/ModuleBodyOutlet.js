@@ -2,7 +2,8 @@ const React = require('react');
 const ModuleBody = require('../components/ModuleBody');
 const { object, } = React.PropTypes;
 
-megadoc.outlets.add('CJS::ModuleBody', {
+module.exports = {
+  name: 'CJS::ModuleBody',
   key: 'CJS::ModuleBody',
   component: React.createClass({
     propTypes: {
@@ -18,4 +19,4 @@ megadoc.outlets.add('CJS::ModuleBody', {
       return <ModuleBody {...this.props} />;
     }
   }),
-});
+};

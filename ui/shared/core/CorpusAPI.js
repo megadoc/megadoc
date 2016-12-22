@@ -188,7 +188,7 @@ function getContext(targetNode) {
   let node = targetNode;
 
   do {
-    if (node.meta.corpusContext) {
+    if (node.meta && node.meta.corpusContext) {
       return node.meta.corpusContext;
     }
 

@@ -2,7 +2,8 @@ const React = require('react');
 const ClassEntityBrowser = require('../components/ClassEntityBrowser');
 const { object, } = React.PropTypes;
 
-megadoc.outlets.add('CJS::ModuleEntities', {
+module.exports = {
+  name: 'CJS::ModuleEntities',
   key: 'CJS::ModuleEntities',
   component: React.createClass({
     propTypes: {
@@ -24,4 +25,4 @@ megadoc.outlets.add('CJS::ModuleEntities', {
       );
     }
   }),
-});
+};

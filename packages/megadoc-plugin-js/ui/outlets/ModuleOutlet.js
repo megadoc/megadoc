@@ -1,8 +1,10 @@
 const React = require('react');
 const Module = require('../components/Module');
+const { isNamespaceDocument } = require('../utils/DocClassifier');
 const { object, } = React.PropTypes;
 
-megadoc.outlets.add('CJS::Module', {
+module.exports = {
+  name: 'CJS::Module',
   key: 'CJS::Module',
   component: React.createClass({
     propTypes: {
@@ -11,7 +13,7 @@ megadoc.outlets.add('CJS::Module', {
     },
 
     render() {
-      if (!this.props.documentNode || !this.props.documentNode.properties) {
+      if (!this.props.documentNode || isNamespaceDocument(this.props.documentNode.properties)) {
         return null;
       }
 
@@ -20,4 +22,4 @@ megadoc.outlets.add('CJS::Module', {
       );
     }
   }),
-});
+}

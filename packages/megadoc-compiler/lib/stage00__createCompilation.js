@@ -1,18 +1,19 @@
 const invariant = require('invariant');
 const scanSources = require('./utils/scanSources');
+const ConfigUtils = require('megadoc-config-utils');
 
 // TODO: extract decorators
 module.exports = function createCompilation(commonOptions, source) {
   const files = scanSources(source.pattern, source.include, source.exclude);
+  const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
 
   return {
     documents: null,
     files,
-    options: {
-      common: commonOptions,
-      processor: source.processor.options || {},
-    },
-    processor: extractProcessingFunctionPaths(source.processor),
+    commonOptions: commonOptions,
+    processor: extractProcessingFunctionPaths(processorEntry),
+    processorOptions: processorEntry.options || {},
+    processorState: null,
     rawDocuments: null,
     renderOperations: null,
     renderedTree: null,
@@ -36,6 +37,7 @@ function extractProcessingFunctionPaths(processorEntry) {
   );
 
   return {
+    initFnPath: spec.initFnPath,
     parseFnPath: spec.parseFnPath,
     parseBulkFnPath: spec.parseBulkFnPath,
     reduceFnPath: spec.reduceFnPath,

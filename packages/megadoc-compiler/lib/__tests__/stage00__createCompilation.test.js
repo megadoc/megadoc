@@ -49,10 +49,31 @@ describe('stage00__createCompilation', function() {
   });
 
   it('should store the common options', function() {
-    assert.deepEqual(output.options.common, { commonOption: 1 });
+    assert.deepEqual(output.commonOptions, { commonOption: 1 });
   });
 
   it('should store the processor options', function() {
-    assert.deepEqual(output.options.processor, { foo: 'bar' });
+    assert.deepEqual(output.processorOptions, { foo: 'bar' });
   });
+
+  context('given a pair of processor config', function() {
+    beforeEach(function() {
+      output = subject(
+        { commonOption: 1 },
+        {
+          pattern: /\.js$/,
+          include: [
+            path.join(fileSuite.getRootDirectory(), 'sources'),
+          ],
+          processor: [processorSpec.path, {
+            foo: 'bar'
+          }]
+        }
+      );
+    });
+
+    it('should store the processor options', function() {
+      assert.deepEqual(output.processorOptions, { foo: 'bar' });
+    });
+  })
 });

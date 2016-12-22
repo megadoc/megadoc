@@ -2,7 +2,8 @@ const React = require('react');
 const K = require('../constants');
 const { shape, string } = React.PropTypes;
 
-megadoc.outlets.add('Inspector', {
+module.exports = {
+  name: 'Inspector',
   key: 'CJS::Inspector',
 
   match(props) {
@@ -39,4 +40,4 @@ megadoc.outlets.add('Inspector', {
       );
     }
   })
-});
+};

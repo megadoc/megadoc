@@ -2,7 +2,8 @@ const React = require('react');
 const ClassBrowser = require('../components/ClassBrowser');
 const { object, shape, bool, } = React.PropTypes;
 
-megadoc.outlets.add('CJS::ClassBrowser', {
+module.exports = {
+  name: 'CJS::ClassBrowser',
   key: 'CJS::ClassBrowser',
   match(x) { return x.namespaceNode.name === 'megadoc-plugin-js'; },
 
@@ -28,4 +29,4 @@ megadoc.outlets.add('CJS::ClassBrowser', {
       );
     }
   }),
-});
+}

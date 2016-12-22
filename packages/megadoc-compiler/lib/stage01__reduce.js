@@ -5,23 +5,36 @@ const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
 
-module.exports = function reduce(config, compilation, done) {
-  const { processor, rawDocuments, options } = compilation;
+module.exports = function reduce(compilation, done) {
+  const { processor, rawDocuments } = compilation;
+  const context = {
+    commonOptions: compilation.commonOptions,
+    options: compilation.processorOptions,
+    state: compilation.processorState,
+  };
 
-  reduceEach(options, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
+  reduceEach(context, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return mergeObject(compilation, {
-      documents: flattenArray(documents),
+      documents: flattenArray(documents).map(ensureHasDefaultAttributes),
     });
   }, done));
 };
 
 // TODO: distribute
-function reduceEach(options, files, fnPath, done) {
+function reduceEach(context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'reduceFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), options);
+  const fn = partial(require(fnPath), context);
 
   async.mapLimit(files, 10, fn, done);
+}
+
+function ensureHasDefaultAttributes(documentNode) {
+  if (!documentNode.meta) {
+    documentNode.meta = {};
+  }
+
+  return documentNode;
 }

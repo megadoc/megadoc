@@ -29,7 +29,7 @@ describe('stage01__reduce', function() {
       ]
     };
 
-    subject({}, compilation, function(err, { documents }) {
+    subject(compilation, function(err, { documents }) {
       if (err) {
         done(err);
       }

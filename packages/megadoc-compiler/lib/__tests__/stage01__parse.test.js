@@ -19,12 +19,11 @@ describe('stage01__parse', function() {
           'b',
         ],
         processor: {
-          atomic: true,
           parseFnPath: parseFnFile.path,
         }
       };
 
-      subject({}, compilation, function(err, { rawDocuments }) {
+      subject(compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -50,12 +49,11 @@ describe('stage01__parse', function() {
           'b',
         ],
         processor: {
-          atomic: false,
           parseBulkFnPath: parseBulkFnFile.path,
         }
       };
 
-      subject({}, compilation, function(err, { rawDocuments }) {
+      subject(compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -83,12 +81,11 @@ describe('stage01__parse', function() {
         'b',
       ],
       processor: {
-        atomic: true,
         parseFnPath: parseFnFile.path,
       }
     };
 
-    subject({}, compilation, function(err, { rawDocuments }) {
+    subject(compilation, function(err, { rawDocuments }) {
       if (err) {
         done(err);
       }

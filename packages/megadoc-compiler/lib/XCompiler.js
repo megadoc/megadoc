@@ -6,6 +6,7 @@ const ConfigUtils = require('megadoc-config-utils');
 const Compiler = exports;
 
 const createCompilation = require('./stage00__createCompilation');
+const initState = require('./stage00__initState');
 const parse = require('./stage01__parse');
 const reduce = require('./stage01__reduce');
 const render = require('./stage01__render');
@@ -41,11 +42,12 @@ Compiler.run = function(config, done) {
   const compilations = config.sources.map(partial(createCompilation, commonOptions));
 
   const compileTree = async.compose(
-    partial(composeTree, config),
-    partial(reduceTree, config),
+    composeTree,
+    reduceTree,
     partial(render, serializer.renderRoutines),
-    partial(reduce, config),
-    partial(parse, config)
+    reduce,
+    parse,
+    initState
   );
 
   const compileTreesIntoCorpus = async.compose(

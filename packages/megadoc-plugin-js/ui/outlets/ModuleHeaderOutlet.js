@@ -2,7 +2,8 @@ const React = require('react');
 const ModuleHeader = require('../components/ModuleHeader');
 const { object, shape, bool, } = React.PropTypes;
 
-megadoc.outlets.add('CJS::ModuleHeader', {
+module.exports = {
+  name: 'CJS::ModuleHeader',
   key: 'CJS::ModuleHeader',
   component: React.createClass({
     propTypes: {
@@ -25,4 +26,4 @@ megadoc.outlets.add('CJS::ModuleHeader', {
       );
     }
   }),
-});
+}
