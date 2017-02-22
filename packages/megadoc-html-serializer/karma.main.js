@@ -13,11 +13,11 @@ tap(require.context('./ui', true, /.test.js$/), function(x) {
   x.keys().forEach(x);
 });
 
-tap(require.context('./packages/megadoc-plugin-markdown/ui', true, /.test.js$/), function(x) {
+tap(require.context('../megadoc-plugin-markdown/ui', true, /.test.js$/), function(x) {
   x.keys().forEach(x);
 });
 
-tap(require.context('./packages/megadoc-plugin-js/ui', true, /.test.js$/), function(x) {
+tap(require.context('../megadoc-plugin-js/ui', true, /.test.js$/), function(x) {
   x.keys().forEach(x);
 });
 

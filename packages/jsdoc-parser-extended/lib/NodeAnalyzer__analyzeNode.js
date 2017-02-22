@@ -2,13 +2,14 @@ var ASTUtils = require('./ASTUtils');
 var NodeInfo = require('./NodeAnalyzer__NodeInfo');
 var K = require('./constants');
 var generateContext = require('./NodeAnalyzer__generateContext');
-var debuglog = require('megadoc/lib/Logger')('megadoc').info;
 var t = require('babel-types');
 
 function analyzeNode(node, path, filePath, config) {
   var info = new NodeInfo(node, filePath);
 
-  debuglog('Analyzing "%s".', node.type);
+  if (process.env.MEGADOC_DEBUG === '1') {
+    console.log('Analyzing "%s".', node.type);
+  }
 
   // CommonJS: a default export
   //

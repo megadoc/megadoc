@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 var commonConfig = require('./webpack/common');
 var nodeEnv = process.env.NODE_ENV || 'development';
-var K = require('./lib/HTMLSerializer__constants');
+var K = require('./lib/constants');
 var entry = {};
 var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 

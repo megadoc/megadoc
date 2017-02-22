@@ -11,7 +11,7 @@ describe('megadoc-plugin-lua::parseFn', function() {
 
   it('works', function(done) {
     const sourceFile = fileSuite.createFile('source.lua', ``);
-    parseFn({ common: {}, processor: {} }, sourceFile.path, done)
+    parseFn({ commonOptions: {}, options: {} }, sourceFile.path, done)
   });
 })
 

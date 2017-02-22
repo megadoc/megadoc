@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var connect = require('connect');
 var serveStatic = require('serve-static');
 var modRewrite = require('connect-modrewrite');
@@ -8,7 +10,8 @@ var ExternalsPlugin = require('./webpack/ExternalsPlugin');
 var fs = require('fs-extra');
 var http = require('http')
 var assign = require('lodash').assign;
-var K = require('./lib/HTMLSerializer__constants');
+var K = require('./lib/constants');
+var root = path.resolve(process.argv[2]);
 
 var CONTENT_HOST = process.env.HOST || '0.0.0.0';
 var CONTENT_PORT = process.env.PORT || '8942';
@@ -39,7 +42,7 @@ function start(host, port, done) {
 
   entry[K.VENDOR_BUNDLE] = [ 'webpack-hot-middleware/client' ]
     .concat(require('./webpack/vendorModules'))
-    .concat(process.argv.slice(2).map(function(x) { return path.resolve(x)}))
+    .concat(process.argv.slice(3).map(function(x) { return path.resolve(x)}))
     .concat(getStyleSheets())
   ;
 
@@ -130,7 +133,7 @@ function start(host, port, done) {
 }
 
 function generatePluginEntry() {
-  var basePath = path.resolve(__dirname, 'packages');
+  var basePath = path.join(root, 'packages');
 
   return pluginNames.reduce(function(map, name) {
     trackFileIfExists('ui/index.js');
@@ -148,7 +151,7 @@ function generatePluginEntry() {
 }
 
 function getStyleOverrides() {
-  const basePath = path.resolve(__dirname, 'packages');
+  const basePath = path.join(root, 'packages');
   const clientConfig = getClientConfig();
 
   return pluginNames.concat([ 'userConfig' ]).reduce(function(map, name) {

@@ -2,7 +2,7 @@ var exec = require('child_process').exec;
 var fs = require('fs');
 var assign = require('object-assign');
 var b = require('megadoc-corpus').builders;
-var RendererUtils = require('megadoc/lib/RendererUtils');
+var RendererUtils = require('megadoc-html-serializer/lib/RendererUtils');
 
 module.exports = function generateAndScanAndReduce(config, globalConfig, utils, done) {
   if (config.skipScan) {

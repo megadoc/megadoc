@@ -26,9 +26,9 @@ if [ -z "${CONFIG_FILE}" ]; then
   exit 1
 fi
 
-if [ ! -d "./ui" ]; then
+if [ ! -d "./packages/megadoc-html-serializer/ui" ]; then
   echo "$1 must be run from megadoc's root."
   exit 1
 fi
 
-exec node ./server.js $@
+exec node ./packages/megadoc-html-serializer/server.js $(pwd) $@

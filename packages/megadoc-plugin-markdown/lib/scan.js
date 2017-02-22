@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 
-var RendererUtils = require('megadoc/lib/RendererUtils');
+var RendererUtils = require('megadoc-html-serializer/lib/RendererUtils');
 var findCommonPrefix = require('./utils/findCommonPrefix');
 var parseTitle = require('./utils/parseTitle');
 var strHumanize = require('./utils/strHumanize');

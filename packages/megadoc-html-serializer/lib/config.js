@@ -1,4 +1,5 @@
 const path = require('path');
+const K = require('./constants');
 
 module.exports = {
   /**
@@ -52,7 +53,7 @@ module.exports = {
    */
   footer: 'Made with &#9829; using [megadoc](https://github.com/megadoc).',
 
-  htmlFile: path.resolve(__dirname, '../../../ui/index.tmpl.html'),
+  htmlFile: path.join(K.ROOT, 'ui/index.tmpl.html'),
 
   /**
    * @property {Object}

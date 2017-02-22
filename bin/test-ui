@@ -15,4 +15,4 @@ source "./bin/_helpers.sh"
 
 nodejs_use_local_packages
 
-exec ./node_modules/.bin/karma start $@
+(cd ./packages/megadoc-html-serializer; exec ./node_modules/.bin/karma start $@)

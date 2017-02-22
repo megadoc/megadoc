@@ -3,7 +3,7 @@ const transformValue = require('./transformValue');
 
 exports.renderTree = function(state, tree, renderOperations) {
   const reducers = {
-    CONVER_MARKDOWN_TO_HTML: function(data, reduce) {
+    CONVERT_MARKDOWN_TO_HTML: function(data, reduce) {
       return reduce(state.markdownRenderer(data));
     },
 
