@@ -1,5 +1,5 @@
 {
   "name": "megadoc-compiler",
   "version": "6.0.0",
-  "main": "lib/XCompiler.js"
+  "main": "lib/Compiler.js"
 }

@@ -3,7 +3,7 @@ const { instanceOf, node, } = React.PropTypes;
 
 const InspectorTooltip = React.createClass({
   propTypes: {
-    target: instanceOf(Element).isRequired,
+    target: instanceOf(window.Element).isRequired,
     children: node.isRequired,
   },
 

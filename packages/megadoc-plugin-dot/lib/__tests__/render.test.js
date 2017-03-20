@@ -3,7 +3,7 @@ var multiline = require('multiline-slash');
 var assert = require('chai').assert;
 var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
 var b = require('megadoc-corpus').builders;
-var jsdom = require('jsdom');
+var cheerio = require('cheerio');
 
 describe("megadoc-plugin-dot::render", function() {
   var suite = IntegrationSuite(this);
@@ -128,7 +128,7 @@ describe("megadoc-plugin-dot::render", function() {
 });
 
 function getAnchors(svg) {
-  var dom = jsdom.jsdom(svg);
+  var dom = cheerio.load(svg);
 
-  return dom.documentElement.querySelectorAll('a');
+  return dom('a');
 }
