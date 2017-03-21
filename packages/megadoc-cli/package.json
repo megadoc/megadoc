@@ -4,5 +4,8 @@
   "main": "lib/megadoc.js",
   "bin": {
     "megadoc": "lib/megadoc.js"
+  },
+  "dependencies": {
+    "chokidar": "1.6.1"
   }
 }

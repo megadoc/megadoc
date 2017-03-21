@@ -11,6 +11,7 @@ const Renderer = require('./Renderer');
 const LinkResolver = require('./LinkResolver');
 const renderRoutines = require('./renderRoutines');
 const DefaultConfig = require('./config');
+const K = require('./constants');
 
 function HTMLSerializer(compilerConfig, userSerializerOptions) {
   this.compilerConfig = {
@@ -75,6 +76,7 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
       const renderedCorpus = aggregateRenderedTreesIntoCorpus(this, renderedNodes);
 
       done(null, {
+        compilations: withTrees,
         corpus: renderedCorpus,
         edgeGraph: null
       });
@@ -104,6 +106,8 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
     verbose: this.compilerConfig.verbose,
   });
 
+  console.log('[D] Emitting files for corpus of size %d', documentUIDs.length)
+
   emitAssets(
     Object.assign({}, this.config, {
       assetRoot: this.compilerConfig.outputDir,
@@ -119,10 +123,39 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
         return done(err);
       }
       else {
-        async.eachSeries(documentUIDs, emitDocumentFile, done);
+        async.eachSeries(documentUIDs, emitDocumentFile, function(emitErr) {
+          done(emitErr, corpusInfo)
+        });
       }
     }
   )
+};
+
+HTMLSerializer.prototype.purgeEmittedCorpusDocuments = function(corpusInfo, done) {
+  const flatCorpus = corpusInfo.corpus.toJSON();
+  const documentUIDs = Object.keys(flatCorpus);
+  const filePaths = documentUIDs.reduce((map, uid) => {
+    const node = flatCorpus[uid];
+    const filePath = node.meta && node.meta.htmlFilePath;
+
+    if (filePath) {
+      map[filePath] = true;
+    }
+
+    return map;
+  }, {});
+
+  const removeDocumentFile = (filePath, callback) => {
+    console.log('[D] Document file "%s" will be purged.', filePath);
+
+    this.assetUtils.removeAsset(filePath, callback);
+  }
+
+  async.eachSeries(Object.keys(filePaths).concat([
+    K.CONFIG_FILE
+  ]), removeDocumentFile, function(emitErr) {
+    done(emitErr, corpusInfo)
+  });
 };
 
 HTMLSerializer.prototype.stop = function(done) {

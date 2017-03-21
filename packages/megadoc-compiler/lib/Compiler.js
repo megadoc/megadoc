@@ -11,8 +11,10 @@ const parse = require('./stage01__parse');
 const reduce = require('./stage01__reduce');
 const render = require('./stage01__render');
 const reduceTree = require('./stage02__reduceTree');
+const mergeChangeTree = require('./stage03__mergeChangeTree');
 const composeTree = require('./stage03__composeTree');
 const renderCorpus = require('./stage04__renderCorpus');
+const purge = require('./stage05__purge');
 const emit = require('./stage05__emit');
 
 /**
@@ -31,7 +33,12 @@ const emit = require('./stage05__emit');
  * @param {Boolean} [runOptions.stats=false]
  *        Turn this on if you want to generate compile-time statistics.
  */
-Compiler.run = function(config, done) {
+Compiler.run = function(config, runOptions, done) {
+  if (arguments.length === 2) {
+    done = runOptions;
+    runOptions = {};
+  }
+
   const tmpDir = config.tmpDir;
   const commonOptions = config; // TODO
   const serializerSpec = ConfigUtils.getConfigurablePair(config.serializer) || {
@@ -39,10 +46,11 @@ Compiler.run = function(config, done) {
   };
   const Serializer = require(serializerSpec.name);
   const serializer = new Serializer(config, serializerSpec.options);
-  const compilations = config.sources.map(partial(createCompilation, commonOptions));
+  const compilations = config.sources.map(partial(createCompilation, commonOptions, runOptions));
 
   const compileTree = async.compose(
     composeTree,
+    partial(mergeChangeTree, runOptions.initialState),
     reduceTree,
     partial(render, serializer.renderRoutines),
     reduce,
@@ -50,10 +58,11 @@ Compiler.run = function(config, done) {
     initState
   );
 
-  const compileTreesIntoCorpus = async.compose(
+  const compileTreesIntoCorpus = async.compose.apply(async, [
     partial(emit, serializer),
+    runOptions.purge ? partial(purge, serializer) : null,
     partial(renderCorpus, serializer)
-  );
+  ].filter(x => x !== null));
 
   async.series([
     function setup(callback) {

@@ -60,6 +60,13 @@ module.exports = function NodeURIDecorator(config) {
     node.meta.href = href;
     node.meta.anchor = g.NodeAnchor(node);
 
+    // we replace the hashtag for single-page mode URLs, otherwise ensure there
+    // is no leading slash in the filepath! we do not want to write to /
+    node.meta.htmlFilePath = node.type === 'DocumentEntity' ?
+      null :
+      node.meta.href.replace(/^(\#?)\/+/, '')
+    ;
+
     if (process.env.VERBOSE) {
       console.log('Node "%s" href: "%s"', node.uid, node.meta.href)
     }

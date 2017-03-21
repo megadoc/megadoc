@@ -6,6 +6,7 @@ var path = require('path');
 var set = require('lodash').set;
 var pkg = require('../package');
 var megadocCompiler = require('megadoc-compiler');
+var megadocDevServer = require('./DevServer');
 var config = {};
 var configFilePath;
 
@@ -17,6 +18,7 @@ function collect(val, list) {
 program
   .version(pkg.version)
   .description('Parse sources and generate static documentation.')
+  .arguments('<CONFIG>')
   .option('--config [PATH]', 'path to megadoc config file (defaults to megadoc.conf.js)')
   .option('--no-scan', 'Skip the scanning phase.')
   .option('--no-index', 'Do not index documentation entities (for linking.)')
@@ -28,6 +30,7 @@ program
   .option('--dump-corpus <PATH>')
   .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
+  .option('-w, --watch', 'Run in watch mode.')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
   .option('--debug', 'Run in DEBUG mode to print debugging messages.')
   .option('--stats', 'Show scanner-related statistics.')
@@ -36,7 +39,7 @@ program
   .parse(process.argv)
 ;
 
-configFilePath = program.config || process.argv[2] || 'megadoc.conf.js';
+configFilePath = program.config || program.args[0] || 'megadoc.conf.js';
 
 if (fs.existsSync(configFilePath)) {
   config = require(path.resolve(configFilePath));
@@ -100,16 +103,20 @@ if (program.debug === true) {
 
 console.log('version %s', pkg.version);
 
+if (program.watch) {
+  megadocDevServer.run(config);
+}
+else {
+  megadocCompiler.run(config, function(err, compilations) {
+    if (err) {
+      console.error(Array(80 - 'megadoc-cli'.length).join('*'));
+      console.error('An error occurred during compilation. Error details below.');
+      console.error(err.stack ? err.stack : err);
+      console.error(Array(80 - 'megadoc-cli'.length).join('*'));
 
-megadocCompiler.run(config, function(err, compilations) {
-  if (err) {
-    console.error(Array(80 - 'megadoc-cli'.length).join('*'));
-    console.error('An error occurred during compilation. Error details below.');
-    console.error(err.stack ? err.stack : err);
-    console.error(Array(80 - 'megadoc-cli'.length).join('*'));
+      throw err;
+    }
 
-    throw err;
-  }
-
-  console.log('done!');
-});
+    console.log('done!');
+  });
+}

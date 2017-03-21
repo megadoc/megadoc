@@ -16,9 +16,7 @@ module.exports = function DocumentFileEmitter(params) {
       return done();
     }
 
-    // we replace the hashtag for single-page mode URLs, otherwise ensure there
-    // is no leading slash in the filepath! we do not want to write to /
-    const filePath = href.replace(/^(\#?)\/+/, '');
+    const filePath = node.meta && node.meta.htmlFilePath;
 
     if (params.verbose) {
       console.log('Emitting HTML file "%s" (URL = "%s", UID = "%s")', filePath, href, node.uid);

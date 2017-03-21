@@ -23,6 +23,7 @@ describe('stage00__createCompilation', function() {
 
     output = subject(
       { commonOption: 1 },
+      {},
       {
         pattern: /\.js$/,
         include: [
@@ -60,6 +61,7 @@ describe('stage00__createCompilation', function() {
     beforeEach(function() {
       output = subject(
         { commonOption: 1 },
+        {},
         {
           pattern: /\.js$/,
           include: [

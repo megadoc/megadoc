@@ -125,6 +125,28 @@ module.exports = function AssetUtils(config) {
     },
 
     /**
+     * Copy a local file into the destination output directory.
+     *
+     * @param  {String} fileName
+     *         Relative path to the output file. For example, if this is a JS
+     *         script you need to require, this will be relative to
+     *         `index.html`.
+     *
+     * @param  {String|Buffer} contents
+     *         The contents of the file.
+     */
+    removeAsset: function(fileName, callback) {
+      const filePath = utils.getAssetPath(config.outputDir, fileName);
+
+      if (fs.existsSync(filePath)) {
+        fs.remove(filePath, callback);
+      }
+      else {
+        callback();
+      }
+    },
+
+    /**
      * Write some contents to an arbitrary temporary file and get a handle to
      * its filepath.
      */

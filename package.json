@@ -41,7 +41,6 @@
     "glob": "5.0.3",
     "htmlparser2": "^3.8.3",
     "invariant": "2.2.1",
-    "megadoc-corpus": "5.0.0",
     "multiline-slash": "2.0.0"
   },
   "devDependencies": {

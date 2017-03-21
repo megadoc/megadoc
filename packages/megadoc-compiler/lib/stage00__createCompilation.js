@@ -3,13 +3,18 @@ const scanSources = require('./utils/scanSources');
 const ConfigUtils = require('megadoc-config-utils');
 
 // TODO: extract decorators
-module.exports = function createCompilation(commonOptions, source) {
-  const files = scanSources(source.pattern, source.include, source.exclude);
+module.exports = function createCompilation(commonOptions, runOptions, source) {
   const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
+  const files = scanSources(source.pattern, source.include, source.exclude);
+  const whitelistedFiles = runOptions.changedSources ?
+    files.filter(x => runOptions.changedSources[x] === true) :
+    files
+  ;
 
   return {
+    id: source.id, // TODO: auto-infer
     documents: null,
-    files,
+    files: whitelistedFiles,
     commonOptions: commonOptions,
     processor: extractProcessingFunctionPaths(processorEntry),
     processorOptions: processorEntry.options || {},
