@@ -9,6 +9,7 @@ const createCompilation = require('./stage00__createCompilation');
 const initState = require('./stage00__initState');
 const parse = require('./stage01__parse');
 const reduce = require('./stage01__reduce');
+const refine = require('./stage01__refine');
 const render = require('./stage01__render');
 const reduceTree = require('./stage02__reduceTree');
 const mergeChangeTree = require('./stage03__mergeChangeTree');
@@ -53,6 +54,7 @@ Compiler.run = function(config, runOptions, done) {
     partial(mergeChangeTree, runOptions.initialState),
     reduceTree,
     partial(render, serializer.renderRoutines),
+    refine,
     reduce,
     parse,
     initState

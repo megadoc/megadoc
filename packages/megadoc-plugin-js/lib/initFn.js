@@ -1,6 +1,6 @@
 var assert = require('assert');
 var EventEmitter = require('events');
-var Parser = require('jsdoc-parser-extended').Parser;
+// var Parser = require('jsdoc-parser-extended').Parser;
 var defaults = require('./config');
 
 module.exports = function init(compilation) {
@@ -46,7 +46,7 @@ module.exports = function init(compilation) {
 
   return {
     emitter: emitter,
-    parser: new Parser({ emitter: emitter }),
+    // parser: new Parser({ emitter: emitter }),
     parserConfig: parserConfig,
   };
 };

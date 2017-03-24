@@ -20,6 +20,7 @@ module.exports = function createCompilation(commonOptions, runOptions, source) {
     processorOptions: processorEntry.options || {},
     processorState: null,
     rawDocuments: null,
+    refinedDocuments: null,
     renderOperations: null,
     renderedTree: null,
     stats: {},
@@ -47,6 +48,7 @@ function extractProcessingFunctionPaths(processorEntry) {
     parseBulkFnPath: spec.parseBulkFnPath,
     reduceFnPath: spec.reduceFnPath,
     reduceTreeFnPath: spec.reduceTreeFnPath,
+    refineFnPath: spec.refineFnPath,
     renderFnPath: spec.renderFnPath,
     serializerOptions: spec.serializerOptions || {},
   };

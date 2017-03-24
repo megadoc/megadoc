@@ -1,20 +1,16 @@
-var K = require('jsdoc-parser-extended').Constants;
+const K = require('jsdoc-parser-extended').Constants;
+const b = require('megadoc-corpus').builders;
 
-module.exports = function parseBulkFn(context, filePaths, done) {
+
+module.exports = function refineFn(context, documents, done) {
+  console.log('[D] Sealing %d documents', documents.length);
+
   var config = context.options;
-  var parserConfig = context.state.parserConfig;
-  var parser = context.state.parser;
   var emitter = context.state.emitter;
 
-  filePaths.forEach(function(filePath) {
-    parser.parseFile(filePath, parserConfig, context.commonOptions.assetRoot);
-  });
-
-  // omg OMG
-  var database = parser.toJSON();
-  var namespaceIds =  database.reduce(function(map, doc) {
-    if (doc.namespace) {
-      map[doc.namespace] = doc;
+  var namespaceIds =  documents.reduce(function(map, node) {
+    if (node.properties.namespace) {
+      map[node.properties.namespace] = node;
     }
 
     return map;
@@ -23,21 +19,26 @@ module.exports = function parseBulkFn(context, filePaths, done) {
   var namespaceDocuments = Object.keys(namespaceIds).map(function(namespaceId) {
     var referencingDocument = namespaceIds[namespaceId];
 
-    return {
+    return b.document({
       id: namespaceId,
       title: namespaceId,
       symbol: K.NAMESPACE_SEP,
-      isNamespace: true,
+      meta: {},
       filePath: referencingDocument.filePath, // useful for error reporting when there's a UID clash
+      indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
       loc: referencingDocument.loc,
-    };
+      properties: {
+        isNamespace: true,
+        tags: [],
+      },
+    });
   })
 
-  var withNamespaces = database.concat(namespaceDocuments);
+  var withNamespaces = documents.concat(namespaceDocuments);
 
   emitter.emit('postprocess', withNamespaces);
 
-  var withoutOrphans = discrdOrphans(withNamespaces, {
+  var withoutOrphans = discardOrphans(withNamespaces, {
     warn: config.strict,
   });
 
@@ -50,7 +51,7 @@ module.exports = function parseBulkFn(context, filePaths, done) {
   done(null, withoutOrphans);
 };
 
-function discrdOrphans(database, options) {
+function discardOrphans(database, options) {
   const shouldWarn = options.warn;
 
   const idMap = database.reduce(function(map, doc) {
@@ -60,15 +61,15 @@ function discrdOrphans(database, options) {
 
   return database.filter(function(doc) {
     const isOrphan = (
-      !doc.isModule &&
-      !doc.isNamespace &&
-      (!doc.receiver || !idMap.hasOwnProperty(doc.receiver))
+      !doc.properties.isModule &&
+      !doc.properties.isNamespace &&
+      (!doc.properties.receiver || !idMap.hasOwnProperty(doc.properties.receiver))
     );
 
     if (isOrphan && shouldWarn) {
       console.warn(
         '%s: Unable to map "%s" to any module, it will be discarded.',
-        dumpDocPath(doc),
+        dumpDocPath(doc.properties),
         doc.id
       );
     }
@@ -79,11 +80,11 @@ function discrdOrphans(database, options) {
 
 function warnAboutUnknownContexts(database) {
   database.forEach(function(doc) {
-    if (!doc.type || doc.type === K.TYPE_UNKNOWN) {
+    if (!doc.properties.type || doc.properties.type === K.TYPE_UNKNOWN) {
       console.info(
         '%s: Document "%s" is unidentified. This probably means megadoc does not ' +
         'know how to handle it yet.',
-        dumpDocPath(doc),
+        dumpDocPath(doc.properties),
         doc.id
       );
     }
@@ -97,11 +98,11 @@ function warnAboutUnknownTags(database, config) {
   ]);
 
   database.forEach(function(doc) {
-    if (doc && doc.tags) {
-      doc.tags.forEach(function(tag) {
+    if (doc && doc.properties && doc.properties.tags) {
+      doc.properties.tags.forEach(function(tag) {
         if (!(tag.type in KNOWN_TAGS)) {
           console.warn("%s: Unknown tag '%s'.",
-            dumpDocPath(doc),
+            dumpDocPath(doc.properties),
             tag.type
           );
         }

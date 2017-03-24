@@ -1,7 +1,7 @@
 const mergeObject = require('./utils/mergeObject');
 
 module.exports = function reduceTree(compilation, done) {
-  const { documents, processor } = compilation;
+  const { refinedDocuments, processor } = compilation;
 
   let treeOperations = [];
 
@@ -13,7 +13,7 @@ module.exports = function reduceTree(compilation, done) {
       state: compilation.processorState,
     };
 
-    treeOperations = fn(context, documents);
+    treeOperations = fn(context, refinedDocuments);
   }
 
   done(null, mergeObject(compilation, { treeOperations: treeOperations }));
