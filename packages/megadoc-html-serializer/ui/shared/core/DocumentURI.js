@@ -1,6 +1,6 @@
 function DocumentURI(config) {
   this.mountPath = config.mountPath;
-  this.extension = config.emittedFileExtension || '';
+  this.extension = config.extension || '';
   this.fileExtensionRegExp = this.extension.length > 0 ?
     new RegExp(this.extension + '$') :
     null
@@ -8,7 +8,7 @@ function DocumentURI(config) {
 }
 
 DocumentURI.prototype.normalize = function(uri) {
-  if (uri.indexOf(this.mountPath) === 0) {
+  if (this.mountPath && uri.indexOf(this.mountPath) === 0) {
     return ensureLeadingSlash(uri.slice(this.mountPath.length));
   }
   else {

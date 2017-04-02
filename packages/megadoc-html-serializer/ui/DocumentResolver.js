@@ -51,8 +51,18 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
     return buildDocumentContext(node);
   }
   else {
-    console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
-    console.log('>> CORPUS HAS %d DOCUMENTS <<', corpus.length)
+    // try to resolve index node
+    const indexPathname = location.pathname + 'index';
+    const indexHref = this.documentURI.withExtension(indexPathname) + location.hash;
+    const indexNode = corpus.getByURI(indexHref);
+
+    if (indexNode) {
+      return indexNode;
+    }
+    else {
+      console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
+      return null;
+    }
   }
 };
 

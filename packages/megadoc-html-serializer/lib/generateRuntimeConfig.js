@@ -25,6 +25,7 @@ module.exports = function generateRuntimeConfig(config, assets) {
     scrollSpying: !!config.scrollSpying,
     sourceStyleSheets: assets.styleSheets,
     spotlight: !!config.spotlight,
+    styleOverrides: config.styleOverrides,
 
     themeOptions: config.themeOptions,
     title: config.title,
