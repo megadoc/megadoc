@@ -28,14 +28,16 @@ module.exports =  function createAssets(config, compilations) {
     return map;
   }, {
     staticAssets: [].concat(
-      config.assets || []
+      config.assets
     ).concat(
-      themePlugin.assets || []
-    ),
+      themePlugin.assets
+    ).filter(x => !!x),
     styleSheets: [
       K.CORE_STYLE_ENTRY,
-      config.styleSheet || config.stylesheet
-    ],
+    ].concat(themePlugin.styleSheets).concat([
+      config.styleSheet,
+      config.stylesheet
+    ]).filter(x => !!x),
     pluginScripts: themePlugin.pluginScripts || [],
   })
 

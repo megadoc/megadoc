@@ -1,6 +1,6 @@
 var marked = require('marked');
-var summaryExtractor = SummaryExtractor();
 var htmlparser = require("htmlparser2");
+var renderHeading = require('./Renderer__renderHeading');
 
 var markdownToTextOptions = Object.freeze({
   tables: false,
@@ -9,6 +9,9 @@ var markdownToTextOptions = Object.freeze({
   breaks: false,
   linkify: false
 });
+
+var summaryExtractor = SummaryExtractor();
+var tocExtractor = TOCExtractor();
 
 /**
  * @module
@@ -112,11 +115,16 @@ function extractSummary(markdown, options) {
   return summaryHTML;
 }
 
+function extractTOC(markdown) {
+  return tocExtractor(markdown);
+}
+
 exports.htmlToText = htmlToText;
 exports.markdownToText = markdownToText;
 exports.normalizeHeading = normalizeHeading;
 exports.trimHTML = trimHTML;
 exports.extractSummary = extractSummary;
+exports.extractTOC = extractTOC;
 
 function SummaryExtractor() {
   var summary;
@@ -153,5 +161,42 @@ function SummaryExtractor() {
     summary = null;
 
     return markdownToText('<p>' + parsedSummary + '</p>');
+  };
+}
+
+function TOCExtractor() {
+  var renderer = new marked.Renderer();
+
+  var markedOptions = Object.freeze({
+    renderer: renderer,
+    gfm: true,
+    tables: false,
+    sanitize: true,
+    breaks: false,
+    linkify: false,
+    pedantic: false,
+  });
+
+  let runState;
+  const runOptions = {};
+
+  renderer.heading = function(text, level) {
+    return renderHeading(text, level, runState, runOptions);
+  };
+
+  return function(markdown) {
+    if (!markdown) {
+      return null;
+    }
+
+    runState = { toc: [] }
+
+    marked(markdown, markedOptions);
+
+    const toc = runState.toc;
+
+    runState = null;
+
+    return toc;
   };
 }

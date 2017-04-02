@@ -1,4 +1,5 @@
-var compose = require('lodash').compose;
+const compose = require('lodash').compose;
+const invariant = require('invariant');
 
 module.exports = function NodeURIDecorator(config) {
   var g = config.layoutOptions.singlePageMode ?
@@ -88,9 +89,17 @@ function FileBasedURIGenerator(config) {
     }
 
     if (node.type === 'DocumentEntity') {
+      if (!node.parentNode) {
+        invariant(false, `Node ${node.id} has no parent!`);
+      }
+
       return NodeURI(node.parentNode) + '#' + NodeAnchor(node);
     }
     else if (node.type === 'Document') {
+      if (!node.parentNode) {
+        invariant(false, `Node ${node.id} has no parent!`);
+      }
+
       return (
         ParentNodeURI(node.parentNode) + '/' + encodeURI(node.id) +
         // What's happening here merits some explanation: documents that nest

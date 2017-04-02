@@ -1,7 +1,6 @@
 const K = require('jsdoc-parser-extended').Constants;
 const b = require('megadoc-corpus').builders;
 
-
 module.exports = function refineFn(context, documents, done) {
   console.log('[D] Sealing %d documents', documents.length);
 
@@ -9,7 +8,7 @@ module.exports = function refineFn(context, documents, done) {
   var emitter = context.state.emitter;
 
   var namespaceIds =  documents.reduce(function(map, node) {
-    if (node.properties.namespace) {
+    if (node.properties.namespace && !documents.some(x => x.id === node.properties.namespace)) {
       map[node.properties.namespace] = node;
     }
 
@@ -39,7 +38,7 @@ module.exports = function refineFn(context, documents, done) {
   emitter.emit('postprocess', withNamespaces);
 
   var withoutOrphans = discardOrphans(withNamespaces, {
-    warn: config.strict,
+    warn: true,
   });
 
   if (config.verbose) {

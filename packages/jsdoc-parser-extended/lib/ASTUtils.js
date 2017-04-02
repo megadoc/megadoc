@@ -26,6 +26,12 @@ Utils.isExports = function(node) {
   );
 };
 
+Utils.isES6DefaultExport = function(node) {
+  return (
+    t.isExportDefaultDeclaration(node)
+  );
+};
+
 Utils.isPrototypeProperty = function(node) {
   return (
     t.isMemberExpression(node)
@@ -66,6 +72,12 @@ Utils.getVariableNameFromModuleExports = function(node) {
   }
 
   return name;
+};
+
+Utils.getVariableNameFromES6DefaultExport = function(node) {
+  if (t.isExportDefaultDeclaration(node) && t.isIdentifier(node.declaration)) {
+    return node.declaration.name;
+  }
 };
 
 Utils.getVariableNameFromFilePath = function(filePath) {

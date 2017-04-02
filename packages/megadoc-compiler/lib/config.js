@@ -139,7 +139,7 @@ module.exports = {
    * Set this to an empty string, or null, if you don't want the footer
    * to be shown.
    */
-  footer: 'Made with &#9829; using [megadoc](https://github.com/megadoc).',
+  // footer: 'Made with &#9829; using [megadoc](https://github.com/megadoc).',
 
   /**
    * @property {Object} hotness

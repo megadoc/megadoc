@@ -94,7 +94,8 @@ Ppt.walk = function(ast, inConfig, filePath) {
 
   babel.traverse(ast, {
     enter: function(path) {
-      var commentPool;
+      var commentPool, withoutDuplicates;
+      console.log('ah!', path.node.type)
 
       // Comments at the Program scope:
       if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
@@ -124,13 +125,12 @@ Ppt.walk = function(ast, inConfig, filePath) {
           return;
         }
 
-        commentPool.forEach(function(commentNode, index) {
+        withoutDuplicates = discardDuplicateComments(commentPool);
+        withoutDuplicates.forEach(function(commentNode, index) {
           var comment = commentNode.value;
 
           if (comment[0] === '*') {
-            parser.parseComment(comment, path, config, filePath,
-              index < commentPool.length - 1
-            );
+            parser.parseComment(comment, path, config, filePath, index === withoutDuplicates.length-1);
           }
         });
       }
@@ -167,10 +167,33 @@ Ppt.walk = function(ast, inConfig, filePath) {
             ASTUtils.dumpLocation(expr, filePath)
           );
 
-          debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
+          console.log('Offending code block:\n%s', babel.transformFromAst(expr).code);
         }
       }
     },
+
+    ExportDefaultDeclaration: function(path) {
+      var doc;
+
+      // module.exports = Something;
+      var name = ASTUtils.getVariableNameFromES6DefaultExport(path.node);
+
+      if (!name && config.inferModuleIdFromFileName) {
+        name = ASTUtils.getVariableNameFromFilePath(filePath);
+      }
+
+      if (name) {
+        doc = parser.registry.get(name, filePath);
+
+        if (doc) {
+          var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
+
+          doc.markAsExported();
+
+          parser.registry.trackModuleDocAtPath(doc, modulePath);
+        }
+      }
+    }
   });
 };
 
@@ -187,7 +210,7 @@ Ppt.toJSON = function() {
   }, []);
 };
 
-Ppt.parseComment = function(comment, path, config, filePath, freeForm) {
+Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
   var contextNode = path.node;
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
 
@@ -232,7 +255,7 @@ Ppt.parseComment = function(comment, path, config, filePath, freeForm) {
 
   var nodeInfo;
 
-  if (!freeForm) {
+  if (isClosestToNode) {
     nodeInfo = analyzeNode(contextNode, path, filePath, config);
 
     this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
@@ -298,6 +321,24 @@ function getPredefinedNamespace(config, docstring, filePath) {
   }
 
   return namespace && namespace.length > 0 ? namespace : null;
+}
+
+function discardDuplicateComments(commentPool) {
+  const uniqueComments = commentPool.reduce((map, comment) => {
+    const locString = String(comment.start) + ',' + String(comment.end);
+
+    if (!map[locString]) {
+      map[locString] = [];
+    }
+
+    map[locString].push(comment);
+
+    return map;
+  }, {});
+
+  return Object.keys(uniqueComments).map(function(key) {
+    return uniqueComments[key][uniqueComments[key].length-1];
+  });
 }
 
 module.exports = Parser;

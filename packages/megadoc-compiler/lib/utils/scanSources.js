@@ -21,8 +21,8 @@ module.exports = function globAndFilter(pattern, include, _exclude) {
   const globOptions = { nodir: true };
   const exclude = wrapArray(_exclude);
 
-  return wrapArray(include).reduce(function(fileList, sourceDir) {
-    return fileList.concat(glob.sync(`${sourceDir}/**/*`, globOptions))
+  return wrapArray(include).reduce(function(fileList, sourceEntry) {
+    return fileList.concat(glob.sync(sourceEntry, globOptions))
   }, []).filter(function(filePath) {
     if (pattern && !filePath.match(pattern)) {
       return false;

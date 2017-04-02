@@ -171,6 +171,8 @@ HTMLSerializer.prototype.stop = function(done) {
   })
 };
 
+HTMLSerializer.RendererUtils = require('./RendererUtils');
+
 function aggregateTreesIntoCorpus(serializer, compilations) {
   const corpus = MegadocCorpus.Corpus({
     strict: serializer.compilerConfig.strict,

@@ -185,4 +185,38 @@ describe('CJS::Parser::Main', function() {
       assert.equal(docs[0].namespace, 'TheVoid');
     });
   });
+
+  it.only('should infer the module name from the file name', function() {
+    const docs = parseInline(`
+      const ajax = require('utils/ajax');
+      const Promise = require('Promise');
+
+
+      module.exports = {
+        /**
+         * The queue itself...
+         *
+         * @param {Object} config
+         * @param {?Function} config.adapter
+         *        Override the ajax adapter if you need to, otherwise we use the default
+         *        [[ajax]].
+         *
+         * @param {?String} [config.retryCount=3]
+         *        The number of times that it should retry a request before it gives up
+         *        and rejects it.
+        */
+        createQueue: function (config = { retryCount: 3, adapter: ajax, callback: () => {}}) {
+        }
+      };
+    `, { inferModuleIdFromFileName: true }, 'src/XHRQueue/index.js');
+
+    console.log(docs);
+
+    assert.equal(docs.length, 2);
+    assert.equal(docs[0].id, 'XHRQueue');
+    assert.equal(docs[0].type, K.TYPE_MODULE);
+
+    assert.equal(docs[1].id, 'XHRQueue.createQueue');
+    assert.equal(docs[1].type, K.TYPE_FUNCTION)
+  })
 });

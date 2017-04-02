@@ -5,6 +5,7 @@ exports.markdown = function markdown(value) {
 };
 
 // TODO: is it possible to stop accepting custom contextNodes?
+// TODO: use contextNodeId instead of actual node
 exports.linkify = function linkify(params) {
   const text = typeof params === 'string' ? params : params.text;
 
@@ -14,6 +15,7 @@ exports.linkify = function linkify(params) {
   });
 };
 
+// TODO: use contextNodeId instead of actual node
 exports.linkifyFragment = function linkifyFragment(params) {
   return CompositeValue.create('LINKIFY_FRAGMENT', {
     text: params.text,

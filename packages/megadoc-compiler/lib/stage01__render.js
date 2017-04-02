@@ -1,5 +1,6 @@
 const mergeObject = require('./utils/mergeObject');
 
+// TODO: distribute
 module.exports = function render(renderRoutines, compilation, done) {
   const { refinedDocuments, processor } = compilation;
   const context = {
