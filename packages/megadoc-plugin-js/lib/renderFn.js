@@ -56,7 +56,7 @@ module.exports = function renderNode(context, renderer, node) {
 
   return {
     aliases: doc.aliases,
-    description: doc.description ? md(linkify({ text: doc.description })) : null,
+    description: doc.description ? md(linkify({ text: doc.description, contextNode: node })) : null,
     filePath: doc.filePath,
     id: doc.id,
     isModule: doc.isModule,
@@ -98,13 +98,15 @@ module.exports = function renderNode(context, renderer, node) {
 
       if (tag.typeInfo.description) {
         nextTypeInfo.description = md(linkify({
-          text: tag.typeInfo.description
+          text: tag.typeInfo.description,
+          contextNode: node,
         }));
       }
 
       if (TAGS_WITH_STRING.hasOwnProperty(tag.type)) {
         nextAttributes.string = md(linkify({
           text: tag.string,
+          contextNode: node,
         }));
       }
       else if (tag.type === 'see') {

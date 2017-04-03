@@ -95,7 +95,6 @@ Ppt.walk = function(ast, inConfig, filePath) {
   babel.traverse(ast, {
     enter: function(path) {
       var commentPool, withoutDuplicates;
-      console.log('ah!', path.node.type)
 
       // Comments at the Program scope:
       if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
@@ -294,6 +293,10 @@ Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
         );
       }
     }
+
+    doc.getTypeDefs().forEach(typeDefDoc => {
+      this.registry.addEntityDoc(typeDefDoc, path);
+    })
   }
   else {
     console.warn("%s: No identifier was found for this document, it will be ignored!",

@@ -41,11 +41,12 @@ function reduceModuleDocument(doc) {
 
 function reduceEntityDocument(doc) {
   return b.documentEntity({
-    id: doc.id,
+    id: doc.symbol + doc.name,
     title: doc.id,
     summary: doc.description,
     filePath: doc.filePath,
     loc: doc.loc,
     properties: doc,
+    indexFields: [ '$uid', '$filePath', 'id', 'aliases' ],
   });
 }

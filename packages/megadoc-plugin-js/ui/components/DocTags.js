@@ -1,14 +1,17 @@
 var React = require('react');
 var TagGroup = require('./Tags/TagGroup');
+var TypeDefTagGroup = require('./Tags/TypeDefTagGroup');
 var ExampleTag = require('./Tags/ExampleTag');
 var ParamTag = require('./Tags/ParamTag');
 var SeeTag = require('./Tags/SeeTag');
 var ThrowsTag = require('./Tags/ThrowsTag');
 var ReturnTag = require('./Tags/ReturnTag');
+var CallbackTag = require('./Tags/CallbackTag');
 var TabularTagGroup = require('./TabularTagGroup');
 var { where } = require('lodash');
 
 const HANDLED_TAGS = [
+  'callback',
   'constructor',
   'class',
   'deprecated',
@@ -35,13 +38,15 @@ var DocTags = React.createClass({
 
   propTypes: {
     tags: React.PropTypes.array,
+    callbacks: React.PropTypes.array,
     withExamples: React.PropTypes.bool,
     withAdditionalResources: React.PropTypes.bool,
   },
 
-  getDefaultProps: function() {
+  getDefaultProps() {
     return {
       tags: [],
+      callbacks: [],
       withExamples: true,
       withAdditionalResources: true
     };
@@ -77,6 +82,10 @@ var DocTags = React.createClass({
         <TagGroup alwaysGroup tagName="ul" tags={this.props.tags} tagType="throws" renderer={ThrowsTag}>
           <span className="type-attention">Exceptions</span>
         </TagGroup>
+
+        <TypeDefTagGroup alwaysGroup tagName="ul" documents={this.props.callbacks} renderer={CallbackTag}>
+          Callback Definitions
+        </TypeDefTagGroup>
 
         {this.props.withAdditionalResources && (
           <TagGroup alwaysGroup tags={this.props.tags} tagType="see" renderer={SeeTag} tagName="ul">

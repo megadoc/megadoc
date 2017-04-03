@@ -2,6 +2,7 @@ var K = require('./constants');
 var DocClassifier = require('./DocClassifier');
 var DocUtils = require('./DocUtils');
 var ASTUtils = require('./ASTUtils');
+var Docstring = require('./Docstring');
 
 /**
  * @param {Docstring} docstring
@@ -45,7 +46,12 @@ Doc.prototype.toJSON = function(registry) {
     type: DocUtils.getTypeNameOf(this),
   };
 
-  if (!doc.isModule) {
+  if (this.$isTypeDef) {
+    doc.symbol = '~';
+    doc.receiver = this.receiver;
+    doc.id = (doc.receiver || '<<unknown>>') + doc.symbol + doc.id;
+  }
+  else if (!doc.isModule) {
     var resolvedContext = DocUtils.resolveReceiverAndScopeFor(this, registry);
 
     doc.receiver = resolvedContext.receiver;
@@ -79,6 +85,7 @@ Doc.prototype.toJSON = function(registry) {
     doc.symbol = generateSymbol(this);
     doc.id = (doc.receiver || '<<unknown>>') + doc.symbol + this.id;
   }
+
 
   doc.mixinTargets = doc.tags
     .filter(function(tag) { return tag.type === 'mixes'; })
@@ -116,6 +123,25 @@ Doc.prototype.isExported = function() {
 
 Doc.prototype.isModule = function() {
   return DocUtils.isModule(this);
+};
+
+Doc.prototype.getTypeDefs = function() {
+  const receiver = DocUtils.getNameOf(this);
+
+  return this.docstring.typeDefs.map(typeDefData => {
+    const typeDefDocstring = new Docstring(typeDefData);
+
+    if (typeDefDocstring.name.indexOf(`${receiver}~`) === 0) {
+      typeDefDocstring.name = typeDefDocstring.name.slice(`${receiver}~`.length);
+    }
+
+    const doc = new Doc(typeDefDocstring, this.nodeInfo, this.filePath);
+
+    doc.$isTypeDef = true;
+    doc.receiver = receiver;
+
+    return doc;
+  });
 };
 
 function generateSymbol(doc) {

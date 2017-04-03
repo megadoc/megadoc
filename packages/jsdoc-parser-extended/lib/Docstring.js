@@ -13,7 +13,11 @@ var collectDescription = require('./Docstring__collectDescription');
  *        The JSDoc-compatible comment string to build from.
  */
 function Docstring(comment, params) {
-  var commentNode, idInfo;
+  if (arguments.length === 1 && typeof comment === 'object') {
+    return Object.assign(this, comment);
+  }
+
+  var commentNode;
 
   try {
     commentNode = parseComment(comment);
@@ -39,26 +43,67 @@ function Docstring(comment, params) {
     });
   });
 
-  idInfo = extractIdInfo(this.tags);
+  const typeDefInfo = extractTypeDefs(this.tags);
+  const tagsWithoutTypeDefs = typeDefInfo.tags;
+  const inferredData = prepareFromTags(commentNode[0], params.nodeLocation, tagsWithoutTypeDefs);
 
-  // this.id = idInfo.id;
-  this.name = idInfo.name;
-  this.namespace = idInfo.namespace;
-  this.description = collectDescription(commentNode[0], this.id, this.tags);
-  this.aliases = this.tags.filter(function(tag) {
+  Object.assign(this, inferredData, {
+    tags: tagsWithoutTypeDefs
+  });
+
+  this.typeDefs = typeDefInfo.typeDefs.map(typeDef => {
+    return Object.assign({}, typeDef, prepareFromTags({ description: '' }, params.nodeLocation, typeDef.tags), {
+      name: typeDef.name,
+      namespace: inferredData.namespace
+    });
+  });
+
+
+  // idInfo = extractIdInfo(this.tags);
+
+  // // this.id = idInfo.id;
+  // this.name = idInfo.name;
+  // this.namespace = idInfo.namespace;
+  // this.description = collectDescription(commentNode[0], this.id, this.tags);
+  // this.aliases = this.tags.filter(function(tag) {
+  //   return tag.type === 'alias';
+  // }).reduce(function(map, tag) {
+  //   map[tag.typeInfo.name] = true;
+  //   return map;
+  // }, {});
+
+  // this.$location = (
+  //   (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
+  //   (this.name || '') + ' in ' +
+  //   params.nodeLocation
+  // );
+
+  return this;
+}
+
+function prepareFromTags(commentNode, nodeLocation, tags) {
+  const info = {};
+  const idInfo = extractIdInfo(tags);
+
+  info.name = idInfo.name;
+  info.namespace = idInfo.namespace;
+  info.description = collectDescription(commentNode, null, tags);
+
+  info.aliases = tags.filter(function(tag) {
     return tag.type === 'alias';
   }).reduce(function(map, tag) {
     map[tag.typeInfo.name] = true;
     return map;
   }, {});
 
-  this.$location = (
-    (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
-    (this.name || '') + ' in ' +
-    params.nodeLocation
+  info.$location = (
+    (idInfo.namespace ? idInfo.namespace + K.NAMESPACE_SEP : '') +
+    (idInfo.name || '') +
+    ' in ' +
+    nodeLocation
   );
 
-  return this;
+  return info;
 }
 
 var Dpt = Docstring.prototype;
@@ -173,3 +218,25 @@ function tap(x, fn) {
 
   return x;
 }
+
+function extractTypeDefs(tags) {
+  return tags.reduce(function(state, tag) {
+    if (tag.type === 'callback' || tag.type === 'typedef') {
+      state.typeDefs.push({
+        name: tag.typeInfo.name,
+        tags: [ tag ],
+      });
+    }
+    else if (state.typeDefs.length) {
+      state.typeDefs[state.typeDefs.length-1].tags.push(tag);
+    }
+    else {
+      state.tags.push(tag);
+    }
+
+    return state;
+  }, {
+    tags: [],
+    typeDefs: [],
+  });
+};

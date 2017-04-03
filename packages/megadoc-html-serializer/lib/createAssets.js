@@ -12,9 +12,13 @@ module.exports =  function createAssets(config, compilations) {
     styleSheets: null,
   };
 
-  const { staticAssets, styleSheets, pluginScripts } = compilations.map(x => x.processor.serializerOptions.html || {}).reduce(function(map, options) {
+  const {
+    staticAssets: pluginStaticAssets,
+    styleSheets: pluginStyleSheets,
+    scripts: pluginScripts,
+  } = compilations.map(x => x.processor.serializerOptions.html || {}).reduce(function(map, options) {
     if (options.pluginScripts) {
-      options.pluginScripts.forEach(x => map.pluginScripts.push(x));
+      options.pluginScripts.forEach(x => map.scripts.push(x));
     }
 
     if (options.styleSheets) {
@@ -27,25 +31,34 @@ module.exports =  function createAssets(config, compilations) {
 
     return map;
   }, {
-    staticAssets: [].concat(
-      config.assets
-    ).concat(
-      themePlugin.assets
-    ).filter(x => !!x),
-    styleSheets: [
-      K.CORE_STYLE_ENTRY,
-    ].concat(themePlugin.styleSheets).concat([
-      config.styleSheet,
-      config.stylesheet
-    ]).filter(x => !!x),
-    pluginScripts: themePlugin.pluginScripts || [],
+    staticAssets: [],
+    styleSheets: [],
+    scripts: [],
   })
 
-  assets.addStyleOverrides(createStyleOverrides(config, themePlugin));
+  const staticAssets = pluginStaticAssets.concat(config.assets).concat(themePlugin.assets);
+  const styleSheets = [ K.CORE_STYLE_ENTRY ]
+    .concat(pluginStyleSheets)
+    .concat(themePlugin.styleSheets)
+    .concat([
+      config.styleSheet,
+      config.stylesheet,
+    ])
+  ;
 
+  const scripts = pluginScripts.concat(themePlugin.pluginScripts);
+  const styleOverrides = createStyleOverrides(config, themePlugin);
+
+  // we want the order of inclusion/initialization to be:
+  //
+  // 1. core
+  // 2. plugins
+  // 3. theme plugins
+  // 4. user config
+  assets.addStyleOverrides(styleOverrides);
   staticAssets.filter(isTruthy).forEach(x => { assets.add(x); });
   styleSheets.filter(isTruthy).forEach(x => { assets.addStyleSheet(x); });
-  pluginScripts.filter(isTruthy).forEach(x => { assets.addPluginScript(x); });
+  scripts.filter(isTruthy).forEach(x => { assets.addPluginScript(x); });
 
   return assets;
 }

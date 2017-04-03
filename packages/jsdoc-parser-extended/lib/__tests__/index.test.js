@@ -186,7 +186,7 @@ describe('CJS::Parser::Main', function() {
     });
   });
 
-  it.only('should infer the module name from the file name', function() {
+  it('should infer the module name from the file name', function() {
     const docs = parseInline(`
       const ajax = require('utils/ajax');
       const Promise = require('Promise');

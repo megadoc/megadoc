@@ -111,14 +111,14 @@ const Doc = React.createClass({
             <DeprecatedTag string={deprecatedTag.string} />
           )}
 
-          {this.props.withDescription && description && !isCollapsed && (
+          {this.props.withDescription && description && description.length > 0 && !isCollapsed && (
             <HighlightedText>
               {description}
             </HighlightedText>
           )}
         </div>
 
-        {!isCollapsed && (
+        {!isCollapsed && doc.tags.length > 0 && (
           <DocTags
             tags={doc.tags}
             withExamples={this.props.withExamples}

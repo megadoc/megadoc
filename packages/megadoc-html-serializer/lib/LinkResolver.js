@@ -166,7 +166,11 @@ LinkResolver.prototype.linkify = function(params) {
 LinkResolver.prototype.renderLink = function(params, descriptor) {
   var format = params.format || 'markdown';
   var strict = params.strict !== false;
-  var link = this.lookup({ path: descriptor.path, contextNode: params.contextNode });
+  var contextNode = params.contextNode ?
+    this.corpus.getByValue(params.contextNode) :
+    null
+  ;
+  var link = this.lookup({ path: descriptor.path, contextNode: contextNode });
 
   assert(descriptor.hasOwnProperty('source'),
     "Link descriptor must contain a @source attribute!");
@@ -175,11 +179,14 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
     return descriptor.source;
   }
   else if (!link && strict) {
-    if (!params.contextNode || !(params.contextNode.uid in this.options.ignore)) {
+    if (!contextNode || !(contextNode.uid in this.options.ignore)) {
+      if (contextNode && !contextNode.uid) {
+        console.warn('WEIRD! CONTEXT NODE HAS NO UID!!!', contextNode)
+      }
       console.warn('%s: Unable to resolve link to "%s" (from: "%s")',
-        dumpNodeFilePath(params.contextNode),
+        dumpNodeFilePath(contextNode),
         descriptor.path,
-        params.contextNode ? params.contextNode.uid : '<<unknown>>'
+        contextNode ? contextNode.uid : '<<unknown>>'
       );
     }
 

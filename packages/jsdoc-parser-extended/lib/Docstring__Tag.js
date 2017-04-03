@@ -71,6 +71,11 @@ function Tag(commentNode, params) {
   };
 
   switch(this.type) {
+    case 'callback':
+      this.typeInfo.name = commentNode.name;
+      this.typeInfo.type = 'function';
+      break;
+
     case 'property':
     case 'param':
     case 'return':

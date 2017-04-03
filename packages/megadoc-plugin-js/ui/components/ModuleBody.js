@@ -58,6 +58,7 @@ const ModuleBody = React.createClass({
 
         {this.renderExamples(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
+        {this.renderCallbacks(doc, moduleDocs)}
         {this.renderProperties(
           doc,
           moduleDocs,
@@ -208,6 +209,24 @@ const ModuleBody = React.createClass({
     return (
       <DocGroup label="Static Method Documentation" tagName="ul" className="class-view__method-list">
         {staticMethodDocs.map(this.renderStaticMethod)}
+      </DocGroup>
+    );
+  },
+
+  renderCallbacks(doc, moduleDocs) {
+    const callbackDocs = orderAwareSort(
+      doc,
+      moduleDocs.filter(DocClassifier.isCallback),
+      'id'
+    );
+
+    if (!callbackDocs.length) {
+      return null;
+    }
+
+    return (
+      <DocGroup label="Callback Definitions" tagName="ul" className="class-view__method-list">
+        {callbackDocs.map(this.renderStaticMethod)}
       </DocGroup>
     );
   },

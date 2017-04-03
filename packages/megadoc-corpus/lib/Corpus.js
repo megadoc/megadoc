@@ -60,6 +60,10 @@ function Corpus(config) {
     return nodes[uid];
   };
 
+  exports.getByValue = function(node) {
+    return exports.get(UID(node));
+  };
+
   exports.getNamespaceNodes = function() {
     return corpusNode.namespaces;
   };
@@ -202,7 +206,7 @@ function Corpus(config) {
       }
     });
 
-    if (node.uid in nodes) {
+    if (nodes.hasOwnProperty(node.uid)) {
       lenientAssert(false,
         'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
         '\nPast definition: ' + dumpNodeFilePath(nodes[node.uid]) +

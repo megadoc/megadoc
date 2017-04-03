@@ -54,6 +54,7 @@ exports.NO_DESCRIPTION_TAGS = {
 exports.KNOWN_TAGS = [
   'alias',
   'async',
+  'callback',
   'class',
   'constructor',
   'deprecated',

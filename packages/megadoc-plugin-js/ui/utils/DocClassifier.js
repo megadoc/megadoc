@@ -10,6 +10,10 @@ function isMethod(doc) {
   );
 }
 
+function isCallback(doc) {
+  return doc.type === K.TYPE_FUNCTION && doc.tags.some(x => x.type === 'callback');
+}
+
 function isFactoryExports(doc) {
   return doc.nodeInfo.scope === K.SCOPE_FACTORY_EXPORTS;
 }
@@ -22,10 +26,11 @@ function isClassEntity(doc) {
 }
 
 function isStaticMethod(doc) {
-  return doc.type === K.TYPE_FUNCTION && !isMethod(doc);
+  return doc.type === K.TYPE_FUNCTION && !isMethod(doc) && !isCallback(doc);
 }
 
 exports.isMethod = isMethod;
+exports.isCallback = isCallback;
 exports.isStaticMethod = isStaticMethod;
 exports.isFactoryExports = isFactoryExports;
 exports.isClassEntity = isClassEntity;

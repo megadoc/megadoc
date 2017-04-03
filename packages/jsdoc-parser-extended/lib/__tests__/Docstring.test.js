@@ -60,4 +60,40 @@ describe('CJS::Parser::Docstring', function() {
       assert.equal(docstring.namespace, 'Hairy');
     });
   });
+
+  describe.only('@callback', function() {
+    it('parses', function() {
+      var docstring = parse(function() {;
+        // /**
+        //  * @module Cocache
+        //  *
+        //  * @param {Object} options
+        //  * @param {Function} [options.onChange]
+        //  * @param {Function} [options.idGenerator]
+        //  * @param {Array.<Cocache~RecordValidator>} [options.recordValidators=[]]
+        //  * @param {String} [options.displayName='<<anonymous>>']
+        //  * @param {Boolean} [options.optimized=true]
+        //  *
+        //  * @callback Cocache~RecordValidator
+        //  *
+        //  * @param {Any} record
+        //  *        The record to validate.
+        //  *
+        //  * @param {Object} options
+        //  *        The options the cache instance was built with.
+        //  *
+        //  * @param {String} displayName
+        //  *        The cache instance's displayName. Use this in your error reporting.
+        //  *
+        //  * @return {void}
+        //  */
+      });
+
+      assert.equal(docstring.name, 'Cocache');
+      assert.equal(docstring.tags.length, 7);
+      assert.equal(docstring.typeDefs.length, 1);
+      assert.equal(docstring.typeDefs[0].name, 'Cocache~RecordValidator');
+      assert.equal(docstring.typeDefs[0].tags.length, 5);
+    });
+  });
 });
