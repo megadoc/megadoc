@@ -1,6 +1,7 @@
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 
+exports.configureFnPath = path.resolve(__dirname, './configureFn.js');
 exports.parseFnPath = path.resolve(__dirname, './parseFn.js');
 exports.reduceFnPath = path.resolve(__dirname, './reduceFn.js');
 exports.reduceTreeFnPath = path.resolve(__dirname, './reduceTreeFn.js');

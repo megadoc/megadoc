@@ -10,14 +10,19 @@ module.exports = function createCompilation(commonOptions, runOptions, source) {
     files.filter(x => runOptions.changedSources[x] === true) :
     files
   ;
+  const paths = extractProcessingFunctionPaths(processorEntry);
+  const processorOptions = paths.configureFnPath ?
+    require(paths.configureFnPath)(processorEntry.options || {}) :
+    processorEntry.options
+  ;
 
   return {
     id: source.id, // TODO: auto-infer
     documents: null,
     files: whitelistedFiles,
     commonOptions: commonOptions,
-    processor: extractProcessingFunctionPaths(processorEntry),
-    processorOptions: processorEntry.options || {},
+    processor: paths,
+    processorOptions,
     processorState: null,
     rawDocuments: null,
     refinedDocuments: null,
@@ -44,6 +49,7 @@ function extractProcessingFunctionPaths(processorEntry) {
 
   return {
     initFnPath: spec.initFnPath,
+    configureFnPath: spec.configureFnPath,
     parseFnPath: spec.parseFnPath,
     parseBulkFnPath: spec.parseBulkFnPath,
     reduceFnPath: spec.reduceFnPath,

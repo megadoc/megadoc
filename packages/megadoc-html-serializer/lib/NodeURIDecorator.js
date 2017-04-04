@@ -8,6 +8,7 @@ module.exports = function NodeURIDecorator(config) {
   ;
 
   var layoutConfig = config.layoutOptions || {};
+  var redirectMap = config.redirect || {};
   var rewriteMap = layoutConfig.rewrite || {};
 
   return {
@@ -56,6 +57,19 @@ module.exports = function NodeURIDecorator(config) {
         href = rewriteMap[href];
         node.meta.hrefRewritten = true;
       }
+    }
+
+    // allow redirect by filepath
+    if (node.filePath && redirectMap.hasOwnProperty(node.filePath)) {
+      node.meta.redirect = redirectMap[node.filePath];
+    }
+    // allow redirect by UID
+    else if (redirectMap.hasOwnProperty(node.uid)) {
+      node.meta.redirect = redirectMap[node.uid];
+    }
+    // allow redirect by URL
+    else if (redirectMap.hasOwnProperty(href)) {
+      node.meta.redirect = redirectMap[href];
     }
 
     node.meta.href = href;

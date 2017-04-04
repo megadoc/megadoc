@@ -48,7 +48,7 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
   }
 
   if (node) {
-    return buildDocumentContext(node);
+    return buildDocumentContext(resolveRedirect(this, node));
   }
   else {
     // try to resolve index node
@@ -57,7 +57,7 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
     const indexNode = corpus.getByURI(indexHref);
 
     if (indexNode) {
-      return indexNode;
+      return buildDocumentContext(resolveRedirect(this, indexNode));
     }
     else {
       console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
@@ -70,6 +70,24 @@ DocumentResolver.prototype.getProtocolAgnosticPathName = function(location) {
   return this.documentURI.normalize(
     this.documentURI.withExtension(location.pathname)
   ) + location.hash;
+};
+
+function resolveRedirect(resolver, contextNode) {
+  if (contextNode && contextNode.meta && contextNode.meta.redirect) {
+    const targetNode = getByUIDOrURI(resolver.corpus, contextNode.meta.redirect);
+
+    if (targetNode) {
+      return targetNode;
+    }
+    else {
+      console.warn("Unable to find the redirect document target at '%s' (from '%s')", targetNode.meta.redirect, contextNode.uid);
+
+      return null;
+    }
+  }
+  else {
+    return contextNode;
+  }
 }
 
 function getByUIDOrURI(corpus, link) {

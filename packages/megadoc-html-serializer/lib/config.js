@@ -55,6 +55,8 @@ module.exports = {
 
   htmlFile: path.join(K.ROOT, 'ui/index.tmpl.html'),
 
+  redirect: {},
+
   /**
    * @property {Object}
    */

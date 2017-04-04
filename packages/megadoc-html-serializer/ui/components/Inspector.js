@@ -9,6 +9,7 @@ const { PropTypes } = React;
 const Inspector = React.createClass({
   propTypes: {
     inSinglePageMode: PropTypes.bool,
+    isOutletOccupied: PropTypes.func.isRequired,
   },
 
   getInitialState() {
@@ -86,7 +87,7 @@ const Inspector = React.createClass({
         namespaceNode: corpus.getNamespaceOfDocument(documentNode),
       };
 
-      if (this.props.isOutledOccupied({ name: 'Inspector', elementProps: context })) {
+      if (this.props.isOutletOccupied({ name: 'Inspector', elementProps: context })) {
         return <Outlet name="Inspector" elementProps={context} />;
       }
     }
