@@ -49,7 +49,7 @@ function copyAssets(config, state, done) {
   state.assets.pluginScripts.forEach(function(filePath) {
     fs.copySync(
       filePath,
-      state.assetUtils.getOutputPath('plugins', path.basename(filePath))
+      state.assetUtils.getOutputPath(config.runtimeOutputPath, path.basename(filePath))
     );
   });
 
@@ -64,6 +64,7 @@ function emitIndexHTMLFile(config, state, done) {
       startingDocumentHref: '/index.html',
     },
     sourceFile: config.htmlFile,
+    runtimeOutputPath: config.runtimeOutputPath,
     assets: state.assets,
     distanceFromRoot: 0,
     favicon: 'favicon.ico'
@@ -81,7 +82,10 @@ function copyAppScripts(config, state, done) {
     K.COMMON_BUNDLE + '.js',
     K.MAIN_BUNDLE + '.js',
   ].forEach(function(file) {
-    fs.copySync(path.join(K.BUNDLE_DIR, file), state.assetUtils.getOutputPath(file));
+    fs.copySync(
+      path.join(K.BUNDLE_DIR, file),
+      state.assetUtils.getOutputPath(config.runtimeOutputPath, file)
+    );
   });
 
   done();
@@ -101,9 +105,26 @@ function emitRuntimeConfigScript(config, state, done) {
   }
 
   // write the runtime config file
-  state.assetUtils.writeAsset(K.CONFIG_FILE,
-    'window.exports["megadoc__config"] = ' + JSON.stringify(runtimeConfig) + ';'
+  state.assetUtils.writeAsset(
+    path.join(config.runtimeOutputPath, K.CONFIG_FILE),
+    exportJSONAsUMD('megadoc__config', JSON.stringify(runtimeConfig))
   );
 
   done();
+}
+
+function exportJSONAsUMD(exportName, content) {
+  return `
+(function(__ref__) {
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    module.exports = __ref__;
+  }
+  else if (typeof exports === 'object') {
+    exports['${exportName}'] = __ref__;
+  }
+  else if (typeof window === 'object') {
+    window['${exportName}'] = __ref__;
+  }
+}(${content}))
+  `;
 }

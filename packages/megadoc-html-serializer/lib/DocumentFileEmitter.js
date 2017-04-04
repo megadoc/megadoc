@@ -33,6 +33,7 @@ module.exports = function DocumentFileEmitter(params) {
         assetRoot: params.assetRoot,
         assets: params.assets,
         distanceFromRoot: distanceFromRoot,
+        runtimeOutputPath: params.runtimeOutputPath,
         params: {
           title: node.title,
           metaDescription: node.summary,

@@ -36,6 +36,8 @@ module.exports = {
   emitFiles: true,
   emittedFileExtension: '.html',
 
+  runtimeOutputPath: '.megadoc',
+
   /**
    * @property {String}
    *

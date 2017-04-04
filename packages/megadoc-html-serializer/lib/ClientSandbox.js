@@ -27,6 +27,7 @@ ClientSandbox.prototype.start = function(assets, done) {
       styleSheets: [ K.STYLE_BUNDLE ],
     },
     sourceFile: this.config.htmlFile,
+    runtimeOutputPath: this.config.runtimeOutputPath,
     assets: assets,
     distanceFromRoot: 0
   }), {

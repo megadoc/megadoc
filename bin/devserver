@@ -18,6 +18,7 @@
 export NODE_ENV="development"
 export VERBOSE=1
 export CONFIG_FILE=$1
+export NODE_PATH="packages/:$NODE_PATH"
 
 shift
 

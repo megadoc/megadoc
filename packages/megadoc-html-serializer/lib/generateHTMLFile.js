@@ -1,4 +1,4 @@
-const template = require('lodash').template;
+const { compose, partial, template } = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const K = require('./constants');
@@ -16,6 +16,7 @@ module.exports = function generateHTMLFile(params) {
 
   const assets = params.assets;
   const distanceFromRoot = params.distanceFromRoot;
+  const runtimeOutputPath = params.runtimeOutputPath;
 
   invariant(assets && typeof assets === 'object',
     "Expected @assets to be the Asset registry.");
@@ -25,6 +26,9 @@ module.exports = function generateHTMLFile(params) {
 
   invariant(typeof distanceFromRoot === 'number',
     "Expected @distanceFromRoot to be a number.");
+
+  invariant(typeof runtimeOutputPath === 'string',
+    "Expected @runtimeOutputPath to be a string.");
 
   // invariant(Array.isArray(params.scripts),
   //   "Expected @scripts to be assigned.");
@@ -37,7 +41,7 @@ module.exports = function generateHTMLFile(params) {
     .concat(assets.runtimeScripts)
     .concat(
       assets.pluginScripts.map(function(filePath) {
-        return 'plugins/' + path.basename(filePath);
+        return path.basename(filePath);
       })
     )
   ;
@@ -46,17 +50,20 @@ module.exports = function generateHTMLFile(params) {
 
   const styleSheets = [ K.STYLE_BUNDLE ];
   const tmpl = template(fs.readFileSync(params.sourceFile, 'utf-8'));
+  const scopeToRuntimeOutputPath = partial(scopeToPath, params.runtimeOutputPath);
+  const relativize = partial(buildRelativeAssetList, distanceFromRoot);
+  const realizePath = compose(scopeToRuntimeOutputPath, relativize);
 
   return tmpl(Object.assign({
-    coreScripts: buildRelativeAssetList(CORE_SCRIPTS, distanceFromRoot),
-    commonModuleScript: buildRelativeAssetList([ K.COMMON_BUNDLE + '.js' ], distanceFromRoot),
-    pluginScripts: buildRelativeAssetList(scripts, distanceFromRoot),
-    styleSheets: buildRelativeAssetList(styleSheets, distanceFromRoot),
-    favicon: favicon ? buildRelativeAssetList([ favicon ], distanceFromRoot) : null,
+    coreScripts: realizePath(CORE_SCRIPTS),
+    commonModuleScript: realizePath([ K.COMMON_BUNDLE + '.js' ]),
+    pluginScripts: realizePath(scripts),
+    styleSheets: realizePath(styleSheets),
+    favicon: favicon ? buildRelativeAssetList(distanceFromRoot, [ favicon ]) : null,
   }, params.params));
 };
 
-function buildRelativeAssetList(list, distanceFromRoot) {
+function buildRelativeAssetList(distanceFromRoot, list) {
   if (distanceFromRoot < 1) {
     return list;
   }
@@ -65,5 +72,14 @@ function buildRelativeAssetList(list, distanceFromRoot) {
 
   return list.map(function(filePath) {
     return relativePathPrefix + filePath;
+  });
+}
+
+function scopeToPath(basePath, list) {
+  return list.map(x => {
+    const dirname = path.dirname(x);
+    const filename = path.basename(x);
+
+    return path.join(dirname, path.join(basePath, filename));
   });
 }

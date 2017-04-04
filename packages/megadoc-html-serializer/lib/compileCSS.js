@@ -13,7 +13,7 @@ module.exports = function compileCSS(config, state, done) {
 
   const webpackConfig = {
     output: {
-      path: assetUtils.getOutputPath(),
+      path: assetUtils.getOutputPath(config.runtimeOutputPath),
       filename: K.STYLE_BUNDLE,
       jsonpFunction: 'webpackJsonp_CSS'
     },
