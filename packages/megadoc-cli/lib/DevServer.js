@@ -1,6 +1,6 @@
+/* eslint-disable */
 const compiler = require('megadoc-compiler');
 const chokidar = require('chokidar');
-
 exports.run = function(config) {
   compiler.run(config, function(err, stats) {
     if (err) {

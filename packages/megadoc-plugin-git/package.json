@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-git",
-  "version": "5.0.0",
+  "version": "6.0.0-beta.1",
   "description": "Git stats collector for files parsed by megadoc.",
   "main": "lib/index.js",
   "repository": {

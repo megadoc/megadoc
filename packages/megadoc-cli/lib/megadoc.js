@@ -107,7 +107,7 @@ if (program.watch) {
   megadocDevServer.run(config);
 }
 else {
-  megadocCompiler.run(config, function(err, compilations) {
+  megadocCompiler.run(config, function(err/*, compilations*/) {
     if (err) {
       console.error(Array(80 - 'megadoc-cli'.length).join('*'));
       console.error('An error occurred during compilation. Error details below.');

@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-react",
-  "version": "5.0.0",
+  "version": "6.0.0-beta.1",
   "description": "Document React components and preview them in Megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -22,7 +22,7 @@
     "babel-core": "6.9.0",
     "babel-generator": "6.9.0",
     "babel-types": "6.9.0",
-    "jsdoc-parser-extended": "1.0.0",
+    "jsdoc-parser-extended": "^6.0.0-beta.1",
     "lodash": "3.10.1"
   },
   "peerDependencies": {

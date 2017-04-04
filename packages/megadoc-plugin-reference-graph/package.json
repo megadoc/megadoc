@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-reference-graph",
-  "version": "5.0.0",
+  "version": "6.0.0-beta.1",
   "description": "A plugin for generating call and reference graph for documents scanned by megadoc.",
   "main": "lib/index.js",
   "repository": {

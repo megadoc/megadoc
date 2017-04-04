@@ -1,13 +1,19 @@
 {
-  "name": "megadoc-corpus",
-  "version": "6.0.0",
-  "description": "",
-  "main": "index.js",
-  "author": "Ahmad Amireh",
-  "license": "MIT",
+  "author": {
+    "name": "Ahmad Amireh"
+  },
   "dependencies": {
     "invariant": "2.2.1",
     "lodash": "3.10.1",
     "object-assign": "4.0.1"
-  }
+  },
+  "description": "",
+  "devDependencies": {},
+  "license": "MIT",
+  "main": "index.js",
+  "name": "megadoc-corpus",
+  "optionalDependencies": {},
+  "readmeFilename": "README.md",
+  "scripts": {},
+  "version": "6.0.0-beta.1"
 }

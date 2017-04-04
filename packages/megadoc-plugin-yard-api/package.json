@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-yard-api",
-  "version": "5.0.1",
+  "version": "6.0.0-beta.1",
   "description": "A YARD-API/Rails documentation generator plugin for megadoc.",
   "main": "lib/index.js",
   "repository": {

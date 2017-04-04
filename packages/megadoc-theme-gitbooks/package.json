@@ -1,6 +1,6 @@
 {
   "name": "megadoc-theme-gitbooks",
-  "version": "5.0.0",
+  "version": "6.0.0-beta.1",
   "description": "A theme for megadoc after gitbooks.io pages.",
   "main": "index.js",
   "scripts": {

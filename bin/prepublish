@@ -201,7 +201,7 @@ if [ "${PRELINK}" == "1" ]; then
 fi
 
 should_run "check" && run_task ensure_no_unlisted_dependencies
-should_run "update" && run_task refresh_dependencies
+# should_run "update" && run_task refresh_dependencies
 should_run "lint" && run_task lint_sources && run_task lint_ui_sources
 should_run "test" && run_task run_tests $@
 should_run "build" && run_task build_assets

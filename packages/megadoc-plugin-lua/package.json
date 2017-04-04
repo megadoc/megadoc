@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-lua",
-  "version": "5.0.0",
+  "version": "6.0.0-beta.1",
   "description": "A Lua documentation generator plugin for megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -23,7 +23,6 @@
     "luaparse": "0.2.0",
     "lodash": "3.10.1"
   },
-
   "peerDependencies": {
     "megadoc": "5.x",
     "megadoc-corpus": "5.x",
