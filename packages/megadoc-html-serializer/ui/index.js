@@ -43,10 +43,12 @@ function createMegadoc(config) {
   megadoc.outlets.define('Inspector');
   megadoc.outlets.define('Image');
   megadoc.outlets.define('Link');
+  megadoc.outlets.define('Text');
 
   require('./outlets/SidebarHeaderOutlet')(megadoc);
   require('./outlets/ImageOutlet')(megadoc);
   require('./outlets/LinkOutlet')(megadoc);
+  require('./outlets/TextOutlet')(megadoc);
 
   console.log('Firing up.');
   console.log('Loading %d external plugins.', config.plugins.length)
