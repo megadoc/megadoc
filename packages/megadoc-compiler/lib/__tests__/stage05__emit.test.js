@@ -9,7 +9,7 @@ describe('stage05__emit', function() {
   const sinon = SinonSuite(this);
 
   it('should pass all compilations through to the serializer', function(done) {
-    const emitFn = fileSuite.createFile('reduceFn.js', `
+    fileSuite.createFile('reduceFn.js', `
       module.exports = function(options, rawDocument, done) {
         done(null, { id: rawDocument.id, name: rawDocument.id + '__name' });
       };

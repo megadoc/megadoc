@@ -18,13 +18,21 @@
 #   - PACKAGE: the package, in case $1 is not passed
 
 [ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
+  [ -f "../../package.json" ] && grep '"name": "megadoc"' ../../package.json &> /dev/null && {
+    echo "$0: re-running from megadoc root"
+    echo "PACKAGE: ${PACKAGE:-${LERNA_PACKAGE_NAME:-$npm_package_name}}"
+    cd ../../
+    exec ./bin/prepublish $@
+    exit $?
+  }
+
   echo "$0: Must be run from megadoc root.";
   exit 1
 }
 
 source "bin/_helpers.sh"
 
-if [ -z $PACKAGE ]; then
+if [[ -z $PACKAGE && -z $LERNA_PACKAGE_NAME && -z $npm_package_name ]]; then
   if [ $# -gt 0 ]; then
     PACKAGE=$1
     shift
@@ -36,7 +44,7 @@ if [ -z $PACKAGE ]; then
   fi
 fi
 
-PACKAGE_NAME="${PACKAGE}"
+PACKAGE_NAME="${PACKAGE:-${LERNA_PACKAGE_NAME:-$npm_package_name}}"
 PACKAGE_ROOT="packages/${PACKAGE_NAME}"
 PROVIDED_UI_LIBRARIES="react"
 IGNORED=()
@@ -126,15 +134,15 @@ function refresh_dependencies {
 }
 
 function lint_sources {
-  ./bin/lint $PACKAGE
+  ./bin/lint $PACKAGE_NAME
 }
 
 function lint_ui_sources {
-  ./bin/lint-ui $PACKAGE
+  ./bin/lint-ui $PACKAGE_NAME
 }
 
 function run_tests {
-  ./bin/test $PACKAGE --reporter dot
+  ./bin/test $PACKAGE_NAME --reporter dot
 }
 
 function build_assets {
@@ -156,18 +164,9 @@ function build_assets {
 echo "Preparing \"${PACKAGE_NAME}\" for publishing... hang on tight."
 echo "---------------------------------------------------------------"
 
-while getopts ":S:" opt; do
-  case $opt in
-    S)
-      IGNORED+=("${OPTARG}")
-      ;;
-    \?)
-      echo "Invalid option: -$OPTARG" >&2
-      ;;
-  esac
-done
+declare -a IGNORED=()
 
-function shouldRun() {
+function should_run() {
   if [[ " ${IGNORED[@]} " =~ " $1 " ]]; then
     return 1
   else
@@ -175,15 +174,37 @@ function shouldRun() {
   fi
 }
 
+while getopts ":S:O:" opt; do
+  case $opt in
+    S)
+      IGNORED+=("${OPTARG}")
+      ;;
+    O)
+      declare -a steps=('check' 'update' 'lint' 'test' 'build')
+
+      for step in ${steps[@]}; do
+        if [ "${step}" != "${OPTARG}" ]; then
+          IGNORED=("${IGNORED[@]}" "${step}")
+        fi
+      done
+
+      unset steps
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
+
 if [ "${PRELINK}" == "1" ]; then
   run_task link_local_dependencies
 fi
 
-shouldRun "check" && run_task ensure_no_unlisted_dependencies
-shouldRun "update" && run_task refresh_dependencies
-shouldRun "lint" && run_task lint_sources && run_task lint_ui_sources
-shouldRun "test" && run_task run_tests
-shouldRun "build" && run_task build_assets
+should_run "check" && run_task ensure_no_unlisted_dependencies
+should_run "update" && run_task refresh_dependencies
+should_run "lint" && run_task lint_sources && run_task lint_ui_sources
+should_run "test" && run_task run_tests $@
+should_run "build" && run_task build_assets
 
 echo "Package \"${PACKAGE_NAME}\" is good for publishing, nice work!"
 echo "---------------------------------------------------------------"

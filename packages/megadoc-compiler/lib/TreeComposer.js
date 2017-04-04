@@ -1,4 +1,3 @@
-const invariant = require('invariant');
 const b = require('megadoc-corpus').builders;
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
 

@@ -1,8 +1,6 @@
 const { assert } = require('chai');
 const Subject = require('../TreeComposer');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 const { builders: b } = require('megadoc-corpus')
-const util = require('util');
 
 describe('megadoc-compiler::TreeComposer', function() {
   describe('.composeTree', function() {
@@ -51,7 +49,7 @@ describe('megadoc-compiler::TreeComposer', function() {
 
       const mergedCompilation = subject(
         {
-          documents: [
+          refinedDocuments: [
             b.document({
               id: 'Klass',
               summary: 'Summary',
@@ -80,7 +78,7 @@ describe('megadoc-compiler::TreeComposer', function() {
           ],
         },
         {
-          documents: [
+          refinedDocuments: [
             b.document({
               id: 'Klass',
               filePath: 'klass.lua',
@@ -105,9 +103,10 @@ describe('megadoc-compiler::TreeComposer', function() {
         }
       );
 
-      const mergedTree = Subject.composeTree(context, mergedCompilation.documents, mergedCompilation.treeOperations)
-
-      console.log(util.inspect(mergedTree, { depth: 10, colors: true }))
+      const mergedTree = Subject.composeTree(context,
+        mergedCompilation.refinedDocuments,
+        mergedCompilation.treeOperations
+      )
 
       assert.equal(mergedTree.documents.length, 2,
         "It preserves documents in other files"

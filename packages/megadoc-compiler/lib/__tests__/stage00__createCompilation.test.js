@@ -27,7 +27,7 @@ describe('stage00__createCompilation', function() {
       {
         pattern: /\.js$/,
         include: [
-          path.join(fileSuite.getRootDirectory(), 'sources'),
+          path.join(fileSuite.getRootDirectory(), 'sources/**/*'),
         ],
         processor: {
           name: processorSpec.path,

@@ -28,6 +28,7 @@ selection.json
 
 # runtime junk
 npm-debug.log
+lerna-debug.log
 /examples/*/public
 /megadoc.sublime-workspace
 /.local

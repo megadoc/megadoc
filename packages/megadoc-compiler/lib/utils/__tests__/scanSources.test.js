@@ -17,7 +17,7 @@ describe('megadoc-compiler::utils::scanSources', function() {
 
     output = subject(
       /\.js$/,
-      [ path.join(fileSuite.getRootDirectory(), 'sources') ],
+      [ path.join(fileSuite.getRootDirectory(), 'sources/**/*') ],
       [ path.join(fileSuite.getRootDirectory(), 'sources/exclude_me') ]
     );
   });

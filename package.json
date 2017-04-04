@@ -12,7 +12,6 @@
     "coverage": "COVERAGE=1 ./bin/test",
     "doc": "./bin/build-docs",
     "lint": "./bin/lint && ./bin/lint-ui",
-    "prepublish": "npm run lint && npm run build && npm run test",
     "start": "./bin/devserver",
     "test": "./bin/test && ./bin/test-ui --single-run"
   },
@@ -31,27 +30,17 @@
   },
   "homepage": "https://github.com/megadoc/megadoc",
   "dependencies": {
-    "async": "^2.0.0-rc.3",
-    "babel-core": "6.9.0",
-    "babel-preset-es2015": "6.9.0",
-    "babel-preset-react": "6.5.0",
-    "commander": "^2.8.1",
-    "dom-contains": "^0.2.0",
-    "fs-extra": "0.18.0",
-    "glob": "5.0.3",
-    "htmlparser2": "^3.8.3",
-    "invariant": "2.2.1",
-    "multiline-slash": "2.0.0"
   },
   "devDependencies": {
     "chai": "3.5.0",
     "cheerio": "0.22.0",
-    "coveralls": "^2.11.4",
+    "coveralls": "2.11.4",
     "depcheck": "0.6.3",
-    "eslint": "^1.4.3",
+    "eslint": "1.4.3",
     "eslint-plugin-react": "^3.4.1",
     "html": "0.0.10",
     "istanbul": "^1.0.0-alpha.2",
+    "lerna": "2.0.0-beta.38",
     "mocha": "2.4.5",
     "mocha-lcov-reporter": "^1.0.0",
     "sinon": "^1.17.1"

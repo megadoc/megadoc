@@ -1,5 +1,19 @@
 {
   "name": "megadoc-compiler",
   "version": "6.0.0",
-  "main": "lib/Compiler.js"
+  "main": "lib/Compiler.js",
+  "scripts": {
+    "prepublish": "../../bin/prepublish",
+    "build": "../../bin/prepublish  -O build",
+    "lint": "../../bin/prepublish   -O lint",
+    "test": "../../bin/prepublish   -O test"
+  },
+  "dependencies": {
+    "async": "2.0.0-rc.3",
+    "fs-extra": "2.1.2",
+    "glob": "5.0.3",
+    "invariant": "2.2.1",
+    "megadoc-config-utils": "^6",
+    "megadoc-corpus": "^6"
+  }
 }
