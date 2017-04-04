@@ -2,12 +2,12 @@ var assert = require('chai').assert;
 var findWhere = require('lodash').findWhere;
 var TestUtils = require('../TestUtils');
 var K = require('../constants');
-var sinonSuite = require('megadoc/lib/TestUtils').sinonSuite;
+var SinonSuite = require('megadoc-test-utils/SinonSuite');
 
 var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser::Main', function() {
-  var sinon = sinonSuite(this);
+  var sinon = SinonSuite(this);
 
   it('should ignore @internal docs', function() {
     var docs = parseInline(function() {;

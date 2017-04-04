@@ -173,7 +173,9 @@ Rpt.findEnclosingDoc = function(startingPath, map) {
   var doc;
 
   ASTUtils.findAncestorPath(startingPath, function(path) {
-    return Boolean(doc = map.get(path));
+    doc = map.get(path);
+
+    return !!doc;
   });
 
   return doc;

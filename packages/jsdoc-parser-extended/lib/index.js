@@ -9,7 +9,6 @@ var NodeInfo = require('./NodeAnalyzer__NodeInfo');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var babel = require('babel-core');
-var K = require('./constants');
 var t = require('babel-types');
 
 function Parser(params) {
