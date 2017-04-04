@@ -50,6 +50,9 @@ const App = React.createClass({
       documentURI: this.documentURI
     });
 
+    const pathname = this.props.location.pathname.replace(config.mountPath, '');
+    const redirect = config.redirect[pathname];
+
     let locationAPI;
 
     if (config.layoutOptions && config.layoutOptions.singlePageMode) {
@@ -63,11 +66,16 @@ const App = React.createClass({
     }
 
     this.locationAPI = locationAPI({
+      mountPath: config.mountPath,
       location: this.props.location,
       onChange: this.reload
     });
 
     this.locationAPI.start();
+
+    if (redirect) {
+      this.locationAPI.transitionTo(redirect);
+    }
   },
 
   componentDidMount() {
@@ -210,7 +218,18 @@ function FileLocation(options) {
     start() {
       window.addEventListener('hashchange', emitChange);
     },
-    transitionTo() {},
+    transitionTo(pathname) {
+      // hash change, do nothing:
+      if (pathname[0] === '#') {
+        return;
+      }
+      else if (pathname.indexOf(options.mountPath) === 0) {
+        location.href = pathname;
+      }
+      else {
+        location.href = [ options.mountPath, pathname ].join('/').replace(/\/+/g, '/');
+      }
+    },
     refreshScroll() {},
     stop() {
       window.removeEventListener('hashchange', emitChange);

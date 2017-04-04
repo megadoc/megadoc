@@ -16,7 +16,10 @@ function createMegadoc(config) {
     verbose: false
   });
 
-  const corpus = CorpusAPI(config.database || []);
+  const corpus = CorpusAPI({
+    database: config.database || [],
+    redirect: config.redirect
+  });
 
   const megadoc = {
     corpus: corpus
@@ -82,6 +85,7 @@ function createMegadoc(config) {
     'database',
     'plugins',
     'startingDocumentUID',
+    'startingDocumentHref',
     'pluginConfigs'
   ]);
 
@@ -115,7 +119,10 @@ exports.createClient = function(config) {
 
 exports.startApp = function(config) {
   const megadoc = createMegadoc(config);
-  const mountPath = MountPath(megadoc.corpus.get(config.startingDocumentUID));
+  const mountPath = MountPath(
+    megadoc.corpus.get(config.startingDocumentUID),
+    config.startingDocumentHref
+  );
 
   console.log('Mount path = "%s".', mountPath);
 
@@ -135,9 +142,12 @@ exports.startApp = function(config) {
 
 // module.exports = megadoc;
 
-function MountPath(currentDocument) {
+function MountPath(currentDocument, startingHref) {
   if (currentDocument) {
     return location.pathname.replace(currentDocument.meta.href, '');
+  }
+  else if (startingHref) {
+    return location.pathname.replace(startingHref, '');
   }
   else {
     return '';

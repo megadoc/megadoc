@@ -41,7 +41,7 @@ module.exports = {
    *
    * Path to where a favicon can be found. Clear this if you don't want any.
    */
-  favicon: null,
+  favicon: 'doc/favicon.ico',
 
   /**
    * @property {String}

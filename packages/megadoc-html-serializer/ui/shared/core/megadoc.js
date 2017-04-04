@@ -10,7 +10,7 @@ module.exports = function createMegadoc(config) {
   let previewHandlers = [];
   let callbacks = [];
   let ran = 0;
-  let corpusAPI = CorpusAPI(config.database || []);
+  let corpusAPI = CorpusAPI(config.database || [], { redirect: config.redirect });
 
   const pluginAPI = {
     outlets: Outlet,

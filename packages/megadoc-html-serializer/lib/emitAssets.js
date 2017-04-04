@@ -12,7 +12,7 @@ module.exports = function emitAssets(config, state, done) {
     config.favicon && copyFavicon,
     copyAssets,
     copyAppScripts,
-    !config.emitFiles && emitIndexHTMLFile,
+    emitIndexHTMLFile,
     emitRuntimeConfigScript,
   ].filter(x => !!x), config, state, done);
 };
@@ -61,10 +61,12 @@ function emitIndexHTMLFile(config, state, done) {
     params: {
       title: config.title,
       metaDescription: config.metaDescription,
+      startingDocumentHref: '/index.html',
     },
     sourceFile: config.htmlFile,
     assets: state.assets,
-    distanceFromRoot: 0
+    distanceFromRoot: 0,
+    favicon: 'favicon.ico'
   });
 
   fs.writeFileSync(state.assetUtils.getOutputPath('index.html'), html);

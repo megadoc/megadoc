@@ -4,7 +4,7 @@ const { assign } = require('lodash');
  * To access these APIs from within your plugins, use the global instance found
  * at [megadoc@corpus `window.megadoc.corpus`]().
  */
-function CorpusAPI(shallowCorpus) {
+function CorpusAPI({ database: shallowCorpus, redirect }) {
   const exports = {};
   const corpus = CorpusTree(shallowCorpus);
   const documentSearchIndex = buildDocumentSearchIndex();
@@ -61,6 +61,10 @@ function CorpusAPI(shallowCorpus) {
   };
 
   exports.getByURI = function(uri) {
+    if (redirect[uri]) {
+      return exports.getByURI(redirect[uri]);
+    }
+
     if (rewrittenDocuments[uri]) {
       return corpus[rewrittenDocuments[uri]];
     }

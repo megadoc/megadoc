@@ -13,6 +13,8 @@ module.exports = function generateRuntimeConfig(config, assets) {
 
     layoutOptions: config.layoutOptions,
 
+    redirect: config.redirect,
+
     metaDescription: config.metaDescription,
     motto: config.motto,
 

@@ -100,6 +100,7 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
     assetRoot: this.compilerConfig.outputDir,
     assetUtils: this.assetUtils,
     assets: this.state.assets,
+    favicon: this.config.favicon ? 'favicon.ico' : null,
     corpus: flatCorpus,
     htmlFile: this.config.htmlFile,
     ui: client,

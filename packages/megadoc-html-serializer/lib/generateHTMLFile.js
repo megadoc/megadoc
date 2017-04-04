@@ -42,6 +42,8 @@ module.exports = function generateHTMLFile(params) {
     )
   ;
 
+  const favicon = params.favicon;
+
   const styleSheets = [ K.STYLE_BUNDLE ];
   const tmpl = template(fs.readFileSync(params.sourceFile, 'utf-8'));
 
@@ -50,6 +52,7 @@ module.exports = function generateHTMLFile(params) {
     commonModuleScript: buildRelativeAssetList([ K.COMMON_BUNDLE + '.js' ], distanceFromRoot),
     pluginScripts: buildRelativeAssetList(scripts, distanceFromRoot),
     styleSheets: buildRelativeAssetList(styleSheets, distanceFromRoot),
+    favicon: favicon ? buildRelativeAssetList([ favicon ], distanceFromRoot) : null,
   }, params.params));
 };
 

@@ -10,6 +10,11 @@
     <% _.forEach(styleSheets, function(styleSheet) { %>
     <link rel="stylesheet" href="<%- styleSheet %>" />
     <% }); %>
+
+    <% if (obj.favicon) { %>
+    <link rel="shortcut icon" href="<%= obj.favicon %>" type="image/x-icon">
+    <link rel="icon" href="<%= obj.favicon %>" type="image/x-icon">
+    <% } %>
   </head>
 
   <body class="body--themed">
@@ -56,6 +61,7 @@
 
       exports['megadoc'].startApp(Object.assign({}, exports['megadoc__config'], {
         startingDocumentUID: "<%- obj.startingDocumentUID || null %>",
+        startingDocumentHref: "<%- obj.startingDocumentHref || null %>",
         plugins: window.MEGADOC_PLUGINS,
       }));
     </script>

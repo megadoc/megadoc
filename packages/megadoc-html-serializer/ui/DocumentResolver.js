@@ -60,8 +60,15 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
       return buildDocumentContext(resolveRedirect(this, indexNode));
     }
     else {
-      console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
-      return null;
+      if (this.config.redirect[location.pathname]) {
+        return this.resolveFromLocation(Object.assign({}, location, {
+          pathname: this.config.redirect[location.pathname]
+        }));
+      }
+      else {
+        console.warn("Unable to find a document at the URI '%s' (from '%s')", href, location.pathname);
+        return null;
+      }
     }
   }
 };

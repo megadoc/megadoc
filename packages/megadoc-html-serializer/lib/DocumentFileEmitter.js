@@ -38,8 +38,10 @@ module.exports = function DocumentFileEmitter(params) {
           metaDescription: node.summary,
           contents: html,
           startingDocumentUID: node.uid,
+          startingDocumentHref: node.meta && node.meta.href,
         },
         sourceFile: params.htmlFile,
+        favicon: params.favicon,
       });
 
       const rc = params.assetUtils.writeAsset(filePath, docHTML, {
