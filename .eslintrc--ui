@@ -8,7 +8,8 @@
   ],
 
   "globals": {
-    "subject": false
+    "subject": false,
+    "megadoc": false
   },
 
   "ecmaFeatures": {

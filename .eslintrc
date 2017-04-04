@@ -1,21 +1,30 @@
 {
   "env": {
+    "browser": true,
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "es6": true
   },
 
   "parserOptions": {
-    "ecmaVersion": 6
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "blockBindings": true,
+      "arrowFunctions": true,
+      "classes": true,
+      "templateStrings": true,
+      "destructuring": true,
+      "objectLiteralShorthandMethods": true,
+      "objectLiteralComputedProperties": true,
+      "spread": true,
+      "restParams": true,
+      "jsx": true,
+    },
   },
 
-  "ecmaFeatures": {
-    "blockBindings": true,
-    "arrowFunctions": true,
-    "templateStrings": true,
-    "destructuring": true,
-    "objectLiteralShorthandMethods": true,
-    "objectLiteralComputedProperties": true,
-  },
+  "plugins": [
+    "react"
+  ],
 
   "rules": {
     "strict": 0,
@@ -57,5 +66,10 @@
     "curly": [2, "multi-line"],
     "no-shadow": 2,
     "no-extra-bind": 2,
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/jsx-no-undef": 2,
+    "react/react-in-jsx-scope": 2,
+    "react/prop-types": 1,
   }
 }

@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "async": "2.0.0-rc.3",
+    "async": "2.3.0",
     "git-log-parser": "1.1.0",
     "lodash": "3.10.1"
   },

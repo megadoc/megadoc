@@ -46,7 +46,7 @@ module.exports = function(compiler, config) {
     }
 
     return wrapSVG(svg);
-  };
+  }
 };
 
 function wrapSVG(svg) {

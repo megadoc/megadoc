@@ -132,9 +132,9 @@ describe('megadoc::Components::Link', function() {
 });
 
 function buildCorpus() {
-  return CorpusAPI(require('json!test_helpers/fixtures/corpus'));
+  return CorpusAPI({ database: require('json!test_helpers/fixtures/corpus') });
 }
 
 function buildSPMCorpus() {
-  return CorpusAPI(require('json!test_helpers/fixtures/corpus--spm'));
+  return CorpusAPI({ database: require('json!test_helpers/fixtures/corpus--spm') });
 }

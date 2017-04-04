@@ -1,4 +1,5 @@
 const CorpusAPI = require('core/CorpusAPI');
+const megadoc = {}; // ...
 
 module.exports = function(mochaSuite, stub) {
   let originalCorpus;

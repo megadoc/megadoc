@@ -54,7 +54,14 @@ var baseConfig = {
           /ui\/vendor/,
           /node_modules/
         ],
-        loaders: [ 'babel' ]
+        loader: 'babel',
+        query: {
+          babelrc: false,
+          presets: [
+            path.resolve(__dirname, '../node_modules/babel-preset-es2015'),
+            path.resolve(__dirname, '../node_modules/babel-preset-react'),
+          ]
+        }
       },
 
       {

@@ -4,7 +4,14 @@
     "packages/*"
   ],
   "ignore": [
-    "distributed"
+    "distributed",
+    "megadoc-plugin-dot",
+    "megadoc-plugin-git",
+    "megadoc-plugin-react",
+    "megadoc-plugin-reference-graph",
+    "megadoc-plugin-skeleton",
+    "megadoc-plugin-static",
+    "megadoc-theme-gitbooks"
   ],
   "version": "6.0.0-beta.1"
 }

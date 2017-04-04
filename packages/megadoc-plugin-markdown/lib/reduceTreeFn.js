@@ -1,4 +1,4 @@
-module.exports = function reduceTree(context, documents) {
+module.exports = function reduceTree(context/*, documents*/) {
   const descriptors = [];
 
   descriptors.push({

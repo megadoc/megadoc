@@ -10,6 +10,7 @@
     "commander": "2.9.0",
     "fs-extra": "2.1.2",
     "lodash": "3.10.1",
-    "megadoc-compiler": "6.0.0-beta.1"
+    "megadoc-compiler": "6.0.0-beta.1",
+    "megadoc-html-serializer": "6.0.0-beta.1"
   }
 }

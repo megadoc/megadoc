@@ -3,7 +3,7 @@ const reactSuite = require('test_helpers/reactSuite');
 const { assert } = require('chai');
 
 describe('megadoc::Components::Root', function() {
-  reactSuite(this, Subject, {
+  const suite = reactSuite(this, Subject, {
     config: {},
     location: {
       pathname: '/',
@@ -14,6 +14,6 @@ describe('megadoc::Components::Root', function() {
   });
 
   it('renders', function() {
-    assert.ok(subject.isMounted());
+    assert.ok(suite.getSubject().isMounted());
   });
 });

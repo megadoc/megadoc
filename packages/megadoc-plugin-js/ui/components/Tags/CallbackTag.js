@@ -1,7 +1,7 @@
 const React = require("react");
 const Doc = require('../Doc');
 
-const { shape, string } = React.PropTypes;
+const { shape, string, object } = React.PropTypes;
 
 const CallbackTag = React.createClass({
   propTypes: {
@@ -9,7 +9,8 @@ const CallbackTag = React.createClass({
     typeInfo: shape({
       name: string,
       description: string,
-    })
+    }),
+    document: object.isRequired,
   },
 
   render() {

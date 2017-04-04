@@ -74,7 +74,7 @@ function getByDisplayType(documentNode, typeNames) {
 
 function getRemainingDocuments(documentNode, lists) {
   const usedUIDs = lists.reduce(function(map, list) {
-    list.forEach(x => map[x.uid] = true);
+    list.forEach(x => { map[x.uid] = true });
     return map;
   }, {});
 

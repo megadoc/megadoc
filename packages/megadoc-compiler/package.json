@@ -9,9 +9,9 @@
     "test": "../../bin/prepublish   -O test"
   },
   "dependencies": {
-    "async": "2.0.0-rc.3",
+    "async": "2.3.0",
     "fs-extra": "2.1.2",
-    "glob": "5.0.3",
+    "glob": "7.1.1",
     "invariant": "2.2.1",
     "megadoc-config-utils": "^6.0.0-beta.1",
     "megadoc-corpus": "^6.0.0-beta.1"

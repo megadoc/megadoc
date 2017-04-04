@@ -1,6 +1,5 @@
 dist
 packages/*/dist
-packages/megadoc/ui
 packages/interface-builder
 packages/megadoc-plugin-react
 packages/megadoc-plugin-skeleton
@@ -18,7 +17,7 @@ packages/*/tmp
 
 coverage
 
-ui/css/fonts/**/*/demo.js
-ui/vendor/**/*
+packages/megadoc-html-serializer/ui/css/fonts/**/*/demo.js
+packages/megadoc-html-serializer/ui/vendor/**/*
 
 **/*.tmpl.js

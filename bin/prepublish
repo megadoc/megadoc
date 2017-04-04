@@ -91,12 +91,12 @@ function link_local_dependencies {
 
 function ensure_no_unlisted_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
-    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,lib--legacy,ui,doc" --json)
+    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,tmp,test_helpers,lib--legacy,ui,doc" --json)
 
     # for some reason the --ignores flag is, well, being ignored by depcheck
     # so we resort to doing this manually in JS land:
     node -e "
-      var IGNORED = [ 'multiline-slash' ];
+      var IGNORED = [ 'multiline-slash', 'sinon' ];
       var deps = JSON.parse(process.argv[1]);
       var missingDeps = Object.keys(deps.missing || {})
         .filter(function(x) {
@@ -156,7 +156,7 @@ function build_assets {
     rm -r $PACKAGE_ROOT/dist
   fi
 
-  ./cli/megadoc-compile --optimize \
+  ./packages/megadoc-cli/lib/compile.js --optimize \
     "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
     "${PACKAGE_ROOT}/ui/index.js"
 }

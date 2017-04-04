@@ -28,6 +28,7 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "jsdoctypeparser": "1.2.0"
+    "jsdoctypeparser": "1.2.0",
+    "multiline-slash": "2.0.0"
   }
 }

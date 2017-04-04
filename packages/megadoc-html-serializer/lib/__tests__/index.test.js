@@ -4,7 +4,7 @@ const FileSuite = require('megadoc-test-utils/FileSuite');
 describe.skip('HTMLSerializer', function() {
   const fileSuite = FileSuite(this);
 
-  let subject, defaultConfig, defaultAssets;
+  let subject, defaultConfig/*, defaultAssets*/;
 
   beforeEach(function() {
     const defaultHtmlFile = fileSuite.createFile('index.html', `
@@ -32,7 +32,7 @@ describe.skip('HTMLSerializer', function() {
   it('creates a jsdom environment', function(done) {
     subject = new HTMLSerializer(defaultConfig);
 
-    subject.start({}, {}, function(err, ok) {
+    subject.start({}, {}, function(err/*, ok*/) {
       if (err) {
         done(err);
       }

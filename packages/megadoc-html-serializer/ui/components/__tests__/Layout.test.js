@@ -1,3 +1,4 @@
+/* global megadoc: false */
 const Subject = require('../Layout');
 const reactSuite = require('test_helpers/reactSuite');
 const stubCorpus = require('test_helpers/stubCorpus');
@@ -25,11 +26,11 @@ describe('megadoc::Components::Layout', function() {
   });
 
   it('renders', function() {
-    assert.ok(subject.isMounted());
+    assert.ok(suite.getSubject().isMounted());
   });
 
   it('renders NotFound if there is nothing to show', function() {
-    assert.ok(drill(subject).has(NotFound));
+    assert.ok(drill(suite.getSubject()).has(NotFound));
   });
 
   describe('@using', function() {
@@ -70,7 +71,7 @@ describe('megadoc::Components::Layout', function() {
         }
       });
 
-      assert.include(drill(subject).node.textContent, "Hello Foo!");
+      assert.include(drill(suite.getSubject()).node.textContent, "Hello Foo!");
     });
 
     it('displays an error when the outlet is not defined', function() {
@@ -92,7 +93,7 @@ describe('megadoc::Components::Layout', function() {
         }
       });
 
-      drill(subject).find(ErrorMessage,
+      drill(suite.getSubject()).find(ErrorMessage,
         m.hasText('Outlet "Foo" has not been defined!')
       );
     });
@@ -119,7 +120,7 @@ describe('megadoc::Components::Layout', function() {
         }
       });
 
-      drill(subject).find(ErrorMessage,
+      drill(suite.getSubject()).find(ErrorMessage,
         m.hasText('No document was found with the UID "api/something"')
       );
     });
