@@ -43,7 +43,7 @@ to do with general output and formatter settings (e.g. HTML), while the other
 layer has to do with _plugins_ for feeding our input into Megadoc as we'll see
 later.
 
-To see what settings are available, refer to the [Config]() reference page.
+To see what settings are available, refer to the [Config](/lib/config.js) reference page.
 In our example, we have requested the docs to be emitted in the `public/docs`
 directory, relative to where we stored our `megadoc.conf.js` file.
 
@@ -78,8 +78,8 @@ For now, we'll introduce ourselves to the first type of plugins - ones
 that let us get some source files scanned and rendered. Choose from one of
 the following guides based on what kind of content you have:
 
-- [/packages/megadoc-plugin-markdown/README.md Markdown documents]()
-- [/packages/megadoc-plugin-js/README.md JavaScript source files]()
-- [/packages/megadoc-plugin-yard-api/README.md Rails APIs]()
-- [/packages/megadoc-plugin-lua/README.md Lua source files]()
+- [/packages/megadoc-plugin-markdown/README.md Markdown documents](/packages/megadoc-plugin-markdown/README.md Markdown documents)
+- [/packages/megadoc-plugin-js/README.md JavaScript source files](/packages/megadoc-plugin-js/README.md JavaScript source files)
+- [/packages/megadoc-plugin-yard-api/README.md Rails APIs](/packages/megadoc-plugin-yard-api/README.md Rails APIs)
+- [/packages/megadoc-plugin-lua/README.md Lua source files](/packages/megadoc-plugin-lua/README.md Lua source files)
 

@@ -18,7 +18,7 @@ the linter, run their tests, and verify everything is OK.
 ## Plugin helper scripts
 
 Right now this is pretty crude and will hopefully get better, but see 
-[./plugin-helper-scripts.md]() for a bunch of CLI utilities for working with
+[./plugin-helper-scripts.md](./plugin-helper-scripts.md) for a bunch of CLI utilities for working with
 the core.
 
 ## The Devserver
