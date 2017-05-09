@@ -61,7 +61,7 @@ describe('CJS::Parser::Docstring', function() {
     });
   });
 
-  describe.only('@callback', function() {
+  describe('@callback', function() {
     it('parses', function() {
       var docstring = parse(function() {;
         // /**

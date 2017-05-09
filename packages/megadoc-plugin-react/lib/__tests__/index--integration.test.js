@@ -1,6 +1,6 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 var MegadocPluginJS = require('megadoc-plugin-js');
 
 describe("[Integration] megadoc-plugin-react", function() {

@@ -1,15 +1,14 @@
 const K = require('jsdoc-parser-extended').Constants;
-const b = require('megadoc-corpus').builders;
 
 module.exports = function refineFn(context, documents, done) {
-  console.log('[D] Sealing %d documents', documents.length);
+  // console.log('[D] Sealing %d documents', documents.length);
 
   var config = context.options;
   var emitter = context.state.emitter;
 
   var namespaceIds =  documents.reduce(function(map, node) {
-    if (node.properties.namespace && !documents.some(x => x.id === node.properties.namespace)) {
-      map[node.properties.namespace] = node;
+    if (node.namespace && !documents.some(x => x.id === node.namespace)) {
+      map[node.namespace] = node;
     }
 
     return map;
@@ -18,19 +17,14 @@ module.exports = function refineFn(context, documents, done) {
   var namespaceDocuments = Object.keys(namespaceIds).map(function(namespaceId) {
     var referencingDocument = namespaceIds[namespaceId];
 
-    return b.document({
+    return {
+      isNamespace: true,
       id: namespaceId,
       title: namespaceId,
-      symbol: K.NAMESPACE_SEP,
-      meta: {},
       filePath: referencingDocument.filePath, // useful for error reporting when there's a UID clash
-      indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
       loc: referencingDocument.loc,
-      properties: {
-        isNamespace: true,
-        tags: [],
-      },
-    });
+      tags: [],
+    };
   })
 
   var withNamespaces = documents.concat(namespaceDocuments);
@@ -60,15 +54,15 @@ function discardOrphans(database, options) {
 
   return database.filter(function(doc) {
     const isOrphan = (
-      !doc.properties.isModule &&
-      !doc.properties.isNamespace &&
-      (!doc.properties.receiver || !idMap.hasOwnProperty(doc.properties.receiver))
+      !doc.isModule &&
+      !doc.isNamespace &&
+      (!doc.receiver || !idMap.hasOwnProperty(doc.receiver))
     );
 
     if (isOrphan && shouldWarn) {
       console.warn(
         '%s: Unable to map "%s" to any module, it will be discarded.',
-        dumpDocPath(doc.properties),
+        dumpDocPath(doc),
         doc.id
       );
     }
@@ -79,11 +73,11 @@ function discardOrphans(database, options) {
 
 function warnAboutUnknownContexts(database) {
   database.forEach(function(doc) {
-    if (!doc.properties.type || doc.properties.type === K.TYPE_UNKNOWN) {
+    if (!doc.type || doc.type === K.TYPE_UNKNOWN) {
       console.info(
         '%s: Document "%s" is unidentified. This probably means megadoc does not ' +
         'know how to handle it yet.',
-        dumpDocPath(doc.properties),
+        dumpDocPath(doc),
         doc.id
       );
     }
@@ -97,11 +91,11 @@ function warnAboutUnknownTags(database, config) {
   ]);
 
   database.forEach(function(doc) {
-    if (doc && doc.properties && doc.properties.tags) {
-      doc.properties.tags.forEach(function(tag) {
+    if (doc && doc && doc.tags) {
+      doc.tags.forEach(function(tag) {
         if (!(tag.type in KNOWN_TAGS)) {
           console.warn("%s: Unknown tag '%s'.",
-            dumpDocPath(doc.properties),
+            dumpDocPath(doc),
             tag.type
           );
         }

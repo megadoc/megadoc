@@ -61,7 +61,7 @@ const App = React.createClass({
     else if (this.props.location.protocol === 'file:') {
       locationAPI = FileLocation;
     }
-    else if (this.props.location.protocol.match(/^http:/)) {
+    else if (this.props.location.protocol.match(/^https?:/)) {
       locationAPI = HistoryLocation;
     }
 

@@ -48,6 +48,7 @@ exports.NO_DESCRIPTION_TAGS = {
   'namespace': true,
   'preserveOrder': true,
   'private': true,
+  'public': true,
   'type': true,
 };
 
@@ -70,6 +71,7 @@ exports.KNOWN_TAGS = [
   'param',
   'preserveOrder',
   'private',
+  'public',
   'property',
   'protected',
   'return',

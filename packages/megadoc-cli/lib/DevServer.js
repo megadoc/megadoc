@@ -1,11 +1,13 @@
 /* eslint-disable */
 const compiler = require('megadoc-compiler');
 const chokidar = require('chokidar');
-exports.run = function(config) {
-  compiler.run(config, function(err, stats) {
+exports.run = function(config, runOptions) {
+  compiler.run(config, runOptions, function(err, stats) {
     if (err) {
       throw err;
     }
+
+    console.log('[I] Initial compilation done. Will now be watching for changes...');
 
     const watcher = new chokidar.FSWatcher({
       usePolling: true,

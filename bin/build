@@ -18,5 +18,5 @@ if [ -z $PACKAGE ]; then
 fi
 
 for pkg in $PACKAGE; do
-  ./bin/prepublish $pkg -S update -S lint -S test
+  ./bin/prepublish $pkg -O build
 done

@@ -1,7 +1,7 @@
 const mergeObject = require('./utils/mergeObject');
 
 module.exports = function refine(compilation, done) {
-  const { documents, processor } = compilation;
+  const { rawDocuments, processor } = compilation;
 
   if (processor.refineFnPath) {
     const fn = require(processor.refineFnPath);
@@ -11,7 +11,7 @@ module.exports = function refine(compilation, done) {
       state: compilation.processorState,
     };
 
-    fn(context, documents, function(err, refinedDocuments) {
+    fn(context, rawDocuments, function(err, refinedDocuments) {
       if (err) {
         done(err);
       }
@@ -21,6 +21,6 @@ module.exports = function refine(compilation, done) {
     });
   }
   else {
-    done(null, mergeObject(compilation, { refinedDocuments: documents }));
+    done(null, mergeObject(compilation, { refinedDocuments: rawDocuments }));
   }
 };

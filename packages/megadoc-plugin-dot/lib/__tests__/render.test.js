@@ -1,7 +1,7 @@
 var Subject = require("../render");
 var multiline = require('multiline-slash');
 var assert = require('chai').assert;
-var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 var b = require('megadoc-corpus').builders;
 var cheerio = require('cheerio');
 

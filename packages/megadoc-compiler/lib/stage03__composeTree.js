@@ -2,16 +2,17 @@ const mergeObject = require('./utils/mergeObject');
 const TreeComposer = require('./TreeComposer');
 
 module.exports = function composeTree(compilation, done) {
-  const { refinedDocuments, treeOperations } = compilation;
+  const { documents, treeOperations } = compilation;
   const context = {
+    id: compilation.id,
     commonOptions: compilation.commonOptions,
     options: compilation.processorOptions,
     state: compilation.processorState,
   };
 
-  console.log('[D] Composing tree of %d nodes', compilation.refinedDocuments.length);
+  console.log('[D] Composing tree of %d nodes', compilation.documents.length);
 
   done(null, mergeObject(compilation, {
-    tree: TreeComposer.composeTree(context, refinedDocuments, treeOperations)
+    tree: TreeComposer.composeTree(context, documents, treeOperations)
   }))
 };

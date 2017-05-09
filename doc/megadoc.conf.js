@@ -17,6 +17,7 @@ var config = {
   assets: [
     { 'packages/megadoc-corpus/doc/corpus-resolver.png': 'images/corpus-resolver.png' },
   ],
+  strict: false,
 
   alias: {
     // 'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
@@ -27,6 +28,73 @@ var config = {
     // 'md__megadoc-corpus/readme#uids': 'CorpusUIDs'
   },
 
+};
+
+config.sources = [
+  {
+    id: 'js__core',
+    url: '/dev/api',
+    title: 'API',
+
+    include: [
+      'lib/**/*.js',
+      'ui/**/*.js',
+    ],
+
+    exclude: [ /__tests__/, /vendor/, ],
+
+    processor: [ 'megadoc-plugin-js', {
+      useDirAsNamespace: false,
+
+      namespaceDirMap: {
+        'ui/': 'UI',
+      }
+    }]
+  },
+  {
+    id: 'md__core',
+    title: 'Documents',
+    include: [ 'README.md', 'CHANGES.md' ],
+    processor: [ 'megadoc-plugin-markdown', {
+      baseURL: '/',
+    }]
+  },
+
+  // @url: /usage
+  {
+    id: 'md__usage',
+    title: 'Documents',
+    include: [ 'doc/usage/**/*.md' ],
+    processor: [ 'megadoc-plugin-markdown', {
+      id: 'md__usage',
+      baseURL: '/usage',
+      title: 'Usage',
+      fullFolderTitles: false,
+    }]
+  },
+
+  // @url: /dev/handbook
+  {
+    id: 'md__plugins',
+    include: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
+    processor: [ 'megadoc-plugin-markdown', {
+      id: 'md__plugins',
+      baseURL: '/dev/handbook',
+      title: 'Plugin Development',
+      fullFolderTitles: false,
+      discardIdPrefix: 'dev-',
+    }]
+  },
+  // require('megadoc-plugin-dot')({}),
+
+];
+
+config.serializer = [ 'megadoc-html-serializer', {
+  redirect: {
+    '/index.html': '/readme.html'
+  },
+  theme: [ 'megadoc-theme-qt' ],
+
   linkResolver: {
     schemes: [ 'Megadoc', 'GitHub Wiki' ],
     ignore: {
@@ -36,8 +104,8 @@ var config = {
 
   layoutOptions: {
     rewrite: {
-      'README.md': '/index.html',
-      'CHANGES.md': '/changes.html',
+      // 'README.md': '/index.html',
+      // 'CHANGES.md': '/changes.html',
     },
 
     bannerLinks: [
@@ -148,58 +216,7 @@ var config = {
       },
     ]
   },
-
-};
-
-config.plugins = [
-  require('megadoc-plugin-js')({
-    id: 'js__core',
-    url: '/dev/api',
-    title: 'API',
-
-    source: [
-      'lib/**/*.js',
-      'ui/**/*.js',
-    ],
-
-    exclude: [ /__tests__/, /vendor/, ],
-
-    useDirAsNamespace: false,
-
-    namespaceDirMap: {
-      'ui/': 'UI',
-    }
-  }),
-
-  require('megadoc-plugin-markdown')({
-    id: 'md__core',
-    title: 'Documents',
-    source: [ 'README.md', 'CHANGES.md' ],
-  }),
-
-  // @url: /usage
-  require('megadoc-plugin-markdown')({
-    id: 'md__usage',
-    baseURL: '/usage',
-    source: [ 'doc/usage/**/*.md' ],
-    title: 'Usage',
-    fullFolderTitles: false,
-  }),
-
-  // @url: /dev/handbook
-  require('megadoc-plugin-markdown')({
-    id: 'md__plugins',
-    baseURL: '/dev/handbook',
-    source: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
-    title: 'Plugin Development',
-    fullFolderTitles: false,
-    discardIdPrefix: 'dev-',
-  }),
-
-  require('megadoc-theme-qt')({}),
-  require('megadoc-plugin-dot')({}),
-
-];
+}]
 
 addPackageDocumentation('megadoc-corpus', {
   url: '/dev/corpus'
@@ -219,86 +236,93 @@ addPackageDocumentation('megadoc-theme-qt');
 module.exports = config;
 
 function addPackageDocumentation(pluginName, options) {
-  var url = (options && options.url) || '/plugins/' + pluginName;
+  var url = options && options.url || ('/plugins/' + pluginName);
   var withJS = !options || options.withJS !== false;
 
   if (withJS) {
-    config.plugins.push(require('megadoc-plugin-js')({
-      id: 'js__' + pluginName,
-      url: url,
-      title: pluginName,
-      useDirAsNamespace: false,
-      inferModuleIdFromFileName: true,
-      source: [
-        'packages/' + pluginName + '/**/*.js'
+    config.sources.push({
+      include: [
+        'packages/' + pluginName + '/{lib,defs}**/*.js'
       ],
+      exclude: [
+        /__tests__/,
+        /legacy/
+      ],
+      processor: [ 'megadoc-plugin-js', {
+        id: 'js__' + pluginName,
+        baseURL: url,
+        title: pluginName,
+        useDirAsNamespace: false,
+        inferModuleIdFromFileName: true,
 
-      namespaceDirMap: {
-        'ui/': 'UI',
-      },
+        namespaceDirMap: {
+          'ui/': 'UI',
+        },
 
-      exclude: [ /__tests__/, /vendor/, /node_modules/ ],
-    }));
+      }]
+    });
   }
 
-  config.plugins.push(require('megadoc-plugin-markdown')({
-    id: 'md__' + pluginName,
-    title: pluginName,
-    source: [ 'packages/' + pluginName + '/**/*.md' ],
+  config.sources.push({
+    include: [ 'packages/' + pluginName + '/**/*.md' ],
     exclude: [ /node_modules/, /__tests__/ ],
-    baseURL: url,
-  }));
-
-  config.layoutOptions.customLayouts.push({
-    match: { by: 'url', on: url },
-    regions: [
-      {
-        name: 'Layout::Sidebar',
-        outlets: [
-          {
-            name: 'Markdown::Browser',
-            using: 'md__' + pluginName,
-            options: { flat: true }
-          },
-          withJS && { name: 'Layout::SidebarHeader', options: { text: 'API' } },
-          withJS && {
-            name: 'CJS::ClassBrowser',
-            using: 'js__' + pluginName,
-            options: { flat: true },
-          },
-        ].filter(truthy)
-      },
-      {
-        name: 'Layout::Content',
-        options: { framed: true },
-        outlets: [
-          {
-            name: 'Markdown::Document',
-            match: { by: 'namespace', on: [ 'md__' + pluginName ] },
-          },
-          withJS && {
-            name: 'CJS::Module',
-            match: { by: 'namespace', on: [ 'js__' + pluginName ] },
-          }
-        ].filter(truthy)
-      },
-
-      {
-        name: 'Layout::NavBar',
-        options: { framed: true },
-        outlets: [
-          {
-            name: 'Markdown::DocumentTOC',
-            match: { by: 'namespace', on: [ 'md__' + pluginName ] },
-          },
-          withJS && {
-            name: 'CJS::ModuleEntities',
-            match: { by: 'namespace', on: [ 'js__' + pluginName ] },
-          }
-        ]
-      }
-    ]
+    processor: [ 'megadoc-plugin-markdown', {
+      id: 'md__' + pluginName,
+      title: pluginName,
+      baseURL: url,
+    }]
   });
+
+  // config.serializer[1].layoutOptions.customLayouts.push({
+  //   match: { by: 'url', on: url },
+  //   regions: [
+  //     {
+  //       name: 'Layout::Sidebar',
+  //       outlets: [
+  //         {
+  //           name: 'Markdown::Browser',
+  //           using: 'md__' + pluginName,
+  //           options: { flat: true }
+  //         },
+  //         withJS && { name: 'Layout::SidebarHeader', options: { text: 'API' } },
+  //         withJS && {
+  //           name: 'CJS::ClassBrowser',
+  //           using: 'js__' + pluginName,
+  //           options: { flat: true },
+  //         },
+  //       ].filter(truthy)
+  //     },
+  //     {
+  //       name: 'Layout::Content',
+  //       options: { framed: true },
+  //       outlets: [
+  //         {
+  //           name: 'Markdown::Document',
+  //           match: { by: 'namespace', on: [ 'md__' + pluginName ] },
+  //         },
+  //         withJS && {
+  //           name: 'CJS::Module',
+  //           match: { by: 'namespace', on: [ 'js__' + pluginName ] },
+  //         }
+  //       ].filter(truthy)
+  //     },
+
+  //     {
+  //       name: 'Layout::NavBar',
+  //       options: { framed: true },
+  //       outlets: [
+  //         {
+  //           name: 'Markdown::DocumentTOC',
+  //           match: { by: 'namespace', on: [ 'md__' + pluginName ] },
+  //         },
+  //         withJS && {
+  //           name: 'CJS::ModuleEntities',
+  //           match: { by: 'namespace', on: [ 'js__' + pluginName ] },
+  //         }
+  //       ]
+  //     }
+  //   ]
+  // });
 }
 
 function truthy(x) {

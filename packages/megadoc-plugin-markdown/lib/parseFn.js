@@ -12,35 +12,17 @@ module.exports = function parseFn(context, filePath, done) {
     source: fs.readFileSync(filePath, 'utf-8')
   };
 
-  // const commonPrefix = config.commonPrefix || ''; // TODO infer
   const commonPrefix = context.commonOptions.assetRoot; // TODO infer
   const extName = path.extname(entry.filePath);
-
-  // entry.filePath = utils.getRelativeAssetPath(filePath);
-
   const fileName = path.basename(filePath)
     .replace(extName, '')
     .replace(/\W/g, '-')
   ;
 
-  if (config.discardFileExtension) {
-    // TODO
-    entry.id = RendererUtils.normalizeHeading(
-      filePath
-        .replace(extName, '')
-        .replace(commonPrefix, '')
-    );
-  }
-  else {
-    // TODO
-    entry.id = RendererUtils.normalizeHeading(filePath.replace(commonPrefix, ''));
-  }
-
   entry.sortingId = entry.filePath.replace(commonPrefix, '');
 
   entry.title = parseTitle(entry.source);
   entry.wordCount = entry.source.split(/\s+/).length;
-  // TODO
   entry.summary = RendererUtils.extractSummary(entry.source, {
     plainText: true
   });
@@ -50,15 +32,9 @@ module.exports = function parseFn(context, filePath, done) {
     entry.source = '# ' + entry.title + '\n\n' + entry.source;
   }
 
-  // TODO
   entry.plainTitle = RendererUtils.markdownToText(entry.title);
-
   entry.fileName = fileName;
   entry.folder = path.dirname(entry.filePath);
-
-  if (config.discardIdPrefix) {
-    entry.id = entry.id.replace(config.discardIdPrefix, '');
-  }
 
   done(null, [ entry ]);
 };

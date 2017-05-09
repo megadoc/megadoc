@@ -1,7 +1,7 @@
 var Subject = require("../index");
 var fs = require('fs');
 var path = require('path');
-var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 
 describe("megadoc-plugin-dot", function() {
   var suite = IntegrationSuite(this);

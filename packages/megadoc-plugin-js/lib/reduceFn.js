@@ -16,7 +16,7 @@ function reduceNamespaceDocument(doc) {
   return b.document({
     id: doc.id,
     title: doc.title,
-    symbol: doc.symbol,
+    symbol: '.',
     indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
     filePath: doc.filePath, // useful for error reporting when there's a UID clash
     loc: doc.loc,
@@ -29,7 +29,7 @@ function reduceNamespaceDocument(doc) {
 
 function reduceModuleDocument(doc) {
   return b.document({
-    id: doc.id,
+    id: doc.name,
     title: doc.id,
     summary: doc.description,
     filePath: doc.filePath,

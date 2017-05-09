@@ -103,34 +103,40 @@ exports.composeTree = function(context, documentList, treeOperations) {
     }
   });
 
-  return b.namespace({
-    id: namespaceAttributes.id || context.options.id,
-    name: namespaceAttributes.name || context.options.name,
-    title: namespaceAttributes.title || null,
-    meta: namespaceAttributes.meta || {},
-    config: namespaceAttributes.config || null,
-    indexFields: namespaceAttributes.indexFields || null,
-    documents: hierarchicalDocuments.filter(x => !x.parentNode),
-  });
+  try {
+    return b.namespace({
+      id: namespaceAttributes.id || context.options.id || context.id,
+      name: namespaceAttributes.name || context.options.name,
+      title: namespaceAttributes.title || null,
+      meta: namespaceAttributes.meta || {},
+      config: namespaceAttributes.config || null,
+      indexFields: namespaceAttributes.indexFields || null,
+      documents: hierarchicalDocuments.filter(x => !x.parentNode),
+    });
+  }
+  catch (e) {
+    console.warn('Error compilation source:', context.id || '<<unknown>>');
+    throw e;
+  }
 };
 
 exports.mergeTrees = function(prevCompilation, nextCompilation) {
-  const changedFiles = nextCompilation.refinedDocuments.reduce(function(map, document) {
+  const changedFiles = nextCompilation.documents.reduce(function(map, document) {
     map[document.filePath] = 1;
 
     return map;
   }, {})
 
-  const changedDocumentIds = nextCompilation.refinedDocuments.reduce(function(map, document) {
+  const changedDocumentIds = nextCompilation.documents.reduce(function(map, document) {
     map[document.id] = 1;
 
     return map;
   }, {});
 
-  console.log('[D] Previous tree size =', prevCompilation.refinedDocuments.length)
+  console.log('[D] Previous tree size =', prevCompilation.documents.length)
   console.log('[D] Merging tree with new sources coming from:', changedFiles)
 
-  const withoutChanged = prevCompilation.refinedDocuments.filter(document => {
+  const withoutChanged = prevCompilation.documents.filter(document => {
     return changedFiles[document.filePath] !== 1;
   }).map(document => {
     return document.merge({ parentNode: null });
@@ -146,14 +152,14 @@ exports.mergeTrees = function(prevCompilation, nextCompilation) {
 
   console.log('[D] %d document(s) are no longer valid', withoutChanged.length);
 
-  const withPartials = withoutChanged.concat(nextCompilation.refinedDocuments);
+  const withPartials = withoutChanged.concat(nextCompilation.documents);
   const renderOpsWithPartials = Object.assign(renderOpsWithoutChanged, nextCompilation.renderOperations);
   const treeOpsWithPartials = treeOpsWithoutChanged.concat(nextCompilation.treeOperations);
 
   console.log('[D] %d document(s) are now in the tree.', withPartials.length)
 
   return {
-    refinedDocuments: withPartials,
+    documents: withPartials,
     renderOperations: renderOpsWithPartials,
     treeOperations: treeOpsWithPartials,
   };

@@ -104,10 +104,10 @@ if (program.debug === true) {
 console.log('version %s', pkg.version);
 
 if (program.watch) {
-  megadocDevServer.run(config);
+  megadocDevServer.run(config, { purge: program.purge });
 }
 else {
-  megadocCompiler.run(config, function(err/*, compilations*/) {
+  megadocCompiler.run(config, { purge: program.purge }, function(err/*, compilations*/) {
     if (err) {
       console.error(Array(80 - 'megadoc-cli'.length).join('*'));
       console.error('An error occurred during compilation. Error details below.');

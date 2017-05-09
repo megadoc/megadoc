@@ -1,5 +1,5 @@
 var Subject = require("../");
-var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 
 describe("[Integration] megadoc-plugin-static", function() {
   var suite = IntegrationSuite(this);

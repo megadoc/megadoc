@@ -2,7 +2,7 @@ var assert = require('chai').assert;
 var TestUtils = require('../../TestUtils');
 var K = require('../../constants');
 var parseInline = TestUtils.parseInline;
-var MegaTestUtils = require('megadoc/lib/TestUtils');
+var MegaTestUtils = require('megadoc-test-utils/LegacyTestUtils');
 
 describe('CJS::Parser - CommonJS automatic module identification', function() {
   it('var SomeModule = function() {}; module.exports = SomeModule;', function() {

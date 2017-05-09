@@ -6,14 +6,14 @@ const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
 
 module.exports = function reduce(compilation, done) {
-  const { processor, rawDocuments } = compilation;
+  const { processor, refinedDocuments } = compilation;
   const context = {
     commonOptions: compilation.commonOptions,
     options: compilation.processorOptions,
     state: compilation.processorState,
   };
 
-  reduceEach(context, rawDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
+  reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return mergeObject(compilation, {
       documents: flattenArray(documents).map(ensureHasDefaultAttributes),
     });

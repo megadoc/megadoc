@@ -54,8 +54,8 @@ Compiler.run = function(config, runOptions, done) {
     partial(mergeChangeTree, runOptions.initialState),
     reduceTree,
     partial(render, serializer.renderRoutines),
-    refine,
     reduce,
+    refine,
     parse,
     initState
   );

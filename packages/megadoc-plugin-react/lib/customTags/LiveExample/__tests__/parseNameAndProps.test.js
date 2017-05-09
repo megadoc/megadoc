@@ -1,6 +1,6 @@
 var assert = require('assert');
 var parseProps = require('../parseNameAndProps');
-var TestUtils = require('megadoc/lib/TestUtils');
+var TestUtils = require('megadoc-test-utils/LegacyTestUtils');
 
 function parse(strGenerator) {
   return parseProps(TestUtils.getInlineString(strGenerator));

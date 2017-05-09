@@ -3,6 +3,9 @@ const { extractTOC } = require('megadoc-html-serializer').RendererUtils;
 
 module.exports = function reduceFn(options, rawDocument, done) {
   const toc = extractTOC(rawDocument.source);
+  if (!rawDocument.id) {
+    console.warn('doc has no id?', rawDocument)
+  }
 
   return done(null, b.document({
     id: rawDocument.id,

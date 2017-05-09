@@ -1,6 +1,6 @@
 var Subject = require("../");
 var assert = require('chai').assert;
-var IntegrationSuite = require('megadoc/lib/TestUtils').IntegrationSuite;
+var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 var path = require('path');
 
 describe("[Integration] megadoc-plugin-lua", function() {

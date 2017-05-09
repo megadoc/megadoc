@@ -18,10 +18,14 @@ module.exports = function emitAssets(config, state, done) {
 };
 
 function copyFavicon(config, state, done) {
-  fs.copySync(
-    state.assetUtils.getAssetPath(config.favicon),
-    state.assetUtils.getOutputPath('favicon.ico')
-  );
+  const filePath = state.assetUtils.getAssetPath(config.favicon);
+
+  if (fs.existsSync(filePath)) {
+    fs.copySync(
+      state.assetUtils.getAssetPath(config.favicon),
+      state.assetUtils.getOutputPath('favicon.ico')
+    );
+  }
 
   done();
 }
@@ -107,7 +111,8 @@ function emitRuntimeConfigScript(config, state, done) {
   // write the runtime config file
   state.assetUtils.writeAsset(
     path.join(config.runtimeOutputPath, K.CONFIG_FILE),
-    exportJSONAsUMD('megadoc__config', JSON.stringify(runtimeConfig))
+    exportJSONAsUMD('megadoc__config', JSON.stringify(runtimeConfig)),
+    { forceOverwrite: true }
   );
 
   done();

@@ -1,4 +1,4 @@
-var TestUtils = require('megadoc/lib/TestUtils');
+var TestUtils = require('megadoc-test-utils/LegacyTestUtils');
 var megadocPluginGit = require('../');
 var assert = require('chai').assert;
 var path = require('path');

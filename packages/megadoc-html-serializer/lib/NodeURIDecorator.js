@@ -1,5 +1,6 @@
 const compose = require('lodash').compose;
 const invariant = require('invariant');
+const { dumpNodeFilePath } = require('megadoc-corpus');
 
 module.exports = function NodeURIDecorator(config) {
   var g = config.layoutOptions.singlePageMode ?
@@ -104,14 +105,14 @@ function FileBasedURIGenerator(config) {
 
     if (node.type === 'DocumentEntity') {
       if (!node.parentNode) {
-        invariant(false, `Node ${node.id} has no parent!`);
+        invariant(false, `Node has no parent! ${dumpNodeFilePath(node)}`);
       }
 
       return NodeURI(node.parentNode) + '#' + NodeAnchor(node);
     }
     else if (node.type === 'Document') {
       if (!node.parentNode) {
-        invariant(false, `Node ${node.id} has no parent!`);
+        invariant(false, `Node has no parent! ${dumpNodeFilePath(node)}`);
       }
 
       return (

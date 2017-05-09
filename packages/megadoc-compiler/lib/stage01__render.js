@@ -2,7 +2,7 @@ const mergeObject = require('./utils/mergeObject');
 
 // TODO: distribute
 module.exports = function render(renderRoutines, compilation, done) {
-  const { refinedDocuments, processor } = compilation;
+  const { documents, processor } = compilation;
   const context = {
     commonOptions: compilation.commonOptions,
     options: compilation.processorOptions,
@@ -14,7 +14,7 @@ module.exports = function render(renderRoutines, compilation, done) {
   if (processor.renderFnPath) {
     const fn = require(processor.renderFnPath);
 
-    renderOperations = refinedDocuments.reduce(function(map, document) {
+    renderOperations = documents.reduce(function(map, document) {
       const documentRenderingDescriptor = fn(context, renderRoutines, document);
 
       if (documentRenderingDescriptor) {

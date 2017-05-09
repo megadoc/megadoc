@@ -1,5 +1,5 @@
 const func = exports;
-const vm = require('vm');
+// const vm = require('vm');
 
 func.from = function(fn) {
   return {
