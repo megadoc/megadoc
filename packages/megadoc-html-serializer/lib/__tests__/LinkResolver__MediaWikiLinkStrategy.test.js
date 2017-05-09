@@ -1,6 +1,6 @@
-var subject = require("../LinkResolver__MediaWikiLinkStrategy");
-var assert = require('chai').assert;
 var SinonSuite = require('megadoc-test-utils/SinonSuite');
+var { assert } = require('chai');
+var subject = require("../LinkResolver__MediaWikiLinkStrategy");
 
 describe("LinkResolver__MediaWikiLinkStrategy", function() {
   var sinon = SinonSuite(this);

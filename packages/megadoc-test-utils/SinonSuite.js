@@ -1,7 +1,7 @@
 const sinon = require('sinon');
-const { assert } = require('chai');
+const chai = require('chai');
 
-sinon.assert.expose(assert, { prefix: "" });
+sinon.assert.expose(chai.assert, { prefix: "" });
 
 module.exports = function sinonSuite(mochaSuite) {
   var sandbox = sinon.sandbox.create();
