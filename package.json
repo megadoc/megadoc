@@ -31,6 +31,8 @@
   "homepage": "https://github.com/megadoc/megadoc",
   "dependencies": {},
   "devDependencies": {
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-react": "6.24.1",
     "chai": "3.5.0",
     "cheerio": "0.22.0",
     "coveralls": "2.11.4",

@@ -22,7 +22,7 @@ describe('stage01__reduce', function() {
         reduceFnPath: reduceFnFile.path,
       },
 
-      rawDocuments: [
+      refinedDocuments: [
         {
           id: '1'
         }

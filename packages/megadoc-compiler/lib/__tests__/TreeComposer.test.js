@@ -49,7 +49,7 @@ describe('megadoc-compiler::TreeComposer', function() {
 
       const mergedCompilation = subject(
         {
-          refinedDocuments: [
+          documents: [
             b.document({
               id: 'Klass',
               summary: 'Summary',
@@ -78,7 +78,7 @@ describe('megadoc-compiler::TreeComposer', function() {
           ],
         },
         {
-          refinedDocuments: [
+          documents: [
             b.document({
               id: 'Klass',
               filePath: 'klass.lua',
@@ -104,7 +104,7 @@ describe('megadoc-compiler::TreeComposer', function() {
       );
 
       const mergedTree = Subject.composeTree(context,
-        mergedCompilation.refinedDocuments,
+        mergedCompilation.documents,
         mergedCompilation.treeOperations
       )
 

@@ -2,11 +2,17 @@
   "name": "megadoc-test-utils",
   "version": "6.0.0-beta.1",
   "dependencies": {
+    "cheerio": "0.22.0",
     "fs-extra": "2.1.2",
+    "glob": "^7.1.1",
+    "lodash": "^4.17.4",
+    "html": "0.0.10",
     "multiline-slash": "2.0.0"
   },
   "peerDependencies": {
     "chai": "3.5.0",
-    "sinon": "1.17.6"
+    "sinon": "1.17.6",
+    "megadoc-html-serializer": "^6.0.0-beta.1",
+    "megadoc-compiler": "^6.0.0-beta.1"
   }
 }

@@ -21,8 +21,5 @@
   "bugs": {
     "url": "https://github.com/megadoc/megadoc/issues"
   },
-  "homepage": "https://github.com/megadoc/megadoc#readme",
-  "peerDependencies": {
-    "megadoc": "5.x"
-  }
+  "homepage": "https://github.com/megadoc/megadoc#readme"
 }

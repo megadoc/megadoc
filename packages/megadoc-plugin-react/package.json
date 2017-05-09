@@ -26,7 +26,6 @@
     "lodash": "3.10.1"
   },
   "peerDependencies": {
-    "megadoc": "5.x",
-    "megadoc-plugin-js": "5.x"
+    "megadoc-plugin-js": "^v6.0.0-beta.1"
   }
 }

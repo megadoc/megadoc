@@ -186,12 +186,14 @@ describe('CJS::Parser::Main', function() {
     });
   });
 
-  it('should infer the module name from the file name', function() {
+  it.skip('should infer the module name from the file name', function() {
     const docs = parseInline(`
       const ajax = require('utils/ajax');
       const Promise = require('Promise');
 
-
+      /**
+       *
+       */
       module.exports = {
         /**
          * The queue itself...
@@ -209,8 +211,6 @@ describe('CJS::Parser::Main', function() {
         }
       };
     `, { inferModuleIdFromFileName: true }, 'src/XHRQueue/index.js');
-
-    console.log(docs);
 
     assert.equal(docs.length, 2);
     assert.equal(docs[0].id, 'XHRQueue');

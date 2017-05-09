@@ -19,8 +19,5 @@
   "bugs": {
     "url": "https://github.com/megadoc/megadoc-theme-qt/issues"
   },
-  "homepage": "https://github.com/megadoc/megadoc-theme-qt#readme",
-  "peerDependencies": {
-    "megadoc": "5.x"
-  }
+  "homepage": "https://github.com/megadoc/megadoc-theme-qt#readme"
 }
