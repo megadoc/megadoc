@@ -1,4 +1,4 @@
-const compose = require('lodash').compose;
+const flowRight = require('lodash').flowRight;
 const invariant = require('invariant');
 const { dumpNodeFilePath } = require('megadoc-corpus');
 
@@ -94,7 +94,7 @@ function FileBasedURIGenerator(config) {
   var RE = extension.length > 0 && new RegExp(extension + '$');
 
   return {
-    NodeURI: compose(ensureHasOneLeadingSlash, NodeURI),
+    NodeURI: flowRight(ensureHasOneLeadingSlash, NodeURI),
     NodeAnchor: NodeAnchor
   };
 
@@ -177,7 +177,7 @@ function FileBasedURIGenerator(config) {
 
 function HashBasedURIGenerator(/*config*/) {
   return {
-    NodeURI: compose(ensureHasOneLeadingSlash, NodeURI),
+    NodeURI: flowRight(ensureHasOneLeadingSlash, NodeURI),
     NodeAnchor: NodeAnchor
   };
 

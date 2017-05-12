@@ -1,4 +1,4 @@
-const { compose, partial, template } = require('lodash');
+const { flowRight, partial, template } = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const K = require('./constants');
@@ -52,7 +52,7 @@ module.exports = function generateHTMLFile(params) {
   const tmpl = template(fs.readFileSync(params.sourceFile, 'utf-8'));
   const scopeToRuntimeOutputPath = partial(scopeToPath, params.runtimeOutputPath);
   const relativize = partial(buildRelativeAssetList, distanceFromRoot);
-  const realizePath = compose(scopeToRuntimeOutputPath, relativize);
+  const realizePath = flowRight(scopeToRuntimeOutputPath, relativize);
 
   return tmpl(Object.assign({
     coreScripts: realizePath(CORE_SCRIPTS),

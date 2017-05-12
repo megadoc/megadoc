@@ -39,6 +39,7 @@ function createMegadoc(config) {
   megadoc.outlets.define('Layout::Sidebar');
   megadoc.outlets.define('Layout::NavBar');
   megadoc.outlets.define('Layout::SidebarHeader');
+  megadoc.outlets.define('Layout::SidebarSearch');
   megadoc.outlets.define('Layout::Footer');
   megadoc.outlets.define('Inspector');
   megadoc.outlets.define('Image');
@@ -46,6 +47,7 @@ function createMegadoc(config) {
   megadoc.outlets.define('Text');
 
   require('./outlets/SidebarHeaderOutlet')(megadoc);
+  require('./outlets/SidebarSearchOutlet')(megadoc);
   require('./outlets/ImageOutlet')(megadoc);
   require('./outlets/LinkOutlet')(megadoc);
   require('./outlets/TextOutlet')(megadoc);
