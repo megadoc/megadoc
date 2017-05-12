@@ -60,7 +60,7 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
       return buildDocumentContext(resolveRedirect(this, indexNode));
     }
     else {
-      if (this.config.redirect[location.pathname]) {
+      if (this.config.redirect && this.config.redirect[location.pathname]) {
         return this.resolveFromLocation(Object.assign({}, location, {
           pathname: this.config.redirect[location.pathname]
         }));

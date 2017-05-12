@@ -4,7 +4,7 @@ const { assign } = require('lodash');
 const { getRegionsForDocument } = LayoutEngine;
 
 function TemplateRealizer(corpus, config) {
-  const layoutConfig = config.layoutOptions;
+  const layoutConfig = config.layoutOptions || {};
 
   return function(globalScope, pathname) {
     const regions = Regions(globalScope, {

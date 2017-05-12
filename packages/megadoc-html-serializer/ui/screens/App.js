@@ -12,6 +12,7 @@ const App = React.createClass({
     config: PropTypes.object.isRequired,
     corpus: PropTypes.object.isRequired,
     location: require('schemas/Location').isRequired,
+    outletManager: PropTypes.object.isRequired,
   },
 
   childContextTypes: {
@@ -100,6 +101,8 @@ const App = React.createClass({
           config={this.props.config}
           corpus={this.props.corpus}
           appState={this.props.appState}
+          documentURI={this.documentURI}
+          documentResolver={this.documentResolver}
           location={{
             pathname: this.documentURI.normalize(location.pathname),
             hash: this.state.hashDisabled ? '' : location.hash,

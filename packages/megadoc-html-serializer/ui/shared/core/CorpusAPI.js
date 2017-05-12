@@ -61,7 +61,7 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
   };
 
   exports.getByURI = function(uri) {
-    if (redirect[uri]) {
+    if (redirect && redirect[uri]) {
       return exports.getByURI(redirect[uri]);
     }
 

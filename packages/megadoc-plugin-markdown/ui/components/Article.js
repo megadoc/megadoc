@@ -25,12 +25,14 @@ const Article = React.createClass({
       <div>
         <HighlightedText>{article.source}</HighlightedText>
 
-        <Disqus
-          identifier={article.id}
-          title={article.title}
-          pathname={this.context.location.pathname}
-          config={this.context.config.disqus || { enabled: false } }
-        />
+        {this.context.config.disqus && (
+          <Disqus
+            identifier={article.id}
+            title={article.title}
+            pathname={this.context.location.pathname}
+            config={this.context.config.disqus}
+          />
+        )}
       </div>
     );
   }

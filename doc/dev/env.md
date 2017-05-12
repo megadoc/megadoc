@@ -9,8 +9,7 @@ Clone the repository from github:
 
 Make sure you're on Node 4 or higher (needed for tests) then run:
 
-    npm install
-    ./node_modules/.bin/lerna bootstrap --hoist
+    npm install && ./node_modules/.bin/lerna bootstrap
 
 This command will install all the necessary packages for Megadoc core and the
 core packages found under `packages/` - it will also compile their assets, run

@@ -12,12 +12,6 @@ const ErrorMessage = require('components/ErrorMessage');
 const { object, func, } = React.PropTypes;
 
 const Root = React.createClass({
-  childContextTypes: {
-    config: object,
-    location: require('schemas/Location'),
-    navigate: func,
-  },
-
   propTypes: {
     appState: object.isRequired,
     config: object,
@@ -25,11 +19,14 @@ const Root = React.createClass({
     location: require('schemas/Location'),
     onNavigate: func,
     onRefreshScroll: func,
-  },
-
-  contextTypes: {
     documentURI: React.PropTypes.instanceOf(DocumentURI).isRequired,
     documentResolver: React.PropTypes.instanceOf(DocumentResolver).isRequired,
+  },
+
+  childContextTypes: {
+    config: object,
+    location: require('schemas/Location'),
+    navigate: func,
   },
 
   getChildContext() {
@@ -151,13 +148,13 @@ const Root = React.createClass({
   },
 
   resolveCurrentDocument() {
-    return this.context.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
+    return this.props.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
   },
 
   getPathName() {
-    return this.context.documentResolver.getProtocolAgnosticPathName(
+    return this.props.documentResolver.getProtocolAgnosticPathName(
       this.getLocation(),
-      this.context.documentURI
+      this.props.documentURI
     );
   },
 

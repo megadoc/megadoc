@@ -1,12 +1,12 @@
 const Subject = require('../ClassBrowser');
 const reactSuite = require('test_helpers/reactSuite');
-const stubContext = require('test_helpers/stubContext');
+const stubRoutingContext = require('test_helpers/stubRoutingContext');
 const { assert } = require('chai');
 const { drill, m } = require('react-drill');
 const Link = require('components/Link');
 
 describe('JS::Components::ClassBrowser', function() {
-  const suite = reactSuite(this, stubContext(Subject), {
+  const suite = reactSuite(this, stubRoutingContext(Subject), {
     namespaceNode: {
       config: {},
       documents: [

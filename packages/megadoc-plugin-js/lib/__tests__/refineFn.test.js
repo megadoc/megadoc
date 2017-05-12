@@ -4,6 +4,7 @@ const reduceFn = require('../reduceFn');
 const subject = require('../refineFn');
 const init = require('../initFn');
 const async = require('async');
+const { assert } = require('chai');
 
 describe('megadoc-plugin-js::refineFn', function() {
   const fileSuite = FileSuite(this);
@@ -176,6 +177,8 @@ describe('megadoc-plugin-js::refineFn', function() {
                 done(err3);
               }
               else {
+                // TODO: real assertion?
+                assert.ok(refinedDocuments);
                 done();
               }
             })

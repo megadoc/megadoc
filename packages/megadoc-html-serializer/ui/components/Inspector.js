@@ -10,6 +10,7 @@ const Inspector = React.createClass({
   propTypes: {
     inSinglePageMode: PropTypes.bool,
     isOutletOccupied: PropTypes.func.isRequired,
+    corpus: PropTypes.object,
   },
 
   getInitialState() {

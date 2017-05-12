@@ -1,12 +1,12 @@
 const React = require('react');
-const { func } = React.PropTypes;
 const sinon = require('sinon');
+const { PropTypes } = React;
 
-module.exports = function(Component, fn) {
+module.exports = function stubRoutingContext(Component, fn) {
   return React.createClass({
     childContextTypes: {
       location: require('schemas/Location'),
-      navigate: func,
+      navigate: PropTypes.func,
     },
 
     getChildContext() {

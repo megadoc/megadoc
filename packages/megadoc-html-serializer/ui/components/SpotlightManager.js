@@ -13,6 +13,7 @@ const SpotlightManager = React.createClass({
     onClose: func.isRequired,
     documentNode: object,
     pathname: string.isRequired,
+    corpus: object.isRequired,
   },
 
   contextTypes: {

@@ -1,17 +1,30 @@
-/* global megadoc: false */
 const Subject = require('../Layout');
 const reactSuite = require('test_helpers/reactSuite');
-const stubCorpus = require('test_helpers/stubCorpus');
-const stubContext = require('test_helpers/stubContext');
+const stubRoutingContext = require('test_helpers/stubRoutingContext');
+const stubAppContext = require('test_helpers/stubAppContext');
 const { assert } = require('chai');
 const { drill, m } = require('react-drill');
-const Outlet = require('components/Outlet');
 const NotFound = require('components/NotFound');
 const ErrorMessage = require('components/ErrorMessage');
 const React = require('react');
+const { OutletManager } = require('react-transclusion');
+const CorpusAPI = require('core/CorpusAPI');
 
 describe('megadoc::Components::Layout', function() {
-  const suite = reactSuite(this, stubContext(Subject), {
+  let outletManager;
+
+  beforeEach(function() {
+    outletManager = OutletManager({
+      strict: false,
+      verbose: false
+    })
+  });
+
+  const suite = reactSuite(this, stubAppContext(stubRoutingContext(Subject), () => {
+    return {
+      outletManager
+    }
+  }), {
     pathname: '/',
     template: {
       regions: [],
@@ -19,10 +32,6 @@ describe('megadoc::Components::Layout', function() {
     },
 
     scope: {},
-  });
-
-  afterEach(function() {
-    Outlet.reset();
   });
 
   it('renders', function() {
@@ -34,11 +43,14 @@ describe('megadoc::Components::Layout', function() {
   });
 
   describe('@using', function() {
-    stubCorpus(this, require('json!test_helpers/fixtures/corpus--small.json'));
+    const corpus = CorpusAPI({
+      database: require('json!test_helpers/fixtures/corpus--small.json'),
+      redirect: {}
+    });
 
     it('injects a custom documentNode into an outlet when specified', function() {
-      Outlet.define('TestOutlet');
-      Outlet.add('TestOutlet', {
+      outletManager.define('TestOutlet');
+      outletManager.add('TestOutlet', {
         key: 'asdf',
         component: React.createClass({
           propTypes: {
@@ -62,7 +74,7 @@ describe('megadoc::Components::Layout', function() {
                   name: 'TestOutlet',
                   using: 'api/foo',
                   scope: {
-                    documentNode: megadoc.corpus.get('api/foo')
+                    documentNode: corpus.get('api/foo')
                   }
                 }
               ]
@@ -99,7 +111,7 @@ describe('megadoc::Components::Layout', function() {
     });
 
     it('displays an error when the document to be injected was not found', function() {
-      Outlet.define('Foo');
+      outletManager.define('Foo');
 
       suite.setProps({
         pathname: '/foo',

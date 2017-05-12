@@ -12,6 +12,7 @@
     "coverage": "COVERAGE=1 ./bin/test",
     "doc": "./bin/build-docs",
     "lint": "./bin/lint && ./bin/lint-ui",
+    "prepublish": "npm run lint && npm run test",
     "start": "./bin/devserver",
     "test": "./bin/test && ./bin/test-ui --single-run"
   },

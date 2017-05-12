@@ -1,22 +1,17 @@
 var _ = require('lodash');
 var RendererUtils = require('./RendererUtils');
-var multiline = require('multiline-slash');
 
-var AnchorableHeadingTmpl = _.template(
-  multiline(function() {;
-    // <h<%- level %> class="anchorable-heading">
-    //   <a name="<%- id %>" class="anchorable-heading__anchor"></a>
-    //   <a href="#<%- id %>" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><%= text %></span>
-    // </h<%- level %>>
-  })
+var AnchorableHeadingTmpl = _.template(`
+<h<%- level %> class="anchorable-heading">
+  <a name="<%- id %>" class="anchorable-heading__anchor"></a>
+  <a href="#<%- id %>" class="anchorable-heading__link icon icon-link"></a><span class="anchorable-heading__text"><%= text %></span>
+</h<%- level %>>`
 );
 
-var HeadingTmpl = _.template(
-  multiline(function() {;
-    // <h<%- level %>>
-    //   <%= text %>
-    // </h<%- level %>>
-  })
+var HeadingTmpl = _.template(`
+<h<%- level %>>
+  <%= text %>
+</h<%- level %>>`
 );
 
 function renderHeading(text, level, state, runOptions) {

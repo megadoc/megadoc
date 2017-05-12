@@ -14,7 +14,7 @@ var sinon = require('sinon');
 sinon.assert.expose(assert, { prefix: "" });
 
 var TestUtils = exports;
-var TEST_REPO_PATH = path.resolve(__dirname, '../tmp/test-repo');
+var TEST_REPO_PATH = path.resolve(__dirname, '../../tmp/test-repo');
 var gid = 0;
 
 exports.contentBase = root;
@@ -139,7 +139,7 @@ function IntegrationSuite(mochaSuite, suiteOptions) {
   );
 
   mochaSuite.beforeEach(function() {
-    suiteRoot = interpolateGUID(path.resolve(__dirname, '../tmp/test-repo__[gid]-[guid]'));
+    suiteRoot = interpolateGUID(path.resolve(__dirname, '../../tmp/test-repo__[gid]-[guid]'));
 
     config = merge({}, require('megadoc-compiler/lib/config'), {
       verbose: false,
