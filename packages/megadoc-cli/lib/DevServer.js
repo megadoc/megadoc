@@ -1,6 +1,8 @@
 /* eslint-disable */
 const compiler = require('megadoc-compiler');
 const chokidar = require('chokidar');
+const ConfigUtils = require('megadoc-config-utils');
+
 exports.run = function(config, runOptions) {
   compiler.run(config, runOptions, function(err, stats) {
     if (err) {
@@ -38,6 +40,11 @@ exports.run = function(config, runOptions) {
       })
     ;
 
+    const serializerSpec = ConfigUtils.getConfigurablePair(config.serializer) || {
+      name: 'megadoc-html-serializer'
+    };
+    const serializerOptions = serializerSpec.options || {};
+
     const filePaths = Object.keys(stats.compilations.reduce((map, compilation) => {
       compilation.files.forEach(filePath => map[filePath] = true);
 
@@ -45,6 +52,10 @@ exports.run = function(config, runOptions) {
     }, {}));
 
     watcher.add(filePaths);
+
+    if (serializerOptions.styleSheet) {
+      watcher.add(serializerOptions.styleSheet);
+    }
 
     process.on('exit', function() {
       console.log('Cleaning up');
