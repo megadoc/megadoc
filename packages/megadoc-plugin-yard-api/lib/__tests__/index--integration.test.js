@@ -2,7 +2,7 @@ var Subject = require("../");
 var assert = require('chai').assert;
 var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 
-describe("[Integration] megadoc-plugin-yard-api", function() {
+describe.skip("[Integration] megadoc-plugin-yard-api", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {

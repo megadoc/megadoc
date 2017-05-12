@@ -1,0 +1,1 @@
+exports.Linter = require('./Linter');

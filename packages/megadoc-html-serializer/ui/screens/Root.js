@@ -137,7 +137,6 @@ const Root = React.createClass({
   },
 
   reload() {
-    console.debug('Root: updating');
     this.forceUpdate();
   },
 

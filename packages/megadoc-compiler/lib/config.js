@@ -27,6 +27,8 @@ module.exports = {
 
   format: 'html',
 
+  lintRules: {},
+
   /**
    * @property {String}
    *
@@ -215,45 +217,6 @@ module.exports = {
   scrollSpying: false,
 
   layout: 'multi-page',
-
-  /**
-   * @property {Object}
-   */
-  layoutOptions: {
-    /**
-     * @property {Object.<String, String>}
-     *
-     * Override the default URL for certain documents. You must use [[UIDs | CorpusUIDs]]
-     * to specify the documents you want to rewrite.
-     *
-     * @example
-     *
-     *     {
-     *       "api/Cache": "/cache.html"
-     *     }
-     */
-    rewrite: {},
-
-    /**
-     * @property {Boolean}
-     *
-     * Launch megadoc into "single-page" mode where you want to present all
-     * the contents in a single page. This flag MUST be turned in order for
-     * links to work online and offline.
-     *
-     * See the [guides/single-page-md Single Page Mode guide]() for more information.
-     */
-    singlePageMode: false,
-
-    /**
-     * @property {Array.<BannerLink>}
-     *
-     * @typedef {BannerLink}
-     * @property {String} text
-     * @property {String} href
-     */
-    bannerLinks: []
-  },
 
   spotlight: true,
 

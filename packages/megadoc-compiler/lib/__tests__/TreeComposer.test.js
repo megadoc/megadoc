@@ -1,3 +1,4 @@
+require('../Compiler')
 const { assert } = require('chai');
 const Subject = require('../TreeComposer');
 const { builders: b } = require('megadoc-corpus')

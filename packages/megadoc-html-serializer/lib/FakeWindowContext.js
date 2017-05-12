@@ -1,16 +1,16 @@
-module.exports = function FakeWindowContext(window, target) {
+module.exports = function FakeWindowContext(window, global) {
   const muddied = [];
 
   function expose(key, value) {
-    if (!target.hasOwnProperty(key)) {
-      target[key] = value;
+    if (!global.hasOwnProperty(key)) {
+      global[key] = value;
       muddied.push(key);
     }
   }
 
   return {
     install: function() {
-      target.window = window;
+      global.window = window;
 
       window.localStorage = {
         setItem: function() {},
@@ -18,11 +18,19 @@ module.exports = function FakeWindowContext(window, target) {
         clear: function() {}
       };
 
-      for (var key in window) {
-        if (window.hasOwnProperty(key)) {
-          expose(key, window[key]);
-        }
-      }
+      // global.console = {
+      //   debug: Function.prototype,
+      //   info: Function.prototype,
+      //   notice: Function.prototype,
+      //   log: Function.prototype,
+      //   warn: console.warn.bind(console),
+      //   error: console.error.bind(console),
+      //   assert: console.assert.bind(console),
+      // };
+
+      Object.keys(window).forEach(key => {
+        expose(key, window[key]);
+      })
     },
 
     expose: expose,
@@ -31,12 +39,12 @@ module.exports = function FakeWindowContext(window, target) {
       delete window.localStorage;
 
       muddied.forEach(function(key) {
-        delete target[key];
+        delete global[key];
       });
 
       muddied.splice(0);
 
-      delete target['window'];
+      delete global['window'];
     }
   };
 }

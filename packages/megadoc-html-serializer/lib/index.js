@@ -108,7 +108,9 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
     verbose: this.compilerConfig.verbose,
   });
 
-  console.log('[D] Emitting files for corpus of size %d', documentUIDs.length)
+  if (this.compilerConfig.verbose) {
+    console.log('[D] Emitting files for corpus of size %d', documentUIDs.length)
+  }
 
   emitAssets(
     Object.assign({}, this.config, {
@@ -148,7 +150,9 @@ HTMLSerializer.prototype.purgeEmittedCorpusDocuments = function(corpusInfo, done
   }, {});
 
   const removeDocumentFile = (filePath, callback) => {
-    console.log('[D] Document file "%s" will be purged.', filePath);
+    if (this.compilerConfig.verbose) {
+      console.log('[D] Document file "%s" will be purged.', filePath);
+    }
 
     this.assetUtils.removeAsset(filePath, callback);
   }

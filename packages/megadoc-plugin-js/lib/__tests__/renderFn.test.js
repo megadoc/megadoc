@@ -24,7 +24,10 @@ describe('megadoc-plugin-js::renderFn', function() {
     HTMLRenderingSuite.assertDidRender(descriptor, {
       location: 'description',
       using: renderer.markdown(
-        renderer.linkify({ text: document.properties.description })
+        renderer.linkify({
+          text: document.properties.description,
+          contextNode: document,
+        })
       )
     });
   });
@@ -53,7 +56,8 @@ describe('megadoc-plugin-js::renderFn', function() {
         location: 'tags[0].typeInfo.description',
         using: renderer.markdown(
           renderer.linkify({
-            text: document.properties.tags[0].typeInfo.description
+            text: document.properties.tags[0].typeInfo.description,
+            contextNode: document,
           })
         )
       });
@@ -81,7 +85,8 @@ describe('megadoc-plugin-js::renderFn', function() {
         location: 'tags[0].string',
         using: renderer.markdown(
           renderer.linkify({
-            text: document.properties.tags[0].string
+            text: document.properties.tags[0].string,
+            contextNode: document,
           })
         )
       });

@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": [ "sources" ],
+  "properties": {
+    "sources": {
+      "type": "array"
+    }
+  }
+}

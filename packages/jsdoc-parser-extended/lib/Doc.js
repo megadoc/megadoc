@@ -131,7 +131,7 @@ Doc.prototype.getTypeDefs = function() {
   return this.docstring.typeDefs.map(typeDefData => {
     const typeDefDocstring = new Docstring(typeDefData);
 
-    if (typeDefDocstring.name.indexOf(`${receiver}~`) === 0) {
+    if (typeDefDocstring.name && typeDefDocstring.name.indexOf(`${receiver}~`) === 0) {
       typeDefDocstring.name = typeDefDocstring.name.slice(`${receiver}~`.length);
     }
 

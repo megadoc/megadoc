@@ -1,9 +1,15 @@
 instrumentation:
+  root: packages
   preserve-comments: true
   excludes:
     - "*.test.js"
-    - "__tests__/**/*"
+    - "**__tests__/**"
     - "TestUtils.js"
+    - "megadoc-plugin-react/**"
+    - "megadoc-plugin-static/**"
+    - "megadoc-plugin-skeleton/**"
+    - "megadoc-test-utils/**"
+    - "**/dist/*.js"
   extensions:
     - .js
 # reporting:

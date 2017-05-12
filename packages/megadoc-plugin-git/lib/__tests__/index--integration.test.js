@@ -3,7 +3,7 @@ var assert = require('chai').assert;
 var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 var path = require('path');
 
-describe("[Integration] megadoc-plugin-git", function() {
+describe.skip("[Integration] megadoc-plugin-git", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {

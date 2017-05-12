@@ -5,7 +5,7 @@ var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').Integration
 var b = require('megadoc-corpus').builders;
 var cheerio = require('cheerio');
 
-describe("megadoc-plugin-dot::render", function() {
+describe.skip("megadoc-plugin-dot::render", function() {
   var suite = IntegrationSuite(this);
   var subject;
 

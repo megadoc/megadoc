@@ -42,11 +42,7 @@ ClientSandbox.prototype.start = function(assets, done) {
   require(VENDOR_BUNDLE);
 
   fakeWindowContext.expose('webpackJsonp_megadoc', window.webpackJsonp_megadoc);
-  fakeWindowContext.expose('console.debug', Function.prototype);
-
-  if (!console.debug) {
-    console.debug = Function.prototype;
-  }
+  // fakeWindowContext.expose('console.debug', Function.prototype);
 
   const commonModules = require(COMMON_BUNDLE);
 

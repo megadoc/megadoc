@@ -171,14 +171,11 @@ describe('megadoc-plugin-js::refineFn', function() {
             done(err2);
           }
           else {
-            console.log('docs:', documents.map(x => x.id))
-
             subject(context, documents, function(err3, refinedDocuments) {
               if (err3) {
                 done(err3);
               }
               else {
-                console.log('refined docs:', refinedDocuments.map(x => x.id))
                 done();
               }
             })

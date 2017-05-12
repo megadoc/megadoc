@@ -31,6 +31,7 @@ module.exports = function createCompilation(commonOptions, runOptions, source) {
     stats: {},
     tree: null,
     treeOperations: null,
+    logger: runOptions.logger,
   };
 };
 

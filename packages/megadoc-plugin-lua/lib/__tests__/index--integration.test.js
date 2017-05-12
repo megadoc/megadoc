@@ -1,56 +1,44 @@
-var Subject = require("../");
-var assert = require('chai').assert;
-var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
-var path = require('path');
+const path = require('path');
+const { createIntegrationSuite } = require('megadoc-test-utils');
 
-describe("[Integration] megadoc-plugin-lua", function() {
-  var suite = IntegrationSuite(this);
-
-  beforeEach(function() {
-    suite.set('plugins', [
-      Subject({
-        verbose: false,
-        routeName: 'lua-test',
-        source: path.resolve(__dirname, 'fixtures/**/*.lua')
-      })
-    ]);
-  });
+describe('[integration] megadoc-plugin-lua', function() {
+  const integrationSuite = createIntegrationSuite(this);
 
   it('works', function(done) {
-    suite.run(function(err, stats) {
-      if (err) { return done(err); }
+    const sourceFile = integrationSuite.createFile('cli.lua', `
+      --- @module cli
+      --- This here be our CLI module.
+      local cli = {}
 
-      assert.equal(stats['lua:lua-test'].moduleCount, 1);
+      --- Ahhh!
+      cli.foo = function() end
 
-      suite.assertFileWasRendered('lua-test/cli.html', {
-        text: 'This here be our CLI module.'
-      });
+      return cli
+    `);
 
-      done();
-    });
-  });
-
-  it('works in single page mode', function(done) {
-    suite.engageSinglePageMode({
-      match: { by: 'url', on: '*' },
-      regions: [
+    integrationSuite.compile({
+      sources: [
         {
-          name: 'Layout::Content',
-          outlets: [{ name: 'Lua::AllModules', using: 'lua-test' }]
+          include: [
+            `${path.dirname(sourceFile.path)}/*.lua`
+          ],
+          processor: {
+            name: path.resolve(__dirname, '../index.js'),
+            options: {
+              id: 'lua',
+              name: 'Lua',
+            }
+          }
         }
       ]
-    });
-
-    suite.run(function(err, stats) {
-      if (err) { return done(err); }
-
-      assert.equal(stats['lua:lua-test'].moduleCount, 1);
-
-      suite.assertFileWasRendered('index.html', {
-        text: 'This here be our CLI module.'
-      });
-
-      done();
-    });
+    }, function(err) {
+      if (err) {
+        done(err);
+      }
+      else {
+        integrationSuite.assertFileWasRendered('lua/cli.html');
+        done();
+      }
+    })
   });
 });

@@ -1,23 +1,18 @@
-const FileSuite = require('megadoc-test-utils/FileSuite');
-const compiler = require('megadoc-compiler');
+const { createIntegrationSuite } = require('megadoc-test-utils');
 const path = require('path');
 
 describe('[integration] megadoc-plugin-js', function() {
-  const fileSuite = FileSuite(this);
+  const suite = createIntegrationSuite(this);
 
   it('works', function(done) {
-    const sourceFile = fileSuite.createFile('source.js', `
+    const sourceFile = suite.createFile('source.js', `
       /**
        * Hello!
        */
       module.exports = function beep() {}
     `);
 
-    compiler.run({
-      tmpDir: path.resolve(fileSuite.getRootDirectory(), 'tmp'),
-      outputDir: path.resolve(fileSuite.getRootDirectory(), 'dist'),
-      verbose: true,
-
+    suite.compile({
       sources: [
         {
           pattern: /\.js$/,
@@ -32,11 +27,11 @@ describe('[integration] megadoc-plugin-js', function() {
           }
         }
       ]
-    }, done)
+    }, {}, done)
   });
 
   it('works against a real thing', function(done) {
-    const sourceFile = fileSuite.createFile('source.js', `
+    const sourceFile = suite.createFile('source.js', `
 
       /**
        * # RID Bag
@@ -97,11 +92,7 @@ describe('[integration] megadoc-plugin-js', function() {
       });
     `);
 
-    compiler.run({
-      tmpDir: path.resolve(fileSuite.getRootDirectory(), 'tmp'),
-      outputDir: path.resolve(fileSuite.getRootDirectory(), 'dist'),
-      verbose: true,
-
+    suite.compile({
       sources: [
         {
           pattern: /\.js$/,
@@ -116,6 +107,6 @@ describe('[integration] megadoc-plugin-js', function() {
           }
         }
       ]
-    }, done)
+    }, {}, done)
   });
 });

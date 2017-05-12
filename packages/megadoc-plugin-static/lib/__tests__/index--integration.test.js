@@ -1,7 +1,7 @@
 var Subject = require("../");
 var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 
-describe("[Integration] megadoc-plugin-static", function() {
+describe.skip("[Integration] megadoc-plugin-static", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {

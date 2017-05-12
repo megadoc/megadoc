@@ -4,7 +4,7 @@ var assert = require('chai').assert;
 var path = require('path');
 var b = require('megadoc-corpus').Types.builders;
 
-describe('megadoc-plugin-git', function() {
+describe.skip('megadoc-plugin-git', function() {
   var compiler, plugin;
 
   beforeEach(function() {

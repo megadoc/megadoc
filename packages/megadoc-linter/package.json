@@ -1,0 +1,8 @@
+{
+  "name": "megadoc-linter",
+  "version": "6.0.0-beta.1",
+  "main": "lib/index.js",
+  "devDependencies": {
+    "megadoc-test-utils": "^6.0.0-beta.1"
+  }
+}

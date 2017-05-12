@@ -3,7 +3,7 @@ var fs = require('fs');
 var path = require('path');
 var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
 
-describe("megadoc-plugin-dot", function() {
+describe.skip("megadoc-plugin-dot", function() {
   var suite = IntegrationSuite(this);
 
   beforeEach(function() {

@@ -2,9 +2,6 @@ const fs = require('fs-extra');
 const async = require('async');
 const partial = require('./utils/partial');
 const ConfigUtils = require('megadoc-config-utils');
-
-const Compiler = exports;
-
 const createCompilation = require('./stage00__createCompilation');
 const initState = require('./stage00__initState');
 const parse = require('./stage01__parse');
@@ -17,6 +14,9 @@ const composeTree = require('./stage03__composeTree');
 const renderCorpus = require('./stage04__renderCorpus');
 const purge = require('./stage05__purge');
 const emit = require('./stage05__emit');
+const parseConfig = require('./parseConfig');
+const composeAsync = fns => async.compose.apply(async, fns);
+const Compiler = exports;
 
 /**
  * Perform the compilation.
@@ -34,11 +34,12 @@ const emit = require('./stage05__emit');
  * @param {Boolean} [runOptions.stats=false]
  *        Turn this on if you want to generate compile-time statistics.
  */
-Compiler.run = function(config, runOptions, done) {
+Compiler.run = function(userConfig, runOptions, done) {
   if (arguments.length === 2) {
     done = runOptions;
     runOptions = {};
   }
+  const config = parseConfig(userConfig);
 
   const tmpDir = config.tmpDir;
   const commonOptions = config; // TODO
@@ -49,20 +50,27 @@ Compiler.run = function(config, runOptions, done) {
   const serializer = new Serializer(config, serializerSpec.options);
   const compilations = config.sources.map(partial(createCompilation, commonOptions, runOptions));
 
-  const compileTree = async.compose(
+  const compileTree = composeAsync([
     composeTree,
-    partial(mergeChangeTree, runOptions.initialState),
+    partial(
+      mergeChangeTree, runOptions.initialState
+    ),
     reduceTree,
-    partial(render, serializer.renderRoutines),
+    partial(
+      render, serializer.renderRoutines
+    ),
     reduce,
     refine,
     parse,
-    initState
-  );
+    initState,
+  ]);
 
-  const compileTreesIntoCorpus = async.compose.apply(async, [
+  const compileTreesIntoCorpus = composeAsync([
     partial(emit, serializer),
-    runOptions.purge ? partial(purge, serializer) : null,
+    runOptions.purge ?
+      partial(purge, serializer) :
+      null
+    ,
     partial(renderCorpus, serializer)
   ].filter(x => x !== null));
 
