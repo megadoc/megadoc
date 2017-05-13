@@ -9,4 +9,4 @@ source "./bin/_helpers.sh"
 
 nodejs_use_local_packages
 
-exec ./cli/megadoc --config=doc/megadoc.conf.js $@
+exec ./packages/megadoc-cli/lib/megadoc.js --config=doc/megadoc.conf.js $@

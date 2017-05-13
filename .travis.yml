@@ -19,6 +19,7 @@ script:
   - ./bin/lint-ui
   - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/test -- --reporter dot
   - ./bin/test-ui --single-run --browsers Firefox
+  - ./bin/build-docs
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
