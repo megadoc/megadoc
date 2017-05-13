@@ -37,7 +37,7 @@
     "chai": "3.5.0",
     "cheerio": "0.22.0",
     "coveralls": "2.11.4",
-    "depcheck": "0.6.3",
+    "depcheck": "0.6.7",
     "eslint": "3.19.0",
     "eslint-plugin-mocha": "4.9.0",
     "eslint-plugin-react": "6.10.3",

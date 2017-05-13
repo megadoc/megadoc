@@ -30,6 +30,11 @@
   exit 1
 }
 
+which jq &> /dev/null || {
+  echo "$0: jq must be installed"
+  exit 1
+}
+
 source "bin/_helpers.sh"
 
 if [[ -z $PACKAGE && -z $LERNA_PACKAGE_NAME && -z $npm_package_name ]]; then
@@ -91,18 +96,18 @@ function link_local_dependencies {
 
 function ensure_no_unlisted_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
-    out=$(./node_modules/.bin/depcheck $PACKAGE_ROOT --ignore-dirs="__tests__,tmp,test_helpers,lib--legacy,ui,doc" --json)
+    out=$(
+      ./node_modules/.bin/depcheck \
+        $PACKAGE_ROOT \
+        --json \
+        --ignores="multiline-slash,sinon,chai" \
+        --ignore-dirs="__tests__,tmp,test_helpers,lib--legacy,ui,doc"
+      )
 
     # for some reason the --ignores flag is, well, being ignored by depcheck
     # so we resort to doing this manually in JS land:
     node -e "
-      var IGNORED = [ 'multiline-slash', 'sinon' ];
-      var deps = JSON.parse(process.argv[1]);
-      var missingDeps = Object.keys(deps.missing || {})
-        .filter(function(x) {
-          return IGNORED.indexOf(x) === -1;
-        })
-      ;
+      var missingDeps = JSON.parse(process.argv[1]).missing || {};
 
       if (missingDeps.length > 0) {
         console.error('Missing dependencies:', missingDeps.map(function(x) { return '\n  * ' + x; }).join(''));
@@ -111,25 +116,6 @@ function ensure_no_unlisted_dependencies {
     " "${out}"
 
     return $?
-  }
-}
-
-function refresh_dependencies {
-  [ -f $PACKAGE_ROOT/package.json ] && {
-    cd $PACKAGE_ROOT
-    echo "Ensuring dependencies are not out-of-date..."
-
-    npm install --ignore-scripts && {
-      # this is causing issues on travis, i think it's the dedupe...
-      if [ -z $TRAVIS_BUILD ]; then
-        echo "Pruning and deduping..."
-        npm prune && npm dedupe
-      fi
-
-      if [ "${PRELINK}" == "1" ]; then
-        npm link --ignore-scripts
-      fi
-    }
   }
 }
 
@@ -146,19 +132,26 @@ function run_tests {
 }
 
 function build_assets {
-  if [ ! -f $PACKAGE_ROOT/ui/index.js ]; then
-    echo "Package has no UI assets to compile - nothing to do!"
-    return 0
-  fi
+  build_script=$(cat $PACKAGE_ROOT/package.json | jq -e -r '.scripts.build')
 
-  if [ -d $PACKAGE_ROOT/dist ]; then
-    echo "Cleaning previous build artifacts..."
-    rm -r $PACKAGE_ROOT/dist
-  fi
+  if [ $build_script == 'null' ]
+  then
+    if [ ! -f $PACKAGE_ROOT/ui/index.js ]; then
+      echo "Package has no UI assets to compile - nothing to do!"
+      return 0
+    fi
 
-  ./packages/megadoc-cli/lib/compile.js --optimize \
-    "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
-    "${PACKAGE_ROOT}/ui/index.js"
+    if [ -d $PACKAGE_ROOT/dist ]; then
+      echo "Cleaning previous build artifacts..."
+      rm -r $PACKAGE_ROOT/dist
+    fi
+
+    ./packages/megadoc-cli/lib/compile.js --optimize \
+      "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
+      "${PACKAGE_ROOT}/ui/index.js"
+  else
+    (cd $PACKAGE_ROOT; npm run build)
+  fi
 }
 
 echo "Preparing \"${PACKAGE_NAME}\" for publishing... hang on tight."
@@ -180,7 +173,7 @@ while getopts ":S:O:" opt; do
       IGNORED+=("${OPTARG}")
       ;;
     O)
-      declare -a steps=('check' 'update' 'lint' 'test' 'build')
+      declare -a steps=('check' 'lint' 'test' 'build')
 
       for step in ${steps[@]}; do
         if [ "${step}" != "${OPTARG}" ]; then
@@ -201,7 +194,6 @@ if [ "${PRELINK}" == "1" ]; then
 fi
 
 should_run "check" && run_task ensure_no_unlisted_dependencies
-# should_run "update" && run_task refresh_dependencies
 should_run "lint" && run_task lint_sources && run_task lint_ui_sources
 should_run "test" && run_task run_tests $@
 should_run "build" && run_task build_assets

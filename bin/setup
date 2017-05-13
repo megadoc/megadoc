@@ -11,13 +11,10 @@ set -e
 }
 
 npm install --ignore-scripts
-npm run build # build failures should count!
 
-if [ "${PRELINK}" == "1" ]; then
-  npm link --ignore-scripts
-fi
+./node_modules/.bin/lerna bootstrap
 
-for pkg in $(find packages -maxdepth 1 -type d -name 'megadoc-*' | sort | sed 's/packages\///')
+for pkg in $(ls packages/ | sort | sed 's/packages\///')
 do
   if [ $pkg == "megadoc-plugin-skeleton" ]; then
     continue

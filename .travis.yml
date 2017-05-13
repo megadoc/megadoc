@@ -11,19 +11,17 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 install:
-  - PRELINK=1 ./bin/setup
+  - ./bin/setup
 
 script:
+  - ./bin/scan-dependency-versions
   - ./bin/lint
   - ./bin/lint-ui
-  - COVERAGE=1 ./bin/test
+  - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/test -- --reporter dot
   - ./bin/test-ui --single-run --browsers Firefox
 
 after_success:
   - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
-
-env:
-  - MEGADOC_TEST_TIMEOUT=60000 TRAVIS_BUILD=1
 
 cache:
   directories:
