@@ -15,6 +15,7 @@ describe('[integration] megadoc-plugin-js', function() {
     suite.compile({
       sources: [
         {
+          id: 'js',
           pattern: /\.js$/,
           include: [ path.dirname(sourceFile.path) ],
           processor: {
@@ -95,6 +96,7 @@ describe('[integration] megadoc-plugin-js', function() {
     suite.compile({
       sources: [
         {
+          id: 'js',
           pattern: /\.js$/,
           include: [ path.dirname(sourceFile.path) ],
           processor: {

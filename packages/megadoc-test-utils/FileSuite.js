@@ -57,6 +57,10 @@ module.exports = function FileSuite(mochaSuite, suiteOptions = {}) {
     return suiteRoot;
   };
 
+  exports.join = function() {
+    return path.join.apply(path, [ suiteRoot ].concat([].slice.call(arguments)));
+  }
+
   return exports;
 };
 

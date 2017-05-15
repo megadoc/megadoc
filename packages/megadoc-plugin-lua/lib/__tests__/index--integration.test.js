@@ -19,6 +19,7 @@ describe('[integration] megadoc-plugin-lua', function() {
     integrationSuite.compile({
       sources: [
         {
+          id: 'lua',
           include: [
             `${path.dirname(sourceFile.path)}/*.lua`
           ],

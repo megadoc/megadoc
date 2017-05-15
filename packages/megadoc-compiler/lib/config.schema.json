@@ -1,9 +1,31 @@
 {
   "type": "object",
-  "required": [ "sources" ],
+  "required": [ "assetRoot", "sources" ],
   "properties": {
+    "assetRoot": {
+      "type": "string"
+    },
     "sources": {
-      "type": "array"
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "id", "include", "processor" ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "include": {
+            "type": [ "string", "array" ]
+          },
+          "processor": {
+            "anyOf": [
+              { "type": "string" },
+              { "type": "array" },
+              { "type": "object" }
+            ]
+          }
+        }
+      }
     }
   }
 }

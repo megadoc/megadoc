@@ -104,9 +104,12 @@ exports.composeTree = function(context, documentList, treeOperations) {
   });
 
   try {
+    const id = namespaceAttributes.id || context.options.id || context.id;
+    const name = namespaceAttributes.name || context.options.name || id;
+
     return b.namespace({
-      id: namespaceAttributes.id || context.options.id || context.id,
-      name: namespaceAttributes.name || context.options.name,
+      id,
+      name,
       title: namespaceAttributes.title || null,
       meta: namespaceAttributes.meta || {},
       config: namespaceAttributes.config || null,
