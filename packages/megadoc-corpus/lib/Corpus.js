@@ -82,7 +82,7 @@ function Corpus(config) {
    * @return {T.Node}
    */
   exports.resolve = function(anchor) {
-    if (anchor.text in nodes) {
+    if (nodes.hasOwnProperty(anchor.text)) {
       return nodes[anchor.text];
     }
 
@@ -198,7 +198,7 @@ function Corpus(config) {
     integrityEnforcements.apply(node);
 
     node.uid = UID(node);
-    node.indices = buildIndices(node);
+    node.indices = Object.assign({}, buildIndices(node), node.indices);
 
     Types.getTypeChain(node.type).forEach(function(typeName) {
       if (typeName in visitors) {

@@ -223,6 +223,8 @@ def("Node", {
      */
     indexFields: or(array(t.string), null),
 
+    indices: or(t.object, null),
+
     /**
      * @property {Object[]}
      *
