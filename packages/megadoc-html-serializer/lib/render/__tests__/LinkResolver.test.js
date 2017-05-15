@@ -1,6 +1,7 @@
 var LinkResolver = require('../LinkResolver');
 var Corpus = require('megadoc-corpus').Corpus;
 var assert = require('assert');
+const NodeURIDecorator = require('../../NodeURIDecorator');
 var b = require('megadoc-corpus').Types.builders;
 
 describe('LinkResolver', function() {
@@ -8,7 +9,7 @@ describe('LinkResolver', function() {
 
   beforeEach(function() {
     corpus = Corpus();
-    corpus.visit(require('../NodeURIDecorator')({
+    corpus.visit(NodeURIDecorator({
       layoutOptions: { singlePageMode: false }
     }));
     corpus.add(

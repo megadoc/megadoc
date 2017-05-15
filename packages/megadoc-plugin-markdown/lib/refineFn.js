@@ -1,5 +1,5 @@
 const findCommonPrefix = require('./utils/findCommonPrefix');
-const RendererUtils = require('megadoc-html-serializer/lib/RendererUtils');
+const { RendererUtils } = require('megadoc-html-serializer');
 const path = require('path');
 
 module.exports = function refineFn(context, documents, done) {

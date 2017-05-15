@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const Subject = require('../TreeRenderer');
 const { builders: b, Corpus } = require('megadoc-corpus');
-const { markdown, linkify } = require('../renderRoutines');
+const { markdown, linkify } = require('../../renderRoutines');
 const Renderer = require('../Renderer')
 const LinkResolver = require('../LinkResolver')
 

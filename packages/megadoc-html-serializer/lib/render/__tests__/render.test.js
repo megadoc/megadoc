@@ -1,4 +1,4 @@
-const render = require('../render');
+const render = require('../');
 const FileSuite = require('megadoc-test-utils/FileSuite');
 
 describe.skip('megadoc-html-serializer::render', function() {

@@ -79,6 +79,6 @@ HTMLSerializer.prototype.stop = function(done) {
   })
 };
 
-HTMLSerializer.RendererUtils = require('./RendererUtils');
+HTMLSerializer.RendererUtils = require('./render/RendererUtils');
 
 module.exports = HTMLSerializer;

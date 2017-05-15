@@ -1,4 +1,4 @@
-const CompositeValue = require('./CompositeValue');
+const CompositeValue = require('./render/CompositeValue');
 
 exports.markdown = function markdown(value) {
   return CompositeValue.create('CONVERT_MARKDOWN_TO_HTML', value);

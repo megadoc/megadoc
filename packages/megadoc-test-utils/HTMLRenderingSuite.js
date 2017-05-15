@@ -1,5 +1,5 @@
 const renderRoutines = require('megadoc-html-serializer/lib/renderRoutines');
-const CV = require('megadoc-html-serializer/lib/CompositeValue');
+const CV = require('megadoc-html-serializer/lib/render/CompositeValue');
 const deepGet = require('lodash').get;
 const util = require('util');
 const { assert } = require('chai');

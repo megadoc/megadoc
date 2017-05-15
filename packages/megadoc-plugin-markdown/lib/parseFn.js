@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const RendererUtils = require('megadoc-html-serializer/lib/RendererUtils');
+const { RendererUtils } = require('megadoc-html-serializer');
 const parseTitle = require('./utils/parseTitle');
 const strHumanize = require('./utils/strHumanize');
 
