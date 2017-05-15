@@ -23,7 +23,6 @@ describe('CJS::Parser - ES6 - import statements', function() {
       verbose: true,
     });
 
-    console.log(docs)
     assert.equal(docs.length, 1);
     assert.equal(docs[0].type, K.TYPE_FUNCTION);
   });

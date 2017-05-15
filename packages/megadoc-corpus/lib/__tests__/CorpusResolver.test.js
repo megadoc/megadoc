@@ -146,7 +146,7 @@ describe('CorpusResolver', function() {
       var { node: document, text } = resolve({
         text: spec.to,
         contextNode: corpus.get(spec.from)
-      }, { trace: true }) || {};
+      }, { trace: false }) || {};
 
       if (spec.res === null) {
         assert.notOk(document, (document && "Resolved '" + document.uid + "' when it should not have."));

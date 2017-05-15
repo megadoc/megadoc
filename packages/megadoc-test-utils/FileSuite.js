@@ -1,5 +1,6 @@
 const path = require('path');
 const fs = require('fs-extra');
+const os = require('os');
 const multiline = require('multiline-slash');
 
 let gid = 0;
@@ -13,12 +14,12 @@ let gid = 0;
  */
 module.exports = function FileSuite(mochaSuite, suiteOptions = {}) {
   const exports = {};
-  const contentBase = suiteOptions.directory || path.resolve(__dirname, '../../tmp/tests');
+  const contentBase = suiteOptions.directory || os.tmpdir();
 
   let suiteRoot;
 
   mochaSuite.beforeEach(function() {
-    suiteRoot = interpolateGUID(path.resolve(contentBase, 'test-repo__[gid]-[guid]'));
+    suiteRoot = interpolateGUID(path.resolve(contentBase, 'megadoc-test-repo__[gid]-[guid]'));
 
     fs.ensureDirSync(suiteRoot);
   });

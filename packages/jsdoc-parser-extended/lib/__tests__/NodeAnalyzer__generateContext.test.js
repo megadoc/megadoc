@@ -32,8 +32,6 @@ describe('CJS::Parser::NodeAnalyzer::generateContext', function() {
       assert.equal(subject.properties.length, 1);
       assert.equal(subject.properties[0].key, 'foo');
       assert.include(subject.properties[0].value, { type: K.TYPE_LITERAL, value: 'bar' });
-
-      console.log(subject)
     });
   });
 

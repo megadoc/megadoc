@@ -21,22 +21,21 @@ describe('stage00__createCompilation', function() {
       };
     `);
 
-    output = subject(
-      { commonOption: 1 },
-      {},
-      {
-        pattern: /\.js$/,
-        include: [
-          path.join(fileSuite.getRootDirectory(), 'sources/**/*'),
-        ],
-        processor: {
-          name: processorSpec.path,
-          options: {
-            foo: 'bar'
-          }
+    output = subject({
+      config: { commonOption: 1 },
+      runOptions: {},
+    }, {
+      pattern: /\.js$/,
+      include: [
+        path.join(fileSuite.getRootDirectory(), 'sources/**/*'),
+      ],
+      processor: {
+        name: processorSpec.path,
+        options: {
+          foo: 'bar'
         }
       }
-    );
+    });
   });
 
   it('should include the matching files', function() {
@@ -59,9 +58,10 @@ describe('stage00__createCompilation', function() {
 
   context('given a pair of processor config', function() {
     beforeEach(function() {
-      output = subject(
-        { commonOption: 1 },
-        {},
+      output = subject({
+        config: { commonOption: 1 },
+        runOptions: {},
+      },
         {
           pattern: /\.js$/,
           include: [
