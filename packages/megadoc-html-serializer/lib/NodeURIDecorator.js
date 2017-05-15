@@ -100,7 +100,10 @@ function FileBasedURIGenerator(config) {
 
   function NodeURI(node) {
     if (shouldIgnore(node)) {
-      return ensureHasExtension(node.meta.href);
+      return node.type === 'DocumentEntity' ?
+        node.meta.href :
+        ensureHasExtension(node.meta.href)
+      ;
     }
 
     if (node.type === 'DocumentEntity') {
@@ -161,7 +164,7 @@ function FileBasedURIGenerator(config) {
       return node.meta.anchor;
     }
     else if (node.type !== 'Corpus') {
-      return encodeURI(node.uid.replace(/[\/\s]+/g, '-'));
+      return encodeURI(node.id.replace(/[\/\s]+/g, '-'));
     }
     else {
       return null;
