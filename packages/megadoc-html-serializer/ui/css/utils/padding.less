@@ -1,0 +1,29 @@
+// This is a utility class similar to margins but for padding See ./margins.less
+// for an explanation.
+//
+.createPadding(@dim; @value) {
+  .padding-trbl-@{dim} { padding-top: @value; padding-right: @value; padding-bottom: @value;  padding-left: @value;  }
+
+  .padding-trb-@{dim}  { padding-top: @value; padding-right: @value; padding-bottom: @value;                        }
+  .padding-trl-@{dim}  { padding-top: @value; padding-right: @value;                         padding-left: @value;  }
+  .padding-tbl-@{dim}  { padding-top: @value;                       padding-bottom: @value;  padding-left: @value;  }
+
+  .padding-tr-@{dim}   { padding-top: @value; padding-right: @value;                                               }
+  .padding-tb-@{dim}   { padding-top: @value;                       padding-bottom: @value;                        }
+  .padding-tl-@{dim}   { padding-top: @value;                                               padding-left: @value;  }
+  .padding-rb-@{dim}   {                     padding-right: @value; padding-bottom: @value;                        }
+  .padding-rl-@{dim}   {                     padding-right: @value;                         padding-left: @value;  }
+  .padding-bl-@{dim}   {                                           padding-bottom: @value;  padding-left: @value;  }
+
+  .padding-t-@{dim}    { padding-top: @value;                                                                     }
+  .padding-r-@{dim}    {                     padding-right: @value;                                               }
+  .padding-b-@{dim}    {                                           padding-bottom: @value;                        }
+  .padding-l-@{dim}    {                                                                   padding-left: @value;  }
+}
+
+.createPadding(none; 0);
+.createPadding(xs; 0.25em);
+.createPadding(s; 0.5em);
+.createPadding(m; 1em);
+.createPadding(l; 1.5em);
+.createPadding(xl; 2em);

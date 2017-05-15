@@ -1,4 +1,4 @@
-var RE_MEDIA_WIKI_LINK = /(.?)\[\[\s*(.+?)\s*\]\]/g;
+var RE_MEDIA_WIKI_LINK = /(.?)\[\[((?:.|\s)+?)\]\]/g;
 
 // MediaWiki scheme for linking. The syntax is:
 //

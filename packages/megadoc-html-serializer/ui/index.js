@@ -41,6 +41,7 @@ function createMegadoc(config) {
   megadoc.outlets.define('Layout::SidebarHeader');
   megadoc.outlets.define('Layout::SidebarSearch');
   megadoc.outlets.define('Layout::Footer');
+  megadoc.outlets.define('Layout::NotFound');
   megadoc.outlets.define('Inspector');
   megadoc.outlets.define('Image');
   megadoc.outlets.define('Link');

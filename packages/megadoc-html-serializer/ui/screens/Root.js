@@ -1,4 +1,5 @@
 const React = require("react");
+const { findDOMNode } = require('react-dom');
 const { Outlet } = require('react-transclusion');
 const Storage = require('core/Storage');
 const SpotlightManager = require('../components/SpotlightManager');
@@ -8,7 +9,7 @@ const ScrollSpy = require('../components/ScrollSpy');
 const DocumentResolver = require('../DocumentResolver');
 const DocumentURI = require('core/DocumentURI');
 const LayoutTemplate = require('../LayoutTemplate');
-const ErrorMessage = require('components/ErrorMessage');
+const NotFound = require('./NotFound');
 const { object, func, } = React.PropTypes;
 
 const Root = React.createClass({
@@ -18,6 +19,7 @@ const Root = React.createClass({
     corpus: object.isRequired,
     location: require('schemas/Location'),
     onNavigate: func,
+    onTransitionTo: func,
     onRefreshScroll: func,
     documentURI: React.PropTypes.instanceOf(DocumentURI).isRequired,
     documentResolver: React.PropTypes.instanceOf(DocumentResolver).isRequired,
@@ -27,18 +29,28 @@ const Root = React.createClass({
     config: object,
     location: require('schemas/Location'),
     navigate: func,
+    transitionTo: func,
+  },
+
+  getInitialState() {
+    return {
+      scope: null,
+      template: null,
+    };
   },
 
   getChildContext() {
     return {
       location: this.props.location,
       config: this.props.config,
-      navigate: this.props.onNavigate
+      navigate: this.props.onNavigate,
+      transitionTo: this.props.onTransitionTo,
     };
   },
 
   componentWillMount() {
     this.realizeTemplate = LayoutTemplate(this.props.corpus, this.props.config);
+    this.setState(this.resolveScope());
   },
 
   componentDidMount() {
@@ -46,6 +58,15 @@ const Root = React.createClass({
     this.props.appState.on('change', this.reload);
 
     window.addEventListener('click', this.handleInternalLink, false);
+  },
+
+  componentWillReceiveProps: function(nextProps) {
+    if (
+      nextProps.location.pathname !== this.props.location.pathname ||
+      nextProps.location.hash !== this.props.location.hash
+    ) {
+      this.setState(this.resolveScope(nextProps.location));
+    }
   },
 
   componentDidUpdate(prevProps) {
@@ -67,18 +88,11 @@ const Root = React.createClass({
   render() {
     const { config } = this.props;
     const pathname = this.getPathName();
-    let scope;
-    let template;
+    const { scope, template } = this.state;
 
-    if (!this.props.appState.inSinglePageMode()) {
-      scope = this.resolveCurrentDocument();
-
-      if (!scope) {
-        return this.renderInternalError();
-      }
+    if (!scope) {
+      return this.renderInternalError();
     }
-
-    template = this.realizeTemplate(scope, this.getPathName());
 
     return (
       <Outlet name="LayoutWrapper" forwardChildren>
@@ -90,6 +104,7 @@ const Root = React.createClass({
             inSinglePageMode={config.layoutOptions && config.layoutOptions.singlePageMode}
           />
         )}
+
         {config.spotlight && (
           <SpotlightManager
             corpus={this.props.corpus}
@@ -117,19 +132,12 @@ const Root = React.createClass({
 
   renderInternalError() {
     return (
-      <ErrorMessage style={{ width: '50vw', margin: '10vh auto 0 auto' }}>
-        <p>There was no document found at this URL. This most likely indicates
-        a configuration error. Please check and try again.
-        </p>
+      <NotFound
+        location={this.getLocation()}
+        resolveScope={this.resolveScope}
+        corpus={this.props.corpus}
 
-        <p>Debugging information:</p>
-
-        <pre>
-          Corpus size: {this.props.corpus.length}
-          {"\n"}
-          Location: {JSON.stringify(this.getLocation(), null, 2)}
-        </pre>
-      </ErrorMessage>
+      />
     );
   },
 
@@ -147,13 +155,37 @@ const Root = React.createClass({
     }
   },
 
-  resolveCurrentDocument() {
-    return this.props.documentResolver.resolveFromLocation(this.getLocation(), this.props.config);
+  resolveScope(location = this.getLocation()) {
+    const scope = this.resolveCurrentDocument(location);
+
+    if (scope) {
+      return {
+        scope,
+        template: this.realizeTemplate(scope, this.getPathName(location))
+      };
+    }
+    else if (this.isHashPointingToAnchor(location)) {
+      return {
+        scope: this.state.scope,
+        template: this.state.template,
+      };
+      // no-op
+    }
+    else {
+      return {
+        scope: null,
+        template: null,
+      }
+    }
   },
 
-  getPathName() {
+  resolveCurrentDocument(location = this.getLocation()) {
+    return this.props.documentResolver.resolveFromLocation(location, this.props.config);
+  },
+
+  getPathName(location = this.getLocation()) {
     return this.props.documentResolver.getProtocolAgnosticPathName(
-      this.getLocation(),
+      location,
       this.props.documentURI
     );
   },
@@ -161,6 +193,13 @@ const Root = React.createClass({
   getLocation() {
     return this.props.location;
   },
+
+  isHashPointingToAnchor(location = this.getLocation()) {
+    const anchor = location.hash.replace(/^#/, '');
+    const selfNode = findDOMNode(this);
+
+    return anchor && anchor.length > 0 && !!selfNode.querySelector(`a[name="${anchor}"]`);
+  }
 });
 
 module.exports = Root;

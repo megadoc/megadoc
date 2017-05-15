@@ -87,5 +87,17 @@ ClientSandbox.prototype.stop = function(assets, done) {
 module.exports = ClientSandbox;
 
 function unloadModule(fileName) {
-  delete require.cache[require.resolve(fileName)];
+  try {
+    delete require.cache[require.resolve(fileName)];
+  }
+  catch (e) {
+    // This is a temporary band-aid: the problem was with inline plugins being
+    // compiled and then removed before the sandbox is stopped, so it looks like
+    // the require cache has been busted implicitly during the removal and then
+    // the call above borks...
+    //
+    // the current approach to generating the inline plugin is going to change
+    // so this (likely) won't be necessary then
+    console.warn('Unable to purge "%s" from cache', fileName);
+  }
 }

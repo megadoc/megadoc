@@ -1,6 +1,7 @@
 var path = require('path');
 var extend = require('lodash').extend;
 var root = path.resolve(__dirname, '..');
+var megaRoot = path.resolve(__dirname, '..', '..', '..');
 
 var nodeEnv = process.env.NODE_ENV;
 
@@ -14,12 +15,13 @@ var baseConfig = {
     // node_modules/ folder.
     root: [
       path.join(root, 'node_modules'),
-      path.join(root, 'ui', 'shims')
+      path.join(root, 'ui', 'shims'),
     ],
 
     fallback: [
       path.join(root, 'ui', 'shared'),
       path.join(root, 'ui', 'css'),
+      path.join(megaRoot, 'node_modules'),
     ],
 
     modulesDirectories: [
@@ -35,7 +37,10 @@ var baseConfig = {
   },
 
   resolveLoader: {
-    root: path.join(root, 'node_modules'),
+    root: [
+      path.join(root, 'node_modules'),
+      path.join(megaRoot, 'node_modules'),
+    ],
   },
 
   node: {
@@ -54,14 +59,15 @@ var baseConfig = {
           /ui\/vendor/,
           /node_modules/
         ],
-        loader: 'babel',
-        query: {
-          babelrc: false,
-          presets: [
-            path.resolve(__dirname, '../node_modules/babel-preset-es2015'),
-            path.resolve(__dirname, '../node_modules/babel-preset-react'),
-          ]
-        }
+        loaders: [
+          'babel-loader?' + JSON.stringify({
+            babelrc: false,
+            presets: [
+              path.join(megaRoot, 'node_modules/babel-preset-es2015'),
+              path.join(megaRoot, 'node_modules/babel-preset-react'),
+            ]
+          })
+        ],
       },
 
       {

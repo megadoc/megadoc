@@ -3,6 +3,7 @@
 const path = require('path');
 const fs = require('fs-extra');
 const http = require('http')
+const os = require('os')
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const modRewrite = require('connect-modrewrite');
@@ -11,12 +12,14 @@ const webpackConfig = require('./webpack.config');
 const ExternalsPlugin = require('./webpack/ExternalsPlugin');
 const { assign } = require('lodash');
 const K = require('./lib/constants');
+const generateInlinePlugin = require('./lib/generateInlinePlugin');
 const ConfigUtils = require('megadoc-config-utils');
 const SerializerDefaults = require('./lib/config');
 
 const MEGADOC_SOURCE_ROOT = path.resolve(process.argv[2]);
 const CONTENT_HOST = process.env.HOST || '0.0.0.0';
 const CONTENT_PORT = process.env.PORT || '8942';
+const inlinePluginPath = path.join(os.tmpdir(), 'megadoc-plugin-inline.source.js');
 
 const { runtimeConfig, contentBase } = loadRuntimeConfig(path.resolve(process.env.CONFIG_FILE))
 const pluginNames = runtimeConfig.pluginNames || [];
@@ -47,11 +50,14 @@ function start(host, port, done) {
   entry[K.MAIN_BUNDLE] = path.resolve(__dirname, 'ui/index.js');
 
   Object.assign(entry, generatePluginEntry(pluginNames));
+  Object.assign(entry, {
+    'megadoc-plugin-inline': inlinePluginPath
+  });
 
   webpackConfig.devtool = 'eval';
   webpackConfig.output = {
     path: path.resolve(__dirname, 'tmp/devserver'),
-    publicPath: '/',
+    publicPath: '/.megadoc',
     filename: '[name].js',
     library: '[name]',
     libraryTarget: 'umd',
@@ -62,7 +68,7 @@ function start(host, port, done) {
 
   webpackConfig.module.loaders.some(function(loader) {
     if (loader.id === 'js-loaders') {
-      loader.loaders.unshift('react-hot');
+      loader.loaders.unshift('react-hot-loader');
       return true;
     }
   });
@@ -100,10 +106,10 @@ function start(host, port, done) {
 
   app.use(require('webpack-dev-middleware')(webpackCompiler, {
     contentBase: contentBase,
-    publicPath: '/',
+    publicPath: '/.megadoc',
     hot: false,
     quiet: false,
-    noInfo: true,
+    noInfo: false,
     lazy: false,
     inline: false,
     watchOptions: {
@@ -116,13 +122,13 @@ function start(host, port, done) {
   app.use(require('webpack-hot-middleware')(webpackCompiler));
 
   app.use(modRewrite([
-    '^/(' +
+    '^/.megadoc\/(' +
       K.VENDOR_BUNDLE + '.js|' +
       K.COMMON_BUNDLE + '.js|' +
       K.MAIN_BUNDLE   + '.js|' +
-      K.STYLE_BUNDLE  +
+      K.STYLE_BUNDLE  +    '|' +
+      '(' + pluginNames.join('|') + ').js' +
     ')$ - [G]',
-    '^/(' + pluginNames.join('|') + ').js$ - [G]',
   ]));
 
   app.use(serveStatic(contentBase, { etag: false }));
@@ -140,7 +146,7 @@ function generatePluginEntry() {
       var filePath = path.join(basePath, name, fileName);
 
       if (fs.existsSync(filePath)) {
-        map['plugins/' +name] = filePath;
+        map[name] = filePath;
       }
     }
 
@@ -191,9 +197,14 @@ function loadRuntimeConfig(compilerConfigFilePath) {
     K.CONFIG_FILE
   );
 
+  generateInlinePlugin({
+    config: serializerConfig,
+    outputPath: inlinePluginPath,
+  });
+
   return {
     contentBase: path.resolve(compilerConfig.outputDir),
-    runtimeConfig: require(runtimeConfigFilePath)
+    runtimeConfig: require(runtimeConfigFilePath),
   };
 }
 

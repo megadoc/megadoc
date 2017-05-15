@@ -11,6 +11,7 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
 
   var webpackConfig = generateCustomWebpackConfig({
     entry: scripts,
+    devtool: false,
 
     output: {
       path: path.dirname(outputFilePath),
@@ -25,7 +26,6 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
     ],
 
     externals: ExternalMap(require('../webpack/publicModules'), 'var')
-    // externals: require('../webpack/publicModules')
   });
 
   if (optimize) {
@@ -54,6 +54,7 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
     });
 
     console.log('Plugin "%s" was compiled successfully.', id);
+    // console.log(stats.toString({ chunks: true }))
 
     done();
   });

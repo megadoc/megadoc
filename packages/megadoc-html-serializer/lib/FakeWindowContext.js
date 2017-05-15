@@ -18,16 +18,6 @@ module.exports = function FakeWindowContext(window, global) {
         clear: function() {}
       };
 
-      // global.console = {
-      //   debug: Function.prototype,
-      //   info: Function.prototype,
-      //   notice: Function.prototype,
-      //   log: Function.prototype,
-      //   warn: console.warn.bind(console),
-      //   error: console.error.bind(console),
-      //   assert: console.assert.bind(console),
-      // };
-
       Object.keys(window).forEach(key => {
         expose(key, window[key]);
       })

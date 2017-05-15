@@ -1,0 +1,81 @@
+// Pre-defined utility margin classes
+//
+// The classes come in 5 sizes:
+//
+//   - (xs)mall
+//   - (s)mall
+//   - (m)edium
+//   - (l)arge
+//   - (xl)arge
+//
+// And the special (none) size indicates a zero margin.
+//
+// Each size supports 14 dimensions to control every corner following the CSS
+// order:
+//
+//     TOP -> RIGHT -> BOTTOM -> LEFT
+//     (t)    (r)      (b)       (l)
+//
+//
+// Examples:
+//
+// To create a top-bottom margin of medium spacing, use:
+//
+//     .margin-tb-m
+//
+// To create a right and left margin of large spacing, use:
+//
+//     .margin-rl-l
+//
+// To create a top-only, right-only, bottom-only, or left-only margins respectively:
+//
+//     .margin-t-m
+//     .margin-r-m
+//     .margin-b-m
+//     .margin-s-m
+//
+// You can mix and match them:
+//
+//     .margin-tb-s;
+//     .margin-rl-l;
+//
+// And you can apply a negative margin by appending `--negative` as a modifier:
+//
+//     .margin-t-s--negative; // margin-top: -0.25em;
+//
+.createMargin(@dim; @value) {
+  .margin-trbl-@{dim} { margin-top: @value; margin-right: @value; margin-bottom: @value;  margin-left: @value;  }
+
+  .margin-trb-@{dim}  { margin-top: @value; margin-right: @value; margin-bottom: @value;                        }
+  .margin-trl-@{dim}  { margin-top: @value; margin-right: @value;                         margin-left: @value;  }
+  .margin-tbl-@{dim}  { margin-top: @value;                       margin-bottom: @value;  margin-left: @value;  }
+
+  .margin-tr-@{dim}   { margin-top: @value; margin-right: @value;                                               }
+  .margin-tb-@{dim}   { margin-top: @value;                       margin-bottom: @value;                        }
+  .margin-tl-@{dim}   { margin-top: @value;                                               margin-left: @value;  }
+  .margin-rb-@{dim}   {                     margin-right: @value; margin-bottom: @value;                        }
+  .margin-rl-@{dim}   {                     margin-right: @value;                         margin-left: @value;  }
+  .margin-bl-@{dim}   {                                           margin-bottom: @value;  margin-left: @value;  }
+
+  .margin-t-@{dim}    { margin-top: @value;                                                                     }
+  .margin-r-@{dim}    {                     margin-right: @value;                                               }
+  .margin-b-@{dim}    {                                           margin-bottom: @value;                        }
+  .margin-l-@{dim}    {                                                                   margin-left: @value;  }
+}
+
+.createMargin(none; 0);
+
+.createMargin(xs; 0.25em);
+.createMargin(xs--negative; -0.25em);
+
+.createMargin(s; 0.5em);
+.createMargin(s--negative; -0.5em);
+
+.createMargin(m; 1em);
+.createMargin(m--negative; -1em);
+
+.createMargin(l; 2em);
+.createMargin(l--negative; -2em);
+
+.createMargin(xl; 3em);
+.createMargin(xl--negative; -3em);

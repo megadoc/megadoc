@@ -1,4 +1,5 @@
 const async = require('async');
+const path = require('path');
 const MegadocCorpus = require('megadoc-corpus');
 const AssetUtils = require('./AssetUtils');
 const DocumentFileEmitter = require('./DocumentFileEmitter');
@@ -10,6 +11,9 @@ const emitAssets = require('./emitAssets');
 const Renderer = require('./Renderer');
 const LinkResolver = require('./LinkResolver');
 const renderRoutines = require('./renderRoutines');
+const reduceRoutines = require('./reduceRoutines');
+const generateInlinePlugin = require('./generateInlinePlugin');
+const compilePlugin = require('./PluginCompiler').compile;
 const DefaultConfig = require('./config');
 const K = require('./constants');
 
@@ -39,6 +43,7 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
 };
 
 HTMLSerializer.prototype.renderRoutines = renderRoutines;
+HTMLSerializer.prototype.reduceRoutines = reduceRoutines;
 
 HTMLSerializer.prototype.start = function(compilations, done) {
   this.state.assets = createAssets(this.config, compilations);
@@ -68,27 +73,21 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
   };
 
   // todo: distribute
-  async.map(withNodes, renderTree, (err, renderedNodes) => {
-    if (err) {
-      done(err);
-    }
-    else {
-      const renderedCorpus = aggregateRenderedTreesIntoCorpus(this, renderedNodes);
+  const renderedNodes = withNodes.map(renderTree)
+  const renderedCorpus = aggregateRenderedTreesIntoCorpus(this, renderedNodes);
 
-      done(null, {
-        compilations: withTrees,
-        corpus: renderedCorpus,
-        edgeGraph: null
-      });
-    }
+  done(null, {
+    compilations: withTrees,
+    corpus: renderedCorpus,
+    edgeGraph: null
   });
 
-  function renderTree(compilationWithNode, callback) {
+  function renderTree(compilationWithNode) {
     const node = compilationWithNode.node;
     const compilation = compilationWithNode.compilation;
     const renderOperations = compilation.renderOperations;
 
-    callback(null, TreeRenderer.renderTree(state, node, renderOperations));
+    return TreeRenderer.renderTree(state, node, renderOperations);
   }
 };
 
@@ -112,27 +111,65 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(corpusInfo, done) {
     console.log('[D] Emitting files for corpus of size %d', documentUIDs.length)
   }
 
-  emitAssets(
-    Object.assign({}, this.config, {
-      assetRoot: this.compilerConfig.outputDir,
-      verbose: this.compilerConfig.verbose,
-    }),
-    {
-      assets: this.state.assets,
-      flatCorpus: flatCorpus,
-      assetUtils: this.assetUtils,
-    },
-    (err) => {
-      if (err) {
-        return done(err);
+  const doEmitAssets = (callback) => {
+    emitAssets(
+      Object.assign({}, this.config, {
+        assetRoot: this.compilerConfig.outputDir,
+        verbose: this.compilerConfig.verbose,
+      }),
+      {
+        assets: this.state.assets,
+        flatCorpus: flatCorpus,
+        assetUtils: this.assetUtils,
+      },
+      (err) => {
+        if (err) {
+          callback(err);
+        }
+        else {
+          async.eachSeries(documentUIDs, emitDocumentFile, function(emitErr) {
+            callback(emitErr, corpusInfo)
+          });
+        }
       }
-      else {
-        async.eachSeries(documentUIDs, emitDocumentFile, function(emitErr) {
-          done(emitErr, corpusInfo)
-        });
-      }
+    )
+  }
+
+  const compileInlineScripts = (callback) => {
+    const inlinePluginPath = path.join(this.compilerConfig.tmpDir, 'megadoc-plugin-inline.source.js');
+    const inlinePluginRuntimePath = path.join(this.compilerConfig.tmpDir, 'megadoc-plugin-inline.js');
+
+    if (!generateInlinePlugin({
+      config: this.config,
+      outputPath: inlinePluginPath,
+    })) {
+      return callback();
     }
-  )
+
+    compilePlugin(
+      [ inlinePluginPath ],
+      inlinePluginRuntimePath,
+      true,
+      err => {
+        if (err) {
+          callback(err);
+        }
+        else {
+          this.state.assets.addPluginScript(inlinePluginRuntimePath)
+          callback();
+        }
+      }
+    );
+  }
+
+  compileInlineScripts(err => {
+    if (err) {
+      done(err);
+    }
+    else {
+      doEmitAssets(done);
+    }
+  });
 };
 
 HTMLSerializer.prototype.purgeEmittedCorpusDocuments = function(corpusInfo, done) {

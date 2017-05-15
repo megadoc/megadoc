@@ -12,7 +12,6 @@ function Assets() {
   this.files = [];
   this.styleSheets = [];
   this.pluginScripts = [];
-  // this.inlineRuntimeScripts = [];
   this.runtimeScripts = [];
   this.runtimeConfigs = {};
   this.styleOverrides = {};

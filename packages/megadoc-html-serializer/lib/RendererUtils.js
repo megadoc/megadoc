@@ -133,7 +133,7 @@ function SummaryExtractor() {
     renderer: renderer,
     gfm: true,
     tables: false,
-    sanitize: true,
+    sanitize: false,
     breaks: false,
     linkify: false,
     pedantic: false,
@@ -156,7 +156,7 @@ function SummaryExtractor() {
     summary = null;
 
     marked(markdown, markedOptions);
-    parsedSummary = summary || '';
+    parsedSummary = (summary || '').replace(/\n+/g, ' ');
 
     summary = null;
 

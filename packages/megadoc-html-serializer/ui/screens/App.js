@@ -97,6 +97,7 @@ const App = React.createClass({
       <OutletProvider outletManager={this.props.outletManager}>
         <Root
           onNavigate={this.navigate}
+          onTransitionTo={this.locationAPI.transitionTo}
           onRefreshScroll={this.locationAPI.refreshScroll}
           config={this.props.config}
           corpus={this.props.corpus}
@@ -115,8 +116,6 @@ const App = React.createClass({
   },
 
   reload() {
-    console.debug('App: forcing update.');
-
     this.forceUpdate();
   },
 

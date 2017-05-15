@@ -60,6 +60,8 @@ function createIntegrationSuite(mochaSuite, suiteOptions = {}) {
 
     }, config);
 
+    fs.ensureDirSync(withDefaults.tmpDir);
+
     return compile(withDefaults, Object.assign({ purge: true, }, runOptions), done);
   };
 
