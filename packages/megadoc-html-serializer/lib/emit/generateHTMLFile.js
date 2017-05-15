@@ -1,7 +1,7 @@
 const { flowRight, partial, template } = require('lodash');
 const fs = require('fs');
 const path = require('path');
-const K = require('./constants');
+const K = require('../constants');
 const invariant = require('invariant');
 const CORE_SCRIPTS = [
   K.CONFIG_FILE,

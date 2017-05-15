@@ -1,5 +1,5 @@
 const AssetUtils = require('./AssetUtils');
-const ClientSandbox = require('./ClientSandbox');
+const ClientSandbox = require('./emit/ClientSandbox');
 const NodeURIDecorator = require('./NodeURIDecorator');
 const createAssets = require('./createAssets');
 const render = require('./render');
@@ -8,6 +8,8 @@ const purge = require('./purge');
 const renderRoutines = require('./renderRoutines');
 const reduceRoutines = require('./reduceRoutines');
 const defaults = require('./config');
+const RendererUtils = require('./render/RendererUtils');
+const { compile: compilePlugin } = require('./emit/PluginCompiler');
 
 function HTMLSerializer(compilerConfig, userSerializerOptions) {
   this.compilerConfig = {
@@ -79,6 +81,7 @@ HTMLSerializer.prototype.stop = function(done) {
   })
 };
 
-HTMLSerializer.RendererUtils = require('./render/RendererUtils');
+HTMLSerializer.RendererUtils = RendererUtils;
+HTMLSerializer.compilePlugin = compilePlugin;
 
 module.exports = HTMLSerializer;

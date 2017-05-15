@@ -1,6 +1,6 @@
 const path = require('path');
 const jsdom = require('jsdom');
-const K = require('./constants');
+const K = require('../constants');
 const generateHTMLFile = require('./generateHTMLFile');
 const FakeWindowContext = require('./FakeWindowContext');
 const COMMON_BUNDLE = path.join(K.BUNDLE_DIR, K.COMMON_BUNDLE);

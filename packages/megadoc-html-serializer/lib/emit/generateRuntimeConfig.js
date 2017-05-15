@@ -1,5 +1,5 @@
-const VERSION = require('./constants').VERSION;
 const path = require('path');
+const { VERSION } = require('../constants');
 
 module.exports = function generateRuntimeConfig(config, assets) {
   return {

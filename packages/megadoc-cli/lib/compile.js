@@ -3,7 +3,7 @@
 var program = require('commander');
 var path = require('path');
 var pkg = require('../package');
-var PluginCompiler = require('megadoc-html-serializer/lib/PluginCompiler');
+var { compilePlugin } = require('megadoc-html-serializer');
 var ctx = {};
 
 program
@@ -22,7 +22,7 @@ if (!ctx.output || ctx.entry.length === 0) {
   program.help();
 }
 
-PluginCompiler.compile(
+compilePlugin(
   ctx.entry.map(resolvePath),
   resolvePath(ctx.output),
   program.optimize,

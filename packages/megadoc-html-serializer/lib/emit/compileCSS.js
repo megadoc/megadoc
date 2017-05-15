@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const K = require('./constants');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const K = require('../constants');
 const ROOT = K.ROOT;
 
 module.exports = function compileCSS(config, state, done) {

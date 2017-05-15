@@ -3,7 +3,7 @@ const path = require('path');
 const DocumentFileEmitter = require('./DocumentFileEmitter');
 const emitAssets = require('./emitAssets');
 const generateInlinePlugin = require('./generateInlinePlugin');
-const compilePlugin = require('./PluginCompiler').compile;
+const { compile: compilePlugin } = require('./PluginCompiler');
 const composeAsync = fns => async.compose.apply(async, fns);
 
 module.exports = composeAsync([

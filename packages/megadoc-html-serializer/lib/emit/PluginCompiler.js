@@ -1,6 +1,7 @@
-var webpack = require('webpack');
-var generateCustomWebpackConfig = require('../webpack/common');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
+const generateCustomWebpackConfig = require('../../webpack/common');
+const publicModules = require('../../webpack/publicModules');
 
 exports.compile = function(scripts, outputFilePath, optimize, done) {
   var id = path.basename(outputFilePath, path.extname(outputFilePath));
@@ -25,7 +26,7 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
       new webpack.NoErrorsPlugin()
     ],
 
-    externals: ExternalMap(require('../webpack/publicModules'), 'var')
+    externals: ExternalMap(publicModules, 'var')
   });
 
   if (optimize) {

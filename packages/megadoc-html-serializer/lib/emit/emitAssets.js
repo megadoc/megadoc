@@ -2,7 +2,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const async = require('async');
 const compileCSS = require('./compileCSS');
-const K = require('./constants');
+const K = require('../constants');
 const generateHTMLFile = require('./generateHTMLFile');
 const generateRuntimeConfig = require('./generateRuntimeConfig');
 
