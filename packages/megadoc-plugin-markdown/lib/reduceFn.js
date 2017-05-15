@@ -1,20 +1,15 @@
 const b = require('megadoc-corpus').builders;
 const { extractTOC } = require('megadoc-html-serializer').RendererUtils;
 
-module.exports = function reduceFn(options, rawDocument, done) {
+module.exports = function reduceFn(options, actions, rawDocument, done) {
   const toc = extractTOC(rawDocument.source);
-  if (!rawDocument.id) {
-    console.warn('doc has no id?', rawDocument)
-  }
 
   return done(null, b.document({
     id: rawDocument.id,
     title: rawDocument.plainTitle,
     filePath: rawDocument.filePath,
     summary: rawDocument.summary,
-    properties: Object.assign({}, rawDocument, {
-      // plainTitle: rawDocument.title
-    }),
+    properties: rawDocument,
     symbol: '#',
     entities: toc.map(function(section) {
       return b.documentEntity({

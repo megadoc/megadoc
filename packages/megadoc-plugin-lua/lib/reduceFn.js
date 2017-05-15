@@ -1,6 +1,6 @@
 const b = require('megadoc-corpus').builders;
 
-module.exports = function reduceFn(options, rawDocument, done) {
+module.exports = function reduceFn(options, actions, rawDocument, done) {
   if (!rawDocument.id) {
     return done(null, null);
   }

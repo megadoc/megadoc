@@ -59,7 +59,9 @@ Compiler.run = function(userConfig, runOptions, done) {
     partial(
       render, serializer.renderRoutines
     ),
-    reduce,
+    partial(
+      reduce, serializer.reduceRoutines
+    ),
     refine,
     parse,
     initState,
