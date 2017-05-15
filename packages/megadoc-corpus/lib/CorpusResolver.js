@@ -11,7 +11,7 @@ function resolve(anchor, options, _state) {
   assert(anchor && anchor.contextNode && typeof anchor.contextNode === 'object',
     "ArgumentError: resolve request requires a contextNode to resolve from.");
 
-  var targetNode;
+  var index;
   var term = anchor.text;
   var contextNode = anchor.contextNode;
   var parentNode = contextNode.parentNode;
@@ -45,26 +45,28 @@ function resolve(anchor, options, _state) {
 
   // descend first
   if (!isLeaf(contextNode)) {
-    targetNode = searchInBranch(contextNode, isFriend(contextNode));
+    index = searchInBranch(contextNode, isFriend(contextNode));
   }
 
   // go up the tree one level, unless we're at the Corpus level
-  if (!targetNode && parentNode) {
+  if (!index && parentNode) {
     trace("Found nothing at this level, looking for a document in my ancestor...");
     trace(Array(80).join('-'))
 
-    return resolve({ contextNode: parentNode, text: term }, options, state);
+    return resolve({ contextNode: parentNode, text: term, }, options, state);
   }
 
-  return targetNode;
+  return index;
 
   function searchInBranch(node, inFriendBranch) {
-    var result;
+    let result;
+
     trace("Searching '%s' (relative? %s, %s)...", node.uid, inFriendBranch, JSON.stringify(node.indices))
 
     if (hasVisited(node)) {
       trace("- Skipping '%s' - already seen before!", node.uid);
-      return;
+
+      return null;
     }
 
     if (!result && node.entities) { // Document
@@ -80,58 +82,45 @@ function resolve(anchor, options, _state) {
     }
 
     function visitBranchNode(childNode) {
-      if (hasVisited(childNode)) {
-        trace("- Skipping '%s' - already seen before!", childNode.uid);
-        return;
-      }
+      if (!hasVisited(childNode)) {
+        trace("- Checking '%s'", childNode.uid);
 
-      trace("- Checking '%s'", childNode.uid);
+        if (matches(term, childNode, inFriendBranch)) {
+          trace("- Found '%s'!", childNode.uid, term);
 
-      if (matches(childNode, inFriendBranch)) {
-        result = childNode;
-      }
-      else {
-        result = searchInBranch(childNode, isFriend(childNode));
-      }
+          result = {
+            node: childNode,
+            text: inFriendBranch ? getPrivateNodeIndex(childNode) : childNode.title || term,
+          };
+        }
+        else {
+          result = searchInBranch(childNode, isFriend(childNode));
+        }
 
-      markVisited(childNode);
+        markVisited(childNode);
+      }
 
       return !!result;
     }
 
     function visitLeafNode(childNode) {
-      if (hasVisited(childNode)) {
-        trace("- Skipping '%s' - already seen before!", childNode.uid);
-        return;
-      }
+      if (!hasVisited(childNode)) {
+        trace("- Checking entity '%s'...", childNode.uid);
 
-      trace("- Checking entity '%s'...", childNode.uid);
+        markVisited(childNode);
 
-      markVisited(childNode);
-
-      if (matches(childNode, inFriendBranch)) {
-        result = childNode;
+        if (matches(term, childNode, inFriendBranch)) {
+          result = {
+            node: childNode,
+            text: inFriendBranch ? getPrivateNodeIndex(childNode) : childNode.title || term,
+          };
+        }
       }
 
       return !!result;
     }
 
     return result;
-  }
-
-  function matches(n, lookInPrivateIndices) {
-    if (n.uid === term) {
-      return true;
-    }
-    else if (!n.indices) {
-      return false;
-    }
-    else if (lookInPrivateIndices) {
-      return term in n.indices;
-    }
-    else {
-      return n.indices[term] > 0;
-    }
   }
 
   function markVisited(node) {
@@ -146,6 +135,25 @@ function resolve(anchor, options, _state) {
     return node.uid in state.friends;
   }
 };
+
+function matches(term, n, lookInPrivateIndices) {
+  if (n.uid === term) {
+    return true;
+  }
+  else if (!n.indices) {
+    return false;
+  }
+  else if (lookInPrivateIndices) {
+    return term in n.indices;
+  }
+  else {
+    return n.indices[term] > 0;
+  }
+}
+
+function getPrivateNodeIndex(node) {
+  return Object.keys(node.indices).filter(index => node.indices[index] === 0)[0];
+}
 
 function isLeaf(node) {
   return node.type === 'DocumentEntity';
@@ -164,16 +172,16 @@ function resolveByFilePath(anchor) {
 
   targetPath = ensureLeadingSlash(path.join(path.dirname(contextNode.filePath), filePath));
 
-  var node = resolve({ text: targetPath, contextNode: anchor.contextNode });
+  const { node: targetNode } = resolve({ text: targetPath, contextNode: anchor.contextNode }) || {};
 
-  if (entityId && node) {
+  if (entityId && targetNode) {
     return resolve({
-      text: node.uid + entityId,
-      contextNode: node
+      text: targetNode.uid + entityId,
+      contextNode: targetNode
     });
   }
   else {
-    return node;
+    return targetNode ? { node: targetNode, text: targetNode.title } : null;
   }
 }
 

@@ -2,6 +2,7 @@ var assert = require('assert');
 var EventEmitter = require('events').EventEmitter;
 var URI = require('urijs');
 var dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
+var { escape: escapeHTML } = require('lodash');
 
 /**
  * @param {Corpus} corpus
@@ -57,31 +58,28 @@ LinkResolver.prototype.lookup = function(params) {
     );
   }
 
-  var document = this.corpus.resolve({
+  var index = this.corpus.resolve({
     text: params.path,
     contextNode: params.contextNode
   });
 
-  if (document) {
+  if (index) {
+    var document = index.node;
+    var title = index.text || document.title;
+
     if (!document.meta.href) {
       // TODO: linter
       console.warn("Document '%s' can not be linked to as it has no @href.", document.uid);
       return;
     }
-    else if (!document.title) {
+    else if (!title) {
       // TODO: linter
       console.warn("Document '%s' can not be linked to as it has no @title.", document.uid);
       return;
     }
     else {
-      this.emitter.emit('lookup', {
-        path: params.path,
-        contextNode: params.contextNode,
-        resolvedDocument: document
-      });
-
       return {
-        text: document.title,
+        text: title,
         title: document.summary,
         href: Href(document, this.options)
       };
@@ -180,9 +178,6 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
   }
   else if (!link && strict) {
     if (!contextNode || !(contextNode.uid in this.options.ignore)) {
-      if (contextNode && !contextNode.uid) {
-        console.warn('WEIRD! CONTEXT NODE HAS NO UID!!!', contextNode)
-      }
       console.warn('%s: Unable to resolve link to "%s" (from: "%s")',
         dumpNodeFilePath(contextNode),
         descriptor.path,
@@ -223,10 +218,10 @@ function generateMarkup(params) {
 }
 
 function generateMarkdownLink(href, text, title) {
-  var buffer = '[' + text + '](mega://' + href;
+  var buffer = '[' + text + '](mega://' + encodeURI(href);
 
   if (title) {
-    buffer += ' "' + title.replace(/\n/g, ' ') + '"';
+    buffer += ' "' + normalizeTitle(title) + '"';
   }
 
   buffer += ')';
@@ -241,19 +236,23 @@ function generateHTMLLink(href, text, title) {
     "mega-link--internal mega-link--broken"
   ;
 
-  var buffer = '<a class="' + className + '"';
+  var buffer = '<a class="' + escapeHTML(className) + '"';
 
   if (href && href.length) {
-    buffer += ' href="' + href + '"';
+    buffer += ' href="' + encodeURI(href) + '"';
   }
 
   if (title) {
-    buffer += ' title="' + title + '"';
+    buffer += ' title="' + escapeHTML(normalizeTitle(title)) + '"';
   }
 
-  buffer += '>' + text + '</a>';
+  buffer += '>' + escapeHTML(text) + '</a>';
 
   return buffer; // TODO: shouldn't we escape this?
+}
+
+function normalizeTitle(title) {
+  return title.replace(/\n+/g, ' ');
 }
 
 module.exports = LinkResolver;

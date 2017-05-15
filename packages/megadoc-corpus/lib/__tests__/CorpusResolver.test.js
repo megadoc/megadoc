@@ -103,28 +103,28 @@ describe('CorpusResolver', function() {
   });
 
   [
-    { from: "JS/Core.X@name"   , to: "X"               , res: "JS/Core.X" },
-    { from: "JS/Core.X@name"   , to: "JS/X"            , res: "JS/X" },
-    { from: "JS/Core.X@name"   , to: "MD/X"            , res: "MD/X" },
-    { from: "JS/Core.X#add"    , to: "@name"           , res: "JS/Core.X@name" },
-    { from: "JS/Core.X#add"    , to: "Y@name"          , res: "JS/Core.Y@name" },
-    { from: "JS/Core.X#add"    , to: "Core.Y@name"     , res: "JS/Core.Y@name" },
-    { from: "JS/Core.X#add"    , to: "JS/Core.Y@name"  , res: "JS/Core.Y@name" },
-    { from: "JS/Core.X"        , to: "@name"           , res: "JS/Core.X@name" },
-    { from: "JS/Core.Y"        , to: "X"               , res: "JS/Core.X" },
+    { from: "JS/Core.X@name"   , to: "X"               , res: "JS/Core.X",        text: 'X'       },
+    { from: "JS/Core.X@name"   , to: "JS/X"            , res: "JS/X",             text: 'JS/X',   },
+    { from: "JS/Core.X@name"   , to: "MD/X"            , res: "MD/X",             text: 'MD/X'    },
+    { from: "JS/Core.X#add"    , to: "@name"           , res: "JS/Core.X@name",   text: '@name'   },
+    { from: "JS/Core.X#add"    , to: "Y@name"          , res: "JS/Core.Y@name",   text: 'Y@name'  },
+    { from: "JS/Core.X#add"    , to: "Core.Y@name"     , res: "JS/Core.Y@name",   text: 'Core.Y@name'  },
+    { from: "JS/Core.X#add"    , to: "JS/Core.Y@name"  , res: "JS/Core.Y@name",   /* text: 'Y@name' */  },
+    { from: "JS/Core.X"        , to: "@name"           , res: "JS/Core.X@name",   text: '@name'   },
+    { from: "JS/Core.Y"        , to: "X"               , res: "JS/Core.X",        text: 'X'       },
     { from: "JS/Core.Y"        , to: "#add"            , res: null },
-    { from: "JS/Core.Y"        , to: "X#add"           , res: "JS/Core.X#add" },
+    { from: "JS/Core.Y"        , to: "X#add"           , res: "JS/Core.X#add",    text: 'X#add'   },
     { from: "JS/Core.Y"        , to: "X.js"            , res: null },
-    { from: "JS/Z"             , to: "X"               , res: "JS/X" },
-    { from: "MD/X"             , to: "X"               , res: "MD/X" },
-    { from: "MD/X"             , to: "Core.X"          , res: "JS/Core.X" },
-    { from: "MD/Y"             , to: "X"               , res: "MD/X" },
+    { from: "JS/Z"             , to: "X"               , res: "JS/X",             /* text: 'X' */ },
+    { from: "MD/X"             , to: "X"               , res: "MD/X",             /* text: 'X' */ },
+    { from: "MD/X"             , to: "Core.X"          , res: "JS/Core.X",        text: 'Core.X' },
+    { from: "MD/Y"             , to: "X"               , res: "MD/X",             /* text: 'X' */ },
 
     // it should not use private indices:
     //
     // "JS UI/UI/Z" has a private index "Z" while JS/Z has a public index "Z" so
     // we expect the latter to be resolved:
-    { from: "MD"               , to: "Z"               , res: "JS/Z" },
+    { from: "MD"               , to: "Z"               , res: "JS/Z",             text: 'Z' },
 
     // filepath resolving (relative to contextNode's filepath):
     { from: "JS/Core.Y"        , to: "./X.js"          , res: "JS/Core.X" },
@@ -143,18 +143,21 @@ describe('CorpusResolver', function() {
     var fn = spec.only ? it.only : it;
 
     fn("resolves '" + spec.res + "' from '" + spec.from + "' using '" + spec.to + "'", function() {
-      var document = resolve({
+      var { node: document, text } = resolve({
         text: spec.to,
         contextNode: corpus.get(spec.from)
-      }, { trace: false });
+      }, { trace: true }) || {};
 
       if (spec.res === null) {
         assert.notOk(document, (document && "Resolved '" + document.uid + "' when it should not have."));
       }
       else {
-
         assert.ok(document);
         assert.equal(document.uid, corpus.get(spec.res).uid);
+
+        if (spec.text) {
+          assert(text === spec.text, `Node should've been yielded as "${spec.text}" but was as "${text}"`);
+        }
       }
     })
   });
