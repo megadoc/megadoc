@@ -1,5 +1,12 @@
 const { assert } = require('chai');
-const subject = require('../reduceFn');
+const reduce = require('../reduceFn');
+const subject = (context, rawDocument, callback) => {
+  return reduce(context, {
+    extractSummaryFromMarkdown(markdown) {
+      return markdown;
+    },
+  }, rawDocument, callback);
+};
 
 describe('megadoc-plugin-js::reduceFn', function() {
   it('works with a module document', function(done) {
@@ -61,7 +68,7 @@ describe('megadoc-plugin-js::reduceFn', function() {
       }
       else {
         assert.include(document, {
-          id: '#beep',
+          id: 'Truck#beep',
           type: 'DocumentEntity'
         }, 'it uses the symbol and the id for an @id');
 

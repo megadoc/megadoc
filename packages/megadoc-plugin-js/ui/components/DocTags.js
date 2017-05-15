@@ -27,10 +27,11 @@ const HANDLED_TAGS = [
   'memberOf',
   'static',
   'preserveOrder',
+  'property',
   'method',
   'namespace',
   'type',
-  'property',
+  'typedef',
 ];
 
 var DocTags = React.createClass({

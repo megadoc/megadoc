@@ -14,6 +14,10 @@ function isCallback(doc) {
   return doc.type === K.TYPE_FUNCTION && doc.tags.some(x => x.type === 'callback');
 }
 
+function isTypeDef(doc) {
+  return !doc.isModule && doc.tags.some(x => x.type === 'typedef');
+}
+
 function isFactoryExports(doc) {
   return doc.nodeInfo.scope === K.SCOPE_FACTORY_EXPORTS;
 }
@@ -34,6 +38,7 @@ exports.isCallback = isCallback;
 exports.isStaticMethod = isStaticMethod;
 exports.isFactoryExports = isFactoryExports;
 exports.isClassEntity = isClassEntity;
+exports.isTypeDef = isTypeDef;
 
 exports.getDisplayType = function(documentNode) {
   if (documentNode.type === 'Namespace') {

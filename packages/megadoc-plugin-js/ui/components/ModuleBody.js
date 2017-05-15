@@ -45,11 +45,11 @@ const ModuleBody = React.createClass({
         ]}
 
         {renderableType === 'Factory' && (
-          this.renderConstructor(doc, "Instance Constructor Documentation")
+          this.renderConstructor(doc, "Instance Constructor")
         )}
 
         {renderableType === 'Class' && (
-          this.renderConstructor(doc, "Constructor Documentation")
+          this.renderConstructor(doc, "Constructor")
         )}
 
         {renderableType === 'Function' && (
@@ -59,18 +59,19 @@ const ModuleBody = React.createClass({
         {this.renderExamples(doc)}
         {this.renderStaticMethods(doc, moduleDocs)}
         {this.renderCallbacks(doc, moduleDocs)}
+        {this.renderTypeDefs(doc, moduleDocs)}
         {this.renderProperties(
           doc,
           moduleDocs,
           (scope) => !isStaticProperty(scope),
-          "Instance Property Documentation"
+          "Instance Properties"
         )}
 
         {this.renderProperties(
           doc,
           moduleDocs,
           isStaticProperty,
-          "Static Property Documentation"
+          "Static Properties"
         )}
 
         {this.renderMethods(doc, moduleDocs)}
@@ -157,7 +158,7 @@ const ModuleBody = React.createClass({
           (
             entityDoc.nodeInfo.type === K.TYPE_LITERAL ||
             entityDoc.tags.some(x => x.type === 'property')
-          )
+          ) && entityDoc.symbol !== '~'
         );
       }),
       'id'
@@ -191,7 +192,15 @@ const ModuleBody = React.createClass({
         typeInfo={tag.typeInfo}
         anchor={this.getEntityAnchor(doc)}
         doc={doc}
-      />
+      >
+        {doc.type && doc.type === K.TYPE_FUNCTION && (
+          <Doc
+            withTitle={false}
+            collapsible={false}
+            doc={doc}
+          />
+        )}
+      </PropertyTag>
     );
   },
 
@@ -207,7 +216,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Static Method Documentation" tagName="ul" className="class-view__method-list">
+      <DocGroup label="Static Methods" tagName="ul" className="class-view__method-list">
         {staticMethodDocs.map(this.renderStaticMethod)}
       </DocGroup>
     );
@@ -227,6 +236,41 @@ const ModuleBody = React.createClass({
     return (
       <DocGroup label="Callback Definitions" tagName="ul" className="class-view__method-list">
         {callbackDocs.map(this.renderStaticMethod)}
+      </DocGroup>
+    );
+  },
+
+  renderTypeDefs(doc, moduleDocs) {
+    const typeDefDocs = orderAwareSort(
+      doc,
+      moduleDocs.filter(DocClassifier.isTypeDef),
+      'id'
+    );
+
+    if (!typeDefDocs.length) {
+      return null;
+    }
+
+    return (
+      <DocGroup label="Type Definitions" tagName="ul" className="class-view__type-def-list">
+        {typeDefDocs.map(typeDefDoc => {
+          return (
+            <Doc
+              key={typeDefDoc.id}
+              doc={typeDefDoc}
+              anchor={this.getEntityAnchor(typeDefDoc)}
+            >
+              {typeDefDoc.tags.filter(x => x.type === 'property').map((tag, i) => {
+                return (
+                  <PropertyTag
+                    key={i}
+                    typeInfo={tag.typeInfo}
+                  />
+                )
+              })}
+            </Doc>
+          )
+        })}
       </DocGroup>
     );
   },
@@ -253,7 +297,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label="Instance Method Documentation" tagName="ul" className="class-view__method-list">
+      <DocGroup label="Instance Methods" tagName="ul" className="class-view__method-list">
         {methodDocs.map(this.renderMethod)}
       </DocGroup>
     );

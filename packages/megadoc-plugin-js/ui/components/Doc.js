@@ -16,6 +16,7 @@ const Doc = React.createClass({
 
   propTypes: {
     anchor: string,
+    children: React.PropTypes.node,
     doc: object.isRequired,
     collapsible: bool,
     expanded: bool,
@@ -121,10 +122,13 @@ const Doc = React.createClass({
         {!isCollapsed && doc.tags.length > 0 && (
           <DocTags
             tags={doc.tags}
+            doc={doc}
             withExamples={this.props.withExamples}
             withAdditionalResources={this.props.withAdditionalResources}
           />
         )}
+
+        {!isCollapsed && this.props.children}
       </div>
     );
   },

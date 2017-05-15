@@ -162,12 +162,18 @@ describe('megadoc-plugin-js::refineFn', function() {
       state: init({})
     };
 
+    const actions = {
+      extractSummaryFromMarkdown(markdown) {
+        return markdown;
+      }
+    }
+
     parseFn(context, sourceFile1.path, function(err, rawDocuments) {
       if (err) {
         done(err);
       }
       else {
-        async.map(rawDocuments, reduceFn.bind(null, context), function(err2, documents) {
+        async.map(rawDocuments, reduceFn.bind(null, context, actions), function(err2, documents) {
           if (err2) {
             done(err2);
           }

@@ -3,17 +3,16 @@ const HighlightedText = require('components/HighlightedText');
 const HeadingAnchor = require('components/HeadingAnchor');
 const TypeNames = require('./TypeNames');
 const DefaultValue = require('./DefaultValue');
-const Doc = require('../Doc');
-const K = require('../../constants');
 const describeNode = require('../../utils/describeNode');
 const DocClassifier = require('../../utils/DocClassifier');
 
-const { shape, string, object } = React.PropTypes;
+const { shape, string, object, node } = React.PropTypes;
 
 const PropertyTag = React.createClass({
   displayName: "PropertyTag",
 
   propTypes: {
+    children: node,
     anchor: string,
     typeInfo: shape({
       type: object,
@@ -26,20 +25,20 @@ const PropertyTag = React.createClass({
   },
 
   render() {
-    const { typeInfo, doc } = this.props;
-    const description = typeInfo.description || doc.description;
-    const defaultValue = typeInfo.defaultValue || describeNode(doc.nodeInfo);
+    const { anchor, typeInfo, doc } = this.props;
+    const description = typeInfo.description || doc && doc.description;
+    const defaultValue = typeInfo.defaultValue || doc && describeNode(doc.nodeInfo);
 
     return (
       <li className="property-tag">
         <header className="property-tag__header anchorable-heading">
-          <HeadingAnchor.Anchor href={this.props.anchor} />
-          <HeadingAnchor.Link href={this.props.anchor} />
+          {anchor && <HeadingAnchor.Anchor href={this.props.anchor} />}
+          {anchor && <HeadingAnchor.Link href={this.props.anchor} />}
 
           <span className="property-tag__name">
-            {typeInfo.name || doc.name}
+            {typeInfo.name || doc && doc.name}
 
-            {DocClassifier.isPrivate(doc) && (
+            {doc && DocClassifier.isPrivate(doc) && (
               <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
             )}
 
@@ -60,13 +59,7 @@ const PropertyTag = React.createClass({
           <DefaultValue defaultValue={defaultValue} />
         )}
 
-        {this.props.doc && this.props.doc.type && this.props.doc.type === K.TYPE_FUNCTION && (
-          <Doc
-            withTitle={false}
-            collapsible={false}
-            doc={this.props.doc}
-          />
-        )}
+        {this.props.children}
       </li>
     );
   }

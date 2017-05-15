@@ -1,5 +1,6 @@
 const assert = require('assert');
 const K = require('jsdoc-parser-extended').Constants;
+const { escape: escapeHTML } = require('lodash');
 const BUILT_IN_TYPES = [
   'Error',
   'String',
@@ -184,7 +185,7 @@ function renderTypeLink(params) {
   if (builtInType) {
     // WTF?
     if (typeof builtInType === 'string') {
-      return '<a href="' + encodeURI(builtInType) + '">' + typeName + '</a>';
+      return '<a href="' + encodeURI(builtInType) + '">' + escapeHTML(typeName) + '</a>';
     }
 
     return typeName;
