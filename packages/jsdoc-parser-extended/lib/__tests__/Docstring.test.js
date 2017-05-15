@@ -96,4 +96,33 @@ describe('CJS::Parser::Docstring', function() {
       assert.equal(docstring.typeDefs[0].tags.length, 5);
     });
   });
+
+  describe('@typedef', function() {
+    it('parses', function() {
+      var docstring = parse(function() {;
+        // /**
+        //  * @module Cocache
+        //  * @property {Cocache~Record}
+        //  *
+        //  * @typedef {Cocache~Record}
+        //  *          My thing.
+        //  *
+        //  * @property {Any} record
+        //  *           The record to validate.
+        //  *
+        //  * @property {Object} options
+        //  *           The options the cache instance was built with.
+        //  *
+        //  * @property {String} displayName
+        //  *           The cache instance's displayName. Use this in your error reporting.
+        //  */
+      });
+
+      assert.equal(docstring.name, 'Cocache');
+      assert.equal(docstring.tags.length, 2);
+      assert.equal(docstring.typeDefs.length, 1);
+      assert.equal(docstring.typeDefs[0].name, 'Cocache~Record');
+      assert.equal(docstring.typeDefs[0].tags.length, 4);
+    });
+  });
 });

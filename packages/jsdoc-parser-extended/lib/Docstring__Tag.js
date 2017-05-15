@@ -75,6 +75,10 @@ function Tag(commentNode, params) {
       this.typeInfo.name = commentNode.name;
       this.typeInfo.type = 'function';
       break;
+    case 'typedef':
+      this.typeInfo.name = commentNode.type;
+      this.typeInfo.type = 'object';
+      break;
 
     case 'property':
     case 'param':

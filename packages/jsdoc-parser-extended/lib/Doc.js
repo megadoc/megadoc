@@ -126,19 +126,16 @@ Doc.prototype.isModule = function() {
 };
 
 Doc.prototype.getTypeDefs = function() {
-  const receiver = DocUtils.getNameOf(this);
-
   return this.docstring.typeDefs.map(typeDefData => {
     const typeDefDocstring = new Docstring(typeDefData);
+    const [ typedReceiver, typedName ] = typeDefDocstring.name.split('~');
 
-    if (typeDefDocstring.name && typeDefDocstring.name.indexOf(`${receiver}~`) === 0) {
-      typeDefDocstring.name = typeDefDocstring.name.slice(`${receiver}~`.length);
-    }
+    typeDefDocstring.name = typedName;
 
     const doc = new Doc(typeDefDocstring, this.nodeInfo, this.filePath);
 
     doc.$isTypeDef = true;
-    doc.receiver = receiver;
+    doc.receiver = typedReceiver;
 
     return doc;
   });

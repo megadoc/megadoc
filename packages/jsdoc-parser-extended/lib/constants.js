@@ -50,6 +50,7 @@ exports.NO_DESCRIPTION_TAGS = {
   'private': true,
   'public': true,
   'type': true,
+  'typedef': true,
 };
 
 exports.KNOWN_TAGS = [
@@ -78,5 +79,6 @@ exports.KNOWN_TAGS = [
   'see',
   'static',
   'throws',
-  'type'
+  'type',
+  'typedef'
 ];
