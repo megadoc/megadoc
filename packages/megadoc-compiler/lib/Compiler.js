@@ -35,7 +35,14 @@ const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 9;
 const compile = asyncSequence([
   configure,
   createSerializer,
-  createCompilations,
+  partial(createCompilations, [
+    'assetRoot',
+    'outputDir',
+    'tmpDir',
+    'verbose',
+    'strict',
+    'debug',
+  ]),
   startSerializer,
   compileSources,
   generateCorpus,
@@ -183,8 +190,8 @@ function createSerializer(state, done) {
   }));
 }
 
-function createCompilations(state, done) {
-  const compilations = state.config.sources.map(partial(createCompilation, state));
+function createCompilations(optionWhitelist, state, done) {
+  const compilations = state.config.sources.map(partial(createCompilation, optionWhitelist, state));
 
   done(null, Object.assign({}, state, { compilations }));
 }

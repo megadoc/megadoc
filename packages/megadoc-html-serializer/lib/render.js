@@ -1,25 +1,33 @@
 const { Corpus } = require('megadoc-corpus');
 const TreeRenderer = require('./TreeRenderer');
 const LinkResolver = require('./LinkResolver');
+const Renderer = require('./Renderer');
 
 module.exports = function renderCorpus({ serializer, compilations }, done) {
   const corpusInfo = aggregateTreesIntoCorpus(serializer, compilations);
   const corpus = corpusInfo.corpus;
   const rootNodes = corpusInfo.rootNodes;
+  const serializerConfig = serializer.config;
 
   const withNodes = rootNodes.map((node, index) => {
     return { node: node, compilation: compilations[index] };
   });
 
   const linkResolver = new LinkResolver(corpus, {
-    relativeLinks: !serializer.config.layoutOptions.singlePageMode,
-    ignore: serializer.config.linkResolver.ignore,
-    injectors: serializer.config.linkResolver.injectors,
+    relativeLinks: !serializerConfig.layoutOptions.singlePageMode,
+    ignore: serializerConfig.linkResolver.ignore,
+    injectors: serializerConfig.linkResolver.injectors,
+  });
+
+  const markdownRenderer = new Renderer({
+    launchExternalLinksInNewTabs: serializerConfig.launchExternalLinksInNewTabs,
+    shortURLs: !serializerConfig.layoutOptions.singlePageMode,
+    syntaxHighlighting: serializerConfig.syntaxHighlighting,
   });
 
   const state = {
-    commonOptions: serializer.compilerConfig,
-    markdownRenderer: serializer.markdownRenderer,
+    compilerConfig: serializer.compilerConfig,
+    markdownRenderer,
     linkResolver: linkResolver,
     corpus: corpus,
   };

@@ -28,6 +28,7 @@ module.exports = function refineFn(context, documents, done) {
 
     return Object.assign({}, document, {
       id,
+      sortingId: document.filePath.replace(commonPrefix, ''),
     })
   });
 

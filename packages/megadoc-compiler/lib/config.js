@@ -33,4 +33,5 @@ module.exports = {
   strict: false,
   verbose: false,
   serializer: null,
+  sources: null,
 };

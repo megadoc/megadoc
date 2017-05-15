@@ -18,36 +18,29 @@ function Parser(params) {
 
 var Ppt = Parser.prototype;
 
-Ppt.parseFile = function(filePath, config, assetRoot) {
-  var relativeFilePath = filePath.indexOf(assetRoot) === 0 ?
-    filePath.substr(assetRoot.length + 1 /* trailing slash */) :
-    filePath
-  ;
-
+Ppt.parseFile = function(filePath, config) {
   try {
     this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
       config,
-      relativeFilePath,
       filePath
     );
   }
   catch(e) {
-    console.error('Failed to parse ' + relativeFilePath);
+    console.error('Failed to parse ' + filePath);
     throw e;
   }
 };
 
-Ppt.parseString = function(str, config, filePath, absoluteFilePath) {
+Ppt.parseString = function(str, config, filePath) {
   if (str.length > 0) {
     try {
       if (config.parse) {
-        this.ast = config.parse(str, absoluteFilePath);
+        this.ast = config.parse(str, filePath);
       }
       else {
         this.ast = babel.transform(str, assign({
-          filenameRelative: filePath,
-          filename: absoluteFilePath,
+          filename: filePath,
           code: true,
           ast: true,
           babelrc: true,

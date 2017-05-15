@@ -5,7 +5,7 @@ module.exports = function parseFn(context, filePath, done) {
   const emitter = context.state.emitter;
   const parser = new Parser({ emitter: emitter })
 
-  parser.parseFile(filePath, parserConfig, context.commonOptions.assetRoot);
+  parser.parseFile(filePath, parserConfig);
 
   done(null, parser.toJSON());
 };

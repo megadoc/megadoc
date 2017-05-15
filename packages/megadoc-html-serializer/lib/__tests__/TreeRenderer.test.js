@@ -32,7 +32,7 @@ describe('TreeRenderer', function() {
       };
 
       const renderedTree = Subject.renderTree({
-        commonOptions: { strict: true },
+        compilerConfig: { strict: true },
         markdownRenderer: new Renderer({})
       }, tree, treeOperations);
 
@@ -91,7 +91,7 @@ describe('TreeRenderer', function() {
       });
 
       const renderedTree = Subject.renderTree({
-        commonOptions: { strict: true },
+        compilerConfig: { strict: true },
         markdownRenderer: new Renderer({}),
         linkResolver: linkResolver,
       }, tree, treeOperations);

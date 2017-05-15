@@ -5,7 +5,7 @@ module.exports = function composeTree(compilation, done) {
   const { documents, treeOperations } = compilation;
   const context = {
     id: compilation.id,
-    commonOptions: compilation.commonOptions,
+    compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
     state: compilation.processorState,
   };

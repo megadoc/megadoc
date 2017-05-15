@@ -4,7 +4,7 @@ const mergeObject = require('./utils/mergeObject');
 module.exports = function render(renderRoutines, compilation, done) {
   const { documents, processor } = compilation;
   const context = {
-    commonOptions: compilation.commonOptions,
+    compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
     state: compilation.processorState,
   };

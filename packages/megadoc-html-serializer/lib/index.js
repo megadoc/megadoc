@@ -5,7 +5,6 @@ const createAssets = require('./createAssets');
 const render = require('./render');
 const emit = require('./emit');
 const purge = require('./purge');
-const Renderer = require('./Renderer');
 const renderRoutines = require('./renderRoutines');
 const reduceRoutines = require('./reduceRoutines');
 const defaults = require('./config');
@@ -22,12 +21,6 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
   this.assetUtils = new AssetUtils(this.compilerConfig);
   this.config = Object.assign({}, defaults, userSerializerOptions);
   this.corpusVisitor = NodeURIDecorator(this.config);
-
-  this.markdownRenderer = new Renderer({
-    launchExternalLinksInNewTabs: this.config.launchExternalLinksInNewTabs,
-    shortURLs: !this.config.layoutOptions.singlePageMode,
-    syntaxHighlighting: this.config.syntaxHighlighting,
-  });
 
   this.state = {
     assets: null,

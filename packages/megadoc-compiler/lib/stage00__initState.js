@@ -8,7 +8,6 @@ module.exports = function initState(compilation, done) {
     const fn = require(fnPath);
     const state = fn({
       options: compilation.processorOptions,
-      commonOptions: compilation.commonOptions,
     });
 
     done(null, Object.assign({}, compilation, { processorState: state }))

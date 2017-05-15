@@ -12,7 +12,6 @@ module.exports = function parse(compilation, done) {
   const applier = processor.parseFnPath ? parseEach : parseBulk;
   const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
   const context = {
-    commonOptions: compilation.commonOptions,
     options: compilation.processorOptions,
     state: compilation.processorState,
   };

@@ -1,9 +1,10 @@
 const invariant = require('invariant');
 const scanSources = require('./utils/scanSources');
 const ConfigUtils = require('megadoc-config-utils');
+const { pick } = require('lodash');
 
 // TODO: extract decorators
-module.exports = function createCompilation(state, source) {
+module.exports = function createCompilation(optionWhitelist, state, source) {
   const { config, runOptions } = state;
   const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
   const files = scanSources(source.pattern, source.include, source.exclude);
@@ -21,7 +22,7 @@ module.exports = function createCompilation(state, source) {
     id: source.id, // TODO: auto-infer
     documents: null,
     files: whitelistedFiles,
-    commonOptions: config,
+    compilerOptions: pick(config, optionWhitelist),
     processor: paths,
     processorOptions,
     processorState: null,

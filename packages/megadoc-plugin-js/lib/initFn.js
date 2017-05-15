@@ -1,14 +1,12 @@
 var assert = require('assert');
 var EventEmitter = require('events');
-// var Parser = require('jsdoc-parser-extended').Parser;
 var defaults = require('./config');
 
 module.exports = function init(compilation) {
   var config = Object.assign({}, defaults, compilation.options);
-  var commonOptions = compilation.commonOptions;
   var emitter = new EventEmitter();
   var parserConfig = {
-    strict: config.strict || commonOptions.strict,
+    strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
@@ -46,7 +44,6 @@ module.exports = function init(compilation) {
 
   return {
     emitter: emitter,
-    // parser: new Parser({ emitter: emitter }),
     parserConfig: parserConfig,
   };
 };

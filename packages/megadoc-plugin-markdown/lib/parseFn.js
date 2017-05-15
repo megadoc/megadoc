@@ -12,14 +12,11 @@ module.exports = function parseFn(context, filePath, done) {
     source: fs.readFileSync(filePath, 'utf-8')
   };
 
-  const commonPrefix = context.commonOptions.assetRoot; // TODO infer
   const extName = path.extname(entry.filePath);
   const fileName = path.basename(filePath)
     .replace(extName, '')
     .replace(/\W/g, '-')
   ;
-
-  entry.sortingId = entry.filePath.replace(commonPrefix, '');
 
   entry.title = parseTitle(entry.source);
   entry.wordCount = entry.source.split(/\s+/).length;

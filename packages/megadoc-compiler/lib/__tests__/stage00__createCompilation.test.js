@@ -21,8 +21,8 @@ describe('stage00__createCompilation', function() {
       };
     `);
 
-    output = subject({
-      config: { commonOption: 1 },
+    output = subject([ 'publicOption' ], {
+      config: { publicOption: 1, privateOption: 2 },
       runOptions: {},
     }, {
       pattern: /\.js$/,
@@ -48,8 +48,12 @@ describe('stage00__createCompilation', function() {
     );
   });
 
-  it('should store the common options', function() {
-    assert.deepEqual(output.commonOptions, { commonOption: 1 });
+  it('should expose the public compiler options', function() {
+    assert.equal(output.compilerOptions.publicOption, 1);
+  });
+
+  it('should not expose private compiler options', function() {
+    assert.equal(output.compilerOptions.privateOption, undefined);
   });
 
   it('should store the processor options', function() {
@@ -58,7 +62,7 @@ describe('stage00__createCompilation', function() {
 
   context('given a pair of processor config', function() {
     beforeEach(function() {
-      output = subject({
+      output = subject([], {
         config: { commonOption: 1 },
         runOptions: {},
       },

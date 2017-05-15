@@ -6,7 +6,7 @@ module.exports = function refine(compilation, done) {
   if (processor.refineFnPath) {
     const fn = require(processor.refineFnPath);
     const context = {
-      commonOptions: compilation.commonOptions,
+      compilerOptions: compilation.compilerOptions,
       options: compilation.processorOptions,
       state: compilation.processorState,
     };

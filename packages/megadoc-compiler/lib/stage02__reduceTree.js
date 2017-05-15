@@ -8,7 +8,6 @@ module.exports = function reduceTree(compilation, done) {
   if (processor.reduceTreeFnPath) {
     const fn = require(processor.reduceTreeFnPath);
     const context = {
-      commonOptions: compilation.commonOptions,
       options: compilation.processorOptions,
       state: compilation.processorState,
     };
