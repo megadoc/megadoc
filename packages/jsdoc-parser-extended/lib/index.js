@@ -16,9 +16,7 @@ function Parser(params) {
   this.emitter = params.emitter;
 }
 
-var Ppt = Parser.prototype;
-
-Ppt.parseFile = function(filePath, config) {
+Parser.prototype.parseFile = function(filePath, config) {
   try {
     this.parseString(
       fs.readFileSync(filePath, 'utf-8'),
@@ -32,7 +30,7 @@ Ppt.parseFile = function(filePath, config) {
   }
 };
 
-Ppt.parseString = function(str, config, filePath) {
+Parser.prototype.parseString = function(str, config, filePath) {
   if (str.length > 0) {
     try {
       if (config.parse) {
@@ -64,7 +62,7 @@ Ppt.parseString = function(str, config, filePath) {
   }
 };
 
-Ppt.walk = function(ast, inConfig, filePath) {
+Parser.prototype.walk = function(ast, inConfig, filePath) {
   var parser = this;
   var config = pick(inConfig, [
     'inferModuleIdFromFileName',
@@ -77,6 +75,8 @@ Ppt.walk = function(ast, inConfig, filePath) {
     'moduleMap',
     'alias',
     'namedReturnTags',
+    'strict',
+    'verbose',
   ]);
 
   if (process.env.MEGADOC_DEBUG === '1') {
@@ -177,6 +177,7 @@ Ppt.walk = function(ast, inConfig, filePath) {
         doc = parser.registry.get(name, filePath);
 
         if (doc) {
+        console.log('hoi?', path.node)
           var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
 
           doc.markAsExported();
@@ -188,7 +189,7 @@ Ppt.walk = function(ast, inConfig, filePath) {
   });
 };
 
-Ppt.toJSON = function() {
+Parser.prototype.toJSON = function() {
   var registry = this.registry;
 
   return registry.docs.reduce(function(list, doc) {
@@ -201,7 +202,7 @@ Ppt.toJSON = function() {
   }, []);
 };
 
-Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
+Parser.prototype.parseComment = function(comment, path, config, filePath, isClosestToNode) {
   var contextNode = path.node;
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
 
@@ -246,18 +247,18 @@ Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
 
   var nodeInfo;
 
-  if (isClosestToNode) {
+  // if (isClosestToNode) {
     nodeInfo = analyzeNode(contextNode, path, filePath, config);
 
-    this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
-  }
-  else {
-    nodeInfo = new NodeInfo(contextNode, filePath);
-  }
+  //   this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
+  // }
+  // else {
+  //   nodeInfo = new NodeInfo(contextNode, filePath);
+  // }
 
   var doc = new Doc(docstring, nodeInfo, filePath);
 
-  if (doc.id) {
+  // if (doc.id) {
     // Pre-defined aliases:
     if (config.alias.hasOwnProperty(doc.id)) {
       config.alias[doc.id].forEach(function(alias) {
@@ -268,7 +269,7 @@ Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
     if (doc.isModule()) {
       var modulePath = ASTUtils.findNearestPathWithComments(path);
 
-      if (process.env.VERBOSE) {
+      if (config.verbose) {
         console.info('[info] Found a module "%s" (source: %s)', doc.id, nodeLocation);
       }
 
@@ -277,7 +278,7 @@ Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
     else {
       this.registry.addEntityDoc(doc, path);
 
-      if (process.env.VERBOSE) {
+      if (config.verbose) {
         console.info('[info] Found an entity "%s" belonging to "%s" (source: %s)',
           doc.id,
           doc.nodeInfo.receiver || '<<unknown>>',
@@ -289,12 +290,12 @@ Ppt.parseComment = function(comment, path, config, filePath, isClosestToNode) {
     doc.getTypeDefs().forEach(typeDefDoc => {
       this.registry.addEntityDoc(typeDefDoc, path);
     })
-  }
-  else {
-    console.warn("%s: No identifier was found for this document, it will be ignored!",
-      nodeLocation
-    );
-  }
+  // }
+  // else {
+  //   console.warn("%s: No identifier was found for this document, it will be ignored!",
+  //     nodeLocation
+  //   );
+  // }
 
   return true;
 };
