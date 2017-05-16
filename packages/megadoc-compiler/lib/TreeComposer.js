@@ -124,6 +124,7 @@ exports.composeTree = function(context, documentList, treeOperations) {
 };
 
 exports.mergeTrees = function(prevCompilation, nextCompilation) {
+  const { verbose } = prevCompilation.compilerOptions;
   const changedFiles = nextCompilation.documents.reduce(function(map, document) {
     map[document.filePath] = 1;
 
@@ -136,8 +137,10 @@ exports.mergeTrees = function(prevCompilation, nextCompilation) {
     return map;
   }, {});
 
-  console.log('[D] Previous tree size =', prevCompilation.documents.length)
-  console.log('[D] Merging tree with new sources coming from:', changedFiles)
+  if (verbose) {
+    console.log('[D] Previous tree size =', prevCompilation.documents.length)
+    console.log('[D] Merging tree with new sources coming from:', changedFiles)
+  }
 
   const withoutChanged = prevCompilation.documents.filter(document => {
     return changedFiles[document.filePath] !== 1;
@@ -153,13 +156,17 @@ exports.mergeTrees = function(prevCompilation, nextCompilation) {
     return changedDocumentIds[op.data.id] !== 1 && changedDocumentIds[op.data.parentId] !== 1;
   });
 
-  console.log('[D] %d document(s) are no longer valid', withoutChanged.length);
+  if (verbose) {
+    console.log('[D] %d document(s) are no longer valid', withoutChanged.length);
+  }
 
   const withPartials = withoutChanged.concat(nextCompilation.documents);
   const renderOpsWithPartials = Object.assign(renderOpsWithoutChanged, nextCompilation.renderOperations);
   const treeOpsWithPartials = treeOpsWithoutChanged.concat(nextCompilation.treeOperations);
 
-  console.log('[D] %d document(s) are now in the tree.', withPartials.length)
+  if (verbose) {
+    console.log('[D] %d document(s) are now in the tree.', withPartials.length)
+  }
 
   return {
     documents: withPartials,

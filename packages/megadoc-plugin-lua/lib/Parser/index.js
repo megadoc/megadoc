@@ -34,9 +34,6 @@ exports.parseFile = function(filePath, config) {
 exports.parseString = function(sourceCode, config) {
   var docs = [];
   var lineNodes = {};
-
-  config = config || { strict: true };
-
   var ast = parser.parse(sourceCode, {
     comments: true,
     scope: true,
@@ -97,7 +94,7 @@ exports.parseString = function(sourceCode, config) {
         return;
       }
 
-      var nodeInfo = parseNode(node);
+      var nodeInfo = parseNode(node, config);
 
       assign(docstring, nodeInfo);
 

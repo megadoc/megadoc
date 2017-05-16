@@ -1,3 +1,4 @@
+const console = require("console");
 const CorpusAPI = require('core/CorpusAPI');
 const invariant = require('utils/invariant');
 const LayoutEngine = require('./LayoutEngine');

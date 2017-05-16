@@ -2,6 +2,7 @@ var LinkResolver = require('../LinkResolver');
 var Corpus = require('megadoc-corpus').Corpus;
 var assert = require('assert');
 const NodeURIDecorator = require('../../NodeURIDecorator');
+const { stubConsoleWarn } = require('megadoc-test-utils')
 var b = require('megadoc-corpus').Types.builders;
 
 describe('LinkResolver', function() {
@@ -101,6 +102,8 @@ describe('LinkResolver', function() {
 
   context('given a broken link', function() {
     it('should generate markup for a broken link', function() {
+      stubConsoleWarn(/Unable to resolve link to "Foo"/);
+
       assert.equal(resolver.linkify({
         text: '[Foo]()',
         strict: true

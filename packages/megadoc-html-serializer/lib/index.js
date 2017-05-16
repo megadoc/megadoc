@@ -56,7 +56,6 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
 HTMLSerializer.prototype.emitCorpusDocuments = function(withCorpus, done) {
   const { compilations, corpus } = withCorpus;
 
-
   emit({ serializer: this, compilations, corpus, }, function(err) {
     done(err, withCorpus);
   });

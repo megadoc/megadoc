@@ -12,7 +12,7 @@ describe('megadoc-compiler::TreeComposer', function() {
         options: {
           id: 'foo',
           name: 'Foo',
-        }
+        },
       }, [
         b.document({
           id: 'Klass'
@@ -29,7 +29,6 @@ describe('megadoc-compiler::TreeComposer', function() {
           },
         }
       ])
-
 
       assert.equal(tree.documents.length, 1)
       assert.equal(tree.documents[0].id, 'Klass')
@@ -50,6 +49,9 @@ describe('megadoc-compiler::TreeComposer', function() {
 
       const mergedCompilation = subject(
         {
+          compilerOptions: {
+            verbose: false,
+          },
           documents: [
             b.document({
               id: 'Klass',
@@ -79,6 +81,9 @@ describe('megadoc-compiler::TreeComposer', function() {
           ],
         },
         {
+          compilerOptions: {
+            verbose: false,
+          },
           documents: [
             b.document({
               id: 'Klass',

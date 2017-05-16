@@ -3,7 +3,7 @@ var multiline = require('multiline-slash');
 var subject = require('../');
 
 function parse(str) {
-  return subject.parseString(multiline(str));
+  return subject.parseString(multiline(str), { strict: true, verbose: false });
 }
 
 describe('Lua::Parser', function() {

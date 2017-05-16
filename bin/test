@@ -54,7 +54,7 @@ if [ "${COVERAGE}" == "1" ]; then
     --preserve-comments \
     --report lcov \
     --report html \
-    ./node_modules/mocha/bin/_mocha -- $@ "${SOURCE_DIRS}/**/*.test.js"
+    ./node_modules/mocha/bin/_mocha -- --reporter dot $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
 else
-  exec ./node_modules/.bin/mocha --reporter dot $@ "${SOURCE_DIRS}/**/*.test.js"
+  exec ./node_modules/.bin/mocha --reporter dot $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
 fi

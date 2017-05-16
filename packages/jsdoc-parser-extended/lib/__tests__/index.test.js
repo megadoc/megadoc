@@ -2,12 +2,12 @@ var assert = require('chai').assert;
 var findWhere = require('lodash').findWhere;
 var TestUtils = require('../TestUtils');
 var K = require('../constants');
-var SinonSuite = require('megadoc-test-utils/SinonSuite');
+const { stubConsoleWarn, createSinonSuite } = require('megadoc-test-utils')
 
 var parseInline = TestUtils.parseInline;
 
 describe('CJS::Parser::Main', function() {
-  var sinon = SinonSuite(this);
+  var sinon = createSinonSuite(this);
 
   it('should ignore @internal docs', function() {
     var docs = parseInline(function() {;
@@ -168,6 +168,8 @@ describe('CJS::Parser::Main', function() {
     });
 
     it('should ignore it if the module already has a namespace', function() {
+      stubConsoleWarn(`Ignoring pre-defined namespace 'Core' for module as it already specifies one`);
+
       var docs = parseInline(function() {;
         // /**
         //  * @module

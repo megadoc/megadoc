@@ -8,6 +8,7 @@ const asyncMaybe = require('./utils/asyncMaybe');
 module.exports = function reduce(reduceRoutines, compilation, done) {
   const { compilerOptions, processor, refinedDocuments } = compilation;
   const context = {
+    compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
     state: compilation.processorState
   };

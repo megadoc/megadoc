@@ -2,6 +2,7 @@ var assert = require('assert');
 var TestUtils = require('../../TestUtils');
 var findWhere = require('lodash').findWhere;
 var K = require('../../constants');
+const { stubConsoleWarn } = require('megadoc-test-utils');
 
 describe('CJS::Parser - @lends support', function() {
   it('redirects all entities belonging to a @lends object into the specified receiver', function() {
@@ -48,6 +49,8 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('correctly links entities defined using something like assign()', function() {
+    stubConsoleWarn('No identifier was found for this document, it will be ignored!');
+
     var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // var DragonHunter = {};
@@ -69,6 +72,8 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('correctly resolves a namespaced module', function() {
+    stubConsoleWarn('No identifier was found for this document, it will be ignored!');
+
     var docs = TestUtils.parseInline(function() {;
       // /**
       //  * @namespace API
@@ -93,6 +98,8 @@ describe('CJS::Parser - @lends support', function() {
   });
 
   it('lends to a prototype', function() {
+    stubConsoleWarn('No identifier was found for this document, it will be ignored!');
+
     var docs = TestUtils.parseInline(function() {;
       // /** @module */
       // function DragonHunter() {}

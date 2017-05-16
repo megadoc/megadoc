@@ -108,7 +108,7 @@ describe("CorpusTypes", function() {
   });
 
   it('works', function() {
-    benchmark({ times: 1 }, function() {
+    benchmark({ times: 1, log: false }, function() {
       b.document({
         id: 'd1',
         entities:

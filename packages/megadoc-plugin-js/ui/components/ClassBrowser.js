@@ -1,4 +1,5 @@
 const React = require("react");
+const console = require("console");
 const Link = require('components/Link');
 const classSet = require('utils/classSet');
 const Storage = require('core/Storage');

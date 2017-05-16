@@ -7,6 +7,7 @@ module.exports = function initState(compilation, done) {
   else {
     const fn = require(fnPath);
     const state = fn({
+      compilerOptions: compilation.compilerOptions,
       options: compilation.processorOptions,
     });
 

@@ -25,7 +25,10 @@ if (!ctx.output || ctx.entry.length === 0) {
 compilePlugin(
   ctx.entry.map(resolvePath),
   resolvePath(ctx.output),
-  program.optimize,
+  {
+    optimize: program.optimize,
+    verbose: true,
+  },
   throwOnError
 );
 

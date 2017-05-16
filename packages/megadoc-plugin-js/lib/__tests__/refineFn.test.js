@@ -1,15 +1,16 @@
-const FileSuite = require('megadoc-test-utils/FileSuite');
 const parseFn = require('../parseFn');
 const reduceFn = require('../reduceFn');
 const subject = require('../refineFn');
 const init = require('../initFn');
 const async = require('async');
-const { assert } = require('chai');
+const { assert, stubConsoleWarn, createFileSuite } = require('megadoc-test-utils');
 
 describe('megadoc-plugin-js::refineFn', function() {
-  const fileSuite = FileSuite(this);
+  const fileSuite = createFileSuite(this);
 
   it('works', function(done) {
+    stubConsoleWarn('Unable to map ".*" to any module, it will be discarded.');
+
     const sourceFile1 = fileSuite.createFile('source1.js', `
       const Faye = require('faye');
       const Immutable = require('immutable');
@@ -21,6 +22,7 @@ describe('megadoc-plugin-js::refineFn', function() {
        *
        * A small module for subscribing to PandaPush channels.
        */
+      let exports;
 
       /*
        * @private

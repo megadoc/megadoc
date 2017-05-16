@@ -93,7 +93,7 @@ function compileInlineScripts(compilation, done) {
   compilePlugin(
     [ inlinePluginPath ],
     inlinePluginRuntimePath,
-    true,
+    { optimize: true, verbose: compilerConfig.verbose },
     err => {
       if (err) {
         done(err);

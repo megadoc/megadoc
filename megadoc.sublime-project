@@ -25,7 +25,6 @@
 				"regression_spec",
 				"spec/fixtures",
 				"public/doc/api",
-				"dist",
 				"coverage",
 				"packages/megadoc/lib",
 				"packages/megadoc/ui"

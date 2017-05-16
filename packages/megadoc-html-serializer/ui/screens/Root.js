@@ -1,4 +1,5 @@
 const React = require("react");
+const console = require("console");
 const { findDOMNode } = require('react-dom');
 const { Outlet } = require('react-transclusion');
 const Storage = require('core/Storage');

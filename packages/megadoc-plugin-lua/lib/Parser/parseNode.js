@@ -1,7 +1,7 @@
 var _ = require('lodash');
 var assign = _.assign;
 
-function parseNode(node) {
+function parseNode(node, config) {
   var ctx = { type: '?' };
   var idInfo;
 
@@ -36,7 +36,10 @@ function parseNode(node) {
     return assign({}, idInfo, { ctx: ctx });
   }
   else {
-    console.info('Unknown node type "%s"', node.type);
+    if (config.verbose) {
+      console.info('Unknown node type "%s"', node.type);
+    }
+
     return { ctx: ctx };
   }
 }

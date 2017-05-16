@@ -1,4 +1,5 @@
 const React = require('react');
+const console = require("console");
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const Storage = require('core/Storage');

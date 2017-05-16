@@ -1,3 +1,4 @@
+const console = require("console");
 const { findDOMNode } = require('react-dom');
 const scrollIntoView = require('utils/scrollIntoView');
 const SIDEBAR_SELECTOR = '.resizable-panel__content';

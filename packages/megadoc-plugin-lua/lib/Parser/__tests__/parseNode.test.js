@@ -11,13 +11,13 @@ function parseNode(str) {
   });
 
   var nodeInfos = ast.body.reduce(function(set, node) {
-    set.push(subject(node));
+    set.push(subject(node, { verbose: false }));
 
     if (node.init) {
       node.init.forEach(function(initNode) {
         if (initNode.type === 'TableConstructorExpression') {
           initNode.fields.forEach(function(childNode) {
-            set.push(subject(childNode));
+            set.push(subject(childNode, { verbose: false }));
           });
         }
       });

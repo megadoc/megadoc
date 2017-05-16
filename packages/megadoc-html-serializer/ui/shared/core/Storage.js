@@ -1,3 +1,4 @@
+const console = require("console");
 const EventEmitter = require('core/EventEmitter');
 const emitter = new EventEmitter(['change']);
 

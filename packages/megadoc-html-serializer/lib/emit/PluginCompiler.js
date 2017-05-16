@@ -3,7 +3,7 @@ const path = require('path');
 const generateCustomWebpackConfig = require('../../webpack/common');
 const publicModules = require('../../webpack/publicModules');
 
-exports.compile = function(scripts, outputFilePath, optimize, done) {
+exports.compile = function(scripts, outputFilePath, { optimize, verbose }, done) {
   var id = path.basename(outputFilePath, path.extname(outputFilePath));
 
   if (!scripts.length) {
@@ -33,11 +33,13 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
     webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
 
-  console.log('Compiling plugin "%s" of %d scripts: %s.',
-    id,
-    scripts.length,
-    JSON.stringify(scripts, null, 2)
-  );
+  if (verbose) {
+    console.log('Compiling plugin "%s" of %d scripts: %s.',
+      id,
+      scripts.length,
+      JSON.stringify(scripts, null, 2)
+    );
+  }
 
   webpack(webpackConfig, function(err, stats) {
     if (err) {
@@ -54,8 +56,10 @@ exports.compile = function(scripts, outputFilePath, optimize, done) {
       console.warn(message);
     });
 
-    console.log('Plugin "%s" was compiled successfully.', id);
-    // console.log(stats.toString({ chunks: true }))
+    if (verbose) {
+      console.log('Plugin "%s" was compiled successfully.', id);
+      // console.log(stats.toString({ chunks: true }))
+    }
 
     done();
   });

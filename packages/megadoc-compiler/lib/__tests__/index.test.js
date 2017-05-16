@@ -2,7 +2,6 @@ const path = require('path');
 const Compiler = require("../Compiler");
 const { run: compile } = Compiler;
 const { assert, createFileSuite } = require('megadoc-test-utils')
-const { BreakpointError } = require('../utils/createBreakpoint');
 
 describe("megadoc-compiler::Compiler", function() {
   const fileSuite = createFileSuite(this);

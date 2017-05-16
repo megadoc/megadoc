@@ -1,3 +1,4 @@
+const console = require("console");
 const Outlet = require('components/Outlet');
 const CorpusAPI = require('./CorpusAPI');
 

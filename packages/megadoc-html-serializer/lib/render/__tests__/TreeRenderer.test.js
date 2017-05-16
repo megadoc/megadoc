@@ -36,8 +36,6 @@ describe('TreeRenderer', function() {
         markdownRenderer: new Renderer({})
       }, tree, treeOperations);
 
-      console.log(renderedTree.documents[0].properties)
-
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });
   });
