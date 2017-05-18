@@ -1,6 +1,5 @@
 var multiline = require('multiline-slash');
 var ASTParser = require('./');
-var EventEmitter = require('events');
 
 exports.parseNode = function(strGenerator, config, filePath) {
   var parser = createParser();
@@ -32,8 +31,6 @@ function parseInline(strGenerator, config, filePath, fn) {
 
   database = parser.toJSON();
 
-  parser.emitter.emit('postprocess', database);
-
   return database;
 }
 
@@ -50,8 +47,6 @@ function parseFiles(filePaths, config, commonPrefix) {
 
   database = parser.toJSON();
 
-  parser.emitter.emit('postprocess', database);
-
   return database;
 }
 
@@ -65,5 +60,5 @@ exports.parseFiles = parseFiles;
 exports.createParser = createParser;
 
 function createParser() {
-  return new ASTParser({ emitter: new EventEmitter() });
+  return new ASTParser({});
 }

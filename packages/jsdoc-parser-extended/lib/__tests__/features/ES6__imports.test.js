@@ -17,10 +17,8 @@ describe('CJS::Parser - ES6 - import statements', function() {
       // };
     }, {
       parserOptions: {
-        presets: [ 'es2015' ],
+        presets: [ ['es2015', { modules: false }] ],
       },
-      debug: true,
-      verbose: true,
     });
 
     assert.equal(docs.length, 1);

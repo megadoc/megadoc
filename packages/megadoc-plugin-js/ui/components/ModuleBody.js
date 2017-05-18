@@ -3,6 +3,7 @@ const { findWhere, where } = require("lodash");
 const Outlet = require('components/Outlet');
 const Link = require('components/Link');
 const Doc = require('./Doc');
+const ObjectSynopsis = require('./ObjectSynopsis');
 const SeeTag = require('./Tags/SeeTag');
 const DocGroup = require('./DocGroup');
 const PropertyTag = require('./Tags/PropertyTag');
@@ -169,7 +170,7 @@ const ModuleBody = React.createClass({
     }
 
     return (
-      <DocGroup label={title} tagName="ul" className="js-doc-entity__property-tags">
+      <DocGroup label={title} tagName="div" className="js-doc-entity__property-tags">
         {propertyDocs.map(this.renderProperty)}
       </DocGroup>
     );
@@ -185,6 +186,16 @@ const ModuleBody = React.createClass({
         }
       }
     );
+
+    if (doc.type && doc.type === K.TYPE_OBJECT && !!tag.typeInfo.name) {
+      return (
+        <ObjectSynopsis
+          key={doc.id}
+          doc={doc}
+          anchor={this.getEntityAnchor(doc)}
+        />
+      );
+    }
 
     return (
       <PropertyTag

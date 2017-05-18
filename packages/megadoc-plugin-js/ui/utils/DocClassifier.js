@@ -33,12 +33,17 @@ function isStaticMethod(doc) {
   return doc.type === K.TYPE_FUNCTION && !isMethod(doc) && !isCallback(doc);
 }
 
+function isExportedSymbol(doc) {
+  return !!doc.isExportedSymbol;
+}
+
 exports.isMethod = isMethod;
 exports.isCallback = isCallback;
 exports.isStaticMethod = isStaticMethod;
 exports.isFactoryExports = isFactoryExports;
 exports.isClassEntity = isClassEntity;
 exports.isTypeDef = isTypeDef;
+exports.isExportedSymbol = isExportedSymbol;
 
 exports.getDisplayType = function(documentNode) {
   if (documentNode.type === 'Namespace') {

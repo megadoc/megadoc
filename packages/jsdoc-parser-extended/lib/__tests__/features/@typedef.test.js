@@ -23,4 +23,24 @@ describe('CJS::Parser - @typedef support', function() {
 
     assert.equal(docs[1].type, 'myModule~Prop');
   });
+
+  it('works with es6 exports', function() {
+    const docs = TestUtils.parseInline(`
+      /**
+       * Hello!
+       *
+       * @typedef  {myModule~Prop}
+       * @property {String} name
+       */
+      export default function myModule() {}
+
+      /**
+       * @property {myModule~Prop}
+       */
+      myModule.someProp = null;
+    `, { parserOptions: { presets: [ ['es2015', { modules: false }] ] } });
+
+    assert.equal(docs.length, 3);
+    assert.deepEqual(docs.map(x => x.id), ['myModule', 'myModule~Prop', 'myModule.someProp'])
+  });
 });

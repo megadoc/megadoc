@@ -12,7 +12,7 @@ const webpackConfig = require('./webpack.config');
 const ExternalsPlugin = require('./webpack/ExternalsPlugin');
 const { assign } = require('lodash');
 const K = require('./lib/constants');
-const generateInlinePlugin = require('./lib/generateInlinePlugin');
+const generateInlinePlugin = require('./lib/emit/generateInlinePlugin');
 const ConfigUtils = require('megadoc-config-utils');
 const SerializerDefaults = require('./lib/config');
 

@@ -102,6 +102,11 @@ exports.resolveReceiverAndScopeFor = function(doc, registry) {
       registry.findClosestModule(doc.$path)
     );
 
+    if (!enclosingModule && doc.nodeInfo.isExportedSymbol()) {
+      enclosingModule = registry.findExportedModule(doc.filePath);
+      enclosingModule = enclosingModule && enclosingModule.id;
+    }
+
     if (enclosingModule) {
       receiver = enclosingModule;
     }

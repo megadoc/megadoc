@@ -52,6 +52,10 @@ Rpt.addEntityDoc = function(doc, path) {
   doc.$path = path;
 };
 
+Rpt.getDocAtPath = function(path) {
+  return this.docs.filter(x => x.$path === path)[0];
+};
+
 Rpt.trackLend = function(lendsTo, path) {
   var targetPath = ASTUtils.findNearestPathWithComments(path);
 

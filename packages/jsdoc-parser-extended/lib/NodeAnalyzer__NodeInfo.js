@@ -28,6 +28,8 @@ NodeInfo.prototype.toJSON = function() {
   return {
     id: this.id,
     receiver: this.receiver,
+    isExportedSymbol: this.isExportedSymbol(),
+    isDefaultExportedSymbol: this.isDefaultExportedSymbol(),
     loc: this.loc,
   };
 };
@@ -56,12 +58,28 @@ NodeInfo.prototype.markAsExports = function() {
   this.$isExports = true;
 };
 
+NodeInfo.prototype.markAsDefaultExportedSymbol = function() {
+  this.$isDefaultExportedSymbol = true;
+};
+
+NodeInfo.prototype.markAsExportedSymbol = function() {
+  this.$isExportedSymbol = true;
+};
+
 NodeInfo.prototype.isModule = function() {
   return Boolean(this.$isModule || this.$isExports);
 };
 
 NodeInfo.prototype.isExports = function() {
   return Boolean(this.$isExports);
+};
+
+NodeInfo.prototype.isExportedSymbol = function() {
+  return Boolean(this.$isExportedSymbol);
+};
+
+NodeInfo.prototype.isDefaultExportedSymbol = function() {
+  return Boolean(this.$isDefaultExportedSymbol);
 };
 
 NodeInfo.prototype.markAsDestructuredObject = function() {

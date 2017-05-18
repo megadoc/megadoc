@@ -75,8 +75,16 @@ Utils.getVariableNameFromModuleExports = function(node) {
 };
 
 Utils.getVariableNameFromES6DefaultExport = function(node) {
-  if (t.isExportDefaultDeclaration(node) && t.isIdentifier(node.declaration)) {
-    return node.declaration.name;
+  if (t.isExportDefaultDeclaration(node)) {
+    if (t.isIdentifier(node.declaration)) {
+      return node.declaration.name;
+    }
+    else if (
+      t.isFunctionDeclaration(node.declaration)
+      && t.isIdentifier(node.declaration.id)
+    ) {
+      return node.declaration.id.name;
+    }
   }
 };
 
@@ -155,10 +163,10 @@ Utils.findIdentifierInScope = function(identifierName, path) {
 Utils.getLocation = function(node) {
   var loc;
 
-  if ('VariableDeclaration' === node.type && node.declarations[0].init) {
+  if (t.isVariableDeclaration(node) && node.declarations[0].init) {
     loc = node.declarations[0].init.loc;
   }
-  else {
+  else if (node) {
     loc = node.loc;
   }
 

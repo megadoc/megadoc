@@ -70,6 +70,31 @@ function analyzeNode(node, path, filePath, config) {
     info.id = node.key.name;
     info.$contextNode = node;
   }
+  else if (t.isExportDefaultDeclaration(node)) {
+    const realInfo = analyzeNode(node.declaration, path, filePath, config);
+    info.id = realInfo.id;
+    info.$contextNode = realInfo.$contextNode;
+    info.markAsModule();
+    info.markAsExportedSymbol()
+    info.markAsDefaultExportedSymbol()
+  }
+  else if (t.isExportNamedDeclaration(node) && node.declaration) {
+    const realInfo = analyzeNode(node.declaration, path, filePath, config);
+
+    info.id = realInfo.id;
+    info.receiver = ASTUtils.getVariableNameFromFilePath(filePath);
+    info.$contextNode = realInfo.$contextNode;
+    info.markAsExportedSymbol()
+  }
+  else if (t.isExportNamedDeclaration(node) && node.specifiers.length === 1) {
+    return analyzeNode(node.specifiers[0], path, filePath, config);
+  }
+  else if (t.isExportSpecifier(node)) {
+    info.id = node.exported.name;
+    info.receiver = ASTUtils.getVariableNameFromFilePath(filePath);
+    info.$contextNode = node;
+    info.markAsExportedSymbol()
+  }
 
   if (info.id) {
     info.addContextInfo(generateContext(info.$contextNode));

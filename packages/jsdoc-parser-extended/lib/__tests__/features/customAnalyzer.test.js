@@ -1,7 +1,7 @@
 var assert = require('assert');
 var TestUtils = require('../../TestUtils');
 
-describe('CJS::Parser: customAnalyzer support', function() {
+describe.skip('CJS::Parser: customAnalyzer support', function() {
   it('accepts a custom analyzeNode function', function() {
     var docs = TestUtils.parseInline(function() {;
       // /**

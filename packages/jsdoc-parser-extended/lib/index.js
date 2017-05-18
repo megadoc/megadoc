@@ -11,9 +11,8 @@ var assign = require('lodash').assign;
 var babel = require('babel-core');
 var t = require('babel-types');
 
-function Parser(params) {
+function Parser() {
   this.registry = new Registry();
-  this.emitter = params.emitter;
 }
 
 Parser.prototype.parseFile = function(filePath, config) {
@@ -62,6 +61,41 @@ Parser.prototype.parseString = function(str, config, filePath) {
   }
 };
 
+function getCommentPool(path) {
+  var commentPool;
+
+  // Comments at the Program scope:
+  if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
+    commentPool = path.node.innerComments;
+  }
+  else if (path.node.leadingComments && path.node.leadingComments.length) {
+    commentPool = path.node.leadingComments;
+  }
+
+  if (commentPool) {
+    // Handle an edge-case with babel against ES6 destructured identifiers;
+    // it seems to attach the leading comments to both the VariableDeclaration
+    // node as well as the first identifier inside of it, so for the following
+    // snippet:
+    //
+    //     /**
+    //      * @module
+    //      */
+    //      var { Assertion } = require('chai');
+    //
+    // leadingComments will be set both on VariableDeclaration as well as
+    // Identifier(Assertion).
+    //
+    // We'll handle the VariableDeclaration and forget about the
+    // destructured variable identifier altogether.
+    if (ASTUtils.isCommentedDestructuredProperty(path)) {
+      return;
+    }
+
+    return discardDuplicateComments(commentPool).map(x => x.value);
+  }
+}
+
 Parser.prototype.walk = function(ast, inConfig, filePath) {
   var parser = this;
   var config = pick(inConfig, [
@@ -86,42 +120,12 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
 
   babel.traverse(ast, {
     enter: function(path) {
-      var commentPool, withoutDuplicates;
-
-      // Comments at the Program scope:
-      if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
-        commentPool = path.node.innerComments;
-      }
-      else if (path.node.leadingComments && path.node.leadingComments.length) {
-        commentPool = path.node.leadingComments;
-      }
+      var commentPool = getCommentPool(path);
 
       if (commentPool) {
-        // Handle an edge-case with babel against ES6 destructured identifiers;
-        // it seems to attach the leading comments to both the VariableDeclaration
-        // node as well as the first identifier inside of it, so for the following
-        // snippet:
-        //
-        //     /**
-        //      * @module
-        //      */
-        //      var { Assertion } = require('chai');
-        //
-        // leadingComments will be set both on VariableDeclaration as well as
-        // Identifier(Assertion).
-        //
-        // We'll handle the VariableDeclaration and forget about the
-        // destructured variable identifier altogether.
-        if (ASTUtils.isCommentedDestructuredProperty(path)) {
-          return;
-        }
-
-        withoutDuplicates = discardDuplicateComments(commentPool);
-        withoutDuplicates.forEach(function(commentNode, index) {
-          var comment = commentNode.value;
-
+        commentPool.forEach(function(comment, index) {
           if (comment[0] === '*') {
-            parser.parseComment(comment, path, config, filePath, index === withoutDuplicates.length-1);
+            parser.parseComment(comment, path, config, filePath, index === commentPool.length-1);
           }
         });
       }
@@ -162,30 +166,6 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
         }
       }
     },
-
-    ExportDefaultDeclaration: function(path) {
-      var doc;
-
-      // module.exports = Something;
-      var name = ASTUtils.getVariableNameFromES6DefaultExport(path.node);
-
-      if (!name && config.inferModuleIdFromFileName) {
-        name = ASTUtils.getVariableNameFromFilePath(filePath);
-      }
-
-      if (name) {
-        doc = parser.registry.get(name, filePath);
-
-        if (doc) {
-        console.log('hoi?', path.node)
-          var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
-
-          doc.markAsExported();
-
-          parser.registry.trackModuleDocAtPath(doc, modulePath);
-        }
-      }
-    }
   });
 };
 
@@ -206,21 +186,12 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
   var contextNode = path.node;
   var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
 
-  this.emitter.emit('preprocess-docstring', comment, {
-    nodeLocation: nodeLocation,
-    filePath: filePath
-  }, function(newComment) {
-    comment = newComment;
-  });
-
-  var docstring = new Docstring('/*' + comment + '*/', {
+  var docstring = new Docstring(comment === null ? '' : '/*' + comment + '*/', {
     config: config,
     filePath: filePath,
     nodeLocation: nodeLocation,
-    emitter: this.emitter
+    ignoreCommentParseError: comment === null,
   });
-
-  this.emitter.emit('process-docstring', docstring);
 
   if (docstring.isInternal()) {
     return false;
@@ -247,18 +218,16 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
 
   var nodeInfo;
 
-  // if (isClosestToNode) {
+  if (isClosestToNode) {
     nodeInfo = analyzeNode(contextNode, path, filePath, config);
-
-  //   this.emitter.emit('process-node', t, contextNode, path, nodeInfo);
-  // }
-  // else {
-  //   nodeInfo = new NodeInfo(contextNode, filePath);
-  // }
+  }
+  else {
+    nodeInfo = new NodeInfo(contextNode, filePath);
+  }
 
   var doc = new Doc(docstring, nodeInfo, filePath);
 
-  // if (doc.id) {
+  if (doc.id) {
     // Pre-defined aliases:
     if (config.alias.hasOwnProperty(doc.id)) {
       config.alias[doc.id].forEach(function(alias) {
@@ -290,12 +259,12 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
     doc.getTypeDefs().forEach(typeDefDoc => {
       this.registry.addEntityDoc(typeDefDoc, path);
     })
-  // }
-  // else {
-  //   console.warn("%s: No identifier was found for this document, it will be ignored!",
-  //     nodeLocation
-  //   );
-  // }
+  }
+  else {
+    console.warn("%s: No identifier was found for this document, it will be ignored!",
+      nodeLocation
+    );
+  }
 
   return true;
 };

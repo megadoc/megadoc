@@ -27,7 +27,12 @@ function Docstring(comment, params) {
   }
 
   if (commentNode.length === 0) {
-    throw new Error('Invalid annotation in comment block. Source:\n' + comment);
+    if (params.ignoreCommentParseError) {
+      commentNode = [{ tags: [] }];
+    }
+    else {
+      throw new Error('Invalid annotation in comment block. Source:\n' + comment);
+    }
   }
 
   assert(commentNode.length === 1,
@@ -36,11 +41,7 @@ function Docstring(comment, params) {
   );
 
   this.tags = commentNode[0].tags.map(function(tagNode) {
-    params.emitter.emit('preprocess-tag', tagNode);
-
-    return tap(new Tag(tagNode, params), function(tag) {
-      params.emitter.emit('process-tag', tag);
-    });
+    return new Tag(tagNode, params);
   });
 
   const typeDefInfo = extractTypeDefs(this.tags);
@@ -144,7 +145,7 @@ Dpt.isModule = function() {
 };
 
 Dpt.isInternal = function() {
-  return this.hasTag('internal');
+  return this.hasTag('internal') || this.hasTag('ignoredoc');
 };
 
 Dpt.doesLend = function() {
@@ -182,9 +183,10 @@ Dpt.hasTypeOverride = function() {
 Dpt.getTypeOverride = function() {
   var typedTags = getTypeOverridingTags(this.tags);
 
-  if (typedTags.length > 1) {
-    console.warn("%s: Document has multiple type overrides!",
-      this.$location
+  if (typedTags.filter(x => x.type !== 'property').length > 1) {
+    console.warn("%s: Document has multiple type overrides! %s",
+      this.$location,
+      JSON.stringify(typedTags.map(x => x && x.typeInfo && x.typeInfo))
     );
   }
 
@@ -203,7 +205,7 @@ module.exports = Docstring;
 
 function getTypeOverridingTags(tags) {
   return tags.filter(function(tag) {
-    return tag.type in K.TYPE_OVERRIDING_TAGS;
+    return K.TYPE_OVERRIDING_TAGS[tag.type] === true;
   });
 }
 
@@ -211,12 +213,6 @@ function findByType(type) {
   return function(x) {
     return x.type === type;
   }
-}
-
-function tap(x, fn) {
-  fn(x);
-
-  return x;
 }
 
 function extractTypeDefs(tags) {
