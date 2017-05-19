@@ -26,7 +26,11 @@
     "url": "https://github.com/megadoc/megadoc/issues"
   },
   "homepage": "https://github.com/megadoc/megadoc",
-  "dependencies": {},
+  "dependencies": {
+    "megadoc-cli": "6.0.0-beta.2",
+    "megadoc-compiler": "6.0.0-beta.2",
+    "megadoc-html-serializer": "6.0.0-beta.2"
+  },
   "devDependencies": {
     "babel-preset-es2015": "6.24.1",
     "babel-preset-react": "6.24.1",
