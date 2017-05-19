@@ -1,34 +1,35 @@
 require('../Compiler')
 const { assert } = require('chai');
-const Subject = require('../TreeComposer');
+const composeTree = require('../stage03__composeTree');
+const mergeTrees = require('../mergeTrees');
 const { builders: b } = require('megadoc-corpus')
 
 describe('megadoc-compiler::TreeComposer', function() {
   describe('.composeTree', function() {
-    const subject = Subject.composeTree;
+    const subject = composeTree;
 
     it('should distribute each file to it', function() {
       const tree = subject({
         id: 'foo',
-        options: {
-          name: 'Foo',
-        },
-      }, [
-        b.document({
-          id: 'Klass'
-        }),
-        b.documentEntity({
-          id: 'Method',
-        })
-      ], [
-        {
-          type: 'CHANGE_NODE_PARENT',
-          data: {
-            parentId: 'Klass',
+        compilerOptions: {},
+        documents: [
+          b.document({
+            id: 'Klass'
+          }),
+          b.documentEntity({
             id: 'Method',
-          },
-        }
-      ])
+          })
+        ],
+        treeOperations: [
+          {
+            type: 'CHANGE_NODE_PARENT',
+            data: {
+              parentId: 'Klass',
+              id: 'Method',
+            },
+          }
+        ]
+      })
 
       assert.equal(tree.documents.length, 1)
       assert.equal(tree.documents[0].id, 'Klass')
@@ -38,14 +39,13 @@ describe('megadoc-compiler::TreeComposer', function() {
   });
 
   describe('.mergeTrees', function() {
-    const subject = Subject.mergeTrees;
+    const subject = mergeTrees;
 
     it('should use all newer representation of documents found in change tree', function() {
       const context = {
         id: 'lua',
-        commonOptions: { strict: true },
+        compilerOptions: { strict: true },
         options: { name: 'Lua Library' },
-        state: null,
       };
 
       const mergedCompilation = subject(
@@ -110,10 +110,12 @@ describe('megadoc-compiler::TreeComposer', function() {
         }
       );
 
-      const mergedTree = Subject.composeTree(context,
-        mergedCompilation.documents,
-        mergedCompilation.treeOperations
-      )
+      const mergedTree = composeTree({
+        id: context.id,
+        compilerOptions: context.compilerOptions,
+        documents: mergedCompilation.documents,
+        treeOperations: mergedCompilation.treeOperations
+      })
 
       assert.equal(mergedTree.documents.length, 2,
         "It preserves documents in other files"

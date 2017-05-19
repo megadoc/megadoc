@@ -20,6 +20,8 @@ const createBreakpoint = require('./utils/createBreakpoint');
 const truthy = x => !!x;
 const asyncSequence = fns => async.seq.apply(async, fns.filter(truthy));
 const { BreakpointError } = createBreakpoint;
+const { asyncify } = async;
+const { assoc, props, view } = require('./utils')
 
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 1;
 const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 2;
@@ -131,7 +133,22 @@ function compileSources(state, done) {
 
     defineBreakpoint(BREAKPOINT_COMPOSE_TREE)
     (
-      composeTree
+      asyncify
+      (
+        assoc('tree')
+        (
+          view
+          (
+            props
+            (
+              [ 'compilerOptions', 'documents', 'id', 'treeOperations' ]
+            )
+          )
+          (
+            composeTree
+          )
+        )
+      )
     ),
   ]);
 

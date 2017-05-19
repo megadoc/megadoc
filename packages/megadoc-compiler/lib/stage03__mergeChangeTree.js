@@ -1,5 +1,5 @@
 const mergeObject = require('./utils/mergeObject');
-const TreeComposer = require('./TreeComposer');
+const mergeTrees = require('./mergeTrees');
 
 module.exports = function mergeChangeTree(prevState, compilation, done) {
   if (!prevState) {
@@ -7,7 +7,7 @@ module.exports = function mergeChangeTree(prevState, compilation, done) {
   }
 
   const [ prevCompilation ] = prevState.compilations.filter(x => x.id === compilation.id);
-  const mergedCompilation = TreeComposer.mergeTrees(prevCompilation, compilation);
+  const mergedCompilation = mergeTrees(prevCompilation, compilation);
 
   done(null, mergeObject(compilation, mergedCompilation));
 };
