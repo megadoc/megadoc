@@ -1,0 +1,157 @@
+.doc-entity__description, .doc-entity__tags {
+  // margin-left: 2em;
+}
+
+.schemable({
+  .doc-group__header {
+    margin: 2em 0 1.5em;
+    border-bottom-width: 0;
+    padding-bottom: 0;
+  }
+
+  // .doc-entity.collapsible {
+  //   border-left-width: 0;
+  // }
+
+  .doc-entity:not(:last-of-type) {
+    border-bottom: none;
+  }
+
+  .doc-entity {
+    margin: 1em 0;
+  }
+
+  .doc-entity + .doc-entity {
+    margin-top: 2em;
+  }
+
+  .doc-entity__header {
+    border-bottom: 1px solid @base2;
+    padding-bottom: 0.5em;
+    padding-right: 1em;
+  }
+
+  .doc-entity__name {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 1.56em;
+    font-size: 1.25em;
+    font-weight: 300;
+    width: 100%;
+    word-break: break-all;
+  }
+
+  .doc-entity__name-fragment {
+    color: @base0;
+  }
+
+  .tag-group {
+    list-style: none;
+    padding-left: 0;
+
+    // OK, we want to cram things a bit so the whitespace doesn't get distracting
+    &__header {
+      margin: 1em 0;
+      border-bottom: none;
+      padding-bottom: 0;
+      letter-spacing: 1.5px;
+    }
+
+    .param-tag, .return-tag, .throws-tag {
+      margin: 1em 0;
+    }
+
+    .markdown-text p, .highlighted-text p {
+      margin: 1em 0;
+    }
+
+    &--single-child {
+      list-style: none;
+    }
+  }
+
+  .js-doc-entity__property-tags {
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .js-document-index, .index-table, table {
+    tr:first-of-type {
+      td, th {
+        border-color: @border-color;
+        border-top-color: transparent;
+      }
+    }
+
+    tr:last-of-type {
+      td {
+        border-bottom-color: transparent;
+      }
+    }
+
+    tr:nth-of-type(even) {
+      background: darken(@base3, 2.5%);
+    }
+
+    tr {
+      th:first-of-type, td:first-of-type {
+        border-left-color: transparent;
+      }
+    }
+
+    tr {
+      th:last-of-type, td:last-of-type {
+        border-right-color: transparent;
+      }
+    }
+
+    table td {
+      padding: 0.25em 0.75em;
+    }
+
+    &__entity-name.active {
+      font-weight: bold;
+    }
+  }
+
+  .property-tag__name, .param-tag__name, .return-tag__name {
+    color: inherit;
+  }
+
+  .class-view__module-filepath {
+    color: @base1;
+    font-style: italic;
+    font-size: 0.85em;
+  }
+
+  .doc-entity__function-signature {
+    em {
+      // font-weight: bold;
+      color: @solarized-cyan;
+      font-style: normal;
+    }
+  }
+
+  .doc-entity__modifier {
+    padding: 0.25em 0.5em;
+    font-size: 0.7em;
+    line-height: 1;
+    vertical-align: middle;
+    letter-spacing: 1px;
+    text-shadow: 0 1px 1px @base3;
+  }
+
+  .doc-entity__protected,
+  .doc-entity__private {
+    background: @base2;
+    color: inherit;
+  }
+
+  .property-tag__name {
+    .doc-entity__protected, .doc-entity__private {
+      background: @solarized-red;
+      color: @base3;
+      text-shadow: none;
+    }
+  }
+});

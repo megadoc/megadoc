@@ -1,0 +1,141 @@
+@import "~helpers";
+
+.root--with-multi-page-layout {
+  &.root--with-banner .root__screen {
+    margin-top: @banner-height;
+  }
+
+  &.root--without-banner .root__screen {
+    margin-top: @spacing;
+  }
+
+  .root__screen {
+    .doc-content {
+      padding: @spacing;
+      margin-bottom: @spacing;
+
+      h1:first-child {
+        margin-top: 0;
+      }
+    }
+  }
+  .two-column-layout {
+    &__left {
+      margin-top: 0;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      vertical-align: top;
+      display: inline-block;
+
+      .resizable-panel__content {
+        position: static;
+        padding: @spacing;
+        margin-bottom: @spacing;
+      }
+
+      .ui-resizable-handle {
+        display: none;
+      }
+    }
+
+    &__right {
+      top: 0;
+      padding: 0 0 0 @spacing;
+      margin-bottom: @spacing;
+      position: relative;
+      vertical-align: top;
+    }
+  }
+
+  .two-column-layout--with-nav {
+    .two-column-layout__right {
+      margin-right: 200px;
+    }
+
+    .two-column-layout__nav {
+      width: 170px;
+      vertical-align: top;
+      position: absolute;
+      right: 0;
+      top: 0;
+      font-size: 0.8em;
+
+      .doc-content {
+        padding: 1em 1em 2em 2em;
+      }
+    }
+  }
+
+  .two-column-layout--inverted {
+    .two-column-layout__right {
+      padding: 0 @spacing 0 0;
+    }
+
+    &.two-column-layout--with-nav {
+      .two-column-layout__nav {
+        left: 0;
+        right: auto;
+      }
+
+      .two-column-layout__right {
+        padding-left: 200px;
+      }
+    }
+  }
+
+  .banner__logo a, .banner__navigation-item a {
+    font-weight: normal;
+  }
+
+  .banner__navigation-item a.active, .banner__menu-list-item a.active {
+    border-bottom-width: 0;
+  }
+
+  .layout__sidebar-header {
+    font-weight: 300;
+    font-size: 1em;
+  }
+}
+
+.schemable({
+  .root--with-multi-page-layout {
+    .root__screen .doc-content {
+      background: white;
+    }
+
+    .banner-wrapper {
+      border-bottom-width: 0;
+      padding-left: @spacing;
+      padding-right: @spacing;
+      background: @plain-code;
+    }
+
+    .banner {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .banner__logo a, .banner__navigation-item a {
+      &, &:visited {
+        color: @link;
+      }
+    }
+
+    .banner__navigation-item a.active {
+      &, &:visited {
+        color: @accent;
+      }
+    }
+
+    .two-column-layout {
+      &__left {
+        background: transparent;
+
+        .resizable-panel__content {
+          background: white;
+        }
+      }
+    }
+  }
+});

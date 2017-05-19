@@ -66,7 +66,6 @@ config.sources = [
     title: 'Documents',
     include: [ 'doc/usage/**/*.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      id: 'md__usage',
       baseURL: '/usage',
       title: 'Usage',
       fullFolderTitles: false,
@@ -78,7 +77,6 @@ config.sources = [
     id: 'md__plugins',
     include: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      id: 'md__plugins',
       baseURL: '/dev/handbook',
       title: 'Plugin Development',
       fullFolderTitles: false,
@@ -93,7 +91,7 @@ config.serializer = [ 'megadoc-html-serializer', {
   redirect: {
     '/index.html': '/readme.html'
   },
-  theme: [ 'megadoc-theme-qt' ],
+  theme: [ 'megadoc-theme-minimalist' ],
 
   linkResolver: {
     schemes: [ 'Megadoc', 'GitHub Wiki' ],
@@ -222,6 +220,12 @@ addPackageDocumentation('megadoc-corpus', {
   url: '/dev/corpus'
 });
 
+addPackageDocumentation('megadoc-compiler');
+addPackageDocumentation('megadoc-linter');
+addPackageDocumentation('megadoc-html-serializer');
+addPackageDocumentation('megadoc-docstring');
+addPackageDocumentation('megadoc-config-utils');
+addPackageDocumentation('megadoc-test-utils');
 addPackageDocumentation('megadoc-plugin-dot');
 addPackageDocumentation('megadoc-plugin-git');
 addPackageDocumentation('megadoc-plugin-js');
@@ -241,6 +245,7 @@ function addPackageDocumentation(pluginName, options) {
 
   if (withJS) {
     config.sources.push({
+      id: 'js__' + pluginName,
       include: [
         'packages/' + pluginName + '/{lib,defs}**/*.js'
       ],
@@ -249,7 +254,6 @@ function addPackageDocumentation(pluginName, options) {
         /legacy/
       ],
       processor: [ 'megadoc-plugin-js', {
-        id: 'js__' + pluginName,
         baseURL: url,
         title: pluginName,
         useDirAsNamespace: false,
@@ -264,10 +268,10 @@ function addPackageDocumentation(pluginName, options) {
   }
 
   config.sources.push({
+    id: 'md__' + pluginName,
     include: [ 'packages/' + pluginName + '/**/*.md' ],
     exclude: [ /node_modules/, /__tests__/ ],
     processor: [ 'megadoc-plugin-markdown', {
-      id: 'md__' + pluginName,
       title: pluginName,
       baseURL: url,
     }]
