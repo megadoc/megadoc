@@ -1,6 +1,6 @@
 {
   "name": "megadoc-cli",
-  "version": "6.0.0-beta.2",
+  "version": "6.0.0-beta.3",
   "main": "lib/megadoc.js",
   "bin": {
     "megadoc": "lib/megadoc.js",
@@ -11,8 +11,8 @@
     "commander": "2.9.0",
     "fs-extra": "2.1.2",
     "lodash": "3.10.1",
-    "megadoc-compiler": "^6.0.0-beta.2",
+    "megadoc-compiler": "^6.0.0-beta.3",
     "megadoc-config-utils": "^6.0.0-beta.2",
-    "megadoc-html-serializer": "^6.0.0-beta.2"
+    "megadoc-html-serializer": "^6.0.0-beta.3"
   }
 }
