@@ -10,7 +10,7 @@ module.exports = function NodeURIDecorator(config) {
 
   var layoutConfig = config.layoutOptions || {};
   var redirectMap = config.redirect || {};
-  var rewriteMap = layoutConfig.rewrite || {};
+  var rewriteMap = layoutConfig.rewrite || config.rewrite || {};
 
   return {
     Namespace: decorateNode,

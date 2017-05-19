@@ -81,7 +81,7 @@ function compileInlineScripts(compilation, done) {
   const { assets, compilerConfig, serializerConfig } = compilation;
   const inlinePluginPath = path.join(compilerConfig.tmpDir, 'megadoc-plugin-inline.source.js');
   const inlinePluginRuntimePath = path.join(compilerConfig.tmpDir, 'megadoc-plugin-inline.js');
-  const hasInlineScripts = !generateInlinePlugin({
+  const hasInlineScripts = generateInlinePlugin({
     config: serializerConfig,
     outputPath: inlinePluginPath,
   });

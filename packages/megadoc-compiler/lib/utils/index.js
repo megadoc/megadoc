@@ -1,4 +1,4 @@
-const { curry } = require('lodash');
+const { curry, pick } = require('lodash');
 
 // http://ramdajs.com/docs/#props
 exports.props = curry(function props(propNames, x) {
@@ -8,6 +8,11 @@ exports.props = curry(function props(propNames, x) {
 // http://ramdajs.com/docs/#assoc
 exports.assoc = curry(function assoc(propName, fn, x) {
   return Object.assign({}, x, { [propName]: fn(x) })
+})
+
+// http://ramdajs.com/docs/#merge
+exports.assocMany = curry(function assocMany(propNames, fn, x) {
+  return Object.assign({}, x, pick(fn(x), propNames))
 })
 
 // http://ramdajs.com/docs/#view

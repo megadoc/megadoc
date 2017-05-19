@@ -4,6 +4,14 @@ const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
+const { curry } = require('lodash');
+
+const relativize = curry(function relativize(assetRoot, x) {
+  const pattern = `${assetRoot}/`;
+  const sz = pattern.length;
+
+  return x.indexOf(pattern) === 0 ? x.slice(sz) : x;
+})
 
 module.exports = function reduce(reduceRoutines, compilation, done) {
   const { compilerOptions, processor, refinedDocuments } = compilation;
@@ -11,6 +19,8 @@ module.exports = function reduce(reduceRoutines, compilation, done) {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };
+
+  const relativizeThis = relativize(compilerOptions.assetRoot)
 
   reduceEach(reduceRoutines, context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return mergeObject(compilation, {
@@ -24,7 +34,7 @@ module.exports = function reduce(reduceRoutines, compilation, done) {
     }
 
     if (documentNode.filePath) {
-      documentNode.filePath = documentNode.filePath.replace(compilerOptions.assetRoot)
+      documentNode.filePath = relativizeThis(documentNode.filePath)
     }
 
     return documentNode;

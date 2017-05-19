@@ -18,6 +18,8 @@ describe('stage01__reduce', function() {
         'b',
       ],
 
+      compilerOptions: {},
+
       processor: {
         reduceFnPath: reduceFnFile.path,
       },

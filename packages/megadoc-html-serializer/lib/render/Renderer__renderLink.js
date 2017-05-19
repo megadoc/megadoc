@@ -1,4 +1,4 @@
-var escapeHTML = require('lodash').escape;
+// var escapeHTML = require('lodash').escape;
 var RE_INTERNAL_LINK = /^mega:\/\//;
 
 function LinkRenderer(config) {
@@ -8,7 +8,7 @@ function LinkRenderer(config) {
     var tagString = '<a href="' + href + '"';
 
     if (title) {
-      tagString += ' title="' + escapeHTML(title) + '"';
+      tagString += ' title="' + title + '"';
     }
 
     if (isInternal) {

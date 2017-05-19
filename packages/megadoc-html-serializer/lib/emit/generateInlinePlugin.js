@@ -11,7 +11,7 @@ module.exports = function generateInlinePlugin({ config, outputPath }) {
     }`)
   }
 
-  if (!outletOccupants) {
+  if (outletOccupants.length === 0) {
     return false;
   }
 
@@ -24,4 +24,6 @@ module.exports = function generateInlinePlugin({ config, outputPath }) {
 
 
   fs.writeFileSync(outputPath, entry, 'utf8');
+
+  return true;
 }

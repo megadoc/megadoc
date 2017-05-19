@@ -1,20 +1,25 @@
 const path = require('path');
 const Compiler = require("../Compiler");
 const { run: compile } = Compiler;
-const { assert, createFileSuite } = require('megadoc-test-utils')
+const { assert, createFileSuite, createSinonSuite } = require('megadoc-test-utils')
 
 describe("megadoc-compiler::Compiler", function() {
   const fileSuite = createFileSuite(this);
   let processorFile;
 
   beforeEach(function() {
-    fileSuite.createFile('lib/test.md', `
-      # Hello World!
-    `);
+    fileSuite.createFile('lib/a.md', `# A`);
+    fileSuite.createFile('lib/b.md', `# B`);
 
     const parseFnFile = fileSuite.createFile('processor/parseFn.js', `
-      module.exports = function parse(options, filePath, done) {
-        done(null, { id: "1" });
+      const fs = require('fs')
+
+      module.exports = function() {
+        module.exports.__impl__.apply(null, arguments);
+      }
+
+      module.exports.__impl__ = function parse(options, filePath, done) {
+        done(null, { id: "1", filePath, content: fs.readFileSync(filePath, 'utf8') });
       };
     `);
 
@@ -22,11 +27,13 @@ describe("megadoc-compiler::Compiler", function() {
       const { builders: b } = require('megadoc-corpus');
 
       module.exports = function reduce(options, actions, rawDocument, done) {
-        const document = b.document({
-          id: rawDocument.id
-        });
-
-        done(null, document);
+        done(null, b.document({
+          id: rawDocument.id,
+          filePath: rawDocument.filePath,
+          properties: {
+            content: rawDocument.content
+          }
+        }));
       };
     `);
 
@@ -36,6 +43,8 @@ describe("megadoc-compiler::Compiler", function() {
       exports.reduceFnPath = "${reduceFnFile.path}";
     `);
   })
+
+  const sinon = createSinonSuite(this)
 
   it('works', function(done) {
     compile({
@@ -54,6 +63,64 @@ describe("megadoc-compiler::Compiler", function() {
       assert.equal(compilations.length, 1)
 
       done();
+    });
+  });
+
+  it('works with a previous compilation', function(done) {
+    const parser = require(fileSuite.join('processor/parseFn.js'))
+    const parse = sinon.spy(parser, '__impl__')
+    const config = {
+      assetRoot: fileSuite.getRootDirectory(),
+      sources: [{
+        id: 'test-processor',
+        include: fileSuite.join('lib/**/*.md'),
+        processor: [ processorFile.path, {} ]
+      }],
+    }
+
+    compile(config, function(err, prevCompilations) {
+      if (err) {
+        return done(err);
+      }
+
+      assert.ok(Array.isArray(prevCompilations));
+      assert.equal(prevCompilations.length, 1)
+
+      assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/a.md'));
+      assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/b.md'));
+
+      assert.deepEqual(
+        prevCompilations[0].documents.map(x => x.properties.content),
+        [ '# A', '# B' ]
+      )
+
+      parse.reset();
+
+      assert.notCalled(parse);
+
+      fileSuite.createFile('lib/a.md', `# New A`);
+
+      compile(config, {
+        changedSources: {
+          [fileSuite.join('lib/a.md')]: true
+        },
+        initialState: { compilations: prevCompilations },
+        purge: true
+      }, function(mergeErr, compilations) {
+        if (mergeErr) {
+          return done(mergeErr);
+        }
+
+        assert.calledOnce(parse);
+        assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/a.md'));
+
+        assert.deepEqual(
+          compilations[0].documents.map(x => x.properties.content),
+          [ '# B', '# New A' ]
+        )
+
+        done();
+      })
     });
   });
 

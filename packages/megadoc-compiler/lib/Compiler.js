@@ -1,6 +1,5 @@
 const fs = require('fs-extra');
 const async = require('async');
-const partial = require('./utils/partial');
 const ConfigUtils = require('megadoc-config-utils');
 const defaults = require('./config');
 const createCompilation = require('./stage00__createCompilation');
@@ -9,7 +8,7 @@ const reduce = require('./stage01__reduce');
 const refine = require('./stage01__refine');
 const render = require('./stage01__render');
 const reduceTree = require('./stage02__reduceTree');
-const mergeChangeTree = require('./stage03__mergeChangeTree');
+const mergeTrees = require('./mergeTrees');
 const composeTree = require('./stage03__composeTree');
 const seal = require('./stage04__seal');
 const purge = require('./stage05__purge');
@@ -17,11 +16,30 @@ const emit = require('./stage05__emit');
 const parseConfig = require('./parseConfig');
 const BlankSerializer = require('./BlankSerializer');
 const createBreakpoint = require('./utils/createBreakpoint');
-const truthy = x => !!x;
-const asyncSequence = fns => async.seq.apply(async, fns.filter(truthy));
+const R = require('ramda');
+const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
-const { assoc, props, view } = require('./utils')
+
+// String -> a -> {k: v} -> {k: v}
+const nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {
+  return Object.assign({}, x, { [propName]: propValue });
+});
+
+// String -> {k: v} -> ???
+const assocWith = R.curry(function assocWith(propName, x) {
+  return R.over
+  (
+    R.lens(R.identity, nativeAssoc(propName))
+  )
+  (
+    x
+  );
+})
+
+const mergeWith = R.curry (function mergeWith(source, x) {
+  return Object.assign({}, source, x)
+})
 
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 1;
 const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 2;
@@ -34,16 +52,36 @@ const BREAKPOINT_RENDER_CORPUS      = exports.BREAKPOINT_RENDER_CORPUS      = 8;
 const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 9;
 
 const compile = asyncSequence([
-  configure,
+  asyncify(
+    assocWith
+    (
+      'config'
+    )
+    (
+      R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
+    )
+  ),
   createSerializer,
-  partial(createCompilations, [
-    'assetRoot',
-    'outputDir',
-    'tmpDir',
-    'verbose',
-    'strict',
-    'debug',
-  ]),
+  asyncify(
+    assocWith
+    (
+      'compilations'
+    )
+    (
+      R.partial(createCompilations, [
+        {
+          optionWhitelist: [
+            'assetRoot',
+            'outputDir',
+            'tmpDir',
+            'verbose',
+            'strict',
+            'debug',
+          ]
+        }
+      ])
+    )
+  ),
   startSerializer,
   compileSources,
   generateCorpus,
@@ -93,6 +131,8 @@ exports.run = function run(userConfig, runOptions, done) {
 function compileSources(state, done) {
   const { runOptions, serializer, compilations } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint);
+  const getPrevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
+  const findPrevCompilation = R.partial(R.filter, [ R.eqProps('id')(R.__), getPrevCompilations ])
 
   const compileTree = asyncSequence([
     defineBreakpoint(BREAKPOINT_PARSE)
@@ -107,16 +147,12 @@ function compileSources(state, done) {
 
     defineBreakpoint(BREAKPOINT_REDUCE)
     (
-      partial(
-        reduce, serializer.reduceRoutines
-      )
+      R.partial(reduce, [ serializer.reduceRoutines ])
     ),
 
     defineBreakpoint(BREAKPOINT_RENDER)
     (
-      partial(
-        render, serializer.renderRoutines
-      )
+      R.partial(render, [ serializer.renderRoutines ])
     ),
 
     defineBreakpoint(BREAKPOINT_REDUCE_TREE)
@@ -126,8 +162,30 @@ function compileSources(state, done) {
 
     defineBreakpoint(BREAKPOINT_MERGE_CHANGE_TREE)
     (
-      partial(
-        mergeChangeTree, runOptions.initialState
+      asyncify
+      (
+        compilation =>
+        (
+          R.reduce
+          (
+            (aggregateCompilation, prevCompilation) =>
+            (
+              R.merge
+              (
+                aggregateCompilation
+              )
+              (
+                mergeTrees(prevCompilation, aggregateCompilation)
+              )
+            )
+          )
+          (
+            compilation
+          )
+          (
+            findPrevCompilation(compilation)
+          )
+        )
       )
     ),
 
@@ -135,19 +193,7 @@ function compileSources(state, done) {
     (
       asyncify
       (
-        assoc('tree')
-        (
-          view
-          (
-            props
-            (
-              [ 'compilerOptions', 'documents', 'id', 'treeOperations' ]
-            )
-          )
-          (
-            composeTree
-          )
-        )
+        assocWith('tree', composeTree)
       )
     ),
   ]);
@@ -157,7 +203,7 @@ function compileSources(state, done) {
       done(err);
     }
     else {
-      done(null, Object.assign({}, state, { withTrees }))
+      done(null, nativeAssoc('withTrees', withTrees, state))
     }
   });
 }
@@ -169,23 +215,16 @@ function generateCorpus(state, done) {
   asyncSequence([
     defineBreakpoint(BREAKPOINT_RENDER_CORPUS)
     (
-      partial(seal, serializer)
+      R.partial(seal, [ serializer ])
     ),
 
-    runOptions.purge && partial(purge, serializer) || null,
+    runOptions.purge && R.partial(purge, [ serializer ]) || null,
 
     defineBreakpoint(BREAKPOINT_EMIT_ASSETS)
     (
-      partial(emit, serializer)
+      R.partial(emit, [ serializer ])
     ),
   ])(withTrees, done);
-}
-
-function configure(state, done) {
-  const { userConfig } = state;
-  const config = Object.assign({}, defaults, parseConfig(userConfig));
-
-  done(null, Object.assign({}, state, { config }))
 }
 
 function createSerializer(state, done) {
@@ -201,22 +240,27 @@ function createSerializer(state, done) {
     serializer = new Serializer(config, serializerSpec.options);
   }
 
-  done(null, Object.assign({}, state, {
-    serializer
-  }));
+  done(null, Object.assign({}, state, { serializer }));
 }
 
-function createCompilations(optionWhitelist, state, done) {
-  const compilations = state.config.sources.map(partial(createCompilation, optionWhitelist, state));
+function createCompilations({ optionWhitelist }, state) {
+  const compilations = R.map
+    (
+      R.partial(createCompilation, [ optionWhitelist, state ])
+    )
+    (
+      state.config.sources
+    )
+  ;
 
-  done(null, Object.assign({}, state, { compilations }));
+  return compilations;
 }
 
 function startSerializer(state, done) {
   const { serializer, compilations } = state;
 
   fs.ensureDirSync(state.config.tmpDir);
-  state.registerTeardownRoutine(partial(fs.remove, state.config.tmpDir));
+  state.registerTeardownRoutine(R.partial(fs.remove, [ state.config.tmpDir ]));
 
   // todo: cluster
   serializer.start(compilations, function(err) {

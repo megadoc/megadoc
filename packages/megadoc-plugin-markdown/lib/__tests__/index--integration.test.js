@@ -22,9 +22,10 @@ describe("[Integration] megadoc-plugin-markdown", function() {
   it('works', function(done) {
     suite.compile({
       sources: [{
-        id: 'test',
+        id: 'articles',
         include: [ path.join(suite.root, 'lib/**/*.md') ],
         processor: [ path.resolve(__dirname, '../index.js'), {
+          id: 'articles',
           baseURL: '/articles',
         }]
       }],

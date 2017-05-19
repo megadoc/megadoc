@@ -13,7 +13,7 @@ let gid = 0;
  */
 module.exports = function FileSuite(mochaSuite, suiteOptions = {}) {
   const exports = {};
-  const contentBase = suiteOptions.directory || path.resolve(__dirname, '../../tmp/tests');
+  const contentBase = suiteOptions.directory || path.resolve(__dirname, '../../tmp');
 
   let suiteRoot;
 

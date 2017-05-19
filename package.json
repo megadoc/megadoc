@@ -2,18 +2,13 @@
   "name": "megadoc",
   "version": "6.0.0-beta.1",
   "description": "Fast and sleek and modular documentation generator.",
-  "main": "lib/index.js",
-  "bin": {
-    "megadoc": "./cli/megadoc",
-    "megadoc-compile": "./cli/megadoc-compile"
-  },
   "scripts": {
     "build": "NODE_ENV=production packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js -p --display-chunks",
     "build:dev": "packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js",
     "coverage": "COVERAGE=1 ./bin/test",
     "doc": "./bin/build-docs",
     "lint": "./bin/lint && ./bin/lint-ui",
-    "prepublish": "npm run lint && npm run test",
+    "prepublish": "./bin/lerna-prepublish",
     "start": "./bin/devserver",
     "test": "./bin/test && ./bin/test-ui --single-run"
   },
@@ -45,7 +40,7 @@
     "fs-extra": "2.1.2",
     "html": "0.0.10",
     "istanbul": "^1.0.0-alpha.2",
-    "lerna": "2.0.0-beta.38",
+    "lerna": "2.0.0-rc.4",
     "mocha": "2.4.5",
     "mocha-lcov-reporter": "^1.0.0",
     "multiline-slash": "^2.0.0",

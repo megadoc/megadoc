@@ -60,22 +60,23 @@ module.exports = {
   redirect: {},
 
   /**
+   * @property {Object.<String, String>}
+   *
+   * Override the default URL for certain documents. You must use [[UIDs | CorpusUIDs]]
+   * to specify the documents you want to rewrite.
+   *
+   * @example
+   *
+   *     {
+   *       "api/Cache": "/cache.html"
+   *     }
+   */
+  rewrite: {},
+
+  /**
    * @property {Object}
    */
   layoutOptions: {
-    /**
-     * @property {Object.<String, String>}
-     *
-     * Override the default URL for certain documents. You must use [[UIDs | CorpusUIDs]]
-     * to specify the documents you want to rewrite.
-     *
-     * @example
-     *
-     *     {
-     *       "api/Cache": "/cache.html"
-     *     }
-     */
-    rewrite: {},
 
     /**
      * @property {Boolean}
