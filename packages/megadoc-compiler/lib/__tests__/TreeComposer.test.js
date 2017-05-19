@@ -9,8 +9,8 @@ describe('megadoc-compiler::TreeComposer', function() {
 
     it('should distribute each file to it', function() {
       const tree = subject({
+        id: 'foo',
         options: {
-          id: 'foo',
           name: 'Foo',
         },
       }, [
@@ -42,8 +42,9 @@ describe('megadoc-compiler::TreeComposer', function() {
 
     it('should use all newer representation of documents found in change tree', function() {
       const context = {
+        id: 'lua',
         commonOptions: { strict: true },
-        options: { id: 'lua', name: 'Lua Library' },
+        options: { name: 'Lua Library' },
         state: null,
       };
 

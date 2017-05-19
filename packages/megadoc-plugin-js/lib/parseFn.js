@@ -1,11 +1,9 @@
 const Parser = require('jsdoc-parser-extended').Parser;
 
 module.exports = function parseFn(context, filePath, done) {
-  const parserConfig = context.state.parserConfig;
-  const emitter = context.state.emitter;
-  const parser = new Parser({ emitter: emitter })
+  const parser = new Parser({})
 
-  parser.parseFile(filePath, parserConfig);
+  parser.parseFile(filePath, context.options.parserConfig);
 
   done(null, parser.toJSON());
 };

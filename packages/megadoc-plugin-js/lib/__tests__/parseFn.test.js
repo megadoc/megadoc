@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const subject = require('../parseFn');
 const FileSuite = require('megadoc-test-utils/FileSuite');
-const init = require('../initFn');
+const configure = require('../configureFn');
 
 describe('megadoc-plugin-js::parseFn', function() {
   const fileSuite = FileSuite(this);
@@ -9,8 +9,7 @@ describe('megadoc-plugin-js::parseFn', function() {
   it('works with a module document', function(done) {
     const context = {
       commonOptions: {},
-      options: {},
-      state: init({})
+      options: configure({}),
     };
 
     const sourceFile1 = fileSuite.createFile('source1.js', `

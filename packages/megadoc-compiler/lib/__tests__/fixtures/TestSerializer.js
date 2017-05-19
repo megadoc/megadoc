@@ -4,17 +4,17 @@ TestSerializer.prototype.start = function(compilations, done) {
   done();
 };
 
-TestSerializer.prototype.renderCorpus = function(compilations, done) {
+TestSerializer.prototype.seal = function(compilations, done) {
   done(null, compilations.map(compilation => {
     return Object.assign({}, compilation, { corpus: {} })
   }));
 };
 
-TestSerializer.prototype.emitCorpusDocuments = function(withCorpus, done) {
+TestSerializer.prototype.emit = function(withCorpus, done) {
   done(null, withCorpus);
 };
 
-TestSerializer.prototype.purgeEmittedCorpusDocuments = function(withCorpus, done) {
+TestSerializer.prototype.purge = function(withCorpus, done) {
   done(null, withCorpus);
 };
 

@@ -42,7 +42,7 @@ describe('stage05__emit', function() {
     };
 
     const serializer = {
-      emitCorpusDocuments: sinon.spy(function(renderedTrees, callback) {
+      emit: sinon.spy(function(renderedTrees, callback) {
         callback(null, renderedTrees);
       }),
     };
@@ -52,7 +52,7 @@ describe('stage05__emit', function() {
         done(err);
       }
       else {
-        assert.calledWith(serializer.emitCorpusDocuments, compilation)
+        assert.calledWith(serializer.emit, compilation)
         assert.equal(output, compilation,
           "it passes the compilation through as-is"
         );

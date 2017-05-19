@@ -1,7 +1,7 @@
 const parseFn = require('../parseFn');
 const reduceFn = require('../reduceFn');
 const subject = require('../refineFn');
-const init = require('../initFn');
+const configure = require('../configureFn');
 const async = require('async');
 const { assert, stubConsoleWarn, createFileSuite } = require('megadoc-test-utils');
 
@@ -160,8 +160,7 @@ describe('megadoc-plugin-js::refineFn', function() {
 
     const context = {
       commonOptions: {},
-      options: {},
-      state: init({})
+      options: configure({}),
     };
 
     const actions = {

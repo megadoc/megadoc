@@ -10,7 +10,6 @@ module.exports = function reduce(reduceRoutines, compilation, done) {
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
-    state: compilation.processorState
   };
 
   reduceEach(reduceRoutines, context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {

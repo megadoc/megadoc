@@ -7,7 +7,6 @@ module.exports = function composeTree(compilation, done) {
     id: compilation.id,
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
-    state: compilation.processorState,
   };
 
   // console.log("[D] Composing tree of %d nodes", compilation.documents.length);

@@ -3,7 +3,7 @@ const TreeRenderer = require('./TreeRenderer');
 const LinkResolver = require('./LinkResolver');
 const Renderer = require('./Renderer');
 
-module.exports = function renderCorpus({ serializer, compilations }, done) {
+module.exports = function render({ serializer, compilations }, done) {
   const corpusInfo = aggregateTreesIntoCorpus(serializer, compilations);
   const corpus = corpusInfo.corpus;
   const rootNodes = corpusInfo.rootNodes;
@@ -60,7 +60,7 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
   corpus.visit(serializer.corpusVisitor);
 
   const rootNodes = compilations.map(function(compilation) {
-    const serializerOptions = compilation.processor.serializerOptions.html || {};
+    const serializerOptions = compilation.serializerOptions.html || {};
 
     compilation.tree.meta.defaultLayouts = serializerOptions.defaultLayouts;
 

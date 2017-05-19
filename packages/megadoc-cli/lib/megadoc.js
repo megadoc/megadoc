@@ -35,6 +35,7 @@ program
   .option('--debug', 'Run in DEBUG mode to print debugging messages.')
   .option('--stats', 'Show scanner-related statistics.')
   .option('--tmp-dir [PATH]', 'Path to a directory megadoc will use for intermediatery files. Defaults to .megadoc/')
+  .option('--output-dir [PATH]')
   .option('--no-purge', 'Do not purge the output directory.')
   .parse(process.argv)
 ;
@@ -50,6 +51,10 @@ else {
 }
 
 config.tmpDir = path.join(config.assetRoot, '.megadoc');
+
+if (program.outputDir) {
+  config.outputDir = path.resolve(program.outputDir);
+}
 
 if (!config.gitRepository) {
   config.gitRepository = path.resolve(config.assetRoot, '.git');

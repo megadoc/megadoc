@@ -1,3 +1,5 @@
+const { omit } = require('lodash');
+
 module.exports = function reduceTree(context, documents) {
   const descriptors = [];
 
@@ -6,10 +8,10 @@ module.exports = function reduceTree(context, documents) {
     data: {
       name: 'megadoc-plugin-js',
       title: context.options.title,
-      config: context.options, // omit parserConfig or what?
+      config: omit(context.options, [ 'parserConfig' ]), // omit parserConfig or what?
       indexFields: [ '$uid', '$filePath', 'aliases' ],
       meta: {
-        href: context.options.baseURL
+        href: context.options.baseURL || undefined
       }
     }
   });

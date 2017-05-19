@@ -38,7 +38,7 @@ HTMLSerializer.prototype.start = function(compilations, done) {
   this.state.clientSandbox.start(this.state.assets, done);
 };
 
-HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
+HTMLSerializer.prototype.seal = function(withTrees, done) {
   render({ serializer: this, compilations: withTrees }, function(err, result) {
     if (err) {
       done(err)
@@ -53,7 +53,7 @@ HTMLSerializer.prototype.renderCorpus = function(withTrees, done) {
   });
 };
 
-HTMLSerializer.prototype.emitCorpusDocuments = function(withCorpus, done) {
+HTMLSerializer.prototype.emit = function(withCorpus, done) {
   const { compilations, corpus } = withCorpus;
 
   emit({ serializer: this, compilations, corpus, }, function(err) {
@@ -61,7 +61,7 @@ HTMLSerializer.prototype.emitCorpusDocuments = function(withCorpus, done) {
   });
 };
 
-HTMLSerializer.prototype.purgeEmittedCorpusDocuments = function(corpusInfo, done) {
+HTMLSerializer.prototype.purge = function(corpusInfo, done) {
   purge({ serializer: this, corpusInfo }, function(err) {
     done(err, corpusInfo);
   });

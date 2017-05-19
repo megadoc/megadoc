@@ -1,10 +1,8 @@
 var assert = require('assert');
-var EventEmitter = require('events');
 var defaults = require('./config');
 
-module.exports = function init(compilation) {
-  var config = Object.assign({}, defaults, compilation.options);
-  var emitter = new EventEmitter();
+module.exports = function configure(userOptions) {
+  var config = Object.assign({}, defaults, userOptions);
   var parserConfig = {
     strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
@@ -42,8 +40,8 @@ module.exports = function init(compilation) {
     });
   }
 
-  return {
-    emitter: emitter,
+  return Object.assign({}, config, {
+    // baseURL: config.baseURL || config.id,
     parserConfig: parserConfig,
-  };
+  });
 };

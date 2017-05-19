@@ -1,5 +1,5 @@
 function dumpNodeFilePath(node) {
-  var buffer = '<<unknown>>';
+  var buffer = `${node && node.id || '<<unknown>>'}`;
 
   if (node && node.filePath) {
     buffer = node.filePath;

@@ -14,7 +14,6 @@ module.exports = function parse(compilation, done) {
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
-    state: compilation.processorState,
   };
 
   applier(context, files, fn, asyncMaybe(function(rawDocuments) {

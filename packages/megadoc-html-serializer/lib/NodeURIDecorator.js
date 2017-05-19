@@ -76,6 +76,12 @@ module.exports = function NodeURIDecorator(config) {
     node.meta.href = href;
     node.meta.anchor = g.NodeAnchor(node);
 
+    if (node.type !== 'DocumentEntity') {
+      invariant(typeof node.meta.href === 'string',
+        `Expected node to have an @href attribute! ${dumpNodeFilePath(node)}`
+      )
+    }
+
     // we replace the hashtag for single-page mode URLs, otherwise ensure there
     // is no leading slash in the filepath! we do not want to write to /
     node.meta.htmlFilePath = node.type === 'DocumentEntity' ?
@@ -226,6 +232,8 @@ function HashBasedURIGenerator(/*config*/) {
 
 function shouldIgnore(node) {
   return node.meta.hasOwnProperty('href') && (
+    // PLEASE for the love of all that's holy stop switching over `null`, if
+    // we want to opt out of this, use a well-defined flag >.<
     node.meta.href === null ||
     (node.meta.href && node.meta.href[0] === '/')
   );

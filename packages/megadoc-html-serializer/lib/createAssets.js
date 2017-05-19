@@ -16,7 +16,7 @@ module.exports =  function createAssets(config, compilations) {
     staticAssets: pluginStaticAssets,
     styleSheets: pluginStyleSheets,
     scripts: pluginScripts,
-  } = compilations.map(x => x.processor.serializerOptions.html || {}).reduce(function(map, options) {
+  } = compilations.map(x => x.serializerOptions.html || {}).reduce(function(map, options) {
     if (options.pluginScripts) {
       options.pluginScripts.forEach(x => map.scripts.push(x));
     }

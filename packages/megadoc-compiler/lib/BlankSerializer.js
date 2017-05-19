@@ -4,15 +4,15 @@ BlankSerializer.prototype.start = function(compilations, done) {
   done();
 };
 
-BlankSerializer.prototype.renderCorpus = function(compilations, done) {
+BlankSerializer.prototype.seal = function(compilations, done) {
   done(null, compilations);
 };
 
-BlankSerializer.prototype.emitCorpusDocuments = function(compilations, done) {
+BlankSerializer.prototype.emit = function(compilations, done) {
   done(null, compilations);
 };
 
-BlankSerializer.prototype.purgeEmittedCorpusDocuments = function(compilations, done) {
+BlankSerializer.prototype.purge = function(compilations, done) {
   done(null, compilations);
 };
 

@@ -4,7 +4,6 @@ module.exports = function refineFn(context, documents, done) {
   // console.log('[D] Sealing %d documents', documents.length);
 
   var config = context.options;
-  var emitter = context.state.emitter;
 
   var namespaceIds =  documents.reduce(function(map, node) {
     if (node.namespace && !documents.some(x => x.id === node.namespace)) {
@@ -28,8 +27,6 @@ module.exports = function refineFn(context, documents, done) {
   })
 
   var withNamespaces = documents.concat(namespaceDocuments);
-
-  emitter.emit('postprocess', withNamespaces);
 
   var withoutOrphans = discardOrphans(withNamespaces, {
     warn: true,

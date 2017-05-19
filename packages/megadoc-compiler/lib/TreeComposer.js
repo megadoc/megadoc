@@ -13,7 +13,7 @@ exports.composeTree = function(context, documentList, treeOperations) {
   const namespaceAttributes = {};
   const blacklisted = {};
   const maybeThrowError = msg => {
-    if (context.compilerOptions.strict >= 2) {
+    if (context.compilerOptions.strict) {
       throw new Error(msg);
     }
     else {
@@ -103,24 +103,18 @@ exports.composeTree = function(context, documentList, treeOperations) {
     }
   });
 
-  try {
-    const id = namespaceAttributes.id || context.options.id || context.id;
-    const name = namespaceAttributes.name || context.options.name || id;
+  const id = context.id;
+  const name = namespaceAttributes.name || id;
 
-    return b.namespace({
-      id,
-      name,
-      title: namespaceAttributes.title || null,
-      meta: namespaceAttributes.meta || {},
-      config: namespaceAttributes.config || null,
-      indexFields: namespaceAttributes.indexFields || null,
-      documents: hierarchicalDocuments.filter(x => !x.parentNode),
-    });
-  }
-  catch (e) {
-    console.warn('Error compilation source:', context.id || '<<unknown>>');
-    throw e;
-  }
+  return b.namespace({
+    id,
+    name,
+    title: namespaceAttributes.title || null,
+    meta: namespaceAttributes.meta || {},
+    config: namespaceAttributes.config || null,
+    indexFields: namespaceAttributes.indexFields || null,
+    documents: hierarchicalDocuments.filter(x => !x.parentNode),
+  });
 };
 
 exports.mergeTrees = function(prevCompilation, nextCompilation) {
