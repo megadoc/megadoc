@@ -12,6 +12,7 @@
     "lodash": "3.10.1",
     "megadoc-config-utils": "^6.0.0-beta.1",
     "megadoc-corpus": "^6.0.0-beta.1",
-    "megadoc-linter": "^6.0.0-beta.1"
+    "megadoc-linter": "^6.0.0-beta.1",
+    "ramda": "0.23.0"
   }
 }
