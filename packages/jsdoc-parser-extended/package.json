@@ -1,6 +1,6 @@
 {
   "name": "jsdoc-parser-extended",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "description": "Extended JSDoc parser.",
   "main": "index.js",
   "repository": {
@@ -28,12 +28,12 @@
     "catharsis": "0.8.8",
     "comment-parser": "0.4.0",
     "lodash": "3.10.1",
-    "megadoc-docstring": "^6.0.0-beta.1",
+    "megadoc-docstring": "^6.0.0-beta.2",
     "weakmap": "0.0.6"
   },
   "devDependencies": {
     "chai": "3.5.0",
-    "megadoc-test-utils": "^6.0.0-beta.1",
+    "megadoc-test-utils": "^6.0.0-beta.2",
     "multiline-slash": "^2.0.0"
   }
 }
