@@ -27,9 +27,6 @@
   },
   "homepage": "https://github.com/megadoc/megadoc",
   "dependencies": {
-    "megadoc-cli": "^6.0.0-beta.3",
-    "megadoc-compiler": "^6.0.0-beta.3",
-    "megadoc-html-serializer": "^6.0.0-beta.3"
   },
   "devDependencies": {
     "babel-preset-es2015": "6.24.1",

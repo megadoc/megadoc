@@ -132,12 +132,28 @@ const Root = React.createClass({
   },
 
   renderInternalError() {
+    const location = this.getLocation();
+    const anchor = location.hash.replace('#', '');
+    let redirectUrl;
+
+    if (anchor && anchor.length) {
+      const withoutAnchor = this.resolveScope(Object.assign({}, location, {
+        hash: ''
+      }))
+
+      if (withoutAnchor.scope) {
+        redirectUrl = location.pathname;
+      }
+    }
+    else {
+      redirectUrl = '/index.html';
+    }
+
     return (
       <NotFound
         location={this.getLocation()}
-        resolveScope={this.resolveScope}
+        redirectUrl={redirectUrl}
         corpus={this.props.corpus}
-
       />
     );
   },

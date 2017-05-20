@@ -3,10 +3,12 @@
   "command": {
     "exec": {
       "ignore": "megadoc"
+    },
+    "publish": {
+      "stream": true
     }
   },
   "packages": [
-    "./",
     "packages/*"
   ],
   "ignore": [

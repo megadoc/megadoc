@@ -111,10 +111,13 @@ function buildDocumentContext(node) {
     ctx.namespaceNode = CorpusAPI.getNamespaceOfNode(node);
   }
   else if (node.type === 'Document') {
+    ctx.documentEntityNode = null;
     ctx.documentNode = node;
     ctx.namespaceNode = CorpusAPI.getNamespaceOfNode(node);
   }
   else if (node.type === 'Namespace') {
+    ctx.documentEntityNode = null;
+    ctx.documentNode = null;
     ctx.namespaceNode = node;
   }
 

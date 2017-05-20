@@ -4,19 +4,13 @@ const { Outlet } = require('react-transclusion');
 const { PropTypes } = React;
 
 const NotFound = React.createClass({
-  contextTypes: {
-    transitionTo: PropTypes.func.isRequired,
-  },
-
   propTypes: {
-    location: PropTypes.object.isRequired,
-    resolveScope: PropTypes.func.isRequired,
-    corpus: PropTypes.object.isRequired,
+    redirectUrl: PropTypes.string.isRequired,
   },
 
   render() {
     return (
-      <Outlet name="Layout::NotFound" elementProps={{ goBack: this.goSomewhereSafe }}>
+      <Outlet name="Layout::NotFound" elementProps={{ redirectUrl: this.props.redirectUrl }}>
         <div className="not-found">
           <p>
             Sorry! There's nothing here for you to see. This is likely a
@@ -24,7 +18,7 @@ const NotFound = React.createClass({
           </p>
 
           <div className="margin-tb-m">
-            <a onClick={this.goSomewhereSafe}>
+            <a href={this.props.redirectUrl}>
               Go back.
             </a>
           </div>
@@ -32,24 +26,6 @@ const NotFound = React.createClass({
       </Outlet>
     );
   },
-
-  goSomewhereSafe() {
-    const { location } = this.props;
-    const anchor = location.hash.replace('#', '');
-
-    if (anchor && anchor.length) {
-      const withoutAnchor = this.props.resolveScope(Object.assign({}, location, {
-        hash: ''
-      }))
-
-      if (withoutAnchor.scope) {
-        this.context.transitionTo(location.pathname);
-      }
-    }
-    else {
-      this.context.transitionTo('/index.html');
-    }
-  }
 });
 
 module.exports = NotFound;
