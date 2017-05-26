@@ -17,6 +17,7 @@ module.exports = function reduceFn(options, actions, rawDocument, done) {
         title: section.text,
         properties: section,
         indexFields: section.level === 1 ? [] : undefined,
+        filePath: rawDocument.filePath,
         meta: {
           indexDisplayName: Array(section.level * 2).join(' ') + section.text,
           anchor: section.scopedId

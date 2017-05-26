@@ -19,8 +19,8 @@
 
 [ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
   [ -f "../../package.json" ] && grep '"name": "megadoc"' ../../package.json &> /dev/null && {
-    echo "$0: re-running from megadoc root"
-    echo "PACKAGE: ${PACKAGE:-${LERNA_PACKAGE_NAME:-$npm_package_name}}"
+    # echo "$0: re-running from megadoc root"
+
     cd ../../
     exec ./bin/prepublish $@
     exit $?

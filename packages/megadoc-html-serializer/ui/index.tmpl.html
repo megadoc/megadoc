@@ -45,13 +45,13 @@
     <script>
       window.MEGADOC_PLUGINS = Object.keys(exports)
         .filter(function(key) {
-          var obj = exports[key];
+          var thing = exports[key];
 
           return (
-            obj &&
-            typeof obj === 'object' &&
-            typeof obj.name === 'string' &&
-            /megadoc-(theme|plugin)-/.test(obj.name)
+            thing &&
+            typeof thing === 'object' &&
+            typeof thing.name === 'string' &&
+            /megadoc-(theme|plugin)-/.test(thing.name)
           );
         })
         .map(function(key) {

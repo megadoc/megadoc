@@ -10,9 +10,6 @@ describe('LinkResolver', function() {
 
   beforeEach(function() {
     corpus = Corpus();
-    corpus.visit(NodeURIDecorator({
-      layoutOptions: { singlePageMode: false }
-    }));
     corpus.add(
       b.namespace({
         meta: {
@@ -62,6 +59,10 @@ describe('LinkResolver', function() {
       })
     );
 
+    corpus.traverse(NodeURIDecorator({
+      layoutOptions: { singlePageMode: false }
+    }));
+
     resolver = new LinkResolver(corpus);
   });
 
@@ -98,6 +99,11 @@ describe('LinkResolver', function() {
     it('should not consider it a link', function() {
       assert.equal(resolver.linkify({ text: '[String[]]()', strict: false }), 'String[]');
     });
+
+    it('should not consider it a link', function() {
+      stubConsoleWarn(/Unable to resolve link to "String\[\]"/);
+      assert.equal(resolver.linkify({ text: '[String[]]()' }), '[String[]](mega://)');
+    });
   });
 
   context('given a broken link', function() {
@@ -127,17 +133,17 @@ describe('LinkResolver', function() {
   it('works by generating relative urls when possible', function() {
     var link;
 
-    assert.ok(corpus.get('MD/Y'))
-    link = resolver.lookup({ path: 'Z', contextNode: corpus.get('MD/Y') })
+    assert.ok(corpus.at('MD/Y'))
+    link = resolver.lookup({ path: 'Z', contextNode: corpus.at('MD/Y') })
     assert.equal(link.href, 'Z');
 
-    link = resolver.lookup({ path: 'Z', contextNode: corpus.get('MD') })
+    link = resolver.lookup({ path: 'Z', contextNode: corpus.at('MD') })
     assert.equal(link.href, 'articles/Z');
 
-    link = resolver.lookup({ path: 'Z', contextNode: corpus.get('MD/Zoo/Contact') })
+    link = resolver.lookup({ path: 'Z', contextNode: corpus.at('MD/Zoo/Contact') })
     assert.equal(link.href, '../articles/Z');
 
-    link = resolver.lookup({ path: 'Z', contextNode: corpus.get('MD/Zoo') })
+    link = resolver.lookup({ path: 'Z', contextNode: corpus.at('MD/Zoo') })
     assert.equal(link.href, 'articles/Z');
   });
 

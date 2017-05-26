@@ -48,41 +48,43 @@ describe('CorpusIndexer', function() {
     );
   });
 
+  const run = x => Subject(corpus, x);
+
   it('indexes on @id', function() {
-    assert.include(Subject(corpus.get('MD/X')), {
+    assert.include(run(corpus.at('MD/X')), {
       'X': 1
     });
   });
 
   it('does not include the namespace id in any index', function() {
-    assert.notInclude(Object.keys(Subject(corpus.get('MD/X'))), 'MD/X');
+    assert.notInclude(Object.keys(run(corpus.at('MD/X'))), 'MD/X');
   });
 
   it('indexes on @parentNode.id/@id', function() {
-    assert.include(Subject(corpus.get('MD/X/someProp')), {
+    assert.include(run(corpus.at('MD/X/someProp')), {
       'X/someProp': 1
     });
   });
 
   it('indexes on a custom field', function() {
-    assert.include(Subject(corpus.get('MD/X')), {
+    assert.include(run(corpus.at('MD/X')), {
       'FOOBAR': 1
     });
   });
 
   it('indexes on a custom array field', function() {
-    assert.include(Subject(corpus.get('MD/X')), {
+    assert.include(run(corpus.at('MD/X')), {
       'Y': 1
     });
   });
 
   it("skips indexing when @indexFields is empty", function() {
-    assert.deepEqual(Subject(corpus.get('MD/A')), {});
+    assert.deepEqual(run(corpus.at('MD/A')), {});
   });
 
   describe('@indexFields resolving', function() {
     it("prefers the node's own indexFields over its parents'", function() {
-      assert.include(Subject(corpus.get('MD/B')), {
+      assert.include(run(corpus.at('MD/B')), {
         'files/B.html': 1
       });
     });
@@ -90,7 +92,7 @@ describe('CorpusIndexer', function() {
 
   it("complains if the index field is not a string", function() {
     assert.throws(function() {
-      Subject(b.document({
+      run(b.document({
         id: 'B',
         indexFields: [ 'id' ],
         properties: {

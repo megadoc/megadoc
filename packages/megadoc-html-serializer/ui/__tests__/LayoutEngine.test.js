@@ -45,12 +45,12 @@ describe('megadoc::LayoutEngine', function() {
       assert.ok(subject(assign({}, params, { documentNode: { type: 'DocumentEntity' }})));
     });
 
-    it('matches by uid', function() {
+    it('matches by path', function() {
       const params = {
         pathname: '/foo',
 
         layouts: [{
-          match: { by: 'uid', on: [ 'api/Database' ] },
+          match: { by: 'path', on: [ 'api/Database' ] },
           regions: [
             {
               name: 'Layout::Content',
@@ -60,8 +60,8 @@ describe('megadoc::LayoutEngine', function() {
         }]
       };
 
-      assert.notOk(subject(assign({}, params, { documentNode: { uid: 'api/foo' }})));
-      assert.ok(subject(assign({}, params, { documentNode: { uid: 'api/Database' }})));
+      assert.notOk(subject(assign({}, params, { documentNode: { path: 'api/foo' }})));
+      assert.ok(subject(assign({}, params, { documentNode: { path: 'api/Database' }})));
     });
 
     it('matches by namespace UID', function() {
@@ -79,8 +79,8 @@ describe('megadoc::LayoutEngine', function() {
         }]
       };
 
-      assert.notOk(subject(assign({}, params, { namespaceNode: { uid: 'md' }})));
-      assert.ok(subject(assign({}, params, { namespaceNode: { uid: 'api' }})));
+      assert.notOk(subject(assign({}, params, { namespaceNode: { path: 'md' }})));
+      assert.ok(subject(assign({}, params, { namespaceNode: { path: 'api' }})));
     });
   });
 });

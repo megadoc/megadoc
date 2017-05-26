@@ -1,6 +1,6 @@
 var assert = require('assert');
 var resolveLink = require('./CorpusResolver');
-var buildIndices = require('./CorpusIndexer');
+var CorpusIndexer = require('./CorpusIndexer');
 var Types = require('./CorpusTypes');
 var integrityEnforcements = require('./CorpusIntegrityEnforcements');
 var assign = require('object-assign');
@@ -13,15 +13,17 @@ var b = Types.builders;
  * The Corpus public API.
  */
 function Corpus(config) {
-  var exports = {};
-  var nodes = {};
-  var corpusNode = b.corpus({
+  const exports = {};
+  const nodes = {};
+  const paths = {};
+  const nodeList = [];
+  const corpusNode = b.corpus({
     meta: {},
     namespaces: [],
     indexFields: [ '$uid', '$filePath' ],
   });
 
-  var visitors = {};
+  const buildIndices = CorpusIndexer(exports);
 
   config = config || {};
 
@@ -60,12 +62,19 @@ function Corpus(config) {
     return nodes[uid];
   };
 
-  exports.getByValue = function(node) {
-    return exports.get(UID(node));
+  exports.at = function(path) {
+    return paths[path];
   };
 
-  exports.getNamespaceNodes = function() {
-    return corpusNode.namespaces;
+  exports.getParentOf = function(object) {
+    if (object.type === 'Namespace') {
+      return corpusNode;
+    }
+    else if (object.parentNodeId) {
+      return nodes[object.parentNodeId];
+    }
+
+    return null;
   };
 
   /**
@@ -85,11 +94,15 @@ function Corpus(config) {
     if (nodes.hasOwnProperty(anchor.text)) {
       return nodes[anchor.text];
     }
+    else if (paths.hasOwnProperty(anchor.text)) {
+      return paths[anchor.text];
+    }
 
-    return resolveLink(anchor.contextNode ? anchor : {
-      text: anchor.text,
-      contextNode: corpusNode
+    const withContextNode = Object.assign({}, anchor, {
+      contextNode: anchor.contextNode || corpusNode
     });
+
+    return resolveLink(withContextNode, { getParentOf: exports.getParentOf });
   };
 
   /**
@@ -98,7 +111,7 @@ function Corpus(config) {
   exports.dump = function() {
     return {
       uids: Object.keys(nodes),
-      visitors: visitors
+      paths: Object.keys(paths),
     };
   };
 
@@ -111,13 +124,15 @@ function Corpus(config) {
    * @param {String} alias
    *        The alias to use (should be fully-qualified.)
    */
-  exports.alias = function(uid, alias) {
-    assert(uid in nodes,
-      "ArgumentError: attempting to alias a node '" + uid + "' to '" + alias + "' but no such node exists." +
+  exports.alias = function(path, alias) {
+    const node = exports.at(path);
+
+    assert(!!node,
+      "ArgumentError: attempting to alias a node '" + path + "' to '" + alias + "' but no such node exists." +
       (config.debug ? "\nAvailable UIDs:\n" + JSON.stringify(Object.keys(nodes), null, 2) : '')
     );
 
-    nodes[uid].indices[alias] = 1;
+    node.indices[alias] = 1;
   };
 
   /**
@@ -127,8 +142,8 @@ function Corpus(config) {
    *         An object that can be safely serialized to disk.
    */
   exports.toJSON = function() {
-    return Object.keys(nodes).reduce(function(map, uid) {
-      map[uid] = flattenNodeAndChildren(nodes[uid]);
+    return nodeList.reduce(function(map, node) {
+      map[getUID(node)] = flattenNodeAndChildren(exports, node);
       return map;
     }, {});
   };
@@ -155,18 +170,40 @@ function Corpus(config) {
    * @callback Corpus~Visitor
    * @param {T.Namespace|T.Node} node
    */
-  exports.visit = function(visitor) {
-    Object.keys(visitor).forEach(function(typeName) {
-      assert(Types.isTypeKnown(typeName),
-        "ArgumentError: a visitor was defined for an unknown node type '" + typeName + "'."
-      );
+  exports.traverse = function traverse(visitor, node) {
+    if (arguments.length === 1) {
+      Object.keys(visitor).forEach(function(typeName) {
+        assert(Types.isTypeKnown(typeName),
+          "ArgumentError: a visitor was defined for an unknown node type '" + typeName + "'."
+        );
+      });
 
-      visitors[typeName] = visitors[typeName] || [];
-      visitors[typeName].push(visitor[typeName]);
-    });
+      return traverse(visitor, corpusNode);
+    }
+
+    const traversalContext = {
+      getParentOf: exports.getParentOf
+    };
+
+    Types.getTypeChain(node.type)
+      .map(typeName => visitor[typeName] || Function.prototype)
+      .forEach(fn => fn(node, traversalContext))
+    ;
+
+    if (node.namespaces) { // Corpus
+      node.namespaces.forEach(traverse.bind(null, visitor));
+    }
+
+    if (node.documents) { // Namespace | Document
+      node.documents.forEach(traverse.bind(null, visitor));
+    }
+
+    if (node.entities) { // Document
+      node.entities.forEach(traverse.bind(null, visitor));
+    }
   };
 
-  function add(node) {
+  function add(node, parentNode) {
     if (node.type === 'Namespace') {
       assert(corpusNode.namespaces.map(function(x) { return x.id; }).indexOf(node.id) === -1,
         "IntegrityViolation: a namespace with the id '" + node.id + "' already exists."
@@ -178,12 +215,13 @@ function Corpus(config) {
       );
 
       corpusNode.namespaces.push(node);
-
-      node.parentNode = corpusNode;
+    }
+    else if (parentNode) {
+      node.parentNodeId = parentNode.uid;
     }
     else {
-      assert(node.parentNode,
-        "IntegrityViolation: expected node to reference a parentNode."
+      assert(node.parentNodeId,
+        `IntegrityViolation: expected node to reference a parentNode. (Source: ${dumpNodeFilePath(node)})`
       );
     }
 
@@ -197,31 +235,27 @@ function Corpus(config) {
 
     integrityEnforcements.apply(node);
 
-    node.uid = UID(node);
-    node.indices = Object.assign({}, buildIndices(node), node.indices);
-
-    Types.getTypeChain(node.type).forEach(function(typeName) {
-      if (typeName in visitors) {
-        visitors[typeName].forEach(function(fn) { fn(node); });
-      }
-    });
+    node.path = generateNodePath(exports, node);
+    node.indices = Object.assign({}, buildIndices(node, { getParentOf: exports.getParentOf }), node.indices);
 
     if (nodes.hasOwnProperty(node.uid)) {
       lenientAssert(false,
-        'IntegrityViolation: a node with the UID "' + node.uid + '" already exists.' +
+        'IntegrityViolation: a node with the UID "' + (node.path || node.uid) + '" already exists.' +
         '\nPast definition: ' + dumpNodeFilePath(nodes[node.uid]) +
         '\nThis definition: ' + dumpNodeFilePath(node)
       );
     }
 
     nodes[node.uid] = node;
+    paths[node.path] = node;
+    nodeList.push(node);
 
     if (node.documents) { // Namespace | Document
-      node.documents.forEach(add);
+      node.documents.forEach(x => add(x, node));
     }
 
     if (node.entities) { // Document
-      node.entities.forEach(add);
+      node.entities.forEach(x => add(x, node));
     }
 
     return node;
@@ -241,15 +275,7 @@ function Corpus(config) {
   return exports;
 };
 
-Corpus.attachNode = function(key, parentNode, node) {
-  parentNode[key].push(node);
-
-  node.parentNode = parentNode;
-
-  return node;
-};
-
-function UID(sourceNode) {
+function generateNodePath(corpus, sourceNode) {
   var fragments = [];
   var node = sourceNode;
 
@@ -263,28 +289,29 @@ function UID(sourceNode) {
     if (node.id) {
       fragments.unshift(node.id);
     }
-  } while ((node = node.parentNode));
+  } while ((node = corpus.getParentOf(node)));
 
   return fragments.join('');
 }
 
-function flattenNodeAndChildren(node) {
-  var clone = flattenNode(assign({}, node));
+function flattenNodeAndChildren(corpus, node) {
+  var clone = assign({}, node);
+  var flatNode = flattenNode(corpus, clone);
 
   if (node.documents) {
-    clone.documents = node.documents.map(getUID);
+    flatNode.documents = node.documents.map(getUID);
   }
 
   if (node.entities) {
-    clone.entities = node.entities.map(getUID);
+    flatNode.entities = node.entities.map(getUID);
   }
 
-  return clone;
+  return flatNode;
 }
 
-function flattenNode(node) {
-  if (node.parentNode) {
-    return assign({}, node, { parentNode: node.parentNode.uid });
+function flattenNode(corpus, node) {
+  if (node.parentNodeId) {
+    return assign(node, { parentNodeId: getUID(corpus.getParentOf(node)) });
   }
   else {
     return node;
@@ -292,7 +319,7 @@ function flattenNode(node) {
 }
 
 function getUID(node) {
-  return node.uid;
+  return node.path;
 }
 
 function hasValidNamespaceId(node) {
@@ -301,3 +328,4 @@ function hasValidNamespaceId(node) {
 
 module.exports = Corpus;
 module.exports.dumpNodeFilePath = dumpNodeFilePath;
+module.exports.getUID = getUID;

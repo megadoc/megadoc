@@ -162,16 +162,6 @@ def("Namespace", {
      * @property {T.Document[]}
      */
     documents: or(array("Node"), null),
-
-    /**
-     * @property {T.Corpus}
-     *
-     * This is automatically attached when you add the namespace to
-     * the corpus.
-     *
-     * @private
-     */
-    parentNode: or("Corpus", null),
   }
 });
 
@@ -272,16 +262,17 @@ def("Document", {
     symbol: or(t.string, null), // defaults to "/"
 
     /**
-     * @property {T.Namespace|T.Document}
+     * @property {String}
      *
-     * The parent node this node belongs to. You can "nest" documents within
-     * each other by attaching a [[T.Document]] node to another as its parentNode.
+     * The UID of the parent node this node belongs to which may either be a
+     * [[T.Document]] or a [[T.Namespace]]. You can "nest" documents within each
+     * other by attaching a [[T.Document]] node to another as its parentNode.
      *
      * If the parentNode is of type [[T.Namespace]], then it means that this
      * document is a top-level one.
      *
      */
-    parentNode: or("Namespace", "Document", null),
+    parentNodeId: or(t.string, null),
     documents: or(array("Document"), null),
     entities: or(array("DocumentEntity"), null),
   }
@@ -310,11 +301,11 @@ def("DocumentEntity", { // terminal
   base: "Node",
   fields: {
     /**
-     * @property {T.Document}
+     * @property {String}
      *
-     * The documentNode that this entity belongs to.
+     * The UID of the documentNode that this entity belongs to.
      */
-    parentNode: or("Document", null)
+    parentNodeId: or(t.string, null),
   }
 });
 

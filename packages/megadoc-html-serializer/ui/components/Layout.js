@@ -38,8 +38,8 @@ const Layout = React.createClass({
       layoutOptions: PropTypes.shape({
         banner: bool,
         bannerLinks: arrayOf(Link),
-      })
-    }),
+      }).isRequired,
+    }).isRequired,
   },
 
   getDefaultProps() {

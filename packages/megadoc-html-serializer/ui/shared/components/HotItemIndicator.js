@@ -23,7 +23,7 @@ const HotItemIndicator = React.createClass({
 
     return (
       <Icon
-        title="This item is hot! It has been edited recently."
+        title="This document has been edited recently."
         className="icon-fire hot-item-indicator"
       />
     );

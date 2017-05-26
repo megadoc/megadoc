@@ -38,8 +38,10 @@ describe('CorpusResolver', function() {
         documents: [
           b.document({
             id: 'UI',
+            filePath: '/ui/index.js',
             documents: [
               b.document({
+                filePath: '/ui/Z.js',
                 id: 'Z'
               })
             ]
@@ -68,6 +70,7 @@ describe('CorpusResolver', function() {
           b.document({
             id: 'Core',
             symbol: '.',
+            filePath: '/js/lib/core/index.js',
 
             documents: [
               b.document({
@@ -76,11 +79,13 @@ describe('CorpusResolver', function() {
                 symbol: '',
                 entities: [
                   b.documentEntity({
-                    id: '@name'
+                    id: '@name',
+                    filePath: '/js/lib/core/X.js',
                   }),
 
                   b.documentEntity({
-                    id: '#add'
+                    id: '#add',
+                    filePath: '/js/lib/core/X.js',
                   })
                 ]
               }),
@@ -91,7 +96,8 @@ describe('CorpusResolver', function() {
                 symbol: '',
                 entities: [
                   b.documentEntity({
-                    id: '@name'
+                    id: '@name',
+                    filePath: '/js/lib/core/Y.js',
                   })
                 ]
               }),
@@ -145,15 +151,15 @@ describe('CorpusResolver', function() {
     fn("resolves '" + spec.res + "' from '" + spec.from + "' using '" + spec.to + "'", function() {
       var { node: document, text } = resolve({
         text: spec.to,
-        contextNode: corpus.get(spec.from)
-      }, { trace: false }) || {};
+        contextNode: corpus.at(spec.from)
+      }, { trace: false, getParentOf: corpus.getParentOf, }) || {};
 
       if (spec.res === null) {
         assert.notOk(document, (document && "Resolved '" + document.uid + "' when it should not have."));
       }
       else {
         assert.ok(document);
-        assert.equal(document.uid, corpus.get(spec.res).uid);
+        assert.equal(document.uid, corpus.at(spec.res).uid);
 
         if (spec.text) {
           assert(text === spec.text, `Node should've been yielded as "${spec.text}" but was as "${text}"`);
@@ -168,7 +174,7 @@ describe('CorpusResolver', function() {
         id: 'Wild Babies',
         name: 'test-plugin',
         documents: [
-          b.document({ id: 'The Gorilla Emperor' })
+          b.document({ id: 'The Gorilla Emperor', filePath: 'gorilla.js' })
         ]
       }));
 
@@ -176,7 +182,7 @@ describe('CorpusResolver', function() {
         id: 'Wild #Hash',
         name: 'test-plugin',
         documents: [
-          b.document({ id: 'The $Wilderness B3Y)ND' })
+          b.document({ id: 'The $Wilderness B3Y)ND', filePath: 'wilderness.js' })
         ]
       }));
 
@@ -184,24 +190,24 @@ describe('CorpusResolver', function() {
         id: 'مجموعتي',
         name: 'test-plugin',
         documents: [
-          b.document({ id: 'صفحة' })
+          b.document({ id: 'صفحة', filePath: 'page.js' })
         ]
       }));
     });
 
     it('works when there are spaces in a namespace', function() {
-      assert(corpus.resolve({ text: 'Wild Babies' }));
-      assert(corpus.resolve({ text: 'Wild Babies/The Gorilla Emperor' }));
+      assert.ok(corpus.resolve({ text: 'Wild Babies' }));
+      assert.ok(corpus.resolve({ text: 'Wild Babies/The Gorilla Emperor' }));
     });
 
     it('works when there are special characters in a namespace', function() {
-      assert(corpus.resolve({ text: 'Wild #Hash' }));
-      assert(corpus.resolve({ text: 'Wild #Hash/The $Wilderness B3Y)ND' }));
+      assert.ok(corpus.resolve({ text: 'Wild #Hash' }));
+      assert.ok(corpus.resolve({ text: 'Wild #Hash/The $Wilderness B3Y)ND' }));
     });
 
     it('works when there are unicode characters in a namespace', function() {
-      assert(corpus.resolve({ text: 'مجموعتي' }));
-      assert(corpus.resolve({ text: 'مجموعتي/صفحة' }));
+      assert.ok(corpus.resolve({ text: 'مجموعتي' }));
+      assert.ok(corpus.resolve({ text: 'مجموعتي/صفحة' }));
     });
 
     it('rejects a namespace with an illegal name (starts with /)', function() {

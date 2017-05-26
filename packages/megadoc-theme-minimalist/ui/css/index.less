@@ -279,13 +279,15 @@ pre[class*="language-"] {
   }
 
 
-  .anchorable-heading__link {
-    transition: none;
+  a.anchorable-heading__link {
+    &, &:visited {
+      color: lighten(@base1, 20%);
+    }
+
     font-size: inherit;
     line-height: inherit;
     margin-left: -1.25em;
     padding-right: 1.25em;
-    opacity: 0.5;
     display: inline-block;
     vertical-align: top;
     width: 1em;

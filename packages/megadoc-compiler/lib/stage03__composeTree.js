@@ -93,10 +93,6 @@ module.exports = function composeTree({
       }
     }
 
-    if (documentParents.hasOwnProperty(document.id)) {
-      modifications.parentNode = documentParents[document.id];
-    }
-
     if (Object.keys(modifications).length > 0) {
       return document.merge(modifications);
     }
@@ -112,7 +108,7 @@ module.exports = function composeTree({
     meta: namespaceAttributes.meta || {},
     config: namespaceAttributes.config || null,
     indexFields: namespaceAttributes.indexFields || null,
-    documents: hierarchicalDocuments.filter(x => !x.parentNode),
+    documents: hierarchicalDocuments.filter(x => !documentParents.hasOwnProperty(x.id)),
   });
 
 

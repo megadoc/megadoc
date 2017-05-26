@@ -9,8 +9,7 @@
     margin-left: -18px;
     vertical-align: middle;
     padding-right: 4px;
-    visibility: hidden;
-    transition: visibility 0s linear 0.35s;
+    opacity: 0;
 
     &:hover, &:active, &:focus {
       text-decoration: none;
@@ -27,9 +26,8 @@
     }
   }
 
-  &:hover &__link {
-    visibility: visible;
-    transition: visibility 0s linear 0s;
+  &:hover &__link, &__link:hover {
+    opacity: inherit;
   }
 }
 
@@ -43,7 +41,7 @@
 
 .schemable({
   .anchorable-heading__link {
-    color: @base1 !important;
+    color: @base1;
     .unmark-link-external()
   }
 });

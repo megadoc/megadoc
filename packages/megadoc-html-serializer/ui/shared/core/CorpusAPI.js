@@ -217,8 +217,8 @@ function CorpusTree(corpus) {
   function reduceNode(uid) {
     const node = corpusTree[uid];
 
-    if (typeof node.parentNode === 'string') {
-      attach(node, corpusTree[node.parentNode]);
+    if (typeof node.parentNodeId === 'string') {
+      attach(node, corpusTree[node.parentNodeId]);
     }
   }
 

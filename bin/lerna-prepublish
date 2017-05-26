@@ -7,7 +7,7 @@ npm run test
 
 {
   export NODE_ENV=production
-  ./node_modules/.bin/lerna exec --concurrency 1 -- ../../bin/prepublish \$LERNA_PACKAGE_NAME
+  ./node_modules/.bin/lerna exec --concurrency 1 --stream -- ../../bin/prepublish \$LERNA_PACKAGE_NAME
 }
 
 echo "All good!"

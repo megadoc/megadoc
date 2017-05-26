@@ -4,7 +4,9 @@ var RE_MATCH_ENTITY_IN_FILEPATH = /\.\w+(\b.+)$/;
 
 module.exports = resolve;
 
-function resolve(anchor, options, _state) {
+function resolve(anchor, options = {}, _state) {
+  const { getParentOf } = options;
+
   assert(anchor && typeof anchor.text === 'string',
     "ArgumentError: resolve request requires a 'text' term to resolve.");
 
@@ -14,7 +16,8 @@ function resolve(anchor, options, _state) {
   var index;
   var term = anchor.text;
   var contextNode = anchor.contextNode;
-  var parentNode = contextNode.parentNode;
+  var parentNode = getParentOf(contextNode);
+
   var state = _state || {
     visited: {},
     // friend nodes are ones we can access by their private indices, which
@@ -31,16 +34,16 @@ function resolve(anchor, options, _state) {
     // |        |-- Y         <- friends: [Core], can access Core.X using "X"
     // |        |   |-- @id   <- friends: [Y, Core], can NOT access Core.X#add using "#add"!!!
     // |    |-- Z             <- friends: [NS1]
-    friends: createListOfFriendNodes(contextNode)
+    friends: createListOfFriendNodes(contextNode, getParentOf)
   };
 
   var trace = options && options.trace ? console.log.bind(console) : Function.prototype;
 
-  trace("Context:", contextNode.uid);
+  trace("Context:", contextNode.path);
   trace("Term:", term);
 
   if (term.match(/^(\.\.?\/)+/)) {
-    return resolveByFilePath(anchor);
+    return resolveByFilePath(anchor, options);
   }
 
   // descend first
@@ -61,10 +64,10 @@ function resolve(anchor, options, _state) {
   function searchInBranch(node, inFriendBranch) {
     let result;
 
-    trace("Searching '%s' (relative? %s, %s)...", node.uid, inFriendBranch, JSON.stringify(node.indices))
+    trace("Searching '%s' (relative? %s, %s)...", node.path, inFriendBranch, JSON.stringify(node.indices))
 
     if (hasVisited(node)) {
-      trace("- Skipping '%s' - already seen before!", node.uid);
+      trace("- Skipping '%s' - already seen before!", node.path);
 
       return null;
     }
@@ -83,10 +86,10 @@ function resolve(anchor, options, _state) {
 
     function visitBranchNode(childNode) {
       if (!hasVisited(childNode)) {
-        trace("- Checking '%s'", childNode.uid);
+        trace("- Checking '%s'", childNode.path);
 
         if (matches(term, childNode, inFriendBranch)) {
-          trace("- Found '%s'!", childNode.uid, term);
+          trace("- Found '%s'!", childNode.path, term);
 
           result = {
             node: childNode,
@@ -105,7 +108,7 @@ function resolve(anchor, options, _state) {
 
     function visitLeafNode(childNode) {
       if (!hasVisited(childNode)) {
-        trace("- Checking entity '%s'...", childNode.uid);
+        trace("- Checking entity '%s'...", childNode.path);
 
         markVisited(childNode);
 
@@ -137,7 +140,7 @@ function resolve(anchor, options, _state) {
 };
 
 function matches(term, n, lookInPrivateIndices) {
-  if (n.uid === term) {
+  if (n.path === term) {
     return true;
   }
   else if (!n.indices) {
@@ -159,7 +162,7 @@ function isLeaf(node) {
   return node.type === 'DocumentEntity';
 }
 
-function resolveByFilePath(anchor) {
+function resolveByFilePath(anchor, options) {
   var filePath = anchor.text;
   var contextNode = anchor.contextNode;
   var targetPath;
@@ -172,29 +175,33 @@ function resolveByFilePath(anchor) {
 
   targetPath = ensureLeadingSlash(path.join(path.dirname(contextNode.filePath), filePath));
 
-  const { node: targetNode } = resolve({ text: targetPath, contextNode: anchor.contextNode }) || {};
+  const { node: targetNode } = resolve(
+    { text: targetPath, contextNode: anchor.contextNode },
+    options
+  ) || {};
 
   if (entityId && targetNode) {
     return resolve({
-      text: targetNode.uid + entityId,
+      text: targetNode.path + entityId,
       contextNode: targetNode
-    });
+    }, options);
   }
   else {
     return targetNode ? { node: targetNode, text: targetNode.title } : null;
   }
 }
 
-function createListOfFriendNodes(node) {
-  var map = {};
+function createListOfFriendNodes(node, getParentOf) {
+  const map = { [node.uid]: true };
+  const parentNode = getParentOf(node);
 
-  map[node.uid] = true;
+  if (parentNode) {
+    map[parentNode.uid] = true;
 
-  if (node.parentNode) {
-    map[node.parentNode.uid] = true;
+    const grandParentNode = getParentOf(parentNode);
 
-    if (isLeaf(node) && node.parentNode.parentNode) {
-      map[node.parentNode.parentNode.uid] = true;
+    if (isLeaf(node) && grandParentNode) {
+      map[grandParentNode.uid] = true;
     }
   }
 

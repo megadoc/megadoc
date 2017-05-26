@@ -57,8 +57,6 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
     debug: serializer.compilerConfig.debug
   });
 
-  corpus.visit(serializer.corpusVisitor);
-
   const rootNodes = compilations.map(function(compilation) {
     const serializerOptions = compilation.serializerOptions.html || {};
 
@@ -66,6 +64,8 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
 
     return corpus.add(compilation.tree);
   });
+
+  corpus.traverse(serializer.corpusVisitor);
 
   return { corpus: corpus, rootNodes: rootNodes };
 }

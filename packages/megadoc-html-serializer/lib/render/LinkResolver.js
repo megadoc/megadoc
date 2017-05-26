@@ -85,19 +85,30 @@ LinkResolver.prototype.lookup = function(params) {
       };
     }
   }
+  else if (params.strict) {
+    console.warn('%s: Unable to resolve link to "%s"',
+      dumpNodeFilePath(params.contextNode),
+      params.path
+    );
+    return {
+      text: params.path,
+      href: '',
+    }
+  }
 
   function Href(node, options) {
-    // handle links to self or links from an entity to parent
-    if (params.contextNode === node || (
-        params.contextNode &&
-        params.contextNode.type === 'DocumentEntity' &&
-        params.contextNode.parentNode === node
-      )) {
-      return node.meta.href;
-    }
-
     if (params.contextNode && params.contextNode.meta.href && options.relativeLinks) {
-      return URI(node.meta.href).relativeTo(params.contextNode.meta.href).toString();
+      const relativeHref = URI(node.meta.href).relativeTo(params.contextNode.meta.href).toString();
+
+      // handle links to self or links from an entity to parent since the relative
+      // href will be empty and will be marked as a broken link when in fact it
+      // isn't, so we just use the absolute href:
+      if (relativeHref.length === 0) {
+        return node.meta.href;
+      }
+      else {
+        return relativeHref;
+      }
     }
     else {
       return node.meta.href;
@@ -165,7 +176,7 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
   var format = params.format || 'markdown';
   var strict = params.strict !== false;
   var contextNode = params.contextNode ?
-    this.corpus.getByValue(params.contextNode) :
+    this.corpus.get(params.contextNode.uid) :
     null
   ;
   var link = this.lookup({ path: descriptor.path, contextNode: contextNode });

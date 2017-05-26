@@ -3,6 +3,7 @@ require('../../');
 var Subject = require("../Corpus");
 var b = require('../CorpusTypes').builders;
 var assert = require('chai').assert;
+const { getUID } = Subject;
 
 describe('Corpus', function() {
   var subject;
@@ -24,7 +25,7 @@ describe('Corpus', function() {
 
     subject.add(ns);
 
-    assert.equal(subject.get('JS'), ns);
+    assert.equal(subject.at('JS'), ns);
   });
 
   it('tracks documents within a namespace', function() {
@@ -42,8 +43,8 @@ describe('Corpus', function() {
 
     subject.add(ns);
 
-    assert.equal(subject.get('JS'), ns);
-    assert.equal(subject.get('JS/Cache'), ns.documents[0]);
+    assert.equal(subject.at('JS'), ns);
+    assert.equal(subject.at('JS/Cache'), ns.documents[0]);
   });
 
   it('allows me to customize the namespace symbol', function() {
@@ -61,8 +62,8 @@ describe('Corpus', function() {
 
     subject.add(ns);
 
-    assert.equal(subject.get('API'), ns);
-    assert.equal(subject.get('API::Users'), ns.documents[0]);
+    assert.equal(subject.at('API'), ns);
+    assert.equal(subject.at('API::Users'), ns.documents[0]);
   });
 
   it('borks if the namespace id is taken', function() {
@@ -111,18 +112,26 @@ describe('Corpus', function() {
       }));
 
       var dump = subject.toJSON();
+      var get = path => (
+        Object.keys(dump)
+          .filter(x => dump[x].path === path || dump[x].uid === path)
+          .map(x => dump[x])
+          [0]
+      )
+
+      const getIdOf = path => getUID(get(path));
 
       assert.equal(Object.keys(dump).length, 3);
-      assert.equal(dump['API'].parentNode, undefined,
+      assert.equal(get('API').parentNodeId, undefined,
         "it does not serialize the root corpus node"
       );
 
-      assert.equal(dump['API/Users'].parentNode, 'API');
-      assert.equal(dump['API/Users'].entities[0], 'API/Users/add',
+      assert.equal(get(get('API/Users').parentNodeId).path, 'API');
+      assert.equal(get('API/Users').entities[0], getIdOf('API/Users/add'),
         "it swaps entities with their UIDs"
       );
 
-      assert.equal(dump['API/Users/add'].parentNode, 'API/Users',
+      assert.equal(get(get('API/Users/add').parentNodeId).path, 'API/Users',
         "it swaps parentNode values with the UID"
       );
     });
@@ -130,26 +139,20 @@ describe('Corpus', function() {
 
   describe('#visit', function() {
     it('lets me register a node visitor', function() {
-      subject.visit({
+      subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
+
+      subject.traverse({
         Namespace: function(node) {
           node.href = 'hadouken';
         }
       });
 
-      subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
-      assert.equal(subject.get('foo').href, 'hadouken');
+      assert.equal(subject.at('foo').href, 'hadouken');
     });
 
     it('calls a visitor that was registered for a parent type', function() {
       var called = false;
       var nodeType;
-
-      subject.visit({
-        Node: function(node) {
-          called = true;
-          nodeType = node.type;
-        }
-      });
 
       subject.add(
         b.namespace({
@@ -158,6 +161,13 @@ describe('Corpus', function() {
           documents: [ b.document({ id: 'bar' }) ]
         })
       );
+
+      subject.traverse({
+        Node: function(node) {
+          called = true;
+          nodeType = node.type;
+        }
+      });
 
       assert.ok(called);
       assert.equal(nodeType, 'Document');
@@ -168,12 +178,6 @@ describe('Corpus', function() {
     // _kind-of_ conforms to this spec.
     it.skip('does not call a visitor that was registered for a child type', function() {
       var called = false;
-
-      subject.visit({
-        Document: function() {
-          called = true;
-        }
-      });
 
       subject.add(
         b.namespace({
@@ -187,19 +191,18 @@ describe('Corpus', function() {
         })
       );
 
+      subject.traverse({
+        Document: function() {
+          called = true;
+        }
+      });
+
       assert.notOk(called);
     });
 
     it('does not call a visitor that was registered for a sibling type', function() {
       var callCount = 0;
       var callTypes = [];
-
-      subject.visit({
-        DocumentEntity: function(node) {
-          callCount += 1;
-          callTypes.push(node.type);
-        }
-      });
 
       subject.add(
         b.namespace({
@@ -218,13 +221,20 @@ describe('Corpus', function() {
         })
       );
 
+      subject.traverse({
+        DocumentEntity: function(node) {
+          callCount += 1;
+          callTypes.push(node.type);
+        }
+      });
+
       assert.equal(callCount, 1);
       assert.deepEqual(callTypes, [ "DocumentEntity" ]);
     });
 
     it('rejects visitors for unknown node types', function() {
       assert.throws(function() {
-        subject.visit({
+        subject.traverse({
           Foobar: function() {
           }
         });

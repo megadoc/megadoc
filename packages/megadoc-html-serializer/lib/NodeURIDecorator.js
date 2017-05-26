@@ -37,7 +37,7 @@ module.exports = function NodeURIDecorator(config) {
   // file over any existing one (in case the rewrite shadows another document)
   // and in the UI to accommodate for links to rewritten URLs.
   //
-  function decorateNode(node) {
+  function decorateNode(node, traversalContext) {
     var href;
 
     // allow rewrite by filepath
@@ -46,12 +46,12 @@ module.exports = function NodeURIDecorator(config) {
       node.meta.hrefRewritten = true;
     }
     // allow rewrite by UID
-    else if (rewriteMap.hasOwnProperty(node.uid)) {
-      href = rewriteMap[node.uid];
+    else if (rewriteMap.hasOwnProperty(node.path)) {
+      href = rewriteMap[node.path];
       node.meta.hrefRewritten = true;
     }
     else {
-      href = g.NodeURI(node);
+      href = g.NodeURI(node, traversalContext);
 
       // allow rewrite by URL
       if (rewriteMap.hasOwnProperty(href)) {
@@ -65,8 +65,8 @@ module.exports = function NodeURIDecorator(config) {
       node.meta.redirect = redirectMap[node.filePath];
     }
     // allow redirect by UID
-    else if (redirectMap.hasOwnProperty(node.uid)) {
-      node.meta.redirect = redirectMap[node.uid];
+    else if (redirectMap.hasOwnProperty(node.path)) {
+      node.meta.redirect = redirectMap[node.path];
     }
     // allow redirect by URL
     else if (redirectMap.hasOwnProperty(href)) {
@@ -90,7 +90,7 @@ module.exports = function NodeURIDecorator(config) {
     ;
 
     if (process.env.VERBOSE) {
-      console.log('Node "%s" href: "%s"', node.uid, node.meta.href)
+      console.log('Node "%s" href: "%s"', node.path, node.meta.href)
     }
   }
 };
@@ -104,7 +104,9 @@ function FileBasedURIGenerator(config) {
     NodeAnchor: NodeAnchor
   };
 
-  function NodeURI(node) {
+  function NodeURI(node, traversalContext) {
+    const { getParentOf } = traversalContext;
+
     if (shouldIgnore(node)) {
       return node.type === 'DocumentEntity' ?
         node.meta.href :
@@ -116,20 +118,22 @@ function FileBasedURIGenerator(config) {
       ;
     }
 
+    const parentNode = getParentOf(node);
+
     if (node.type === 'DocumentEntity') {
-      if (!node.parentNode) {
+      if (!parentNode) {
         invariant(false, `Node has no parent! ${dumpNodeFilePath(node)}`);
       }
 
-      return NodeURI(node.parentNode) + '#' + NodeAnchor(node);
+      return NodeURI(parentNode, traversalContext) + '#' + NodeAnchor(node);
     }
     else if (node.type === 'Document') {
-      if (!node.parentNode) {
+      if (!parentNode) {
         invariant(false, `Node has no parent! ${dumpNodeFilePath(node)}`);
       }
 
       return (
-        ParentNodeURI(node.parentNode) + '/' + encodeURI(node.id) +
+        ParentNodeURI(parentNode, traversalContext) + '/' + encodeURI(node.id) +
         // What's happening here merits some explanation: documents that nest
         // other documents beneath them should be placed inside
         // `/path/to/document/index.html` instead of `/path/to/document.html`
@@ -165,8 +169,8 @@ function FileBasedURIGenerator(config) {
     }
   }
 
-  function ParentNodeURI(node) {
-    return NodeURI(node).replace(RE, '').replace(/\/index$/, '');
+  function ParentNodeURI(node, traversalContext) {
+    return NodeURI(node, traversalContext).replace(RE, '').replace(/\/index$/, '');
   }
 
   function NodeAnchor(node) {
@@ -212,7 +216,7 @@ function HashBasedURIGenerator(/*config*/) {
       return null;
     }
 
-    return '#/' + encodeURI(node.uid);
+    return '#/' + encodeURI(node.path);
 
     // if (node.type === 'DocumentEntity') {
     //   return NodeURI(node.parentNode) + '/' + encodeURI(node.id);

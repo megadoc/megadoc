@@ -1,22 +1,23 @@
-var invariant = require('invariant');
-var dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
+const invariant = require('invariant');
+const { dumpNodeFilePath } = require('./CorpusUtils');
+const { curry } = require('lodash');
 
 // An index of value 0 is considered private and is accessible only to the node
 // and its "friends". Indices of higher values are not significant in their
 // value and merely denote that they are visible to all nodes.
-module.exports = function buildIndices(node) {
+module.exports = curry(function buildIndices(corpus, node) {
   if (node.type === 'Namespace') {
     return {};
   }
 
-  var indexFields = resolveIndexFields(node) || [];
+  var indexFields = resolveIndexFields(corpus, node) || [];
 
   return indexFields.reduce(function(indices, field) {
-    if (field === '$uid') {
-      generateIdIndices(node, indices);
+    if (field === '$uid' || field === '$path') {
+      generateIdIndices(corpus, node, indices);
     }
     else if (field === '$filePath') {
-      var filePathIndex = getFilePathIndex(node);
+      var filePathIndex = getFilePathIndex(corpus, node);
 
       if (filePathIndex) {
         indices[withLeadingSlash(filePathIndex)] = 1;
@@ -43,12 +44,13 @@ module.exports = function buildIndices(node) {
 
     return indices;
   }, {});
-}
+})
 
-function generateIdIndices(node, map) {
+function generateIdIndices(corpus, node, map) {
   var ancestors = [];
   var anchorNode = node;
-  var isTopLevel = node.parentNode && node.parentNode.type === 'Namespace';
+  const parentNode = corpus.getParentOf(node);
+  var isTopLevel = parentNode && parentNode.type === 'Namespace';
 
   // If the node resides at the top level of its namespace, it will have only
   // one UID index and that *should* be public.
@@ -64,7 +66,7 @@ function generateIdIndices(node, map) {
       ancestors.unshift(anchorNode);
 
       map[ancestors.map(identifyNodeInChain).join('')] = ancestors.length - 1;
-    } while ((anchorNode = anchorNode.parentNode));
+    } while ((anchorNode = corpus.getParentOf(anchorNode)));
   }
 
   function identifyNodeInChain(x, i) {
@@ -79,14 +81,16 @@ function generateIdIndices(node, map) {
   return map;
 }
 
-function resolveIndexFields(node) {
-  var anchorNode = node;
-
-  do {
-    if (anchorNode.indexFields) {
-      return anchorNode.indexFields;
-    }
-  } while ((anchorNode = anchorNode.parentNode));
+function resolveIndexFields(corpus, node) {
+  if (!node) {
+    return null;
+  }
+  else if (node.indexFields) {
+    return node.indexFields;
+  }
+  else {
+    return resolveIndexFields(corpus, corpus.getParentOf(node));
+  }
 }
 
 function withLeadingSlash(x) {
@@ -97,23 +101,25 @@ function withoutLeadingSlash(x) {
   return x[0] === '/' ? x.slice(1) : x;
 }
 
-function buildEntityFileIndex(node) {
+function buildEntityFileIndex(corpus, node) {
+  const parentNode = corpus.getParentOf(node);
+
   return (
-    (node.filePath || node.parentNode.filePath) +
-    (node.parentNode.symbol || '') +
+    (node.filePath || parentNode.filePath) +
+    (parentNode.symbol || '') +
     node.id
   );
 }
 
-function getFilePathIndex(node) {
+function getFilePathIndex(corpus, node) {
   // for entities, we want to index by the enclosing document's filepath
   // followed by the id of the entity for links like:
   //
   //     /README.md#see-something
   //     /lib/X.js@name
   if (node.type === 'DocumentEntity') {
-    if (node.filePath || node.parentNode.filePath) {
-      return buildEntityFileIndex(node);
+    if (node.filePath || corpus.getParentOf(node).filePath) {
+      return buildEntityFileIndex(corpus, node);
     }
   }
   else if (node.filePath) {

@@ -1,12 +1,13 @@
-var assert = require('assert');
-var typeDefs = {};
-var typeCheckers = {};
-var builders = {};
-var builtInTypes = {};
-var assign = require('lodash').assign;
-var uniq = require('lodash').uniq;
-var camelizeCache = {};
-var definitions = [];
+const assert = require('assert');
+const { assign, uniq } = require('lodash');
+const generateUID = require('./generateUID');
+const { dumpNodeFilePath } = require('./CorpusUtils');
+const typeDefs = {};
+const typeCheckers = {};
+const builders = {};
+const builtInTypes = {};
+const camelizeCache = {};
+const definitions = [];
 
 /**
  * @module CorpusTypes
@@ -61,12 +62,23 @@ function createTypeBuilder(typeName, typeDef) {
     // verify all required fields are present
     requiredFields.forEach(function(field) {
       assert(field in fields,
-        "Field '" + field + "' is missing for a node of type '" + typeName + "'."
+        "Field '" + field + "' is missing for a node of type '" + typeName + "'." +
+        " (Source: " + (dumpNodeFilePath(fields)) + ")"
       );
     });
 
-    this.consumeFields(fields);
+    consumeFields.call(this, fields);
     this.type = typeName;
+
+    // kuz the corpus node does not have a id nor a UID
+    if (this.id) {
+      this.uid = generateUID([
+        this.type,
+        this.id,
+        this.symbol,
+        this.filePath,
+      ]);
+    }
 
     return this;
   };
@@ -88,11 +100,9 @@ function createTypeBuilder(typeName, typeDef) {
     }, {}));
   };
 
-  TypeBuilder.prototype.consumeFields = function(fields) {
-    var that = this;
-
+  function consumeFields(fields) {
     // reject unrecognized fields and validate recognized ones
-    Object.keys(fields).forEach(function(fieldName) {
+    Object.keys(fields).forEach(fieldName => {
       var fieldValue = fields[fieldName];
       var typeError;
 
@@ -106,27 +116,8 @@ function createTypeBuilder(typeName, typeDef) {
         assert(false, "TypeError: " + typeError + " (source: " + typeName + "[\"" + fieldName + "\"])");
       }
 
-      if (fieldName !== 'parentNode') {
-        if (Array.isArray(fieldValue)) {
-          fieldValue.forEach(assignParentNode);
-        }
-        else {
-          assignParentNode(fieldValue);
-        }
-      }
-
-      that[fieldName] = fieldValue;
+      this[fieldName] = fieldValue;
     });
-
-    function assignParentNode(x) {
-      if (x) { // guard against nil values
-        var xCtor = x.constructor;
-
-        if (xCtor.__typeDef__ && 'parentNode' in xCtor.__typeDef__.fields) {
-          x.parentNode = that;
-        }
-      }
-    }
   };
 
   return TypeBuilder;
