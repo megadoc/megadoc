@@ -13,6 +13,7 @@ const ConfigType = {
   collapsibleSidebar: PropTypes.bool,
   footer: PropTypes.string,
   resizableSidebar: PropTypes.bool,
+  fixedSidebar: PropTypes.bool,
 };
 
 const LayoutScreen = React.createClass({
@@ -57,6 +58,7 @@ const LayoutScreen = React.createClass({
       <TwoColumnLayout
         resizable={config.resizableSidebar}
         collapsible={config.collapsibleSidebar}
+        fixed={config.fixedSidebar}
       >
         <TwoColumnLayout.LeftColumn>
           <div>

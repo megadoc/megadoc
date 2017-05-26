@@ -9,7 +9,7 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": [ "id", "include", "processor" ],
+        "required": [ "include", "processor" ],
         "properties": {
           "id": {
             "type": "string"

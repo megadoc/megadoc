@@ -122,7 +122,7 @@ const Root = React.createClass({
         )}
 
         <Layout
-          {...config.layoutOptions}
+          config={config}
           pathname={pathname}
           scope={scope}
           template={template}

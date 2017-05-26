@@ -132,6 +132,14 @@ module.exports = {
   /**
    * @property {Boolean}
    *
+   * Whether the side-bar should be fixed with its own scrollbar that is
+   * independent of the content panel.
+   */
+  fixedSidebar: false,
+
+  /**
+   * @property {Boolean}
+   *
    * Turn this on if you want the side-bar links to become
    * active as the user is scrolling the page.
    *

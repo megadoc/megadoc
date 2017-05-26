@@ -131,8 +131,8 @@ exports.run = function run(userConfig, runOptions, done) {
 function compileSources(state, done) {
   const { runOptions, serializer, compilations } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint);
-  const getPrevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
-  const findPrevCompilation = R.partial(R.filter, [ R.eqProps('id')(R.__), getPrevCompilations ])
+  const prevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
+  const findPrevCompilation = compilation => prevCompilations.filter(x => x.id === compilation.id)
 
   const compileTree = asyncSequence([
     defineBreakpoint(BREAKPOINT_PARSE)

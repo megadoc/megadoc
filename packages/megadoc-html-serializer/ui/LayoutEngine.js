@@ -75,7 +75,7 @@ function getLayoutOverride(scope, layouts) {
       "A custom layout must have a @match property defined!"
     );
 
-    return match(x, scope);
+    return [].concat(x.match).every(matchEntry => match(matchEntry, scope));
   })[0];
 }
 
@@ -91,9 +91,9 @@ function arrayWrap(x) {
   return Array.isArray(x) ? x : [].concat(x || []);
 }
 
-function match(entry, { documentNode, namespaceNode, pathname }) {
-  const matchBy = entry.match.by;
-  const matchOn = arrayWrap(entry.match.on);
+function match(matchEntry, { documentNode, namespaceNode, pathname }) {
+  const matchBy = matchEntry.by;
+  const matchOn = arrayWrap(matchEntry.on);
 
   return (
     (

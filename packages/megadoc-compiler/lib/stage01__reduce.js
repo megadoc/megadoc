@@ -4,14 +4,7 @@ const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
-const { curry } = require('lodash');
-
-const relativize = curry(function relativize(assetRoot, x) {
-  const pattern = `${assetRoot}/`;
-  const sz = pattern.length;
-
-  return x.indexOf(pattern) === 0 ? x.slice(sz) : x;
-})
+const relativize = require('./utils/relativize');
 
 module.exports = function reduce(reduceRoutines, compilation, done) {
   const { compilerOptions, processor, refinedDocuments } = compilation;

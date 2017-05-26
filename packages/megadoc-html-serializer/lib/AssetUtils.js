@@ -85,7 +85,8 @@ module.exports = function AssetUtils(config) {
             console.error(
               "ERROR: you are attempting to overwrite a directory destination! " +
               "This is most likely a configuration error, like using a rewrite " +
-              "condition."
+              "condition.\n\n" +
+              "Destination: " + filePath
             );
 
             return 'ERR_FILE_EXISTS';

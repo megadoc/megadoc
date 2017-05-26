@@ -45,7 +45,7 @@ function TemplateRealizer(corpus, config) {
     return assign({}, region, {
       outlets: region.outlets
         .filter(x => {
-          return !x.match || LayoutEngine.match(x, globalScopeWithPathname);
+          return !x.match || LayoutEngine.match(x.match, globalScopeWithPathname);
         })
         .map(function(x) {
           return assign({}, x, { scope: getOutletScope(x, globalScope) });

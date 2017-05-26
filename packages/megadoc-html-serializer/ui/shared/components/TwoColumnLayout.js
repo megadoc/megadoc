@@ -49,6 +49,7 @@ const TwoColumnLayout = React.createClass({
   propTypes: {
     children: React.PropTypes.any,
     resizable: PropTypes.bool,
+    fixed: PropTypes.bool,
     collapsible: PropTypes.bool,
   },
 
@@ -97,7 +98,8 @@ const TwoColumnLayout = React.createClass({
         className={classSet({
           "two-column-layout": true,
           "two-column-layout--inverted": inverted,
-          "two-column-layout--with-nav": !!nav
+          "two-column-layout--with-nav": !!nav,
+          "two-column-layout--fixed": !!this.props.fixed,
         })}
       >
         <div

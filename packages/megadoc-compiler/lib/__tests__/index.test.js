@@ -67,15 +67,24 @@ describe("megadoc-compiler::Compiler", function() {
   });
 
   it('works with a previous compilation', function(done) {
+    fileSuite.createFile('lib/a.js', `console.log("A");`);
+
     const parser = require(fileSuite.join('processor/parseFn.js'))
     const parse = sinon.spy(parser, '__impl__')
     const config = {
       assetRoot: fileSuite.getRootDirectory(),
-      sources: [{
-        id: 'test-processor',
-        include: fileSuite.join('lib/**/*.md'),
-        processor: [ processorFile.path, {} ]
-      }],
+      sources: [
+        {
+          id: 'test-processor',
+          include: fileSuite.join('lib/**/*.md'),
+          processor: [ processorFile.path, {} ]
+        },
+        {
+          id: 'other-test-processor',
+          include: fileSuite.join('lib/**/*.js'),
+          processor: [ processorFile.path, {} ]
+        }
+      ],
     }
 
     compile(config, function(err, prevCompilations) {
@@ -84,7 +93,7 @@ describe("megadoc-compiler::Compiler", function() {
       }
 
       assert.ok(Array.isArray(prevCompilations));
-      assert.equal(prevCompilations.length, 1)
+      assert.equal(prevCompilations.length, 2)
 
       assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/a.md'));
       assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/b.md'));

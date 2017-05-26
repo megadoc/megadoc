@@ -23,6 +23,7 @@ module.exports = function generateRuntimeConfig(config, assets) {
     pluginNames: assets.pluginScripts.map(getPluginName),
 
     resizableSidebar: !!config.resizableSidebar,
+    fixedSidebar: !!config.fixedSidebar,
 
     scrollSpying: !!config.scrollSpying,
     sourceStyleSheets: assets.styleSheets,

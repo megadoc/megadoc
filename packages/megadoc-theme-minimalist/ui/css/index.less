@@ -154,27 +154,18 @@ pre[class*="language-"] {
     }
   }
 
-  .root--with-multi-page-layout .two-column-layout__left {
+  .root--with-static-sidebar .two-column-layout__left {
     width: 280px !important;
+  }
 
-    &:before {
-      content: '';
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      width: 280px;
-      z-index: -1;
-    }
+  .root--with-static-sidebar .two-column-layout__right {
+    margin-left: 280px !important;
   }
 
   .layout__sidebar-header {
     opacity: 0.5;
     letter-spacing: 5px;
     font-weight: 700;
-  }
-
-  .root--with-multi-page-layout .two-column-layout__right {
-    margin-left: 280px !important;
   }
 
   .root--with-multi-page-layout .two-column-layout__left .resizable-panel__content {

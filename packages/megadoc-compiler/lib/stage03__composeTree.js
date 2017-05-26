@@ -1,5 +1,5 @@
 const { builders: b, dumpNodeFilePath } = require('megadoc-corpus');
-const { indexBy, prop } = require('./utils');
+const R = require('ramda');
 
 module.exports = function composeTree({
   compilerOptions,
@@ -9,7 +9,7 @@ module.exports = function composeTree({
 }) {
   // console.log("[D] Composing tree of %d nodes", compilation.documents.length);
 
-  const documentMap = indexBy(prop('id'), documents);
+  const documentMap = R.indexBy(R.prop('id'), documents);
   const documentChildren = {};
   const documentParents = {};
   const namespaceAttributes = {};
@@ -105,11 +105,9 @@ module.exports = function composeTree({
     }
   });
 
-  const name = namespaceAttributes.name || id;
-
   const tree = b.namespace({
     id,
-    name,
+    name: namespaceAttributes.name || id,
     title: namespaceAttributes.title || null,
     meta: namespaceAttributes.meta || {},
     config: namespaceAttributes.config || null,

@@ -108,7 +108,11 @@ function FileBasedURIGenerator(config) {
     if (shouldIgnore(node)) {
       return node.type === 'DocumentEntity' ?
         node.meta.href :
-        ensureHasExtension(node.meta.href)
+        ensureHasExtension(
+          ensureHasValidFilename(
+            node.meta.href
+          )
+        )
       ;
     }
 
@@ -181,6 +185,15 @@ function FileBasedURIGenerator(config) {
     if (s) {
       return s.match(RE) ? s : s + extension;
     }
+  }
+}
+
+function ensureHasValidFilename(x) {
+  if (x === '/' || x === '') {
+    return '/index.html';
+  }
+  else {
+    return x;
   }
 }
 

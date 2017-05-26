@@ -3,6 +3,7 @@ const classSet = require('utils/classSet');
 const Banner = require('./Layout__Banner');
 const LayoutScreen = require('./Layout__Screen');
 const scrollToTop = require('utils/scrollToTop');
+const { PropTypes } = React;
 
 const { node, shape, string, arrayOf, array, object, bool, } = React.PropTypes;
 const Link = shape({
@@ -31,15 +32,19 @@ const Layout = React.createClass({
       namespaceNode: object,
     }),
 
-    banner: bool,
-    fixedSidbar: bool,
-    bannerLinks: arrayOf(Link),
+    config: PropTypes.shape({
+      fixedSidebar: PropTypes.bool,
+
+      layoutOptions: PropTypes.shape({
+        banner: bool,
+        bannerLinks: arrayOf(Link),
+      })
+    }),
   },
 
   getDefaultProps() {
     return {
       banner: true,
-      fixedSidbar: true,
       bannerLinks: [],
     };
   },
@@ -53,22 +58,23 @@ const Layout = React.createClass({
   },
 
   render() {
-    const { template } = this.props;
-    const config = this.props;
+    const { template, config } = this.props;
+    const { layoutOptions } = config;
     const className = classSet({
       'root': true,
       'root--with-multi-page-layout': true,
-      'root--with-fixed-sidebar': config.fixedSidbar,
       'root--with-two-column-layout': template.hasSidebarElements,
-      'root--with-banner': config.banner,
-      'root--without-banner': !config.banner,
+      'root--with-fixed-sidebar': config.fixedSidebar,
+      'root--with-static-sidebar': !config.fixedSidebar,
+      'root--with-banner': layoutOptions.banner,
+      'root--without-banner': !layoutOptions.banner,
     });
 
     return (
       <div className={className}>
-        {config.banner && (
+        {layoutOptions.banner && (
           <Banner
-            links={config.bannerLinks || []}
+            links={layoutOptions.bannerLinks || []}
             currentPath={this.props.pathname}
           />
         )}
