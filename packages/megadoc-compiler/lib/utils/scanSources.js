@@ -17,8 +17,8 @@ const wrapArray = require('./wrapArray');
  * @return {String[]}
  *         A list of matched files.
  */
-module.exports = function globAndFilter(pattern, include, _exclude) {
-  const globOptions = { nodir: true };
+module.exports = function globAndFilter(pattern, include, _exclude, rootDir) {
+  const globOptions = { nodir: true, absolute: true, cwd: rootDir || process.cwd() };
   const exclude = wrapArray(_exclude);
 
   return wrapArray(include).reduce(function(fileList, sourceEntry) {

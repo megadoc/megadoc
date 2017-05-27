@@ -12,7 +12,6 @@ describe('megadoc::Components::Root', function() {
   const suite = reactSuite(this, stubAppContext(stubRoutingContext(Subject)), () => {
     const config = {
       redirect: {},
-      layoutOptions: {},
     };
 
     const documentURI = new DocumentURI({});

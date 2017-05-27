@@ -34,17 +34,13 @@ const Layout = React.createClass({
 
     config: PropTypes.shape({
       fixedSidebar: PropTypes.bool,
-
-      layoutOptions: PropTypes.shape({
-        banner: bool,
-        bannerLinks: arrayOf(Link),
-      }).isRequired,
+      banner: bool,
+      bannerLinks: arrayOf(Link),
     }).isRequired,
   },
 
   getDefaultProps() {
     return {
-      banner: true,
       bannerLinks: [],
     };
   },
@@ -59,22 +55,21 @@ const Layout = React.createClass({
 
   render() {
     const { template, config } = this.props;
-    const { layoutOptions } = config;
     const className = classSet({
       'root': true,
       'root--with-multi-page-layout': true,
       'root--with-two-column-layout': template.hasSidebarElements,
       'root--with-fixed-sidebar': config.fixedSidebar,
       'root--with-static-sidebar': !config.fixedSidebar,
-      'root--with-banner': layoutOptions.banner,
-      'root--without-banner': !layoutOptions.banner,
+      'root--with-banner': config.banner,
+      'root--without-banner': !config.banner,
     });
 
     return (
       <div className={className}>
-        {layoutOptions.banner && (
+        {config.banner && (
           <Banner
-            links={layoutOptions.bannerLinks || []}
+            links={config.bannerLinks || []}
             currentPath={this.props.pathname}
           />
         )}

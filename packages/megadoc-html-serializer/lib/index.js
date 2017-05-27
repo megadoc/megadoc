@@ -10,8 +10,9 @@ const reduceRoutines = require('./reduceRoutines');
 const defaults = require('./config');
 const RendererUtils = require('./render/RendererUtils');
 const { compile: compilePlugin } = require('./emit/PluginCompiler');
+const { omit } = require('lodash');
 
-function HTMLSerializer(compilerConfig, userSerializerOptions) {
+function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
   this.compilerConfig = {
     assetRoot: compilerConfig.assetRoot,
     outputDir: compilerConfig.outputDir,
@@ -21,7 +22,11 @@ function HTMLSerializer(compilerConfig, userSerializerOptions) {
   };
 
   this.assetUtils = new AssetUtils(this.compilerConfig);
-  this.config = Object.assign({}, defaults, userSerializerOptions);
+  this.config = Object.assign({},
+    defaults,
+    omit(userSerializerOptions, [ 'layoutOptions' ]),
+    userSerializerOptions.layoutOptions
+  );
   this.corpusVisitor = NodeURIDecorator(this.config);
 
   this.state = {

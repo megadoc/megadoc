@@ -4,13 +4,11 @@ const { assign } = require('lodash');
 const { getRegionsForDocument } = LayoutEngine;
 
 function TemplateRealizer(corpus, config) {
-  const layoutConfig = config.layoutOptions || {};
-
   return function(globalScope, pathname) {
     const regions = Regions(globalScope, {
       // we'll need the pathname for filtering outlets:
       pathname: pathname,
-      customLayouts: layoutConfig.customLayouts,
+      customLayouts: config.customLayouts,
     });
 
     return {

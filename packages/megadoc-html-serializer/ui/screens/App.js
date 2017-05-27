@@ -56,7 +56,7 @@ const App = React.createClass({
 
     let locationAPI;
 
-    if (config.layoutOptions && config.layoutOptions.singlePageMode) {
+    if (config.singlePageMode) {
       locationAPI = HashLocation;
     }
     else if (this.props.location.protocol === 'file:') {

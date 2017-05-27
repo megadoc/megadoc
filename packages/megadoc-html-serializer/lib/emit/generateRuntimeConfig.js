@@ -11,9 +11,13 @@ module.exports = function generateRuntimeConfig(config, assets) {
 
     footer: config.footer,
 
-    layoutOptions: config.layoutOptions,
+    banner: config.banner,
+    bannerLinks: config.bannerLinks,
+    singlePageMode: config.singlePageMode,
+    customLayouts: config.customLayouts,
 
     redirect: config.redirect,
+    rewrite: config.rewrite,
 
     metaDescription: config.metaDescription,
     motto: config.motto,

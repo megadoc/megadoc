@@ -3,12 +3,12 @@ const invariant = require('invariant');
 const { dumpNodeFilePath } = require('megadoc-corpus');
 
 module.exports = function NodeURIDecorator(config) {
-  var g = config.layoutOptions.singlePageMode ?
+  var g = config.singlePageMode ?
     HashBasedURIGenerator(config) :
     FileBasedURIGenerator(config)
   ;
 
-  var layoutConfig = config.layoutOptions || {};
+  var layoutConfig = config;
   var redirectMap = config.redirect || {};
   var rewriteMap = layoutConfig.rewrite || config.rewrite || {};
 

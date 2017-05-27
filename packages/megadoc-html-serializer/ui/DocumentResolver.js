@@ -27,20 +27,17 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
 
 
   const href = this.getProtocolAgnosticPathName(location);
+  const overriddenDocumentLink = LayoutEngine.getDocumentOverride(href, config);
 
-  if (config && config.layoutOptions) {
-    const overriddenDocumentLink = LayoutEngine.getDocumentOverride(href, config.layoutOptions);
+  if (overriddenDocumentLink) {
+    node = getByUIDOrURI(corpus, overriddenDocumentLink);
 
-    if (overriddenDocumentLink) {
-      node = getByUIDOrURI(corpus, overriddenDocumentLink);
-
-      if (!node) {
-        console.warn(
-          "A document '%s' specified as an override for the url '%s' could " +
-          "not be found. This is most likely a configuration error.",
-          overriddenDocumentLink, href
-        );
-      }
+    if (!node) {
+      console.warn(
+        "A document '%s' specified as an override for the url '%s' could " +
+        "not be found. This is most likely a configuration error.",
+        overriddenDocumentLink, href
+      );
     }
   }
 

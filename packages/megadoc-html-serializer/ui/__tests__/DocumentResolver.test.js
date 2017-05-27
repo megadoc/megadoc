@@ -33,21 +33,19 @@ describe('megadoc::DocumentResolver', function() {
       });
     });
 
-    context.skip('when an override exists for the current URL in layoutOptions', function() {
+    context.skip('when an override exists for the current URL in customLayouts', function() {
       it('resolves with the document specified by its UID', function() {
         const location = HTTPLocation({
           pathname: '/api.html'
         });
 
         const config = {
-          layoutOptions: {
-            customLayouts: [
-              {
-                match: { by: 'url', on: '*' },
-                using: 'api/Database'
-              }
-            ]
-          }
+          customLayouts: [
+            {
+              match: { by: 'url', on: '*' },
+              using: 'api/Database'
+            }
+          ]
         }
 
         tap(subject.resolveFromLocation(location, config), x => {
@@ -61,14 +59,12 @@ describe('megadoc::DocumentResolver', function() {
         });
 
         const config = {
-          layoutOptions: {
-            customLayouts: [
-              {
-                match: { by: 'url', on: '/foo.html' },
-                using: '/api/Database.html'
-              }
-            ]
-          }
+          customLayouts: [
+            {
+              match: { by: 'url', on: '/foo.html' },
+              using: '/api/Database.html'
+            }
+          ]
         }
 
         tap(subject.resolveFromLocation(location, config), x => {

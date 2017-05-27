@@ -34,7 +34,6 @@ describe('megadoc::Components::Layout', function() {
     scope: {},
 
     config: {
-      layoutOptions: {},
     }
   });
 

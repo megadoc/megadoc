@@ -102,7 +102,7 @@ const Root = React.createClass({
         {config.tooltipPreviews && (
           <Inspector
             corpus={this.props.corpus}
-            inSinglePageMode={config.layoutOptions && config.layoutOptions.singlePageMode}
+            inSinglePageMode={config.singlePageMode}
           />
         )}
 

@@ -100,120 +100,118 @@ config.serializer = [ 'megadoc-html-serializer', {
     },
   },
 
-  layoutOptions: {
-    rewrite: {
-      // 'README.md': '/index.html',
-      // 'CHANGES.md': '/changes.html',
+  rewrite: {
+    // 'README.md': '/index.html',
+    // 'CHANGES.md': '/changes.html',
+  },
+
+  bannerLinks: [
+    {
+      text: 'Usage',
+      href: '/usage/readme',
     },
 
-    bannerLinks: [
-      {
-        text: 'Usage',
-        href: '/usage/readme',
-      },
+    {
+      text: 'Plugins',
+      links: [
+        {
+          text: 'Dot (graphs)',
+          href: '/plugins/megadoc-plugin-dot/readme.html',
+        },
 
-      {
-        text: 'Plugins',
-        links: [
-          {
-            text: 'Dot (graphs)',
-            href: '/plugins/megadoc-plugin-dot/readme.html',
-          },
+        {
+          text: 'Git',
+          href: '/plugins/megadoc-plugin-git/readme.html',
+        },
 
-          {
-            text: 'Git',
-            href: '/plugins/megadoc-plugin-git/readme.html',
-          },
+        {
+          text: 'JavaScript',
+          href: '/plugins/megadoc-plugin-js/readme.html',
+        },
+        {
+          text: 'JavaScript React',
+          href: '/plugins/megadoc-plugin-react/readme.html',
+        },
 
-          {
-            text: 'JavaScript',
-            href: '/plugins/megadoc-plugin-js/readme.html',
-          },
-          {
-            text: 'JavaScript React',
-            href: '/plugins/megadoc-plugin-react/readme.html',
-          },
+        {
+          text: 'Markdown',
+          href: '/plugins/megadoc-plugin-markdown/readme.html',
+        },
 
-          {
-            text: 'Markdown',
-            href: '/plugins/megadoc-plugin-markdown/readme.html',
-          },
+        {
+          text: 'Lua',
+          href: '/plugins/megadoc-plugin-lua/readme.html',
+        },
 
-          {
-            text: 'Lua',
-            href: '/plugins/megadoc-plugin-lua/readme.html',
-          },
+        {
+          text: 'YARD-API',
+          href: '/plugins/megadoc-plugin-yard-api/readme.html',
+        },
 
-          {
-            text: 'YARD-API',
-            href: '/plugins/megadoc-plugin-yard-api/readme.html',
-          },
+        {
+          text: 'Reference Graph',
+          href: '/plugins/megadoc-plugin-reference-graph/readme.html',
+        },
 
-          {
-            text: 'Reference Graph',
-            href: '/plugins/megadoc-plugin-reference-graph/readme.html',
-          },
+        {
+          text: 'Theme - Qt',
+          href: '/plugins/megadoc-theme-qt/readme.html',
+        },
 
-          {
-            text: 'Theme - Qt',
-            href: '/plugins/megadoc-theme-qt/readme.html',
-          },
+        {
+          text: 'Theme - gitbooks.io',
+          href: '/plugins/megadoc-theme-gitbooks/readme.html',
+        },
+      ]
+    },
 
-          {
-            text: 'Theme - gitbooks.io',
-            href: '/plugins/megadoc-theme-gitbooks/readme.html',
-          },
-        ]
-      },
+    {
+      text: 'Developers',
+      links: [
+        {
+          text: 'Handbook',
+          href: '/dev/handbook/readme.html',
+        },
 
-      {
-        text: 'Developers',
-        links: [
-          {
-            text: 'Handbook',
-            href: '/dev/handbook/readme.html',
-          },
+        {
+          text: 'API',
+          href: '/dev/api',
+        },
 
-          {
-            text: 'API',
-            href: '/dev/api',
-          },
+        {
+          text: 'Corpus',
+          href: '/dev/corpus/readme.html',
+        },
+      ]
+    },
 
-          {
-            text: 'Corpus',
-            href: '/dev/corpus/readme.html',
-          },
-        ]
-      },
+    {
+      text: 'Changes',
+      href: '/changes',
+    },
 
-      {
-        text: 'Changes',
-        href: '/changes',
-      },
+  ],
 
-    ],
-
-    customLayouts: [
-      {
-        match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changes' ] },
-        regions: [
-          {
-            name: 'Layout::Content',
-            options: { framed: true },
-            outlets: [
-              { name: 'Markdown::Document' }
-            ]
-          },
-          {
-            name: 'Layout::Sidebar',
-            outlets: [
-              { name: 'Markdown::DocumentTOC' }
-            ]
-          }
-        ]
-      },
-    ]
-  },
+  customLayouts: [
+    {
+      match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changes' ] },
+      regions: [
+        {
+          name: 'Layout::Content',
+          options: { framed: true },
+          outlets: [
+            { name: 'Markdown::Document' }
+          ]
+        },
+        {
+          name: 'Layout::Sidebar',
+          outlets: [
+            { name: 'Markdown::DocumentTOC' }
+          ]
+        }
+      ]
+    },
+  ],
 }]
 
 addPackageDocumentation('megadoc-corpus', {
@@ -277,7 +275,7 @@ function addPackageDocumentation(pluginName, options) {
     }]
   });
 
-  // config.serializer[1].layoutOptions.customLayouts.push({
+  // config.serializer[1].customLayouts.push({
   //   match: { by: 'url', on: url },
   //   regions: [
   //     {

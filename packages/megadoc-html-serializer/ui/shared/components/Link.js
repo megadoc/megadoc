@@ -13,9 +13,7 @@ const Link = React.createClass({
     }).isRequired,
 
     config: shape({
-      layoutOptions: shape({
-        singlePageMode: bool,
-      }),
+      singlePageMode: bool,
     }),
   },
 
@@ -94,7 +92,7 @@ const Link = React.createClass({
   },
 
   inSinglePageMode() {
-    return !!get(this.context, 'config.layoutOptions.singlePageMode');
+    return !!get(this.context, 'config.singlePageMode');
   }
 });
 

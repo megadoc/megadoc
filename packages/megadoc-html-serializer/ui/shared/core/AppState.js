@@ -7,7 +7,7 @@ const createAppState = function(config) {
     layout: config.layout,
     spotlightOpen: false,
     invertedTCL: false,
-    singlePageMode: config.layoutOptions && config.layoutOptions.singlePageMode,
+    singlePageMode: config.singlePageMode,
   };
 
   let AppState = EventEmitter([ 'change', 'layoutChange' ]);

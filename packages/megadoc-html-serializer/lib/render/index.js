@@ -14,14 +14,14 @@ module.exports = function render({ serializer, compilations }, done) {
   });
 
   const linkResolver = new LinkResolver(corpus, {
-    relativeLinks: !serializerConfig.layoutOptions.singlePageMode,
+    relativeLinks: !serializerConfig.singlePageMode,
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
   });
 
   const markdownRenderer = new Renderer({
     launchExternalLinksInNewTabs: serializerConfig.launchExternalLinksInNewTabs,
-    shortURLs: !serializerConfig.layoutOptions.singlePageMode,
+    shortURLs: !serializerConfig.singlePageMode,
     syntaxHighlighting: serializerConfig.syntaxHighlighting,
   });
 

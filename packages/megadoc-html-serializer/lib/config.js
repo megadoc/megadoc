@@ -36,7 +36,7 @@ module.exports = {
   emitFiles: true,
   emittedFileExtension: '.html',
 
-  runtimeOutputPath: '.megadoc',
+  runtimeOutputPath: 'assets',
 
   /**
    * @property {String}
@@ -73,31 +73,27 @@ module.exports = {
    */
   rewrite: {},
 
+  banner: true,
+
   /**
-   * @property {Object}
+   * @property {Boolean}
+   *
+   * Launch megadoc into "single-page" mode where you want to present all
+   * the contents in a single page. This flag MUST be turned in order for
+   * links to work online and offline.
+   *
+   * See the [guides/single-page-md Single Page Mode guide]() for more information.
    */
-  layoutOptions: {
+  singlePageMode: false,
 
-    /**
-     * @property {Boolean}
-     *
-     * Launch megadoc into "single-page" mode where you want to present all
-     * the contents in a single page. This flag MUST be turned in order for
-     * links to work online and offline.
-     *
-     * See the [guides/single-page-md Single Page Mode guide]() for more information.
-     */
-    singlePageMode: false,
-
-    /**
-     * @property {Array.<BannerLink>}
-     *
-     * @typedef {BannerLink}
-     * @property {String} text
-     * @property {String} href
-     */
-    bannerLinks: []
-  },
+  /**
+   * @property {Array.<BannerLink>}
+   *
+   * @typedef {BannerLink}
+   * @property {String} text
+   * @property {String} href
+   */
+  bannerLinks: [],
 
   /**
    * @property {Boolean}

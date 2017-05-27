@@ -9,7 +9,7 @@ const blankProcessor = require('./blankProcessor');
 module.exports = function createCompilation(optionWhitelist, state, source) {
   const { config, runOptions } = state;
   const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
-  const files = getSourceFiles({ runOptions, source })
+  const files = getSourceFiles({ assetRoot: config.assetRoot, runOptions, source })
   const spec = require(processorEntry.name);
   const paths = extractPaths(spec);
   const configure = require(paths.configureFnPath);
@@ -61,8 +61,8 @@ function extractPaths(spec) {
   }
 }
 
-function getSourceFiles({ runOptions, source }) {
-  const files = scanSources(source.pattern, source.include, source.exclude);
+function getSourceFiles({ assetRoot, runOptions, source }) {
+  const files = scanSources(source.pattern, source.include, source.exclude, assetRoot);
 
   return runOptions.changedSources ?
     files.filter(x => runOptions.changedSources[x] === true) :

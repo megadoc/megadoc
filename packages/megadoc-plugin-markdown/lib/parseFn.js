@@ -5,11 +5,12 @@ const { RendererUtils } = require('megadoc-html-serializer');
 const parseTitle = require('./utils/parseTitle');
 const strHumanize = require('./utils/strHumanize');
 
-module.exports = function parseFn(context, filePath, done) {
+module.exports = function parseFn(context, absoluteFilePath, done) {
   const config = context.options;
+  const filePath = absoluteFilePath.replace(context.compilerOptions.assetRoot + '/','')
   const entry = {
     filePath: filePath,
-    source: fs.readFileSync(filePath, 'utf-8')
+    source: fs.readFileSync(absoluteFilePath, 'utf-8')
   };
 
   const extName = path.extname(entry.filePath);

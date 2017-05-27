@@ -60,7 +60,7 @@ describe('LinkResolver', function() {
     );
 
     corpus.traverse(NodeURIDecorator({
-      layoutOptions: { singlePageMode: false }
+      singlePageMode: false
     }));
 
     resolver = new LinkResolver(corpus);
