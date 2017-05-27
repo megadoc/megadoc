@@ -92,7 +92,6 @@ function createMegadoc(config) {
     'plugins',
     'startingDocumentUID',
     'startingDocumentHref',
-    'pluginConfigs'
   ]);
 
   const appState = AppState(config);

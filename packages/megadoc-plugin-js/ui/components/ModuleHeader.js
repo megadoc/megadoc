@@ -3,14 +3,9 @@ const Outlet = require('components/Outlet');
 const Heading = require('components/Heading');
 const HeadingAnchor = require('components/HeadingAnchor');
 const HighlightedText = require('components/HighlightedText');
-const ConfigReceiver = require('components/ConfigReceiver');
 const K = require('../constants');
 const DocClassifier = require('../utils/DocClassifier');
 const { PropTypes } = React;
-
-const ConfigType = {
-  assetRoot: PropTypes.string
-};
 
 const ModuleHeader = React.createClass({
   propTypes: {
@@ -19,7 +14,6 @@ const ModuleHeader = React.createClass({
     headerLevel: PropTypes.string,
     generateAnchor: PropTypes.bool,
     showNamespace: PropTypes.bool,
-    config: PropTypes.shape(ConfigType),
   },
 
   getDefaultProps() {
@@ -93,7 +87,7 @@ const ModuleHeader = React.createClass({
 
         {this.props.showSourcePaths && documentNode.filePath && (
           <p className="class-view__module-filepath">
-            Defined in: <code>{getRelativeFilePath(this.props.config.assetRoot, documentNode.filePath)}</code>
+            Defined in: <code>{documentNode.filePath}</code>
           </p>
         )}
 
@@ -105,15 +99,6 @@ const ModuleHeader = React.createClass({
   }
 });
 
-function getRelativeFilePath(assetRoot, filePath) {
-  if (filePath.indexOf(assetRoot) === 0) {
-    return filePath.slice(assetRoot.length + 1);
-  }
-  else {
-    return filePath;
-  }
-}
-
 function hasMixinTargets(node) {
   return (
     node.properties &&
@@ -122,4 +107,4 @@ function hasMixinTargets(node) {
   );
 }
 
-module.exports = ConfigReceiver(ModuleHeader, ConfigType);
+module.exports = ModuleHeader;

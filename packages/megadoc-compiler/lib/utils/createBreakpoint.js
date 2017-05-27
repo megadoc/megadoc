@@ -5,13 +5,15 @@ const BreakpointError = function(result) {
 
 BreakpointError.prototype = Object.create(Error);
 
-module.exports = function createBreakpoint(breakpoint) {
+module.exports = function createBreakpoint(breakpoint, tap = Function.prototype) {
   return function defineBreakpoint(stage) {
     const shouldBreak = breakpoint && breakpoint <= stage || false;
 
     return function createBreakableFunction(fn) {
       if (shouldBreak) {
         return function(x, done) {
+          tap(x);
+
           done(new BreakpointError(x));
         }
       }

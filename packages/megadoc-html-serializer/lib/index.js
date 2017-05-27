@@ -8,9 +8,15 @@ const purge = require('./purge');
 const renderRoutines = require('./renderRoutines');
 const reduceRoutines = require('./reduceRoutines');
 const defaults = require('./config');
-const RendererUtils = require('./render/RendererUtils');
-const { compile: compilePlugin } = require('./emit/PluginCompiler');
 const { omit } = require('lodash');
+
+// public exports:
+const { compile: compilePlugin } = require('./emit/PluginCompiler');
+const RendererUtils = require('./render/RendererUtils');
+
+// public exports needed by megadoc-html-live-server:
+const generateInlinePlugin = require('./emit/generateInlinePlugin');
+const K = require('./constants');
 
 function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
   this.compilerConfig = {
@@ -87,5 +93,7 @@ HTMLSerializer.prototype.stop = function(done) {
 
 HTMLSerializer.RendererUtils = RendererUtils;
 HTMLSerializer.compilePlugin = compilePlugin;
+HTMLSerializer.generateInlinePlugin = generateInlinePlugin;
+HTMLSerializer.constants = K;
 
 module.exports = HTMLSerializer;

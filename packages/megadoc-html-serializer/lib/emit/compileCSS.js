@@ -1,60 +1,19 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const K = require('../constants');
 const ROOT = K.ROOT;
+const createCSSCompiler = require(path.join(ROOT, 'webpack/createCSSCompiler'))
 
 module.exports = function compileCSS(config, state, done) {
-  const files = state.assets.styleSheets;
-  const assetUtils = state.assetUtils;
-  const lessQuery = JSON.stringify({
-    modifyVars: state.assets.styleOverrides
-  });
-
-  const webpackConfig = {
-    output: {
-      path: assetUtils.getOutputPath(config.runtimeOutputPath),
-      filename: K.STYLE_BUNDLE,
-      jsonpFunction: 'webpackJsonp_CSS'
-    },
-
-    devtool: null,
-    entry: files,
-
-    resolve: {
-      extensions: [ '', '.less', '.css' ],
-      modulesDirectories: [ 'node_modules' ],
-      fallback: path.join(ROOT, 'ui/css')
-    },
-
-    resolveLoader: {
-      root: path.join(ROOT, 'node_modules'),
-    },
-
-    module: {
-      loaders: [
-        {
-          test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-          loader: 'url-loader?limit=100000'
-        },
-
-        {
-          test: /\.less$/,
-          loader: ExtractTextPlugin.extract(
-            'style', 'css?importLoaders=1!less?' + lessQuery
-          )
-        },
-      ]
-    },
-
-    plugins: [
-      new webpack.NoErrorsPlugin(),
-      new ExtractTextPlugin(K.STYLE_BUNDLE),
-    ]
-  };
+  const webpackConfig = createCSSCompiler({
+    files: state.assets.styleSheets,
+    outputDir: state.assetUtils.getOutputPath(config.runtimeOutputPath),
+    outputFileName: K.STYLE_BUNDLE,
+    styleOverrides: state.assets.styleOverrides,
+  })
 
   if (config.verbose) {
-    console.log('Compiling CSS assets:\n%s', JSON.stringify(files, null, 2));
+    console.log('Compiling CSS assets:\n%s', JSON.stringify(webpackConfig.entry, null, 2));
   }
 
   webpack(webpackConfig, function(err, stats) {

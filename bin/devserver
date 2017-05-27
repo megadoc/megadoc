@@ -32,4 +32,4 @@ if [ ! -d "./packages/megadoc-html-serializer/ui" ]; then
   exit 1
 fi
 
-exec node ./packages/megadoc-html-serializer/server.js $(pwd) $@
+exec node ./packages/megadoc-html-live-server/lib/index.js $(pwd) $@

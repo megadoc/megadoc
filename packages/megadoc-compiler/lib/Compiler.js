@@ -41,51 +41,16 @@ const mergeWith = R.curry (function mergeWith(source, x) {
   return Object.assign({}, source, x)
 })
 
-const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 1;
-const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 2;
-const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 3;
-const BREAKPOINT_RENDER             = exports.BREAKPOINT_RENDER             = 4;
-const BREAKPOINT_REDUCE_TREE        = exports.BREAKPOINT_REDUCE_TREE        = 5;
-const BREAKPOINT_COMPOSE_TREE       = exports.BREAKPOINT_COMPOSE_TREE       = 6;
-const BREAKPOINT_MERGE_CHANGE_TREE  = exports.BREAKPOINT_MERGE_CHANGE_TREE  = 7;
-const BREAKPOINT_RENDER_CORPUS      = exports.BREAKPOINT_RENDER_CORPUS      = 8;
-const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 9;
-
-const compile = asyncSequence([
-  asyncify(
-    assocWith
-    (
-      'config'
-    )
-    (
-      R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
-    )
-  ),
-  createSerializer,
-  asyncify(
-    assocWith
-    (
-      'compilations'
-    )
-    (
-      R.partial(createCompilations, [
-        {
-          optionWhitelist: [
-            'assetRoot',
-            'outputDir',
-            'tmpDir',
-            'verbose',
-            'strict',
-            'debug',
-          ]
-        }
-      ])
-    )
-  ),
-  startSerializer,
-  compileSources,
-  generateCorpus,
-])
+const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE              = 1;
+const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
+const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 3;
+const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 4;
+const BREAKPOINT_RENDER             = exports.BREAKPOINT_RENDER             = 5;
+const BREAKPOINT_REDUCE_TREE        = exports.BREAKPOINT_REDUCE_TREE        = 6;
+const BREAKPOINT_COMPOSE_TREE       = exports.BREAKPOINT_COMPOSE_TREE       = 7;
+const BREAKPOINT_MERGE_CHANGE_TREE  = exports.BREAKPOINT_MERGE_CHANGE_TREE  = 8;
+const BREAKPOINT_RENDER_CORPUS      = exports.BREAKPOINT_RENDER_CORPUS      = 9;
+const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 10;
 
 /**
  * @module Compiler
@@ -111,6 +76,46 @@ exports.run = function run(userConfig, runOptions, done) {
   }
 
   const teardownRoutines = [];
+  const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
+
+  const compile = asyncSequence([
+    asyncify(
+      assocWith
+      (
+        'config'
+      )
+      (
+        R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
+      )
+    ),
+    createSerializer,
+    asyncify(
+      assocWith
+      (
+        'compilations'
+      )
+      (
+        R.partial(createCompilations, [
+          {
+            optionWhitelist: [
+              'assetRoot',
+              'outputDir',
+              'tmpDir',
+              'verbose',
+              'strict',
+              'debug',
+            ]
+          }
+        ])
+      )
+    ),
+    startSerializer,
+    defineBreakpoint(BREAKPOINT_COMPILE)
+    (
+      compileSources
+    ),
+    generateCorpus,
+  ])
 
   compile({
     userConfig,
@@ -130,7 +135,7 @@ exports.run = function run(userConfig, runOptions, done) {
 
 function compileSources(state, done) {
   const { runOptions, serializer, compilations } = state;
-  const defineBreakpoint = createBreakpoint(runOptions.breakpoint);
+  const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
   const prevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
   const findPrevCompilation = compilation => prevCompilations.filter(x => x.id === compilation.id)
 
@@ -210,7 +215,7 @@ function compileSources(state, done) {
 
 function generateCorpus(state, done) {
   const { withTrees, runOptions, serializer } = state;
-  const defineBreakpoint = createBreakpoint(runOptions.breakpoint);
+  const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
 
   asyncSequence([
     defineBreakpoint(BREAKPOINT_RENDER_CORPUS)
