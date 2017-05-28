@@ -95,5 +95,6 @@ HTMLSerializer.RendererUtils = RendererUtils;
 HTMLSerializer.compilePlugin = compilePlugin;
 HTMLSerializer.generateInlinePlugin = generateInlinePlugin;
 HTMLSerializer.constants = K;
+HTMLSerializer.ClientSandbox = ClientSandbox;
 
 module.exports = HTMLSerializer;

@@ -68,6 +68,15 @@ module.exports = function configureWebpack({
         // no idea why we have to do this, otherwise react-hot-loader complains
         'react/lib/ReactMount': require.resolve('megadoc-html-serializer/node_modules/react-dom/lib/ReactMount.js'),
       }),
+
+      fallback: (baseWebpackConfig.resolve.fallback || []).concat([
+        path.join(
+          path.dirname(
+            require.resolve('megadoc-html-serializer/ui')
+          ),
+          'css'
+        ),
+      ])
     }),
   });
 }
@@ -134,20 +143,21 @@ function addReactHotLoader(loaders) {
 }
 
 function addInlineCSSLoader({ assets }, loaders) {
-  return loaders.map(function(loader) {
-    if (loader.id === 'less-loaders') {
-      return Object.assign({}, R.omit([ 'loader', 'query' ])(loader), {
-        loaders: [
-          'style-loader',
-          'css-loader?importLoaders=1',
-          'less-loader?' + JSON.stringify({
-            modifyVars: assets.styleOverrides
-          })
-        ]
-      });
-    }
-    else {
-      return loader;
-    }
-  });
+  return loaders.concat([
+    {
+      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+      loader: 'url-loader?limit=100000'
+    },
+
+    {
+      test: /\.less$/,
+      loaders: [
+        'style-loader',
+        'css-loader?importLoaders=1',
+        'less-loader?' + JSON.stringify({
+          modifyVars: assets.styleOverrides
+        })
+      ]
+    },
+  ]);
 }

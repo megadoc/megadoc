@@ -11,7 +11,7 @@ const loadRuntimeConfig = require('./loadRuntimeConfig');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
 const { run: compile, BREAKPOINT_COMPILE } = require('megadoc-compiler');
-const { constants: K } = require('megadoc-html-serializer');
+const { constants: K, ClientSandbox } = require('megadoc-html-serializer');
 const R = require('ramda');
 
 const run = async.seq(
@@ -32,6 +32,8 @@ const run = async.seq(
     let assets;
     let serializerConfig;
 
+    const restoreClientSandbox = stubClientSandbox();
+
     compile(state.compilerConfig, {
       breakpoint: BREAKPOINT_COMPILE,
       tap: compilationState => {
@@ -39,6 +41,8 @@ const run = async.seq(
         serializerConfig = compilationState.serializer.config;
       }
     }, function(err) {
+      restoreClientSandbox();
+
       if (err) {
         done(err);
       }
@@ -54,7 +58,7 @@ const run = async.seq(
   (state, done) => {
     console.log('Serving from:', state.contentBase);
 
-    start(state, function(err) {
+    startServer(state, function(err) {
       if (err) {
         done(err);
       }
@@ -83,7 +87,7 @@ run({
   }
 })
 
-function start({
+function startServer({
   assets,
   contentBase,
   host,
@@ -120,4 +124,22 @@ function start({
   app.use(serveStatic(contentBase, { etag: false }));
 
   http.createServer(app).listen(port, host, done);
+}
+
+
+function stubClientSandbox() {
+  const { start, stop } = ClientSandbox.prototype;
+
+  ClientSandbox.prototype.start = function(_, callback) {
+    callback();
+  }
+
+  ClientSandbox.prototype.stop = function(_, callback) {
+    callback();
+  }
+
+  return function restoreClientSandbox() {
+    ClientSandbox.prototype.stop = stop;
+    ClientSandbox.prototype.start = start;
+  }
 }

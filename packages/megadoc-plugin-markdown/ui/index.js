@@ -1,5 +1,5 @@
 const Storage = require('core/Storage');
-const K = require('constants');
+const K = require('./constants');
 Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
 
 const BrowserOutlet = require('./outlets/BrowserOutlet');
