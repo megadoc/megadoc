@@ -1,19 +1,24 @@
 const React = require('react');
-const moment = require('moment');
 const Icon = require('components/Icon');
 const ConfigReceiver = require('components/ConfigReceiver');
 const { PropTypes } = React;
 const ConfigType = {
   hotness: PropTypes.shape({
     count: PropTypes.number,
-    interval: PropTypes.string,
+    interval: PropTypes.oneOf([ 'days', 'weeks', 'months' ]),
   }),
 };
 
+const DAY_MS = 1000 * 60 * 60 * 24;
+const INTERVALS = {
+  'days': DAY_MS,
+  'weeks': DAY_MS * 7,
+  'months': DAY_MS * 30,
+}
 const HotItemIndicator = React.createClass({
   propTypes: {
     config: PropTypes.shape(ConfigType).isRequired,
-    timestamp: PropTypes.string.isRequired,
+    timestamp: PropTypes.number.isRequired,
   },
 
   render() {
@@ -31,10 +36,16 @@ const HotItemIndicator = React.createClass({
 });
 
 module.exports = ConfigReceiver(HotItemIndicator, ConfigType);
+module.exports.HotItemIndicator = HotItemIndicator;
 
 function isItemHot(hotness, commitTs) {
-  const since = moment().subtract(hotness.count, hotness.interval);
-  const ts = moment(new Date(commitTs * 1000));
+  if (!commitTs) {
+    return false;
+  }
 
-  return !ts.isBefore(since);
+  const duration = INTERVALS[hotness.interval] * hotness.count;
+  const ts = new Date(commitTs * 1000).getTime();
+  const now = new Date().getTime();
+
+  return now - ts < duration;
 }
