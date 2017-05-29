@@ -16,10 +16,12 @@ const emit = require('./stage05__emit');
 const parseConfig = require('./parseConfig');
 const BlankSerializer = require('./BlankSerializer');
 const createBreakpoint = require('./utils/createBreakpoint');
+const createProfiler = require('./utils/createProfiler');
 const R = require('ramda');
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
+const { builders } = require('megadoc-corpus');
 
 // String -> a -> {k: v} -> {k: v}
 const nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {
@@ -76,129 +78,191 @@ exports.run = function run(userConfig, runOptions, done) {
   }
 
   const teardownRoutines = [];
+  const profile = { benchmarks: [] };
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
+  const instrument = createProfiler({
+    enabled: runOptions.profile,
+    writeFn: x => profile.benchmarks.push(x)
+  });
 
   const compile = asyncSequence([
-    asyncify(
-      assocWith
-      (
-        'config'
-      )
-      (
-        R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
-      )
-    ),
-    createSerializer,
-    asyncify(
-      assocWith
-      (
-        'compilations'
-      )
-      (
-        R.partial(createCompilations, [
-          {
-            optionWhitelist: [
-              'assetRoot',
-              'outputDir',
-              'tmpDir',
-              'verbose',
-              'strict',
-              'debug',
-            ]
-          }
-        ])
-      )
-    ),
-    startSerializer,
-    defineBreakpoint(BREAKPOINT_COMPILE)
+    asyncify
     (
-      compileSources
+      mergeWith({ instrument })
     ),
-    generateCorpus,
+
+    instrument.async('boot:parse-config')
+    (
+      asyncify(
+        assocWith
+        (
+          'config'
+        )
+        (
+          R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
+        )
+      )
+    ),
+
+    instrument.async('boot:create-serializer')
+    (
+      createSerializer
+    ),
+
+    instrument.async('boot:create-compilations')
+    (
+      asyncify
+      (
+        assocWith
+        (
+          'compilations'
+        )
+        (
+          R.partial(createCompilations, [
+            {
+              optionWhitelist: [
+                'assetRoot',
+                'outputDir',
+                'tmpDir',
+                'verbose',
+                'strict',
+                'debug',
+              ]
+            }
+          ])
+        )
+      )
+    ),
+
+    instrument.async('boot:start-serializer')
+    (
+      startSerializer
+    ),
+
+    instrument.async('compile')
+    (
+      defineBreakpoint(BREAKPOINT_COMPILE)
+      (
+        compileTrees
+      )
+    ),
+
+    instrument.async('emit')
+    (
+      sealPurgeAndEmit
+    )
   ])
 
-  compile({
+  instrument.async('total')(compile)({
     userConfig,
     runOptions,
     registerTeardownRoutine(fn) {
       teardownRoutines.push(fn);
     }
-  }, ensureTeardown(teardownRoutines, (err, result) => {
+  }, ensureTeardown(teardownRoutines, (err, compilations) => {
     if (err instanceof BreakpointError) {
       done(null, err.result);
     }
+    else if (err) {
+      done(err);
+    }
+    else if (runOptions.profile) {
+      done(null, { profile, compilations });
+    }
     else {
-      done(err, result);
+      done(null, compilations);
     }
   }));
 }
 
-function compileSources(state, done) {
-  const { runOptions, serializer, compilations } = state;
+function compileTrees(state, done) {
+  const { runOptions, serializer, compilations, instrument } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
   const prevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
   const findPrevCompilation = compilation => prevCompilations.filter(x => x.id === compilation.id)
 
+  const scopeMessage = message => x => `${message} [${x.id}]`
   const compileTree = asyncSequence([
-    defineBreakpoint(BREAKPOINT_PARSE)
+    instrument.async(scopeMessage('compile:parse'))
     (
-      parse
-    ),
-
-    defineBreakpoint(BREAKPOINT_REFINE)
-    (
-      refine
-    ),
-
-    defineBreakpoint(BREAKPOINT_REDUCE)
-    (
-      R.partial(reduce, [ serializer.reduceRoutines ])
-    ),
-
-    defineBreakpoint(BREAKPOINT_RENDER)
-    (
-      R.partial(render, [ serializer.renderRoutines ])
-    ),
-
-    defineBreakpoint(BREAKPOINT_REDUCE_TREE)
-    (
-      reduceTree
-    ),
-
-    defineBreakpoint(BREAKPOINT_MERGE_CHANGE_TREE)
-    (
-      asyncify
+      defineBreakpoint(BREAKPOINT_PARSE)
       (
-        compilation =>
+        parse
+      )
+    ),
+
+    instrument.async(scopeMessage('compile:refine'))
+    (
+      defineBreakpoint(BREAKPOINT_REFINE)
+      (
+        refine
+      )
+    ),
+
+    instrument.async(scopeMessage('compile:reduce'))
+    (
+      defineBreakpoint(BREAKPOINT_REDUCE)
+      (
+        R.partial(reduce, [ Object.assign({ b: builders }, serializer.reduceRoutines) ])
+      )
+    ),
+
+    instrument.async(scopeMessage('compile:render'))
+    (
+      defineBreakpoint(BREAKPOINT_RENDER)
+      (
+        R.partial(render, [ serializer.renderRoutines ])
+      )
+    ),
+
+    instrument.async(scopeMessage('compile:reduce-tree'))
+    (
+      defineBreakpoint(BREAKPOINT_REDUCE_TREE)
+      (
+        reduceTree
+      )
+    ),
+
+    instrument.async(scopeMessage('compile:merge-change-tree'))
+    (
+      defineBreakpoint(BREAKPOINT_MERGE_CHANGE_TREE)
+      (
+        asyncify
         (
-          R.reduce
+          compilation =>
           (
-            (aggregateCompilation, prevCompilation) =>
+            R.reduce
             (
-              R.merge
+              (aggregateCompilation, prevCompilation) =>
               (
-                aggregateCompilation
-              )
-              (
-                mergeTrees(prevCompilation, aggregateCompilation)
+                R.merge
+                (
+                  aggregateCompilation
+                )
+                (
+                  mergeTrees(prevCompilation, aggregateCompilation)
+                )
               )
             )
-          )
-          (
-            compilation
-          )
-          (
-            findPrevCompilation(compilation)
+            (
+              compilation
+            )
+            (
+              findPrevCompilation(compilation)
+            )
           )
         )
       )
     ),
 
-    defineBreakpoint(BREAKPOINT_COMPOSE_TREE)
+    instrument.async(scopeMessage('compile:compose-tree'))
     (
-      asyncify
+      defineBreakpoint(BREAKPOINT_COMPOSE_TREE)
       (
-        assocWith('tree', composeTree)
+        asyncify
+        (
+          assocWith('tree', composeTree)
+        )
       )
     ),
   ]);
@@ -213,21 +277,33 @@ function compileSources(state, done) {
   });
 }
 
-function generateCorpus(state, done) {
-  const { withTrees, runOptions, serializer } = state;
+function sealPurgeAndEmit(state, done) {
+  const { withTrees, runOptions, serializer, instrument } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
 
   asyncSequence([
-    defineBreakpoint(BREAKPOINT_RENDER_CORPUS)
+    instrument.async('emit:seal')
     (
-      R.partial(seal, [ serializer ])
+      defineBreakpoint(BREAKPOINT_RENDER_CORPUS)
+      (
+        R.partial(seal, [ serializer ])
+      )
     ),
 
-    runOptions.purge && R.partial(purge, [ serializer ]) || null,
-
-    defineBreakpoint(BREAKPOINT_EMIT_ASSETS)
+    runOptions.purge &&
     (
-      R.partial(emit, [ serializer ])
+      instrument.async('emit:purge')
+      (
+        R.partial(purge, [ serializer ])
+      )
+    ) || null,
+
+    instrument.async('emit:write-assets')
+    (
+      defineBreakpoint(BREAKPOINT_EMIT_ASSETS)
+      (
+        R.partial(emit, [ serializer ])
+      )
     ),
   ])(withTrees, done);
 }

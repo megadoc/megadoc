@@ -7,6 +7,7 @@ var set = require('lodash').set;
 var pkg = require('../package');
 var megadocCompiler = require('megadoc-compiler');
 var megadocDevServer = require('./DevServer');
+var printProfile = require('./printProfile');
 var config = {};
 var configFilePath;
 
@@ -26,6 +27,7 @@ program
   .option('--no-write', 'Do not write any assets.')
   .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
   .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
+  .option('--profile')
   .option('--dump-config')
   .option('--dump-corpus <PATH>')
   .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
@@ -108,11 +110,16 @@ if (program.debug === true) {
 
 console.log('version %s', pkg.version);
 
+const runOptions = {
+  purge: program.purge,
+  profile: program.profile
+};
+
 if (program.watch) {
-  megadocDevServer.run(config, { purge: program.purge });
+  megadocDevServer.run(config, runOptions);
 }
 else {
-  megadocCompiler.run(config, { purge: program.purge }, function(err/*, compilations*/) {
+  megadocCompiler.run(config, runOptions, function(err, result) {
     if (err) {
       console.error(Array(80 - 'megadoc-cli'.length).join('*'));
       console.error('An error occurred during compilation. Error details below.');
@@ -122,6 +129,10 @@ else {
       throw err;
     }
 
-    console.log('done!');
+    if (runOptions.profile) {
+      printProfile(result.profile)
+    }
+
+    console.log('OK!');
   });
 }

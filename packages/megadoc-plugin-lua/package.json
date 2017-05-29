@@ -21,10 +21,11 @@
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
     "lodash": "3.10.1",
-    "luaparse": "0.2.0"
+    "luaparse": "0.2.0",
+    "megadoc-corpus": "^6.0.0-beta.2",
+    "megadoc-docstring": "^6.0.0-beta.2"
   },
-  "peerDependencies": {
-    "megadoc-corpus": "^6.0.0-beta.1",
-    "megadoc-docstring": "^6.0.0-beta.1"
+  "devDependencies": {
+    "megadoc-test-utils": "^6.0.0-beta.3"
   }
 }

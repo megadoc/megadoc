@@ -24,9 +24,10 @@ describe("megadoc-compiler::Compiler", function() {
     `);
 
     const reduceFnFile = fileSuite.createFile('processor/reduceFn.js', `
-      const { builders: b } = require('megadoc-corpus');
 
       module.exports = function reduce(options, actions, rawDocument, done) {
+        const { b } = actions;
+
         done(null, b.document({
           id: rawDocument.id,
           filePath: rawDocument.filePath,
@@ -248,5 +249,27 @@ describe("megadoc-compiler::Compiler", function() {
         });
       })
     })
+  })
+
+  it('generates profiling benchmarks', function(done) {
+    compile({
+      assetRoot: fileSuite.getRootDirectory(),
+      sources: [{
+        id: 'test-processor',
+        include: fileSuite.join('lib/**/*.md'),
+        processor: [ processorFile.path, {} ]
+      }],
+    }, { profile: true }, function(err, { profile, compilations }) {
+      if (err) {
+        return done(err);
+      }
+
+      assert.ok(Array.isArray(compilations));
+      assert.equal(compilations.length, 1)
+      assert.ok(profile);
+      assert.notEqual(profile.benchmarks.length, 0)
+
+      done();
+    });
   })
 });

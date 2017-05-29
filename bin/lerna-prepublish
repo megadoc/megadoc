@@ -2,12 +2,20 @@
 
 set -e
 
-npm run lint
-npm run test
+./bin/scan-dependency-versions
 
+npm run lint
+
+# packages must be built first before running the tests
 {
-  export NODE_ENV=production
-  ./node_modules/.bin/lerna exec --concurrency 1 --stream -- ../../bin/prepublish \$LERNA_PACKAGE_NAME
+  ./node_modules/.bin/lerna exec \
+    --concurrency 1 \
+    --stream \
+    -- NODE_ENV=production \
+       PACKAGE="${LERNA_PACKAGE_NAME}" \
+       ../../bin/prepublish -S test -S lint
 }
+
+npm run test
 
 echo "All good!"

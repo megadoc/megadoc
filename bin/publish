@@ -81,7 +81,6 @@ echo "Preparing \"${PACKAGE_NAME}\" for publishing... hang on tight."
 echo "---------------------------------------------------------------"
 
 run_task verify_dependency_versions
-
 run_task build_package
 run_task publish_package
 

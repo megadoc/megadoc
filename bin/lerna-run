@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
 ./node_modules/.bin/lerna exec \
-  --concurrency 1 \
+  --concurrency ${CONCURRENCY:-1} \
   --stream \
-  -- PACKAGE=\$LERNA_PACKAGE_NAME ../../bin/prepublish $@
+  -- PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish $@

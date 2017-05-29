@@ -13,14 +13,4 @@ set -e
 npm install --ignore-scripts
 
 ./node_modules/.bin/lerna bootstrap
-
-for pkg in $(ls packages/ | sort | sed 's/packages\///')
-do
-  if [ $pkg == "megadoc-plugin-skeleton" ]; then
-    continue
-  fi
-
-  # prepublish a single package but skip its tests/lints since we already do
-  # them implicitly in `npm run publish`...
-  ./bin/prepublish $pkg -S lint -S test
-done
+CONCURRENCY=3 ./bin/lerna-run -O build

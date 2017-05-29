@@ -14,5 +14,9 @@
     "megadoc-corpus": "^6.0.0-beta.2",
     "megadoc-linter": "^6.0.0-beta.3",
     "ramda": "0.23.0"
+  },
+  "devDependencies": {
+    "megadoc-html-serializer": "^6.0.0-beta.5",
+    "megadoc-test-utils": "^6.0.0-beta.3"
   }
 }
