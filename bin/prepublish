@@ -107,7 +107,8 @@ function ensure_no_unlisted_dependencies {
     # for some reason the --ignores flag is, well, being ignored by depcheck
     # so we resort to doing this manually in JS land:
     node -e "
-      var missingDeps = JSON.parse(process.argv[1]).missing || {};
+      var deps = JSON.parse(process.argv[1]);
+      var missingDeps = Object.keys(deps.missing || {});
 
       if (missingDeps.length > 0) {
         console.error('Missing dependencies:', missingDeps.map(function(x) { return '\n  * ' + x; }).join(''));
