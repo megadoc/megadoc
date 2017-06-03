@@ -2,7 +2,7 @@ const invariant = require('invariant');
 const crypto = require('crypto');
 const scanSources = require('./utils/scanSources');
 const ConfigUtils = require('megadoc-config-utils');
-const { pick } = require('lodash');
+const { pick } = require('ramda');
 const blankProcessor = require('./blankProcessor');
 
 // TODO: extract decorators
@@ -29,7 +29,7 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     id,
     documents: null,
     files,
-    compilerOptions: pick(config, optionWhitelist),
+    compilerOptions: pick(optionWhitelist, config),
     processor: paths,
     processorOptions: configure(processorEntry.options || {}),
     serializerOptions: spec.serializerOptions || {},

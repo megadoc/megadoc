@@ -1,27 +1,21 @@
-const { curry, pick } = require('lodash');
+const R = require('ramda');
 
-// http://ramdajs.com/docs/#props
-exports.props = curry(function props(propNames, x) {
-  return propNames.reduce((map, key) => Object.assign(map, { [key]: x[key] }), {})
+// String -> a -> {k: v} -> {k: v}
+exports.nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {
+  return Object.assign({}, x, { [propName]: propValue });
 });
 
-// http://ramdajs.com/docs/#assoc
-exports.assoc = curry(function assoc(propName, fn, x) {
-  return Object.assign({}, x, { [propName]: fn(x) })
+// String -> {k: v} -> ???
+exports.assocWith = R.curry(function assocWith(propName, x) {
+  return R.over
+  (
+    R.lens(R.identity, exports.nativeAssoc(propName))
+  )
+  (
+    x
+  );
 })
 
-// http://ramdajs.com/docs/#merge
-exports.assocMany = curry(function assocMany(propNames, fn, x) {
-  return Object.assign({}, x, pick(fn(x), propNames))
+exports.mergeWith = R.curry (function mergeWith(source, x) {
+  return Object.assign({}, source, x)
 })
-
-// http://ramdajs.com/docs/#view
-exports.view = curry(function view(lens, f, x) {
-  return f(lens(x))
-})
-
-// http://ramdajs.com/docs/#prop
-exports.prop = require('./prop');
-
-// http://ramdajs.com/docs/#indexBy
-exports.indexBy = require('./indexBy');

@@ -1,5 +1,6 @@
 const fs = require('fs-extra');
 const async = require('async');
+const R = require('ramda');
 const ConfigUtils = require('megadoc-config-utils');
 const defaults = require('./config');
 const createCompilation = require('./stage00__createCompilation');
@@ -17,31 +18,11 @@ const parseConfig = require('./parseConfig');
 const BlankSerializer = require('./BlankSerializer');
 const createBreakpoint = require('./utils/createBreakpoint');
 const createProfiler = require('./utils/createProfiler');
-const R = require('ramda');
+const { assocWith, mergeWith, nativeAssoc } = require('./utils');
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
 const { builders } = require('megadoc-corpus');
-
-// String -> a -> {k: v} -> {k: v}
-const nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {
-  return Object.assign({}, x, { [propName]: propValue });
-});
-
-// String -> {k: v} -> ???
-const assocWith = R.curry(function assocWith(propName, x) {
-  return R.over
-  (
-    R.lens(R.identity, nativeAssoc(propName))
-  )
-  (
-    x
-  );
-})
-
-const mergeWith = R.curry (function mergeWith(source, x) {
-  return Object.assign({}, source, x)
-})
 
 const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE              = 1;
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
@@ -341,6 +322,8 @@ function startSerializer(state, done) {
   const { serializer, compilations } = state;
 
   fs.ensureDirSync(state.config.tmpDir);
+
+  // sadness :(
   state.registerTeardownRoutine(R.partial(fs.remove, [ state.config.tmpDir ]));
 
   // todo: cluster
