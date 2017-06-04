@@ -39,6 +39,7 @@ program
   .option('--tmp-dir [PATH]', 'Path to a directory megadoc will use for intermediatery files. Defaults to .megadoc/')
   .option('--output-dir [PATH]')
   .option('--no-purge', 'Do not purge the output directory.')
+  .option('-j, --threads [COUNT]', 'Number of threads to use for processing (1 indicates foreground.)')
   .parse(process.argv)
 ;
 
@@ -68,6 +69,10 @@ if (program.dumpConfig) {
 
 if (program.verbose) {
   set(config, 'verbose', true);
+}
+
+if (program.threads) {
+  set(config, 'threads', Math.max(parseInt(program.threads, 10), 1))
 }
 
 program.override.forEach(function(override) {

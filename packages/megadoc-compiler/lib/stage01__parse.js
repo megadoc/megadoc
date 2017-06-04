@@ -4,10 +4,11 @@ const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
+const divisus = require('divisus');
 
 // TODO: apply decorators
-module.exports = function parse(compilation, done) {
-  const { processor, files } = compilation;
+module.exports = function parse(cluster, compilation, done) {
+  const { files, processor } = compilation;
 
   const applier = processor.parseFnPath ? parseEach : parseBulk;
   const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
@@ -16,7 +17,7 @@ module.exports = function parse(compilation, done) {
     options: compilation.processorOptions,
   };
 
-  applier(context, files, fn, asyncMaybe(function(rawDocuments) {
+  applier(cluster, context, files, fn, asyncMaybe(function(rawDocuments) {
     return mergeObject(compilation, {
       rawDocuments: flattenArray(rawDocuments),
     });
@@ -24,18 +25,18 @@ module.exports = function parse(compilation, done) {
 };
 
 // TODO: distribute
-function parseEach(context, files, fnPath, done) {
+function parseEach(cluster, context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), context);
+  const fn = partial(divisus(cluster).fn(fnPath), context);
 
   async.mapLimit(files, 10, fn, done);
 }
 
 // TODO: apply in background
-function parseBulk(context, files, fnPath, done) {
+function parseBulk(cluster, context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseBulkFnPath' to point to a file, but it doesn't."
   );

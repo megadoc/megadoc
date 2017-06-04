@@ -34,4 +34,6 @@ module.exports = {
   verbose: false,
   serializer: null,
   sources: null,
+
+  threads: 1,
 };

@@ -23,6 +23,7 @@ const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
 const { builders } = require('megadoc-corpus');
+const divisus = require('divisus');
 
 const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE              = 1;
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
@@ -120,6 +121,11 @@ exports.run = function run(userConfig, runOptions, done) {
       startSerializer
     ),
 
+    instrument.async('boot:start-cluster')
+    (
+      startCluster
+    ),
+
     instrument.async('compile')
     (
       defineBreakpoint(BREAKPOINT_COMPILE)
@@ -168,7 +174,7 @@ function compileTrees(state, done) {
     (
       defineBreakpoint(BREAKPOINT_PARSE)
       (
-        parse
+        R.partial(parse, [ state.cluster ])
       )
     ),
 
@@ -335,6 +341,30 @@ function startSerializer(state, done) {
       state.registerTeardownRoutine(serializer.stop.bind(serializer))
 
       done(null, state);
+    }
+  });
+}
+
+function startCluster(state, done) {
+  const createCluster = state.config.threads === 1 ?
+    divisus.createForegroundCluster :
+    divisus.createCluster
+  ;
+
+  const cluster = createCluster({ size: state.config.threads })
+
+  cluster.start(function(err) {
+    if (err) {
+      done(err);
+    }
+    else {
+      state.registerTeardownRoutine(function(callback) {
+        cluster.stop(function(e) {
+          callback(e);
+        });
+      });
+
+      done(null, Object.assign(state, { cluster }));
     }
   });
 }

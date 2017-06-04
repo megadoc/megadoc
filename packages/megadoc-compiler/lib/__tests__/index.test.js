@@ -134,6 +134,27 @@ describe("megadoc-compiler::Compiler", function() {
     });
   });
 
+  it('works with multiple threads', function(done) {
+    compile({
+      assetRoot: fileSuite.getRootDirectory(),
+      threads: 3,
+      sources: [{
+        id: 'test-processor',
+        include: fileSuite.join('lib/**/*.md'),
+        processor: [ processorFile.path, {} ]
+      }],
+    }, function(err, compilations) {
+      if (err) {
+        return done(err);
+      }
+
+      assert.ok(Array.isArray(compilations));
+      assert.equal(compilations.length, 1)
+
+      done();
+    });
+  });
+
   it('respects breakpoints', function(done) {
     compile({
       assetRoot: fileSuite.getRootDirectory(),

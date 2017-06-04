@@ -1,9 +1,22 @@
 const { assert } = require('chai');
 const subject = require('../stage01__parse');
 const FileSuite = require('megadoc-test-utils/FileSuite');
+const { createForegroundCluster } = require('divisus');
 
 describe('stage01__parse', function() {
   const fileSuite = FileSuite(this);
+
+  let cluster;
+
+  beforeEach(function(done) {
+    cluster = createForegroundCluster();
+    cluster.start(done);
+  })
+
+  afterEach(function(done) {
+    cluster.stop(done);
+    cluster = null;
+  })
 
   context('given an atomic processor...', function() {
     it('should distribute each file to it', function(done) {
@@ -23,7 +36,7 @@ describe('stage01__parse', function() {
         }
       };
 
-      subject(compilation, function(err, { rawDocuments }) {
+      subject(cluster, compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -53,7 +66,7 @@ describe('stage01__parse', function() {
         }
       };
 
-      subject(compilation, function(err, { rawDocuments }) {
+      subject(cluster, compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -85,7 +98,7 @@ describe('stage01__parse', function() {
       }
     };
 
-    subject(compilation, function(err, { rawDocuments }) {
+    subject(cluster, compilation, function(err, { rawDocuments }) {
       if (err) {
         done(err);
       }
