@@ -1,1 +1,1 @@
-module.exports = window.console;
+module.exports = typeof console !== 'undefined' ? console : (window.console || global.console);

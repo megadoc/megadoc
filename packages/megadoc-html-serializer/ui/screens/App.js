@@ -51,9 +51,6 @@ const App = React.createClass({
       documentURI: this.documentURI
     });
 
-    const pathname = this.props.location.pathname.replace(config.mountPath, '');
-    const redirect = config.redirect[pathname];
-
     let locationAPI;
 
     if (config.singlePageMode) {
@@ -71,15 +68,20 @@ const App = React.createClass({
       location: this.props.location,
       onChange: this.reload
     });
+  },
+
+  componentDidMount() {
+    const { config } = this.props;
 
     this.locationAPI.start();
+
+    const pathname = this.props.location.pathname.replace(config.mountPath, '');
+    const redirect = config.redirect[pathname];
 
     if (redirect) {
       this.locationAPI.transitionTo(redirect);
     }
-  },
 
-  componentDidMount() {
     // this is to avoid discrepancy with the server-rendered version since it
     // will not have a hash fragment and the client would (hash fragment may
     // change the UI if it's pointing to a DocumentEntity)

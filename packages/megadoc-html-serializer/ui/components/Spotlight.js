@@ -5,7 +5,11 @@ const TokenSearcher = require('core/TokenSearcher');
 const Link = require('components/Link');
 const classSet = require('classnames');
 const { func, arrayOf, shape, string, bool, } = React.PropTypes;
-const hasScrollIntoViewIfNeeded = typeof window.Element.prototype.scrollIntoViewIfNeeded === 'function';
+const hasScrollIntoViewIfNeeded = (
+  typeof window !== 'undefined' &&
+  typeof window.Element !== 'undefined' &&
+  typeof window.Element.prototype.scrollIntoViewIfNeeded === 'function'
+);
 
 const TokensPropType = arrayOf(shape({
   $1: string,

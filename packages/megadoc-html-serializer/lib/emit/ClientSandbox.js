@@ -1,56 +1,34 @@
 const path = require('path');
-const jsdom = require('jsdom');
 const K = require('../constants');
-const generateHTMLFile = require('./generateHTMLFile');
 const FakeWindowContext = require('./FakeWindowContext');
+const generateRuntimeConfig = require('./generateRuntimeConfig');
 const COMMON_BUNDLE = path.join(K.BUNDLE_DIR, K.COMMON_BUNDLE);
 const MAIN_BUNDLE = path.join(K.BUNDLE_DIR, K.MAIN_BUNDLE);
 const VENDOR_BUNDLE = path.join(K.BUNDLE_DIR, K.VENDOR_BUNDLE);
-const generateRuntimeConfig = require('./generateRuntimeConfig');
 
 // TODO: investigate using node vm module for this?
 function ClientSandbox(serializerConfig) {
   this.config = serializerConfig;
 
   this.state = {
-    dom: null,
     fakeWindowContext: null,
-    ui: null,
-    window: null,
+    megadocClient: null,
   };
 }
 
 ClientSandbox.prototype.start = function(assets, done) {
-  const dom = jsdom.jsdom(generateHTMLFile({
-    params: {
-      scripts: [],
-      styleSheets: [ K.STYLE_BUNDLE ],
-    },
-    sourceFile: this.config.htmlFile,
-    runtimeOutputPath: this.config.runtimeOutputPath,
-    assets: assets,
-    distanceFromRoot: 0
-  }), {
-    url: 'http://localhost'
-  });
+  this.state.fakeWindowContext = FakeWindowContext(global, global);
 
-  const window = dom.defaultView;
-  const fakeWindowContext = FakeWindowContext(window, global);
+  const { fakeWindowContext } = this.state;
 
   fakeWindowContext.install();
 
   require(VENDOR_BUNDLE);
 
-  fakeWindowContext.expose('webpackJsonp_megadoc', window.webpackJsonp_megadoc);
-  // fakeWindowContext.expose('console.debug', Function.prototype);
-
-  const commonModules = require(COMMON_BUNDLE);
-
-  fakeWindowContext.expose('MEGADOC_PUBLIC_MODULES', commonModules);
+  fakeWindowContext.expose('webpackJsonp_megadoc', global.webpackJsonp_megadoc);
+  fakeWindowContext.expose('MEGADOC_PUBLIC_MODULES', require(COMMON_BUNDLE));
 
   this.state.megadocClient = require(MAIN_BUNDLE);
-
-  // fakeWindowContext.expose('megadoc', window.megadoc);
 
   this.state.runtimePlugins = assets.pluginScripts.map(function(filePath) {
     const pluginExports = require(filePath);
@@ -58,9 +36,6 @@ ClientSandbox.prototype.start = function(assets, done) {
     return pluginExports[Object.keys(pluginExports)[0]];
   });
 
-  this.state.dom = dom;
-  this.state.window = window;
-  this.state.fakeWindowContext = fakeWindowContext;
 
   done();
 };

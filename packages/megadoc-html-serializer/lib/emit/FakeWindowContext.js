@@ -11,16 +11,6 @@ module.exports = function FakeWindowContext(window, global) {
   return {
     install: function() {
       global.window = window;
-
-      window.localStorage = {
-        setItem: function() {},
-        removeItem: function() {},
-        clear: function() {}
-      };
-
-      Object.keys(window).forEach(key => {
-        expose(key, window[key]);
-      })
     },
 
     expose: expose,

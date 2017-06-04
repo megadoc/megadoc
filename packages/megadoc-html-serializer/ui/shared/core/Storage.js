@@ -1,6 +1,29 @@
 const console = require("console");
 const EventEmitter = require('core/EventEmitter');
 const emitter = new EventEmitter(['change']);
+const createMemoryStorage = () => {
+  const store = {};
+
+  return {
+    getItem(key) {
+      return store[key];
+    },
+
+    setItem(key, value) {
+      store[key] = value;
+    },
+
+    removeItem(key) {
+      delete store[key];
+    },
+
+    clear() {
+      Object.keys(store).forEach(key => { delete store[key] })
+    }
+  }
+}
+
+const storage = typeof localStorage === 'undefined' ? createMemoryStorage() : localStorage;
 
 let STORAGE_ITEMS = {};
 
@@ -13,17 +36,13 @@ exports.get = function(key) {
     Please add this key to core/Storage.js.`
   );
 
-  if (!localStorage.hasOwnProperty(key)) {
-    return defaultValue;
-  }
-
   try {
-    value = JSON.parse(localStorage.getItem(key));
+    value = JSON.parse(storage.getItem(key));
   }
   catch(e) {
     if (e.name.match(/SyntaxError/)) {
-      value = localStorage.getItem(key);
-      localStorage.setItem(key, JSON.stringify(value));
+      value = storage.getItem(key);
+      storage.setItem(key, JSON.stringify(value));
     }
     else {
       throw e;
@@ -39,7 +58,7 @@ exports.get = function(key) {
 };
 
 exports.set = function(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+  storage.setItem(key, JSON.stringify(value));
   emitter.emit('change');
 };
 
@@ -47,14 +66,10 @@ exports.on = emitter.on;
 exports.off = emitter.off;
 
 exports.clear = function() {
-  localStorage.clear();
+  storage.clear();
   emitter.emit('change');
 };
 
 exports.register = function(key, defaultValue) {
-  if (STORAGE_ITEMS.hasOwnProperty(key)) {
-    console.warn(`[Storage]: Key ${key} has already been registered.`);
-  }
-
   STORAGE_ITEMS[key] = defaultValue;
 };
