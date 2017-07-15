@@ -5,7 +5,6 @@ module.exports = function printProfile(profile) {
     head: ['Stage', 'Elapsed (ms)']
   });
 
-
   profile.benchmarks.forEach(({ stage, elapsed }) => {
     table.push([ stage, elapsed ]);
   })

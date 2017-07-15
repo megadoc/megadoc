@@ -5,32 +5,21 @@ var fs = require('fs-extra');
 var path = require('path');
 var set = require('lodash').set;
 var pkg = require('../package');
-var megadocCompiler = require('megadoc-compiler');
-var megadocDevServer = require('./DevServer');
+var { run: compile } = require('megadoc-compiler');
+var { run: compileAndWatch } = require('./compileAndWatch');
 var printProfile = require('./printProfile');
 var config = {};
 var configFilePath;
-
-function collect(val, list) {
-  list.push(val);
-  return list;
-}
 
 program
   .version(pkg.version)
   .description('Parse sources and generate static documentation.')
   .arguments('<CONFIG>')
   .option('--config [PATH]', 'path to megadoc config file (defaults to megadoc.conf.js)')
-  .option('--no-scan', 'Skip the scanning phase.')
-  .option('--no-index', 'Do not index documentation entities (for linking.)')
-  .option('--no-render', 'Do not render markdown or resolve links.')
-  .option('--no-write', 'Do not write any assets.')
-  .option('--override <KEY=VALUE>', 'Override a config item.', collect, [])
-  .option('--plugin <NAME>', 'Override the active plugin list.', collect, [])
+  .option('--breakpoint [BREAKPOINT]', 'Debugging breakpoint')
   .option('--profile')
   .option('--dump-config')
   .option('--dump-corpus <PATH>')
-  .option('--layout <NAME>', 'Override the HTML layout to use ("single-page" or "multi-page")')
   .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
   .option('-w, --watch', 'Run in watch mode.')
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
@@ -75,56 +64,23 @@ if (program.threads) {
   set(config, 'threads', Math.max(parseInt(program.threads, 10), 1))
 }
 
-program.override.forEach(function(override) {
-  var fragments = override.split(/\s*=\s*/);
-  var key = fragments[0];
-  var value;
-
-  try {
-    value = JSON.parse(fragments[1]);
-  }
-  catch(e) {
-    value = fragments[1].toString();
-  }
-
-  set(config, key, value);
-
-  console.log('Overridden "%s" with "%s"', key, value);
-});
-
-if (program.plugin.length > 0) {
-  console.log('Plugins:', JSON.stringify(program.plugin));
-
-  var activePlugins = config.plugins.filter(function(plugin) {
-    return program.plugin.indexOf(plugin.name) > -1;
-  });
-
-  if (activePlugins.length !== config.plugins.length) {
-    console.log('%d plugins were excluded.', config.plugins.length - activePlugins.length);
-    config.plugins = activePlugins;
-  }
-}
-
-if (program.layout) {
-  config.layout = program.layout;
-}
-
 if (program.debug === true) {
   config.debug = true;
 }
 
-console.log('version %s', pkg.version);
+console.log('Megadoc: version "%s".', pkg.version);
 
 const runOptions = {
   purge: program.purge,
-  profile: program.profile
+  profile: program.profile,
+  breakpoint: asNumberOrNull(program.breakpoint),
 };
 
 if (program.watch) {
-  megadocDevServer.run(config, runOptions);
+  compileAndWatch(config, runOptions);
 }
 else {
-  megadocCompiler.run(config, runOptions, function(err, result) {
+  compile(config, runOptions, function(err, result) {
     if (err) {
       console.error(Array(80 - 'megadoc-cli'.length).join('*'));
       console.error('An error occurred during compilation. Error details below.');
@@ -140,4 +96,15 @@ else {
 
     console.log('OK!');
   });
+}
+
+function asNumberOrNull(x) {
+  const asNumber = parseInt(x, 10);
+
+  if (isNaN(asNumber)) {
+    return null;
+  }
+  else {
+    return asNumber
+  }
 }
