@@ -1,23 +1,26 @@
 const React = require('react');
 const Link = require('components/Link');
+const { sortBy } = require('lodash');
 const { object, } = React.PropTypes;
 
 const Browser = React.createClass({
   propTypes: {
     params: object,
-    namespaceNode: object,
+    namespaceNode: object.isRequired,
+    documentNode: object,
   },
 
   render() {
     return (
       <ul className="lua-browser">
-        {this.props.namespaceNode.documents.map(this.renderModule)}
+        {sortBy(this.props.namespaceNode.documents, 'title').map(this.renderModule)}
       </ul>
     );
   },
 
   renderModule(documentNode) {
     const { entities } = documentNode;
+    const active = this.props.documentNode === documentNode;
 
     return (
       <li key={documentNode.uid} className="lua-browser__module">
@@ -27,7 +30,7 @@ const Browser = React.createClass({
           children={documentNode.title}
         />
 
-        {entities.length > 0 && (
+        {active && entities.length > 0 && (
           <ol>
             {entities.map(this.renderEntity)}
           </ol>

@@ -107,6 +107,10 @@ exports.parseString = function(sourceCode, config) {
         if (moduleTag.name.length) {
           docstring.id = moduleTag.name;
         }
+
+        if (moduleTag.description.length) {
+          docstring.description += '\n' + moduleTag.description;
+        }
       }
 
       // doc path

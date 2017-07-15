@@ -16,13 +16,7 @@ const Module = React.createClass({
     const { documentNode } = this.props;
     const { entities } = documentNode;
     const functions = entities.filter(e => e.properties.ctx.type === 'function');
-    const description = documentNode.properties.tags.reduce(function(fragments, tag) {
-      if (~[ 'module' ].indexOf(tag.type)) {
-        fragments.push(tag.description);
-      }
-
-      return fragments;
-    }, [ documentNode.properties.description ]).join('\n');
+    const description = documentNode.properties.description;
 
     return (
       <div>
