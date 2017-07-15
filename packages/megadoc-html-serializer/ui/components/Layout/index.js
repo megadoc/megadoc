@@ -1,7 +1,7 @@
 const React = require("react");
 const classSet = require('utils/classSet');
-const Banner = require('./Layout__Banner');
-const LayoutScreen = require('./Layout__Screen');
+const Banner = require('./Banner');
+const LayoutScreen = require('./Screen');
 const scrollToTop = require('utils/scrollToTop');
 const { PropTypes } = React;
 

@@ -1,5 +1,5 @@
-const Subject = require('../Layout');
-const NotFound = require('components/NotFound');
+const Subject = require('../');
+const NotFound = require('../NotFound');
 const ErrorMessage = require('components/ErrorMessage');
 const React = require('react');
 const { OutletManager } = require('react-transclusion');

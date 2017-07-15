@@ -1,10 +1,10 @@
 const React = require("react");
-const TwoColumnLayout = require('components/TwoColumnLayout');
-const NotFound = require('components/NotFound');
-const Document = require('components/Document');
+const TwoColumnLayout = require('./TwoColumnLayout');
+const NotFound = require('./NotFound');
+const Document = require('./Document');
 const ErrorMessage = require('components/ErrorMessage');
-const Footer = require('components/Footer');
-const Sticky = require('components/Sticky');
+const Footer = require('./Footer');
+const Sticky = require('./Sticky');
 const ConfigReceiver = require('components/ConfigReceiver');
 const { OutletRenderer, Outlet } = require('react-transclusion');
 const { PropTypes } = React;
@@ -85,6 +85,7 @@ const LayoutScreen = React.createClass({
 
   renderContent() {
     const ContentTag = this.getOutletTag('Layout::Content');
+    const { footer } = this.props.config;
 
     return (
       <div>
@@ -92,7 +93,9 @@ const LayoutScreen = React.createClass({
           {this.renderRegion('Layout::Content') || <NotFound />}
         </ContentTag>
 
-        <Footer>{this.props.config.footer}</Footer>
+        {footer && footer.length > 0 && (
+          <Footer>{footer}</Footer>
+        )}
       </div>
     );
   },

@@ -3,9 +3,9 @@ const Link = require("components/Link");
 const { Outlet } = require('react-transclusion');
 const Icon = require('components/Icon');
 const ConfigReceiver = require('components/ConfigReceiver');
-const DocumentURI = require('../DocumentURI');
-const BannerItem = require('./Layout__BannerItem');
-const BannerMenu = require('./Layout__BannerMenu');
+const DocumentURI = require('../../DocumentURI');
+const BannerItem = require('./BannerItem');
+const BannerMenu = require('./BannerMenu');
 const { string, any, arrayOf, object, } = React.PropTypes;
 const { PropTypes } = React;
 
