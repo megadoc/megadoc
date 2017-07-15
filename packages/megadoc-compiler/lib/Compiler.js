@@ -25,7 +25,7 @@ const { asyncify } = async;
 const { builders } = require('megadoc-corpus');
 const divisus = require('divisus');
 
-const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE              = 1;
+const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE            = 1;
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
 const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 3;
 const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 4;
