@@ -1,7 +1,3 @@
-const Storage = require('core/Storage');
-const K = require('./constants');
-Storage.register(K.CFG_CLASS_BROWSER_GROUP_BY_FOLDER, true);
-
 const BrowserOutlet = require('./outlets/BrowserOutlet');
 const DocumentOutlet = require('./outlets/DocumentOutlet');
 const DocumentTOCOutlet = require('./outlets/DocumentTOCOutlet');

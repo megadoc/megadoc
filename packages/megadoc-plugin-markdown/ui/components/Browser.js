@@ -1,8 +1,6 @@
 const React = require("react");
 const Link = require('components/Link');
 const HotItemIndicator = require('components/HotItemIndicator');
-const Storage = require('core/Storage');
-const GROUP_BY_FOLDER = require('../constants').CFG_CLASS_BROWSER_GROUP_BY_FOLDER;
 const { ROOT_FOLDER_ID } = require('constants');
 const ArticleTOC = require('./ArticleTOC');
 const { object } = React.PropTypes;
@@ -14,6 +12,12 @@ var Browser = React.createClass({
     documentEntityNode: object,
     expanded: React.PropTypes.bool,
     flat: React.PropTypes.bool,
+  },
+
+  getInitialState() {
+    return {
+      groupByFolder: false
+    };
   },
 
   render() {
@@ -60,7 +64,7 @@ var Browser = React.createClass({
     const isActive = this.props.documentNode === documentNode || this.props.expanded;
     let title = article.title || '';
 
-    if (Storage.get(GROUP_BY_FOLDER) &&
+    if (this.state.groupByFolder &&
       article.folderTitle !== ROOT_FOLDER_ID &&
       article.folderTitle !== '.') {
 

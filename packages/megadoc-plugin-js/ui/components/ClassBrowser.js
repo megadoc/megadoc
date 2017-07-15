@@ -2,13 +2,10 @@ const React = require("react");
 const console = require("console");
 const Link = require('components/Link');
 const classSet = require('utils/classSet');
-const Storage = require('core/Storage');
 const Checkbox = require('components/Checkbox');
 const Icon = require('components/Icon');
 const HotItemIndicator = require('components/HotItemIndicator');
 const { sortBy } = require('lodash');
-const K = require('../constants');
-const PRIVATE_VISIBILITY_KEY = K.CFG_CLASS_BROWSER_SHOW_PRIVATE;
 const orderAwareSort = require('../utils/orderAwareSort');
 const DocClassifier = require('../utils/DocClassifier');
 const { object, bool, } = React.PropTypes;
@@ -22,7 +19,13 @@ var ClassBrowser = React.createClass({
     flat: bool,
   },
 
-  getDefaultProps: function() {
+  getInitialState() {
+    return {
+      showPrivateModules: false
+    };
+  },
+
+  getDefaultProps() {
     return {
       withControls: true
     };
@@ -76,7 +79,7 @@ var ClassBrowser = React.createClass({
         {this.props.withControls && hasPrivateModules && (
           <div className="class-browser__controls">
             <Checkbox
-              checked={!!Storage.get(PRIVATE_VISIBILITY_KEY)}
+              checked={this.state.showPrivateModules}
               onChange={this.togglePrivateVisibility}
               children="Show private"
             />
@@ -91,7 +94,7 @@ var ClassBrowser = React.createClass({
     const { config } = this.props.namespaceNode;
     const shouldHidePrivateModules = (
       config.showPrivateModules === false ||
-      !Storage.get(K.CFG_CLASS_BROWSER_SHOW_PRIVATE)
+      !this.state.showPrivateModules
     );
 
     if (shouldHidePrivateModules) {
@@ -191,7 +194,9 @@ var ClassBrowser = React.createClass({
   },
 
   togglePrivateVisibility() {
-    Storage.set(PRIVATE_VISIBILITY_KEY, !Storage.get(PRIVATE_VISIBILITY_KEY));
+    this.setState({
+      showPrivateModules: !this.state.showPrivateModules
+    });
   }
 });
 

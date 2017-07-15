@@ -1,8 +1,3 @@
-const Storage = require('core/Storage');
-const K = require('./constants');
-
-Storage.register(K.CFG_CLASS_BROWSER_SHOW_PRIVATE, false);
-
 exports.outlets = [
   'CJS::Landing',
   'CJS::ClassBrowser',

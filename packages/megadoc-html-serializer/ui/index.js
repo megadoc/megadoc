@@ -2,9 +2,7 @@ const React = require('react');
 const console = require("console");
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
-const Storage = require('core/Storage');
 const AppState = require('./AppState');
-const K = require('constants');
 const App = require('./screens/App');
 const { omit } = require('lodash');
 const CorpusAPI = require('./CorpusAPI');
@@ -25,9 +23,6 @@ function createMegadoc(config) {
   const megadoc = {
     corpus: corpus
   };
-
-  Storage.register(K.CFG_COLOR_SCHEME, K.DEFAULT_SCHEME);
-  Storage.register(K.CFG_SIDEBAR_WIDTH, K.INITIAL_SIDEBAR_WIDTH);
 
   // expose this to plugins so that we can move to a non-global version in the
   // future

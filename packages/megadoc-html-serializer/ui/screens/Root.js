@@ -2,7 +2,6 @@ const React = require("react");
 const console = require("console");
 const { findDOMNode } = require('react-dom');
 const { Outlet } = require('react-transclusion');
-const Storage = require('core/Storage');
 const SpotlightManager = require('../components/SpotlightManager');
 const Inspector = require('../components/Inspector');
 const Layout = require('../components/Layout');
@@ -55,7 +54,6 @@ const Root = React.createClass({
   },
 
   componentDidMount() {
-    Storage.on('change', this.reload);
     this.props.appState.on('change', this.reload);
 
     window.addEventListener('click', this.handleInternalLink, false);
@@ -83,7 +81,6 @@ const Root = React.createClass({
     window.removeEventListener('click', this.handleInternalLink, false);
 
     this.props.appState.off('change', this.reload);
-    Storage.off('change', this.reload);
   },
 
   render() {
