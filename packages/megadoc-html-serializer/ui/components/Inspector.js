@@ -1,6 +1,6 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
-const domContains = require('dom-contains');
+const domContains = require('utils/domContains');
 const Tooltip = require('./InspectorTooltip');
 const { Outlet, OutletRenderer } = require('react-transclusion');
 const { debounce } = require('lodash');

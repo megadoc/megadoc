@@ -1,7 +1,7 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 const Spotlight = require('./Spotlight');
-const contains = require('dom-contains');
+const domContains = require('utils/domContains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, object, string, } = React.PropTypes;
 const DocumentURI = require('core/DocumentURI');
@@ -119,7 +119,7 @@ const SpotlightManager = React.createClass({
   },
 
   doCloseSpotlightOnExternalClicks(e) {
-    if (contains(e.target, findDOMNode(this))) {
+    if (domContains(e.target, findDOMNode(this))) {
       this.closeSpotlight();
     }
   },

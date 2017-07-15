@@ -1,6 +1,5 @@
 module.exports = [
   'classnames',
-  'dom-contains',
   'fuzzaldrin-plus',
   'lodash',
   'react',

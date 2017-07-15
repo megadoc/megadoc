@@ -1,12 +1,15 @@
 .two-column-layout {
   &--inverted &__left {
     right: 0;
+    left: auto;
   }
 
   &__left {
     top: 0;
     bottom: 0;
     z-index: 1;
+    position: absolute;
+    min-height: 100vh;
 
     // transition: width 0.3s ease 0s;
 
@@ -32,7 +35,6 @@
     top: 0;
     left: 100%;
     margin-left: 0;
-    // width:  48px;
     overflow: hidden;
     font-size: 16px;
     line-height: 1;
