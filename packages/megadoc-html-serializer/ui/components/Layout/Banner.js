@@ -6,6 +6,7 @@ const ConfigReceiver = require('components/ConfigReceiver');
 const DocumentURI = require('../../DocumentURI');
 const BannerItem = require('./BannerItem');
 const BannerMenu = require('./BannerMenu');
+const getLinkHref = require('./getLinkHref');
 const { string, any, arrayOf, object, } = React.PropTypes;
 const { PropTypes } = React;
 
@@ -101,7 +102,7 @@ const Banner = React.createClass({
 
     return (
       <BannerItem key={link.text}>
-        <Link href={this.context.documentURI.withExtension(link.href)}>{link.text}</Link>
+        <Link href={getLinkHref(this, link)}>{link.text}</Link>
       </BannerItem>
     );
   },
