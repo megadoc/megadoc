@@ -3,11 +3,11 @@ const console = require("console");
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const Storage = require('core/Storage');
-const AppState = require('core/AppState');
+const AppState = require('./AppState');
 const K = require('constants');
 const App = require('./screens/App');
 const { omit } = require('lodash');
-const CorpusAPI = require('core/CorpusAPI');
+const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
 
 function createMegadoc(config) {

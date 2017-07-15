@@ -1,14 +1,17 @@
 const Subject = require('../Layout');
-const reactSuite = require('test_helpers/reactSuite');
-const stubRoutingContext = require('test_helpers/stubRoutingContext');
-const stubAppContext = require('test_helpers/stubAppContext');
-const { assert } = require('chai');
-const { drill, m } = require('react-drill');
 const NotFound = require('components/NotFound');
 const ErrorMessage = require('components/ErrorMessage');
 const React = require('react');
 const { OutletManager } = require('react-transclusion');
-const CorpusAPI = require('core/CorpusAPI');
+const {
+  assert,
+  drill,
+  m,
+  createCorpus,
+  reactSuite,
+  stubRoutingContext,
+  stubAppContext
+} = require('test_helpers');
 
 describe('megadoc::Components::Layout', function() {
   let outletManager;
@@ -46,7 +49,7 @@ describe('megadoc::Components::Layout', function() {
   });
 
   describe('@using', function() {
-    const corpus = CorpusAPI({
+    const corpus = createCorpus({
       database: require('json!test_helpers/fixtures/corpus--small.json'),
       redirect: {}
     });

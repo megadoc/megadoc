@@ -1,4 +1,4 @@
-const TitleManager = require('core/TitleManager');
+const TitleManager = require('../../TitleManager');
 const { PropTypes } = require('react');
 const IDENTITY = function(arg) {
   return arg;

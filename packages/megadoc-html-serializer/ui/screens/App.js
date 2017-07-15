@@ -1,6 +1,6 @@
 const React = require('react');
 const Root = require('./Root');
-const DocumentURI = require('core/DocumentURI');
+const DocumentURI = require('../DocumentURI');
 const DocumentResolver = require('../DocumentResolver');
 const { OutletProvider } = require('react-transclusion');
 

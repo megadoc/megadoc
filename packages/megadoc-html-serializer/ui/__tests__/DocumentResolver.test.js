@@ -1,14 +1,13 @@
 const Subject = require('../DocumentResolver');
-const CorpusAPI = require('core/CorpusAPI');
-const DocumentURI = require('core/DocumentURI');
-const { assert } = require('chai');
+const DocumentURI = require('../DocumentURI');
+const { createCorpus, assert } = require('test_helpers');
 const corpusData = require('json!test_helpers/fixtures/corpus.json');
 
 describe('megadoc::DocumentResolver', function() {
   let corpus, documentURI, subject;
 
   beforeEach(function() {
-    corpus = CorpusAPI({
+    corpus = createCorpus({
       database: corpusData,
       redirect: {},
     });

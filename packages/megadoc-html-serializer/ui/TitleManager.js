@@ -1,4 +1,4 @@
-var invariant = require('utils/invariant');
+var invariant = require('invariant');
 
 /**
  * A module for adjusting the document's title for a while then restoring it.

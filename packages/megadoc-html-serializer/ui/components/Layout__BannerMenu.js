@@ -2,7 +2,7 @@ const React = require("react");
 const Link = require("components/Link");
 const Icon = require('components/Icon');
 const classSet = require('utils/classSet');
-const DocumentURI = require('core/DocumentURI');
+const DocumentURI = require('../DocumentURI');
 const { string, oneOf, arrayOf, shape, } = React.PropTypes;
 
 const BannerMenu = React.createClass({

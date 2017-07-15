@@ -1,5 +1,5 @@
 const console = require("console");
-const EventEmitter = require('core/EventEmitter');
+const EventEmitter = require('../../EventEmitter');
 const emitter = new EventEmitter(['change']);
 const createMemoryStorage = () => {
   const store = {};
@@ -7,6 +7,10 @@ const createMemoryStorage = () => {
   return {
     getItem(key) {
       return store[key];
+    },
+
+    hasItem(key) {
+      return store.hasOwnProperty(key);
     },
 
     setItem(key, value) {
@@ -23,42 +27,23 @@ const createMemoryStorage = () => {
   }
 }
 
-const storage = typeof localStorage === 'undefined' ? createMemoryStorage() : localStorage;
-
-let STORAGE_ITEMS = {};
+const storage = createMemoryStorage();
+const defaultValues = {};
 
 exports.get = function(key) {
-  const defaultValue = STORAGE_ITEMS[key];
-  let value;
-
-  console.assert(STORAGE_ITEMS.hasOwnProperty(key),
+  console.assert(defaultValues.hasOwnProperty(key),
     `You are attempting to access an unregistered storage key '${key}'.
     Please add this key to core/Storage.js.`
   );
 
-  try {
-    value = JSON.parse(storage.getItem(key));
-  }
-  catch(e) {
-    if (e.name.match(/SyntaxError/)) {
-      value = storage.getItem(key);
-      storage.setItem(key, JSON.stringify(value));
-    }
-    else {
-      throw e;
-    }
-  }
-  finally {
-    if (value === undefined) {
-      value = defaultValue;
-    }
-  }
-
-  return value;
+  return storage.hasItem(key) ?
+    storage.getItem(key) :
+    defaultValues[key]
+  ;
 };
 
 exports.set = function(key, value) {
-  storage.setItem(key, JSON.stringify(value));
+  storage.setItem(key, value);
   emitter.emit('change');
 };
 
@@ -71,5 +56,5 @@ exports.clear = function() {
 };
 
 exports.register = function(key, defaultValue) {
-  STORAGE_ITEMS[key] = defaultValue;
+  defaultValues[key] = defaultValue;
 };

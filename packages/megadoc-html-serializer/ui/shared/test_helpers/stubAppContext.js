@@ -1,8 +1,8 @@
 const React = require('react');
 const { PropTypes } = React;
 const { OutletManager } = require('react-transclusion');
-const DocumentURI = require('core/DocumentURI');
-const AppState = require('core/AppState');
+const DocumentURI = require('../../DocumentURI');
+const AppState = require('../../AppState');
 
 module.exports = function stubAppContext(Component, fn) {
   const appState = AppState({});

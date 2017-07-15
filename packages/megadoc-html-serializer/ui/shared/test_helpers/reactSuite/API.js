@@ -1,7 +1,7 @@
 const React = require("react");
 const { render, unmountComponentAtNode } = require('react-dom');
 const config = require("./config");
-const EventEmitter = require('core/EventEmitter');
+const EventEmitter = require('../../../EventEmitter');
 const { assign } = require('lodash');
 
 /**

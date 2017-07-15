@@ -1,4 +1,4 @@
-const MetaDescriptionManager = require('core/MetaDescriptionManager');
+const MetaDescriptionManager = require('../../MetaDescriptionManager');
 const IDENTITY = function(arg) {
   return arg;
 };

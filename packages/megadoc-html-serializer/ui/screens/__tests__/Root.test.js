@@ -1,12 +1,14 @@
 const Subject = require('../Root');
-const reactSuite = require('test_helpers/reactSuite');
-const { assert } = require('chai');
-const AppState = require('core/AppState');
-const DocumentURI = require('core/DocumentURI');
+const AppState = require('../../AppState');
+const DocumentURI = require('../../DocumentURI');
 const DocumentResolver = require('../../DocumentResolver');
-const CorpusAPI = require('core/CorpusAPI');
-const stubAppContext = require('test_helpers/stubAppContext');
-const stubRoutingContext = require('test_helpers/stubRoutingContext');
+const {
+  assert,
+  reactSuite,
+  stubAppContext,
+  stubRoutingContext,
+  createCorpus,
+} = require('test_helpers');
 
 describe('megadoc::Components::Root', function() {
   const suite = reactSuite(this, stubAppContext(stubRoutingContext(Subject)), () => {
@@ -15,7 +17,7 @@ describe('megadoc::Components::Root', function() {
     };
 
     const documentURI = new DocumentURI({});
-    const corpus = CorpusAPI({
+    const corpus = createCorpus({
       database: require('json!test_helpers/fixtures/corpus--small.json'),
       redirect: config.redirect
     });

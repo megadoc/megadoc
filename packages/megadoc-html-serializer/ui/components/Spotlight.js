@@ -1,7 +1,7 @@
 const React = require('react');
 const { findDOMNode } = require('react-dom');
 const { debounce } = require('lodash');
-const TokenSearcher = require('core/TokenSearcher');
+const TokenSearcher = require('../TokenSearcher');
 const Link = require('components/Link');
 const classSet = require('classnames');
 const { func, arrayOf, shape, string, bool, } = React.PropTypes;

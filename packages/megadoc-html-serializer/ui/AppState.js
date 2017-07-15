@@ -1,5 +1,5 @@
 const K = require('constants');
-const EventEmitter = require('core/EventEmitter');
+const EventEmitter = require('./EventEmitter');
 const invariant = require('utils/invariant');
 
 const createAppState = function(config) {

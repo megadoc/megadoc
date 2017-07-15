@@ -1,6 +1,6 @@
 const console = require("console");
-const CorpusAPI = require('core/CorpusAPI');
-const invariant = require('utils/invariant');
+const CorpusAPI = require('./CorpusAPI');
+const invariant = require('invariant');
 const LayoutEngine = require('./LayoutEngine');
 
 function DocumentResolver({ config, corpus, documentURI }) {

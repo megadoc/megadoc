@@ -1,5 +1,4 @@
 const React = require("react");
-const Router = require('core/Router');
 const { filter } = Array.prototype;
 
 const ScrollSpy = React.createClass({
@@ -70,7 +69,8 @@ function focusClosestHeading() {
 
       target.node.id = id;
 
-      Router.refresh();
+      // TODO: port to history
+      // Router.refresh();
     }
   }
 }
