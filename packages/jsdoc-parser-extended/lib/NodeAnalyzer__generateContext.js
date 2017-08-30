@@ -6,6 +6,7 @@ module.exports = parseNode;
 function parseNode(contextNode) {
   if (
     t.isFunctionExpression(contextNode) ||
+    t.isArrowFunctionExpression(contextNode) ||
     t.isFunctionDeclaration(contextNode) ||
     t.isObjectMethod(contextNode)
   ) {

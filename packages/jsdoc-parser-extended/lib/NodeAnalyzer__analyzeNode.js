@@ -47,7 +47,7 @@ function analyzeNode(node, path, filePath, config) {
   //       /** Hello */
   //       function() {}
   //     )(this)
-  else if (t.isFunctionExpression(node)) {
+  else if (t.isFunctionExpression(node) || t.isArrowFunctionExpression(node)) {
     info.id = node.id.name;
     info.$contextNode = node;
   }
@@ -198,7 +198,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   }
 
   // Functions assigned to a property.
-  else if (t.isMemberExpression(lhs) && t.isFunctionExpression(rhs)) {
+  else if (t.isMemberExpression(lhs) && (t.isFunctionExpression(rhs) || t.isArrowFunctionExpression(rhs))) {
     info.$contextNode = rhs;
 
     // CommonJS special scenario: a named function assigned to `module.exports`
@@ -276,7 +276,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   }
 }
 
-function analyzeProperty(node, path, info) {
+function analyzeProperty(node, path, info, filePath) {
   // A property that points to an identifier, possibly in the current scope:
   //
   //     function fn() {}
@@ -301,12 +301,14 @@ function analyzeProperty(node, path, info) {
   }
 
   if (!info.id) {
-    console.warn('Unable to parse property key!');
+    console.warn('Unable to parse property key!',
+      ASTUtils.dumpLocation(node, filePath)
+    );
   }
 }
 
 function analyzeReturnStatement(node, path, info) {
-  if (t.isFunctionExpression(node.argument)) {
+  if (t.isFunctionExpression(node.argument) || t.isArrowFunctionExpression(node.argument)) {
     info.$contextNode = node.argument;
 
     if (t.isIdentifier(node.argument.id)) {

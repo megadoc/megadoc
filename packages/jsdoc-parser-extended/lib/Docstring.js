@@ -180,6 +180,10 @@ Dpt.hasTypeOverride = function() {
   return getTypeOverridingTags(this.tags).length > 0;
 };
 
+Dpt.markedAsExportedSymbol = function() {
+  return this.hasTag('export');
+}
+
 Dpt.getTypeOverride = function() {
   var typedTags = getTypeOverridingTags(this.tags);
 

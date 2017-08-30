@@ -27,6 +27,7 @@ exports.TYPE_OVERRIDING_TAGS = {
   'property': true,
   'type': true,
   'class': true,
+  'export': true,
 };
 
 exports.TAGS_WITH_STRINGS = {
@@ -61,6 +62,7 @@ exports.KNOWN_TAGS = [
   'constructor',
   'deprecated',
   'example',
+  'export',
   'interface',
   'lends',
   'memberOf',

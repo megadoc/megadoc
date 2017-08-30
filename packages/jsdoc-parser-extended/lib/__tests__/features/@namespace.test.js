@@ -59,4 +59,25 @@ describe('CJS::Parser - @namespace support', function() {
     assert.equal(docs[0].namespace, 'Core.Data');
     assert.equal(docs[0].description, 'Some description.');
   });
+
+  it('should map entities', function() {
+    var docs = parseInline(function() {;
+      // /**
+      //  * @namespace Data
+      //  */
+      // var Cache = {};
+      //
+      // /**
+      //  * @property {String}
+      //  */
+      // Cache.something = String;
+    });
+
+    assert.equal(docs.length, 2);
+    assert.equal(docs[0].name, 'Cache');
+    assert.equal(docs[0].namespace, 'Data');
+
+    assert.equal(docs[1].name, 'something');
+    assert.equal(docs[1].receiver, 'Data.Cache');
+  });
 });

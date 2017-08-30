@@ -96,6 +96,7 @@ function Tag(commentNode, params) {
 
       break;
 
+    case 'export':
     case 'type':
       this.typeInfo = TypeInfo(commentNode, nodeLocation);
 

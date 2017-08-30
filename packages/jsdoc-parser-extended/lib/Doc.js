@@ -35,7 +35,7 @@ Doc.prototype.toJSON = function(registry) {
     id: DocUtils.getIdOf(this),
     isModule: this.isModule(),
     isDefaultExportedSymbol: plainNodeInfo.isDefaultExportedSymbol,
-    isExportedSymbol: plainNodeInfo.isExportedSymbol,
+    isExportedSymbol: plainNodeInfo.isExportedSymbol || this.docstring.markedAsExportedSymbol(),
     loc: plainNodeInfo.loc,
     line: null,
     mixinTargets: null,
