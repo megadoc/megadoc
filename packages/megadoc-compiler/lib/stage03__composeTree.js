@@ -7,9 +7,10 @@ module.exports = function composeTree({
   id,
   treeOperations,
 }) {
-  // console.log("[D] Composing tree of %d nodes", compilation.documents.length);
+  // console.log('[D] Composing tree of %d nodes', documents.length, compilerOptions.strict);
 
   const documentMap = R.indexBy(R.prop('id'), documents);
+  const documentUidMap = R.indexBy(R.prop('uid'), documents);
   const documentChildren = {};
   const documentParents = {};
   const namespaceAttributes = {};
@@ -23,11 +24,20 @@ module.exports = function composeTree({
     }
   };
 
+  const getByIdentifiers = (docId, docUid) => {
+    if (typeof docUid !== 'undefined') {
+      return documentUidMap[docUid];
+    }
+    else {
+      return documentMap[docId]
+    }
+  }
+
   treeOperations.forEach(function(op) {
     switch (op.type) {
       case 'CHANGE_NODE_PARENT':
-        const parent = documentMap[op.data.parentId];
-        const child = documentMap[op.data.id];
+        const parent = getByIdentifiers(op.data.parentId, op.data.parentUid);
+        const child = getByIdentifiers(op.data.id, op.data.uid);
 
         if (!parent) {
           maybeThrowError(
@@ -69,37 +79,26 @@ module.exports = function composeTree({
   });
 
   const withoutBlacklistedDocuments = documents.filter(x => !blacklisted[x.id]);
+  const rootNodes = withoutBlacklistedDocuments.filter(x => !documentParents.hasOwnProperty(x.id));
 
-  const hierarchicalDocuments = withoutBlacklistedDocuments.map(function(document) {
-    const modifications = {};
+  const isDocumentNode = node => node.type === 'Document'
+  const isDocumentEntityNode = node => node.type === 'DocumentEntity'
 
-    if (documentChildren.hasOwnProperty(document.id)) {
-      const childDocuments = documentChildren[document.id].filter(x => x.type === 'Document');
-
-      if (childDocuments.length) {
-        modifications.documents = []
-          .concat(document.documents || [])
-          .concat(childDocuments)
-        ;
-      }
-
-      const childEntities = documentChildren[document.id].filter(x => x.type === 'DocumentEntity');
-
-      if (childEntities.length) {
-        modifications.entities = []
-          .concat(document.entities || [])
-          .concat(childEntities)
-        ;
-      }
-    }
-
-    if (Object.keys(modifications).length > 0) {
-      return document.merge(modifications);
+  const hierarchize = node => {
+    if (!documentChildren.hasOwnProperty(node.id)) {
+      return node;
     }
     else {
-      return document;
+      const children = documentChildren[node.id].map(hierarchize);
+
+      return node.merge({
+        documents: children.filter(isDocumentNode),
+        entities: children.filter(isDocumentEntityNode),
+      })
     }
-  });
+  }
+
+  const hierarchicalNodes = rootNodes.map(hierarchize)
 
   const tree = b.namespace({
     id,
@@ -108,7 +107,7 @@ module.exports = function composeTree({
     meta: namespaceAttributes.meta || {},
     config: namespaceAttributes.config || null,
     indexFields: namespaceAttributes.indexFields || null,
-    documents: hierarchicalDocuments.filter(x => !documentParents.hasOwnProperty(x.id)),
+    documents: hierarchicalNodes,
   });
 
 
