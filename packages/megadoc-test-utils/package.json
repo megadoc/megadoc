@@ -1,6 +1,6 @@
 {
   "name": "megadoc-test-utils",
-  "version": "6.0.0-beta.3",
+  "version": "6.0.0-beta.6",
   "main": "index.js",
   "dependencies": {
     "cheerio": "0.22.0",
