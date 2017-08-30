@@ -1,4 +1,4 @@
-const { createIntegrationSuite } = require('megadoc-test-utils');
+const { assert, createIntegrationSuite } = require('megadoc-test-utils');
 const path = require('path');
 
 describe('[integration] megadoc-plugin-js', function() {
@@ -17,7 +17,7 @@ describe('[integration] megadoc-plugin-js', function() {
         {
           id: 'js',
           pattern: /\.js$/,
-          include: [ path.dirname(sourceFile.path) ],
+          include: [ path.dirname(sourceFile.path + '/*') ],
           processor: {
             name: path.resolve(__dirname, '../index.js'),
             options: {
@@ -29,6 +29,74 @@ describe('[integration] megadoc-plugin-js', function() {
         }
       ]
     }, {}, done)
+  });
+
+  it('works with namespacing', function(done) {
+    const sourceFile = suite.createFile('source.js', `
+      /**
+       * @namespace Core
+       * @module
+       */
+      const Cache = {};
+
+      /** @property {String}  */
+      Cache.something = '';
+    `);
+
+    suite.compile({
+      strict: true,
+      sources: [
+        {
+          id: 'js',
+          pattern: /\.js$/,
+          include: [ path.dirname(sourceFile.path + '/*') ],
+          processor: {
+            name: path.resolve(__dirname, '../index.js'),
+            options: {
+              id: 'js',
+              name: 'JavaScripts',
+              strict: true,
+            }
+          }
+        }
+      ]
+    }, {}, function(err, stats) {
+      if (err) {
+        return done(err)
+      }
+
+      const corpus = stats.corpus.toJSON();
+      const keysOf = x => Object.keys(x).sort()
+
+      const assertEmptyArray = (a) => {
+        assert.deepEqual(a || [], [])
+      }
+
+      assert.deepEqual(keysOf(corpus), [
+        'js',
+        'js/Core',
+        'js/Core.Cache',
+        'js/Core.Cache.something'
+      ])
+
+      assert.equal(corpus['js'].parentNodeId, undefined)
+      assert.deepEqual(corpus['js'].documents, ['js/Core'])
+      assertEmptyArray(corpus['js'].entities)
+
+      assert.equal(corpus['js/Core'].parentNodeId, 'js')
+      assert.deepEqual(corpus['js/Core'].documents, ['js/Core.Cache'])
+      assertEmptyArray(corpus['js/Core'].entities)
+
+      assert.equal(corpus['js/Core.Cache'].parentNodeId, 'js/Core')
+      assertEmptyArray(corpus['js/Core.Cache'].documents)
+      assert.deepEqual(corpus['js/Core.Cache'].entities, ['js/Core.Cache.something'])
+
+      assert.equal(corpus['js/Core.Cache.something'].parentNodeId, 'js/Core.Cache')
+      assertEmptyArray(corpus['js/Core.Cache.something'].documents)
+      assertEmptyArray(corpus['js/Core.Cache.something'].entities)
+
+      done();
+    })
   });
 
   it('works against a real thing', function(done) {

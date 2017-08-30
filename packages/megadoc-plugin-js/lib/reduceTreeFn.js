@@ -21,7 +21,7 @@ module.exports = function reduceTree(context, documents) {
       type: 'CHANGE_NODE_PARENT',
       data: {
         id: x.id,
-        parentId: x.properties.receiver
+        parentUid: documents.filter(y => y.properties.id === x.properties.receiver).map(y => y.uid)[0],
       }
     });
   });

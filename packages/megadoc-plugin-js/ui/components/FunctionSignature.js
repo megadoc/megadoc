@@ -23,7 +23,7 @@ const FunctionSignature = React.createClass({
         return tag.type === 'param' && (tag.typeInfo.name || '?').indexOf('.') === -1;
       })
       .map(function(param) {
-        if (withNames) {
+        if (withNames && param.typeInfo.name) {
           return '<em>' + (param.typeInfo.name || '?') + '</em>: ' + describeType(param.typeInfo.type);
         }
         else {

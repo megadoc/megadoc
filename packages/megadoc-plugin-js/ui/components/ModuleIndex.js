@@ -25,6 +25,7 @@ const ModuleIndex = React.createClass({
     const { documentNode } = this.props;
     const memberFuctions = getByClassification(documentNode, [ DocClassifier.isMethod ]);
     const memberProperties = getByClassification(documentNode, [ DocClassifier.isMemberProperty ]);
+    const exportedSymbols = getByClassification(documentNode, [ DocClassifier.isExportedSymbol ]);
     const staticMembers = getByClassification(documentNode, [
       DocClassifier.isStaticMethod,
       DocClassifier.isStaticProperty,
@@ -41,11 +42,13 @@ const ModuleIndex = React.createClass({
     const others = getRemainingDocuments(documentNode, [
       staticMembers,
       memberFuctions,
-      memberProperties
+      memberProperties,
+      exportedSymbols
     ]);
 
     return (
       <div className="js-document-index">
+        {exportedSymbols.length > 0 && this.renderExportedSymbols('Exported Symbols', exportedSymbols)}
         {memberFuctions.length > 0 && this.renderMethodGroup('Public Functions', memberFuctions)}
         {memberProperties.length > 0 && this.renderPropertyGroup('Public Properties', memberProperties)}
         {publicStaticMembers.length > 0 && this.renderMethodGroup('Public Static Members', publicStaticMembers)}
@@ -179,6 +182,38 @@ const ModuleIndex = React.createClass({
       </tr>
     )
   },
+
+  renderExportedSymbols(title, documents) {
+    return (
+      <div>
+        <h2 className="doc-group__header">
+          {title}
+        </h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Definition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {documents.map(node => {
+              const [ typeInfo ] = node.properties.tags.filter(x => x.type === 'export').map(x => x.typeInfo);
+
+              return (
+                <tr key={node.id}>
+                  <td>{typeInfo.name || node.properties.name}</td>
+                  <td><TypeNames type={typeInfo.type} /></td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
 });
 
 function getByClassification(documentNode, klassifiers) {

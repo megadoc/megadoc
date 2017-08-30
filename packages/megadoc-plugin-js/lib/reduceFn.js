@@ -28,8 +28,14 @@ function reduceNamespaceDocument(actions, doc) {
 }
 
 function reduceModuleDocument(actions, doc) {
+  const id = doc.namespace ?
+    doc.name :
+    // doc.id.replace(/^${doc.namespace}./, '') :
+    doc.id
+  ;
+
   return b.document({
-    id: doc.name,
+    id: id,
     title: doc.id,
     summary: actions.extractSummaryFromMarkdown(doc.description),
     filePath: doc.filePath,
@@ -40,18 +46,20 @@ function reduceModuleDocument(actions, doc) {
 }
 
 function reduceEntityDocument(actions, doc) {
+  const id = doc.symbol + doc.name;
+
   return b.documentEntity({
-    id: doc.id,
+    id: id,
     title: doc.id,
     summary: actions.extractSummaryFromMarkdown(doc.description),
     meta: {
-      anchor: encodeURI((doc.symbol + doc.name).replace(/[\/\s]+/g, '-'))
+      anchor: encodeURI(id.replace(/[\/\s]+/g, '-'))
     },
     filePath: doc.filePath,
     loc: doc.loc,
     properties: doc,
     indices: {
-      [doc.symbol + doc.name]: 0
+      [id]: 0
     },
     indexFields: [
       '$uid',

@@ -1,7 +1,7 @@
 const K = require('jsdoc-parser-extended').Constants;
 
 module.exports = function refineFn(context, documents, done) {
-  // console.log('[D] Sealing %d documents', documents.length);
+  console.log('[D] Sealing %d documents', documents.length);
 
   var config = context.options;
 
@@ -37,6 +37,7 @@ module.exports = function refineFn(context, documents, done) {
   }
 
   warnAboutUnknownTags(withoutOrphans, config);
+  console.log('[D] Post-sealing: %d documents', withoutOrphans.length);
 
   done(null, withoutOrphans);
 };

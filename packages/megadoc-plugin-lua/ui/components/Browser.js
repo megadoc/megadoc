@@ -1,5 +1,6 @@
 const React = require('react');
 const Link = require('components/Link');
+const Sidebar = require('components/Sidebar');
 const { sortBy } = require('lodash');
 const { object, } = React.PropTypes;
 
@@ -12,9 +13,9 @@ const Browser = React.createClass({
 
   render() {
     return (
-      <ul className="lua-browser">
+      <Sidebar.Tree>
         {sortBy(this.props.namespaceNode.documents, 'title').map(this.renderModule)}
-      </ul>
+      </Sidebar.Tree>
     );
   },
 
@@ -23,31 +24,35 @@ const Browser = React.createClass({
     const active = this.props.documentNode === documentNode;
 
     return (
-      <li key={documentNode.uid} className="lua-browser__module">
-        <Link
-          className="lua-browser__link"
-          to={documentNode}
-          children={documentNode.title}
-        />
+      <Sidebar.Entry key={documentNode.uid}>
+        <Sidebar.EntryLink>
+          <Link
+            to={documentNode}
+            children={documentNode.title}
+            title={documentNode.title}
+          />
+        </Sidebar.EntryLink>
 
         {active && entities.length > 0 && (
-          <ol>
+          <Sidebar.List>
             {entities.map(this.renderEntity)}
-          </ol>
+          </Sidebar.List>
         )}
-      </li>
+      </Sidebar.Entry>
     );
   },
 
   renderEntity(documentNode) {
     return (
-      <li key={documentNode.uid} className="lua-browser__module-entity">
-        <Link
-          className="lua-browser__link"
-          to={documentNode}
-          children={documentNode.title}
-        />
-      </li>
+      <Sidebar.Entry key={documentNode.uid}>
+        <Sidebar.EntryLink>
+          <Link
+            to={documentNode}
+            children={documentNode.title}
+            title={documentNode.title}
+          />
+        </Sidebar.EntryLink>
+      </Sidebar.Entry>
     );
   }
 });

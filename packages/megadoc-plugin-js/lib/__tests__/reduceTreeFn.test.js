@@ -14,6 +14,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
         id: 'truck',
         title: 'truck',
         properties: {
+          id: 'truck',
           isModule: true
         }
       }),
@@ -31,7 +32,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     assert.equal(treeOperations.length, 2);
     assert.include(treeOperations[1].data, {
       id: '#beep',
-      parentId: 'truck'
+      parentUid: documents[0].uid,
     });
   });
 
@@ -58,6 +59,47 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     assert.include(treeOperations[1].data, {
       id: 'truck',
       parentId: 'MyNamespace'
+    });
+  });
+
+  it('wires entities to documents nested inside namespaces', function() {
+    const documents = [
+      b.document({
+        id: 'MyNamespace',
+        properties: {}
+      }),
+
+      b.document({
+        id: 'truck',
+        title: 'truck',
+        properties: {
+          id: 'MyNamespace.truck',
+          namespace: 'MyNamespace',
+          isModule: true
+        }
+      }),
+
+      b.documentEntity({
+        id: 'beep',
+        title: 'truck#beep',
+        properties: {
+          isModule: false,
+          receiver: 'MyNamespace.truck'
+        }
+      })
+    ];
+
+    const treeOperations = subject(defaultContext, documents)
+
+    assert.equal(treeOperations.length, 3);
+    assert.include(treeOperations[2].data, {
+      id: 'truck',
+      parentId: 'MyNamespace'
+    });
+
+    assert.include(treeOperations[1].data, {
+      id: 'beep',
+      parentUid: documents[1].uid
     });
   });
 });

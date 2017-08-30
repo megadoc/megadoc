@@ -15,7 +15,7 @@ describe('megadoc-plugin-lua::parseFn', function() {
 
 describe('megadoc-plugin-lua::reduceTreeFn', function() {
   it('works', function() {
-    const config = { common: {}, processor: {} };
+    const config = { compilerOptions: {}, options: {} };
     const documents = [
       b.document({
         id: 'foo',
@@ -31,13 +31,14 @@ describe('megadoc-plugin-lua::reduceTreeFn', function() {
     ];
 
     const treeOperations = reduceTreeFn(config, documents);
+    const changeParentOps = treeOperations.filter(x => x.type === 'CHANGE_NODE_PARENT')
 
-    assert.equal(treeOperations.length, 1);
-    assert.include(treeOperations[0], {
+    assert.equal(changeParentOps.length, 1);
+    assert.include(changeParentOps[0], {
       type: 'CHANGE_NODE_PARENT'
     })
 
-    assert.include(treeOperations[0].data, {
+    assert.include(changeParentOps[0].data, {
       id: documents[1].id,
       parentId: documents[0].id,
     })
