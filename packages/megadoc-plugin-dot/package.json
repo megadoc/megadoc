@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-dot",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Render Graphviz/dot graphs right from Markdown documents.",
   "main": "lib/index.js",
   "repository": {

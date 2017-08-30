@@ -1,5 +1,5 @@
 var nomnoml = require('nomnoml');
-var RE_MEGADOT = Object.freeze(/mega\:\/\/([^\s\]]+)(?:\s*\as\s{1,}"(.+?)")?/g);
+var RE_MEGADOT = /mega\:\/\/([^\s\]]+)(?:\s*\as\s{1,}"(.+?)")?/g;
 
 module.exports = function(compiler, config) {
   var state, injector;

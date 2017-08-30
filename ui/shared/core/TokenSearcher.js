@@ -15,7 +15,7 @@ function TokenSearcherFuzzaldrin(tokens) {
     return map;
   }, {});
 
-  const strings = Object.freeze(Object.keys(flatMap).filter(x => !!x));
+  const strings = Object.keys(flatMap).filter(x => !!x);
 
   return {
     search(term) {

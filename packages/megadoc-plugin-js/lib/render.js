@@ -33,7 +33,7 @@ var BUILT_IN_TYPES = [
   'void'
 ];
 
-var EXPRESSION_TYPES = Object.freeze([
+var EXPRESSION_TYPES = [
   K.TYPE_UNION,
   K.TYPE_ALL_LITERAL,
   K.TYPE_UNKNOWN_LITERAL,
@@ -41,7 +41,7 @@ var EXPRESSION_TYPES = Object.freeze([
   K.TYPE_FUNCTION,
   K.TYPE_OBJECT,
   K.TYPE_OBJECT_PROPERTY
-].reduce(function(map, x) { map[x] = true; return map; }, {}));
+].reduce(function(map, x) { map[x] = true; return map; }, {});
 
 var TAGS_WITH_STRING = K.TAGS_WITH_STRINGS;
 

@@ -141,6 +141,11 @@ and is (currently) backwards compatible.
 - Spotlight Symbol-Jumping support for scanning and jumping between sections of the current article quickly
 - Tooltip Preview support: the name of the article plus an estimated reading time in minutes
 
+## 5.0.5
+
+- No longer using `Object.freeze()` which was causing issues with regular
+  expression string replacements
+
 ## 4.0.1
 
 - `megadoc-run` or `megadoc run` binary was restored to just `megadoc`
