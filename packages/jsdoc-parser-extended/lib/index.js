@@ -9,7 +9,6 @@ var NodeInfo = require('./NodeAnalyzer__NodeInfo');
 var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var babel = require('babel-core');
-var K = require('./constants');
 var t = require('babel-types');
 
 function Parser(params) {
@@ -167,7 +166,7 @@ Ppt.walk = function(ast, inConfig, filePath) {
             ASTUtils.dumpLocation(expr, filePath)
           );
 
-          debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
+          // debuglog('Offending code block:\n%s', babel.transformFromAst(expr).code);
         }
       }
     },

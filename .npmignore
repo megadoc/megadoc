@@ -3,6 +3,7 @@
 /tmp
 /.megadoc
 /packages
+/packages--legacy
 /node_modules
 
 /doc/compiled
