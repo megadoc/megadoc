@@ -1,5 +1,5 @@
 require('../Compiler')
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
 const { builders: b } = require('megadoc-corpus')
 

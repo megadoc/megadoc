@@ -51,7 +51,7 @@ function parseFunctionExpression(node) {
 function parseLiteral(node) {
   return {
     type: K.TYPE_LITERAL,
-    value: node.value
+    value: node.value || node.raw
   };
 }
 

@@ -8,7 +8,9 @@
     "object-assign": "4.0.1"
   },
   "description": "",
-  "devDependencies": {},
+  "devDependencies": {
+    "megadoc-test-utils": "^6.0.0-beta.6"
+  },
   "license": "MIT",
   "main": "index.js",
   "name": "megadoc-corpus",

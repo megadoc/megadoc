@@ -1,6 +1,5 @@
 const createProfiler = require('../createProfiler');
-const { assert } = require('chai')
-const { createSinonSuite } = require('megadoc-test-utils');
+const { assert, createSinonSuite } = require('megadoc-test-utils');
 
 describe("megadoc-compiler::utils::createProfiler", function() {
   const sinon = createSinonSuite(this);

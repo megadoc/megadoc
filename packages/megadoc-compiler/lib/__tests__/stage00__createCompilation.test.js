@@ -1,10 +1,9 @@
-const { assert } = require('chai');
+const { assert, createFileSuite } = require('megadoc-test-utils');
 const path = require('path');
 const subject = require('../stage00__createCompilation');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 
 describe('stage00__createCompilation', function() {
-  const fileSuite = FileSuite(this);
+  const fileSuite = createFileSuite(this);
 
   let processorSpec, output;
 

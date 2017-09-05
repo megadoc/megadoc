@@ -1,7 +1,5 @@
-const { assert } = require('chai');
+const { assert, createFileSuite: FileSuite, createSinonSuite: SinonSuite } = require('megadoc-test-utils');
 const subject = require('../stage05__emit');
-const FileSuite = require('megadoc-test-utils/FileSuite');
-const SinonSuite = require('megadoc-test-utils/SinonSuite');
 const b = require('megadoc-corpus').builders;
 
 describe('stage05__emit', function() {

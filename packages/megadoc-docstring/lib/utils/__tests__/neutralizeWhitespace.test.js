@@ -1,6 +1,5 @@
 var neutralizeWhitespace = require('../neutralizeWhitespace');
-var multiline = require('multiline-slash');
-var assert = require('chai').assert;
+var { assert, multiline } = require('megadoc-test-utils');
 
 describe('utils::neutralizeWhitespace', function() {
   it('strips leading whitespace ONLY if all lines are padded equally', function() {

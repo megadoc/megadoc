@@ -1,6 +1,5 @@
 var parseTitle = require('../parseTitle');
-var expect = require('chai').expect;
-var multiline = require('multiline-slash');
+var { assert, multiline } = require('megadoc-test-utils');
 
 describe('markdown/scan/parseTitle', function() {
   it('should work', function() {
@@ -12,7 +11,7 @@ describe('markdown/scan/parseTitle', function() {
       // ## A little about Mocha
     }, true);
 
-    expect(parseTitle(fixture)).to.equal('Testing CommonJS Modules');
+    assert.equal(parseTitle(fixture), 'Testing CommonJS Modules');
   });
 
   it('should work with stroked headings', function() {
@@ -26,6 +25,6 @@ describe('markdown/scan/parseTitle', function() {
       // Monitor #donk_users, work on high priority bugs and help with reviews.
     }, true);
 
-    expect(parseTitle(fixture)).to.equal('Support Week');
+    assert.equal(parseTitle(fixture), 'Support Week');
   });
 });

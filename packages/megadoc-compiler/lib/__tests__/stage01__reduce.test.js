@@ -1,6 +1,5 @@
-const { assert } = require('chai');
+const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
 const subject = require('../stage01__reduce');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 
 describe('stage01__reduce', function() {
   const fileSuite = FileSuite(this);

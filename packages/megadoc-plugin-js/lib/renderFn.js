@@ -185,7 +185,7 @@ function renderTypeLink(params) {
   if (builtInType) {
     // WTF?
     if (typeof builtInType === 'string') {
-      return '<a href="' + encodeURI(builtInType) + '">' + escapeHTML(typeName) + '</a>';
+      return '<a target="_blank" href="' + encodeURI(builtInType) + '">' + escapeHTML(typeName) + '</a>';
     }
 
     return typeName;

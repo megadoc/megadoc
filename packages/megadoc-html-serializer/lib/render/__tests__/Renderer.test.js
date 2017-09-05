@@ -1,6 +1,5 @@
 var Renderer = require('../Renderer');
-var assert = require('chai').assert;
-var multiline = require('multiline-slash');
+var { assert, multiline } = require('megadoc-test-utils');
 
 describe('Renderer', function() {
   var subject, spmSubject;

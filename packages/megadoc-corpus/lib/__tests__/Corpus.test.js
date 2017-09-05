@@ -2,7 +2,7 @@ require('../../');
 
 var Subject = require("../Corpus");
 var b = require('../CorpusTypes').builders;
-var assert = require('chai').assert;
+var { assert } = require('megadoc-test-utils');
 const { getUID } = Subject;
 
 describe('Corpus', function() {

@@ -1,9 +1,8 @@
 var subject = require("../LinkResolver__MegadocLinkStrategy");
-var assert = require('chai').assert;
-var SinonSuite = require('megadoc-test-utils/SinonSuite');
+var { createSinonSuite, assert } = require('megadoc-test-utils');
 
 describe("LinkResolver__MegadocLinkStrategy", function() {
-  var sinon = SinonSuite(this);
+  var sinon = createSinonSuite(this);
 
   [
     // works with no text

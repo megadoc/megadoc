@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const Subject = require('../TreeRenderer');
 const { builders: b, Corpus } = require('megadoc-corpus');
 const { markdown, linkify } = require('../../renderRoutines');

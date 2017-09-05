@@ -73,6 +73,6 @@
     "react/react-in-jsx-scope": 2,
     "react/prop-types": 1,
 
-    "mocha/no-exclusive-tests": "error"
+    "mocha/no-exclusive-tests": 2
   }
 }

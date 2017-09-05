@@ -1,6 +1,5 @@
-const { assert } = require('chai');
+const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
 const subject = require('../stage01__parse');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 const { createForegroundCluster } = require('divisus');
 
 describe('stage01__parse', function() {

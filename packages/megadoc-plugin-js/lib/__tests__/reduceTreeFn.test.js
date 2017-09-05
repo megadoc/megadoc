@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const subject = require('../reduceTreeFn');
 const b = require('megadoc-corpus').builders;
 

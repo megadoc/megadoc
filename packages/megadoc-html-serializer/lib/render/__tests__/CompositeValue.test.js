@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const CompositeValue = require('../CompositeValue');
 
 describe('CompositeValue', function() {

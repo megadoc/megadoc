@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const reduce = require('../reduceFn');
 const subject = (context, rawDocument, callback) => {
   return reduce(context, {

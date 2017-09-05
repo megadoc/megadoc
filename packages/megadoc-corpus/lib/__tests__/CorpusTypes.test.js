@@ -1,6 +1,6 @@
 require('../../');
 
-var assert = require('chai').assert;
+var assert = require('megadoc-test-utils').assert;
 var Subject = require("../CorpusTypes");
 var b = Subject.builders;
 var t = Subject.builtInTypes;

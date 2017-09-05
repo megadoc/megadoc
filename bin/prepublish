@@ -100,8 +100,7 @@ function ensure_no_unlisted_dependencies {
       ./node_modules/.bin/depcheck \
         $PACKAGE_ROOT \
         --json \
-        --ignores="multiline-slash,sinon,chai" \
-        --ignore-dirs="__tests__,tmp,test_helpers,lib--legacy,ui,doc"
+        --ignore-dirs="tmp,test_helpers,lib--legacy,ui,doc"
       )
 
     # for some reason the --ignores flag is, well, being ignored by depcheck

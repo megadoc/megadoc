@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const subject = require('../renderFn');
 const b = require('megadoc-corpus').builders;
 const HTMLRenderingSuite = require('megadoc-test-utils/HTMLRenderingSuite');

@@ -1,5 +1,4 @@
-var assert = require('assert');
-var multiline = require('multiline-slash');
+var { assert, multiline } = require('megadoc-test-utils');
 var subject = require('../');
 
 function parse(str) {

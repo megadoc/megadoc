@@ -1,7 +1,6 @@
-const { assert } = require('chai');
+const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
 const path = require('path');
 const subject = require('../scanSources');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 
 describe('megadoc-compiler::utils::scanSources', function() {
   const fileSuite = FileSuite(this);

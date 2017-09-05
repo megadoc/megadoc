@@ -1,6 +1,5 @@
-var multiline = require('multiline-slash');
 var subject = require('../parser');
-var assert = require('chai').assert;
+var { assert, multiline } = require('megadoc-test-utils');
 
 describe('parser', function() {
   describe('#parseComment', function() {

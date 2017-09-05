@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
 const mergeTrees = require('../mergeTrees');
 const { builders: b } = require('megadoc-corpus')

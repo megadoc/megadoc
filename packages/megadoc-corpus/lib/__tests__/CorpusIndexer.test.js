@@ -3,7 +3,7 @@ require('../../');
 var Corpus = require("../Corpus");
 var Subject = require('../CorpusIndexer');
 var b = require('../CorpusTypes').builders;
-var assert = require('chai').assert;
+var { assert } = require('megadoc-test-utils');
 
 describe('CorpusIndexer', function() {
   var corpus;

@@ -1,4 +1,4 @@
-const { assert } = require('chai');
+const { assert } = require('megadoc-test-utils');
 const subject = require('../parseFn');
 const FileSuite = require('megadoc-test-utils/FileSuite');
 const configure = require('../configureFn');
