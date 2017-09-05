@@ -11,6 +11,7 @@ var TabularTagGroup = require('./TabularTagGroup');
 var { where } = require('lodash');
 
 const HANDLED_TAGS = [
+  'alias',
   'callback',
   'constructor',
   'class',
