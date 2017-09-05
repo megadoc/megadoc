@@ -49,10 +49,18 @@ function parseFunctionExpression(node) {
 }
 
 function parseLiteral(node) {
-  return {
-    type: K.TYPE_LITERAL,
-    value: node.value || node.raw
-  };
+  if (t.isRegExpLiteral(node)) {
+    return {
+      type: K.TYPE_LITERAL,
+      value: node.pattern
+    }
+  }
+  else {
+    return {
+      type: K.TYPE_LITERAL,
+      value: node.value || node.raw
+    };
+  }
 }
 
 function parseObjectExpression(expr) {
