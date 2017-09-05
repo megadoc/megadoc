@@ -1,6 +1,6 @@
 {
   "name": "megadoc-compiler",
-  "version": "6.0.0-beta.6",
+  "version": "6.0.0-beta.7",
   "main": "lib/Compiler.js",
   "scripts": {},
   "dependencies": {
@@ -11,12 +11,12 @@
     "glob": "7.1.1",
     "invariant": "2.2.1",
     "megadoc-config-utils": "^6.0.0-beta.2",
-    "megadoc-corpus": "^6.0.0-beta.6",
-    "megadoc-linter": "^6.0.0-beta.6",
+    "megadoc-corpus": "^6.0.0-beta.7",
+    "megadoc-linter": "^6.0.0-beta.7",
     "ramda": "0.23.0"
   },
   "devDependencies": {
-    "megadoc-html-serializer": "^6.0.0-beta.6",
-    "megadoc-test-utils": "^6.0.0-beta.6"
+    "megadoc-html-serializer": "^6.0.0-beta.7",
+    "megadoc-test-utils": "^6.0.0-beta.7"
   }
 }
