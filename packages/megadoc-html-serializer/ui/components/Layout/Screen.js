@@ -8,12 +8,14 @@ const Sticky = require('./Sticky');
 const ConfigReceiver = require('components/ConfigReceiver');
 const { OutletRenderer, Outlet } = require('react-transclusion');
 const { PropTypes } = React;
+const { INITIAL_SIDEBAR_WIDTH } = require('constants');
 
 const ConfigType = {
   collapsibleSidebar: PropTypes.bool,
   footer: PropTypes.string,
   resizableSidebar: PropTypes.bool,
   fixedSidebar: PropTypes.bool,
+  sidebarWidth: PropTypes.number,
 };
 
 const LayoutScreen = React.createClass({
@@ -59,6 +61,7 @@ const LayoutScreen = React.createClass({
         resizable={config.resizableSidebar}
         collapsible={config.collapsibleSidebar}
         fixed={config.fixedSidebar}
+        initialSidebarWidth={config.sidebarWidth || INITIAL_SIDEBAR_WIDTH}
       >
         <TwoColumnLayout.LeftColumn>
           <div>

@@ -5,10 +5,7 @@ const resizable = require('utils/resizable');
 const classSet = require('utils/classSet');
 const Icon = require('components/Icon');
 const Button = require('components/Button');
-const {
-  MIN_SIDEBAR_WIDTH,
-  INITIAL_SIDEBAR_WIDTH
-} = require('constants');
+const { MIN_SIDEBAR_WIDTH } = require('constants');
 
 const { PropTypes } = React;
 const LeftColumn = React.createClass({
@@ -51,12 +48,13 @@ const TwoColumnLayout = React.createClass({
     resizable: PropTypes.bool,
     fixed: PropTypes.bool,
     collapsible: PropTypes.bool,
+    initialSidebarWidth: PropTypes.number,
   },
 
   getInitialState() {
     return {
-      initialSidebarWidth: INITIAL_SIDEBAR_WIDTH,
-      sidebarWidth: INITIAL_SIDEBAR_WIDTH,
+      initialSidebarWidth: this.props.initialSidebarWidth,
+      sidebarWidth: this.props.initialSidebarWidth,
       sidebarCollapsed: false
     };
   },

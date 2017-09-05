@@ -25,6 +25,7 @@ module.exports = function generateRuntimeConfig(config, assets) {
 
     resizableSidebar: !!config.resizableSidebar,
     fixedSidebar: !!config.fixedSidebar,
+    sidebarWidth: config.sidebarWidth,
 
     scrollSpying: !!config.scrollSpying,
     spotlight: !!config.spotlight,

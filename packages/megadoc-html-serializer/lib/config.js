@@ -134,6 +134,11 @@ module.exports = {
   fixedSidebar: false,
 
   /**
+   * @property {Number}
+   */
+  sidebarWidth: null,
+
+  /**
    * @property {Boolean}
    *
    * Turn this on if you want the side-bar links to become
