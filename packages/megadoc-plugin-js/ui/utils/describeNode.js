@@ -7,7 +7,10 @@ module.exports = function(nodeInfo) {
 function describeNode(nodeInfo, stringify) {
   const print = stringify ? prettyJSON : Identity;
 
-  if (nodeInfo.type === K.TYPE_LITERAL) {
+  if (nodeInfo.type === K.TYPE_LITERAL && nodeInfo.regexp) {
+    return nodeInfo.hasOwnProperty('value') ? nodeInfo.value : null;
+  }
+  else if (nodeInfo.type === K.TYPE_LITERAL) {
     return print(nodeInfo.hasOwnProperty('value') ? nodeInfo.value : null);
   }
   else if (nodeInfo.type === K.TYPE_ARRAY) {

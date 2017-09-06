@@ -76,7 +76,7 @@ var DocTags = React.createClass({
         </TabularTagGroup>
 
         {this.props.withExamples && (
-          <TagGroup tags={this.props.tags} tagType="example" renderer={ExampleTag}>
+          <TagGroup alwaysGroup tags={this.props.tags} tagType="example" renderer={ExampleTag} tagName="ul">
             Examples
           </TagGroup>
         )}

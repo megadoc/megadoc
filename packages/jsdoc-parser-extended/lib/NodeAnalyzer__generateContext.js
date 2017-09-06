@@ -52,7 +52,8 @@ function parseLiteral(node) {
   if (t.isRegExpLiteral(node)) {
     return {
       type: K.TYPE_LITERAL,
-      value: node.pattern
+      value: node.pattern,
+      regexp: true,
     }
   }
   else {
