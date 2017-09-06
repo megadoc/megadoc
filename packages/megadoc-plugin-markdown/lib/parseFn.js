@@ -7,14 +7,14 @@ const strHumanize = require('./utils/strHumanize');
 
 module.exports = function parseFn(context, absoluteFilePath, done) {
   const config = context.options;
-  const filePath = absoluteFilePath.replace(context.compilerOptions.assetRoot + '/','')
+  const relativeFilePath = absoluteFilePath.replace(context.compilerOptions.assetRoot + '/','')
   const entry = {
-    filePath: filePath,
+    filePath: absoluteFilePath,
     source: fs.readFileSync(absoluteFilePath, 'utf-8')
   };
 
-  const extName = path.extname(entry.filePath);
-  const fileName = path.basename(filePath)
+  const extName = path.extname(relativeFilePath);
+  const fileName = path.basename(relativeFilePath)
     .replace(extName, '')
     .replace(/\W/g, '-')
   ;
@@ -32,7 +32,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
 
   entry.plainTitle = RendererUtils.markdownToText(entry.title);
   entry.fileName = fileName;
-  entry.folder = path.dirname(entry.filePath);
+  entry.folder = path.dirname(relativeFilePath);
 
   done(null, [ entry ]);
 };

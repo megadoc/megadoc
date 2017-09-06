@@ -1,8 +1,7 @@
 const R = require('ramda');
-const relativize = require('./utils/relativize');
 
 module.exports = function mergeTrees(prevCompilation, nextCompilation) {
-  const changedFiles = R.indexBy(R.identity)(nextCompilation.files.map(relativize(nextCompilation.compilerOptions.assetRoot)));
+  const changedFiles = R.indexBy(R.identity)(nextCompilation.files);
   const changedDocumentIds = R.indexBy(R.prop('id'), nextCompilation.documents);
 
   const {

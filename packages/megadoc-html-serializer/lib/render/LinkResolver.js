@@ -192,7 +192,7 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
       console.warn('%s: Unable to resolve link to "%s" (from: "%s")',
         dumpNodeFilePath(contextNode),
         descriptor.path,
-        contextNode ? contextNode.uid : '<<unknown>>'
+        contextNode ? contextNode.id : '<<unknown>>'
       );
     }
 

@@ -4,16 +4,12 @@ const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
-const relativize = require('./utils/relativize');
-
 module.exports = function reduce(reduceRoutines, compilation, done) {
-  const { compilerOptions, processor, refinedDocuments } = compilation;
+  const { processor, refinedDocuments } = compilation;
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };
-
-  const relativizeThis = relativize(compilerOptions.assetRoot)
 
   reduceEach(reduceRoutines, context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return mergeObject(compilation, {
@@ -24,10 +20,6 @@ module.exports = function reduce(reduceRoutines, compilation, done) {
   function normalize(documentNode) {
     if (!documentNode.meta) {
       documentNode.meta = {};
-    }
-
-    if (documentNode.filePath) {
-      documentNode.filePath = relativizeThis(documentNode.filePath)
     }
 
     return documentNode;

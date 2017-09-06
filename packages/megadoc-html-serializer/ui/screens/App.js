@@ -41,7 +41,7 @@ const App = React.createClass({
     const { config } = this.props;
 
     this.documentURI = new DocumentURI({
-      mountPath: this.props.location.protocol === 'file:' ? config.mountPath : null,
+      mountPath: config.mountPath,
       extension: config.emittedFileExtension,
     });
 
