@@ -1,15 +1,15 @@
-var fs = require('fs');
-var nodejsPath = require('path');
-var ASTUtils = require('./ASTUtils');
-var Doc = require('./Doc');
-var Docstring = require('./Docstring');
-var Registry = require('./Registry');
-var analyzeNode = require('./NodeAnalyzer__analyzeNode');
-var NodeInfo = require('./NodeAnalyzer__NodeInfo');
-var pick = require('lodash').pick;
-var assign = require('lodash').assign;
-var babel = require('babel-core');
-var t = require('babel-types');
+const fs = require('fs');
+const nodejsPath = require('path');
+const ASTUtils = require('./ASTUtils');
+const Doc = require('./Doc');
+const Docstring = require('./Docstring');
+const Registry = require('./Registry');
+const analyzeNode = require('./NodeAnalyzer__analyzeNode');
+const NodeInfo = require('./NodeAnalyzer__NodeInfo');
+const { assign, pick} = require('lodash');
+const babel = require('babel-core');
+const t = require('babel-types');
+const { NoUnidentified } = require('./lintingRules')
 const { dumpLocation } = ASTUtils
 const debugLog = function() {
   if (process.env.MEGADOC_DEBUG === '1') {
@@ -17,8 +17,9 @@ const debugLog = function() {
   }
 }
 
-function Parser() {
+function Parser({ linter }) {
   this.registry = new Registry();
+  this.linter = linter
 }
 
 Parser.prototype.parseFile = function(filePath, config) {
@@ -37,6 +38,8 @@ Parser.prototype.parseFile = function(filePath, config) {
 
 Parser.prototype.parseString = function(str, config, filePath) {
   if (str.length > 0) {
+    const { linter } = this;
+
     try {
       if (config.parse) {
         this.ast = config.parse(str, filePath);
@@ -54,15 +57,14 @@ Parser.prototype.parseString = function(str, config, filePath) {
       this.walk(this.ast, config, filePath);
     }
     catch (e) {
-      if (config.strict) {
-        throw e;
-      }
-      else {
-        console.warn("%s: File could not be parsed, most likely due to a SyntaxError.", filePath);
-        console.warn(e && e.stack || e);
+      linter.logError({
+        message: 'file could not be parsed',
+        loc: linter.locationForNode({
+          filePath,
+        })
+      })
 
-        return;
-      }
+      linter.addToErrorReport(e)
     }
   }
 };
@@ -112,23 +114,8 @@ function getCommentPool(path) {
   }
 }
 
-Parser.prototype.walk = function(ast, inConfig, filePath) {
-  var parser = this;
-  var config = pick(inConfig, [
-    'inferModuleIdFromFileName',
-    'inferNamespaces',
-    'nodeAnalyzers',
-    'docstringProcessors',
-    'tagProcessors',
-    'tagAliases',
-    'customTags',
-    'namespaceDirMap',
-    'moduleMap',
-    'alias',
-    'namedReturnTags',
-    'strict',
-    'verbose',
-  ]);
+Parser.prototype.walk = function(ast, config, filePath) {
+  const { linter, registry } = this;
 
   if (process.env.MEGADOC_DEBUG === '1') {
     debugLog('\nParsing: %s', filePath);
@@ -144,7 +131,15 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
           if (comment[0] === '*') {
             debugLog('Found a docstring comment at %s', dumpLocation(path.node, 'line'));
 
-            parser.parseComment(comment, path, config, filePath, index === commentPool.length-1);
+            parseComment({
+              comment,
+              config,
+              filePath,
+              isClosestToNode: index === commentPool.length-1,
+              linter,
+              path,
+              registry,
+            });
           }
           else {
             debugLog('Ignoring comment since it does not start with /** at line %s', dumpLocation(path.node, 'line'))
@@ -171,7 +166,7 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
         }
 
         if (name) {
-          doc = parser.registry.get(name, filePath);
+          doc = registry.get(name, filePath);
 
           debugLog('  - Module name: "%s"', name)
 
@@ -179,16 +174,17 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
             var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
 
             doc.markAsExported();
-            parser.registry.trackModuleDocAtPath(doc, modulePath);
+            registry.trackModuleDocAtPath(doc, modulePath);
           }
         }
         else {
-          console.warn(
-            'Unable to identify exported module id. ' +
-            'This probably means you are using an unnamed `module.exports`.' +
-            ' (source: %s)',
-            dumpLocation(expr, filePath)
-          );
+          linter.logRuleEntry({
+            rule: NoUnidentified,
+            loc: linter.locationForNode({
+              filePath: filePath,
+              loc: expr.loc
+            }),
+          })
         }
       }
     },
@@ -216,7 +212,15 @@ Parser.prototype.toJSON = function() {
   return withoutLends.map(doc => doc.toJSON(registry));
 };
 
-Parser.prototype.parseComment = function(comment, path, config, filePath, isClosestToNode) {
+function parseComment({
+  comment,
+  config,
+  filePath,
+  isClosestToNode,
+  linter,
+  path,
+  registry
+}) {
   var contextNode = path.node;
   var nodeLocation = dumpLocation(contextNode, filePath);
 
@@ -233,7 +237,7 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
   }
 
   if (docstring.doesLend()) {
-    this.registry.trackLend(docstring.getLentTo(), path);
+    registry.trackLend(docstring.getLentTo(), path);
   }
 
   var predefinedNamespace = getPredefinedNamespace(config, docstring, filePath);
@@ -254,7 +258,7 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
   var nodeInfo;
 
   if (isClosestToNode) {
-    nodeInfo = analyzeNode(contextNode, path, filePath, config);
+    nodeInfo = analyzeNode(contextNode, path, filePath, config, linter);
   }
   else {
     nodeInfo = new NodeInfo(contextNode, filePath);
@@ -277,10 +281,10 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
         console.info('[info] Found a module "%s" (source: %s)', doc.id, nodeLocation);
       }
 
-      this.registry.addModuleDoc(doc, modulePath, filePath);
+      registry.addModuleDoc(doc, modulePath, filePath);
     }
     else {
-      this.registry.addEntityDoc(doc, path);
+      registry.addEntityDoc(doc, path);
 
       if (config.verbose) {
         console.info('[info] Found an entity "%s" belonging to "%s" (source: %s)',
@@ -292,13 +296,17 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
     }
 
     doc.getTypeDefs().forEach(typeDefDoc => {
-      this.registry.addEntityDoc(typeDefDoc, path);
+      registry.addEntityDoc(typeDefDoc, path);
     })
   }
   else {
-    console.warn("%s: No identifier was found for this document, it will be ignored!",
-      nodeLocation
-    );
+    linter.logRuleEntry({
+      rule: NoUnidentified,
+      loc: linter.locationForNode({
+        filePath: filePath,
+        loc: path.node.loc
+      })
+    })
   }
 
   return true;

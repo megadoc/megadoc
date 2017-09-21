@@ -19,14 +19,7 @@ const generateInlinePlugin = require('./emit/generateInlinePlugin');
 const K = require('./constants');
 
 function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
-  this.compilerConfig = {
-    assetRoot: compilerConfig.assetRoot,
-    outputDir: compilerConfig.outputDir,
-    tmpDir: compilerConfig.tmpDir,
-    verbose: compilerConfig.verbose,
-    strict: compilerConfig.strict,
-  };
-
+  this.compilerConfig = compilerConfig;
   this.assetUtils = new AssetUtils(this.compilerConfig);
   this.config = Object.assign({},
     defaults,

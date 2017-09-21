@@ -14,7 +14,7 @@ const b = Types.builders;
  *
  * The Corpus public API.
  */
-function Corpus(config, { linter }) {
+function Corpus({ strict = true, alias: aliases }, { linter }) {
   const exports = {};
   const nodes = {};
   const paths = {};
@@ -26,7 +26,6 @@ function Corpus(config, { linter }) {
   });
 
   const buildIndices = CorpusIndexer(exports);
-  const strict = config.strict !== false;
 
   /**
    * @method add
@@ -78,33 +77,7 @@ function Corpus(config, { linter }) {
     return null;
   };
 
-  /**
-   * Resolve a link to a document.
-   *
-   * @param {Object} anchor
-   * @param {T.Node} [anchor.contextNode]
-   *        The contextNode we're resolving from. Defaults to the root corpus
-   *        node.
-   *
-   * @param {String} anchor.text
-   *        The term to use for looking up the document.
-   *
-   * @return {T.Node}
-   */
-  exports.resolve = function(anchor) {
-    if (nodes.hasOwnProperty(anchor.text)) {
-      return nodes[anchor.text];
-    }
-    else if (paths.hasOwnProperty(anchor.text)) {
-      return paths[anchor.text];
-    }
-
-    const withContextNode = Object.assign({}, anchor, {
-      contextNode: anchor.contextNode || corpusNode
-    });
-
-    return resolveLink(withContextNode, { getParentOf: exports.getParentOf });
-  };
+  exports.resolve = resolve;
 
   /**
    * @private
@@ -114,29 +87,6 @@ function Corpus(config, { linter }) {
       uids: Object.keys(nodes),
       paths: Object.keys(paths),
     };
-  };
-
-  /**
-   * Define an alias for a document.
-   *
-   * @param {String} uid
-   *        The UID of the node to alias.
-   *
-   * @param {String} alias
-   *        The alias to use (should be fully-qualified.)
-   */
-  exports.alias = function(path, alias) {
-    const node = exports.at(path);
-
-    if (!node) {
-      linter.logConfigurationError({
-        message: `Node "${path}" aliased as "${alias}" could not be found.`,
-      })
-
-      return;
-    }
-
-    node.indices[alias] = 1;
   };
 
   /**
@@ -207,6 +157,51 @@ function Corpus(config, { linter }) {
     }
   };
 
+  /**
+   * Resolve a link to a document.
+   *
+   * @param {Object} anchor
+   * @param {T.Node} [anchor.contextNode]
+   *        The contextNode we're resolving from. Defaults to the root corpus
+   *        node.
+   *
+   * @param {String} anchor.text
+   *        The term to use for looking up the document.
+   *
+   * @return {T.Node}
+   */
+  function resolve(anchor) {
+    if (nodes.hasOwnProperty(anchor.text)) {
+      return nodes[anchor.text];
+    }
+    else if (paths.hasOwnProperty(anchor.text)) {
+      return paths[anchor.text];
+    }
+
+    const withContextNode = Object.assign({}, anchor, {
+      contextNode: anchor.contextNode || corpusNode
+    });
+
+    return (
+      resolveLink(withContextNode, { getParentOf: exports.getParentOf }) ||
+      resolveAliasedLink(withContextNode)
+    );
+  }
+
+  /** @private */
+  function resolveAliasedLink(anchor) {
+    if (aliases.hasOwnProperty(anchor.text) && aliases[anchor.text] !== anchor.text) {
+      const aliased = exports.resolve(R.merge(anchor, { text: aliases[anchor.text] }))
+
+      if (aliased) {
+        return {
+          node: aliased,
+          text: anchor.text
+        }
+      }
+    }
+  }
+
   function add(node, parentNode) {
     if (node.type === 'Namespace') {
       const hasConflict = corpusNode.namespaces.map(R.prop('id')).indexOf(node.id) > -1;
@@ -254,7 +249,10 @@ function Corpus(config, { linter }) {
     }
 
     node.path = generateNodePath(exports, node);
-    node.indices = Object.assign({}, buildIndices(node, { getParentOf: exports.getParentOf }), node.indices);
+    node.indices = Object.assign({},
+      buildIndices(node, { getParentOf: exports.getParentOf }),
+      node.indices
+    );
 
     if (nodes.hasOwnProperty(node.uid)) {
       linter.logError({

@@ -36,8 +36,8 @@ exports.renderTree = function(state, tree, renderOperations) {
   function visitNode(node) {
     const nextData = {};
 
-    if (renderOperations[node.id]) {
-      const nextProperties = renderNodeProperties(reducers, node.properties, renderOperations[node.id]);
+    if (renderOperations[node.uid]) {
+      const nextProperties = renderNodeProperties(reducers, node.properties, renderOperations[node.uid]);
 
       if (nextProperties) {
         nextData.properties = nextProperties;

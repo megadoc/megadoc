@@ -1,11 +1,11 @@
 var path = require('path');
 var config = {
-  assetRoot: path.resolve(__dirname, '..'),
+  assetRoot: path.resolve(__dirname),
 
   title: 'megadoc',
   outputDir: '/srv/http/docs/megadoc',
-  useHashLocation: true,
-  publicPath: '',
+  // useHashLocation: true,
+  // publicPath: '',
   stylesheet: 'doc/theme.less',
   disqus: false,
   showSettingsLinkInBanner: false,
@@ -17,15 +17,15 @@ var config = {
   assets: [
     { 'packages/megadoc-corpus/doc/corpus-resolver.png': 'images/corpus-resolver.png' },
   ],
-  strict: false,
+  strict: true,
 
   alias: {
-    // 'md__megadoc-plugin-markdown/readme': 'megadoc-plugin-markdown',
-    // 'md__megadoc-plugin-js/readme': 'megadoc-plugin-js',
-    // 'md__megadoc-plugin-git/readme': 'megadoc-plugin-git',
-    // 'md__megadoc-plugin-lua/readme': 'megadoc-plugin-lua',
-    // 'md__megadoc-plugin-yard-api/readme': 'megadoc-plugin-yard-api',
-    // 'md__megadoc-corpus/readme#uids': 'CorpusUIDs'
+    'megadoc-plugin-markdown': 'md__megadoc-plugin-markdown/readme',
+    'megadoc-plugin-js': 'md__megadoc-plugin-js/readme',
+    'megadoc-plugin-git': 'md__megadoc-plugin-git/readme',
+    'megadoc-plugin-lua': 'md__megadoc-plugin-lua/readme',
+    'megadoc-plugin-yard-api': 'md__megadoc-plugin-yard-api/readme',
+    'CorpusUIDs': 'md__megadoc-corpus/readme#uids',
   },
 
 };
@@ -41,7 +41,10 @@ config.sources = [
       'ui/**/*.js',
     ],
 
-    exclude: [ /__tests__/, /vendor/, ],
+    exclude: [
+      '**/__tests__/**',
+      '**/vendor/**',
+    ],
 
     processor: [ 'megadoc-plugin-js', {
       useDirAsNamespace: false,
@@ -248,8 +251,7 @@ function addPackageDocumentation(pluginName, options) {
         'packages/' + pluginName + '/{lib,defs}**/*.js'
       ],
       exclude: [
-        /__tests__/,
-        /legacy/
+        '**/__tests__/**'
       ],
       processor: [ 'megadoc-plugin-js', {
         baseURL: url,
@@ -268,7 +270,7 @@ function addPackageDocumentation(pluginName, options) {
   config.sources.push({
     id: 'md__' + pluginName,
     include: [ 'packages/' + pluginName + '/**/*.md' ],
-    exclude: [ /node_modules/, /__tests__/ ],
+    exclude: [ '**/node_modules/**', '**/__tests__/**' ],
     processor: [ 'megadoc-plugin-markdown', {
       title: pluginName,
       baseURL: url,

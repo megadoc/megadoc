@@ -1,6 +1,9 @@
 var assert = require('assert');
 var neutralizeWhitespace = require('./utils/neutralizeWhitespace');
 
+/**
+ * @module
+ */
 function Parser() {
   this.factories = {}
 }

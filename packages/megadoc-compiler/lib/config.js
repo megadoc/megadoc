@@ -36,4 +36,5 @@ module.exports = {
   sources: null,
 
   threads: 1,
+  alias: {},
 };

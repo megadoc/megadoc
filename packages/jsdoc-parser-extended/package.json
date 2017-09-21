@@ -29,6 +29,7 @@
     "comment-parser": "0.4.0",
     "lodash": "3.10.1",
     "megadoc-docstring": "^6.0.0-beta.7",
+    "megadoc-linter": "^6.0.0-beta.7",
     "weakmap": "0.0.6"
   },
   "devDependencies": {

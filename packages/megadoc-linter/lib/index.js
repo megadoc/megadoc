@@ -13,7 +13,36 @@ const LevelStrings = {
 
 let lastFile; // YES
 
-/** @module Linter */
+/**
+ * @module Linter
+ *
+ * @typedef   {Linter~Config}
+ * @type      {Object}
+ * @property  {String} assetRoot
+ *
+ *
+ * @typedef   {Linter~Location}
+ * @type      {Object}
+ *
+ * @property  {String} filePath
+ * @property  {Object} loc
+ * @property  {Object} loc.start
+ * @property  {Number} loc.start.line
+ *
+ *
+ * @typedef   {Linter~Rule}
+ * @type      {Object}
+ *
+ * @property  {String} name
+ * @property  {function(Object): String} messageFn
+ * @property  {Object} defaults
+ * @property  {Linter~Level} defaults.level
+ *
+ * @typedef   {Linter~Level}
+ * @type      {Number}
+ *
+ * One of `LOG_INFO`, `LOG_WARN` or `LOG_ERROR`.
+ */
 
 /**
  * Create a Linter that works according to user configuration.
@@ -27,6 +56,7 @@ exports.for = function(config) {
   )
 
   return {
+    addToErrorReport: R.partial(addToErrorReport, [config]),
     logMessage: R.partial(logMessage, [config]),
     logRuleEntry: R.partial(logRuleEntry, [config]),
     logError: R.partial(logError, [config]),
@@ -37,6 +67,11 @@ exports.for = function(config) {
       stringifyNodeLocation
     )
   }
+}
+
+// TODO
+function addToErrorReport(config, error) {
+  console.error(error && error.stack || error)
 }
 
 /**
@@ -208,6 +243,7 @@ exports.LOG_WARN = LOG_WARN
 exports.LOG_ERROR = LOG_ERROR
 exports.NoLocation = { filePath: '<<none>>' }
 exports.NullLinter = {
+  addToErrorReport: R.T,
   logMessage: R.T,
   logRuleEntry: R.T,
   logError: R.T,

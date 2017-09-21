@@ -1,6 +1,9 @@
 const path = require('path');
 const K = require('./constants');
 
+/**
+ * @module Config
+ */
 module.exports = {
   /**
    * @property {String}
@@ -87,9 +90,9 @@ module.exports = {
   singlePageMode: false,
 
   /**
-   * @property {Array.<BannerLink>}
+   * @property {Array.<Config~BannerLink>}
    *
-   * @typedef {BannerLink}
+   * @typedef {Config~BannerLink}
    * @property {String} text
    * @property {String} href
    */

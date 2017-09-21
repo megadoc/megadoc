@@ -19,7 +19,7 @@ module.exports = function render({ serializer, compilations }, done) {
     relativeLinks: !serializerConfig.singlePageMode,
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
-    compilerConfig: serializer.compilerConfig,
+    linter: Linter.for(serializer.compilerConfig),
   });
 
   const markdownRenderer = new Renderer({

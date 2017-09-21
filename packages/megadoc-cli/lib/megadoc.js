@@ -68,7 +68,7 @@ if (program.debug === true) {
   config.debug = true;
 }
 
-console.log('Megadoc: version "%s".', pkg.version);
+console.log('megadoc: version "%s".', pkg.version);
 
 const runOptions = {
   purge: program.purge,
@@ -80,6 +80,8 @@ if (program.watch) {
   compileAndWatch(config, runOptions);
 }
 else {
+  const startedAt = new Date()
+
   compile(config, runOptions, function(err, result) {
     if (err) {
       console.error(Array(80 - 'megadoc-cli'.length).join('*'));
@@ -94,7 +96,8 @@ else {
       printProfile(result.profile)
     }
 
-    console.log('OK!');
+    const elapsed = (new Date() - startedAt) / 1000
+    console.log(`Done: ${elapsed}s.`);
   });
 }
 

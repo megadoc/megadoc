@@ -1,10 +1,11 @@
-var ASTUtils = require('./ASTUtils');
-var NodeInfo = require('./NodeAnalyzer__NodeInfo');
-var K = require('./constants');
-var generateContext = require('./NodeAnalyzer__generateContext');
-var t = require('babel-types');
+const ASTUtils = require('./ASTUtils');
+const NodeInfo = require('./NodeAnalyzer__NodeInfo');
+const K = require('./constants');
+const generateContext = require('./NodeAnalyzer__generateContext');
+const t = require('babel-types');
+const { PropertyNodes } = require('./lintingRules')
 
-function analyzeNode(node, path, filePath, config) {
+function analyzeNode(node, path, filePath, config, linter) {
   var info = new NodeInfo(node, filePath);
 
   if (process.env.MEGADOC_DEBUG === '1') {
@@ -56,7 +57,7 @@ function analyzeNode(node, path, filePath, config) {
     info.$contextNode = node;
   }
   else if (t.isObjectProperty(node)) {
-    analyzeProperty(node, path, info, filePath, config);
+    analyzeProperty(node, path, info, filePath, linter);
   }
   // Factory returns:
   //
@@ -71,7 +72,7 @@ function analyzeNode(node, path, filePath, config) {
     info.$contextNode = node;
   }
   else if (t.isExportDefaultDeclaration(node)) {
-    const realInfo = analyzeNode(node.declaration, path, filePath, config);
+    const realInfo = analyzeNode(node.declaration, path, filePath, config, linter);
     info.id = realInfo.id;
     info.$contextNode = realInfo.$contextNode;
     info.markAsModule();
@@ -79,7 +80,7 @@ function analyzeNode(node, path, filePath, config) {
     info.markAsDefaultExportedSymbol()
   }
   else if (t.isExportNamedDeclaration(node) && node.declaration) {
-    const realInfo = analyzeNode(node.declaration, path, filePath, config);
+    const realInfo = analyzeNode(node.declaration, path, filePath, config, linter);
 
     info.id = realInfo.id;
     info.receiver = ASTUtils.getVariableNameFromFilePath(filePath);
@@ -87,7 +88,7 @@ function analyzeNode(node, path, filePath, config) {
     info.markAsExportedSymbol()
   }
   else if (t.isExportNamedDeclaration(node) && node.specifiers.length === 1) {
-    return analyzeNode(node.specifiers[0], path, filePath, config);
+    return analyzeNode(node.specifiers[0], path, filePath, config, linter);
   }
   else if (t.isExportSpecifier(node)) {
     info.id = node.exported.name;
@@ -276,7 +277,7 @@ function analyzeExpressionStatement(node, path, info, filePath, config) {
   }
 }
 
-function analyzeProperty(node, path, info, filePath) {
+function analyzeProperty(node, path, info, filePath, linter) {
   // A property that points to an identifier, possibly in the current scope:
   //
   //     function fn() {}
@@ -284,7 +285,7 @@ function analyzeProperty(node, path, info, filePath) {
   //     var obj = {
   //       someFunc: fn // <--
   //     };
-  if (t.isIdentifier(node.key) && t.isIdentifier(node.value)) {
+  if (t.isIdentifier(node.key) && t.isIdentifier(node.value) && node.value.name !== 'undefined') {
     var identifierPath = ASTUtils.findIdentifierInScope(node.value.name, path);
     if (identifierPath) {
       info.id = node.key.name;
@@ -301,9 +302,17 @@ function analyzeProperty(node, path, info, filePath) {
   }
 
   if (!info.id) {
-    console.warn('Unable to parse property key!',
-      ASTUtils.dumpLocation(node, filePath)
-    );
+    linter.logRuleEntry({
+      rule: PropertyNodes,
+      params: {
+        key: node.key && node.key.type || undefined,
+        value: node.value && node.value.type || undefined,
+      },
+      loc: linter.locationForNode({
+        filePath,
+        loc: node.loc
+      })
+    })
   }
 }
 

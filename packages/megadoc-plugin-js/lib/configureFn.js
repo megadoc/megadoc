@@ -19,6 +19,7 @@ module.exports = function configure(userOptions) {
     tagProcessors: config.tagProcessors || [],
     postProcessors: config.postProcessors || [],
     tagAliases: config.tagAliases,
+    verbose: config.verbose,
   };
 
   assert(typeof config.id === 'string',
