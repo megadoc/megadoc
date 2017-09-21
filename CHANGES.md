@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.0.0-beta.9
+
+- [[megadoc-plugin-js]] Added a new option `inferNamespaces`  for controlling
+  the behaviour of inferring namespaces from @module tags when `.` is used
+- [[megadoc-html-serializer]] Added a new outlet SidebarLink that allows the
+  user to define a link in the sidebar
+- [[megadoc-html-serializer]] LinkOutlet now accepts "to" besides "href" to
+  point to a document instead of a hard-coded URI
+
 ## 6.0.0
 
 This is a very exciting release; a new model for representing the documents rendered by megadoc is introduced called the [Corpus](). This model enables

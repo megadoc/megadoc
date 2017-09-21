@@ -2,7 +2,7 @@ const React = require('react');
 const Button = require('components/Button');
 const classSet = require('classnames');
 
-const SidebarSearch = React.createClass({
+const SidebarSearchOutlet = React.createClass({
   propTypes: {
     $outletOptions:  React.PropTypes.shape({
       text:  React.PropTypes.string.isRequired,
@@ -37,9 +37,4 @@ const SidebarSearch = React.createClass({
   }
 });
 
-module.exports = function(megadoc) {
-  megadoc.outlets.add('Layout::SidebarSearch', {
-    key: 'xxx',
-    component: SidebarSearch
-  });
-};
+module.exports = SidebarSearchOutlet;

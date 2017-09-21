@@ -279,3 +279,4 @@ function getNamespaceOfNode(rootNode) {
 
 module.exports = CorpusAPI;
 module.exports.getNamespaceOfNode = getNamespaceOfNode;
+module.exports.hrefOf = getHref;

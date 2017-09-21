@@ -9,6 +9,7 @@ const ScrollSpy = require('../components/ScrollSpy');
 const DocumentResolver = require('../DocumentResolver');
 const DocumentURI = require('../DocumentURI');
 const LayoutTemplate = require('../LayoutTemplate');
+const CorpusAPI = require('../CorpusAPI');
 const NotFound = require('./NotFound');
 const { object, func, } = React.PropTypes;
 
@@ -129,28 +130,42 @@ const Root = React.createClass({
   },
 
   renderInternalError() {
+    const { corpus } = this.props
     const location = this.getLocation();
     const anchor = location.hash.replace('#', '');
-    let redirectUrl;
+    const redirectUrl = [
+      // omit the anchor and try ?
+      () => {
+        if (anchor && anchor.length) {
+          const withoutAnchor = this.resolveCurrentDocument(Object.assign({}, location, {
+            hash: ''
+          }))
 
-    if (anchor && anchor.length) {
-      const withoutAnchor = this.resolveScope(Object.assign({}, location, {
-        hash: ''
-      }))
+          if (withoutAnchor) {
+            return location.pathname;
+          }
+        }
+      },
 
-      if (withoutAnchor.scope) {
-        redirectUrl = location.pathname;
-      }
-    }
-    else {
-      redirectUrl = '/index.html';
-    }
+      // resolve by parent path ?
+      () => {
+        const dirname = string => string.split('/').slice(0, -1).join('/')
+        const parentNode = corpus.getByURI(dirname(location.pathname) + '/index.html')
+
+        if (parentNode) {
+          return CorpusAPI.hrefOf(parentNode)
+        }
+      },
+
+      // oh snap ?
+      () => '/index.html'
+    ].reduce((found, f) => found || f(), null);
 
     return (
       <NotFound
         location={this.getLocation()}
         redirectUrl={redirectUrl}
-        corpus={this.props.corpus}
+        corpus={corpus}
       />
     );
   },

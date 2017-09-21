@@ -8,8 +8,8 @@ module.exports = {
   key: 'CJS::Module',
   component: React.createClass({
     propTypes: {
-      documentNode: object.isRequired,
-      namespaceNode: object.isRequired,
+      documentNode: object,
+      namespaceNode: object,
     },
 
     render() {

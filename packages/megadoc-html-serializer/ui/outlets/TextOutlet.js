@@ -21,9 +21,4 @@ const TextOutlet = React.createClass({
   }
 });
 
-module.exports = function(megadoc) {
-  megadoc.outlets.add('Text', {
-    key: 'Text',
-    component: TextOutlet
-  });
-};
+module.exports = TextOutlet;

@@ -27,27 +27,8 @@ function createMegadoc(config) {
   // expose this to plugins so that we can move to a non-global version in the
   // future
   megadoc.outlets = outlets;
-  megadoc.outlets.define('Meta');
-  megadoc.outlets.define('LayoutWrapper');
-  megadoc.outlets.define('Layout');
-  megadoc.outlets.define('Layout::Banner');
-  megadoc.outlets.define('Layout::Content');
-  megadoc.outlets.define('Layout::Sidebar');
-  megadoc.outlets.define('Layout::NavBar');
-  megadoc.outlets.define('Layout::SidebarHeader');
-  megadoc.outlets.define('Layout::SidebarSearch');
-  megadoc.outlets.define('Layout::Footer');
-  megadoc.outlets.define('Layout::NotFound');
-  megadoc.outlets.define('Inspector');
-  megadoc.outlets.define('Image');
-  megadoc.outlets.define('Link');
-  megadoc.outlets.define('Text');
 
-  require('./outlets/SidebarHeaderOutlet')(megadoc);
-  require('./outlets/SidebarSearchOutlet')(megadoc);
-  require('./outlets/ImageOutlet')(megadoc);
-  require('./outlets/LinkOutlet')(megadoc);
-  require('./outlets/TextOutlet')(megadoc);
+  require('./outlets')(outlets)
 
   console.log('Firing up.');
   console.log('Loading %d external plugins.', config.plugins.length)

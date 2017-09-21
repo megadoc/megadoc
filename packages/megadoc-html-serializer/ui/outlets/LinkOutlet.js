@@ -1,5 +1,5 @@
 const React = require('react');
-const { shape, string } = React.PropTypes;
+const { shape, string, object } = React.PropTypes;
 const Link = require('components/Link');
 
 const LinkOutlet = React.createClass({
@@ -7,28 +7,42 @@ const LinkOutlet = React.createClass({
     location: shape({
       pathname: string,
     }),
+    corpus: object,
   },
 
   propTypes: {
     $outletOptions: shape({
-      href: string.isRequired,
+      href: string,
+      className:  string,
+      to:  string,
       text: string.isRequired,
       title: string,
     }).isRequired,
   },
 
   render() {
-    const props = this.props.$outletOptions;
+    const options = this.props.$outletOptions;
+    const linkAttrs = {
+      title: options.title,
+      className: options.className,
+      children: options.text
+    }
 
-    return (
-      <Link href={props.href} title={props.title} children={props.text} />
-    );
+    if (options.to) {
+      return <Link {...linkAttrs} to={this.resolveNode(options.to)} />
+    }
+    else {
+      return <Link {...linkAttrs} href={options.href} />
+    }
+  },
+
+  resolveNode(id) {
+    const { corpus } = this.context;
+
+    return [ corpus.getByURI, corpus.get ].reduce(function(found, f) {
+      return found || f(id)
+    }, null)
   }
 });
 
-module.exports = function(megadoc) {
-  megadoc.outlets.add('Link', {
-    key: 'Link',
-    component: LinkOutlet
-  });
-};
+module.exports = LinkOutlet
