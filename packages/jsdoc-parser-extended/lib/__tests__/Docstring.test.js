@@ -7,6 +7,7 @@ function parse(strGenerator) {
   var comment = multiline(strGenerator);
 
   return new Docstring(comment, {
+    config: {},
     emitter: new EventEmitter()
   });
 };

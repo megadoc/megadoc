@@ -114,4 +114,28 @@ module.exports = {
    * @property {Boolean}
    */
   sanitize: true,
+
+  /**
+   * Override titles for certain documents, regardless of their H1 header.
+   *
+   * This is useful for "README" files that may have a title that's redundant
+   * (like the name of the package itself) so you can override that to, say,
+   * "About" for better readability.
+   *
+   * For example, the following file:
+   *
+   *     # megadoc-plugin-markdown
+   *
+   *     ... description ...
+   *
+   * Would normally have a title of "megadoc-plugin-markdown". To override it,
+   * specify its file path:
+   *
+   *     {
+   *       titleOverrides: {
+   *         'README.md': 'About'
+   *       }
+   *     }
+   */
+  titleOverrides: {}
 };

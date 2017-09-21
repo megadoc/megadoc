@@ -1,6 +1,12 @@
 # Changelog
 
-## 6.0.0-beta.9
+## 6.0.0-beta.12
+
+- [[megadoc-plugin-markdown]] Added a new option `titleOverrides` for
+  overriding a title of a document (for use in the sidebar or spotlight, for
+  example) while keeping its contents intact
+
+## 6.0.0-beta.11
 
 - [[megadoc-plugin-js]] Added a new option `inferNamespaces`  for controlling
   the behaviour of inferring namespaces from @module tags when `.` is used

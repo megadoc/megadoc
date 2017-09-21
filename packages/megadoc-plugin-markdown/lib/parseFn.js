@@ -19,7 +19,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
     .replace(/\W/g, '-')
   ;
 
-  entry.title = parseTitle(entry.source);
+  entry.title = getPredefinedTitle(config, relativeFilePath) || parseTitle(entry.source);
   entry.wordCount = entry.source.split(/\s+/).length;
   entry.summary = RendererUtils.extractSummary(entry.source, {
     plainText: true
@@ -36,3 +36,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
 
   done(null, [ entry ]);
 };
+
+function getPredefinedTitle(config, filePath) {
+  return config.titleOverrides && config.titleOverrides[filePath]
+}

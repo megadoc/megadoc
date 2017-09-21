@@ -22,9 +22,4 @@ const ImageOutlet = React.createClass({
   }
 });
 
-module.exports = function(megadoc) {
-  megadoc.outlets.add('Image', {
-    key: 'Image',
-    component: ImageOutlet
-  });
-};
+module.exports = ImageOutlet
