@@ -28,6 +28,8 @@ const ModuleBody = React.createClass({
     const moduleDocs = documentNode.entities.map(x => x.properties);
     const renderableType = DocClassifier.getDisplayType(documentNode);
     const mixedInTargets = getMixedInTargets(documentNode, this.props.namespaceNode);
+    const withoutTypedefs = moduleDocs.filter(x => !DocClassifier.isTypeDef(x))
+    const typedefs = moduleDocs.filter(DocClassifier.isTypeDef)
 
     return (
       <div>
@@ -58,24 +60,24 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderExamples(doc)}
-        {this.renderStaticMethods(doc, moduleDocs)}
-        {this.renderCallbacks(doc, moduleDocs)}
-        {this.renderTypeDefs(doc, moduleDocs)}
+        {this.renderStaticMethods(doc, withoutTypedefs)}
+        {this.renderCallbacks(doc, withoutTypedefs)}
+        {this.renderTypeDefs(doc, typedefs)}
         {this.renderProperties(
           doc,
-          moduleDocs,
+          withoutTypedefs,
           (scope) => !isStaticProperty(scope),
           "Instance Properties"
         )}
 
         {this.renderProperties(
           doc,
-          moduleDocs,
+          withoutTypedefs,
           isStaticProperty,
           "Static Properties"
         )}
 
-        {this.renderMethods(doc, moduleDocs)}
+        {this.renderMethods(doc, withoutTypedefs)}
         {this.renderAdditionalResources(doc)}
       </div>
     );
@@ -251,27 +253,23 @@ const ModuleBody = React.createClass({
     );
   },
 
-  renderTypeDefs(doc, moduleDocs) {
-    const typeDefDocs = orderAwareSort(
-      doc,
-      moduleDocs.filter(DocClassifier.isTypeDef),
-      'id'
-    );
+  renderTypeDefs(doc, typedefs) {
+    const ordered = orderAwareSort(doc, typedefs, 'id');
 
-    if (!typeDefDocs.length) {
+    if (!ordered.length) {
       return null;
     }
 
     return (
       <DocGroup label="Type Definitions" tagName="ul" className="class-view__type-def-list">
-        {typeDefDocs.map(typeDefDoc => {
+        {ordered.map(typedefDoc => {
           return (
             <Doc
-              key={typeDefDoc.id}
-              doc={typeDefDoc}
-              anchor={this.getEntityAnchor(typeDefDoc)}
+              key={typedefDoc.id}
+              doc={typedefDoc}
+              anchor={this.getEntityAnchor(typedefDoc)}
             >
-              {typeDefDoc.tags.filter(x => x.type === 'property').map((tag, i) => {
+              {typedefDoc.tags.filter(x => x.type === 'property').map((tag, i) => {
                 return (
                   <PropertyTag
                     key={i}

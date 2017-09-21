@@ -1,13 +1,14 @@
 var K = require('./constants');
 var findWhere = require('lodash').findWhere;
 
-function extractIdInfo(tags) {
+function extractIdInfo(tags, config = {}) {
+  var { inferNamespaces = true } = config;
   var name, id;
   var namespace = getNameFromTag(tags, 'namespace');
   var fqid = id = getNameFromTag(tags, 'module') || getNameFromTag(tags, 'class');
 
   // check for inline namespaces found in a module id string
-  if (fqid && fqid.indexOf(K.NAMESPACE_SEP) > -1) {
+  if (inferNamespaces && fqid && fqid.indexOf(K.NAMESPACE_SEP) > -1) {
     if (namespace) {
       console.warn(
         "Document '%s' already has a namespace specified using the " +

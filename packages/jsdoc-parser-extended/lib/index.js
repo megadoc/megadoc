@@ -100,6 +100,7 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
   var parser = this;
   var config = pick(inConfig, [
     'inferModuleIdFromFileName',
+    'inferNamespaces',
     'nodeAnalyzers',
     'docstringProcessors',
     'tagProcessors',

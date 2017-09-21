@@ -46,14 +46,14 @@ function Docstring(comment, params) {
 
   const typeDefInfo = extractTypeDefs(this.tags);
   const tagsWithoutTypeDefs = typeDefInfo.tags;
-  const inferredData = prepareFromTags(commentNode[0], params.nodeLocation, tagsWithoutTypeDefs);
+  const inferredData = prepareFromTags(commentNode[0], params, tagsWithoutTypeDefs);
 
   Object.assign(this, inferredData, {
     tags: tagsWithoutTypeDefs
   });
 
   this.typeDefs = typeDefInfo.typeDefs.map(typeDef => {
-    return Object.assign({}, typeDef, prepareFromTags({ description: '' }, params.nodeLocation, typeDef.tags), {
+    return Object.assign({}, typeDef, prepareFromTags({ description: '' }, params, typeDef.tags), {
       name: typeDef.name,
       namespace: inferredData.namespace
     });
@@ -82,9 +82,9 @@ function Docstring(comment, params) {
   return this;
 }
 
-function prepareFromTags(commentNode, nodeLocation, tags) {
+function prepareFromTags(commentNode, { nodeLocation, config }, tags) {
   const info = {};
-  const idInfo = extractIdInfo(tags);
+  const idInfo = extractIdInfo(tags, { inferNamespaces: config.inferNamespaces });
 
   info.name = idInfo.name;
   info.namespace = idInfo.namespace;

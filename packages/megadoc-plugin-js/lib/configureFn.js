@@ -6,6 +6,7 @@ module.exports = function configure(userOptions) {
   var parserConfig = {
     strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
+    inferNamespaces: config.inferNamespaces,
     customTags: config.customTags,
     namespaceDirMap: config.namespaceDirMap,
     moduleMap: config.moduleMap,

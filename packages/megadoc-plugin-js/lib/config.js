@@ -73,6 +73,21 @@ module.exports = {
   inferModuleIdFromFileName: true,
 
   /**
+   * @property {Boolean}
+   *
+   * Automatically classify a module as part of a namespace if its name
+   * contains "." characters.
+   *
+   * For example, the following module will be namespaced under "core":
+   *
+   *     /**
+   *      * @module core.cache
+   *      *\/
+   *      function cache() {}
+   */
+  inferNamespaces: true,
+
+  /**
    * @property {Function}
    *
    * You can implement this function if you need to perform any custom
