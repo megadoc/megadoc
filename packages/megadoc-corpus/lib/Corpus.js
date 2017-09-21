@@ -1,18 +1,20 @@
-var assert = require('assert');
-var resolveLink = require('./CorpusResolver');
-var CorpusIndexer = require('./CorpusIndexer');
-var Types = require('./CorpusTypes');
-var integrityEnforcements = require('./CorpusIntegrityEnforcements');
-var assign = require('object-assign');
-var dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
-var b = Types.builders;
+const assert = require('assert');
+const R = require('ramda')
+const resolveLink = require('./CorpusResolver');
+const CorpusIndexer = require('./CorpusIndexer');
+const Types = require('./CorpusTypes');
+const assign = require('object-assign');
+const dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
+const { NoConflicts, NoNamespaceConflicts } = require('./lintingRules')
+
+const b = Types.builders;
 
 /**
  * @preserveOrder
  *
  * The Corpus public API.
  */
-function Corpus(config) {
+function Corpus(config, { linter }) {
   const exports = {};
   const nodes = {};
   const paths = {};
@@ -24,8 +26,7 @@ function Corpus(config) {
   });
 
   const buildIndices = CorpusIndexer(exports);
-
-  config = config || {};
+  const strict = config.strict !== false;
 
   /**
    * @method add
@@ -127,10 +128,13 @@ function Corpus(config) {
   exports.alias = function(path, alias) {
     const node = exports.at(path);
 
-    assert(!!node,
-      "ArgumentError: attempting to alias a node '" + path + "' to '" + alias + "' but no such node exists." +
-      (config.debug ? "\nAvailable UIDs:\n" + JSON.stringify(Object.keys(nodes), null, 2) : '')
-    );
+    if (!node) {
+      linter.logConfigurationError({
+        message: `Node "${path}" aliased as "${alias}" could not be found.`,
+      })
+
+      return;
+    }
 
     node.indices[alias] = 1;
   };
@@ -205,14 +209,26 @@ function Corpus(config) {
 
   function add(node, parentNode) {
     if (node.type === 'Namespace') {
-      assert(corpusNode.namespaces.map(function(x) { return x.id; }).indexOf(node.id) === -1,
-        "IntegrityViolation: a namespace with the id '" + node.id + "' already exists."
-      );
+      const hasConflict = corpusNode.namespaces.map(R.prop('id')).indexOf(node.id) > -1;
 
-      assert(hasValidNamespaceId(node),
-        'IntegrityViolation: a namespace id may not start with "/" ' +
-        '(forward slash) or "." (dot) characters.'
-      );
+      if (hasConflict) {
+        linter.logRuleEntry({
+          rule: NoNamespaceConflicts,
+          params: { node },
+          loc: linter.locationForNode(node),
+        })
+
+        return;
+      }
+
+      if (!hasValidNamespaceId(node)) {
+        linter.logError({
+          message: `Namespace id may not start with "/" or "."`,
+          loc: linter.locationForNode(node),
+        })
+
+        return;
+      }
 
       corpusNode.namespaces.push(node);
     }
@@ -220,30 +236,46 @@ function Corpus(config) {
       node.parentNodeId = parentNode.uid;
     }
     else {
-      assert(node.parentNodeId,
-        `IntegrityViolation: expected node to reference a parentNode. (Source: ${dumpNodeFilePath(node)})`
-      );
+      linter.logError({
+        message: `Unable to resolve parent document`,
+        loc: linter.locationForNode(node)
+      })
+
+      return;
     }
 
     if (node.type === 'Namespace' || node.type === 'Document') {
       node.symbol = node.hasOwnProperty('symbol') ? node.symbol : '/';
     }
 
+    // TODO: why are we doing this here?
     if (!node.meta) {
       node.meta = {};
     }
-
-    integrityEnforcements.apply(node);
 
     node.path = generateNodePath(exports, node);
     node.indices = Object.assign({}, buildIndices(node, { getParentOf: exports.getParentOf }), node.indices);
 
     if (nodes.hasOwnProperty(node.uid)) {
-      lenientAssert(false,
-        'IntegrityViolation: a node with the UID "' + (node.path || node.uid) + '" already exists.' +
-        '\nPast definition: ' + dumpNodeFilePath(nodes[node.uid]) +
-        '\nThis definition: ' + dumpNodeFilePath(node)
-      );
+      linter.logError({
+        message: `Node has been seen before, this shouldn't happen...`,
+        loc: linter.locationForNode(node)
+      });
+    }
+
+    if (paths.hasOwnProperty(node.path)) {
+      linter.logRuleEntry({
+        rule: NoConflicts,
+        params: {
+          path: node.path,
+          previousLocation: linter.locationForNodeAsString(paths[node.path])
+        },
+        loc: linter.locationForNode(node)
+      })
+
+      if (strict) {
+        return;
+      }
     }
 
     nodes[node.uid] = node;
@@ -259,17 +291,6 @@ function Corpus(config) {
     }
 
     return node;
-  }
-
-  function lenientAssert(expr, message) {
-    if (config.strict !== false) {
-      assert(expr, message);
-    }
-    else {
-      if (!expr) {
-        console.warn(message);
-      }
-    }
   }
 
   return exports;

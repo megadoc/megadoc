@@ -8,6 +8,8 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     options: {},
   };
 
+  const uidOf = (id, nodes) => nodes.filter(x => x.id === id).map(x => x.uid)[0]
+
   it('wires entities to their parents', function() {
     const documents = [
       b.document({
@@ -31,7 +33,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
 
     assert.equal(treeOperations.length, 2);
     assert.include(treeOperations[1].data, {
-      id: '#beep',
+      uid: uidOf('#beep', documents),
       parentUid: documents[0].uid,
     });
   });
@@ -57,7 +59,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
 
     assert.equal(treeOperations.length, 2);
     assert.include(treeOperations[1].data, {
-      id: 'truck',
+      uid: uidOf('truck', documents),
       parentId: 'MyNamespace'
     });
   });
@@ -93,12 +95,12 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
 
     assert.equal(treeOperations.length, 3);
     assert.include(treeOperations[2].data, {
-      id: 'truck',
+      uid: uidOf('truck', documents),
       parentId: 'MyNamespace'
     });
 
     assert.include(treeOperations[1].data, {
-      id: 'beep',
+      uid: uidOf('beep', documents),
       parentUid: documents[1].uid
     });
   });

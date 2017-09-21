@@ -1,9 +1,18 @@
 const K = require('jsdoc-parser-extended').Constants;
+const Linter = require('megadoc-linter');
+const { NoOrphans, NoUnknownTags, NoUnknownNodes, } = require('./lintingRules');
+
+const debugLog = function() {
+  if (process.env.MEGADOC_DEBUG === '1') {
+    console.log.apply(console, arguments)
+  }
+}
 
 module.exports = function refineFn(context, documents, done) {
-  console.log('[D] Sealing %d documents', documents.length);
+  debugLog('Sealing %d documents', documents.length);
 
-  var config = context.options;
+  const config = context.options;
+  const linter = Linter.for(context.compilerOptions)
 
   var namespaceIds =  documents.reduce(function(map, node) {
     if (node.namespace && !documents.some(x => x.id === node.namespace)) {
@@ -27,24 +36,20 @@ module.exports = function refineFn(context, documents, done) {
   })
 
   var withNamespaces = documents.concat(namespaceDocuments);
-
-  var withoutOrphans = discardOrphans(withNamespaces, {
-    warn: true,
-  });
+  var withoutOrphans = discardOrphans(linter, withNamespaces);
 
   if (config.verbose) {
-    warnAboutUnknownContexts(withoutOrphans);
+    warnAboutUnknownContexts(linter, withoutOrphans);
   }
 
-  warnAboutUnknownTags(withoutOrphans, config);
-  console.log('[D] Post-sealing: %d documents', withoutOrphans.length);
+  warnAboutUnknownTags(linter, config, withoutOrphans);
+
+  debugLog('Post-sealing: %d documents', withoutOrphans.length);
 
   done(null, withoutOrphans);
 };
 
-function discardOrphans(database, options) {
-  const shouldWarn = options.warn;
-
+function discardOrphans(linter, database) {
   const idMap = database.reduce(function(map, doc) {
     map[doc.id] = true;
     return map;
@@ -57,32 +62,31 @@ function discardOrphans(database, options) {
       (!doc.receiver || !idMap.hasOwnProperty(doc.receiver))
     );
 
-    if (isOrphan && shouldWarn) {
-      console.warn(
-        '%s: Unable to map "%s" to any module, it will be discarded.',
-        dumpDocPath(doc),
-        doc.id
-      );
+    if (isOrphan) {
+      linter.logRuleEntry({
+        rule: NoOrphans,
+        params: doc,
+        loc: getDocLocation(doc)
+      })
     }
 
     return !isOrphan;
   })
 }
 
-function warnAboutUnknownContexts(database) {
+function warnAboutUnknownContexts(linter, database) {
   database.forEach(function(doc) {
     if (!doc.type || doc.type === K.TYPE_UNKNOWN) {
-      console.info(
-        '%s: Document "%s" is unidentified. This probably means megadoc does not ' +
-        'know how to handle it yet.',
-        dumpDocPath(doc),
-        doc.id
-      );
+      linter.logRuleEntry({
+        rule: NoUnknownNodes,
+        params: doc,
+        loc: getDocLocation(doc)
+      });
     }
   });
 }
 
-function warnAboutUnknownTags(database, config) {
+function warnAboutUnknownTags(linter, config, database) {
   var KNOWN_TAGS = combine([
     config.customTags || {},
     K.KNOWN_TAGS.reduce(function(map, x) { map[x] = true; return map; }, {})
@@ -92,10 +96,11 @@ function warnAboutUnknownTags(database, config) {
     if (doc && doc && doc.tags) {
       doc.tags.forEach(function(tag) {
         if (!(tag.type in KNOWN_TAGS)) {
-          console.warn("%s: Unknown tag '%s'.",
-            dumpDocPath(doc),
-            tag.type
-          );
+          linter.logRuleEntry({
+            rule: NoUnknownTags,
+            params: tag,
+            loc: getDocLocation(doc)
+          });
         }
       });
     }
@@ -114,6 +119,9 @@ function combine(maps) {
   }, {});
 }
 
-function dumpDocPath(doc) {
-  return doc.filePath + (doc.line ? (':' + doc.line) : '');
+function getDocLocation(doc) {
+  return {
+    filePath: doc.filePath,
+    line: doc.line
+  }
 }

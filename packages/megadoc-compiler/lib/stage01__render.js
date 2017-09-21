@@ -13,7 +13,7 @@ module.exports = function render(renderRoutines, compilation, done) {
     const documentRenderingDescriptor = fn(context, renderRoutines, document);
 
     if (documentRenderingDescriptor) {
-      map[document.id] = documentRenderingDescriptor;
+      map[document.uid] = documentRenderingDescriptor;
     }
 
     return map;

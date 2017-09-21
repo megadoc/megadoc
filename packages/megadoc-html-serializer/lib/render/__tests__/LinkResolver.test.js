@@ -1,14 +1,15 @@
-var LinkResolver = require('../LinkResolver');
-var Corpus = require('megadoc-corpus').Corpus;
+const LinkResolver = require('../LinkResolver');
+const Corpus = require('megadoc-corpus').Corpus;
 const NodeURIDecorator = require('../../NodeURIDecorator');
 const { assert, stubConsoleWarn } = require('megadoc-test-utils')
-var b = require('megadoc-corpus').Types.builders;
+const b = require('megadoc-corpus').Types.builders;
+const { NullLinter } = require('megadoc-linter')
 
 describe('LinkResolver', function() {
   var resolver, corpus;
 
   beforeEach(function() {
-    corpus = Corpus();
+    corpus = Corpus({}, { linter: NullLinter });
     corpus.add(
       b.namespace({
         meta: {
@@ -62,7 +63,7 @@ describe('LinkResolver', function() {
       singlePageMode: false
     }));
 
-    resolver = new LinkResolver(corpus);
+    resolver = new LinkResolver(corpus, { linter: NullLinter });
   });
 
   it('should not blow up with a docstring containing no links', function() {

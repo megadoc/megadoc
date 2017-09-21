@@ -1,4 +1,5 @@
 const generateHTMLFile = require('./generateHTMLFile');
+const { dumpNodeFilePath } = require('megadoc-corpus');
 
 module.exports = function DocumentFileEmitter(params) {
   const ui = params.ui;
@@ -49,8 +50,8 @@ module.exports = function DocumentFileEmitter(params) {
         forceOverwrite: node.meta.hrefRewritten
       });
 
-      if (rc === 'ERR_FILE_EXISTS') {
-        console.error('Offending document:', node.uid);
+      if (rc === 'ERR_FILE_EXISTS' && node.type !== 'Namespace') {
+        console.error('Offending document:', dumpNodeFilePath(node));
       }
 
       done();

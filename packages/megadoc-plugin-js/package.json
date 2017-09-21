@@ -23,11 +23,12 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "babel-core": "6.24.1",
-    "babel-types": "6.24.1",
+    "babel-core": "6.26.0",
+    "babel-types": "6.26.0",
     "jsdoc-parser-extended": "^6.0.0-beta.12",
     "lodash": "3.10.1",
     "megadoc-corpus": "^6.0.0-beta.7",
+    "megadoc-linter": "^6.0.0-beta.7",
     "weakmap": "0.0.6"
   },
   "devDependencies": {

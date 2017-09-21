@@ -1,5 +1,7 @@
-const { builders: b, dumpNodeFilePath } = require('megadoc-corpus');
 const R = require('ramda');
+const { builders: b, dumpNodeFilePath } = require('megadoc-corpus');
+const isDocumentNode = node => node.type === 'Document'
+const isDocumentEntityNode = node => node.type === 'DocumentEntity'
 
 module.exports = function composeTree({
   compilerOptions,
@@ -9,7 +11,7 @@ module.exports = function composeTree({
 }) {
   // console.log('[D] Composing tree of %d nodes', documents.length, compilerOptions.strict);
 
-  const documentMap = R.indexBy(R.prop('id'), documents);
+  const documentIdMap = R.indexBy(R.prop('id'), documents);
   const documentUidMap = R.indexBy(R.prop('uid'), documents);
   const documentChildren = {};
   const documentParents = {};
@@ -29,7 +31,21 @@ module.exports = function composeTree({
       return documentUidMap[docUid];
     }
     else {
-      return documentMap[docId]
+      return documentIdMap[docId]
+    }
+  }
+
+  const hierarchize = node => {
+    if (!documentChildren.hasOwnProperty(node.uid)) {
+      return node;
+    }
+    else {
+      const children = documentChildren[node.uid].map(hierarchize);
+
+      return node.merge({
+        documents: children.filter(isDocumentNode),
+        entities: children.filter(isDocumentEntityNode),
+      })
     }
   }
 
@@ -47,7 +63,7 @@ module.exports = function composeTree({
             )
           );
 
-          blacklisted[op.data.id] = true;
+          blacklisted[op.data.uid || op.data.id] = true;
 
           return;
         }
@@ -59,17 +75,17 @@ module.exports = function composeTree({
             )
           );
 
-          blacklisted[op.data.id] = true;
+          blacklisted[op.data.uid || op.data.id] = true;
 
           return;
         }
 
-        if (!documentChildren[parent.id]) {
-          documentChildren[parent.id] = [];
+        if (!documentChildren[parent.uid]) {
+          documentChildren[parent.uid] = [];
         }
 
-        documentChildren[parent.id].push(child);
-        documentParents[child.id] = parent;
+        documentChildren[parent.uid].push(child);
+        documentParents[child.uid] = parent;
 
         break;
       case 'SET_NAMESPACE_ATTRIBUTES':
@@ -78,29 +94,15 @@ module.exports = function composeTree({
     }
   });
 
-  const withoutBlacklistedDocuments = documents.filter(x => !blacklisted[x.id]);
-  const rootNodes = withoutBlacklistedDocuments.filter(x => !documentParents.hasOwnProperty(x.id));
-
-  const isDocumentNode = node => node.type === 'Document'
-  const isDocumentEntityNode = node => node.type === 'DocumentEntity'
-
-  const hierarchize = node => {
-    if (!documentChildren.hasOwnProperty(node.id)) {
-      return node;
-    }
-    else {
-      const children = documentChildren[node.id].map(hierarchize);
-
-      return node.merge({
-        documents: children.filter(isDocumentNode),
-        entities: children.filter(isDocumentEntityNode),
-      })
-    }
-  }
+  const withoutBlacklistedDocuments = documents.filter(x => !blacklisted[x.uid] && !blacklisted[x.id]);
+  const rootNodes = withoutBlacklistedDocuments
+    .filter(x => !documentParents.hasOwnProperty(x.uid))
+    .filter(R.complement(isDocumentEntityNode))
+  ;
 
   const hierarchicalNodes = rootNodes.map(hierarchize)
 
-  const tree = b.namespace({
+  return b.namespace({
     id,
     name: namespaceAttributes.name || id,
     title: namespaceAttributes.title || null,
@@ -109,9 +111,6 @@ module.exports = function composeTree({
     indexFields: namespaceAttributes.indexFields || null,
     documents: hierarchicalNodes,
   });
-
-
-  return tree;
 };
 
 function withSourceMessage(document, message) {

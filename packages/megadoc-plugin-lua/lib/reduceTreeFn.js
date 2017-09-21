@@ -9,7 +9,7 @@ module.exports = function reduceTreeFn(context, documents) {
       return {
         type: 'CHANGE_NODE_PARENT',
         data: {
-          id: document.id,
+          uid: document.uid,
           parentId: document.properties.receiver,
         }
       }

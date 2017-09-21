@@ -1,5 +1,4 @@
 const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
-const path = require('path');
 const subject = require('../scanSources');
 
 describe('megadoc-compiler::utils::scanSources', function() {
@@ -15,15 +14,11 @@ describe('megadoc-compiler::utils::scanSources', function() {
     ];
 
     output = subject(
-      /\.js$/,
-      [ path.join(fileSuite.getRootDirectory(), 'sources/**/*') ],
-      [ path.join(fileSuite.getRootDirectory(), 'sources/exclude_me') ]
+      null,
+      'sources/**/*',
+      'sources/exclude_me/*',
+      fileSuite.getRootDirectory()
     );
-  });
-
-  it('should include only the files matching the pattern', function() {
-    assert.include(output, sourceFiles[0].path);
-    assert.notInclude(output, sourceFiles[1].path);
   });
 
   it('should include only the files in the specified directories', function() {

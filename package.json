@@ -4,7 +4,7 @@
   "description": "Fast and sleek and modular documentation generator.",
   "scripts": {
     "build": "NODE_ENV=production packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js -p --display-chunks",
-    "build:dev": "packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js",
+    "build:dev": "packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js -w --progress",
     "coverage": "COVERAGE=1 ./bin/test",
     "doc": "./bin/build-docs",
     "lint": "./bin/lint && ./bin/lint-ui",
@@ -28,8 +28,8 @@
   "homepage": "https://github.com/megadoc/megadoc",
   "dependencies": {},
   "devDependencies": {
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
+    "babel-preset-es2015": "6.26.0",
+    "babel-preset-react": "6.26.0",
     "coveralls": "2.11.4",
     "depcheck": "0.6.7",
     "eslint": "3.19.0",

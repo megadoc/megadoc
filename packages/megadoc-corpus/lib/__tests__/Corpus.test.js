@@ -1,15 +1,21 @@
 require('../../');
 
-var Subject = require("../Corpus");
-var b = require('../CorpusTypes').builders;
-var { assert } = require('megadoc-test-utils');
+const Subject = require("../Corpus");
+const { builders: b } = require('../CorpusTypes');
+const { assert, createSinonSuite } = require('megadoc-test-utils');
+const { NullLinter } = require('megadoc-linter');
+const { NoConflicts, NoNamespaceConflicts } = require('../lintingRules');
 const { getUID } = Subject;
 
 describe('Corpus', function() {
-  var subject;
+  const sinon = createSinonSuite(this)
+  let subject;
 
   beforeEach(function() {
-    subject = Subject();
+    sinon.spy(NullLinter, 'logRuleEntry')
+    sinon.spy(NullLinter, 'logError')
+
+    subject = Subject({}, { linter: NullLinter });
   });
 
   it('works', function() {
@@ -68,30 +74,35 @@ describe('Corpus', function() {
 
   it('borks if the namespace id is taken', function() {
     subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
+    subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
 
-    assert.throws(function() {
-      subject.add(b.namespace({ id: 'foo', name: 'test-plugin', }));
-    }, "IntegrityViolation: a namespace with the id 'foo' already exists.");
+    assert.calledWith(NullLinter.logRuleEntry, sinon.match({
+      rule: NoNamespaceConflicts
+    }))
   });
 
   it('borks if i try to add a non-namespace node without a parentNode', function() {
-    assert.throws(function() {
-      subject.add(b.document({ id: 'foo' }));
-    }, "IntegrityViolation: expected node to reference a parentNode.");
+    subject.add(b.document({ id: 'foo' }));
+
+    assert.calledWith(NullLinter.logError, sinon.match({
+      message: `Unable to resolve parent document`
+    }))
   });
 
   it('borks on duplicate UIDs', function() {
-    assert.throws(function() {
-      subject.add(
-        b.namespace({
-          id: 'foo',
-          name: 'test-plugin',
-          documents: [
-            b.document({ id: 'a' }),
-            b.document({ id: 'a' }),
-          ]
-        }));
-    }, "IntegrityViolation: a node with the UID \"foo/a\" already exists.");
+    subject.add(
+      b.namespace({
+        id: 'foo',
+        name: 'test-plugin',
+        documents: [
+          b.document({ id: 'a' }),
+          b.document({ id: 'a' }),
+        ]
+      }));
+
+    assert.calledWith(NullLinter.logRuleEntry, sinon.match({
+      rule: NoConflicts
+    }))
   });
 
   describe('serialization', function() {

@@ -92,18 +92,21 @@ module.exports = function AssetUtils(config) {
             return 'ERR_FILE_EXISTS';
           }
 
-          console.info("Overwriting existing asset at '%s'...", filePath);
+          if (config.verbose) {
+            console.log("Overwriting existing asset at '%s'...", filePath);
+          }
 
           fs.removeSync(filePath);
 
           return utils.writeAsset(fileName, contents, options);
         }
 
-        console.error(
-          "ERROR: A file or directory already exists at this path - it is not",
-          "possible to overwrite!",
-          filePath
-        );
+        if (config.verbose) {
+          console.log(
+            "A file or directory already exists at this path - it is not",
+            "possible to overwrite!\n\t%s", filePath
+          );
+        }
 
         return 'ERR_FILE_EXISTS';
       }

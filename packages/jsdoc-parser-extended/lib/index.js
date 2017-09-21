@@ -10,6 +10,12 @@ var pick = require('lodash').pick;
 var assign = require('lodash').assign;
 var babel = require('babel-core');
 var t = require('babel-types');
+const { dumpLocation } = ASTUtils
+const debugLog = function() {
+  if (process.env.MEGADOC_DEBUG === '1') {
+    console.log.apply(console, arguments)
+  }
+}
 
 function Parser() {
   this.registry = new Registry();
@@ -68,6 +74,9 @@ function getCommentPool(path) {
   if (t.isProgram(path.node) && path.node.innerComments && path.node.innerComments.length) {
     commentPool = path.node.innerComments;
   }
+  else if (t.isProgram(path.node) && path.node.body.leadingComments && path.node.body.leadingComments.length) {
+    commentPool = path.node.body.leadingComments;
+  }
   else if (path.node.leadingComments && path.node.leadingComments.length) {
     commentPool = path.node.leadingComments;
   }
@@ -89,10 +98,17 @@ function getCommentPool(path) {
     // We'll handle the VariableDeclaration and forget about the
     // destructured variable identifier altogether.
     if (ASTUtils.isCommentedDestructuredProperty(path)) {
+      debugLog('Ignoring comment pool on destructured property at %s', dumpLocation(path.node, 'line'))
       return;
     }
 
-    return discardDuplicateComments(commentPool).map(x => x.value);
+    const withoutDuplicates = discardDuplicateComments(commentPool)
+
+    if (withoutDuplicates.length !== commentPool.length) {
+      debugLog('Discarded %d comments identified as duplicate', commentPool.length - withoutDuplicates.length)
+    }
+
+    return withoutDuplicates.map(x => x.value);
   }
 }
 
@@ -115,8 +131,8 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
   ]);
 
   if (process.env.MEGADOC_DEBUG === '1') {
-    console.log('\nParsing: %s', filePath);
-    console.log(Array(80).join('-'));
+    debugLog('\nParsing: %s', filePath);
+    debugLog(Array(80).join('-'));
   }
 
   babel.traverse(ast, {
@@ -126,7 +142,12 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
       if (commentPool) {
         commentPool.forEach(function(comment, index) {
           if (comment[0] === '*') {
+            debugLog('Found a docstring comment at %s', dumpLocation(path.node, 'line'));
+
             parser.parseComment(comment, path, config, filePath, index === commentPool.length-1);
+          }
+          else {
+            debugLog('Ignoring comment since it does not start with /** at line %s', dumpLocation(path.node, 'line'))
           }
         });
       }
@@ -138,15 +159,21 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
 
       // module.exports = Something;
       if (t.isAssignmentExpression(node.expression) && ASTUtils.isModuleExports(node.expression)) {
+        debugLog('Found "module.exports" at %s to be used as a module document', dumpLocation(node.expression, 'line'))
+
         expr = node.expression;
         name = ASTUtils.getVariableNameFromModuleExports(expr);
 
         if (!name && config.inferModuleIdFromFileName) {
           name = ASTUtils.getVariableNameFromFilePath(filePath);
+
+          debugLog('  - Inferred module name from file name: "%s"', name)
         }
 
         if (name) {
           doc = parser.registry.get(name, filePath);
+
+          debugLog('  - Module name: "%s"', name)
 
           if (doc) {
             var modulePath = ASTUtils.findNearestPathWithComments(doc.$path);
@@ -160,10 +187,8 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
             'Unable to identify exported module id. ' +
             'This probably means you are using an unnamed `module.exports`.' +
             ' (source: %s)',
-            ASTUtils.dumpLocation(expr, filePath)
+            dumpLocation(expr, filePath)
           );
-
-          console.log('Offending code block:\n%s', babel.transformFromAst(expr).code);
         }
       }
     },
@@ -171,21 +196,29 @@ Parser.prototype.walk = function(ast, inConfig, filePath) {
 };
 
 Parser.prototype.toJSON = function() {
-  var registry = this.registry;
+  const { registry } = this;
 
-  return registry.docs.reduce(function(list, doc) {
-    // We don't care about modules that @lend
-    if (!doc.docstring.doesLend()) {
-      list.push(doc.toJSON(registry));
-    }
+  // We don't care about modules that @lend
+  const withoutLends = registry.docs.filter(doc => !doc.docstring.doesLend())
 
-    return list;
-  }, []);
+  if (process.env.MEGADOC_DEBUG === '1' && withoutLends.length !== registry.docs.length) {
+    const lends = registry.docs.filter(doc => doc.docstring.doesLend())
+
+    debugLog(`Discarding ${lends.length} @lend documents:`)
+
+    lends.forEach(doc => {
+      debugLog(` - %s (at %s)`, doc.id, dumpLocation(doc.$path.node, 'line'))
+    });
+  }
+
+  debugLog('%d documents found in file', withoutLends.length)
+
+  return withoutLends.map(doc => doc.toJSON(registry));
 };
 
 Parser.prototype.parseComment = function(comment, path, config, filePath, isClosestToNode) {
   var contextNode = path.node;
-  var nodeLocation = ASTUtils.dumpLocation(contextNode, filePath);
+  var nodeLocation = dumpLocation(contextNode, filePath);
 
   var docstring = new Docstring(comment === null ? '' : '/*' + comment + '*/', {
     config: config,
@@ -195,6 +228,7 @@ Parser.prototype.parseComment = function(comment, path, config, filePath, isClos
   });
 
   if (docstring.isInternal()) {
+    debugLog('Discarding @internal document:', dumpLocation(path.node, 'line'))
     return false;
   }
 

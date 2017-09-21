@@ -1,6 +1,7 @@
 const { stubConsoleWarn, stubConsoleError } = require('./watchConsole');
 
 exports.sinonSuite = require('./SinonSuite');
+exports.sinon = require('sinon');
 exports.createSinonSuite = require('./SinonSuite');
 exports.createFileSuite = require('./FileSuite');
 exports.createIntegrationSuite = require('./createIntegrationSuite');

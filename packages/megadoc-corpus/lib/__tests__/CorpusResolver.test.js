@@ -1,15 +1,17 @@
 require('../../');
 
-var Subject = require("../Corpus");
-var resolve = require("../CorpusResolver");
-var b = require('../CorpusTypes').builders;
-var assert = require('megadoc-test-utils').assert;
+const Subject = require("../Corpus");
+const resolve = require("../CorpusResolver");
+const { builders: b } = require('../CorpusTypes');
+const { assert, createSinonSuite } = require('megadoc-test-utils');
+const { NullLinter } = require('megadoc-linter')
 
 describe('CorpusResolver', function() {
+  const sinon = createSinonSuite(this)
   var corpus;
 
   beforeEach(function() {
-    corpus = Subject();
+    corpus = Subject({}, { linter: NullLinter });
     corpus.add(
       b.namespace({
         id: 'MD',
@@ -170,6 +172,8 @@ describe('CorpusResolver', function() {
 
   describe('funny names', function() {
     beforeEach(function() {
+      sinon.spy(NullLinter, 'logError')
+
       corpus.add(b.namespace({
         id: 'Wild Babies',
         name: 'test-plugin',
@@ -211,15 +215,19 @@ describe('CorpusResolver', function() {
     });
 
     it('rejects a namespace with an illegal name (starts with /)', function() {
-      assert.throws(function() {
-        corpus.add(b.namespace({ id: '/foo', name: 'test-plugin' }));
-      }, 'IntegrityViolation: a namespace id may not start with');
+      corpus.add(b.namespace({ id: '/foo', name: 'test-plugin' }));
+
+      assert.calledWith(NullLinter.logError, sinon.match({
+        message: 'Namespace id may not start with "/" or "."'
+      }))
     });
 
     it('rejects a namespace with an illegal name (starts with .)', function() {
-      assert.throws(function() {
-        corpus.add(b.namespace({ id: './foo', name: 'test-plugin' }));
-      }, 'IntegrityViolation: a namespace id may not start with');
+      corpus.add(b.namespace({ id: './foo', name: 'test-plugin' }));
+
+      assert.calledWith(NullLinter.logError, sinon.match({
+        message: 'Namespace id may not start with "/" or "."'
+      }))
     });
   })
 });

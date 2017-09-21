@@ -9,7 +9,6 @@ const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
 
 function createMegadoc(config) {
-  console.log('megadoc: version %s', config.version);
   const outlets = OutletManager({
     strict: true,
     verbose: false
@@ -29,9 +28,6 @@ function createMegadoc(config) {
   megadoc.outlets = outlets;
 
   require('./outlets')(outlets)
-
-  console.log('Firing up.');
-  console.log('Loading %d external plugins.', config.plugins.length)
 
   const pluginAPI = { corpus };
 

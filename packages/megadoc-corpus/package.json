@@ -5,7 +5,9 @@
   "dependencies": {
     "invariant": "2.2.1",
     "lodash": "3.10.1",
-    "object-assign": "4.0.1"
+    "object-assign": "4.0.1",
+    "megadoc-linter": "^6.0.0-beta.7",
+    "ramda": "0.24.1"
   },
   "description": "",
   "devDependencies": {

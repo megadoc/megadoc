@@ -1,15 +1,16 @@
 require('../../');
 
-var Corpus = require("../Corpus");
-var Subject = require('../CorpusIndexer');
-var b = require('../CorpusTypes').builders;
-var { assert } = require('megadoc-test-utils');
+const Corpus = require("../Corpus");
+const Subject = require('../CorpusIndexer');
+const b = require('../CorpusTypes').builders;
+const { assert } = require('megadoc-test-utils');
+const { NullLinter } = require('megadoc-linter')
 
 describe('CorpusIndexer', function() {
-  var corpus;
+  let corpus;
 
   beforeEach(function() {
-    corpus = Corpus();
+    corpus = Corpus({}, { linter: NullLinter });
     corpus.add(
       b.namespace({
         id: 'MD',

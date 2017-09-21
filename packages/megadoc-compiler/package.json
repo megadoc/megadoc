@@ -13,7 +13,7 @@
     "megadoc-config-utils": "^6.0.0-beta.2",
     "megadoc-corpus": "^6.0.0-beta.7",
     "megadoc-linter": "^6.0.0-beta.7",
-    "ramda": "0.23.0"
+    "ramda": "0.24.1"
   },
   "devDependencies": {
     "megadoc-html-serializer": "^6.0.0-beta.12",

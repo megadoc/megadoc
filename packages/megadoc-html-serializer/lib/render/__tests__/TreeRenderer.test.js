@@ -4,6 +4,7 @@ const { builders: b, Corpus } = require('megadoc-corpus');
 const { markdown, linkify } = require('../../renderRoutines');
 const Renderer = require('../Renderer')
 const LinkResolver = require('../LinkResolver')
+const { NullLinter } = require('megadoc-linter')
 
 describe('TreeRenderer', function() {
   describe('.markdown', function() {
@@ -69,7 +70,7 @@ describe('TreeRenderer', function() {
       const corpus = Corpus({
         strict: true,
         debug: false,
-      });
+      }, { linter: NullLinter });
 
       corpus.add(tree);
 
@@ -86,6 +87,7 @@ describe('TreeRenderer', function() {
         relativeLinks: false,
         ignore: [],
         injectors: null,
+        linter: NullLinter,
       });
 
       const renderedTree = Subject.renderTree({

@@ -1,7 +1,9 @@
+const R = require('ramda');
 const { Corpus } = require('megadoc-corpus');
 const TreeRenderer = require('./TreeRenderer');
 const LinkResolver = require('./LinkResolver');
 const Renderer = require('./Renderer');
+const Linter = require('megadoc-linter');
 
 module.exports = function render({ serializer, compilations }, done) {
   const corpusInfo = aggregateTreesIntoCorpus(serializer, compilations);
@@ -17,6 +19,7 @@ module.exports = function render({ serializer, compilations }, done) {
     relativeLinks: !serializerConfig.singlePageMode,
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
+    compilerConfig: serializer.compilerConfig,
   });
 
   const markdownRenderer = new Renderer({
@@ -33,7 +36,7 @@ module.exports = function render({ serializer, compilations }, done) {
   };
 
   // todo: distribute
-  const renderedNodes = withNodes.map(renderTree)
+  const renderedNodes = withNodes.map(R.partial(renderTree, [state]))
   const renderedCorpus = aggregateRenderedTreesIntoCorpus(serializer, renderedNodes);
 
   done(null, {
@@ -41,21 +44,18 @@ module.exports = function render({ serializer, compilations }, done) {
     renderedCorpus: renderedCorpus,
     edgeGraph: null
   });
-
-  function renderTree(compilationWithNode) {
-    const node = compilationWithNode.node;
-    const compilation = compilationWithNode.compilation;
-    const renderOperations = compilation.renderOperations;
-
-    return TreeRenderer.renderTree(state, node, renderOperations);
-  }
 };
 
+function renderTree(state, compilationWithNode) {
+  const node = compilationWithNode.node;
+  const compilation = compilationWithNode.compilation;
+  const renderOperations = compilation.renderOperations;
+
+  return TreeRenderer.renderTree(state, node, renderOperations);
+}
+
 function aggregateTreesIntoCorpus(serializer, compilations) {
-  const corpus = Corpus({
-    strict: serializer.compilerConfig.strict,
-    debug: serializer.compilerConfig.debug
-  });
+  const corpus = Corpus(serializer.compilerConfig, { linter: Linter.NullLinter });
 
   const rootNodes = compilations.map(function(compilation) {
     const serializerOptions = compilation.serializerOptions.html || {};
@@ -70,15 +70,10 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
   return { corpus: corpus, rootNodes: rootNodes };
 }
 
-function aggregateRenderedTreesIntoCorpus(serializer, trees) {
-  const corpus = Corpus({
-    strict: serializer.compilerConfig.strict,
-    debug: serializer.compilerConfig.debug
-  });
+function aggregateRenderedTreesIntoCorpus({ compilerConfig }, trees) {
+  const corpus = Corpus(compilerConfig, { linter: Linter.for(compilerConfig) });
 
-  trees.forEach(function(tree) {
-    corpus.add(tree);
-  });
+  trees.forEach(R.unary(corpus.add));
 
   return corpus;
 }

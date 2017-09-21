@@ -20,7 +20,7 @@ module.exports = function reduceTree(context, documents) {
     descriptors.push({
       type: 'CHANGE_NODE_PARENT',
       data: {
-        id: x.id,
+        uid: x.uid,
         parentUid: documents.filter(y => y.properties.id === x.properties.receiver).map(y => y.uid)[0],
       }
     });
@@ -30,7 +30,7 @@ module.exports = function reduceTree(context, documents) {
     descriptors.push({
       type: 'CHANGE_NODE_PARENT',
       data: {
-        id: x.id,
+        uid: x.uid,
         parentId: x.properties.namespace
       }
     });

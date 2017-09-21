@@ -1,8 +1,9 @@
-var assert = require('assert');
-var EventEmitter = require('events').EventEmitter;
-var URI = require('urijs');
-var dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
-var { escape: escapeHTML } = require('lodash');
+const assert = require('assert');
+const EventEmitter = require('events').EventEmitter;
+const URI = require('urijs');
+const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
+const { escape: escapeHTML } = require('lodash');
+const { NoBrokenLinks } = require('../lintingRules')
 
 /**
  * @param {Corpus} corpus
@@ -22,6 +23,8 @@ function LinkResolver(corpus, options) {
     LinkResolver.MegadocLinkInjector,
     LinkResolver.MediaWikiLinkInjector,
   ];
+
+  this.linter = options.linter;
 
   return this;
 }
@@ -86,10 +89,12 @@ LinkResolver.prototype.lookup = function(params) {
     }
   }
   else if (params.strict) {
-    console.warn('%s: Unable to resolve link to "%s"',
-      dumpNodeFilePath(params.contextNode),
-      params.path
-    );
+    this.linter.logRuleEntry({
+      rule: NoBrokenLinks,
+      params,
+      loc: this.linter.locationForNode(params.contextNode),
+    })
+
     return {
       text: params.path,
       href: '',
@@ -189,11 +194,11 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
   }
   else if (!link && strict) {
     if (!contextNode || !(contextNode.uid in this.options.ignore)) {
-      console.warn('%s: Unable to resolve link to "%s" (from: "%s")',
-        dumpNodeFilePath(contextNode),
-        descriptor.path,
-        contextNode ? contextNode.id : '<<unknown>>'
-      );
+      this.linter.logRuleEntry({
+        rule: NoBrokenLinks,
+        params: descriptor,
+        loc: this.linter.locationForNode(contextNode || params.contextNode),
+      })
     }
 
     return generateMarkup({

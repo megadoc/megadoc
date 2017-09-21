@@ -21,12 +21,15 @@ describe('stage00__createCompilation', function() {
     `);
 
     output = subject([ 'publicOption' ], {
-      config: { publicOption: 1, privateOption: 2 },
+      config: {
+        publicOption: 1,
+        privateOption: 2,
+        assetRoot: fileSuite.getRootDirectory()
+      },
       runOptions: {},
     }, {
-      pattern: /\.js$/,
       include: [
-        path.join(fileSuite.getRootDirectory(), 'sources/**/*'),
+        'sources/**/*.js',
       ],
       processor: {
         name: processorSpec.path,

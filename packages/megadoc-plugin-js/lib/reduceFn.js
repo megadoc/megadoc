@@ -1,6 +1,13 @@
 const b = require('megadoc-corpus').builders;
+const debugLog = function() {
+  if (process.env.MEGADOC_DEBUG === '1') {
+    console.log.apply(console, arguments)
+  }
+}
 
 module.exports = function reduceFn(options, actions, rawDocument, done) {
+  debugLog('Reducing "%s"', rawDocument.id)
+
   if (rawDocument.isModule) {
     done(null, reduceModuleDocument(actions, rawDocument));
   }
@@ -18,7 +25,7 @@ function reduceNamespaceDocument(actions, doc) {
     title: doc.title,
     symbol: '.',
     indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
-    filePath: doc.filePath, // useful for error reporting when there's a UID clash
+    filePath: doc.filePath,
     loc: doc.loc,
     properties: {
       isNamespace: true,
@@ -28,14 +35,8 @@ function reduceNamespaceDocument(actions, doc) {
 }
 
 function reduceModuleDocument(actions, doc) {
-  const id = doc.namespace ?
-    doc.name :
-    // doc.id.replace(/^${doc.namespace}./, '') :
-    doc.id
-  ;
-
   return b.document({
-    id: id,
+    id: doc.namespace ? doc.name : doc.id,
     title: doc.id,
     summary: actions.extractSummaryFromMarkdown(doc.description),
     filePath: doc.filePath,

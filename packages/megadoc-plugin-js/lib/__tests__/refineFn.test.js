@@ -159,7 +159,9 @@ describe('megadoc-plugin-js::refineFn', function() {
     `);
 
     const context = {
-      commonOptions: {},
+      compilerOptions: {
+        assetRoot: fileSuite.getRootDirectory(),
+      },
       options: configure({}),
     };
 

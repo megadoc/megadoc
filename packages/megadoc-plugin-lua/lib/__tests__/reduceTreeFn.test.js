@@ -1,17 +1,7 @@
 const { assert } = require('megadoc-test-utils');
-const parseFn = require('../parseFn');
 const reduceTreeFn = require('../reduceTreeFn');
-const FileSuite = require('megadoc-test-utils/FileSuite');
 const b = require('megadoc-corpus').builders;
-
-describe('megadoc-plugin-lua::parseFn', function() {
-  const fileSuite = FileSuite(this);
-
-  it('works', function(done) {
-    const sourceFile = fileSuite.createFile('source.lua', ``);
-    parseFn({ compilerOptions: {}, options: {} }, sourceFile.path, done)
-  });
-})
+const uidOf = (id, nodes) => nodes.filter(x => x.id === id).map(x => x.uid)[0]
 
 describe('megadoc-plugin-lua::reduceTreeFn', function() {
   it('works', function() {
@@ -39,8 +29,8 @@ describe('megadoc-plugin-lua::reduceTreeFn', function() {
     })
 
     assert.include(changeParentOps[0].data, {
-      id: documents[1].id,
-      parentId: documents[0].id,
+      uid: uidOf('x', documents),
+      parentId: 'foo',
     })
   });
 })

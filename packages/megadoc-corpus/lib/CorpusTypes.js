@@ -71,12 +71,13 @@ function createTypeBuilder(typeName, typeDef) {
     this.type = typeName;
 
     // kuz the corpus node does not have a id nor a UID
-    if (this.id) {
+    if (typeName !== 'Corpus') {
       this.uid = generateUID([
         this.type,
         this.id,
         this.symbol,
         this.filePath,
+        this.loc || null
       ]);
     }
 
