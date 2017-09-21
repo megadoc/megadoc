@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.0.0
+
+- [**BREAKING**] [[megadoc-compiler/Config.sources]] no longer accepts
+  `pattern`
+- [**BREAKING**] [[megadoc-compiler/Config.exclude]] is now a minimatch pattern
+  like `include` instead of being regex patterns
+- greatly improved error reporting
+
 ## 6.0.0-beta.12
 
 - [[megadoc-plugin-markdown]] Added a new option `titleOverrides` for
