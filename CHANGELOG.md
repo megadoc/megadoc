@@ -2,29 +2,6 @@
 
 ## 6.0.0
 
-- [**BREAKING**] [[megadoc-compiler/Config.sources]] no longer accepts
-  `pattern`
-- [**BREAKING**] [[megadoc-compiler/Config.exclude]] is now a minimatch pattern
-  like `include` instead of being regex patterns
-- greatly improved error reporting
-
-## 6.0.0-beta.12
-
-- [[megadoc-plugin-markdown]] Added a new option `titleOverrides` for
-  overriding a title of a document (for use in the sidebar or spotlight, for
-  example) while keeping its contents intact
-
-## 6.0.0-beta.11
-
-- [[megadoc-plugin-js]] Added a new option `inferNamespaces`  for controlling
-  the behaviour of inferring namespaces from @module tags when `.` is used
-- [[megadoc-html-serializer]] Added a new outlet SidebarLink that allows the
-  user to define a link in the sidebar
-- [[megadoc-html-serializer]] LinkOutlet now accepts "to" besides "href" to
-  point to a document instead of a hard-coded URI
-
-## 6.0.0
-
 This is a very exciting release; a new model for representing the documents rendered by megadoc is introduced called the [Corpus](). This model enables
 us to analyze the database in a source-agnostic manner and provide many 
 features out-of-the-box such as automatic indexing, URI generation, and more!
@@ -48,6 +25,56 @@ and runtime performance.
 - (semver-major) [megadoc-plugin-markdown]() will now discard file extensions by default (this will cause URLs to change unless you opt-out)
 - (semver-major) [megadoc]() no longer accepts a `readme` config; use the markdown plugin with a rewrite for serving such a file
 - (semver-major) [megadoc]() no longer accepts a `home` config for redirecting
+- (semver-major) [[megadoc-compiler/Config.sources]] no longer accepts
+  `pattern`
+- (semver-major) [[megadoc-compiler/Config.exclude]] is now a minimatch pattern
+  like `include` instead of being regex patterns
+- greatly improved error reporting
+
+## 6.0.0-beta.12
+
+- [[megadoc-plugin-markdown]] Added a new option `titleOverrides` for
+  overriding a title of a document (for use in the sidebar or spotlight, for
+  example) while keeping its contents intact
+
+## 6.0.0-beta.11
+
+- [[megadoc-plugin-js]] Added a new option `inferNamespaces`  for controlling
+  the behaviour of inferring namespaces from @module tags when `.` is used
+- [[megadoc-html-serializer]] Added a new outlet SidebarLink that allows the
+  user to define a link in the sidebar
+- [[megadoc-html-serializer]] LinkOutlet now accepts "to" besides "href" to
+  point to a document instead of a hard-coded URI
+
+## 6.0.0-beta.10
+
+[[megadoc-compiler]]'s scanSources will now apply a uniqueness filter to the
+list. This allows users to specify a file more than once (the case when they're
+using both a glob and a specific file path) but only the first entry will have
+an effect.
+
+For example:
+
+```javascript
+{
+  sources: [
+    {
+      include: [
+        'README.md',
+        '*.md'
+      ]
+    }
+  ]
+}
+// => include: [ 'README.md', 'a.md', 'b.md' ]
+```
+
+## 6.0.0-beta.9
+
+- [[megadoc-plugin-js]]: added a new option `inferNamespaces`  for controlling
+  the behaviour of inferring namespaces from @module tags when `.` is used
+- [[jsdoc-parser-extended]]: implemented option `inferNamespaces`
+
 ## 5.0.0
 
 - Markdown renderer now accepts a `anchorableHeadings: Boolean` option that
@@ -164,10 +191,15 @@ and is (currently) backwards compatible.
 - Spotlight Symbol-Jumping support for scanning and jumping between sections of the current article quickly
 - Tooltip Preview support: the name of the article plus an estimated reading time in minutes
 
+## 4.0.2
+
+- [[megadoc-plugin-js]] turned off the debugging messages during parse. To turn them on, run megadoc with the environment variable `NODE_DEBUG=megadoc` exported.
+
 ## 4.0.1
 
 - `megadoc-run` or `megadoc run` binary was restored to just `megadoc`
 - `megadoc compile` is no longer a thing, use the `megadoc-compile` binary directly instead
+- [[megadoc-plugin-js]] fixed a missing dependency in package.json
 
 ## 4.0.0
 
