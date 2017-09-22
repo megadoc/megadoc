@@ -24,9 +24,9 @@ describe("megadoc-compiler::Compiler", function() {
     `);
 
     const reduceFnFile = fileSuite.createFile('processor/reduceFn.js', `
+      const { builders: b } = require('megadoc-corpus');
 
-      module.exports = function reduce(options, actions, rawDocument, done) {
-        const { b } = actions;
+      module.exports = function reduce(options, rawDocument, done) {
 
         done(null, b.document({
           id: rawDocument.id,

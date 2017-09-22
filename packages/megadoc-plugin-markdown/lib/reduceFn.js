@@ -1,7 +1,7 @@
 const b = require('megadoc-corpus').builders;
 const { extractTOC } = require('megadoc-html-serializer').RendererUtils;
 
-module.exports = function reduceFn(options, actions, rawDocument, done) {
+module.exports = function reduceFn(options, rawDocument, done) {
   const toc = extractTOC(rawDocument.source);
 
   return done(null, b.document({

@@ -6,7 +6,7 @@ describe('stage01__reduce', function() {
 
   it('should pass each file through to the reducer', function(done) {
     const reduceFnFile = fileSuite.createFile('reduceFn.js', `
-      module.exports = function(context, actions, rawDocument, done) {
+      module.exports = function(context, rawDocument, done) {
         done(null, { id: rawDocument.id, name: rawDocument.id + '__name' });
       };
     `);
@@ -30,7 +30,7 @@ describe('stage01__reduce', function() {
       ]
     };
 
-    subject({}, compilation, function(err, { documents }) {
+    subject(compilation, function(err, { documents }) {
       if (err) {
         done(err);
       }

@@ -12,13 +12,13 @@ module.exports = composeAsync([
   prepare,
 ]);
 
-function prepare({ serializer, compilations, corpus }, done) {
+function prepare({ serializer, compilations, renderedCorpus }, done) {
   done(null, {
     assets: serializer.state.assets,
     assetUtils: serializer.assetUtils,
     clientSandbox: serializer.state.clientSandbox,
     compilerConfig: serializer.compilerConfig,
-    corpus,
+    renderedCorpus,
     serializerConfig: serializer.config,
   });
 };
@@ -29,11 +29,11 @@ function doEmitAssets(compilation, done) {
     assetUtils,
     clientSandbox,
     compilerConfig,
-    corpus,
+    renderedCorpus,
     serializerConfig,
   } = compilation;
 
-  const flatCorpus = corpus.toJSON();
+  const flatCorpus = renderedCorpus.toJSON();
   const documentUIDs = Object.keys(flatCorpus);
 
   if (compilerConfig.verbose) {

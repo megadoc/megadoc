@@ -12,7 +12,7 @@ const invariant = require('utils/invariant');
  * @property {Object} match
  *           The parameters that control when this configuration applies.
  *
- * @property {url|path|type} match.by
+ * @property {url|path|filePath|type} match.by
  *           What we should match on.
  *
  * @property {String|Array.<String>} match.on
@@ -105,9 +105,13 @@ function match(matchEntry, { documentNode, namespaceNode, pathname }) {
     ) ||
     (
       documentNode &&
-      // uid is for backwards compatibility
-      (matchBy === 'uid' || matchBy === 'path') &&
+      matchBy === 'path' &&
       matchOn.indexOf(documentNode.path) > -1
+    ) ||
+    (
+      documentNode &&
+      matchBy === 'filePath' &&
+      matchOn.indexOf(documentNode.filePath) > -1
     ) ||
     (
       matchBy === 'url' &&

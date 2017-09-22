@@ -190,6 +190,7 @@ def("Node", {
      * @property {String}
      */
     summary: or(t.string, null),
+    summaryFields: or(array(t.string), null),
 
     /**
      * @property {String}

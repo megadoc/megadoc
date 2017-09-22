@@ -4,14 +4,14 @@ const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
 const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
-module.exports = function reduce(reduceRoutines, compilation, done) {
+module.exports = function reduce(compilation, done) {
   const { processor, refinedDocuments } = compilation;
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };
 
-  reduceEach(reduceRoutines, context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
+  reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return mergeObject(compilation, {
       documents: flattenArray(documents).map(normalize),
     });
@@ -27,12 +27,12 @@ module.exports = function reduce(reduceRoutines, compilation, done) {
 };
 
 // TODO: distribute
-function reduceEach(reduceRoutines, context, files, fnPath, done) {
+function reduceEach(context, files, fnPath, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'reduceFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), context, reduceRoutines);
+  const fn = partial(require(fnPath), context);
 
   async.mapLimit(files, 10, fn, done);
 }

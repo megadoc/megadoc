@@ -1,5 +1,12 @@
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
+const RendererUtils = require('./RendererUtils');
+
+const extractSummaryFromMarkdown = function(markdown) {
+  return RendererUtils.extractSummary(markdown || '', {
+    plainText: true
+  })
+};
 
 exports.renderTree = function(state, tree, renderOperations) {
   const reducers = {
@@ -41,6 +48,16 @@ exports.renderTree = function(state, tree, renderOperations) {
 
       if (nextProperties) {
         nextData.properties = nextProperties;
+      }
+    }
+
+    if (node.summaryFields) {
+      const summaryInput = node.summaryFields.reduce(function(value, fieldName) {
+        return value || node.properties[fieldName]
+      }, null);
+
+      if (summaryInput) {
+        nextData.summary = extractSummaryFromMarkdown(summaryInput);
       }
     }
 

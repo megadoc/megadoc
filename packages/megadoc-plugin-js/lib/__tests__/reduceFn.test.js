@@ -1,12 +1,5 @@
 const { assert } = require('megadoc-test-utils');
-const reduce = require('../reduceFn');
-const subject = (context, rawDocument, callback) => {
-  return reduce(context, {
-    extractSummaryFromMarkdown(markdown) {
-      return markdown;
-    },
-  }, rawDocument, callback);
-};
+const subject = require('../reduceFn');
 
 describe('megadoc-plugin-js::reduceFn', function() {
   it('works with a module document', function(done) {

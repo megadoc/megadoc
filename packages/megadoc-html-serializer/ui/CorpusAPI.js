@@ -83,8 +83,8 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
     // This happens in SinglePageMode where we must use fully-qualified URIs
     // (i.e. both href + anchor).
     if (uri.indexOf('#') > -1) {
-      const [ path, anchor ] = uri.split('#');
-      const node = exports.getByURI(path);
+      const [ pathname, anchor ] = uri.split('#');
+      const node = exports.getByURI(pathname);
 
       if (node && node.meta.anchor === anchor) {
         return node;

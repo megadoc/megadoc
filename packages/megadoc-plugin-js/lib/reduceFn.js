@@ -5,21 +5,21 @@ const debugLog = function() {
   }
 }
 
-module.exports = function reduceFn(options, actions, rawDocument, done) {
+module.exports = function reduceFn(options, rawDocument, done) {
   debugLog('Reducing "%s"', rawDocument.id)
 
   if (rawDocument.isModule) {
-    done(null, reduceModuleDocument(actions, rawDocument));
+    done(null, reduceModuleDocument(rawDocument));
   }
   else if (rawDocument.isNamespace) {
-    done(null, reduceNamespaceDocument(actions, rawDocument));
+    done(null, reduceNamespaceDocument(rawDocument));
   }
   else {
-    done(null, reduceEntityDocument(actions, rawDocument));
+    done(null, reduceEntityDocument(rawDocument));
   }
 };
 
-function reduceNamespaceDocument(actions, doc) {
+function reduceNamespaceDocument(doc) {
   return b.document({
     id: doc.id,
     title: doc.title,
@@ -34,11 +34,11 @@ function reduceNamespaceDocument(actions, doc) {
   });
 }
 
-function reduceModuleDocument(actions, doc) {
+function reduceModuleDocument(doc) {
   return b.document({
     id: doc.namespace ? doc.name : doc.id,
     title: doc.id,
-    summary: actions.extractSummaryFromMarkdown(doc.description),
+    summaryFields: [ 'description' ],
     filePath: doc.filePath,
     loc: doc.loc,
     symbol: '',
@@ -46,13 +46,13 @@ function reduceModuleDocument(actions, doc) {
   });
 }
 
-function reduceEntityDocument(actions, doc) {
+function reduceEntityDocument(doc) {
   const id = doc.symbol + doc.name;
 
   return b.documentEntity({
     id: id,
     title: doc.id,
-    summary: actions.extractSummaryFromMarkdown(doc.description),
+    summaryFields: [ 'description' ],
     meta: {
       anchor: encodeURI(id.replace(/[\/\s]+/g, '-'))
     },

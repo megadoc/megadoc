@@ -314,8 +314,7 @@ function generateNodePath(corpus, sourceNode) {
 }
 
 function flattenNodeAndChildren(corpus, node) {
-  var clone = assign({}, node);
-  var flatNode = flattenNode(corpus, clone);
+  var flatNode = flattenNode(corpus, node);
 
   if (node.documents) {
     flatNode.documents = node.documents.map(getUID);
@@ -330,10 +329,10 @@ function flattenNodeAndChildren(corpus, node) {
 
 function flattenNode(corpus, node) {
   if (node.parentNodeId) {
-    return assign(node, { parentNodeId: getUID(corpus.getParentOf(node)) });
+    return assign(node.toJSON(), { parentNodeId: getUID(corpus.getParentOf(node)) });
   }
   else {
-    return node;
+    return node.toJSON();
   }
 }
 

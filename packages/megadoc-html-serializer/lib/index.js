@@ -6,7 +6,6 @@ const render = require('./render');
 const emit = require('./emit');
 const purge = require('./purge');
 const renderRoutines = require('./renderRoutines');
-const reduceRoutines = require('./reduceRoutines');
 const defaults = require('./config');
 const { omit } = require('lodash');
 
@@ -35,7 +34,6 @@ function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
 };
 
 HTMLSerializer.prototype.renderRoutines = renderRoutines;
-HTMLSerializer.prototype.reduceRoutines = reduceRoutines;
 
 HTMLSerializer.prototype.start = function(compilations, done) {
   this.state.assets = createAssets(this.config, compilations);
@@ -50,7 +48,7 @@ HTMLSerializer.prototype.seal = function(withTrees, done) {
     else {
       done(null, {
         compilations: withTrees,
-        corpus: result.renderedCorpus,
+        renderedCorpus: result.renderedCorpus,
         edgeGraph: result.edgeGraph,
       })
     }
@@ -58,9 +56,9 @@ HTMLSerializer.prototype.seal = function(withTrees, done) {
 };
 
 HTMLSerializer.prototype.emit = function(withCorpus, done) {
-  const { compilations, corpus } = withCorpus;
+  const { compilations, renderedCorpus } = withCorpus;
 
-  emit({ serializer: this, compilations, corpus, }, function(err) {
+  emit({ serializer: this, compilations, renderedCorpus, }, function(err) {
     done(err, withCorpus);
   });
 };

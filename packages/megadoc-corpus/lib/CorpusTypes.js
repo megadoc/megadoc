@@ -1,4 +1,5 @@
 const assert = require('assert');
+const R = require('ramda');
 const { assign, uniq } = require('lodash');
 const generateUID = require('./generateUID');
 const { dumpNodeFilePath } = require('./CorpusUtils');
@@ -39,6 +40,18 @@ function def(typeName, typeDef) {
     builders[camelize(typeName)] = createTypeBuilder(typeName, typeDef);
   });
 }
+
+const omitInternalFields = R.without([
+  'indexFields',
+  'summaryFields',
+]);
+
+const addRuntimeFields = R.concat([
+  'indices',
+  'path',
+  'type',
+  'uid',
+]);
 
 function createTypeBuilder(typeName, typeDef) {
   var TypeBuilder, constructor; // eslint-disable-line
@@ -86,7 +99,7 @@ function createTypeBuilder(typeName, typeDef) {
 
   TypeBuilder.__typeDef__ = typeDef;
   TypeBuilder.prototype.toJSON = function() {
-    return knownFields.concat(['type']).reduce(function(map, field) {
+    return addRuntimeFields(omitInternalFields(knownFields)).reduce(function(map, field) {
       map[field] = this[field];
 
       return map;

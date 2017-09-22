@@ -34,10 +34,4 @@ BlankSerializer.renderRoutines = {
   },
 }
 
-BlankSerializer.reduceRoutines = {
-  extractSummaryFromMarkdown(markdown) {
-    return markdown;
-  }
-}
-
 module.exports = BlankSerializer;

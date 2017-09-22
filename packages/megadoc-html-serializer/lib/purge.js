@@ -3,19 +3,15 @@ const K = require('./constants');
 
 module.exports = function purge({ serializer, corpusInfo }, done) {
   const { assetUtils, compilerConfig } = serializer;
+  const filePaths = {}
 
-  const flatCorpus = corpusInfo.corpus.toJSON();
-  const documentUIDs = Object.keys(flatCorpus);
-  const filePaths = documentUIDs.reduce((map, uid) => {
-    const node = flatCorpus[uid];
-    const filePath = node.meta && node.meta.htmlFilePath;
-
-    if (filePath) {
-      map[filePath] = true;
-    }
-
-    return map;
-  }, {});
+  corpusInfo.renderedCorpus.traverse({
+    Node(node) {
+      if (node.meta && node.meta.htmlFilePath) {
+        filePaths[node.meta.htmlFilePath] = true;
+      }
+    },
+  });
 
   const removeDocumentFile = (filePath, callback) => {
     if (compilerConfig.verbose) {

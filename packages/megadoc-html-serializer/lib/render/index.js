@@ -6,13 +6,11 @@ const Renderer = require('./Renderer');
 const Linter = require('megadoc-linter');
 
 module.exports = function render({ serializer, compilations }, done) {
-  const corpusInfo = aggregateTreesIntoCorpus(serializer, compilations);
-  const corpus = corpusInfo.corpus;
-  const rootNodes = corpusInfo.rootNodes;
+  const { corpus, rootNodes } = aggregateTreesIntoCorpus(serializer, compilations);
   const serializerConfig = serializer.config;
 
   const withNodes = rootNodes.map((node, index) => {
-    return { node: node, compilation: compilations[index] };
+    return { node, compilation: compilations[index] };
   });
 
   const linkResolver = new LinkResolver(corpus, {
@@ -41,7 +39,7 @@ module.exports = function render({ serializer, compilations }, done) {
 
   done(null, {
     corpus,
-    renderedCorpus: renderedCorpus,
+    renderedCorpus,
     edgeGraph: null
   });
 };
@@ -67,7 +65,7 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
 
   corpus.traverse(serializer.corpusVisitor);
 
-  return { corpus: corpus, rootNodes: rootNodes };
+  return { corpus, rootNodes };
 }
 
 function aggregateRenderedTreesIntoCorpus({ compilerConfig }, trees) {

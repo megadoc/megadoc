@@ -39,6 +39,32 @@ describe('TreeRenderer', function() {
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });
+
+    it('extracts a summary from one of the "summaryFields" fields', function() {
+      const tree = b.namespace({
+        id: 'test',
+        name: 'Test',
+        documents: [
+          b.document({
+            id: 'moduleA',
+            summaryFields: [ 'description' ],
+            properties: {
+              text: 'Hello *World*!',
+              description: 'lol!'
+            }
+          }),
+        ]
+      });
+
+      const treeOperations = {};
+
+      const renderedTree = Subject.renderTree({
+        compilerConfig: { strict: true },
+        markdownRenderer: new Renderer({})
+      }, tree, treeOperations);
+
+      assert.equal(renderedTree.documents[0].summary, 'lol!')
+    })
   });
 
   describe('.linkify', function() {

@@ -65,7 +65,7 @@ describe('[integration] megadoc-plugin-js', function() {
         return done(err)
       }
 
-      const corpus = stats.corpus.toJSON();
+      const corpus = stats.renderedCorpus.toJSON();
       const keysOf = x => Object.keys(x).sort()
 
       const assertEmptyArray = (a) => {

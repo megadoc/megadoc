@@ -14,6 +14,7 @@ entry[K.COMMON_BUNDLE] = path.resolve(__dirname, './tmp/publicModules');
 
 var config = {
   entry: entry,
+  devtool: 'eval',
 
   output: {
     path: K.BUNDLE_DIR,

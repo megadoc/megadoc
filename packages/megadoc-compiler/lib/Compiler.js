@@ -22,7 +22,6 @@ const { assocWith, mergeWith, nativeAssoc } = require('./utils');
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
-const { builders } = require('megadoc-corpus');
 const divisus = require('divisus');
 
 const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE            = 1;
@@ -190,7 +189,7 @@ function compileTrees(state, done) {
     (
       defineBreakpoint(BREAKPOINT_REDUCE)
       (
-        R.partial(reduce, [ Object.assign({ b: builders }, serializer.reduceRoutines) ])
+        reduce
       )
     ),
 
