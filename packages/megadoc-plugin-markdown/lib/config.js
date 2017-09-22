@@ -29,20 +29,6 @@ module.exports = {
   baseURL: undefined,
 
   /**
-   * @property {Array.<String>}
-   *
-   * Patterns to locate the source files.
-   */
-  source: [ 'doc/**/*.md' ],
-
-  /**
-   * @property {Array.<String>}
-   *
-   * Patterns to _exclude_ files that were matched by [@source]().
-   */
-  exclude: [],
-
-  /**
    * @property {Boolean}
    *
    * Turning this on will make the listing (sidebar or document index)

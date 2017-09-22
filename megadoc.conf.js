@@ -4,7 +4,6 @@ var config = {
 
   title: 'megadoc',
   outputDir: '/srv/http/docs/megadoc',
-  stylesheet: 'doc/theme.less',
   disqus: false,
   showSettingsLinkInBanner: false,
   tooltipPreviews: false,
@@ -55,7 +54,7 @@ config.sources = [
   {
     id: 'md__core',
     title: 'Documents',
-    include: [ 'README.md', 'CHANGES.md' ],
+    include: [ 'README.md', 'CHANGELOG.md' ],
     processor: [ 'megadoc-plugin-markdown', {
       baseURL: '/',
     }]
@@ -97,14 +96,11 @@ config.serializer = [ 'megadoc-html-serializer', {
   linkResolver: {
     schemes: [ 'Megadoc', 'GitHub Wiki' ],
     ignore: {
-      'md__core/changes': true
+      'md__core/changelog': true
     },
   },
 
-  rewrite: {
-    // 'README.md': '/index.html',
-    // 'CHANGES.md': '/changes.html',
-  },
+  styleSheet: path.resolve(__dirname, 'doc/theme.less'),
 
   bannerLinks: [
     {
@@ -188,14 +184,14 @@ config.serializer = [ 'megadoc-html-serializer', {
 
     {
       text: 'Changes',
-      href: '/changes',
+      href: '/changelog.html',
     },
 
   ],
 
   customLayouts: [
     {
-      match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changes' ] },
+      match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changelog' ] },
       regions: [
         {
           name: 'Layout::Content',

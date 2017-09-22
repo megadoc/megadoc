@@ -1,5 +1,6 @@
-var assert = require('assert');
-var neutralizeWhitespace = require('./utils/neutralizeWhitespace');
+const assert = require('assert');
+const neutralizeWhitespace = require('./utils/neutralizeWhitespace');
+const { Parser: JSDParser, Builder } = require('jsdoctypeparser');
 
 /**
  * @module
@@ -274,86 +275,15 @@ exports.extractTagParts = function(str) {
  * @return {Object}
  */
 exports.parseTag = function(str) {
-  var tag = {};
   var lines = str.split('\n');
   var parts = exports.extractTagParts(lines[0]);
-  var type = tag.type = parts.shift().replace('@', '');
+  var type = parts.shift().replace('@', '');
   var matchType = new RegExp('^@?' + type + ' *');
 
-  tag.string = str.replace(matchType, '');
-
-  // if (lines.length > 1) {
-  //   parts.push(lines.slice(1).join('\n'));
-  // }
-
-  // tag.string = parts.join('\n');
-
-  // TODO Tag factories
-
-  // switch (type) {
-  //   case 'property':
-  //   case 'template':
-  //   case 'param':
-  //     var typeString = parts.shift();
-  //     tag.name = parts.shift() || '';
-  //     tag.description = parts.join(' ');
-  //     exports.parseTagTypes(typeString, tag);
-  //     break;
-  //   case 'define':
-  //   case 'return':
-  //   case 'returns':
-  //     exports.parseTagTypes(parts.shift(), tag);
-  //     tag.description = parts.join(' ');
-  //     break;
-  //   case 'see':
-  //     if (~str.indexOf('http')) {
-  //       tag.title = parts.length > 1
-  //         ? parts.shift()
-  //         : '';
-  //       tag.url = parts.join(' ');
-  //     } else {
-  //       tag.local = parts.join(' ');
-  //     }
-  //     break;
-  //   case 'api':
-  //     tag.visibility = parts.shift();
-  //     break;
-  //   case 'public':
-  //   case 'private':
-  //   case 'protected':
-  //     tag.visibility = type;
-  //     break;
-  //   case 'enum':
-  //   case 'typedef':
-  //   case 'type':
-  //     exports.parseTagTypes(parts.shift(), tag);
-  //     break;
-  //   case 'lends':
-  //   case 'memberOf':
-  //     tag.parent = parts.shift();
-  //     break;
-  //   case 'extends':
-  //   case 'implements':
-  //   case 'augments':
-  //     tag.otherClass = parts.shift();
-  //     break;
-  //   case 'borrows':
-  //     tag.otherMemberName = parts.join(' ').split(' as ')[0];
-  //     tag.thisMemberName = parts.join(' ').split(' as ')[1];
-  //     break;
-  //   case 'throws':
-  //     tag.types = exports.parseTagTypes(parts.shift());
-  //     tag.description = parts.join(' ');
-  //     break;
-  //   case 'description':
-  //     tag.full = parts.join(' ').trim();
-  //     break;
-  //   default:
-  //     tag.string = parts.join(' ');
-  //     break;
-  // }
-
-  return tag;
+  return {
+    type: type,
+    string: str.replace(matchType, '')
+  }
 };
 
 /**
@@ -383,8 +313,6 @@ exports.parseTag = function(str) {
  */
 
 exports.parseTagTypes = function(str, tag) {
-  var JSDParser = require('jsdoctypeparser').Parser;
-  var Builder = require('jsdoctypeparser').Builder;
   var result = new JSDParser().parse(str.substr(1, str.length - 2));
 
   var types = (function transform(typeStruct) {
