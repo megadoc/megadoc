@@ -3,10 +3,12 @@ const reduceFn = require('../reduceFn');
 const subject = require('../refineFn');
 const configure = require('../configureFn');
 const async = require('async');
-const { assert, stubConsoleWarn, createFileSuite } = require('megadoc-test-utils');
+const { assert, stubLints, stubConsoleWarn, createFileSuite } = require('megadoc-test-utils');
 
 describe('megadoc-plugin-js::refineFn', function() {
   const fileSuite = createFileSuite(this);
+
+  stubLints(this, require('megadoc-linter'))
 
   it('works', function(done) {
     stubConsoleWarn('Unable to map ".*" to any module, it will be discarded.');
