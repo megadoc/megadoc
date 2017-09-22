@@ -8,7 +8,9 @@ describe('megadoc-plugin-js::parseFn', function() {
 
   it('works with a module document', function(done) {
     const context = {
-      commonOptions: {},
+      compilerOptions: {
+        assetRoot: fileSuite.getRootDirectory(),
+      },
       options: configure({}),
     };
 

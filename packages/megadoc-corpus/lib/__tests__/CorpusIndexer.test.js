@@ -49,7 +49,7 @@ describe('CorpusIndexer', function() {
     );
   });
 
-  const run = x => Subject(corpus, x);
+  const run = x => Subject(corpus, {}, x);
 
   it('indexes on @id', function() {
     assert.include(run(corpus.at('MD/X')), {

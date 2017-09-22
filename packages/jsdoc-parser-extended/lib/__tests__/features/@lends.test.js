@@ -1,7 +1,7 @@
-var assert = require('assert');
-var TestUtils = require('../../TestUtils');
-var findWhere = require('lodash').findWhere;
-var K = require('../../constants');
+const assert = require('assert');
+const TestUtils = require('../../TestUtils');
+const findWhere = require('lodash').findWhere;
+const K = require('../../constants');
 const { stubConsoleWarn } = require('megadoc-test-utils');
 
 describe('CJS::Parser - @lends support', function() {

@@ -1,8 +1,8 @@
-var assert = require('chai').assert;
-var findWhere = require('lodash').findWhere;
-var TestUtils = require('../TestUtils');
-var K = require('../constants');
-const { stubConsoleWarn, createSinonSuite } = require('megadoc-test-utils')
+const { findWhere } = require('lodash');
+const TestUtils = require('../TestUtils');
+const K = require('../constants');
+const { assert, stubConsoleWarn, createSinonSuite } = require('megadoc-test-utils')
+const { NullLinter } = require('megadoc-linter')
 
 var parseInline = TestUtils.parseInline;
 
@@ -26,19 +26,21 @@ describe('CJS::Parser::Main', function() {
 
   it('should warn about invalid docstrings', function() {
     sinon.stub(console, 'warn');
+    sinon.spy(NullLinter, 'logError')
 
-    assert.throws(function() {
-      parseInline(function() {;
-        // /**
-        //  * @internal
-        //    Something.
-        //  */
-        //  function Something() {
-        //  }
-        //
-        //  module.exports = Something;
-      });
-    }, /Invalid annotation in comment block/);
+    parseInline(function() {;
+      // /**
+      //  * @internal
+      //    Something.
+      //  */
+      //  function Something() {
+      //  }
+      //
+      //  module.exports = Something;
+    });
+    assert.calledWith(NullLinter.logError, sinon.match({
+      message: sinon.match('invalid annotation in comment block')
+    }))
   });
 
   describe('resolving identifiers', function() {

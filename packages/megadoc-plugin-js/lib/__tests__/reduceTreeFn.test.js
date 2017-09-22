@@ -4,7 +4,7 @@ const b = require('megadoc-corpus').builders;
 
 describe('megadoc-plugin-js::reduceTreeFn', function() {
   const defaultContext = {
-    commonOptions: {},
+    compilerOptions: {},
     options: {},
   };
 

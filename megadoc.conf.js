@@ -4,8 +4,6 @@ var config = {
 
   title: 'megadoc',
   outputDir: '/srv/http/docs/megadoc',
-  // useHashLocation: true,
-  // publicPath: '',
   stylesheet: 'doc/theme.less',
   disqus: false,
   showSettingsLinkInBanner: false,

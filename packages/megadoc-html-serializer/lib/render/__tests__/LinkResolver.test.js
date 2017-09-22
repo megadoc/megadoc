@@ -9,7 +9,7 @@ describe('LinkResolver', function() {
   var resolver, corpus;
 
   beforeEach(function() {
-    corpus = Corpus({}, { linter: NullLinter });
+    corpus = Corpus({ alias: {} }, { linter: NullLinter });
     corpus.add(
       b.namespace({
         meta: {

@@ -47,10 +47,11 @@ runtime performance.
 - (semver-major) [megadoc]() no longer accepts a `readme` config; use the
   markdown plugin with a rewrite for serving such a file
 - (semver-major) [megadoc]() no longer accepts a `home` config for redirecting
+- (semver-major) configuration property `publicPath` is no longer required and
+  has been dropped
 - (semver-major) [[megadoc-html-serializer]] configuration property
   `stylesheet` renamed to `styleSheet`
-- (semver-major) [[megadoc-html-serializer]] configuration property
-  `useHashLocation` has been removed
+- (semver-major) configuration property `useHashLocation` has been removed
 - (semver-major) [[megadoc-compiler/Config.sources]] no longer accepts
   `pattern`
 - (semver-major) [[megadoc-compiler/Config.exclude]] is now a minimatch pattern

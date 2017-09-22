@@ -1,4 +1,4 @@
-const { assert } = require('megadoc-test-utils');
+const { assert, uidOf } = require('megadoc-test-utils');
 const Subject = require('../TreeRenderer');
 const { builders: b, Corpus } = require('megadoc-corpus');
 const { markdown, linkify } = require('../../renderRoutines');
@@ -27,7 +27,7 @@ describe('TreeRenderer', function() {
       });
 
       const treeOperations = {
-        'moduleA': {
+        [uidOf('moduleA', tree.documents)]: {
           text: markdown(tree.documents[0].properties.text)
         }
       };
@@ -75,10 +75,10 @@ describe('TreeRenderer', function() {
       corpus.add(tree);
 
       const treeOperations = {
-        'moduleA': {
+        [uidOf('moduleA', tree.documents)]: {
           text: markdown(tree.documents[0].properties.text)
         },
-        'moduleB': {
+        [uidOf('moduleB', tree.documents)]: {
           text: markdown(linkify(tree.documents[1].properties.text)),
         },
       };

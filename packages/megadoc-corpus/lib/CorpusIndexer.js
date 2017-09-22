@@ -1,11 +1,12 @@
 const invariant = require('invariant');
 const { dumpNodeFilePath } = require('./CorpusUtils');
 const { curry } = require('lodash');
+const { getRelativeFilePath } = require('megadoc-linter');
 
 // An index of value 0 is considered private and is accessible only to the node
 // and its "friends". Indices of higher values are not significant in their
 // value and merely denote that they are visible to all nodes.
-module.exports = curry(function buildIndices(corpus, node) {
+module.exports = curry(function buildIndices(corpus, compilerConfig, node) {
   if (node.type === 'Namespace') {
     return {};
   }
@@ -17,11 +18,13 @@ module.exports = curry(function buildIndices(corpus, node) {
       generateIdIndices(corpus, node, indices);
     }
     else if (field === '$filePath') {
-      var filePathIndex = getFilePathIndex(corpus, node);
+      const filePathIndex = getFilePathIndex(corpus, node);
 
       if (filePathIndex) {
-        indices[withLeadingSlash(filePathIndex)] = 1;
-        indices[withoutLeadingSlash(filePathIndex)] = 1;
+        const relativeFilePath = getRelativeFilePath(compilerConfig, filePathIndex)
+
+        indices[withLeadingSlash(relativeFilePath)] = 1;
+        indices[withoutLeadingSlash(relativeFilePath)] = 1;
       }
     }
     else {

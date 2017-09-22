@@ -6,7 +6,7 @@ const Docstring = require('./Docstring');
 const Registry = require('./Registry');
 const analyzeNode = require('./NodeAnalyzer__analyzeNode');
 const NodeInfo = require('./NodeAnalyzer__NodeInfo');
-const { assign, pick} = require('lodash');
+const { assign } = require('lodash');
 const babel = require('babel-core');
 const t = require('babel-types');
 const { NoUnidentified } = require('./lintingRules')
@@ -46,7 +46,7 @@ Parser.prototype.parseString = function(str, config, filePath) {
       }
       else {
         this.ast = babel.transform(str, assign({
-          filename: filePath,
+          filename: 'file',
           code: true,
           ast: true,
           babelrc: true,
@@ -58,7 +58,7 @@ Parser.prototype.parseString = function(str, config, filePath) {
     }
     catch (e) {
       linter.logError({
-        message: 'file could not be parsed',
+        message: e.message || 'file could not be parsed',
         loc: linter.locationForNode({
           filePath,
         })

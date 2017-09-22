@@ -5,7 +5,7 @@ const HTMLRenderingSuite = require('megadoc-test-utils/HTMLRenderingSuite');
 
 describe('megadoc-plugin-js::renderFn', function() {
   const defaultContext = {
-    commonOptions: {},
+    compilerOptions: {},
     options: {},
   };
 

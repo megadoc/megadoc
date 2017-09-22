@@ -9,3 +9,4 @@ exports.assert = require('chai').assert;
 exports.stubConsoleWarn = stubConsoleWarn;
 exports.stubConsoleError = stubConsoleError;
 exports.multiline = require('multiline-slash')
+exports.uidOf = (id, nodes) => nodes.filter(x => x.id === id).map(x => x.uid)[0]

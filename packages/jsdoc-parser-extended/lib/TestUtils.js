@@ -1,5 +1,6 @@
-var multiline = require('multiline-slash');
-var ASTParser = require('./');
+const multiline = require('multiline-slash');
+const ASTParser = require('./');
+const { NullLinter } = require('megadoc-linter');
 
 exports.parseNode = function(strGenerator, config, filePath) {
   var parser = createParser();
@@ -60,5 +61,5 @@ exports.parseFiles = parseFiles;
 exports.createParser = createParser;
 
 function createParser() {
-  return new ASTParser({});
+  return new ASTParser({ linter: NullLinter });
 }

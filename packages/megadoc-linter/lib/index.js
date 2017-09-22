@@ -2,6 +2,7 @@ const chalk = require('chalk');
 const columnify = require('columnify');
 const invariant = require('invariant');
 const R = require('ramda');
+const { AsyncPrinter } = require('./printers');
 const LOG_INFO = 1;
 const LOG_WARN = 2;
 const LOG_ERROR = 3;
@@ -11,7 +12,7 @@ const LevelStrings = {
   [LOG_ERROR]: chalk.red('error'),
 }
 
-let lastFile; // YES
+const globalStates = new WeakMap()
 
 /**
  * @module Linter
@@ -51,12 +52,23 @@ let lastFile; // YES
  * @return {Linter}
  */
 exports.for = function(config) {
+  if (!globalStates.has(config)) {
+    globalStates.set(config, {
+      lastFile: null,
+      printer: AsyncPrinter({
+        print: R.partial(logManyMessages, [config]),
+        frequency: 50,
+      }),
+    });
+  }
+
   invariant(typeof config.assetRoot === 'string' && config.assetRoot,
     'assetRoot must be defined!'
   )
 
   return {
     addToErrorReport: R.partial(addToErrorReport, [config]),
+    getRelativeFilePath: R.partial(getRelativeFilePath, [config]),
     logMessage: R.partial(logMessage, [config]),
     logRuleEntry: R.partial(logRuleEntry, [config]),
     logError: R.partial(logError, [config]),
@@ -152,53 +164,58 @@ function logConfigurationError(config, { message }) {
  * @param  {Linter~Level}     [params.level=LOG_INFO]
  */
 function logMessage(config, { rule, loc, message, level = LOG_INFO }) {
-  if (config.lintingDisabled === true) {
-    return;
-  }
+  const state = globalStates.get(config)
 
-  const { filePath: __filePath, line } = loc;
-  const filePath = getRelativeFilePath(config, __filePath)
+  state.printer.add({
+    filePath: getRelativeFilePath(config, loc.filePath),
+    line: loc.line,
+    level,
+    message,
+    rule
+  })
+}
 
-  // for lack of a better buffering implementation :D
-  if (lastFile !== filePath) {
-    if (lastFile) {
-      console.log('')
+// for lack of a better buffering implementation :D
+function logManyMessages(config, messages) {
+  const byFile = R.groupBy(R.prop('filePath'), messages)
+  const state = globalStates.get(config)
+
+  R.forEachObjIndexed((fileMessages, filePath) => {
+    if (state.lastFile !== filePath) {
+      if (state.lastFile) {
+        console.log('')
+      }
+
+      state.lastFile = filePath
+
+      console.log(chalk.underline(chalk.bold(filePath)))
     }
 
-    lastFile = filePath
-
-    console.log(chalk.underline(chalk.bold(filePath)))
-  }
-
-  console.log(
-    columnify(
-      [{ line, level: level, message, rule }],
-      {
-        columns: [ 'line', 'level', 'message', 'rule' ],
-        preserveNewLines: true,
-        showHeaders: false,
-        truncate: false,
-        config: {
-          line: {
-            minWidth: 5,
-            align: 'right',
-            dataTransform: x => chalk.green(x),
-          },
-          level: {
-            minWidth: 'warning'.length,
-            maxWidth: 'warning'.length,
-            dataTransform: x => LevelStrings[x],
-          },
-          message: {
-            maxWidth: 65,
-          },
-          rule: {
-            dataTransform: x => chalk.green(x),
-          }
+    console.log(columnify(fileMessages, {
+      columns: [ 'line', 'level', 'message', 'rule' ],
+      preserveNewLines: true,
+      showHeaders: false,
+      truncate: false,
+      config: {
+        line: {
+          minWidth: 5,
+          align: 'right',
+          dataTransform: x => chalk.green(x),
+        },
+        level: {
+          minWidth: 'warning'.length,
+          maxWidth: 'warning'.length,
+          dataTransform: x => LevelStrings[x],
+        },
+        message: {
+          maxWidth: 65,
+        },
+        rule: {
+          dataTransform: x => chalk.green(x),
         }
       }
-    )
-  )
+    }))
+  }, byFile)
 }
 
 function readRuleConfig(config, rule) {
@@ -250,4 +267,7 @@ exports.NullLinter = {
   logConfigurationError: R.T,
   locationForNode: R.always(null),
   locationForNodeAsString: R.always(null),
+  getRelativeFilePath: R.identity,
 }
+
+exports.getRelativeFilePath = getRelativeFilePath;

@@ -23,7 +23,7 @@ function Docstring(comment, params) {
     commentNode = parseComment(comment);
   }
   catch(e) {
-    throw new Error('Comment parse failed: "' + e.message + '" Source:\n' + comment);
+    throw new Error('comment could not be parsed: "' + e.message + '":\n' + comment);
   }
 
   if (commentNode.length === 0) {
@@ -31,7 +31,7 @@ function Docstring(comment, params) {
       commentNode = [{ tags: [] }];
     }
     else {
-      throw new Error('Invalid annotation in comment block. Source:\n' + comment);
+      throw new Error('invalid annotation in comment block:\n' + comment);
     }
   }
 
@@ -58,26 +58,6 @@ function Docstring(comment, params) {
       namespace: inferredData.namespace
     });
   });
-
-
-  // idInfo = extractIdInfo(this.tags);
-
-  // // this.id = idInfo.id;
-  // this.name = idInfo.name;
-  // this.namespace = idInfo.namespace;
-  // this.description = collectDescription(commentNode[0], this.id, this.tags);
-  // this.aliases = this.tags.filter(function(tag) {
-  //   return tag.type === 'alias';
-  // }).reduce(function(map, tag) {
-  //   map[tag.typeInfo.name] = true;
-  //   return map;
-  // }, {});
-
-  // this.$location = (
-  //   (this.namespace ? this.namespace + K.NAMESPACE_SEP : '') +
-  //   (this.name || '') + ' in ' +
-  //   params.nodeLocation
-  // );
 
   return this;
 }
