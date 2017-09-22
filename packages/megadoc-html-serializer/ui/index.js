@@ -29,34 +29,25 @@ function createMegadoc(config) {
 
   require('./outlets')(outlets)
 
-  const pluginAPI = { corpus };
+  config.plugins.forEach(function({
+    outlets: pluginOutlets = [],
+    outletOccupants: pluginOutletOccupants = [],
+  }) {
+    pluginOutlets.forEach(function(outletSpec) {
+      if (typeof outletSpec === 'string') {
+        outlets.define(outletSpec)
+      }
+      else {
+        // TODO ?
+      }
+    })
 
-  config.plugins.forEach(function(plugin) {
-    const pluginConfig = corpus.getNamespacesForPlugin(plugin.name).map(x => x.config);
-
-    if (plugin.register) {
-      plugin.register(pluginAPI, pluginConfig)
-    }
-
-    if (plugin.outlets) {
-      plugin.outlets.forEach(function(outletSpec) {
-        if (typeof outletSpec === 'string') {
-          outlets.define(outletSpec)
-        }
-        else {
-          // TODO ?
-        }
+    pluginOutletOccupants.forEach(function(occupantSpec) {
+      outlets.add(occupantSpec.name, {
+        key: occupantSpec.key || 'default',
+        component: occupantSpec.component,
       })
-    }
-
-    if (plugin.outletOccupants) {
-      plugin.outletOccupants.forEach(function(occupantSpec) {
-        outlets.add(occupantSpec.name, {
-          key: occupantSpec.key || 'default',
-          component: occupantSpec.component,
-        })
-      })
-    }
+    })
   });
 
   const appConfig = omit(config, [

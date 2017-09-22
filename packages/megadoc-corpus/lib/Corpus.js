@@ -5,7 +5,7 @@ const CorpusIndexer = require('./CorpusIndexer');
 const Types = require('./CorpusTypes');
 const assign = require('object-assign');
 const dumpNodeFilePath = require('./CorpusUtils').dumpNodeFilePath;
-const { NoConflicts, NoNamespaceConflicts } = require('./lintingRules')
+const { NoConflicts, NoNamespaceConflicts } = require('./lintingRules');
 
 const b = Types.builders;
 
@@ -22,7 +22,7 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
   const corpusNode = b.corpus({
     meta: {},
     namespaces: [],
-    indexFields: [ '$uid', '$filePath' ],
+    indexFields: [ '$path', '$filePath' ],
   });
 
   const buildIndices = CorpusIndexer(exports, { assetRoot });
@@ -70,8 +70,8 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
     if (object.type === 'Namespace') {
       return corpusNode;
     }
-    else if (object.parentNodeId) {
-      return nodes[object.parentNodeId];
+    else if (object.parentNodeUID) {
+      return nodes[object.parentNodeUID];
     }
 
     return null;
@@ -96,10 +96,12 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
    *         An object that can be safely serialized to disk.
    */
   exports.toJSON = function() {
-    return nodeList.reduce(function(map, node) {
-      map[getUID(node)] = flattenNodeAndChildren(exports, node);
-      return map;
-    }, {});
+    return nodeList
+      .map(R.partial(flattenNodeAndChildren, [ exports ]))
+      .map(node => Object.assign(node, {
+        filePath: linter.getRelativeFilePath(node.filePath)
+      }))
+    ;
   };
 
   /**
@@ -228,7 +230,7 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
       corpusNode.namespaces.push(node);
     }
     else if (parentNode) {
-      node.parentNodeId = parentNode.uid;
+      node.parentNodeUID = parentNode.uid;
     }
     else {
       linter.logError({
@@ -237,15 +239,6 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
       })
 
       return;
-    }
-
-    if (node.type === 'Namespace' || node.type === 'Document') {
-      node.symbol = node.hasOwnProperty('symbol') ? node.symbol : '/';
-    }
-
-    // TODO: why are we doing this here?
-    if (!node.meta) {
-      node.meta = {};
     }
 
     node.path = generateNodePath(exports, node);
@@ -328,8 +321,8 @@ function flattenNodeAndChildren(corpus, node) {
 }
 
 function flattenNode(corpus, node) {
-  if (node.parentNodeId) {
-    return assign(node.toJSON(), { parentNodeId: getUID(corpus.getParentOf(node)) });
+  if (node.parentNodeUID) {
+    return assign(node.toJSON(), { parentNodeUID: getUID(corpus.getParentOf(node)) });
   }
   else {
     return node.toJSON();
@@ -337,7 +330,7 @@ function flattenNode(corpus, node) {
 }
 
 function getUID(node) {
-  return node.path;
+  return node.uid;
 }
 
 function hasValidNamespaceId(node) {
@@ -346,4 +339,3 @@ function hasValidNamespaceId(node) {
 
 module.exports = Corpus;
 module.exports.dumpNodeFilePath = dumpNodeFilePath;
-module.exports.getUID = getUID;

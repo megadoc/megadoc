@@ -8,26 +8,26 @@ const { assign } = require('lodash');
 function CorpusAPI({ database: shallowCorpus, redirect }) {
   const exports = {};
   const corpus = CorpusTree(shallowCorpus);
-  const documentSearchIndex = buildDocumentSearchIndex();
-  const documentEntitySearchIndex = buildDocumentEntitySearchIndex();
-  const pluginNamespaces = Object.keys(corpus).reduce((map, x) => {
-    const node = getByUID(x);
+  const { pathMap, filePathMap, hrefMap } = shallowCorpus.reduce((map, { uid }) => {
+    const node = getByUID(uid);
 
-    if (node.type === 'Namespace') {
-      if (!map[node.pluginName]) {
-        map[node.pluginName] = [];
-      }
+    map.pathMap[node.path] = node;
+    map.hrefMap[getHref(node)] = node;
 
-      map[node.pluginName].push(node);
+    if (node.type !== 'DocumentEntity') {
+      map.filePathMap[node.filePath] = node;
     }
 
     return map;
-  }, {});
+  }, { pathMap: {}, filePathMap: {}, hrefMap: {} });
 
-  const length = Object.keys(corpus).length;
-  const rewrittenDocuments = Object.keys(corpus).reduce((map, x) => {
-    if (corpus[x].meta.hrefRewritten) {
-      map[corpus[x].meta.href] = x;
+  const documentSearchIndex = buildDocumentSearchIndex();
+  const documentEntitySearchIndex = buildDocumentEntitySearchIndex();
+  const rewrittenDocuments = shallowCorpus.reduce((map, { uid }) => {
+    const node = getByUID(uid);
+
+    if (node.meta.hrefRewritten) {
+      map[node.meta.href] = node;
     }
 
     return map;
@@ -49,31 +49,21 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
     return documentEntitySearchIndex[uid];
   };
 
-  exports.getCatalogue = function(id) {
-    return Object.keys(corpus).filter(x => x.indexOf(id + '/') === 0).map(getByUID);
-  };
-
-  exports.getNamespacesForPlugin = function(pluginName) {
-    return pluginNamespaces[pluginName] || [];
-  };
-
-  exports.get = function(uid) {
-    return corpus[uid];
+  exports.get = function(path) {
+    return pathMap[path];
   };
 
   exports.getByURI = function(uri) {
-    if (redirect && redirect[uri]) {
+    if (redirect && redirect.hasOwnProperty(uri)) {
       return exports.getByURI(redirect[uri]);
     }
 
-    if (rewrittenDocuments[uri]) {
-      return corpus[rewrittenDocuments[uri]];
+    if (rewrittenDocuments.hasOwnProperty(uri)) {
+      return rewrittenDocuments[uri];
     }
 
-    for (let uid in corpus) {
-      if (getHref(corpus[uid]) === uri) {
-        return corpus[uid];
-      }
+    if (hrefMap.hasOwnProperty(uri)) {
+      return hrefMap[uri];
     }
 
     // Ok, if we still didn't match any node but there's an anchor in the URL
@@ -92,10 +82,14 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
     }
   };
 
+  exports.getByFilePath = function(filePath) {
+    return filePathMap[filePath];
+  };
+
   Object.defineProperty(exports, 'length', {
     configurable: false,
     writable: false,
-    value: length
+    value: shallowCorpus.length
   });
 
   exports.getNamespaceOfDocument = getNamespaceOfDocument;
@@ -131,14 +125,16 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
   }
 
   function buildDocumentSearchIndex() {
-    return Object.keys(corpus).filter(uid => {
+    return shallowCorpus.filter(({ uid }) => {
+      const node = getByUID(uid);
+
       return (
-        !!getHref(corpus[uid]) &&
+        !!getHref(node) &&
         // ignore documents that have no indices
-        Object.keys(corpus[uid].indices).length > 0
+        Object.keys(node.indices).length > 0
       );
-    }).map(uid => {
-      const node = corpus[uid];
+    }).map(({ uid }) => {
+      const node = getByUID(uid);
 
       return {
         $1: node.title,
@@ -153,9 +149,9 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
   }
 
   function buildDocumentEntitySearchIndex() {
-    return Object.keys(corpus)
-      .filter(uid => !!getHref(corpus[uid]) && corpus[uid].type === 'Document')
-      .reduce((map, uid) => {
+    return shallowCorpus
+      .filter(({ uid }) => !!getHref(corpus[uid]) && corpus[uid].type === 'Document')
+      .reduce((map, { uid }) => {
         const node = getByUID(uid);
 
         if (!node.entities) {
@@ -204,21 +200,21 @@ function getContext(targetNode) {
 }
 
 function CorpusTree(corpus) {
-  const corpusTree = Object.keys(corpus).reduce(function(map, uid) {
-    map[uid] = discardChildReferences( assign({}, corpus[uid]) );
+  const corpusTree = corpus.reduce(function(map, node) {
+    map[node.uid] = discardChildReferences(assign({}, node));
 
     return map;
   }, {});
 
-  Object.keys(corpusTree).forEach(reduceNode);
+  corpus.forEach(reduceNode);
 
   return corpusTree;
 
-  function reduceNode(uid) {
+  function reduceNode({ uid }) {
     const node = corpusTree[uid];
 
-    if (typeof node.parentNodeId === 'string') {
-      attach(node, corpusTree[node.parentNodeId]);
+    if (typeof node.parentNodeUID === 'string') {
+      attach(node, corpusTree[node.parentNodeUID]);
     }
   }
 

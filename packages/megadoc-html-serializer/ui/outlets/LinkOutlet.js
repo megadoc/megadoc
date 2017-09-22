@@ -39,7 +39,7 @@ const LinkOutlet = React.createClass({
   resolveNode(id) {
     const { corpus } = this.context;
 
-    return [ corpus.getByURI, corpus.get ].reduce(function(found, f) {
+    return [ corpus.getByURI, corpus.getByFilePath, corpus.get ].reduce(function(found, f) {
       return found || f(id)
     }, null)
   }

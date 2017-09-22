@@ -62,34 +62,6 @@ describe('megadoc::Components::Link', function() {
     });
   });
 
-  context('in SinglePageMode...', function() {
-    context('given @to...', function() {
-      let corpus;
-
-      beforeEach(function() {
-        corpus = buildSPMCorpus();
-      });
-
-      it('should use @meta.href', function() {
-        render({ to: corpus.get('lua') });
-
-        assert.include(drill(subject).node.href, '#/lua');
-      });
-
-      it('should link to entities using @meta.href', function() {
-        render({ to: corpus.get('lua/from_lua') });
-
-        assert.include(drill(subject).node.href, '#/lua/from_lua');
-      });
-
-      it('should link to entities with hashes inside their URIs', function() {
-        render({ to: corpus.get('lua/cli#set_description') });
-
-        assert.include(drill(subject).node.href, '#/lua/cli#set_description');
-      });
-    });
-  });
-
   context('given @to...', function() {
     let corpus;
 
@@ -98,8 +70,8 @@ describe('megadoc::Components::Link', function() {
     });
 
     it('links to the node using its @href', function() {
-      render({ to: corpus.get('api/Bag') });
-      assert.include(drill(subject).node.href, '/api/Bag.html');
+      render({ to: corpus.get('api/foo') });
+      assert.include(drill(subject).node.href, '/api/foo.html');
     });
   });
 
@@ -132,9 +104,5 @@ describe('megadoc::Components::Link', function() {
 });
 
 function buildCorpus() {
-  return CorpusAPI({ database: require('json!test_helpers/fixtures/corpus') });
-}
-
-function buildSPMCorpus() {
-  return CorpusAPI({ database: require('json!test_helpers/fixtures/corpus--spm') });
+  return CorpusAPI({ database: require('json!test_helpers/fixtures/corpus.json') });
 }

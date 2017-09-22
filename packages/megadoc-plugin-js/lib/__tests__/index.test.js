@@ -66,34 +66,35 @@ describe('[integration] megadoc-plugin-js', function() {
       }
 
       const corpus = stats.renderedCorpus.toJSON();
-      const keysOf = x => Object.keys(x).sort()
+      const getByPath = nodePath => corpus.filter(x => x.path === nodePath)[0]
+      const uidOf = nodePath => getByPath(nodePath).uid
 
       const assertEmptyArray = (a) => {
         assert.deepEqual(a || [], [])
       }
 
-      assert.deepEqual(keysOf(corpus), [
+      assert.deepEqual(corpus.map(x => x.path), [
         'js',
         'js/Core',
         'js/Core.Cache',
         'js/Core.Cache.something'
       ])
 
-      assert.equal(corpus['js'].parentNodeId, undefined)
-      assert.deepEqual(corpus['js'].documents, ['js/Core'])
-      assertEmptyArray(corpus['js'].entities)
+      assert.equal(getByPath('js').parentNodeUID, undefined)
+      assert.deepEqual(getByPath('js').documents, [uidOf('js/Core')])
+      assertEmptyArray(getByPath('js').entities)
 
-      assert.equal(corpus['js/Core'].parentNodeId, 'js')
-      assert.deepEqual(corpus['js/Core'].documents, ['js/Core.Cache'])
-      assertEmptyArray(corpus['js/Core'].entities)
+      assert.equal(getByPath('js/Core').parentNodeUID, uidOf('js'))
+      assert.deepEqual(getByPath('js/Core').documents, [uidOf('js/Core.Cache')])
+      assertEmptyArray(getByPath('js/Core').entities)
 
-      assert.equal(corpus['js/Core.Cache'].parentNodeId, 'js/Core')
-      assertEmptyArray(corpus['js/Core.Cache'].documents)
-      assert.deepEqual(corpus['js/Core.Cache'].entities, ['js/Core.Cache.something'])
+      assert.equal(getByPath('js/Core.Cache').parentNodeUID, uidOf('js/Core'))
+      assertEmptyArray(getByPath('js/Core.Cache').documents)
+      assert.deepEqual(getByPath('js/Core.Cache').entities, [uidOf('js/Core.Cache.something')])
 
-      assert.equal(corpus['js/Core.Cache.something'].parentNodeId, 'js/Core.Cache')
-      assertEmptyArray(corpus['js/Core.Cache.something'].documents)
-      assertEmptyArray(corpus['js/Core.Cache.something'].entities)
+      assert.equal(getByPath('js/Core.Cache.something').parentNodeUID, uidOf('js/Core.Cache'))
+      assertEmptyArray(getByPath('js/Core.Cache.something').documents)
+      assertEmptyArray(getByPath('js/Core.Cache.something').entities)
 
       done();
     })

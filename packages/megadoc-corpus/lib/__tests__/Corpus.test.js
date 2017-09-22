@@ -5,7 +5,6 @@ const { builders: b } = require('../CorpusTypes');
 const { assert, createSinonSuite } = require('megadoc-test-utils');
 const { NullLinter } = require('megadoc-linter');
 const { NoConflicts, NoNamespaceConflicts } = require('../lintingRules');
-const { getUID } = Subject;
 
 describe('Corpus', function() {
   const sinon = createSinonSuite(this)
@@ -130,19 +129,19 @@ describe('Corpus', function() {
           [0]
       )
 
-      const getIdOf = path => getUID(get(path));
+      const getIdOf = path => get(path).uid;
 
       assert.equal(Object.keys(dump).length, 3);
-      assert.equal(get('API').parentNodeId, undefined,
+      assert.equal(get('API').parentNodeUID, undefined,
         "it does not serialize the root corpus node"
       );
 
-      assert.equal(get(get('API/Users').parentNodeId).path, 'API');
+      assert.equal(get(get('API/Users').parentNodeUID).path, 'API');
       assert.equal(get('API/Users').entities[0], getIdOf('API/Users/add'),
         "it swaps entities with their UIDs"
       );
 
-      assert.equal(get(get('API/Users/add').parentNodeId).path, 'API/Users',
+      assert.equal(get(get('API/Users/add').parentNodeUID).path, 'API/Users',
         "it swaps parentNode values with the UID"
       );
     });

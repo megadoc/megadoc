@@ -6,7 +6,7 @@ const createAppState = function(config) {
   let state = {
     layout: config.layout,
     spotlightOpen: false,
-    invertedTCL: false,
+    invertedTCL: config.invertedSidebar,
     singlePageMode: config.singlePageMode,
   };
 

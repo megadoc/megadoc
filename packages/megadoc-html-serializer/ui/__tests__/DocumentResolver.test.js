@@ -24,11 +24,11 @@ describe('megadoc::DocumentResolver', function() {
   context('using the http:// protocol', function() {
     it('resolves with the document mapped to the current the URL', function() {
       const location = HTTPLocation({
-        pathname: '/api/Database.html'
+        pathname: '/api/foo.html'
       });
 
       tap(subject.resolveFromLocation(location), x => {
-        assert.equal(x.documentNode.uid, 'api/Database');
+        assert.equal(x.documentNode.path, 'api/foo');
       });
     });
 
@@ -42,13 +42,13 @@ describe('megadoc::DocumentResolver', function() {
           customLayouts: [
             {
               match: { by: 'url', on: '*' },
-              using: 'api/Database'
+              using: 'api/foo'
             }
           ]
         }
 
         tap(subject.resolveFromLocation(location, config), x => {
-          assert.equal(x.documentNode.uid, 'api/Database');
+          assert.equal(x.documentNode.uid, 'api/foo');
         });
       });
 
@@ -61,13 +61,13 @@ describe('megadoc::DocumentResolver', function() {
           customLayouts: [
             {
               match: { by: 'url', on: '/foo.html' },
-              using: '/api/Database.html'
+              using: '/api/foo.html'
             }
           ]
         }
 
         tap(subject.resolveFromLocation(location, config), x => {
-          assert.equal(x.documentNode.uid, 'api/Database');
+          assert.equal(x.documentNode.uid, 'api/foo');
         });
       });
     });

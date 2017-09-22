@@ -65,6 +65,14 @@ exports.getDocumentOverride = function(pathname, layoutConfig) {
   }
 };
 
+exports.getRegionsForDocument = function(scope, layouts) {
+  const layoutOverride = getLayoutOverride(scope, layouts);
+
+  if (layoutOverride) {
+    return layoutOverride.regions;
+  }
+};
+
 function getLayoutOverride(scope, layouts) {
   if (!layouts) {
     return null;
@@ -75,25 +83,13 @@ function getLayoutOverride(scope, layouts) {
       "A custom layout must have a @match property defined!"
     );
 
-    return [].concat(x.match).every(matchEntry => match(matchEntry, scope));
+    return listOf(x.match).every(matchEntry => match(matchEntry, scope));
   })[0];
-}
-
-function getRegionsForDocument(scope, layouts) {
-  const layoutOverride = getLayoutOverride(scope, layouts);
-
-  if (layoutOverride) {
-    return layoutOverride.regions;
-  }
-}
-
-function arrayWrap(x) {
-  return Array.isArray(x) ? x : [].concat(x || []);
 }
 
 function match(matchEntry, { documentNode, namespaceNode, pathname }) {
   const matchBy = matchEntry.by;
-  const matchOn = arrayWrap(matchEntry.on);
+  const matchOn = listOf(matchEntry.on);
 
   return (
     (
@@ -137,5 +133,8 @@ function matchByURL(matchOn, pathname) {
   });
 }
 
+function listOf(x) {
+  return Array.isArray(x) ? x : [].concat(x || []);
+}
+
 exports.match = match;
-exports.getRegionsForDocument = getRegionsForDocument;

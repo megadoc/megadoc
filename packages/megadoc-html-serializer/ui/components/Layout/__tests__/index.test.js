@@ -50,7 +50,7 @@ describe('megadoc::Components::Layout', function() {
 
   describe('@using', function() {
     const corpus = createCorpus({
-      database: require('json!test_helpers/fixtures/corpus--small.json'),
+      database: require('json!test_helpers/fixtures/corpus.json'),
       redirect: {}
     });
 

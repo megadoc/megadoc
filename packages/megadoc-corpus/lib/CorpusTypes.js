@@ -80,8 +80,13 @@ function createTypeBuilder(typeName, typeDef) {
       );
     });
 
+    this.meta = {};
     consumeFields.call(this, fields);
     this.type = typeName;
+
+    if (typeName === 'Namespace' || typeName === 'Document') {
+      this.symbol = fields.hasOwnProperty('symbol') ? fields.symbol : '/';
+    }
 
     // kuz the corpus node does not have a id nor a UID
     if (typeName !== 'Corpus') {
@@ -99,11 +104,7 @@ function createTypeBuilder(typeName, typeDef) {
 
   TypeBuilder.__typeDef__ = typeDef;
   TypeBuilder.prototype.toJSON = function() {
-    return addRuntimeFields(omitInternalFields(knownFields)).reduce(function(map, field) {
-      map[field] = this[field];
-
-      return map;
-    }.bind(this), {});
+    return R.pick(addRuntimeFields(omitInternalFields(knownFields)), this);
   };
 
   TypeBuilder.prototype.merge = function(nextFields) {

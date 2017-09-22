@@ -18,7 +18,7 @@ describe('megadoc::Components::Root', function() {
 
     const documentURI = new DocumentURI({});
     const corpus = createCorpus({
-      database: require('json!test_helpers/fixtures/corpus--small.json'),
+      database: require('json!test_helpers/fixtures/corpus.json'),
       redirect: config.redirect
     });
 

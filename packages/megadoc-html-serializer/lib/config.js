@@ -137,6 +137,11 @@ module.exports = {
   fixedSidebar: false,
 
   /**
+   * @property {Boolean}
+   */
+  invertedSidebar: false,
+
+  /**
    * @property {Number}
    */
   sidebarWidth: null,

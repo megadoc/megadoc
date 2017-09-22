@@ -30,7 +30,7 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
   const overriddenDocumentLink = LayoutEngine.getDocumentOverride(href, config);
 
   if (overriddenDocumentLink) {
-    node = getByUIDOrURI(corpus, overriddenDocumentLink);
+    node = getByPathOrURI(corpus, overriddenDocumentLink);
 
     if (!node) {
       console.warn(
@@ -79,7 +79,7 @@ DocumentResolver.prototype.getProtocolAgnosticPathName = function(location) {
 
 function resolveRedirect(resolver, contextNode) {
   if (contextNode && contextNode.meta && contextNode.meta.redirect) {
-    const targetNode = getByUIDOrURI(resolver.corpus, contextNode.meta.redirect);
+    const targetNode = getByPathOrURI(resolver.corpus, contextNode.meta.redirect);
 
     if (targetNode) {
       return targetNode;
@@ -95,7 +95,7 @@ function resolveRedirect(resolver, contextNode) {
   }
 }
 
-function getByUIDOrURI(corpus, link) {
+function getByPathOrURI(corpus, link) {
   return corpus.get(link) || corpus.getByURI(link);
 }
 
