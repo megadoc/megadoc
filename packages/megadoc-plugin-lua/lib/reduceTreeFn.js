@@ -10,7 +10,7 @@ module.exports = function reduceTreeFn(context, documents) {
         type: 'CHANGE_NODE_PARENT',
         data: {
           uid: document.uid,
-          parentId: document.properties.receiver,
+          parentUid: documents.filter(x => x.id === document.properties.receiver).map(x => x.uid)[0],
         }
       }
     })

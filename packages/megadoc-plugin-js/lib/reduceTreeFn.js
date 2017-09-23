@@ -31,7 +31,7 @@ module.exports = function reduceTree(context, documents) {
       type: 'CHANGE_NODE_PARENT',
       data: {
         uid: x.uid,
-        parentId: x.properties.namespace
+        parentUid: documents.filter(y => y.id === x.properties.namespace).map(y => y.uid)[0]
       }
     });
   });

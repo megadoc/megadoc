@@ -1,5 +1,5 @@
 require('../Compiler')
-const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs, uidOf } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
 const b = createBuildersWithUIDs(require('megadoc-corpus'));
 
@@ -9,23 +9,24 @@ describe('megadoc-compiler::composeTree', function() {
 
   describe('CHANGE_NODE_PARENT', function() {
     it('maps a DocumentEntity to a Document', function() {
+      const documents = [
+        b.document({
+          id: 'Klass'
+        }),
+        b.documentEntity({
+          id: 'Method',
+        })
+      ]
       const tree = subject({
         id: 'foo',
         compilerOptions,
-        documents: [
-          b.document({
-            id: 'Klass'
-          }),
-          b.documentEntity({
-            id: 'Method',
-          })
-        ],
+        documents,
         treeOperations: [
           {
             type: 'CHANGE_NODE_PARENT',
             data: {
-              parentId: 'Klass',
-              id: 'Method',
+              parentUid: uidOf('Klass', documents),
+              uid: uidOf('Method', documents),
             },
           }
         ]
@@ -38,19 +39,20 @@ describe('megadoc-compiler::composeTree', function() {
     });
 
     it('maps a Document to a Document', function() {
+      const documents = [
+        b.document({ id: 'Container' }),
+        b.document({ id: 'Klass' })
+      ];
       const tree = subject({
         id: 'foo',
         compilerOptions,
-        documents: [
-          b.document({ id: 'Container' }),
-          b.document({ id: 'Klass' })
-        ],
+        documents,
         treeOperations: [
           {
             type: 'CHANGE_NODE_PARENT',
             data: {
-              id: 'Klass',
-              parentId: 'Container',
+              uid: uidOf('Klass', documents),
+              parentUid: uidOf('Container', documents),
             },
           }
         ]
@@ -64,48 +66,52 @@ describe('megadoc-compiler::composeTree', function() {
 
     it('whines if a parent could not be found', function() {
       assert.throws(function() {
+        const documents = [
+          b.document({
+            id: 'Klass'
+          })
+        ];
+
         subject({
           id: 'foo',
           compilerOptions,
-          documents: [
-            b.document({
-              id: 'Klass'
-            })
-          ],
+          documents,
           treeOperations: [
             {
               type: 'CHANGE_NODE_PARENT',
               data: {
-                id: 'Klass',
-                parentId: 'Container',
+                uid: uidOf('Klass', documents),
+                parentUid: uidOf('Container', documents),
               },
             }
           ]
         })
-      }, /Node with the id "Container" specified as a parent for node "Klass" could not be found./)
+      }, /Node with UID ".+" specified as a parent for node ".+" could not be found./)
     });
 
     it('whines if the node could not be found', function() {
       assert.throws(function() {
+        const documents = [
+          b.document({
+            id: 'Klass'
+          })
+        ];
+
         subject({
           id: 'foo',
           compilerOptions,
-          documents: [
-            b.document({
-              id: 'Klass'
-            })
-          ],
+          documents,
           treeOperations: [
             {
               type: 'CHANGE_NODE_PARENT',
               data: {
-                id: 'Child',
-                parentId: 'Klass',
+                uid: uidOf('Child', documents),
+                parentUid: uidOf('Klass', documents),
               },
             }
           ]
         })
-      }, /Node with the id "Child" specified as a child for node "Klass" could not be found./)
+      }, /Node with UID ".+" specified as a child for node ".+" could not be found./)
     });
   })
 });

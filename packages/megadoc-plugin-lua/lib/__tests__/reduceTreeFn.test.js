@@ -30,7 +30,7 @@ describe('megadoc-plugin-lua::reduceTreeFn', function() {
 
     assert.include(changeParentOps[0].data, {
       uid: uidOf('x', documents),
-      parentId: 'foo',
+      parentUid: uidOf('foo', documents),
     })
   });
 })

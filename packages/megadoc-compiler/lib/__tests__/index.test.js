@@ -311,7 +311,7 @@ describe("megadoc-compiler::Compiler", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, { profile: true }, function(err, profile) {
+    }, { profile: true }, function(err, { profile }) {
       if (err) {
         return done(err);
       }

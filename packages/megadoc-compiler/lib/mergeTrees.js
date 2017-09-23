@@ -3,13 +3,16 @@ const R = require('ramda');
 module.exports = function mergeTrees(prevCompilation, nextCompilation) {
   const { linter } = prevCompilation;
   const changedFiles = nextCompilation.files.map(linter.getRelativeFilePath);
-  const changedDocumentIds = R.indexBy(R.prop('id'), nextCompilation.documents);
+  const changedDocumentUIDs = R.indexBy(R.prop('uid'), nextCompilation.documents);
 
   const {
     documents: withoutChanged,
     renderOperations: renderOpsWithoutChanged,
     treeOperations: treeOpsWithoutChanged
-  } = prune({ changedFiles, changedDocumentIds }, prevCompilation)
+  } = prune({
+    changedFiles,
+    changedDocumentUIDs
+  }, prevCompilation)
 
   const withPartials = R.concat(withoutChanged, nextCompilation.documents);
   const renderOpsWithPartials = Object.assign(renderOpsWithoutChanged, nextCompilation.renderOperations);
@@ -26,7 +29,7 @@ function nullifyParent(node) {
   return R.merge(node, { parentNode: null })
 }
 
-function prune({ changedFiles, changedDocumentIds }, compilation) {
+function prune({ changedFiles, changedDocumentUIDs }, compilation) {
   return {
     documents: R.map
     (
@@ -40,13 +43,13 @@ function prune({ changedFiles, changedDocumentIds }, compilation) {
 
     renderOperations: R.filter
     (
-      documentId => !changedDocumentIds[documentId],
+      documentId => !changedDocumentUIDs[documentId],
       compilation.renderOperations
     ),
 
     treeOperations: R.filter
     (
-      op => !changedDocumentIds[op.data.id] && !changedDocumentIds[op.data.parentId],
+      op => !changedDocumentUIDs[op.data.uid] && !changedDocumentUIDs[op.data.parentUid],
       compilation.treeOperations
     ),
   };

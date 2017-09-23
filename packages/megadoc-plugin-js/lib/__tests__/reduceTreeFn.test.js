@@ -34,7 +34,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     assert.equal(treeOperations.length, 2);
     assert.include(treeOperations[1].data, {
       uid: uidOf('#beep', documents),
-      parentUid: documents[0].uid,
+      parentUid: uidOf('truck', documents),
     });
   });
 
@@ -60,7 +60,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     assert.equal(treeOperations.length, 2);
     assert.include(treeOperations[1].data, {
       uid: uidOf('truck', documents),
-      parentId: 'MyNamespace'
+      parentUid: uidOf('MyNamespace', documents),
     });
   });
 
@@ -96,7 +96,7 @@ describe('megadoc-plugin-js::reduceTreeFn', function() {
     assert.equal(treeOperations.length, 3);
     assert.include(treeOperations[2].data, {
       uid: uidOf('truck', documents),
-      parentId: 'MyNamespace'
+      parentUid: uidOf('MyNamespace', documents),
     });
 
     assert.include(treeOperations[1].data, {

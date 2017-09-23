@@ -12,7 +12,6 @@ module.exports = function composeTree({
 }) {
   // console.log('[D] Composing tree of %d nodes', documents.length, compilerOptions.strict);
 
-  const documentIdMap = R.indexBy(R.prop('id'), documents);
   const documentUidMap = R.indexBy(R.prop('uid'), documents);
   const documentChildren = {};
   const documentParents = {};
@@ -26,15 +25,6 @@ module.exports = function composeTree({
       console.error(msg);
     }
   };
-
-  const getByIdentifiers = (docId, docUid) => {
-    if (typeof docUid !== 'undefined') {
-      return documentUidMap[docUid];
-    }
-    else {
-      return documentIdMap[docId]
-    }
-  }
 
   const hierarchize = node => {
     if (!documentChildren.hasOwnProperty(node.uid)) {
@@ -53,30 +43,30 @@ module.exports = function composeTree({
   treeOperations.forEach(function(op) {
     switch (op.type) {
       case 'CHANGE_NODE_PARENT':
-        const parent = getByIdentifiers(op.data.parentId, op.data.parentUid);
-        const child = getByIdentifiers(op.data.id, op.data.uid);
+        const parent = documentUidMap[op.data.parentUid];
+        const child = documentUidMap[op.data.uid];
 
         if (!parent) {
           maybeThrowError(
             withSourceMessage(child,
-              `Node with the id "${op.data.parentId}" specified as a parent for ` +
-              `node "${op.data.id}" could not be found.`
+              `Node with UID "${op.data.parentUid}" specified as a parent for ` +
+              `node "${op.data.uid}" could not be found.`
             )
           );
 
-          blacklisted[op.data.uid || op.data.id] = true;
+          blacklisted[op.data.uid] = true;
 
           return;
         }
         else if (!child) {
           maybeThrowError(
             withSourceMessage(parent,
-              `Node with the id "${op.data.id}" specified as a child for ` +
-              `node "${op.data.parentId}" could not be found.`
+              `Node with UID "${op.data.uid}" specified as a child for ` +
+              `node "${op.data.parentUid}" could not be found.`
             )
           );
 
-          blacklisted[op.data.uid || op.data.id] = true;
+          blacklisted[op.data.uid] = true;
 
           return;
         }
@@ -95,7 +85,7 @@ module.exports = function composeTree({
     }
   });
 
-  const withoutBlacklistedDocuments = documents.filter(x => !blacklisted[x.uid] && !blacklisted[x.id]);
+  const withoutBlacklistedDocuments = documents.filter(x => !blacklisted[x.uid]);
   const rootNodes = withoutBlacklistedDocuments
     .filter(x => !documentParents.hasOwnProperty(x.uid))
     .filter(R.complement(isDocumentEntityNode))
