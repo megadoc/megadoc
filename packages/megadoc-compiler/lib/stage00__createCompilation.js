@@ -30,18 +30,20 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     documents: null,
     files,
     compilerOptions: pick(optionWhitelist, config),
+    linter,
     processor: paths,
     processorOptions: configure(processorEntry.options || {}),
-    serializerOptions: spec.serializerOptions || {},
     rawDocuments: null,
     refinedDocuments: null,
     renderOperations: null,
     renderedTree: null,
+    serializerOptions: spec.serializerOptions || {},
+    // this is needed by some processors like markdown during refinement in
+    // order to calculate a common prefix
+    sourcePatterns: source.include,
     stats: {},
     tree: null,
     treeOperations: null,
-    logger: runOptions.logger,
-    linter,
   };
 };
 

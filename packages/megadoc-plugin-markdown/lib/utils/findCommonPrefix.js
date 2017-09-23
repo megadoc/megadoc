@@ -15,7 +15,7 @@
  * @return {String}
  *         The common prefix.
  */
-module.exports = function(array, delim) {
+module.exports = function findCommonPrefix(array, delim) {
   if (array.length === 0) {
     return '';
   }

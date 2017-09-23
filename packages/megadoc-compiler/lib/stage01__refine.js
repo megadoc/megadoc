@@ -6,6 +6,7 @@ module.exports = function refine(compilation, done) {
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
+    sourcePatterns: compilation.sourcePatterns,
   };
 
   fn(context, rawDocuments, function(err, refinedDocuments) {
