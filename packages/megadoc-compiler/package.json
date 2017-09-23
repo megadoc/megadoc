@@ -5,11 +5,11 @@
   "scripts": {},
   "dependencies": {
     "ajv": "5.0.1",
-    "async": "2.3.0",
+    "async": "2.5.0",
     "divisus": "1.0.2",
     "fs-extra": "2.1.2",
     "glob": "7.1.1",
-    "invariant": "2.2.1",
+    "invariant": "2.2.2",
     "megadoc-config-utils": "^6.0.0-beta.2",
     "megadoc-corpus": "^6.0.0-beta.7",
     "megadoc-linter": "^6.0.0-beta.7",

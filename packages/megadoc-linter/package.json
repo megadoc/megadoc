@@ -8,7 +8,7 @@
   "dependencies": {
     "chalk": "2.1.0",
     "columnify": "1.5.4",
-    "invariant": "2.2.1",
+    "invariant": "2.2.2",
     "ramda": "0.24.1"
   }
 }

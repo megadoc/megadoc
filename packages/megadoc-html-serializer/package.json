@@ -7,7 +7,7 @@
     "test": "mocha lib/**/*.test.js"
   },
   "dependencies": {
-    "async": "2.3.0",
+    "async": "2.5.0",
     "babel-core": "6.26.0",
     "babel-loader": "7.0.0",
     "babel-preset-es2015": "6.24.1",
@@ -22,7 +22,7 @@
     "glob": "7.1.1",
     "htmlparser2": "3.9.2",
     "imports-loader": "0.6.5",
-    "invariant": "2.2.1",
+    "invariant": "2.2.2",
     "less": "2.3.1",
     "less-loader": "2.0.0",
     "lodash": "3.10.1",
@@ -40,7 +40,7 @@
     "style-loader": "0.13.1",
     "urijs": "1.18.0",
     "url-loader": "0.5.7",
-    "webpack": "1.12.15"
+    "webpack": "1.15.0"
   },
   "devDependencies": {
     "chai": "3.5.0",
