@@ -4,6 +4,7 @@ const invariant = require('invariant');
 const partial = require('./utils/partial');
 const asyncMaybe = require('./utils/asyncMaybe');
 const { assignUID } = require('megadoc-corpus');
+const orderDocumentList = require('./orderDocumentList');
 
 module.exports = function reduce(compilation, done) {
   const { processor, linter, refinedDocuments } = compilation;
@@ -14,13 +15,14 @@ module.exports = function reduce(compilation, done) {
 
   const normalize = R.pipe(
     createMetaContainer,
+    setDefaults,
     relativizeFilePaths,
     assignUID
   );
 
   reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return R.merge(compilation, {
-      documents: R.flatten(documents).map(normalize),
+      documents: orderDocumentList(R.flatten(documents).map(normalize)),
     });
   }, done));
 
@@ -63,6 +65,24 @@ module.exports = function reduce(compilation, done) {
     }
   }
 };
+
+function setDefaults(node) {
+  switch (node.type) {
+    case 'Namespace':
+      return Object.assign(node, {
+        documents: node.documents || [],
+      })
+
+    case 'Document':
+      return Object.assign(node, {
+        documents: node.documents || [],
+        entities: node.entities || [],
+      })
+
+    default:
+      return node
+  }
+}
 
 // TODO: distribute
 function reduceEach(context, files, fnPath, done) {

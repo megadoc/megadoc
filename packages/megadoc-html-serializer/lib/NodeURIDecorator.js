@@ -217,19 +217,6 @@ function HashBasedURIGenerator(/*config*/) {
     }
 
     return '#/' + encodeURI(node.path);
-
-    // if (node.type === 'DocumentEntity') {
-    //   return NodeURI(node.parentNode) + '/' + encodeURI(node.id);
-    // }
-    // else if (node.type === 'Document') {
-    //   return NodeURI(node.parentNode) + '/' + encodeURI(node.id);
-    // }
-    // else if (node.type === 'Namespace') {
-    //   return '#/' + encodeURI(node.id);
-    // }
-    // else if (node.type === 'Corpus') {
-    //   return null;
-    // }
   }
 
   function NodeAnchor(node) {

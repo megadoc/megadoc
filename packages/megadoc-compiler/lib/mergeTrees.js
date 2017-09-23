@@ -1,4 +1,5 @@
 const R = require('ramda');
+const orderDocumentList = require('./orderDocumentList');
 
 module.exports = function mergeTrees(prevCompilation, nextCompilation) {
   const { linter } = prevCompilation;
@@ -19,26 +20,18 @@ module.exports = function mergeTrees(prevCompilation, nextCompilation) {
   const treeOpsWithPartials = R.concat(treeOpsWithoutChanged, nextCompilation.treeOperations);
 
   return {
-    documents: withPartials,
+    documents: orderDocumentList(withPartials),
     renderOperations: renderOpsWithPartials,
     treeOperations: treeOpsWithPartials,
   };
 };
 
-function nullifyParent(node) {
-  return R.merge(node, { parentNode: null })
-}
-
 function prune({ changedFiles, changedDocumentUIDs }, compilation) {
   return {
-    documents: R.map
+    documents: R.filter
     (
-      nullifyParent,
-      R.filter
-      (
-        document => changedFiles.indexOf(document.filePath) === -1,
-        compilation.documents
-      )
+      document => changedFiles.indexOf(document.filePath) === -1,
+      compilation.documents
     ),
 
     renderOperations: R.filter

@@ -135,7 +135,7 @@ describe("megadoc-compiler::Compiler", function() {
 
         assert.deepEqual(
           compilations[0].documents.map(x => x.properties.content),
-          [ '# B', '# New A' ]
+          [ '# New A', '# B' ]
         )
 
         thirdRun(nextState);
@@ -157,7 +157,7 @@ describe("megadoc-compiler::Compiler", function() {
 
         assert.deepEqual(
           compilations[0].documents.map(x => x.properties.content),
-          [ '# B', '# New A' ]
+          [ '# New A', '# B' ]
         )
 
         done();

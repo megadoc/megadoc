@@ -183,8 +183,8 @@ describe('megadoc-compiler::mergeTrees', function() {
       }
     });
 
-    assert.deepEqual(mergedTree.documents.map(x => x.id), [ 'OtherKlass', 'Klass' ],
-      "It preserves documents in other files"
+    assert.deepEqual(mergedTree.documents.map(x => x.id), [ 'Klass', 'OtherKlass' ],
+      "It preserves other file documents and maintains order"
     );
 
     assert.ok(mergedTree.documents.some(x => x.summary === 'New Summary'));
