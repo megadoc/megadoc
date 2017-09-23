@@ -1,7 +1,8 @@
 const R = require('ramda');
 
 module.exports = function mergeTrees(prevCompilation, nextCompilation) {
-  const changedFiles = R.indexBy(R.identity)(nextCompilation.files);
+  const { linter } = prevCompilation;
+  const changedFiles = nextCompilation.files.map(linter.getRelativeFilePath);
   const changedDocumentIds = R.indexBy(R.prop('id'), nextCompilation.documents);
 
   const {
@@ -22,7 +23,7 @@ module.exports = function mergeTrees(prevCompilation, nextCompilation) {
 };
 
 function nullifyParent(node) {
-  return node.merge({ parentNode: null })
+  return R.merge(node, { parentNode: null })
 }
 
 function prune({ changedFiles, changedDocumentIds }, compilation) {
@@ -32,7 +33,7 @@ function prune({ changedFiles, changedDocumentIds }, compilation) {
       nullifyParent,
       R.filter
       (
-        document => !changedFiles[document.filePath],
+        document => changedFiles.indexOf(document.filePath) === -1,
         compilation.documents
       )
     ),

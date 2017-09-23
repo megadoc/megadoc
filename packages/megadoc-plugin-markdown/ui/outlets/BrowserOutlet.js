@@ -3,6 +3,8 @@ const Browser = require('../components/Browser')
 const { object, shape, bool, } = React.PropTypes;
 
 module.exports = React.createClass({
+  displayName: 'Markdown::BrowserOutlet',
+
   propTypes: {
     namespaceNode: object,
     $outletOptions: shape({

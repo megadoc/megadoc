@@ -14,7 +14,7 @@ module.exports = function refineFn(context, documents, done) {
   const config = context.options;
   const linter = Linter.for(context.compilerOptions)
 
-  var namespaceIds =  documents.reduce(function(map, node) {
+  const namespaceIds =  documents.reduce(function(map, node) {
     if (node.namespace && !documents.some(x => x.id === node.namespace)) {
       map[node.namespace] = node;
     }
@@ -22,8 +22,8 @@ module.exports = function refineFn(context, documents, done) {
     return map;
   }, {});
 
-  var namespaceDocuments = Object.keys(namespaceIds).map(function(namespaceId) {
-    var referencingDocument = namespaceIds[namespaceId];
+  const namespaceDocuments = Object.keys(namespaceIds).map(function(namespaceId) {
+    const referencingDocument = namespaceIds[namespaceId];
 
     return {
       isNamespace: true,
@@ -35,8 +35,8 @@ module.exports = function refineFn(context, documents, done) {
     };
   })
 
-  var withNamespaces = documents.concat(namespaceDocuments);
-  var withoutOrphans = discardOrphans(linter, withNamespaces);
+  const withNamespaces = documents.concat(namespaceDocuments);
+  const withoutOrphans = discardOrphans(linter, withNamespaces);
 
   if (config.verbose) {
     warnAboutUnknownContexts(linter, withoutOrphans);
@@ -87,23 +87,21 @@ function warnAboutUnknownContexts(linter, database) {
 }
 
 function warnAboutUnknownTags(linter, config, database) {
-  var KNOWN_TAGS = combine([
+  const KNOWN_TAGS = combine([
     config.customTags || {},
     K.KNOWN_TAGS.reduce(function(map, x) { map[x] = true; return map; }, {})
   ]);
 
   database.forEach(function(doc) {
-    if (doc && doc && doc.tags) {
-      doc.tags.forEach(function(tag) {
-        if (!(tag.type in KNOWN_TAGS)) {
-          linter.logRuleEntry({
-            rule: NoUnknownTags,
-            params: tag,
-            loc: getDocLocation(doc)
-          });
-        }
-      });
-    }
+    doc.tags.forEach(function(tag) {
+      if (!(tag.type in KNOWN_TAGS)) {
+        linter.logRuleEntry({
+          rule: NoUnknownTags,
+          params: tag,
+          loc: getDocLocation(doc)
+        });
+      }
+    });
   });
 }
 

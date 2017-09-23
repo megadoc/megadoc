@@ -37,15 +37,25 @@ const Link = React.createClass({
     const href = this.getHref();
     const isActive = this.props.active || this.isActive(href);
 
+    if (!href) {
+      console.warn(
+        `Link with text "${this.props.children}" has no resolvable destination... ` +
+        `This most likely indicates a configuration error.`
+      );
+    }
+
     return (
       <a
         id={this.props.id}
         name={this.props.name}
         title={this.props.title}
-        href={this.getRelativeHref(href)}
+        href={href && this.getRelativeHref(href) || undefined}
         onClick={this.navigate}
         children={this.props.children}
-        className={classSet(this.props.className, { 'active' : isActive })}
+        className={classSet(this.props.className, {
+          'active': isActive,
+          'mega-link--internal mega-link--broken': !href
+        })}
       />
     );
   },

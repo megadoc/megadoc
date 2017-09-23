@@ -4,18 +4,18 @@ module.exports = [
     match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
     regions: [
       {
-        name: 'Layout::Content',
+        name: 'Core::Content',
         options: { framed: true },
         outlets: [
           { name: 'Markdown::Document' },
-          { name: 'Layout::Content' },
+          { name: 'Core::Content' },
         ]
       },
       {
-        name: 'Layout::Sidebar',
+        name: 'Core::Sidebar',
         outlets: [
           { name: 'Markdown::Browser' },
-          { name: 'Layout::Sidebar' }
+          { name: 'Core::Sidebar' }
         ]
       }
     ]
@@ -26,7 +26,7 @@ module.exports = [
     match: { by: 'type', on: [ 'Namespace' ] },
     regions: [
       {
-        name: 'Layout::Sidebar',
+        name: 'Core::Sidebar',
         outlets: [{ name: 'Markdown::Browser' }]
       }
     ]

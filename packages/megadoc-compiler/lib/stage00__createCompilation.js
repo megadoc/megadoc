@@ -7,7 +7,7 @@ const blankProcessor = require('./blankProcessor');
 
 // TODO: extract decorators
 module.exports = function createCompilation(optionWhitelist, state, source) {
-  const { config, runOptions } = state;
+  const { config, linter, runOptions } = state;
   const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
   const files = getSourceFiles({ assetRoot: config.assetRoot, runOptions, source })
   const spec = require(processorEntry.name);
@@ -41,6 +41,7 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     tree: null,
     treeOperations: null,
     logger: runOptions.logger,
+    linter,
   };
 };
 
@@ -65,7 +66,7 @@ function getSourceFiles({ assetRoot, runOptions, source }) {
   const files = scanSources(source.pattern, source.include, source.exclude, assetRoot);
 
   return runOptions.changedSources ?
-    files.filter(x => runOptions.changedSources[x] === true) :
+    files.filter(x => runOptions.changedSources.indexOf(x) > -1) :
     files
   ;
 }

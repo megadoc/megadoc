@@ -1,5 +1,6 @@
 const b = require('megadoc-corpus').builders;
 const { extractTOC } = require('megadoc-html-serializer').RendererUtils;
+const { omit } = require('lodash');
 
 module.exports = function reduceFn(options, rawDocument, done) {
   const toc = extractTOC(rawDocument.source);
@@ -9,7 +10,7 @@ module.exports = function reduceFn(options, rawDocument, done) {
     title: rawDocument.plainTitle,
     filePath: rawDocument.filePath,
     summary: rawDocument.summary,
-    properties: rawDocument,
+    properties: omit(rawDocument, ['filePath']),
     symbol: '#',
     entities: toc.map(function(section) {
       return b.documentEntity({

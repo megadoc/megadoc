@@ -3,6 +3,8 @@ const Article = require('../components/Article')
 const { object } = React.PropTypes;
 
 module.exports = React.createClass({
+  displayName: 'Markdown::DocumentOutlet',
+
   propTypes: {
     documentNode: object,
   },

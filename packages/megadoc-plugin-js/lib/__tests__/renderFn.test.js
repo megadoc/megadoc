@@ -1,6 +1,6 @@
-const { assert } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
 const subject = require('../renderFn');
-const b = require('megadoc-corpus').builders;
+const b = createBuildersWithUIDs(require('megadoc-corpus'));
 const HTMLRenderingSuite = require('megadoc-test-utils/HTMLRenderingSuite');
 
 describe('megadoc-plugin-js::renderFn', function() {
@@ -14,7 +14,8 @@ describe('megadoc-plugin-js::renderFn', function() {
       id: 'truck',
       title: 'truck',
       properties: {
-        description: 'Hello *World*!'
+        description: 'Hello *World*!',
+        tags: [],
       }
     })
 

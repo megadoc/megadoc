@@ -1,60 +1,49 @@
 module.exports = function registerOutlets(outlets) {
-  const add = ({ names, component }) => {
-    names.forEach(name => {
-      outlets.add(name, { key: name, component })
-    })
-  }
-
   // expose this to plugins so that we can move to a non-global version in the
   // future
   outlets = outlets;
-  outlets.define('Meta');
-  outlets.define('LayoutWrapper');
-  outlets.define('Layout');
-  outlets.define('Layout::Banner');
-  outlets.define('Layout::Content');
-  outlets.define('Layout::Sidebar');
-  outlets.define('Layout::NavBar');
-  outlets.define('Layout::SidebarHeader'); // deprecated
-  outlets.define('Layout::SidebarLink');   // deprecated
-  outlets.define('Layout::SidebarSearch'); // deprecated
-  outlets.define('Layout::Footer');
-  outlets.define('Layout::NotFound');
-  outlets.define('Image');
-  outlets.define('Inspector');
-  outlets.define('Link');
-  outlets.define('SidebarHeader');
-  outlets.define('SidebarLink');
-  outlets.define('SidebarSearch');
-  outlets.define('Text');
+  outlets.define('Core::Banner');
+  outlets.define('Core::Content');
+  outlets.define('Core::Footer');
+  outlets.define('Core::Image');
+  outlets.define('Core::Inspector');
+  outlets.define('Core::LayoutWrapper');
+  outlets.define('Core::Link');
+  outlets.define('Core::Meta');
+  outlets.define('Core::NavBar');
+  outlets.define('Core::NotFound');
+  outlets.define('Core::Sidebar');
+  outlets.define('Core::SidebarHeader');
+  outlets.define('Core::SidebarHeaderLink');
+  outlets.define('Core::SidebarLink');
+  outlets.define('Core::SidebarSearch');
+  outlets.define('Core::Text');
 
-  outlets.add('Link', {
-    key: 'Link',
-    component: require('./LinkOutlet')
-  });
-
-  add({
-    names: [ 'Layout::SidebarHeader', 'SidebarHeader' ],
+  outlets.add('Core::SidebarHeader', {
     component: require('./SidebarHeaderOutlet')
   })
 
-  add({
-    names: [ 'Layout::SidebarLink', 'SidebarLink' ],
+  outlets.add('Core::SidebarHeaderLink', {
+    component: require('./SidebarHeaderLinkOutlet')
+  })
+
+  outlets.add('Core::SidebarLink', {
     component: require('./SidebarLinkOutlet')
   })
 
-  add({
-    names: [ 'Layout::SidebarSearch', 'SidebarSearch' ],
+  outlets.add('Core::SidebarSearch', {
     component: require('./SidebarSearchOutlet')
   })
 
-  outlets.add('Image', {
-    key: 'Image',
+  outlets.add('Core::Image', {
     component: require('./ImageOutlet')
   });
 
-  outlets.add('Text', {
-    key: 'Text',
+  outlets.add('Core::Link', {
+    component: require('./LinkOutlet')
+  });
+
+  outlets.add('Core::Text', {
     component: require('./TextOutlet')
   })
 

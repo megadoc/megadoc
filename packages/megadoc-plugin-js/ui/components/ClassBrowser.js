@@ -17,6 +17,7 @@ var ClassBrowser = React.createClass({
     documentEntityNode: object,
     namespaceNode: object,
     flat: bool,
+    linkNamespaces: bool,
   },
 
   getInitialState() {
@@ -109,7 +110,10 @@ var ClassBrowser = React.createClass({
 
     const hasSelfDocument = ns.id !== '__general__' && (
       ns.properties ||
-      config.linkToNamespacesInBrowser
+      (
+        config.linkToNamespacesInBrowser ||
+        this.props.linkNamespaces
+      )
     );
 
     return (

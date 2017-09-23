@@ -1,28 +1,66 @@
 const async = require('async');
+const R = require('ramda');
 const invariant = require('invariant');
-const flattenArray = require('./utils/flattenArray');
 const partial = require('./utils/partial');
-const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
+const { assignUID } = require('megadoc-corpus');
+
 module.exports = function reduce(compilation, done) {
-  const { processor, refinedDocuments } = compilation;
+  const { processor, linter, refinedDocuments } = compilation;
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };
 
+  const normalize = R.pipe(
+    createMetaContainer,
+    relativizeFilePaths,
+    assignUID
+  );
+
   reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
-    return mergeObject(compilation, {
-      documents: flattenArray(documents).map(normalize),
+    return R.merge(compilation, {
+      documents: R.flatten(documents).map(normalize),
     });
   }, done));
 
-  function normalize(documentNode) {
-    if (!documentNode.meta) {
-      documentNode.meta = {};
+  function createMetaContainer(node) {
+    if (!node.meta) {
+      node.meta = {};
     }
 
-    return documentNode;
+    return node;
+  }
+
+  // this statement may look strange (then again not in the larger scope of
+  // things) but there is a very good reason for it (two, in fact):
+  //
+  // 1) part of it is sensitive data; system file paths should not end up in
+  //    the runtime
+  // 2) it makes file-path indexing sooooooooooooooo sooo much easier
+  //
+  // what's not cool about it is that it breaks everything that expects
+  // filePath to be absolute, but those places (usually) have access to
+  // config.assetRoot anyway and they know about this so, deal with it.
+  //
+  // don't remove please
+  function relativizeFilePaths(node) {
+    switch (node.type) {
+      case 'Document':
+        return Object.assign(node, {
+          filePath: linter.getRelativeFilePath(node.filePath),
+          documents: node.documents ? node.documents.map(relativizeFilePaths) : node.documents,
+          entities: node.entities ? node.entities.map(relativizeFilePaths) : node.entities,
+        });
+
+      case 'DocumentEntity':
+        return Object.assign(node, {
+          filePath: linter.getRelativeFilePath(node.filePath),
+        });
+
+      default:
+        return node;
+    }
   }
 };
 

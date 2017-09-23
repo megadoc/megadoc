@@ -14,7 +14,7 @@ const b = Types.builders;
  *
  * The Corpus public API.
  */
-function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
+function Corpus({ strict = true, alias: aliases = {} }, { linter }) {
   const exports = {};
   const nodes = {};
   const paths = {};
@@ -25,7 +25,7 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
     indexFields: [ '$path', '$filePath' ],
   });
 
-  const buildIndices = CorpusIndexer(exports, { assetRoot });
+  const buildIndices = CorpusIndexer(exports);
 
   /**
    * @method add
@@ -96,12 +96,7 @@ function Corpus({ assetRoot, strict = true, alias: aliases = {} }, { linter }) {
    *         An object that can be safely serialized to disk.
    */
   exports.toJSON = function() {
-    return nodeList
-      .map(R.partial(flattenNodeAndChildren, [ exports ]))
-      .map(node => Object.assign(node, {
-        filePath: linter.getRelativeFilePath(node.filePath)
-      }))
-    ;
+    return nodeList.map(R.partial(flattenNodeAndChildren, [ exports ]));
   };
 
   /**
@@ -322,10 +317,10 @@ function flattenNodeAndChildren(corpus, node) {
 
 function flattenNode(corpus, node) {
   if (node.parentNodeUID) {
-    return assign(node.toJSON(), { parentNodeUID: getUID(corpus.getParentOf(node)) });
+    return assign({}, node, { parentNodeUID: getUID(corpus.getParentOf(node)) });
   }
   else {
-    return node.toJSON();
+    return assign({}, node);
   }
 }
 

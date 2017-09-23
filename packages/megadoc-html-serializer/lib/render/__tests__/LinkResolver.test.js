@@ -1,9 +1,9 @@
 const LinkResolver = require('../LinkResolver');
 const Corpus = require('megadoc-corpus').Corpus;
 const NodeURIDecorator = require('../../NodeURIDecorator');
-const { assert, stubConsoleWarn } = require('megadoc-test-utils')
-const b = require('megadoc-corpus').Types.builders;
+const { assert, createBuildersWithUIDs, stubConsoleWarn } = require('megadoc-test-utils')
 const { NullLinter } = require('megadoc-linter')
+const b = createBuildersWithUIDs(require('megadoc-corpus'));
 
 describe('LinkResolver', function() {
   var resolver, corpus;

@@ -2,9 +2,9 @@ require('../../');
 
 const Corpus = require("../Corpus");
 const Subject = require('../CorpusIndexer');
-const b = require('../CorpusTypes').builders;
-const { assert } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
 const { NullLinter } = require('megadoc-linter')
+const b = createBuildersWithUIDs(require('../../'));
 
 describe('CorpusIndexer', function() {
   let corpus;
@@ -49,7 +49,7 @@ describe('CorpusIndexer', function() {
     );
   });
 
-  const run = x => Subject(corpus, {}, x);
+  const run = x => Subject(corpus, x);
 
   it('indexes on @id', function() {
     assert.include(run(corpus.at('MD/X')), {

@@ -1,8 +1,4 @@
-var CorpusTypes = require('../lib/CorpusTypes');
-var def = CorpusTypes.def;
-var or = CorpusTypes.or;
-var array = CorpusTypes.array;
-var t = CorpusTypes.builtInTypes;
+const { def } = require('../lib/CorpusTypes');
 
 /**
  * @namespace T
@@ -40,7 +36,7 @@ var t = CorpusTypes.builtInTypes;
  */
 def("Corpus", {
   fields: {
-    meta: t.object,
+    meta: null,
 
     /**
      * @property {String[]} indexFields
@@ -54,14 +50,14 @@ def("Corpus", {
      *
      * Defaults to: `[ "$uid", "$filePath" ]`
      */
-    indexFields: array(t.string),
+    indexFields: null,
 
     /**
      * @property {T.Namespace[]}
      *
      * The list of namespace nodes contained within the corpus.
      */
-    namespaces: array("Namespace")
+    namespaces: null
   }
 });
 
@@ -79,7 +75,7 @@ def("Namespace", {
      * and will consequently effect the generated URLs and paths of the generated
      * .html files.
      */
-    id: t.string,
+    id: null,
 
     /**
      * @property {!String}
@@ -95,7 +91,7 @@ def("Namespace", {
      * The name can be shared, and is usually equal to the name of the plugin
      * that is generating this namespace (e.g. "megadoc-plugin-markdown".)
      */
-    name: t.string,
+    name: null,
 
     /**
      * @property {String?} [title=null]
@@ -108,7 +104,7 @@ def("Namespace", {
      * Example values: "Articles" for a markdown namespace, "JavaScripts" for
      * JS source files, "API" for Rails or Python API source files, etc.
      */
-    title: or(t.string, null),
+    title: null,
 
     /**
      * @property {String?} [symbol="/"]
@@ -129,7 +125,7 @@ def("Namespace", {
      *
      * Document A above will have a UID of `X/A`.
      */
-    symbol: or(t.string, null),
+    symbol: null,
 
     /**
      * @property {String[]} [indexFields=null]
@@ -144,24 +140,24 @@ def("Namespace", {
      *
      * @see /doc/dev/using-the-corpus.md#tuning-the-indexer
      */
-    indexFields: or(array(t.string), null),
+    indexFields: null,
 
     /**
      * @inheritdoc T.Corpus@meta
      */
-    meta: or(t.object, null),
+    meta: null,
 
     /**
      * @property {Object?}
      *
      * A good place to inject the user config needed by the UI for your plugin.
      */
-    config: or(t.object, null),
+    config: null,
 
     /**
      * @property {T.Document[]}
      */
-    documents: or(array("Node"), null),
+    documents: null,
   }
 });
 
@@ -177,20 +173,20 @@ def("Node", {
      *
      * See [T.Namespace@id]
      */
-    id: t.string,
+    id: null,
 
     /**
      * @property {String}
      *
      * See [T.Namespace@title]
      */
-    title: or(t.string, null),
+    title: null,
 
     /**
      * @property {String}
      */
-    summary: or(t.string, null),
-    summaryFields: or(array(t.string), null),
+    summary: null,
+    summaryFields: null,
 
     /**
      * @property {String}
@@ -200,21 +196,21 @@ def("Node", {
      * The file path MUST be relative to the [[Config@assetRoot]] and starts
      * with a forward slash.
      */
-    filePath: or(t.string, null),
+    filePath: null,
 
-    loc: or(t.object, null),
+    loc: null,
 
     /**
      * @inheritdoc T.Corpus@meta
      */
-    meta: or(t.object, null),
+    meta: null,
 
     /**
      * @inheritdoc T.Namespace@meta
      */
-    indexFields: or(array(t.string), null),
+    indexFields: null,
 
-    indices: or(t.object, null),
+    indices: null,
 
     /**
      * @property {Object[]}
@@ -223,7 +219,7 @@ def("Node", {
      * attach whatever kind of properties you need here that were not already
      * represented by the document's abstract representation (this node.)
      */
-    properties: or(array("Property"), t.object, null),
+    properties: null,
   }
 });
 
@@ -260,7 +256,7 @@ def("Document", {
     /**
      * @property {String} symbol
      */
-    symbol: or(t.string, null), // defaults to "/"
+    symbol: null,
 
     /**
      * @property {String}
@@ -273,9 +269,9 @@ def("Document", {
      * document is a top-level one.
      *
      */
-    parentNodeId: or(t.string, null),
-    documents: or(array("Document"), null),
-    entities: or(array("DocumentEntity"), null),
+    parentNodeUID: null,
+    documents: null,
+    entities: null,
   }
 });
 
@@ -306,7 +302,7 @@ def("DocumentEntity", { // terminal
      *
      * The UID of the documentNode that this entity belongs to.
      */
-    parentNodeId: or(t.string, null),
+    parentNodeUID: null,
   }
 });
 
@@ -315,7 +311,7 @@ def("DocumentEntity", { // terminal
  */
 def("Property", {
   fields: {
-    key: t.string,
-    value: or(t.string, t.number, t.boolean, t.regExp, t.array, t.object, null)
+    key: null,
+    value: null,
   }
 });

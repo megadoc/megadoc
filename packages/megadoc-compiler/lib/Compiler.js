@@ -18,6 +18,7 @@ const parseConfig = require('./parseConfig');
 const BlankSerializer = require('./BlankSerializer');
 const createBreakpoint = require('./utils/createBreakpoint');
 const createProfiler = require('./utils/createProfiler');
+const Linter = require('megadoc-linter');
 const { assocWith, mergeWith, nativeAssoc } = require('./utils');
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const { BreakpointError } = createBreakpoint;
@@ -62,7 +63,7 @@ exports.run = function run(userConfig, runOptions, done) {
   const profile = { benchmarks: [] };
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
   const instrument = createProfiler({
-    enabled: runOptions.profile,
+    enabled: !!runOptions.profile,
     writeFn: x => profile.benchmarks.push(x)
   });
 
@@ -88,6 +89,11 @@ exports.run = function run(userConfig, runOptions, done) {
     instrument.async('boot:create-serializer')
     (
       createSerializer
+    ),
+
+    instrument.async('boot:create-linter')
+    (
+      createLinter
     ),
 
     instrument.async('boot:create-compilations')
@@ -145,7 +151,7 @@ exports.run = function run(userConfig, runOptions, done) {
     registerTeardownRoutine(fn) {
       teardownRoutines.push(fn);
     }
-  }, ensureTeardown(teardownRoutines, (err, compilations) => {
+  }, ensureTeardown(teardownRoutines, (err, state) => {
     if (err instanceof BreakpointError) {
       done(null, err.result);
     }
@@ -153,10 +159,10 @@ exports.run = function run(userConfig, runOptions, done) {
       done(err);
     }
     else if (runOptions.profile) {
-      done(null, { profile, compilations });
+      done(null, R.merge({ profile }, state));
     }
     else {
-      done(null, compilations);
+      done(null, state);
     }
   }));
 }
@@ -164,7 +170,7 @@ exports.run = function run(userConfig, runOptions, done) {
 function compileTrees(state, done) {
   const { runOptions, serializer, compilations, instrument } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
-  const prevCompilations = R.pathOr([], ['initialState', 'compilations'])(runOptions)
+  const prevCompilations = R.pathOr([], ['initialState', 'compilations'], runOptions)
   const findPrevCompilation = compilation => prevCompilations.filter(x => x.id === compilation.id)
 
   const scopeMessage = message => x => `${message} [${x.id}]`
@@ -217,6 +223,12 @@ function compileTrees(state, done) {
         (
           compilation =>
           (
+            // findPrevCompilation(compilation).length > 0 ?
+            //   R.merge(
+            //     findPrevCompilation(compilation)[0],
+            //     mergeTrees(findPrevCompilation(compilation)[0], compilation)
+            //   ) :
+            //   compilation
             R.reduce
             (
               (aggregateCompilation, prevCompilation) =>
@@ -308,6 +320,12 @@ function createSerializer(state, done) {
   }
 
   done(null, Object.assign({}, state, { serializer }));
+}
+
+function createLinter(state, done) {
+  const { config } = state;
+
+  done(null, Object.assign({}, state, { linter: Linter.for(config) }));
 }
 
 function createCompilations({ optionWhitelist }, state) {

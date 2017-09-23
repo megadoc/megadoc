@@ -3,6 +3,8 @@ const ArticleTOC = require('../components/ArticleTOC')
 const { object, bool, shape, } = React.PropTypes;
 
 module.exports = React.createClass({
+  displayName: 'Markdown::DocumentTOCOutlet',
+
   propTypes: {
     documentEntityNode: object,
     documentNode: object.isRequired,
@@ -12,18 +14,7 @@ module.exports = React.createClass({
     }),
   },
 
-  statics: {
-    match(props) {
-      return (
-        props.namespaceNode &&
-        props.namespaceNode.name === 'megadoc-plugin-markdown' &&
-        !!props.documentNode
-      );
-    },
-  },
-
   render() {
-
     return (
       <ArticleTOC flat grouped={this.props.$outletOptions.grouped} {...this.props} />
     );

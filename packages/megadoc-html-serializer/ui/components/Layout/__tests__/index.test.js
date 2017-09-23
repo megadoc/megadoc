@@ -57,7 +57,6 @@ describe('megadoc::Components::Layout', function() {
     it('injects a custom documentNode into an outlet when specified', function() {
       outletManager.define('TestOutlet');
       outletManager.add('TestOutlet', {
-        key: 'asdf',
         component: React.createClass({
           propTypes: {
             documentNode: React.PropTypes.object,
@@ -74,7 +73,7 @@ describe('megadoc::Components::Layout', function() {
         template: {
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: [
                 {
                   name: 'TestOutlet',
@@ -99,7 +98,7 @@ describe('megadoc::Components::Layout', function() {
         template: {
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: [
                 {
                   name: 'Foo',
@@ -125,7 +124,7 @@ describe('megadoc::Components::Layout', function() {
         template: {
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: [
                 {
                   name: 'Foo',

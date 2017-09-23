@@ -66,7 +66,7 @@ const Banner = React.createClass({
             )}
 
             <Outlet
-              name="MultiPageLayout::Banner"
+              name="Core::Banner"
               alwaysRenderChildren
               tagName="span"
               fnRenderElement={(key, props, Type) => (

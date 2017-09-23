@@ -1,3 +1,4 @@
+const R = require('ramda');
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
 const RendererUtils = require('./RendererUtils');
@@ -62,53 +63,25 @@ exports.renderTree = function(state, tree, renderOperations) {
     }
 
     if (node.documents) {
-      const nextDocuments = node.documents.map(visitNode);
-
-      if (nextDocuments.some((x, i) => x !== node.documents[i])) {
-        nextData.documents = nextDocuments;
-      }
+      nextData.documents = node.documents.map(visitNode);
     }
 
     if (node.entities) {
-      const nextEntities = node.entities.map(visitNode);
-
-      if (nextEntities.some((x, i) => x !== node.entities[i])) {
-        nextData.entities = nextEntities;
-      }
+      nextData.entities = node.entities.map(visitNode);
     }
 
-    if (Object.keys(nextData).length > 0) {
-      return node.merge(nextData);
-    }
-    else {
-      return node;
-    }
+    return R.merge(node, nextData);
   }
 
   return visitNode(tree);
 };
 
 function renderNodeProperties(reducers, properties, renderedPropertySpec) {
-  let hasChanged = false;
-
-  const nextProperties = transformValue(
+  return transformValue(
     properties,
     renderedPropertySpec,
     function(thisValue, possiblyCompositeValue) {
-      const nextValue = CompositeValue.compute(reducers, possiblyCompositeValue);
-
-      if (nextValue !== thisValue) {
-        hasChanged = true;
-      }
-
-      return nextValue;
+      return CompositeValue.compute(reducers, possiblyCompositeValue);
     }
   );
-
-  if (!hasChanged) {
-    return null;
-  }
-  else {
-    return nextProperties;
-  }
 }

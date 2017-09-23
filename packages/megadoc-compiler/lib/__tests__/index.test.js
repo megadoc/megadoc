@@ -55,7 +55,7 @@ describe("megadoc-compiler::Compiler", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, function(err, compilations) {
+    }, function(err, { compilations }) {
       if (err) {
         return done(err);
       }
@@ -88,19 +88,21 @@ describe("megadoc-compiler::Compiler", function() {
       ],
     }
 
-    compile(config, function(err, prevCompilations) {
+    compile(config, function(err, state) {
       if (err) {
         return done(err);
       }
 
-      assert.ok(Array.isArray(prevCompilations));
-      assert.equal(prevCompilations.length, 2)
+      const { compilations } = state;
+
+      assert.ok(Array.isArray(compilations));
+      assert.equal(compilations.length, 2)
 
       assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/a.md'));
       assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/b.md'));
 
       assert.deepEqual(
-        prevCompilations[0].documents.map(x => x.properties.content),
+        compilations[0].documents.map(x => x.properties.content),
         [ '# A', '# B' ]
       )
 
@@ -108,18 +110,25 @@ describe("megadoc-compiler::Compiler", function() {
 
       assert.notCalled(parse);
 
+      secondRun(state)
+    });
+
+    function secondRun(initialState) {
       fileSuite.createFile('lib/a.md', `# New A`);
 
       compile(config, {
-        changedSources: {
-          [fileSuite.join('lib/a.md')]: true
-        },
-        initialState: { compilations: prevCompilations },
+        watch: true,
+        changedSources: [
+          fileSuite.join('lib/a.md')
+        ],
+        initialState,
         purge: true
-      }, function(mergeErr, compilations) {
+      }, function(mergeErr, nextState) {
         if (mergeErr) {
           return done(mergeErr);
         }
+
+        const { compilations } = nextState;
 
         assert.calledOnce(parse);
         assert.calledWith(parse, sinon.match.any, fileSuite.join('lib/a.md'));
@@ -129,9 +138,31 @@ describe("megadoc-compiler::Compiler", function() {
           [ '# B', '# New A' ]
         )
 
+        thirdRun(nextState);
+      });
+    }
+
+    function thirdRun(initialState) {
+      compile(config, {
+        watch: true,
+        changedSources: [],
+        initialState,
+        purge: true
+      }, function(mergeErr, nextState) {
+        if (mergeErr) {
+          return done(mergeErr);
+        }
+
+        const { compilations } = nextState;
+
+        assert.deepEqual(
+          compilations[0].documents.map(x => x.properties.content),
+          [ '# B', '# New A' ]
+        )
+
         done();
       })
-    });
+    }
   });
 
   it('works with multiple threads', function(done) {
@@ -143,7 +174,7 @@ describe("megadoc-compiler::Compiler", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, function(err, compilations) {
+    }, function(err, { compilations }) {
       if (err) {
         return done(err);
       }
@@ -280,13 +311,11 @@ describe("megadoc-compiler::Compiler", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, { profile: true }, function(err, { profile, compilations }) {
+    }, { profile: true }, function(err, profile) {
       if (err) {
         return done(err);
       }
 
-      assert.ok(Array.isArray(compilations));
-      assert.equal(compilations.length, 1)
       assert.ok(profile);
       assert.notEqual(profile.benchmarks.length, 0)
 

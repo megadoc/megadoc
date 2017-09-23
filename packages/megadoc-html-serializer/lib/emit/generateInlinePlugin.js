@@ -5,7 +5,7 @@ module.exports = function generateInlinePlugin({ config, outputPath }) {
 
   if (config.notFoundComponent) {
     outletOccupants.push(`{
-      name: 'Layout::NotFound',
+      name: 'Core::NotFound',
       key: 'Inline::NotFound',
       component: require("${config.notFoundComponent}")
     }`)

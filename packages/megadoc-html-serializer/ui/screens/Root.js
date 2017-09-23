@@ -94,8 +94,8 @@ const Root = React.createClass({
     }
 
     return (
-      <Outlet name="LayoutWrapper" forwardChildren>
-        <Outlet name="Meta" />
+      <Outlet name="Core::LayoutWrapper" forwardChildren>
+        <Outlet name="Core::Meta" />
 
         {config.tooltipPreviews && (
           <Inspector

@@ -10,7 +10,7 @@ const NotFound = React.createClass({
 
   render() {
     return (
-      <Outlet name="Layout::NotFound" elementProps={{ redirectUrl: this.props.redirectUrl }}>
+      <Outlet name="Core::NotFound" elementProps={{ redirectUrl: this.props.redirectUrl }}>
         <div className="not-found">
           <p>
             Sorry! There's nothing here for you to see. This is likely a

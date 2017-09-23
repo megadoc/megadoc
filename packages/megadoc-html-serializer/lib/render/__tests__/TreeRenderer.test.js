@@ -1,10 +1,11 @@
-const { assert, uidOf } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs, uidOf } = require('megadoc-test-utils');
 const Subject = require('../TreeRenderer');
-const { builders: b, Corpus } = require('megadoc-corpus');
+const {  Corpus } = require('megadoc-corpus');
 const { markdown, linkify } = require('../../renderRoutines');
 const Renderer = require('../Renderer')
 const LinkResolver = require('../LinkResolver')
 const { NullLinter } = require('megadoc-linter')
+const b = createBuildersWithUIDs(require('megadoc-corpus'));
 
 describe('TreeRenderer', function() {
   describe('.markdown', function() {

@@ -58,6 +58,22 @@ runtime performance.
   like `include` instead of being regex patterns
 - greatly improved error reporting
 
+## 6.0.0-beta.13
+
+Revisited the mess of CorpusTypes being prototypal objects which was the source
+of so much pain. Now they're plain POJOs and we've changed the way UIDs are handled:
+
+1. the assignment of UIDs is done explicitly by the creator (in our case, we do it at reduction time and tree composition time (for the namespace) in the compiler)
+2. file paths are relativized upon reduction
+3. the UIDs are (guaranteed to be) calculated based on the relativized file
+   path (finally)
+
+Also, the type checkers for all corpus type builders have been removed.
+
+What has been fixed by those changes is, mainly, the tree merging routine so
+watch works very reliably now, we only need to tackle the issue of emitted
+document ordering now and it will be seamless.
+
 ## 6.0.0-beta.12
 
 - [[megadoc-plugin-markdown]] Added a new option `titleOverrides` for

@@ -10,6 +10,7 @@
     "html": "0.0.10",
     "lodash": "3.10.1",
     "multiline-slash": "2.0.0",
+    "ramda": "0.24.1",
     "sinon": "1.17.6"
   },
   "peerDependencies": {

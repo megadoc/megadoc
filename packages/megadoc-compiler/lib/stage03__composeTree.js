@@ -2,6 +2,7 @@ const R = require('ramda');
 const { builders: b, dumpNodeFilePath } = require('megadoc-corpus');
 const isDocumentNode = node => node.type === 'Document'
 const isDocumentEntityNode = node => node.type === 'DocumentEntity'
+const { assignUID } = require('megadoc-corpus');
 
 module.exports = function composeTree({
   compilerOptions,
@@ -42,7 +43,7 @@ module.exports = function composeTree({
     else {
       const children = documentChildren[node.uid].map(hierarchize);
 
-      return node.merge({
+      return R.merge(node, {
         documents: children.filter(isDocumentNode),
         entities: children.filter(isDocumentEntityNode),
       })
@@ -102,15 +103,17 @@ module.exports = function composeTree({
 
   const hierarchicalNodes = rootNodes.map(hierarchize)
 
-  return b.namespace({
-    id,
-    name: namespaceAttributes.name || id,
-    title: namespaceAttributes.title || null,
-    meta: namespaceAttributes.meta || {},
-    config: namespaceAttributes.config || null,
-    indexFields: namespaceAttributes.indexFields || null,
-    documents: hierarchicalNodes,
-  });
+  return assignUID(
+    b.namespace({
+      id,
+      name: namespaceAttributes.name || id,
+      title: namespaceAttributes.title || null,
+      meta: namespaceAttributes.meta || {},
+      config: namespaceAttributes.config || null,
+      indexFields: namespaceAttributes.indexFields || null,
+      documents: hierarchicalNodes,
+    })
+  );
 };
 
 function withSourceMessage(document, message) {

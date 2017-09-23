@@ -42,7 +42,7 @@ function resolve(anchor, options = {}, _state) {
   trace("Context:", contextNode.path);
   trace("Term:", term);
 
-  if (term.match(/^(\.\.?\/)+/)) {
+  if (term.match(/^(\.{1,2}\/)+/)) {
     return resolveByFilePath(anchor, options);
   }
 
@@ -180,14 +180,17 @@ function resolveByFilePath(anchor, options) {
     options
   ) || {};
 
-  if (entityId && targetNode) {
+  if (targetNode && entityId) {
     return resolve({
       text: targetNode.path + entityId,
       contextNode: targetNode
     }, options);
   }
+  else if (targetNode) {
+    return { node: targetNode, text: targetNode.title };
+  }
   else {
-    return targetNode ? { node: targetNode, text: targetNode.title } : null;
+    return null;
   }
 }
 

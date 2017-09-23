@@ -68,21 +68,21 @@ LinkResolver.prototype.lookup = function(params) {
 
   if (index) {
     var document = index.node;
-    var title = index.text || document.title;
+    var text = document.title || index.text;
 
     if (!document.meta.href) {
       // TODO: linter
       console.warn("Document '%s' can not be linked to as it has no @href.", document.uid);
       return;
     }
-    else if (!title) {
+    else if (!text) {
       // TODO: linter
       console.warn("Document '%s' can not be linked to as it has no @title.", document.uid);
       return;
     }
     else {
       return {
-        text: title,
+        text: text,
         title: document.summary,
         href: Href(document, this.options)
       };

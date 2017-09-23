@@ -103,7 +103,7 @@ const ModuleBody = React.createClass({
     const tags = where(doc.tags, { type: 'example' });
 
     return (
-      <Outlet name="CJS::ExampleTags" elementProps={{tags}}>
+      <Outlet name="JS::ExampleTags" elementProps={{tags}}>
         {tags.length === 1 && (this.renderExampleTag(tags[0]))}
 
         {tags.length > 1 && (
@@ -119,7 +119,7 @@ const ModuleBody = React.createClass({
     return (
       <Outlet
         key={tag.string}
-        name="CJS::ExampleTag"
+        name="JS::ExampleTag"
         elementProps={{
           tag,
           documentNode: this.props.documentNode

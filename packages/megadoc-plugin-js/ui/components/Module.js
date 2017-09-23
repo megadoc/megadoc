@@ -39,7 +39,7 @@ const Module = React.createClass({
         />
 
         <Outlet
-          name="CJS::ModuleBody"
+          name="JS::ModuleBody"
           elementProps={{
             params: legacyParams,
             query: {},

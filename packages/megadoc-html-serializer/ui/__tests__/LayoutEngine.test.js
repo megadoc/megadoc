@@ -16,7 +16,7 @@ describe('megadoc::LayoutEngine', function() {
           match: { by: 'url', on: '/foo' },
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: null
             }
           ]
@@ -34,7 +34,7 @@ describe('megadoc::LayoutEngine', function() {
           match: { by: 'type', on: 'DocumentEntity' },
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: null
             }
           ]
@@ -53,7 +53,7 @@ describe('megadoc::LayoutEngine', function() {
           match: { by: 'path', on: [ 'api/Database' ] },
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: null
             }
           ]
@@ -72,7 +72,7 @@ describe('megadoc::LayoutEngine', function() {
           match: { by: 'namespace', on: [ 'api' ] },
           regions: [
             {
-              name: 'Layout::Content',
+              name: 'Core::Content',
               outlets: null
             }
           ]

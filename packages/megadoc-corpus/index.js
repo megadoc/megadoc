@@ -1,11 +1,7 @@
 require('./defs/core');
 
-var Corpus = require('./lib/Corpus');
-var CorpusTypes = require('./lib/CorpusTypes');
-
-CorpusTypes.finalize();
-
-exports.Corpus = Corpus;
-exports.Types = CorpusTypes;
-exports.builders = CorpusTypes.builders;
-exports.dumpNodeFilePath = Corpus.dumpNodeFilePath;
+exports.Corpus = require('./lib/Corpus');
+exports.Types = require('./lib/CorpusTypes');
+exports.builders = require('./lib/CorpusTypes').builders;
+exports.dumpNodeFilePath = require('./lib/Corpus').dumpNodeFilePath;
+exports.assignUID = require('./lib/assignUID');

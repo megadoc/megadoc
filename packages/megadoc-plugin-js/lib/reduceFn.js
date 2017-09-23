@@ -1,4 +1,5 @@
 const b = require('megadoc-corpus').builders;
+const { omit } = require('lodash');
 const debugLog = function() {
   if (process.env.MEGADOC_DEBUG === '1') {
     console.log.apply(console, arguments)
@@ -42,7 +43,7 @@ function reduceModuleDocument(doc) {
     filePath: doc.filePath,
     loc: doc.loc,
     symbol: '',
-    properties: doc,
+    properties: omit(doc, [ 'filePath' ]),
   });
 }
 
@@ -58,7 +59,7 @@ function reduceEntityDocument(doc) {
     },
     filePath: doc.filePath,
     loc: doc.loc,
-    properties: doc,
+    properties: omit(doc, [ 'filePath' ]),
     indices: {
       [id]: 0
     },

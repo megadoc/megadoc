@@ -65,7 +65,7 @@ const LayoutScreen = React.createClass({
       >
         <TwoColumnLayout.LeftColumn>
           <div>
-            {this.renderRegion('Layout::Sidebar')}
+            {this.renderRegion('Core::Sidebar')}
           </div>
         </TwoColumnLayout.LeftColumn>
 
@@ -87,13 +87,13 @@ const LayoutScreen = React.createClass({
   },
 
   renderContent() {
-    const ContentTag = this.getOutletTag('Layout::Content');
+    const ContentTag = this.getOutletTag('Core::Content');
     const { footer } = this.props.config;
 
     return (
       <div>
         <ContentTag>
-          {this.renderRegion('Layout::Content') || <NotFound />}
+          {this.renderRegion('Core::Content') || <NotFound />}
         </ContentTag>
 
         {footer && footer.length > 0 && (
@@ -104,20 +104,20 @@ const LayoutScreen = React.createClass({
   },
 
   renderNavBar() {
-    const contents = this.renderRegion('Layout::NavBar');
+    const contents = this.renderRegion('Core::NavBar');
 
     if (!contents) {
       return null;
     }
 
-    const ContentTag = this.getOutletTag('Layout::NavBar');
+    const ContentTag = this.getOutletTag('Core::NavBar');
 
     return (
       <Sticky>
         <ContentTag>
           <p>Contents</p>
 
-          {this.renderRegion('Layout::NavBar')}
+          {this.renderRegion('Core::NavBar')}
         </ContentTag>
       </Sticky>
     );

@@ -13,7 +13,7 @@ function TemplateRealizer(corpus, config) {
 
     return {
       regions,
-      hasSidebarElements: regions.some(x => x.name === 'Layout::Sidebar'),
+      hasSidebarElements: regions.some(x => x.name === 'Core::Sidebar'),
     };
   };
 
@@ -62,7 +62,7 @@ function TemplateRealizer(corpus, config) {
   function getDefaultGlobalRegions() {
     return [
       {
-        name: 'Layout::Content',
+        name: 'Core::Content',
         outlets: null
       }
     ];

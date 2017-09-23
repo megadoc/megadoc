@@ -1,7 +1,8 @@
-const { assert } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
 const mergeTrees = require('../mergeTrees');
-const { builders: b } = require('megadoc-corpus')
+const { NullLinter } = require('megadoc-linter');
+const b = createBuildersWithUIDs(require('megadoc-corpus'));
 
 describe('megadoc-compiler::mergeTrees', function() {
   const subject = mergeTrees;
@@ -11,6 +12,7 @@ describe('megadoc-compiler::mergeTrees', function() {
   };
 
   const createCompilation = compilationSpec => ({
+    linter: NullLinter,
     files: compilationSpec.documents.map(x => x.filePath),
     compilerOptions: compilationContext.compilerOptions,
     documents: compilationSpec.documents,

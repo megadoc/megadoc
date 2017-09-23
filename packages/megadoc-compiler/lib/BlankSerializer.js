@@ -9,7 +9,7 @@ BlankSerializer.prototype.seal = function(compilations, done) {
 };
 
 BlankSerializer.prototype.emit = function(compilations, done) {
-  done(null, compilations);
+  done(null, { compilations });
 };
 
 BlankSerializer.prototype.purge = function(compilations, done) {

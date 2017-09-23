@@ -45,74 +45,46 @@ const EXPRESSION_TYPES = Object.freeze([
 ].reduce(function(map, x) { map[x] = true; return map; }, {}));
 
 const TAGS_WITH_STRING = K.TAGS_WITH_STRINGS;
+const when = (x, f) => x ? f(x) : x;
 
-module.exports = function renderNode(context, renderer, node) {
-  const md = renderer.markdown;
-  const linkify = renderer.linkify;
+module.exports = function renderFn(context, renderer, node) {
+  const { markdown, linkify } = renderer;
   const builtInTypes = BUILT_IN_TYPES.concat(context.options.builtInTypes || []).reduce(toIndexMap, {});
-
   const doc = node.properties;
-  const mixinTargets = doc.mixinTargets || [];
-  const tags = doc.tags || [];
 
   return {
-    aliases: doc.aliases,
-    description: doc.description ? md(linkify({ text: doc.description, contextNode: node })) : null,
-    filePath: doc.filePath,
-    id: doc.id,
-    isModule: doc.isModule,
-    loc: doc.loc,
-    line: doc.line,
-
-    mixinTargets: mixinTargets.map(function(typeName) {
-      // var target = compiler.corpus.resolve({
-      //   text: typeName,
-      //   contextNode: node
-      // });
-
-      // if (!target) {
-      //   return { name: typeName };
-      // }
-
+    description: when(doc.description, x => markdown(linkify({ text: x, contextNode: node }))),
+    mixinTargets: when(doc.mixinTargets, x => x.map(function(typeName) {
       return {
-        // TODO: ... ?
-        // uid: target.uid,
         name: typeName,
         html: renderTypeLink({
           typeName: typeName,
           renderer: renderer,
           builtInTypes: builtInTypes,
-          // linkResolver: compiler.linkResolver,
           contextNode: node,
         })
       };
-    }),
+    })),
 
-    name: doc.name,
-    namespace: doc.namespace,
-    nodeInfo: doc.nodeInfo,
-    receiver: doc.receiver,
-    symbol: doc.symbol,
-    tags: tags.map(function(tag) {
+    tags: doc.tags.map(function(tag) {
       const nextTypeInfo = Object.assign({}, tag.typeInfo);
       const nextAttributes = {};
 
       if (tag.typeInfo.description) {
-        nextTypeInfo.description = md(linkify({
+        nextTypeInfo.description = markdown(linkify({
           text: tag.typeInfo.description,
           contextNode: node,
         }));
       }
 
       if (TAGS_WITH_STRING.hasOwnProperty(tag.type)) {
-        nextAttributes.string = md(linkify({
+        nextAttributes.string = markdown(linkify({
           text: tag.string,
           contextNode: node,
         }));
       }
       else if (tag.type === 'see') {
         nextTypeInfo.name = renderTypeLink({
-          // linkResolver: compiler.linkResolver,
           contextNode: node,
           typeName: tag.typeInfo.name.trim(),
           builtInTypes: builtInTypes,
@@ -120,7 +92,9 @@ module.exports = function renderNode(context, renderer, node) {
         });
       }
 
-      nextTypeInfo.type = renderTagType(tag.typeInfo.type);
+      if (tag.typeInfo.type) {
+        nextTypeInfo.type = renderTagType(tag.typeInfo.type);
+      }
 
       return Object.assign({}, tag, nextAttributes, {
         typeInfo: nextTypeInfo,
@@ -131,10 +105,6 @@ module.exports = function renderNode(context, renderer, node) {
   };
 
   function renderTagType(type) {
-    if (!type) {
-      return null;
-    }
-
     const nextType = Object.assign({}, type);
     const isExpression = EXPRESSION_TYPES.hasOwnProperty(type.name);
 
@@ -156,6 +126,7 @@ module.exports = function renderNode(context, renderer, node) {
     if (type.key) {
       nextType.key = renderTagType(type.key);
     }
+
     // Also FieldType
     if (type.value) {
       nextType.value = renderTagType(type.value);

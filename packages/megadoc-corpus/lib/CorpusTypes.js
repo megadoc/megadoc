@@ -1,14 +1,7 @@
-const assert = require('assert');
 const R = require('ramda');
-const { assign, uniq } = require('lodash');
-const generateUID = require('./generateUID');
-const { dumpNodeFilePath } = require('./CorpusUtils');
 const typeDefs = {};
-const typeCheckers = {};
 const builders = {};
-const builtInTypes = {};
 const camelizeCache = {};
-const definitions = [];
 
 /**
  * @module CorpusTypes
@@ -26,206 +19,50 @@ const definitions = [];
  */
 function def(typeName, typeDef) {
   typeDefs[typeName] = typeDef;
-
-  definitions.push(function() {
-    if (typeDef.base) {
-      assign(typeDef.fields, typeDefs[typeDef.base].fields);
-    }
-
-    typeCheckers[typeName] = Object.keys(typeDef.fields).reduce(function(map, field) {
-      map[field] = createTypeChecker(typeDef.fields[field]);
-      return map;
-    }, {});
-
-    builders[camelize(typeName)] = createTypeBuilder(typeName, typeDef);
-  });
+  builders[camelize(typeName)] = createTypeBuilder(typeName, typeDef);
 }
 
-const omitInternalFields = R.without([
-  'indexFields',
-  'summaryFields',
-]);
+// const omitInternalFields = R.without([
+//   'indexFields',
+//   'summaryFields',
+// ]);
 
-const addRuntimeFields = R.concat([
-  'indices',
-  'path',
-  'type',
-  'uid',
-]);
+// const addRuntimeFields = R.concat([
+//   'indices',
+//   'path',
+//   'type',
+//   'uid',
+// ]);
 
-function createTypeBuilder(typeName, typeDef) {
-  var TypeBuilder, constructor; // eslint-disable-line
-  var knownFields = Object.keys(typeDef.fields);
-  var requiredFields = knownFields.filter(function(field) {
-    return !typeDef.fields[field].optional;
-  });
-
-  // a hack so that constructor.name displays the type name properly
-  eval( // eslint-disable-line
-    'TypeBuilder = function ' + typeName + '() {' +
-    '  return constructor.apply(this, arguments);' +
-    '};'
-  );
-
-  constructor = function(fields) {
-    if (!(this instanceof TypeBuilder)) {
-      return new TypeBuilder(fields || {});
-    }
-
-    // verify all required fields are present
-    requiredFields.forEach(function(field) {
-      assert(field in fields,
-        "Field '" + field + "' is missing for a node of type '" + typeName + "'." +
-        " (Source: " + (dumpNodeFilePath(fields)) + ")"
-      );
-    });
-
-    this.meta = {};
-    consumeFields.call(this, fields);
-    this.type = typeName;
-
-    if (typeName === 'Namespace' || typeName === 'Document') {
-      this.symbol = fields.hasOwnProperty('symbol') ? fields.symbol : '/';
-    }
-
-    // kuz the corpus node does not have a id nor a UID
-    if (typeName !== 'Corpus') {
-      this.uid = generateUID([
-        this.type,
-        this.id,
-        this.symbol,
-        this.filePath,
-        this.loc || null
-      ]);
-    }
-
-    return this;
-  };
-
-  TypeBuilder.__typeDef__ = typeDef;
-  TypeBuilder.prototype.toJSON = function() {
-    return R.pick(addRuntimeFields(omitInternalFields(knownFields)), this);
-  };
-
-  TypeBuilder.prototype.merge = function(nextFields) {
-    return new TypeBuilder(knownFields.reduce((map, key) => {
-      map[key] = nextFields.hasOwnProperty(key) ? nextFields[key] : this[key];
-
-      return map;
-    }, {}));
-  };
-
-  function consumeFields(fields) {
-    // reject unrecognized fields and validate recognized ones
-    Object.keys(fields).forEach(fieldName => {
-      var fieldValue = fields[fieldName];
-      var typeError;
-
-      assert(fieldName in typeDef.fields,
-        "Field '" + fieldName + "' is unrecognized for a node of type '" + typeName + "'."
-      );
-
-      typeError = typeCheckers[typeName][fieldName](fieldValue);
-
-      if (typeError) {
-        assert(false, "TypeError: " + typeError + " (source: " + typeName + "[\"" + fieldName + "\"])");
-      }
-
-      this[fieldName] = fieldValue;
-    });
-  };
-
-  return TypeBuilder;
-}
-
-function createTypeChecker(type) {
-  return function(x) {
-    if (type === null) {
-      if (x !== null && x !== undefined) {
-        return 'Expected value to be "null"';
-      }
-    }
-    else if (isOrType(type)) {
-      if (!checkUnionType(type, x)) {
-        return (
-          'Expected value to be of one of the types [ ' +
-          type.typeNames + ' ], not \'' + getTypeOf(x) + '\''
-        );
-      }
-    }
-    else if (isArrayType(type)) {
-      return checkArrayType(type, x);
-    }
-    else if (typeof type === 'string') {
-      return checkCustomType(type, x);
-    }
-    else if (typeof type === 'function') {
-      return type(x);
-    }
-    else {
-      return checkPrimitiveType(type, x);
-    }
-  };
-}
-
-function checkPrimitiveType(type, x) {
-  var expectedType = type.name;
-
-  var valid = (
-    !!x &&
-    (
-      (x.constructor && x.constructor === type) ||
-      (x.constructor && x.constructor.name === expectedType) ||
-      typeof x === type ||
-      x instanceof type
-    )
-  );
-
-  if (!valid) {
-    return "Expected a value of type '" + expectedType + "', not '" + getTypeOf(x) + "'."
+function assignNodeType(type) {
+  return function(node) {
+    return Object.assign(node, { type });
   }
 }
 
-function checkUnionType(type, x) {
-  return type.types.some(function(typeChecker) {
-    if (!typeChecker(x)) {
-      return true;
-    }
-  });
+function ensureHasMetaContainer(node) {
+  return Object.assign(node, { meta: node.meta || {} });
 }
 
-function checkCustomType(type, x) {
-  var typeConstructor = builders[camelize(type)];
-  var expectedType = typeConstructor.name;
-  var descendants = exports.getTypeDescendants(expectedType);
+function ensureHasSymbol(node) {
+  switch (node.type) {
+    case 'Namespace':
+    case 'Document':
+      return Object.assign(node, {
+        symbol: node.hasOwnProperty('symbol') ? node.symbol : '/'
+      });
 
-  if (!x || descendants.indexOf(x.constructor.name) === -1) {
-    return "Expected a value of type '" + expectedType + "', not '" + (getTypeOf(x)) + "'."
+    default:
+      return node;
   }
 }
 
-function checkArrayType(type, x) {
-  var error;
-
-  if (!Array.isArray(x)) {
-    return (
-      'Expected value to be an array of the types [ ' +
-      type.typeNames + ' ], not \'' + getTypeOf(x) + '\''
-    );
-  }
-
-  x.some(function(y, index) {
-    if (!checkUnionType(type, y)) {
-      error = (
-        'Expected value at [' + index + '] to be of one of the types { ' +
-        type.typeNames + ' }, not \'' + getTypeOf(y) + '\''
-      );
-
-      return true;
-    }
-  });
-
-  return error;
+function createTypeBuilder(type) {
+  return props => R.pipe(
+    assignNodeType(type),
+    ensureHasMetaContainer,
+    ensureHasSymbol
+  )(R.merge({}, props));
 }
 
 function camelize(str, lowerFirst) {
@@ -242,119 +79,6 @@ function camelize(str, lowerFirst) {
   });
 
   return camelizeCache[str];
-};
-
-function array() {
-  var valueTypes = [].slice.call(arguments);
-  var typeNames = valueTypes.map(getTypeName).join(' | ');
-
-  return {
-    type: 'array',
-    types: valueTypes.map(createTypeChecker),
-    typeNames: typeNames,
-    toString: function() {
-      return 'Array.<' + typeNames + '>';
-    }
-  };
-}
-
-function isArrayType(type) {
-  return type && type.type === 'array';
-}
-
-function or() {
-  var valueTypes = [].slice.call(arguments);
-
-  return {
-    type: 'or',
-    types: valueTypes.map(createTypeChecker),
-    typeNames: valueTypes.map(getTypeName).join(' | '),
-    optional: valueTypes.some(function(x) { return x === null }),
-  };
-}
-
-function isOrType(type) {
-  return type && type.type === 'or';
-}
-
-/**
- * @lends CorpusTypes
- *
- * "Seal" the type definitions, create the builders and type checkers. This has
- * to be done separately from the stage where [.def]() is called so that we can
- * resolve custom types in the definitions.
- */
-function finalize() {
-  definitions.forEach(function(fn) {
-    fn();
-  });
-
-  definitions.splice(0);
-}
-
-function getTypeName(x) {
-  if (typeof x === 'string') {
-    return x;
-  }
-  else if (typeof x === 'function') {
-    return x.name;
-  }
-  else if (x === null) {
-    return 'null';
-  }
-  else if (isArrayType(x)) {
-    return x.typeNames;
-  }
-  else {
-    return String(x);
-  }
-}
-
-function getTypeOf(x) {
-  if (Array.isArray(x)) {
-    return 'Array.<' + uniq(x.map(getTypeOf)).join(', ') + '>';
-  }
-  return (x && x.constructor) ? x.constructor.name : typeof x;
-}
-
-builtInTypes["string"] = BuiltInTypeChecker('String', function(x) {
-  return typeof x === 'string';
-});
-
-builtInTypes["number"] = BuiltInTypeChecker('Number', function(x) {
-  return typeof x === 'number';
-});
-
-builtInTypes["boolean"] = BuiltInTypeChecker('Boolean', function(x) {
-  return typeof x === 'boolean';
-});
-
-builtInTypes["regExp"] = BuiltInTypeChecker('RegExp', function(x) {
-  return x instanceof RegExp;
-});
-
-builtInTypes["null"] = BuiltInTypeChecker('null', function(x) {
-  return x === null || x === undefined;
-});
-
-builtInTypes["array"] = BuiltInTypeChecker('Array', function(x) {
-  return Array.isArray(x);
-});
-
-builtInTypes["arrayOfType"] = array;
-builtInTypes["oneOfType"] = or;
-
-builtInTypes["object"] = BuiltInTypeChecker('Object', function(x) {
-  return typeof x === 'object' && x !== null;
-});
-
-
-function BuiltInTypeChecker(typeName, f) {
-  return function(x) {
-    if (!f(x)) {
-      return "Expected a value of type '" + typeName + "', not '" + getTypeOf(x) + "'";
-    }
-  };
 }
 
 /**
@@ -367,11 +91,6 @@ function BuiltInTypeChecker(typeName, f) {
  */
 exports.builders = builders;
 exports.def = def;
-exports.array = array;
-exports.or = or;
-exports.finalize = finalize;
-exports.builtInTypes = builtInTypes;
-exports.types = builtInTypes;
 
 /**
  * @param  {String}  typeName

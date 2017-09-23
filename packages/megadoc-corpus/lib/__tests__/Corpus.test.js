@@ -1,10 +1,10 @@
 require('../../');
 
 const Subject = require("../Corpus");
-const { builders: b } = require('../CorpusTypes');
-const { assert, createSinonSuite } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs, createSinonSuite } = require('megadoc-test-utils');
 const { NullLinter } = require('megadoc-linter');
 const { NoConflicts, NoNamespaceConflicts } = require('../lintingRules');
+const b = createBuildersWithUIDs(require('../../'));
 
 describe('Corpus', function() {
   const sinon = createSinonSuite(this)

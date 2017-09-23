@@ -1,26 +1,34 @@
+const InspectorOutlet = require('./outlets/InspectorOutlet');
+const ModuleOutlet = require('./outlets/ModuleOutlet');
+const ModuleEntitiesOutlet = require('./outlets/ModuleEntitiesOutlet');
+const ModuleHeaderOutlet = require('./outlets/ModuleHeaderOutlet');
+const ModuleIndexOutlet = require('./outlets/ModuleIndexOutlet');
+const ModuleBodyOutlet = require('./outlets/ModuleBodyOutlet');
+const ClassBrowserOutlet = require('./outlets/ClassBrowserOutlet');
+const NamespaceIndexOutlet = require('./outlets/NamespaceIndexOutlet');
+
 exports.outlets = [
-  'CJS::Landing',
-  'CJS::ClassBrowser',
-  'CJS::Module',
-  'CJS::ModuleEntities',
-  'CJS::ModuleHeader',
-  'CJS::ModuleHeader::Type',
-  'CJS::ModuleIndex',
-  'CJS::ModuleBody',
-  'CJS::NamespaceIndex',
-  'CJS::Tag',
-  'CJS::ExampleTags',
-  'CJS::ExampleTag',
+  'JS::Browser',
+  'JS::Module',
+  'JS::ModuleEntities',
+  'JS::ModuleHeader',
+  'JS::ModuleHeader::Type',
+  'JS::ModuleIndex',
+  'JS::ModuleBody',
+  'JS::Namespace',
+  'JS::Tag',
+  'JS::ExampleTags',
+  'JS::ExampleTag',
 ];
 
 exports.name = 'megadoc-plugin-js';
 exports.outletOccupants = [
-  require('./outlets/InspectorOutlet'),
-  require('./outlets/ModuleOutlet'),
-  require('./outlets/ModuleEntitiesOutlet'),
-  require('./outlets/ModuleHeaderOutlet'),
-  require('./outlets/ModuleIndexOutlet'),
-  require('./outlets/ModuleBodyOutlet'),
-  require('./outlets/ClassBrowserOutlet'),
-  require('./outlets/NamespaceIndexOutlet'),
+  { name: 'Core::Inspector', component: InspectorOutlet, },
+  { name: 'JS::Module', component: ModuleOutlet, },
+  { name: 'JS::ModuleEntities', component: ModuleEntitiesOutlet, },
+  { name: 'JS::ModuleHeader', component: ModuleHeaderOutlet, },
+  { name: 'JS::ModuleIndex', component: ModuleIndexOutlet, },
+  { name: 'JS::ModuleBody', component: ModuleBodyOutlet, },
+  { name: 'JS::Browser', component: ClassBrowserOutlet, },
+  { name: 'JS::Namespace', component: NamespaceIndexOutlet, },
 ]

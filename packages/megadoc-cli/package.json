@@ -14,6 +14,8 @@
     "lodash": "3.10.1",
     "megadoc-compiler": "^6.0.0-beta.12",
     "megadoc-config-utils": "^6.0.0-beta.2",
-    "megadoc-html-serializer": "^6.0.0-beta.12"
+    "megadoc-html-serializer": "^6.0.0-beta.12",
+    "megadoc-linter": "^6.0.0-beta.7",
+    "ramda": "0.24.1"
   }
 }

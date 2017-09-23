@@ -1,5 +1,6 @@
 const { stubConsoleWarn, stubConsoleError } = require('./watchConsole');
-const sinon = require('sinon')
+const sinon = require('sinon');
+const R = require('ramda');
 
 exports.sinonSuite = require('./SinonSuite');
 exports.sinon = require('sinon');
@@ -20,4 +21,13 @@ exports.stubLints = function(mochaSuite, Linter) {
   mochaSuite.afterEach(function() {
     Linter.for.restore()
   })
+}
+
+exports.createBuildersWithUIDs = function(corpusPackage) {
+  const { builders, assignUID } = corpusPackage;
+
+  return Object.keys(builders).reduce(function(map, name) {
+    map[name] = R.pipe(builders[name], assignUID);
+    return map;
+  }, {})
 }

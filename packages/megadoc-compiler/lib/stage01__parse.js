@@ -9,10 +9,10 @@ const divisus = require('divisus');
 // TODO: apply decorators
 module.exports = function parse(cluster, compilation, done) {
   const { files, processor } = compilation;
-
   const applier = processor.parseFnPath ? parseEach : parseBulk;
   const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
   const context = {
+    id: compilation.id,
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };

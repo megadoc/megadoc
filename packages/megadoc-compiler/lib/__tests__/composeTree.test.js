@@ -1,7 +1,7 @@
 require('../Compiler')
-const { assert } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
-const { builders: b } = require('megadoc-corpus')
+const b = createBuildersWithUIDs(require('megadoc-corpus'));
 
 describe('megadoc-compiler::composeTree', function() {
   const subject = composeTree;
