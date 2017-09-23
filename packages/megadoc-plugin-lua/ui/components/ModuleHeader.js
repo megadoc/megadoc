@@ -11,9 +11,9 @@ const ModuleHeader = React.createClass({
     level: oneOfType([string, number]),
   },
 
-  shouldComponentUpdate: function(prevProps) {
-    return prevProps.doc !== this.props.doc;
-  },
+  // shouldComponentUpdate: function(prevProps) {
+  //   return prevProps.doc !== this.props.doc;
+  // },
 
   render() {
     const { doc } = this.props;

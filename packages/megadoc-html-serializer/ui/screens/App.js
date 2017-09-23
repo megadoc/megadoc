@@ -11,6 +11,7 @@ const App = React.createClass({
     appState: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     corpus: PropTypes.object.isRequired,
+    mountPath: PropTypes.string.isRequired,
     location: require('schemas/Location').isRequired,
     outletManager: PropTypes.object.isRequired,
   },
@@ -41,7 +42,7 @@ const App = React.createClass({
     const { config } = this.props;
 
     this.documentURI = new DocumentURI({
-      mountPath: config.mountPath,
+      mountPath: this.props.mountPath,
       extension: config.emittedFileExtension,
     });
 
@@ -64,7 +65,7 @@ const App = React.createClass({
     }
 
     this.locationAPI = locationAPI({
-      mountPath: config.mountPath,
+      mountPath: this.props.mountPath,
       location: this.props.location,
       onChange: this.reload
     });
@@ -75,7 +76,7 @@ const App = React.createClass({
 
     this.locationAPI.start();
 
-    const pathname = this.props.location.pathname.replace(config.mountPath, '');
+    const pathname = this.props.location.pathname.replace(this.props.mountPath, '');
     const redirect = config.redirect[pathname];
 
     if (redirect) {
@@ -86,6 +87,16 @@ const App = React.createClass({
     // will not have a hash fragment and the client would (hash fragment may
     // change the UI if it's pointing to a DocumentEntity)
     this.setState({ hashDisabled: false });
+  },
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.config !== this.props.config) {
+      this.documentResolver = new DocumentResolver({
+        config: nextProps.config,
+        corpus: nextProps.corpus,
+        documentURI: this.documentURI
+      });
+    }
   },
 
   componentWillUnmount() {

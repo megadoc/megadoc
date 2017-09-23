@@ -43,6 +43,8 @@
 
     <!-- Load the plugins and start the client -->
     <script>
+      window.startingDocumentUID = "<%- obj.startingDocumentUID || null %>";
+      window.startingDocumentHref = "<%- obj.startingDocumentHref || null %>";
       window.MEGADOC_PLUGINS = Object.keys(exports)
         .filter(function(key) {
           var thing = exports[key];
@@ -60,8 +62,8 @@
       ;
 
       exports['megadoc'].startApp(Object.assign({}, exports['megadoc__config'], {
-        startingDocumentUID: "<%- obj.startingDocumentUID || null %>",
-        startingDocumentHref: "<%- obj.startingDocumentHref || null %>",
+        startingDocumentUID: window.startingDocumentUID,
+        startingDocumentHref: window.startingDocumentHref,
         plugins: window.MEGADOC_PLUGINS,
       }));
     </script>

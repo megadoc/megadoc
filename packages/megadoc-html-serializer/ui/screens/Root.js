@@ -51,7 +51,7 @@ const Root = React.createClass({
 
   componentWillMount() {
     this.realizeTemplate = LayoutTemplate(this.props.corpus, this.props.config);
-    this.setState(this.resolveScope());
+    this.setState(this.resolveScope(this.props));
   },
 
   componentDidMount() {
@@ -60,12 +60,17 @@ const Root = React.createClass({
     window.addEventListener('click', this.handleInternalLink, false);
   },
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.config !== this.props.config) {
+      this.realizeTemplate = LayoutTemplate(nextProps.corpus, nextProps.config);
+    }
+
     if (
       nextProps.location.pathname !== this.props.location.pathname ||
-      nextProps.location.hash !== this.props.location.hash
+      nextProps.location.hash !== this.props.location.hash ||
+      nextProps.config !== this.props.config
     ) {
-      this.setState(this.resolveScope(nextProps.location));
+      this.setState(this.resolveScope(nextProps));
     }
   },
 
@@ -86,8 +91,10 @@ const Root = React.createClass({
 
   render() {
     const { config } = this.props;
-    const pathname = this.getPathName();
+    const pathname = this.getPathName(this.props);
     const { scope, template } = this.state;
+
+    console.debug('root: rendering')
 
     if (!scope) {
       return this.renderInternalError();
@@ -130,16 +137,19 @@ const Root = React.createClass({
   },
 
   renderInternalError() {
-    const { corpus } = this.props
-    const location = this.getLocation();
+    const { corpus, location } = this.props
     const anchor = location.hash.replace('#', '');
     const redirectUrl = [
       // omit the anchor and try ?
       () => {
         if (anchor && anchor.length) {
-          const withoutAnchor = this.resolveCurrentDocument(Object.assign({}, location, {
-            hash: ''
-          }))
+          const withoutAnchor = this.resolveCurrentDocument({
+            config: this.props.config,
+            documentResolver: this.props.documentResolver,
+            location: Object.assign({}, location, {
+              hash: ''
+            })
+          })
 
           if (withoutAnchor) {
             return location.pathname;
@@ -163,7 +173,7 @@ const Root = React.createClass({
 
     return (
       <NotFound
-        location={this.getLocation()}
+        location={this.props.location}
         redirectUrl={redirectUrl}
         corpus={corpus}
       />
@@ -184,16 +194,21 @@ const Root = React.createClass({
     }
   },
 
-  resolveScope(location = this.getLocation()) {
-    const scope = this.resolveCurrentDocument(location);
+  resolveScope(props = this.props) {
+    const { location } = props;
+    const scope = this.resolveCurrentDocument({
+      config: props.config,
+      documentResolver: props.documentResolver,
+      location: props.location
+    });
 
     if (scope) {
       return {
         scope,
-        template: this.realizeTemplate(scope, this.getPathName(location))
+        template: this.realizeTemplate(scope, this.getPathName(props))
       };
     }
-    else if (this.isHashPointingToAnchor(location)) {
+    else if (isHashPointingToAnchor(location)) {
       return {
         scope: this.state.scope,
         template: this.state.template,
@@ -208,28 +223,21 @@ const Root = React.createClass({
     }
   },
 
-  resolveCurrentDocument(location = this.getLocation()) {
-    return this.props.documentResolver.resolveFromLocation(location, this.props.config);
+  resolveCurrentDocument({ location, config, documentResolver }) {
+    return documentResolver.resolveFromLocation(location, config);
   },
 
-  getPathName(location = this.getLocation()) {
-    return this.props.documentResolver.getProtocolAgnosticPathName(
-      location,
-      this.props.documentURI
-    );
+  getPathName({ documentResolver, documentURI, location }) {
+    return documentResolver.getProtocolAgnosticPathName(location, documentURI);
   },
-
-  getLocation() {
-    return this.props.location;
-  },
-
-  isHashPointingToAnchor(location = this.getLocation()) {
-    const anchor = location.hash.replace(/^#/, '');
-    const selfNode = findDOMNode(this);
-
-    return anchor && anchor.length > 0 && !!selfNode.querySelector(`a[name="${anchor}"]`);
-  }
 });
+
+function isHashPointingToAnchor(location) {
+  const anchor = location.hash.replace(/^#/, '');
+  const selfNode = findDOMNode(this);
+
+  return anchor && anchor.length > 0 && !!selfNode.querySelector(`a[name="${anchor}"]`);
+}
 
 module.exports = Root;
 

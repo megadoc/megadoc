@@ -4,7 +4,8 @@
   "main": "lib/megadoc.js",
   "bin": {
     "megadoc": "lib/megadoc.js",
-    "megadoc-compile": "lib/compile.js"
+    "megadoc-compile-plugin": "lib/megadoc-compile-plugin.js",
+    "megadoc-watch": "lib/megadoc-watch.js"
   },
   "dependencies": {
     "chokidar": "1.6.1",

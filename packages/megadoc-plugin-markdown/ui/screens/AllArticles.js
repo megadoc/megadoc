@@ -9,9 +9,9 @@ const AllArticles = React.createClass({
     routeName: string,
   },
 
-  shouldComponentUpdate() {
-    return false;
-  },
+  // shouldComponentUpdate() {
+  //   return false;
+  // },
 
   render() {
     const folders = Database.for(this.props.routeName).getFolders();

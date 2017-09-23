@@ -3,8 +3,8 @@ const { getConfigurablePair } = require('megadoc-config-utils');
 const { constants: K } = require('megadoc-html-serializer');
 const HTMLSerializer = require('megadoc-html-serializer');
 
-function loadRuntimeConfig({ configFilePath }) {
-  const config = reverseMerge(require(configFilePath), {
+function loadRuntimeConfig({ preloadedConfig, configFilePath }) {
+  const config = preloadedConfig || reverseMerge(require(configFilePath), {
     assetRoot: path.resolve(path.dirname(configFilePath))
   });
 
@@ -21,6 +21,7 @@ function loadRuntimeConfig({ configFilePath }) {
     compilerConfig: config,
     contentBase: path.resolve(config.outputDir),
     runtimeConfig: require(runtimeConfigFilePath),
+    runtimeConfigFilePath,
     runtimeOutputPath: normalizePath(runtimeOutputPath),
   };
 }

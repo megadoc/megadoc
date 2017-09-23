@@ -54,9 +54,9 @@ var DocTags = React.createClass({
     };
   },
 
-  shouldComponentUpdate: function(nextProps) {
-    return this.props.tags !== nextProps.tags;
-  },
+  // shouldComponentUpdate: function(nextProps) {
+  //   return this.props.tags !== nextProps.tags;
+  // },
 
   render() {
     var paramTags = where(this.props.tags, { type: 'param' });

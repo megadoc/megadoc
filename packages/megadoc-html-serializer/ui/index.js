@@ -50,12 +50,13 @@ function createMegadoc(config) {
     })
   });
 
-  const appConfig = omit(config, [
-    'database',
-    'plugins',
-    'startingDocumentUID',
-    'startingDocumentHref',
-  ]);
+  const appConfig = config;
+  // const appConfig = omit(config, [
+  //   'database',
+  //   'plugins',
+  //   'startingDocumentUID',
+  //   'startingDocumentHref',
+  // ]);
 
   const appState = AppState(config);
 
@@ -96,9 +97,10 @@ exports.startApp = function(config) {
 
   render(
     <App
-      config={Object.assign({}, megadoc.appConfig, { mountPath })}
+      config={megadoc.appConfig}
       appState={megadoc.appState}
       corpus={megadoc.corpus}
+      mountPath={mountPath}
       outletManager={megadoc.outlets}
       location={window.location}
     />,

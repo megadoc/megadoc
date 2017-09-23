@@ -3,8 +3,15 @@ const chokidar = require('chokidar');
 const R = require('ramda');
 const ConfigUtils = require('megadoc-config-utils');
 
-exports.run = function(config, runOptions) {
+exports.run = function(config, runOptions, callback = null) {
   compiler.run(config, runOptions, function(err, state) {
+    if (err && callback) {
+      return callback(err);
+    }
+    else if (callback) {
+      callback();
+    }
+
     if (err) {
       throw err;
     }

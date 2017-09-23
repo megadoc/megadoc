@@ -23,9 +23,9 @@ const ModuleHeader = React.createClass({
     };
   },
 
-  shouldComponentUpdate(prevProps) {
-    return prevProps.documentNode !== this.props.documentNode;
-  },
+  // shouldComponentUpdate(prevProps) {
+  //   return prevProps.documentNode !== this.props.documentNode;
+  // },
 
   render() {
     let anchor;

@@ -17,12 +17,14 @@ const R = require('ramda');
 const run = async.seq(
   (options, done) => {
     const runtimeConfig = loadRuntimeConfig({
+      preloadedConfig: options.config,
       configFilePath: options.configFilePath
     });
 
     done(null, Object.assign({}, options, R.pick([
       'compilerConfig',
       'runtimeConfig',
+      'runtimeConfigFilePath',
       'runtimeOutputPath',
       'contentBase',
     ], runtimeConfig)));
@@ -75,17 +77,22 @@ const run = async.seq(
   }
 )
 
-run({
-  configFilePath: path.resolve(process.env.CONFIG_FILE),
-  host: process.env.HOST || '0.0.0.0',
-  port: process.env.PORT || '8942',
-  sourceFiles: process.argv.slice(3).map(x => path.resolve(x)),
-  tmpDir: os.tmpdir(),
-}, function(err) {
-  if (err) {
-    throw err;
-  }
-})
+if (require.main === module) {
+  run({
+    configFilePath: path.resolve(process.env.CONFIG_FILE),
+    host: process.env.HOST || '0.0.0.0',
+    port: process.env.PORT || '8942',
+    sourceFiles: process.argv.slice(3).map(x => path.resolve(x)),
+    tmpDir: os.tmpdir(),
+  }, function(err) {
+    if (err) {
+      throw err;
+    }
+  })
+}
+else {
+  module.exports = run;
+}
 
 function startServer({
   assets,
@@ -93,6 +100,7 @@ function startServer({
   host,
   port,
   runtimeConfig,
+  runtimeConfigFilePath,
   runtimeOutputPath,
   serializerConfig,
   sourceFiles,
@@ -103,9 +111,10 @@ function startServer({
   addWebpack({
     webpackConfig: configureWebpack({
       additionalFiles: sourceFiles,
-      runtimeConfig,
-      runtimeOutputPath,
       assets,
+      runtimeConfig,
+      runtimeConfigFilePath,
+      runtimeOutputPath,
       serializerConfig,
       tmpDir,
     }),
@@ -117,6 +126,7 @@ function startServer({
   proxyAssets({
     runtimeOutputPath,
     files: [
+      `${K.CONFIG_FILE}`,
       `${K.STYLE_BUNDLE}`,
     ]
   }, app)
