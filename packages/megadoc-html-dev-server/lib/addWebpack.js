@@ -13,20 +13,16 @@ module.exports = function addWebpack({
     contentBase: contentBase,
     publicPath: runtimeOutputPath,
     hot: false,
-    quiet: true,
+    quiet: false,
     noInfo: true,
     lazy: false,
     inline: false,
     watchOptions: {
-      poll: false,
-      aggregateTimeout: 0,
+      aggregateTimeout: 300,
     },
-    stats: false,
+    stats: { colors: true },
     historyApiFallback: false,
   }));
 
-  app.use(createWebpackHotMiddleware(webpackCompiler, {
-    log: false,
-    overlay: false,
-  }));
+  app.use(createWebpackHotMiddleware(webpackCompiler));
 }

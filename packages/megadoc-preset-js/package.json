@@ -10,10 +10,10 @@
   "author": "Ahmad Amireh",
   "license": "AGPL-3.0",
   "dependencies": {
-    "megadoc-cli": "6.0.0",
-    "megadoc-compiler": "6.0.0",
-    "megadoc-html-serializer": "6.0.0",
-    "megadoc-plugin-js": "6.0.0",
-    "megadoc-plugin-markdown": "6.0.0"
+    "megadoc-cli": "^6.0.0",
+    "megadoc-compiler": "^6.0.0",
+    "megadoc-html-serializer": "^6.0.0",
+    "megadoc-plugin-js": "^6.0.0",
+    "megadoc-plugin-markdown": "^6.0.0"
   }
 }

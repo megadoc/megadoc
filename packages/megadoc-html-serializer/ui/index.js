@@ -7,7 +7,7 @@ const App = require('./screens/App');
 const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
 
-function createMegadoc(config) {
+function createMegadoc(config, { plugins }) {
   const outlets = OutletManager({
     strict: true,
     verbose: false
@@ -20,7 +20,7 @@ function createMegadoc(config) {
 
   require('./outlets')(outlets)
 
-  config.plugins.forEach(function({
+  plugins.forEach(function({
     outlets: pluginOutlets = [],
     outletOccupants: pluginOutletOccupants = [],
   }) {
@@ -50,7 +50,7 @@ function createMegadoc(config) {
 }
 
 exports.createClient = function(config) {
-  const megadoc = createMegadoc(config);
+  const megadoc = createMegadoc(config, { plugins: config.plugins });
 
   return {
     render: function(href, done) {
@@ -72,12 +72,13 @@ exports.createClient = function(config) {
   };
 };
 
-exports.startApp = function(config) {
-  const megadoc = createMegadoc(config);
-  const mountPath = MountPath(
-    megadoc.corpus.get(config.startingDocumentUID),
-    config.startingDocumentHref
-  );
+exports.startApp = function(config, {
+  startingDocumentUID,
+  startingDocumentHref,
+  plugins
+}) {
+  const megadoc = createMegadoc(config, { plugins });
+  const mountPath = MountPath(megadoc.corpus.get(startingDocumentUID), startingDocumentHref);
 
   console.log('Mount path = "%s".', mountPath);
 

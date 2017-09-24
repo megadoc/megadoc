@@ -1,6 +1,6 @@
 const path = require('path');
 const { getConfigurablePair } = require('megadoc-config-utils');
-const { CONFIG_FILE, STYLE_BUNDLE } = require('megadoc-html-serializer').constants;
+const { constants: K } = require('megadoc-html-serializer');
 const HTMLSerializer = require('megadoc-html-serializer');
 
 function loadRuntimeConfig({ preloadedConfig, configFilePath }) {
@@ -15,12 +15,13 @@ function loadRuntimeConfig({ preloadedConfig, configFilePath }) {
 
   const serializer = new HTMLSerializer(config, serializerSpec.options)
   const { runtimeOutputPath } = serializer.config;
-  const runtimeConfigFilePath = serializer.assetUtils.getOutputPath(runtimeOutputPath, CONFIG_FILE);
+  const runtimeConfigFilePath = serializer.assetUtils.getOutputPath(runtimeOutputPath, K.CONFIG_FILE);
 
   return {
+    compilerConfig: config,
     contentBase: path.resolve(config.outputDir),
+    runtimeConfig: require(runtimeConfigFilePath),
     runtimeConfigFilePath,
-    runtimeStylesFilePath: serializer.assetUtils.getOutputPath(runtimeOutputPath, STYLE_BUNDLE),
     runtimeOutputPath: normalizePath(runtimeOutputPath),
   };
 }

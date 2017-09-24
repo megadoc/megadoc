@@ -29,6 +29,9 @@ catch (e) {
 }
 
 const config = parseCommonOptions(program);
+const startedAt = new Date();
+
+console.log('[I] Generating documentation for the first time... please hold on.');
 
 compileAndWatch(config, {
   purge: true,
@@ -39,6 +42,8 @@ compileAndWatch(config, {
     console.error('Compilation failed!');
     throw compilationError;
   }
+
+  console.log('[I] OK, just need to start the web server now!');
 
   const fd = fork(path.resolve(__dirname, './launchHtmlLiveServer.js'));
 
@@ -53,7 +58,8 @@ compileAndWatch(config, {
       })
     }
     else if (message.name === 'READY') {
-      console.log('OK, all set!')
+      const elapsed = (new Date() - startedAt) / 1000;
+      console.log(`[I] Oomph, all set! Took about ${elapsed} seconds.`)
     }
   })
 });

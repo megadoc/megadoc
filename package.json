@@ -3,7 +3,7 @@
   "version": "6.0.0-beta.4",
   "description": "Fast and sleek and modular documentation generator.",
   "scripts": {
-    "build": "NODE_ENV=production packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js -p --display-chunks",
+    "build": "NODE_ENV=production packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js --display-chunks",
     "build:dev": "packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js -w --progress",
     "coverage": "COVERAGE=1 ./bin/test",
     "doc": "rm -rf doc/compiled && NODE_PATH=packages packages/megadoc-cli/lib/megadoc.js",

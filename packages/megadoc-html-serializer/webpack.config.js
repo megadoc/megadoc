@@ -14,7 +14,7 @@ entry[K.COMMON_BUNDLE] = path.resolve(__dirname, './tmp/publicModules');
 
 var config = {
   entry: entry,
-  devtool: 'eval',
+  devtool: nodeEnv === 'production' ? false : 'eval',
 
   output: {
     path: K.BUNDLE_DIR,
@@ -34,7 +34,7 @@ var config = {
   ]
 };
 
-if (nodeEnv === 'production' && process.env.OPTIMIZE !== '0') {
+if (nodeEnv === 'production') {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
 

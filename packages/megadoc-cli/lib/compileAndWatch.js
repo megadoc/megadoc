@@ -34,10 +34,12 @@ function engage(config, runOptions, initialState) {
 
   watcher
     .on('add', function() {
-      console.log('[I] A source file has been added. Re-generating...');
+      console.log('[I] File added, re-generating...');
     })
     .on('change', function(file) {
-      console.log('[I] A source file has been modified. Re-generating...');
+      console.log('[I] File modified, re-generating...');
+
+      const startedAt = new Date();
 
       recompile(config, runOptions, state, [ file ], function(err, nextState) {
         if (err) {
@@ -45,11 +47,13 @@ function engage(config, runOptions, initialState) {
         }
 
         state = nextState;
-        console.log('[I] Recompiled successfully. Watching for further changes...');
+
+        const elapsed = (new Date() - startedAt) / 1000;
+        console.log(`[I] Done: ${elapsed}s.`);
       })
     })
     .on('unlink', function() {
-      console.log('[I] A source file has been deleted. Re-generating...');
+      console.log('[I] File deleted, re-generating...');
     })
   ;
 

@@ -1,16 +1,19 @@
-const { exports } = window;
+var exports = window.exports;
+var config = require('megadoc-config-file');
 
-exports['megadoc__config'] = require('megadoc-config-file');
+Object.defineProperty(exports, 'megadoc__config', {
+  configurable: false,
+  enumerable: true,
+  get: function() { return config; },
+  set: function() {}
+})
 
-if (module.hot) {
-  module.hot.accept('megadoc-config-file', function() {
-    const nextConfig = require('megadoc-config-file');
+module.hot.accept('megadoc-config-file', function() {
+  config = require('megadoc-config-file');
 
-    exports['megadoc__config'] = nextConfig;
-    exports['megadoc'].startApp(Object.assign(exports['megadoc__config'], {
-      startingDocumentUID: window.startingDocumentUID,
-      startingDocumentHref: window.startingDocumentHref,
-      plugins: window.MEGADOC_PLUGINS,
-    }));
-  })
-}
+  exports['megadoc'].startApp(config, {
+    startingDocumentUID: window.startingDocumentUID,
+    startingDocumentHref: window.startingDocumentHref,
+    plugins: window.MEGADOC_PLUGINS,
+  });
+})

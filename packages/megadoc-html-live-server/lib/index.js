@@ -1,138 +1,61 @@
 #!/usr/bin/env node
 
-const async = require('async');
 const http = require('http')
 const connect = require('connect');
 const serveStatic = require('serve-static');
-const proxyAssets = require('./proxyAssets');
 const loadRuntimeConfig = require('./loadRuntimeConfig');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
-const { run: compile, BREAKPOINT_COMPILE } = require('megadoc-compiler');
-const { constants: K, ClientSandbox } = require('megadoc-html-serializer');
-const R = require('ramda');
 
-const run = async.seq(
-  (options, done) => {
-    const runtimeConfig = loadRuntimeConfig({
-      preloadedConfig: options.config,
-      configFilePath: options.configFilePath
-    });
+const run = (options, done) => {
+  const runtimeConfig = loadRuntimeConfig({
+    preloadedConfig: options.config,
+    configFilePath: options.configFilePath
+  });
 
-    done(null, Object.assign({}, options, R.pick([
-      'compilerConfig',
-      'runtimeConfig',
-      'runtimeConfigFilePath',
-      'runtimeOutputPath',
-      'contentBase',
-    ], runtimeConfig)));
-  },
+  const state = Object.assign({}, options, runtimeConfig);
 
-  (state, done) => {
-    let assets;
-    let serializerConfig;
+  console.log('[I] Serving docs from:', state.contentBase);
 
-    const restoreClientSandbox = stubClientSandbox();
+  startServer(state, function(err) {
+    if (err) {
+      done(err);
+    }
+    else {
+      console.log('[I] Server now active at "http://%s:%s"', state.host, state.port);
 
-    compile(state.compilerConfig, {
-      breakpoint: BREAKPOINT_COMPILE,
-      tap: compilationState => {
-        assets = compilationState.serializer.state.assets;
-        serializerConfig = compilationState.serializer.config;
-      }
-    }, function(err) {
-      restoreClientSandbox();
-
-      if (err) {
-        done(err);
-      }
-      else {
-        done(null, Object.assign({}, state, {
-          assets,
-          serializerConfig
-        }))
-      }
-    })
-  },
-
-  (state, done) => {
-    console.log('Serving from:', state.contentBase);
-
-    startServer(state, function(err) {
-      if (err) {
-        done(err);
-      }
-      else {
-        done(null, state);
-      }
-    });
-  },
-
-  (state, done) => {
-    console.log('Hot server listening at "http://%s:%s"', state.host, state.port);
-
-    done();
-  }
-)
-
-module.exports = run;
+      done(null, state);
+    }
+  });
+};
 
 function startServer({
-  assets,
   contentBase,
   host,
   port,
   runtimeConfig,
   runtimeConfigFilePath,
+  runtimeStylesFilePath,
   runtimeOutputPath,
-  serializerConfig,
-  sourceFiles,
   tmpDir,
 }, done) {
   const app = connect();
 
   addWebpack({
     webpackConfig: configureWebpack({
-      additionalFiles: sourceFiles,
-      assets,
       runtimeConfig,
       runtimeConfigFilePath,
+      runtimeStylesFilePath,
       runtimeOutputPath,
-      serializerConfig,
       tmpDir,
     }),
     runtimeOutputPath,
     contentBase,
-    additionalFiles: sourceFiles,
   }, app);
-
-  proxyAssets({
-    runtimeOutputPath,
-    files: [
-      `${K.CONFIG_FILE}`,
-      `${K.STYLE_BUNDLE}`,
-    ]
-  }, app)
 
   app.use(serveStatic(contentBase, { etag: false }));
 
   http.createServer(app).listen(port, host, done);
 }
 
-
-function stubClientSandbox() {
-  const { start, stop } = ClientSandbox.prototype;
-
-  ClientSandbox.prototype.start = function(_, callback) {
-    callback();
-  }
-
-  ClientSandbox.prototype.stop = function(_, callback) {
-    callback();
-  }
-
-  return function restoreClientSandbox() {
-    ClientSandbox.prototype.stop = stop;
-    ClientSandbox.prototype.start = start;
-  }
-}
+module.exports = run;

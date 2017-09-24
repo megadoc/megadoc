@@ -80,35 +80,20 @@ module.exports = function AssetUtils(config) {
       var dirPath = path.dirname(filePath);
 
       if (fs.existsSync(filePath)) {
-        if (options && options.forceOverwrite) {
-          if (fs.statSync(filePath).isDirectory()) {
-            console.error(
-              "ERROR: you are attempting to overwrite a directory destination! " +
-              "This is most likely a configuration error, like using a rewrite " +
-              "condition.\n\n" +
-              "Destination: " + filePath
-            );
+        if (fs.statSync(filePath).isDirectory()) {
+          console.error(
+            "ERROR: you are attempting to overwrite a directory destination! " +
+            "This is most likely a configuration error, like using a rewrite " +
+            "condition.\n\n" +
+            "Destination: " + filePath
+          );
 
-            return 'ERR_FILE_EXISTS';
-          }
-
-          if (config.verbose) {
-            console.log("Overwriting existing asset at '%s'...", filePath);
-          }
-
-          fs.removeSync(filePath);
-
-          return utils.writeAsset(fileName, contents, options);
+          return 'ERR_FILE_EXISTS';
         }
 
         if (config.verbose) {
-          console.log(
-            "A file or directory already exists at this path - it is not",
-            "possible to overwrite!\n\t%s", filePath
-          );
+          console.warn("Overwriting existing asset at '%s'...", filePath);
         }
-
-        return 'ERR_FILE_EXISTS';
       }
       else if (fs.existsSync(dirPath) && !fs.statSync(dirPath).isDirectory()) {
         console.error(
