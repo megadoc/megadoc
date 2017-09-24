@@ -1,4 +1,6 @@
-exports.getConfigurablePair = function getConfigurablePair(item) {
+const path = require('path');
+
+function getConfigurablePair(item) {
   if (typeof item === 'string') {
     return { name: item, options: null };
   }
@@ -12,3 +14,23 @@ exports.getConfigurablePair = function getConfigurablePair(item) {
     return null;
   }
 };
+
+exports.getConfigurablePair = getConfigurablePair;
+exports.getOptionsFromPair = function(value) {
+  const tuple = getConfigurablePair(value);
+
+  if (tuple) {
+    return tuple.options;
+  }
+  else {
+    return null;
+  }
+};
+
+exports.loadConfigFromFile = function(filePath) {
+  const userConfig = require(filePath);
+
+  return Object.assign({}, userConfig, {
+    assetRoot: userConfig.assetRoot || path.resolve(path.dirname(filePath))
+  });
+}

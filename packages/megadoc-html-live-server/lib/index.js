@@ -3,27 +3,19 @@
 const http = require('http')
 const connect = require('connect');
 const serveStatic = require('serve-static');
-const loadRuntimeConfig = require('./loadRuntimeConfig');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
+const { extractRuntimeParameters } = require('megadoc-html-serializer/addon');
 
 const run = (options, done) => {
-  const runtimeConfig = loadRuntimeConfig({
-    preloadedConfig: options.config,
-    configFilePath: options.configFilePath
-  });
-
+  const runtimeConfig = extractRuntimeParameters({ configFilePath: options.configFilePath });
   const state = Object.assign({}, options, runtimeConfig);
-
-  console.log('[I] Serving docs from:', state.contentBase);
 
   startServer(state, function(err) {
     if (err) {
       done(err);
     }
     else {
-      console.log('[I] Server now active at "http://%s:%s"', state.host, state.port);
-
       done(null, state);
     }
   });

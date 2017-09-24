@@ -7,10 +7,10 @@ if (module.hot) {
     const nextConfig = require('megadoc-config-file');
 
     exports['megadoc__config'] = nextConfig;
-    exports['megadoc'].startApp(Object.assign(exports['megadoc__config'], {
+    exports['megadoc'].startApp(exports['megadoc__config'], {
       startingDocumentUID: window.startingDocumentUID,
       startingDocumentHref: window.startingDocumentHref,
       plugins: window.MEGADOC_PLUGINS,
-    }));
+    });
   })
 }

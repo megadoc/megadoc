@@ -315,8 +315,10 @@ function createSerializer(state, done) {
     serializer = new BlankSerializer()
   }
   else {
-    const Serializer = require(serializerSpec.name);
-    serializer = new Serializer(config, serializerSpec.options);
+    const serializerModule = require(serializerSpec.name);
+    const factory = serializerModule.factory || serializerModule;
+
+    serializer = new factory(config, serializerSpec.options);
   }
 
   done(null, Object.assign({}, state, { serializer }));

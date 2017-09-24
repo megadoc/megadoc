@@ -75,7 +75,7 @@ module.exports = function AssetUtils(config) {
      * @param  {String|Buffer} contents
      *         The contents of the file.
      */
-    writeAsset: function(fileName, contents, options) {
+    writeAsset: function(fileName, contents) {
       var filePath = utils.getAssetPath(config.outputDir, fileName);
       var dirPath = path.dirname(filePath);
 
@@ -95,7 +95,8 @@ module.exports = function AssetUtils(config) {
           console.warn("Overwriting existing asset at '%s'...", filePath);
         }
       }
-      else if (fs.existsSync(dirPath) && !fs.statSync(dirPath).isDirectory()) {
+
+      if (fs.existsSync(dirPath) && !fs.statSync(dirPath).isDirectory()) {
         console.error(
           "ERROR: A file exists at '%s' but is NOT a directory - it is not " +
           "possible to write to '%s'.",

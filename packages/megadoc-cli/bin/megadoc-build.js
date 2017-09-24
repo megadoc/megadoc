@@ -3,31 +3,24 @@
 const program = require('commander');
 const pkg = require('../package');
 const { run: compile } = require('megadoc-compiler');
-const { run: compileAndWatch } = require('./compileAndWatch');
-const printProfile = require('./printProfile');
-const parseCommonOptions = require('./parseCommonOptions');
+const { run: compileAndWatch } = require('../lib/compileAndWatch');
+const printProfile = require('../lib/printProfile');
+const addCommonOptions = require('../lib/addCommonOptions');
+const parseCommonOptions = require('../lib/parseCommonOptions');
 
-program
-  .version(pkg.version)
+addCommonOptions(program)
   .description('Generate static documentation.')
-  .option('-c, --config [PATH]', 'path to megadoc config file', 'megadoc.conf.js')
   .option('--breakpoint [BREAKPOINT]', 'Debugging breakpoint')
   .option('--profile')
   .option('--dump-config')
   .option('--dump-corpus <PATH>')
-  .option('--log-level [LEVEL]', 'Logger level. Valid values: "info", "log", "warn", or "error"')
   .option('-w, --watch', 'Run in watch mode.')
-  .option('-v, --verbose', 'Shortcut for --log-level="info"')
-  .option('--debug', 'Run in DEBUG mode to print debugging messages.')
-  .option('--stats', 'Show scanner-related statistics.')
-  .option('--tmp-dir [PATH]', 'Path to a directory megadoc will use for intermediatery files. Defaults to .megadoc/')
-  .option('--output-dir [PATH]')
   .option('--no-purge', 'Do not purge the output directory.')
-  .option('-j, --threads [COUNT]', 'Number of threads to use for processing (1 indicates foreground.)')
+  .option('--stats', 'Show scanner-related statistics.')
   .parse(process.argv)
 ;
 
-const config = parseCommonOptions(program);
+const { config } = parseCommonOptions(program);
 
 if (program.dumpConfig) {
   console.log('Config:\n', config);

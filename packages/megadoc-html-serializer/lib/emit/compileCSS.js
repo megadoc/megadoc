@@ -1,14 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
-const K = require('../constants');
-const ROOT = K.ROOT;
+const { STYLES_FILE, ROOT } = require('../constants');
 const createCSSCompiler = require(path.join(ROOT, 'webpack/createCSSCompiler'))
 
 module.exports = function compileCSS(config, state, done) {
   const webpackConfig = createCSSCompiler({
     files: state.assets.styleSheets,
     outputDir: state.assetUtils.getOutputPath(config.runtimeOutputPath),
-    outputFileName: K.STYLE_BUNDLE,
+    outputFileName: STYLES_FILE,
     styleOverrides: state.assets.styleOverrides,
   })
 

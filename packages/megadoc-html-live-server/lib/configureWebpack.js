@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const baseWebpackConfig = require('megadoc-html-serializer/webpack.config');
+const { webpackConfig, CONFIG_BUNDLE } = require('megadoc-html-serializer/addon');
 
 module.exports = function configureWebpack({
   runtimeConfigFilePath,
@@ -8,11 +8,11 @@ module.exports = function configureWebpack({
   runtimeOutputPath,
   tmpDir,
 }) {
-  return Object.assign({}, baseWebpackConfig, {
+  return Object.assign({}, webpackConfig, {
     devtool: false,
 
     entry: {
-      'megadoc__config': [
+      [CONFIG_BUNDLE]: [
         require.resolve('webpack-hot-middleware/client.js'),
         path.resolve(__dirname, '../ui/hotLoadConfig.js'),
         path.resolve(__dirname, '../ui/hotLoadStyles.js'),

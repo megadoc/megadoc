@@ -1,5 +1,5 @@
-const b = require('megadoc-corpus').builders;
-const { extractTOC } = require('megadoc-html-serializer').RendererUtils;
+const { builders: b } = require('megadoc-corpus');
+const { extractTOC } = require('megadoc-markdown-utils');
 const { omit } = require('lodash');
 
 module.exports = function reduceFn(options, rawDocument, done) {

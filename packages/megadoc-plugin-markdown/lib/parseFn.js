@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { RendererUtils } = require('megadoc-html-serializer');
+const { extractSummary, markdownToText } = require('megadoc-markdown-utils');
 const parseTitle = require('./utils/parseTitle');
 const strHumanize = require('./utils/strHumanize');
 
@@ -21,7 +21,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
 
   entry.title = getPredefinedTitle(config, relativeFilePath) || parseTitle(entry.source);
   entry.wordCount = entry.source.split(/\s+/).length;
-  entry.summary = RendererUtils.extractSummary(entry.source, {
+  entry.summary = extractSummary(entry.source, {
     plainText: true
   });
 
@@ -40,7 +40,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
     entry.title = path.basename(relativeFilePath);
   }
 
-  entry.plainTitle = RendererUtils.markdownToText(entry.title);
+  entry.plainTitle = markdownToText(entry.title);
   entry.fileName = fileName;
   entry.folder = path.dirname(relativeFilePath);
 

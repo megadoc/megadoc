@@ -34,7 +34,7 @@ const BUILT_IN_TYPES = [
   'void'
 ];
 
-const EXPRESSION_TYPES = Object.freeze([
+const EXPRESSION_TYPES = ([
   K.TYPE_UNION,
   K.TYPE_ALL_LITERAL,
   K.TYPE_UNKNOWN_LITERAL,

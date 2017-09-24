@@ -48,7 +48,7 @@ module.exports = function generateHTMLFile(params) {
 
   const favicon = params.favicon;
 
-  const styleSheets = [ K.STYLE_BUNDLE ];
+  const styleSheets = [ K.STYLES_FILE ];
   const tmpl = template(fs.readFileSync(params.sourceFile, 'utf-8'));
   const scopeToRuntimeOutputPath = partial(scopeToPath, params.runtimeOutputPath);
   const relativize = partial(buildRelativeAssetList, distanceFromRoot);

@@ -23,7 +23,8 @@
   "dependencies": {
     "lodash": "3.10.1",
     "megadoc-corpus": "^6.0.0",
-    "megadoc-html-serializer": "^6.0.0"
+    "megadoc-html-serializer": "^6.0.0",
+    "megadoc-markdown-utils": "^6.0.0"
   },
   "devDependencies": {
     "megadoc-test-utils": "^6.0.0"

@@ -1,10 +1,10 @@
 const R = require('ramda');
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
-const RendererUtils = require('./RendererUtils');
+const { extractSummary } = require('megadoc-markdown-utils');
 
 const extractSummaryFromMarkdown = function(markdown) {
-  return RendererUtils.extractSummary(markdown || '', {
+  return extractSummary(markdown || '', {
     plainText: true
   })
 };

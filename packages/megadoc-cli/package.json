@@ -1,26 +1,33 @@
 {
   "name": "megadoc-cli",
   "version": "6.0.0",
-  "main": "lib/megadoc.js",
+  "main": "bin/megadoc.js",
   "bin": {
-    "megadoc": "lib/megadoc.js",
-    "megadoc-build": "lib/megadoc-build.js",
-    "megadoc-build-html-plugin": "lib/megadoc-build-html-plugin.js",
-    "megadoc-edit": "lib/megadoc-edit.js"
+    "megadoc": "bin/megadoc.js",
+    "megadoc-build": "bin/megadoc-build.js",
+    "megadoc-build-html-plugin": "bin/megadoc-build-html-plugin.js",
+    "megadoc-server": "bin/megadoc-server.js"
   },
   "dependencies": {
+    "chalk": "2.1.0",
     "chokidar": "1.6.1",
     "cli-table": "0.3.1",
     "commander": "2.11.0",
-    "fs-extra": "2.1.2",
     "lodash": "3.10.1",
-    "megadoc-compiler": "^6.0.0",
     "megadoc-config-utils": "^6.0.0",
-    "megadoc-html-serializer": "^6.0.0",
     "megadoc-linter": "^6.0.0",
     "ramda": "0.24.1"
   },
   "peerDependencies": {
-    "megadoc-html-live-server": "^6.0.0-beta.12"
+    "megadoc-compiler": "^6.0.0",
+    "megadoc-html-dev-server": "^6.0.0-beta.12",
+    "megadoc-html-live-server": "^6.0.0-beta.12",
+    "megadoc-html-serializer": "^6.0.0"
+  },
+  "devDependencies": {
+    "megadoc-compiler": "^6.0.0",
+    "megadoc-html-dev-server": "^6.0.0-beta.12",
+    "megadoc-html-live-server": "^6.0.0-beta.12",
+    "megadoc-html-serializer": "^6.0.0"
   }
 }

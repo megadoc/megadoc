@@ -1,11 +1,11 @@
 var marked = require('marked');
 var _ = require('lodash');
-var RendererUtils = require('./RendererUtils');
+var { trimHTML } = require('megadoc-markdown-utils');
 var renderHeading = require('./Renderer__renderHeading');
 var CodeRenderer = require('./Renderer__renderCode');
 var LinkRenderer = require('./Renderer__renderLink');
 var assign = _.assign;
-var NilOptions = Object.freeze({});
+var NilOptions = ({});
 
 /**
  * Markdown to HTML renderer.
@@ -15,7 +15,7 @@ var NilOptions = Object.freeze({});
  */
 function Renderer(config) {
   var renderer = new marked.Renderer();
-  var markedOptions = Object.freeze({
+  var markedOptions = ({
     renderer: renderer,
     gfm: true,
     tables: true,
@@ -106,7 +106,7 @@ function Renderer(config) {
     toc = runState.toc;
 
     if (options && options.trimHTML) {
-      html = RendererUtils.trimHTML(html);
+      html = trimHTML(html);
     }
 
     runState = createRunState(NilOptions);

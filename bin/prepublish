@@ -116,7 +116,7 @@ function build_assets {
       rm -r $PACKAGE_ROOT/dist
     fi
 
-    ./packages/megadoc-cli/lib/megadoc-build-html-plugin.js --optimize \
+    ./packages/megadoc-cli/bin/megadoc-build-html-plugin.js --optimize \
       "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
       "${PACKAGE_ROOT}/ui/index.js"
   else

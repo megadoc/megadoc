@@ -81,7 +81,7 @@ function engage(config, runOptions, initialState) {
 
 function recompile(config, runOptions, initialState, changedSources, done) {
   compiler.run(config, R.merge(runOptions, {
-    changedSources/*.map(linter.getRelativeFilePath)*/,
+    changedSources,
     initialState,
     purge: true,
   }), done);

@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 
-var program = require('commander');
-var path = require('path');
-var pkg = require('../package');
-var { compilePlugin } = require('megadoc-html-serializer');
-var ctx = {};
+const program = require('commander');
+const path = require('path');
+const pkg = require('../package');
+const { compilePlugin } = require('megadoc-html-serializer/addon');
 
 program
   .version(pkg.version)
@@ -12,12 +11,9 @@ program
   .arguments('<outfile> <entry_file> [other_entry_files...]')
   .option('--optimize', 'Build a production-ready version.')
   .action(function(output, entry, otherEntries) {
-    ctx.output = output;
-    ctx.entry = [ entry ].concat(otherEntries);
-
     compilePlugin(
-      ctx.entry.map(resolvePath),
-      resolvePath(ctx.output),
+      [ entry ].concat(otherEntries).map(resolvePath),
+      resolvePath(output),
       {
         optimize: program.optimize,
         verbose: true,

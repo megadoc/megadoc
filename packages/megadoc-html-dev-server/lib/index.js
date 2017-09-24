@@ -5,19 +5,15 @@ const http = require('http')
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const proxyAssets = require('./proxyAssets');
-const loadRuntimeConfig = require('./loadRuntimeConfig');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
 const { run: compile, BREAKPOINT_COMPILE } = require('megadoc-compiler');
-const { constants: K, ClientSandbox } = require('megadoc-html-serializer');
+const { ClientSandbox, constants: K, extractRuntimeParameters } = require('megadoc-html-serializer/addon');
 const R = require('ramda');
 
 const run = async.seq(
   (options, done) => {
-    const runtimeConfig = loadRuntimeConfig({
-      preloadedConfig: options.config,
-      configFilePath: options.configFilePath
-    });
+    const runtimeConfig = extractRuntimeParameters({ configFilePath: options.configFilePath });
 
     done(null, Object.assign({}, options, R.pick([
       'compilerConfig',
@@ -56,8 +52,6 @@ const run = async.seq(
   },
 
   (state, done) => {
-    console.log('Serving from:', state.contentBase);
-
     startServer(state, function(err) {
       if (err) {
         done(err);
@@ -69,8 +63,6 @@ const run = async.seq(
   },
 
   (state, done) => {
-    console.log('Hot server listening at "http://%s:%s"', state.host, state.port);
-
     done();
   }
 )
@@ -110,7 +102,7 @@ function startServer({
     runtimeOutputPath,
     files: [
       `${K.CONFIG_FILE}`,
-      `${K.STYLE_BUNDLE}`,
+      `${K.STYLES_FILE}`,
     ]
   }, app)
 

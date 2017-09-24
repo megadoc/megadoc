@@ -1,10 +1,16 @@
 const path = require('path');
 const webpack = require('webpack');
 const R = require('ramda');
-const { constants: K, generateInlinePlugin } = require('megadoc-html-serializer');
-const baseWebpackConfig = require('megadoc-html-serializer/webpack.config');
-const { apply: createPublicModules } = require('megadoc-html-serializer/webpack/ExternalsPlugin');
-const webpackVendorModules = require('megadoc-html-serializer/webpack/vendorModules');
+const {
+  generateInlinePlugin,
+  webpackConfig,
+  webpackVendorModules,
+  WebpackExternalsPlugin,
+  COMMON_BUNDLE,
+  CONFIG_FILE,
+  MAIN_BUNDLE,
+  VENDOR_BUNDLE,
+} = require('megadoc-html-serializer/addon');
 
 module.exports = function configureWebpack({
   assets,
@@ -15,7 +21,7 @@ module.exports = function configureWebpack({
   serializerConfig,
   tmpDir,
 }) {
-  const commonBundlePath = createPublicModules({ outputDir: tmpDir });
+  const commonBundlePath = WebpackExternalsPlugin.apply({ outputDir: tmpDir });
   const inlinePluginPath = path.join(tmpDir, 'megadoc-plugin-inline.source.js');
   const createLoaders = R.compose(
     R.partial(addInlineCSSLoader, [{ assets }]),
@@ -28,7 +34,7 @@ module.exports = function configureWebpack({
     outputPath: inlinePluginPath,
   });
 
-  return Object.assign({}, baseWebpackConfig, {
+  return Object.assign({}, webpackConfig, {
     devtool: 'eval',
 
     entry: createEntry({
@@ -41,8 +47,8 @@ module.exports = function configureWebpack({
       commonBundlePath,
     }),
 
-    module: Object.assign({}, baseWebpackConfig.module, {
-      loaders: createLoaders(baseWebpackConfig.module.loaders)
+    module: Object.assign({}, webpackConfig.module, {
+      loaders: createLoaders(webpackConfig.module.loaders)
     }),
 
     output: {
@@ -56,11 +62,10 @@ module.exports = function configureWebpack({
 
     plugins: [
       new webpack.optimize.OccurenceOrderPlugin(),
-      new webpack.optimize.CommonsChunkPlugin(K.VENDOR_BUNDLE, K.VENDOR_BUNDLE + '.js'),
+      new webpack.optimize.CommonsChunkPlugin(VENDOR_BUNDLE, VENDOR_BUNDLE + '.js'),
       new webpack.optimize.DedupePlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-        'process.env.CONFIG_FILE': JSON.stringify(runtimeConfigFilePath),
       }),
 
       new webpack.HotModuleReplacementPlugin(),
@@ -70,14 +75,14 @@ module.exports = function configureWebpack({
       })
     ],
 
-    resolve: Object.assign({}, baseWebpackConfig.resolve, {
-      alias: Object.assign({}, baseWebpackConfig.resolve.alias, {
+    resolve: Object.assign({}, webpackConfig.resolve, {
+      alias: Object.assign({}, webpackConfig.resolve.alias, {
         // no idea why we have to do this, otherwise react-hot-loader complains
         'react/lib/ReactMount': require.resolve('megadoc-html-serializer/node_modules/react-dom/lib/ReactMount.js'),
         'megadoc-config-file$': runtimeConfigFilePath,
       }),
 
-      fallback: (baseWebpackConfig.resolve.fallback || []).concat([
+      fallback: (webpackConfig.resolve.fallback || []).concat([
         path.join(
           path.dirname(
             require.resolve('megadoc-html-serializer/ui')
@@ -97,15 +102,15 @@ function createEntry({
   commonBundlePath,
 }) {
   return Object.assign({
-    [K.VENDOR_BUNDLE]: [ require.resolve('webpack-hot-middleware/client.js') ]
+    [VENDOR_BUNDLE]: [ require.resolve('webpack-hot-middleware/client.js') ]
       .concat(webpackVendorModules)
       .concat(additionalFiles)
       .concat(getStyleSheets({ assets }))
       .concat(path.resolve(__dirname, '../ui/hotLoadConfig.js'))
     ,
 
-    [K.COMMON_BUNDLE]: commonBundlePath,
-    [K.MAIN_BUNDLE]: require.resolve('megadoc-html-serializer/ui/index.js'),
+    [COMMON_BUNDLE]: commonBundlePath,
+    [MAIN_BUNDLE]: require.resolve('megadoc-html-serializer/ui/index.js'),
   }, generatePluginEntry({
       inlinePluginPath,
       pluginNames: runtimeConfig.pluginNames || [],
@@ -144,7 +149,7 @@ function addReactHotLoader(loaders) {
       return Object.assign({}, loader, {
         loaders: [require.resolve('react-hot-loader')].concat(loader.loaders),
         exclude: loader.exclude.concat([
-          new RegExp(`${K.CONFIG_FILE}$`)
+          new RegExp(`${CONFIG_FILE}$`)
         ])
       });
     }

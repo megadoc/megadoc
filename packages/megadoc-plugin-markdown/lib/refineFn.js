@@ -1,5 +1,5 @@
 const findCommonPrefix = require('./utils/findCommonPrefix');
-const { RendererUtils } = require('megadoc-html-serializer');
+const { normalizeHeading } = require('megadoc-markdown-utils');
 const path = require('path');
 
 module.exports = function refineFn({ options: config, compilerOptions, sourcePatterns }, documents, done) {
@@ -16,14 +16,14 @@ module.exports = function refineFn({ options: config, compilerOptions, sourcePat
     let id;
 
     if (config.discardFileExtension) {
-      id = RendererUtils.normalizeHeading(
+      id = normalizeHeading(
         document.filePath
           .replace(extName, '')
           .replace(commonPrefix, '')
       );
     }
     else {
-      id = RendererUtils.normalizeHeading(document.filePath.replace(commonPrefix, ''));
+      id = normalizeHeading(document.filePath.replace(commonPrefix, ''));
     }
 
     if (config.discardIdPrefix) {
