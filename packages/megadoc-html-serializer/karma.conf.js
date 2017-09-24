@@ -36,7 +36,7 @@ module.exports = function(config) {
       }
     },
 
-    browserNoActivityTimeout: 30000,
+    browserNoActivityTimeout: 60000,
 
     files: [
       'karma.main.js',
