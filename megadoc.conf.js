@@ -3,7 +3,7 @@ var config = {
   assetRoot: path.resolve(__dirname),
 
   title: 'megadoc',
-  outputDir: '/srv/http/docs/megadoc',
+  outputDir: path.resolve(__dirname, 'doc/compiled'),
   disqus: false,
   showSettingsLinkInBanner: false,
   tooltipPreviews: false,
