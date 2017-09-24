@@ -25,9 +25,19 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
     plainText: true
   });
 
-  if (config.generateMissingHeadings && !entry.title) {
+  const preformatEntry = getPreformatEntry(config, relativeFilePath);
+
+  if (preformatEntry) {
+    const { language = 'bash' } = preformatEntry;
+    entry.source = '```' + language + '\n' + entry.source + '\n```\n';
+  }
+
+  if (!entry.title && !preformatEntry && config.generateMissingHeadings) {
     entry.title = strHumanize(fileName);
     entry.source = '# ' + entry.title + '\n\n' + entry.source;
+  }
+  else if (!entry.title) {
+    entry.title = path.basename(relativeFilePath);
   }
 
   entry.plainTitle = RendererUtils.markdownToText(entry.title);
@@ -39,4 +49,14 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
 
 function getPredefinedTitle(config, filePath) {
   return config.titleOverrides && config.titleOverrides[filePath]
+}
+
+function getPreformatEntry(config, filePath) {
+  return config.preformat && config.preformat[filePath] || (
+    Object.keys(config.preformat).filter(key => {
+      return filePath.match(key);
+    }).map(key => {
+      return config.preformat[key]
+    })[0]
+  )
 }

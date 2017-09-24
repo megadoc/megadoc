@@ -123,5 +123,7 @@ module.exports = {
    *       }
    *     }
    */
-  titleOverrides: {}
+  titleOverrides: {},
+
+  preformat: {},
 };
