@@ -16,7 +16,7 @@ describe.skip('CJS::Parser: customAnalyzer support', function() {
       // module.exports = SomeComponent;
     }, {
       parserOptions: {
-        presets: [ 'react' ],
+        presets: [ require.resolve('babel-preset-react') ],
       },
     }, null, function(parser) {
       parser.emitter.on('process-node', visit);

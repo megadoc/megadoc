@@ -65,8 +65,8 @@ describe('CJS::Parser - @module support', function() {
     }, {
       parserOptions: {
         presets: [
-          'es2015',
-          'react',
+          require.resolve('babel-preset-es2015'),
+          require.resolve('babel-preset-react'),
         ]
       }
     });

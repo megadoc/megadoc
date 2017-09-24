@@ -64,36 +64,6 @@ if [ ! -d "${PACKAGE_ROOT}" ]; then
   fi
 fi
 
-function link_local_dependencies {
-  [ -f $PACKAGE_ROOT/package.json ] && {
-    cd $PACKAGE_ROOT
-
-    DEPS=$(node -e '
-      console.log(Object.keys(require("./package").dependencies || {})
-        .filter(function(x) { return x.match(/^megadoc/) })
-        .join("\n")
-      )
-    ')
-
-    PEER_DEPS=$(node -e '
-      console.log(Object.keys(require("./package").peerDependencies || {})
-        .filter(function(x) { return x.match(/^megadoc/) })
-        .join("\n")
-      )
-    ')
-
-    for dep in $DEPS; do
-      echo "Linking local version of '${dep}'..."
-      npm link --ignore-scripts "../${dep}"
-    done
-
-    for dep in $PEER_DEPS; do
-      echo "Linking local version of '${dep}'..."
-      npm link --ignore-scripts "../${dep}"
-    done
-  }
-}
-
 function ensure_no_unlisted_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
     out=$(
@@ -188,10 +158,6 @@ while getopts ":S:O:" opt; do
       ;;
   esac
 done
-
-if [ "${PRELINK}" == "1" ]; then
-  run_task link_local_dependencies
-fi
 
 should_run "check" && run_task ensure_no_unlisted_dependencies
 should_run "lint" && run_task lint_sources && run_task lint_ui_sources

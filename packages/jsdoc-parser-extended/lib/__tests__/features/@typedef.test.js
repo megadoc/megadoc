@@ -38,7 +38,7 @@ describe('CJS::Parser - @typedef support', function() {
        * @property {myModule~Prop}
        */
       myModule.someProp = null;
-    `, { parserOptions: { presets: [ ['es2015', { modules: false }] ] } });
+    `, { parserOptions: { presets: [ [require.resolve('babel-preset-es2015'), { modules: false }] ] } });
 
     assert.equal(docs.length, 3);
     assert.deepEqual(docs.map(x => x.id), ['myModule', 'myModule~Prop', 'myModule.someProp'])

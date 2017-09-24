@@ -12,11 +12,11 @@ const TextOutlet = React.createClass({
   },
 
   render() {
-    const props = this.props.$outletOptions;
-    const HTMLTag = props.tagName || 'div';
+    const { $outletOptions } = this.props;
+    const HTMLTag = $outletOptions.tagName || 'div';
 
     return (
-      <HTMLTag className={props.className} title={props.title} children={props.text} />
+      <HTMLTag className={$outletOptions.className} title={$outletOptions.title} children={$outletOptions.text} />
     );
   }
 });

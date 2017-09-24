@@ -33,6 +33,8 @@
     "weakmap": "0.0.6"
   },
   "devDependencies": {
+    "babel-preset-es2015": "6.24.1",
+    "babel-preset-react": "6.24.1",
     "chai": "3.5.0",
     "megadoc-test-utils": "^6.0.0-beta.7",
     "multiline-slash": "^2.0.0"

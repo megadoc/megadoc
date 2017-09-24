@@ -5,7 +5,7 @@ const { assert } = require('megadoc-test-utils');
 
 describe('CJS::Parser - ES6 - export statements', function() {
   const parserOptions = {
-    presets: [ ['es2015', { modules: false}] ],
+    presets: [ [require.resolve('babel-preset-es2015'), { modules: false}] ],
     babelrc: false
   };
 

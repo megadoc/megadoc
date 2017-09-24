@@ -17,7 +17,7 @@ describe('CJS::Parser - ES6 - import statements', function() {
       // };
     }, {
       parserOptions: {
-        presets: [ ['es2015', { modules: false }] ],
+        presets: [ [require.resolve('babel-preset-es2015'), { modules: false }] ],
       },
     });
 

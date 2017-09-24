@@ -13,4 +13,6 @@ set -e
 npm install --ignore-scripts
 
 ./node_modules/.bin/lerna bootstrap
-CONCURRENCY=3 ./bin/lerna-run -O build
+./node_modules/.bin/lerna exec \
+  --stream \
+  -- PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish -O build

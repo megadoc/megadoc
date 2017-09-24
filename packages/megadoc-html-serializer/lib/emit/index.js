@@ -12,7 +12,7 @@ module.exports = composeAsync([
   prepare,
 ]);
 
-function prepare({ serializer, compilations, renderedCorpus }, done) {
+function prepare({ serializer, renderedCorpus }, done) {
   done(null, {
     assets: serializer.state.assets,
     assetUtils: serializer.assetUtils,

@@ -12,7 +12,7 @@
     "megadoc": false
   },
 
-  "ecmaFeatures": {
+  "parserOptions": {
     "blockBindings": true,
     "arrowFunctions": true,
     "classes": true,
