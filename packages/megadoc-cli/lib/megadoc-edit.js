@@ -11,11 +11,22 @@ const { fork } = require('child_process');
 program
   .version(pkg.version)
   .description('Serve documentation through a web-server and reflect changes in real-time.')
-  .option('--config [PATH]', 'path to megadoc config file (defaults to megadoc.conf.js)')
+  .option('-c, --config [PATH]', 'path to megadoc config file', 'megadoc.conf.js')
+  .option('-h, --host [address]', 'ethernet address to listen on', '0.0.0.0')
+  .option('-p, --port [port]', 'port to bind to', '8942')
+  .option('--tmp-dir [directory]', 'directory to store temporary files in', os.tmpdir())
   .option('-v, --verbose', 'Shortcut for --log-level="info"')
   .option('-j, --threads [COUNT]', 'Number of threads to use for processing (1 indicates foreground.)')
   .parse(process.argv)
 ;
+
+try {
+  require.resolve('megadoc-html-live-server');
+}
+catch (e) {
+  console.error('%s: the package "megadoc-html-live-server" must be installed', program._name);
+  process.exit(1);
+}
 
 const config = parseCommonOptions(program);
 
@@ -35,31 +46,14 @@ compileAndWatch(config, {
     if (message.name === 'ALIVE') {
       fd.send({
         config,
-        host: process.env.HOST || '0.0.0.0',
-        port: process.env.PORT || '8942',
+        host: program.host,
+        port: program.port,
         sourceFiles: [],
-        // tmpDir: config.tmpDir,
-        tmpDir: os.tmpdir(),
+        tmpDir: program.tmpDir,
       })
     }
     else if (message.name === 'READY') {
       console.log('OK, all set!')
     }
   })
-
-  // process.nextTick(() => {
-  //   startDevServer({
-  //     config,
-  //     host: process.env.HOST || '0.0.0.0',
-  //     port: process.env.PORT || '8942',
-  //     sourceFiles: [],
-  //     tmpDir: config.tmpDir,
-  //   }, function(err) {
-  //     if (err) {
-  //       console.error('Unable to start the web server!');
-  //       throw err;
-  //     }
-
-  //   })
-  // })
 });

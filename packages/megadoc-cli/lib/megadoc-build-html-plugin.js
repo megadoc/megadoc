@@ -14,23 +14,20 @@ program
   .action(function(output, entry, otherEntries) {
     ctx.output = output;
     ctx.entry = [ entry ].concat(otherEntries);
+
+    compilePlugin(
+      ctx.entry.map(resolvePath),
+      resolvePath(ctx.output),
+      {
+        optimize: program.optimize,
+        verbose: true,
+      },
+      throwOnError
+    );
   })
   .parse(process.argv)
 ;
 
-if (!ctx.output || ctx.entry.length === 0) {
-  program.help();
-}
-
-compilePlugin(
-  ctx.entry.map(resolvePath),
-  resolvePath(ctx.output),
-  {
-    optimize: program.optimize,
-    verbose: true,
-  },
-  throwOnError
-);
 
 function resolvePath(arg) {
   return path.resolve(arg);

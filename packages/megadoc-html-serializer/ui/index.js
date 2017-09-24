@@ -4,7 +4,6 @@ const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const AppState = require('./AppState');
 const App = require('./screens/App');
-const { omit } = require('lodash');
 const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
 
@@ -18,14 +17,6 @@ function createMegadoc(config) {
     database: config.database || [],
     redirect: config.redirect
   });
-
-  const megadoc = {
-    corpus: corpus
-  };
-
-  // expose this to plugins so that we can move to a non-global version in the
-  // future
-  megadoc.outlets = outlets;
 
   require('./outlets')(outlets)
 
@@ -50,17 +41,12 @@ function createMegadoc(config) {
     })
   });
 
-  const appConfig = config;
-  // const appConfig = omit(config, [
-  //   'database',
-  //   'plugins',
-  //   'startingDocumentUID',
-  //   'startingDocumentHref',
-  // ]);
-
-  const appState = AppState(config);
-
-  return { appConfig, appState, outlets, corpus };
+  return {
+    appConfig: config,
+    appState: AppState(config),
+    outlets,
+    corpus
+  };
 }
 
 exports.createClient = function(config) {

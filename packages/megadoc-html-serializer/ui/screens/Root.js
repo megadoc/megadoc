@@ -1,5 +1,4 @@
 const React = require("react");
-const console = require("console");
 const { findDOMNode } = require('react-dom');
 const { Outlet } = require('react-transclusion');
 const SpotlightManager = require('../components/SpotlightManager');
@@ -76,7 +75,6 @@ const Root = React.createClass({
 
   componentDidUpdate(prevProps) {
     if (prevProps.location.hash !== this.props.location.hash) {
-      console.debug('Hash has changed from "%s" to "%s" - forcing refresh!', prevProps.location.hash, this.props.location.hash);
       this.props.onRefreshScroll();
     }
   },
@@ -93,8 +91,6 @@ const Root = React.createClass({
     const { config } = this.props;
     const pathname = this.getPathName(this.props);
     const { scope, template } = this.state;
-
-    console.debug('root: rendering')
 
     if (!scope) {
       return this.renderInternalError();

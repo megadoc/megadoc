@@ -3,7 +3,9 @@
   "packages": [
     "packages/*"
   ],
-  "ignore": [],
+  "ignore": [
+    "dependency-scanner"
+  ],
   "stream": true,
   "version": "6.0.0-beta.12"
 }

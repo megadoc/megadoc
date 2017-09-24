@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-const path = require('path');
 const async = require('async');
 const http = require('http')
-const os = require('os')
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const proxyAssets = require('./proxyAssets');
@@ -77,22 +75,7 @@ const run = async.seq(
   }
 )
 
-if (require.main === module) {
-  run({
-    configFilePath: path.resolve(process.env.CONFIG_FILE),
-    host: process.env.HOST || '0.0.0.0',
-    port: process.env.PORT || '8942',
-    sourceFiles: process.argv.slice(3).map(x => path.resolve(x)),
-    tmpDir: os.tmpdir(),
-  }, function(err) {
-    if (err) {
-      throw err;
-    }
-  })
-}
-else {
-  module.exports = run;
-}
+module.exports = run;
 
 function startServer({
   assets,

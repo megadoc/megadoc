@@ -101,7 +101,7 @@ function createEntry({
       .concat(webpackVendorModules)
       .concat(additionalFiles)
       .concat(getStyleSheets({ assets }))
-      .concat(path.resolve(__dirname, './hotLoadConfig.js'))
+      .concat(path.resolve(__dirname, '../ui/hotLoadConfig.js'))
     ,
 
     [K.COMMON_BUNDLE]: commonBundlePath,

@@ -10,8 +10,7 @@ const parseCommonOptions = require('./parseCommonOptions');
 program
   .version(pkg.version)
   .description('Generate static documentation.')
-  .arguments('<CONFIG>')
-  .option('--config [PATH]', 'path to megadoc config file (defaults to megadoc.conf.js)')
+  .option('-c, --config [PATH]', 'path to megadoc config file', 'megadoc.conf.js')
   .option('--breakpoint [BREAKPOINT]', 'Debugging breakpoint')
   .option('--profile')
   .option('--dump-config')

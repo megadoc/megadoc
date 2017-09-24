@@ -11,7 +11,7 @@ const App = React.createClass({
     appState: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
     corpus: PropTypes.object.isRequired,
-    mountPath: PropTypes.string.isRequired,
+    mountPath: PropTypes.string,
     location: require('schemas/Location').isRequired,
     outletManager: PropTypes.object.isRequired,
   },
@@ -76,7 +76,11 @@ const App = React.createClass({
 
     this.locationAPI.start();
 
-    const pathname = this.props.location.pathname.replace(this.props.mountPath, '');
+    const pathname = this.props.mountPath ?
+      this.props.location.pathname.replace(this.props.mountPath, '') :
+      this.props.location.pathname
+    ;
+
     const redirect = config.redirect[pathname];
 
     if (redirect) {

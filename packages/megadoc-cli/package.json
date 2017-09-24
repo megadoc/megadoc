@@ -4,8 +4,9 @@
   "main": "lib/megadoc.js",
   "bin": {
     "megadoc": "lib/megadoc.js",
-    "megadoc-compile-plugin": "lib/megadoc-compile-plugin.js",
-    "megadoc-watch": "lib/megadoc-watch.js"
+    "megadoc-build": "lib/megadoc-build.js",
+    "megadoc-build-html-plugin": "lib/megadoc-build-html-plugin.js",
+    "megadoc-edit": "lib/megadoc-edit.js"
   },
   "dependencies": {
     "chokidar": "1.6.1",
@@ -18,5 +19,8 @@
     "megadoc-html-serializer": "^6.0.0-beta.12",
     "megadoc-linter": "^6.0.0-beta.7",
     "ramda": "0.24.1"
+  },
+  "peerDependencies": {
+    "megadoc-html-live-server": "^6.0.0-beta.12"
   }
 }
