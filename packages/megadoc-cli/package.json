@@ -1,6 +1,6 @@
 {
   "name": "megadoc-cli",
-  "version": "6.0.0",
+  "version": "6.0.1",
   "main": "bin/megadoc.js",
   "bin": {
     "megadoc": "bin/megadoc.js",
@@ -14,20 +14,20 @@
     "cli-table": "0.3.1",
     "commander": "2.11.0",
     "lodash": "3.10.1",
-    "megadoc-config-utils": "^6.0.0",
+    "megadoc-config-utils": "^6.0.1",
     "megadoc-linter": "^6.0.0",
     "ramda": "0.24.1"
   },
   "peerDependencies": {
-    "megadoc-compiler": "^6.0.0",
-    "megadoc-html-dev-server": "^6.0.0-beta.12",
-    "megadoc-html-live-server": "^6.0.0-beta.12",
-    "megadoc-html-serializer": "^6.0.0"
+    "megadoc-compiler": "^6.0.1",
+    "megadoc-html-dev-server": "^6.0.1",
+    "megadoc-html-live-server": "^6.0.1",
+    "megadoc-html-serializer": "^6.0.1"
   },
   "devDependencies": {
-    "megadoc-compiler": "^6.0.0",
-    "megadoc-html-dev-server": "^6.0.0-beta.12",
-    "megadoc-html-live-server": "^6.0.0-beta.12",
-    "megadoc-html-serializer": "^6.0.0"
+    "megadoc-compiler": "^6.0.1",
+    "megadoc-html-dev-server": "^6.0.1",
+    "megadoc-html-live-server": "^6.0.1",
+    "megadoc-html-serializer": "^6.0.1"
   }
 }
