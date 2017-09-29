@@ -1,6 +1,6 @@
 # Megadoc
 
-[![Build Status](https://travis-ci.org/megadoc/megadoc.svg)](https://travis-ci.org/megadoc/megadoc) [![Coverage Status](https://coveralls.io/repos/github/megadoc/megadoc/badge.svg?branch=master)](https://coveralls.io/github/megadoc/megadoc?branch=master)
+[![Build Status](https://travis-ci.org/megadoc/megadoc.svg)](https://travis-ci.org/megadoc/megadoc) [![Coverage Status](https://coveralls.io/repos/github/tinydoc/tinydoc/badge.svg?branch=master)](https://coveralls.io/github/tinydoc/tinydoc?branch=master)
 
 Megadoc is a documentation generator that is able to scan and analyze documentation found in different sources and present them in a coherent UI.
 Example sources include source-files like JavaScript or Lua modules, Markdown 
