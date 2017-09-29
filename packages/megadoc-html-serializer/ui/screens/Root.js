@@ -10,6 +10,7 @@ const DocumentURI = require('../DocumentURI');
 const LayoutTemplate = require('../LayoutTemplate');
 const CorpusAPI = require('../CorpusAPI');
 const NotFound = require('./NotFound');
+const { assign } = require('lodash');
 const { object, func, } = React.PropTypes;
 
 const Root = React.createClass({
@@ -142,7 +143,7 @@ const Root = React.createClass({
           const withoutAnchor = this.resolveCurrentDocument({
             config: this.props.config,
             documentResolver: this.props.documentResolver,
-            location: Object.assign({}, location, {
+            location: assign({}, location, {
               hash: ''
             })
           })

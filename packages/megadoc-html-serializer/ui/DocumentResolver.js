@@ -2,6 +2,7 @@ const console = require("console");
 const CorpusAPI = require('./CorpusAPI');
 const invariant = require('invariant');
 const LayoutEngine = require('./LayoutEngine');
+const { assign } = require('lodash');
 
 function DocumentResolver({ config, corpus, documentURI }) {
   this.corpus = corpus;
@@ -59,7 +60,7 @@ DocumentResolver.prototype.resolveFromLocation = function(location) {
     }
     else {
       if (this.config.redirect && this.config.redirect[location.pathname]) {
-        return this.resolveFromLocation(Object.assign({}, location, {
+        return this.resolveFromLocation(assign({}, location, {
           pathname: this.config.redirect[location.pathname]
         }));
       }

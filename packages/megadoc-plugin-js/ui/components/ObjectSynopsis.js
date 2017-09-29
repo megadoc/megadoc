@@ -1,6 +1,7 @@
 const React = require('react');
-const { PropTypes, } = React;
 const PropertyTag = require('./Tags/PropertyTag');
+const { assign } = require('lodash');
+const { PropTypes, } = React;
 
 const ObjectSynopsis = React.createClass({
 
@@ -45,7 +46,7 @@ const ObjectSynopsis = React.createClass({
               <PropertyTag
                 anchor={isRoot && anchor || null}
                 collapsible={isRoot}
-                typeInfo={Object.assign({}, tag.typeInfo, {
+                typeInfo={assign({}, tag.typeInfo, {
                   name: tag.typeInfo.name.split('.').slice(-1).join('.')
                 })}
               >

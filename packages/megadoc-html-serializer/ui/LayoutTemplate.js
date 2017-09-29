@@ -78,7 +78,7 @@ function TemplateRealizer(corpus, config) {
         customScope = DocumentResolver.buildDocumentContext(node);
 
         if (customScope && customScope.namespaceNode === parentScope.namespaceNode) {
-          Object.assign(customScope, {
+          assign(customScope, {
             documentEntityNode: parentScope.documentEntityNode,
             documentNode: parentScope.documentNode,
           });

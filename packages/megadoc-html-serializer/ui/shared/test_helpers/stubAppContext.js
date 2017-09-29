@@ -3,6 +3,7 @@ const { PropTypes } = React;
 const { OutletManager } = require('react-transclusion');
 const DocumentURI = require('../../DocumentURI');
 const AppState = require('../../AppState');
+const { assign } = require('lodash');
 
 module.exports = function stubAppContext(Component, fn) {
   const appState = AppState({});
@@ -27,7 +28,7 @@ module.exports = function stubAppContext(Component, fn) {
     getChildContext() {
       const overrides = typeof fn === 'function' ? fn() : fn;
 
-      return Object.assign({}, {
+      return assign({}, {
         appState,
         config: {},
         documentURI,

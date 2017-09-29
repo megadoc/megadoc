@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.1.1
+
+- dropped use of `Object.assign` for IE11 compatibility
+
 ## 6.1.0
 
 - dropped the `strict` option from the compiler and plugins; megadoc
