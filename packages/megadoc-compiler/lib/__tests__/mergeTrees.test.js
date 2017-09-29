@@ -1,5 +1,4 @@
-const { assert, createBuildersWithUIDs, uidOf } = require('megadoc-test-utils');
-const composeTree = require('../stage03__composeTree');
+const { assert, createBuildersWithUIDs } = require('megadoc-test-utils');
 const mergeTrees = require('../mergeTrees');
 const { NullLinter } = require('megadoc-linter');
 const b = createBuildersWithUIDs(require('megadoc-corpus'));
@@ -13,9 +12,9 @@ describe('megadoc-compiler::mergeTrees', function() {
 
   const createCompilation = compilationSpec => ({
     linter: NullLinter,
-    files: compilationSpec.documents.map(x => x.filePath),
+    files: compilationSpec.rawDocuments.map(x => x.filePath),
     compilerOptions: compilationContext.compilerOptions,
-    documents: compilationSpec.documents,
+    rawDocuments: compilationSpec.rawDocuments,
     renderOperations: compilationSpec.renderOperations || {},
     treeOperations: compilationSpec.treeOperations || [],
   })
@@ -29,24 +28,13 @@ describe('megadoc-compiler::mergeTrees', function() {
     return subject(previousCompilation, nextCompilation);
   }
 
-  const run = spec => {
-    const mergedCompilation = mergeTwoTrees(spec)
-    const mergedTree = composeTree({
-      id: compilationContext.id,
-      compilerOptions: compilationContext.compilerOptions,
-      documents: mergedCompilation.documents,
-      treeOperations: mergedCompilation.treeOperations
-    })
-
-    return mergedTree;
-  }
 
   it('should discard all documents found in changed files', function() {
-    const mergedTree = run({
+    const mergedTree = mergeTwoTrees({
       changedFiles: [ 'a.js' ],
 
       previous: {
-        documents: [
+        rawDocuments: [
           b.document({
             id: 'foo',
             filePath: 'a.js',
@@ -59,53 +47,53 @@ describe('megadoc-compiler::mergeTrees', function() {
       },
 
       next: {
-        documents: []
+        rawDocuments: []
       },
     })
 
-    assert.equal(mergedTree.documents.length, 0);
+    assert.equal(mergedTree.rawDocuments.length, 0);
   });
 
   it('should not modify documents found in other files', function() {
-    const mergedTree = run({
+    const mergedTree = mergeTwoTrees({
       changedFiles: [ 'a.js' ],
 
       previous: {
-        documents: [
+        rawDocuments: [
           b.document({ id: 'foo', filePath: 'a.js' }),
           b.document({ id: 'bar', filePath: 'b.js' })
         ]
       },
 
       next: {
-        documents: [
+        rawDocuments: [
         ]
       },
     })
 
-    assert.equal(mergedTree.documents.length, 1)
-    assert.include(mergedTree.documents[0], { id: 'bar', filePath: 'b.js' })
+    assert.equal(mergedTree.rawDocuments.length, 1)
+    assert.include(mergedTree.rawDocuments[0], { id: 'bar', filePath: 'b.js' })
   });
 
   it('should be idempotent', function() {
     const assertOk = tree => {
-      assert.equal(tree.documents.length, 2)
-      assert.include(tree.documents[0], { id: 'foo', filePath: 'a.js' })
-      assert.include(tree.documents[1], { id: 'bar', filePath: 'b.js' })
+      assert.equal(tree.rawDocuments.length, 2)
+      assert.include(tree.rawDocuments[0], { id: 'foo', filePath: 'a.js' })
+      assert.include(tree.rawDocuments[1], { id: 'bar', filePath: 'b.js' })
     }
 
     const mergedTree = mergeTwoTrees({
       changedFiles: [ 'a.js', 'b.js' ],
 
       previous: {
-        documents: [
+        rawDocuments: [
           b.document({ id: 'foo', filePath: 'a.js' }),
           b.document({ id: 'bar', filePath: 'b.js' })
         ]
       },
 
       next: {
-        documents: [
+        rawDocuments: [
           b.document({ id: 'foo', filePath: 'a.js' }),
           b.document({ id: 'bar', filePath: 'b.js' })
         ]
@@ -115,85 +103,12 @@ describe('megadoc-compiler::mergeTrees', function() {
     assertOk(mergedTree);
 
     const nextMergedTree = mergeTwoTrees({
-      changedFiles: mergedTree.documents.map(x => x.filePath),
+      changedFiles: mergedTree.rawDocuments.map(x => x.filePath),
       previous: mergedTree,
       next: mergedTree,
     })
 
     assertOk(nextMergedTree);
-  })
-
-  it('should use all newer representation of documents found in change tree', function() {
-    const documents = [
-      b.document({
-        id: 'Klass',
-        summary: 'Summary',
-        filePath: 'klass.lua',
-      }),
-      b.documentEntity({
-        id: 'KlassMethod',
-        filePath: 'klass.lua',
-      }),
-
-      b.document({
-        id: 'OtherKlass',
-        filePath: 'other_klass.lua',
-      }),
-    ];
-
-    const nextDocuments = [
-      b.document({
-        id: 'Klass',
-        filePath: 'klass.lua',
-        summary: 'New Summary',
-      }),
-
-      b.documentEntity({
-        id: 'KlassMethod',
-        filePath: 'klass.lua',
-      })
-    ]
-
-    const mergedTree = run({
-      changedFiles: [ 'klass.lua' ],
-      previous: {
-        documents,
-        treeOperations: [
-          {
-            type: 'CHANGE_NODE_PARENT',
-            data: {
-              parentUid: uidOf('Klass', documents),
-              uid: uidOf('KlassMethod', documents),
-            },
-          }
-        ],
-      },
-
-      next: {
-        documents: nextDocuments,
-        treeOperations: [
-          {
-            type: 'CHANGE_NODE_PARENT',
-            data: {
-              parentUid: uidOf('Klass', nextDocuments),
-              uid: uidOf('KlassMethod', nextDocuments),
-            },
-          }
-        ]
-      }
-    });
-
-    assert.deepEqual(mergedTree.documents.map(x => x.id), [ 'Klass', 'OtherKlass' ],
-      "It preserves other file documents and maintains order"
-    );
-
-    assert.ok(mergedTree.documents.some(x => x.summary === 'New Summary'));
-    assert.notOk(mergedTree.documents.some(x => x.summary === 'Summary'));
-    assert.equal(
-      mergedTree.documents.filter(x => x.summary === 'New Summary')[0].entities.length,
-      1,
-      "It preserves the tree structure"
-    )
   })
 
   it('should remove documents that are no longer referenced by source files')

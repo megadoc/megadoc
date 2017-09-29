@@ -180,4 +180,121 @@ describe('[integration] megadoc-plugin-js', function() {
       ]
     }, {}, done)
   });
+
+  it('works with a previous compilation', function(done) {
+    suite.createFile('src/a.js', `
+      /**
+       * @module A
+       *
+       * See [[./b.js]]
+       */
+      module.exports = {
+        /** Do something */
+        doSomething() {},
+      }
+    `);
+
+    suite.createFile('src/b.js', `
+      /**
+       * @module B
+       *
+       * See [[./a.js]]
+       */
+      module.exports = function B() {}
+    `);
+
+    const config = {
+      assetRoot: suite.root,
+      strict: true,
+      sources: [
+        {
+          id: 'js',
+          pattern: /\.js$/,
+          include: [ suite.root + '/src/*.js' ],
+          processor: {
+            name: path.resolve(__dirname, '../index.js'),
+            options: {
+              id: 'js',
+              name: 'JavaScripts',
+              strict: true,
+            }
+          }
+        }
+      ]
+    }
+
+    suite.compile(config, {}, function(err, state) {
+      if (err) {
+        return done(err);
+      }
+
+      const { compilations } = state;
+
+      assert.deepEqual(
+        compilations[0].documents.map(x => x.id),
+        [ 'A', '.doSomething', 'B' ]
+      )
+
+      secondRun(state)
+    });
+
+    function secondRun(initialState) {
+      suite.createFile('src/a.js', `
+        /**
+         * @module NewA
+         *
+         * See [[./b.js]]
+         */
+        module.exports = {
+          /** Do something */
+          doSomething() {},
+        }
+      `);
+
+      suite.compile(config, {
+        watch: true,
+        changedSources: [
+          suite.join('src/a.js')
+        ],
+        initialState,
+        purge: true
+      }, function(mergeErr, nextState) {
+        if (mergeErr) {
+          return done(mergeErr);
+        }
+
+        const { compilations } = nextState;
+
+        assert.deepEqual(
+          compilations[0].documents.map(x => x.title),
+          [ 'NewA', 'NewA.doSomething', 'B' ]
+        )
+
+        thirdRun(nextState);
+      });
+    }
+
+    function thirdRun(initialState) {
+      suite.compile(config, {
+        watch: true,
+        changedSources: [],
+        initialState,
+        purge: true
+      }, function(mergeErr, nextState) {
+        if (mergeErr) {
+          return done(mergeErr);
+        }
+
+        const { compilations } = nextState;
+
+        assert.deepEqual(
+          compilations[0].documents.map(x => x.title),
+          [ 'NewA', 'NewA.doSomething', 'B' ]
+        )
+
+        done();
+      })
+    }
+  });
+
 });

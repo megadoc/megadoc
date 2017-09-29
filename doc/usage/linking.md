@@ -1,2 +1,1 @@
-# Linking to internal ocuments
-
+# Linking to internal documents

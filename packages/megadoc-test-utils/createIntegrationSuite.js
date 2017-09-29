@@ -31,6 +31,8 @@ function createIntegrationSuite(mochaSuite, suiteOptions = {}) {
     get() { return fileSuite.getRootDirectory() }
   });
 
+  exports.join = fileSuite.join;
+
   /**
    * Perform a compilation.
    *

@@ -212,56 +212,57 @@ describe("megadoc-compiler::Compiler", function() {
   describe('stages...', function() {
     const stages = [
       {
-        message: 'can parse',
-        breakpoint: Compiler.BREAKPOINT_REFINE,
+        message: 'can merge with a change tree',
+        breakpoint: Compiler.BREAKPOINT_MERGE_CHANGE_TREE + 1,
         output: 'rawDocuments',
         nextOutput: 'refinedDocuments',
-        // focus: true ,
+      },
+
+      {
+        message: 'can parse',
+        breakpoint: Compiler.BREAKPOINT_PARSE + 1,
+        output: 'rawDocuments',
+        nextOutput: 'refinedDocuments',
       },
       {
         message: 'can refine',
-        breakpoint: Compiler.BREAKPOINT_REDUCE,
+        breakpoint: Compiler.BREAKPOINT_REFINE + 1,
         output: 'refinedDocuments',
         nextOutput: 'documents',
       },
       {
         message: 'can reduce',
-        breakpoint: Compiler.BREAKPOINT_RENDER,
+        breakpoint: Compiler.BREAKPOINT_REDUCE + 1,
         output: 'documents',
         nextOutput: 'renderOperations',
       },
       {
         message: 'can render',
-        breakpoint: Compiler.BREAKPOINT_REDUCE_TREE,
+        breakpoint: Compiler.BREAKPOINT_RENDER + 1,
         output: 'renderOperations',
         nextOutput: 'treeOperations',
       },
       {
         message: 'can reduce a tree',
-        breakpoint: Compiler.BREAKPOINT_MERGE_CHANGE_TREE,
+        breakpoint: Compiler.BREAKPOINT_REDUCE_TREE + 1,
         output: 'treeOperations',
         nextOutput: null,
       },
       {
-        message: 'can merge with a change tree',
-        breakpoint: Compiler.BREAKPOINT_COMPOSE_TREE,
-        output: 'treeOperations',
-        nextOutput: 'tree',
-      },
-      {
         message: 'can compose a tree',
-        breakpoint: Compiler.BREAKPOINT_RENDER_CORPUS,
+        breakpoint: Compiler.BREAKPOINT_COMPOSE_TREE + 1,
         output: 'tree',
         nextOutput: 'corpus',
       },
       {
         message: 'can render the corpus',
-        breakpoint: Compiler.BREAKPOINT_EMIT_ASSETS,
+        breakpoint: Compiler.BREAKPOINT_RENDER_CORPUS + 1,
         output: null,
         nextOutput: null,
       },
       {
         message: 'can emit the assets',
+        breakpoint: Compiler.BREAKPOINT_EMIT_ASSETS + 1,
         output: null,
         nextOutput: null,
       },
@@ -291,10 +292,14 @@ describe("megadoc-compiler::Compiler", function() {
             compilations
           ;
 
-          assert.notOk(compilation[nextOutput])
+          assert(!compilation[nextOutput],
+            `"${nextOutput}" should not be present at this stage`
+          )
 
           if (output) {
-            assert.ok(compilation[output])
+            assert(!!compilation[output],
+              `"${output}" should be present at this stage`
+            )
           }
 
           done();

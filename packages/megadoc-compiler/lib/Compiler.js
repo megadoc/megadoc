@@ -27,12 +27,12 @@ const divisus = require('divisus');
 
 const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE            = 1;
 const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
-const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 3;
-const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 4;
-const BREAKPOINT_RENDER             = exports.BREAKPOINT_RENDER             = 5;
-const BREAKPOINT_REDUCE_TREE        = exports.BREAKPOINT_REDUCE_TREE        = 6;
-const BREAKPOINT_COMPOSE_TREE       = exports.BREAKPOINT_COMPOSE_TREE       = 7;
-const BREAKPOINT_MERGE_CHANGE_TREE  = exports.BREAKPOINT_MERGE_CHANGE_TREE  = 8;
+const BREAKPOINT_MERGE_CHANGE_TREE  = exports.BREAKPOINT_MERGE_CHANGE_TREE  = 3;
+const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 4;
+const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 5;
+const BREAKPOINT_RENDER             = exports.BREAKPOINT_RENDER             = 6;
+const BREAKPOINT_REDUCE_TREE        = exports.BREAKPOINT_REDUCE_TREE        = 7;
+const BREAKPOINT_COMPOSE_TREE       = exports.BREAKPOINT_COMPOSE_TREE       = 8;
 const BREAKPOINT_RENDER_CORPUS      = exports.BREAKPOINT_RENDER_CORPUS      = 9;
 const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 10;
 
@@ -183,6 +183,38 @@ function compileTrees(state, done) {
       )
     ),
 
+    instrument.async(scopeMessage('compile:merge-change-tree'))
+    (
+      defineBreakpoint(BREAKPOINT_MERGE_CHANGE_TREE)
+      (
+        asyncify
+        (
+          compilation =>
+          (
+            R.reduce
+            (
+              (aggregateCompilation, prevCompilation) =>
+              (
+                R.merge
+                (
+                  aggregateCompilation
+                )
+                (
+                  mergeTrees(prevCompilation, aggregateCompilation)
+                )
+              )
+            )
+            (
+              compilation
+            )
+            (
+              findPrevCompilation(compilation)
+            )
+          )
+        )
+      )
+    ),
+
     instrument.async(scopeMessage('compile:refine'))
     (
       defineBreakpoint(BREAKPOINT_REFINE)
@@ -212,44 +244,6 @@ function compileTrees(state, done) {
       defineBreakpoint(BREAKPOINT_REDUCE_TREE)
       (
         reduceTree
-      )
-    ),
-
-    instrument.async(scopeMessage('compile:merge-change-tree'))
-    (
-      defineBreakpoint(BREAKPOINT_MERGE_CHANGE_TREE)
-      (
-        asyncify
-        (
-          compilation =>
-          (
-            // findPrevCompilation(compilation).length > 0 ?
-            //   R.merge(
-            //     findPrevCompilation(compilation)[0],
-            //     mergeTrees(findPrevCompilation(compilation)[0], compilation)
-            //   ) :
-            //   compilation
-            R.reduce
-            (
-              (aggregateCompilation, prevCompilation) =>
-              (
-                R.merge
-                (
-                  aggregateCompilation
-                )
-                (
-                  mergeTrees(prevCompilation, aggregateCompilation)
-                )
-              )
-            )
-            (
-              compilation
-            )
-            (
-              findPrevCompilation(compilation)
-            )
-          )
-        )
       )
     ),
 

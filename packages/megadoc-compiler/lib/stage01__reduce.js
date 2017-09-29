@@ -4,7 +4,6 @@ const invariant = require('invariant');
 const partial = require('./utils/partial');
 const asyncMaybe = require('./utils/asyncMaybe');
 const { assignUID } = require('megadoc-corpus');
-const orderDocumentList = require('./orderDocumentList');
 
 module.exports = function reduce(compilation, done) {
   const { processor, linter, refinedDocuments } = compilation;
@@ -22,7 +21,7 @@ module.exports = function reduce(compilation, done) {
 
   reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {
     return R.merge(compilation, {
-      documents: orderDocumentList(R.flatten(documents).map(normalize)),
+      documents: R.flatten(documents).map(normalize),
     });
   }, done));
 
