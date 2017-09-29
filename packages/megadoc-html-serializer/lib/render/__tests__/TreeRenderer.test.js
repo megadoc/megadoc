@@ -34,7 +34,6 @@ describe('TreeRenderer', function() {
       };
 
       const renderedTree = Subject.renderTree({
-        compilerConfig: { strict: true },
         markdownRenderer: new Renderer({})
       }, tree, treeOperations);
 
@@ -60,7 +59,6 @@ describe('TreeRenderer', function() {
       const treeOperations = {};
 
       const renderedTree = Subject.renderTree({
-        compilerConfig: { strict: true },
         markdownRenderer: new Renderer({})
       }, tree, treeOperations);
 
@@ -95,7 +93,6 @@ describe('TreeRenderer', function() {
       });
 
       const corpus = Corpus({
-        strict: true,
         debug: false,
       }, { linter: NullLinter });
 
@@ -118,7 +115,6 @@ describe('TreeRenderer', function() {
       });
 
       const renderedTree = Subject.renderTree({
-        compilerConfig: { strict: true },
         markdownRenderer: new Renderer({}),
         linkResolver: linkResolver,
       }, tree, treeOperations);

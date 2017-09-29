@@ -112,7 +112,6 @@ exports.run = function run(userConfig, runOptions, done) {
                 'outputDir',
                 'tmpDir',
                 'verbose',
-                'strict',
                 'debug',
               ]
             }

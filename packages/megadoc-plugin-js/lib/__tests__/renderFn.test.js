@@ -142,7 +142,6 @@ describe('megadoc-plugin-js::renderFn', function() {
       HTMLRenderingSuite.assertDidRender(descriptor, {
         location: 'tags[0].typeInfo.name',
         using: renderer.linkifyFragment({
-          strict: true,
           format: 'html',
           contextNode: document,
           text: 'FooBar',
@@ -177,7 +176,6 @@ describe('megadoc-plugin-js::renderFn', function() {
         location: 'tags[0].typeInfo.type.html',
         using: renderer.linkifyFragment({
           contextNode: document,
-          strict: true,
           format: 'html',
           text: 'FooBar'
         })
@@ -217,7 +215,6 @@ describe('megadoc-plugin-js::renderFn', function() {
         location: 'tags[0].typeInfo.type.elements[0].html',
         using: renderer.linkifyFragment({
           contextNode: document,
-          strict: true,
           format: 'html',
           text: 'Foo'
         })
@@ -227,7 +224,6 @@ describe('megadoc-plugin-js::renderFn', function() {
         location: 'tags[0].typeInfo.type.elements[1].html',
         using: renderer.linkifyFragment({
           contextNode: document,
-          strict: true,
           format: 'html',
           text: 'Bar'
         })
@@ -265,7 +261,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.params[0].html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'Foo'
           })
@@ -301,7 +296,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.returnType.html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'Foo'
           })
@@ -355,7 +349,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.elements[0].key.html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'x'
           })
@@ -365,7 +358,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.elements[0].value.html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'Foo'
           })
@@ -375,7 +367,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.elements[1].key.html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'y'
           })
@@ -385,7 +376,6 @@ describe('megadoc-plugin-js::renderFn', function() {
           location: 'tags[0].typeInfo.type.elements[1].value.html',
           using: renderer.linkifyFragment({
             contextNode: document,
-            strict: true,
             format: 'html',
             text: 'Bar'
           })

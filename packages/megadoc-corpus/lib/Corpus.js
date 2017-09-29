@@ -14,7 +14,7 @@ const b = Types.builders;
  *
  * The Corpus public API.
  */
-function Corpus({ strict = true, alias: aliases = {} }, { linter }) {
+function Corpus({ alias: aliases = {} }, { linter }) {
   const exports = {};
   const nodes = {};
   const paths = {};
@@ -259,9 +259,7 @@ function Corpus({ strict = true, alias: aliases = {} }, { linter }) {
         loc: linter.locationForNode(node)
       })
 
-      if (strict) {
-        return;
-      }
+      return;
     }
 
     nodes[node.uid] = node;

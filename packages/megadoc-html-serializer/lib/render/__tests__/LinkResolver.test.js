@@ -95,12 +95,8 @@ describe('LinkResolver', function() {
     });
   });
 
-  context('given a str that contains []', function() {
-    it('should not consider it a link', function() {
-      assert.equal(resolver.linkify({ text: '[String[]]()', strict: false }), 'String[]');
-    });
-
-    it('should not consider it a link', function() {
+  context('given a link string that contains []', function() {
+    it('still considers it a link', function() {
       stubConsoleWarn(/Unable to resolve link to "String\[\]"/);
       assert.equal(resolver.linkify({ text: '[String[]]()' }), '[String[]](mega://)');
     });
@@ -112,21 +108,12 @@ describe('LinkResolver', function() {
 
       assert.equal(resolver.linkify({
         text: '[Foo]()',
-        strict: true
       }), '[Foo](mega://)')
 
       assert.equal(resolver.linkify({
         text: '[Foo]()',
-        strict: true,
         format: 'html'
       }), '<a class="mega-link--internal mega-link--broken">Foo</a>')
-    });
-
-    it('should leave things as they are if not in strict mode', function() {
-      assert.equal(resolver.linkify({
-        text: '[Foo]()',
-        strict: false
-      }), 'Foo')
     });
   });
 

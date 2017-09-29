@@ -33,10 +33,6 @@ module.exports = function parseCommonOptions(program) {
     config.debug = true;
   }
 
-  if (program.strict) {
-    config.strict = true;
-  }
-
   if (program.threads) {
     config.threads = Math.max(parseInt(program.threads, 10), 1)
   }

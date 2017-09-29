@@ -7,7 +7,7 @@ describe('megadoc-compiler::mergeTrees', function() {
   const subject = mergeTrees;
   const compilationContext = {
     id: 'test-processor',
-    compilerOptions: { strict: true, verbose: true }
+    compilerOptions: { verbose: true }
   };
 
   const createCompilation = compilationSpec => ({

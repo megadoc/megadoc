@@ -23,7 +23,6 @@ describe('[integration] megadoc-plugin-js', function() {
             options: {
               id: 'js',
               name: 'JavaScripts',
-              strict: true,
             }
           }
         }
@@ -44,7 +43,6 @@ describe('[integration] megadoc-plugin-js', function() {
     `);
 
     suite.compile({
-      strict: true,
       sources: [
         {
           id: 'js',
@@ -55,7 +53,6 @@ describe('[integration] megadoc-plugin-js', function() {
             options: {
               id: 'js',
               name: 'JavaScripts',
-              strict: true,
             }
           }
         }
@@ -173,7 +170,6 @@ describe('[integration] megadoc-plugin-js', function() {
             options: {
               id: 'js',
               name: 'JavaScripts',
-              strict: true,
             }
           }
         }
@@ -205,7 +201,6 @@ describe('[integration] megadoc-plugin-js', function() {
 
     const config = {
       assetRoot: suite.root,
-      strict: true,
       sources: [
         {
           id: 'js',
@@ -216,7 +211,6 @@ describe('[integration] megadoc-plugin-js', function() {
             options: {
               id: 'js',
               name: 'JavaScripts',
-              strict: true,
             }
           }
         }

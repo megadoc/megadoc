@@ -30,7 +30,6 @@ module.exports = {
   lintRules: {},
 
   debug: false,
-  strict: false,
   verbose: false,
   serializer: null,
   sources: null,

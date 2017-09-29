@@ -164,8 +164,7 @@ describe('megadoc-compiler::utils::transformValue', function() {
                   "$__type": "LINKIFY_FRAGMENT",
                   "$__value": {
                     "text": "BinaryTransport",
-                    "format": "html",
-                    "strict": true
+                    "format": "html"
                   }
                 }
               }

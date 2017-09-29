@@ -16,18 +16,13 @@ exports.renderTree = function(state, tree, renderOperations) {
     },
 
     LINKIFY_STRING: function(data, reduce) {
-      const linkifyData = Object.assign({
-        strict: state.compilerConfig.strict,
-      }, data);
-
-      return reduce(state.linkResolver.linkify(linkifyData));
+      return reduce(state.linkResolver.linkify(data));
     },
 
     LINKIFY_FRAGMENT: function(data, reduce) {
       return reduce(
         state.linkResolver.renderLink(
           {
-            strict: data.hasOwnProperty('strict') ? data.strict : state.compilerConfig.strict,
             format: data.format,
             contextNode: data.contextNode,
           },

@@ -9,7 +9,6 @@ module.exports = function addCommonOptions(program) {
     .option('--tmp-dir [PATH]', 'directory to use for temporary files')
     .option('-v, --verbose', 'print diagnostic information')
     .option('--debug', 'print painful diagnostic information')
-    .option('--strict', 'fail hard on documentation errors')
     .option('-j, --threads [COUNT]', 'number of threads to use for processing (1 means foreground)')
   ;
 

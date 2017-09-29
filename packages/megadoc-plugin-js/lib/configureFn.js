@@ -4,7 +4,6 @@ var defaults = require('./config');
 module.exports = function configure(userOptions) {
   var config = Object.assign({}, defaults, userOptions);
   var parserConfig = {
-    strict: config.strict,
     inferModuleIdFromFileName: config.inferModuleIdFromFileName,
     inferNamespaces: config.inferNamespaces,
     customTags: config.customTags,

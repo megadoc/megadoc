@@ -2,7 +2,7 @@ var { assert, multiline } = require('megadoc-test-utils');
 var subject = require('../');
 
 function parse(str) {
-  return subject.parseString(multiline(str), { strict: true, verbose: false });
+  return subject.parseString(multiline(str), { verbose: false });
 }
 
 describe('Lua::Parser', function() {

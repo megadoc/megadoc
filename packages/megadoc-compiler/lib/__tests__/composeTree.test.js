@@ -1,11 +1,12 @@
 require('../Compiler')
-const { assert, createBuildersWithUIDs, uidOf } = require('megadoc-test-utils');
+const { assert, createBuildersWithUIDs, uidOf, createSinonSuite } = require('megadoc-test-utils');
 const composeTree = require('../stage03__composeTree');
 const b = createBuildersWithUIDs(require('megadoc-corpus'));
+const { NullLinter } = require('megadoc-linter');
 
 describe('megadoc-compiler::composeTree', function() {
   const subject = composeTree;
-  const compilerOptions = { strict: true };
+  const sinon = createSinonSuite(this);
 
   describe('CHANGE_NODE_PARENT', function() {
     it('maps a DocumentEntity to a Document', function() {
@@ -19,7 +20,6 @@ describe('megadoc-compiler::composeTree', function() {
       ]
       const tree = subject({
         id: 'foo',
-        compilerOptions,
         documents,
         treeOperations: [
           {
@@ -45,7 +45,6 @@ describe('megadoc-compiler::composeTree', function() {
       ];
       const tree = subject({
         id: 'foo',
-        compilerOptions,
         documents,
         treeOperations: [
           {
@@ -65,53 +64,61 @@ describe('megadoc-compiler::composeTree', function() {
     });
 
     it('whines if a parent could not be found', function() {
-      assert.throws(function() {
-        const documents = [
-          b.document({
-            id: 'Klass'
-          })
-        ];
+      sinon.spy(NullLinter, 'logError');
 
-        subject({
-          id: 'foo',
-          compilerOptions,
-          documents,
-          treeOperations: [
-            {
-              type: 'CHANGE_NODE_PARENT',
-              data: {
-                uid: uidOf('Klass', documents),
-                parentUid: uidOf('Container', documents),
-              },
-            }
-          ]
+      const documents = [
+        b.document({
+          id: 'Klass'
         })
-      }, /Node with UID ".+" specified as a parent for node ".+" could not be found./)
+      ];
+
+      subject({
+        id: 'foo',
+        documents,
+        linter: NullLinter,
+        treeOperations: [
+          {
+            type: 'CHANGE_NODE_PARENT',
+            data: {
+              uid: uidOf('Klass', documents),
+              parentUid: uidOf('Container', documents),
+            },
+          }
+        ]
+      })
+
+      assert.calledWith(NullLinter.logError, sinon.match({
+        message: sinon.match(/Node with UID ".+" specified as a parent for node ".+" could not be found./)
+      }))
     });
 
     it('whines if the node could not be found', function() {
-      assert.throws(function() {
-        const documents = [
-          b.document({
-            id: 'Klass'
-          })
-        ];
+      sinon.spy(NullLinter, 'logError');
 
-        subject({
-          id: 'foo',
-          compilerOptions,
-          documents,
-          treeOperations: [
-            {
-              type: 'CHANGE_NODE_PARENT',
-              data: {
-                uid: uidOf('Child', documents),
-                parentUid: uidOf('Klass', documents),
-              },
-            }
-          ]
+      const documents = [
+        b.document({
+          id: 'Klass',
         })
-      }, /Node with UID ".+" specified as a child for node ".+" could not be found./)
+      ];
+
+      subject({
+        id: 'foo',
+        documents,
+        linter: NullLinter,
+        treeOperations: [
+          {
+            type: 'CHANGE_NODE_PARENT',
+            data: {
+              uid: uidOf('Child', documents),
+              parentUid: uidOf('Klass', documents),
+            },
+          }
+        ]
+      })
+
+      assert.calledWith(NullLinter.logError, sinon.match({
+        message: sinon.match(/Node with UID ".+" specified as a child for node ".+" could not be found./)
+      }))
     });
   })
 });

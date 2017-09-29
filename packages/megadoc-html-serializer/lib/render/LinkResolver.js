@@ -66,39 +66,29 @@ LinkResolver.prototype.lookup = function(params) {
     contextNode: params.contextNode
   });
 
-  if (index) {
-    var document = index.node;
-    var text = document.title || index.text;
-
-    if (!document.meta.href) {
-      // TODO: linter
-      console.warn("Document '%s' can not be linked to as it has no @href.", document.uid);
-      return;
-    }
-    else if (!text) {
-      // TODO: linter
-      console.warn("Document '%s' can not be linked to as it has no @title.", document.uid);
-      return;
-    }
-    else {
-      return {
-        text: text,
-        title: document.summary,
-        href: Href(document, this.options)
-      };
-    }
+  if (!index) {
+    return null;
   }
-  else if (params.strict) {
-    this.linter.logRuleEntry({
-      rule: NoBrokenLinks,
-      params,
-      loc: this.linter.locationForNode(params.contextNode),
-    })
 
+  var document = index.node;
+  var text = document.title || index.text;
+
+  if (!document.meta.href) {
+    // TODO: linter
+    console.warn("Document '%s' can not be linked to as it has no @href.", document.uid);
+    return null;
+  }
+  else if (!text) {
+    // TODO: linter
+    console.warn("Document '%s' can not be linked to as it has no @title.", document.uid);
+    return null;
+  }
+  else {
     return {
-      text: params.path,
-      href: '',
-    }
+      text: text,
+      title: document.summary,
+      href: Href(document, this.options)
+    };
   }
 
   function Href(node, options) {
@@ -151,8 +141,6 @@ LinkResolver.prototype.linkify = function(params) {
  *
  * @param {Object} params
  * @param {T.Node} params.contextNode
- * @param {Boolean} [params.strict=true]
- *        Will warn when enabled and the link could not be resolved.
  *
  * @param {String} params.format
  *        One of "html" or "markdown".
@@ -178,28 +166,30 @@ LinkResolver.prototype.linkify = function(params) {
  * @return {String}
  */
 LinkResolver.prototype.renderLink = function(params, descriptor) {
-  var format = params.format || 'markdown';
-  var strict = params.strict !== false;
-  var contextNode = params.contextNode ?
+  const format = params.format || 'markdown';
+  const contextNode = params.contextNode ?
     this.corpus.get(params.contextNode.uid) :
     null
   ;
-  var link = this.lookup({ path: descriptor.path, contextNode: contextNode });
+  const link = this.lookup({ path: descriptor.path, contextNode: contextNode });
 
   assert(descriptor.hasOwnProperty('source'),
     "Link descriptor must contain a @source attribute!");
 
-  if (!link && !strict) {
-    return descriptor.source;
+  if (link) {
+    return generateMarkup({
+      format: format,
+      href: link.href,
+      text: descriptor.text || link.text,
+      title: descriptor.title || link.title,
+    });
   }
-  else if (!link && strict) {
-    if (!contextNode || !(contextNode.uid in this.options.ignore)) {
-      this.linter.logRuleEntry({
-        rule: NoBrokenLinks,
-        params: descriptor,
-        loc: this.linter.locationForNode(contextNode || params.contextNode),
-      })
-    }
+  else {
+    this.linter.logRuleEntry({
+      rule: NoBrokenLinks,
+      params: descriptor,
+      loc: this.linter.locationForNode(contextNode || params.contextNode),
+    })
 
     return generateMarkup({
       format: format,
@@ -209,12 +199,6 @@ LinkResolver.prototype.renderLink = function(params, descriptor) {
     });
   }
 
-  return generateMarkup({
-    format: format,
-    href: link.href,
-    text: descriptor.text || link.text,
-    title: descriptor.title || link.title,
-  });
 };
 
 function generateMarkup(params) {

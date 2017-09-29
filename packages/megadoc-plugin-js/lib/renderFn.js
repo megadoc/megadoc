@@ -163,7 +163,6 @@ function renderTypeLink(params) {
   }
 
   return renderer.linkifyFragment({
-    strict: true,
     format: 'html',
     contextNode: contextNode,
     text: typeName

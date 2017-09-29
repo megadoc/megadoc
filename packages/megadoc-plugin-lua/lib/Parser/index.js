@@ -83,9 +83,7 @@ exports.parseString = function(sourceCode, config) {
       var docstring;
 
       try {
-        docstring = docstringParser.parseComment(comment, {
-          strict: config.strict
-        });
+        docstring = docstringParser.parseComment(comment);
       }
       catch (e) {
         console.error("Unable to parse comment docstring:", comment.slice(0, 80));

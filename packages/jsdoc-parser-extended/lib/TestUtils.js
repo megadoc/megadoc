@@ -8,7 +8,6 @@ exports.parseNode = function(strGenerator, config, filePath) {
 
   config = config || {};
   config.alias = config.alias || {};
-  config.strict = true;
 
   parser.parseString(body, config, filePath || '__test__');
 
@@ -22,7 +21,6 @@ function parseInline(strGenerator, config, filePath, fn) {
 
   config = config || {};
   config.alias = config.alias || {};
-  config.strict = true;
 
   if (fn) {
     fn(parser);

@@ -1,30 +1,20 @@
 const R = require('ramda');
-const { builders: b, dumpNodeFilePath } = require('megadoc-corpus');
+const { builders: b } = require('megadoc-corpus');
 const isDocumentNode = node => node.type === 'Document'
 const isDocumentEntityNode = node => node.type === 'DocumentEntity'
 const { assignUID } = require('megadoc-corpus');
 
 module.exports = function composeTree({
-  compilerOptions,
   documents,
   id,
   treeOperations,
+  linter,
 }) {
-  // console.log('[D] Composing tree of %d nodes', documents.length, compilerOptions.strict);
-
   const documentUidMap = R.indexBy(R.prop('uid'), documents);
   const documentChildren = {};
   const documentParents = {};
   const namespaceAttributes = {};
   const blacklisted = {};
-  const maybeThrowError = msg => {
-    if (compilerOptions.strict) {
-      throw new Error(msg);
-    }
-    else {
-      console.error(msg);
-    }
-  };
 
   const hierarchize = node => {
     if (!documentChildren.hasOwnProperty(node.uid)) {
@@ -47,24 +37,26 @@ module.exports = function composeTree({
         const child = documentUidMap[op.data.uid];
 
         if (!parent) {
-          maybeThrowError(
-            withSourceMessage(child,
+          linter.logError({
+            message: (
               `Node with UID "${op.data.parentUid}" specified as a parent for ` +
               `node "${op.data.uid}" could not be found.`
-            )
-          );
+            ),
+            loc: linter.locationForNode(child)
+          });
 
           blacklisted[op.data.uid] = true;
 
           return;
         }
         else if (!child) {
-          maybeThrowError(
-            withSourceMessage(parent,
+          linter.logError({
+            message: (
               `Node with UID "${op.data.uid}" specified as a child for ` +
               `node "${op.data.parentUid}" could not be found.`
-            )
-          );
+            ),
+            loc: linter.locationForNode(parent)
+          });
 
           blacklisted[op.data.uid] = true;
 
@@ -105,7 +97,3 @@ module.exports = function composeTree({
     })
   );
 };
-
-function withSourceMessage(document, message) {
-  return message + ' (Source: ' + dumpNodeFilePath(document) + ')';
-}

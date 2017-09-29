@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.1.0
+
+- dropped the `strict` option from the compiler and plugins; megadoc
+  will now recover from errors where it can and report them through the
+  linter.
+- Fixed a few issues with incremental building
+
+## 6.0.1
+
+- Applied a few fixes to the HTML live server
+
 ## 6.0.0
 
 This is a very exciting release; a new model for representing the documents
