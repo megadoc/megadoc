@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
-node ./packages/dependency-scanner/lib/index.js $@
+ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
+
+node "${ROOT}/packages/dependency-scanner/lib/index.js" $@

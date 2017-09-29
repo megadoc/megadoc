@@ -9,6 +9,7 @@
     "doc": "rm -rf doc/compiled && NODE_PATH=packages packages/megadoc-cli/bin/megadoc.js",
     "doc:inspect": "rm -rf doc/compiled && NODE_PATH=packages node --inspect --debug-brk packages/megadoc-cli/bin/megadoc-build.js",
     "lint": "./bin/lint && ./bin/lint-ui",
+    "publish": "lerna publish",
     "prepublish": "./bin/lerna-prepublish",
     "start": "NODE_PATH=packages ./packages/megadoc-cli/lib/megadoc-edit.js",
     "test": "./bin/test && ./bin/test-ui --single-run"

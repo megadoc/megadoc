@@ -6,16 +6,10 @@
 #
 #     $0
 
-[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
-  echo "$0: Must be run from megadoc root.";
-  exit 1
-}
-
-source "./bin/_helpers.sh"
-
-nodejs_use_local_packages
+ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
 
 (
-  cd ./packages/megadoc-html-serializer
+  cd "${ROOT}/packages/megadoc-html-serializer"
+
   exec ./node_modules/.bin/karma start --browsers Firefox $@
 )

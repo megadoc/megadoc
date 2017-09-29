@@ -10,11 +10,7 @@
 #
 #   - PACKAGE: the package, in case $1 is not passed
 
-[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
-  echo "$0: Must be run from megadoc root.";
-  exit 1
-}
-
+ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
 SOURCES=()
 
 if [ -z $PACKAGE ]; then
@@ -23,17 +19,20 @@ if [ -z $PACKAGE ]; then
 fi
 
 if [ -z $PACKAGE ]; then
-  SOURCES=(ui packages/*/ui)
-elif [ -d "packages/${PACKAGE}" ]; then
-  SOURCES=("packages/${PACKAGE}/ui")
-elif [ -d "packages/megadoc-plugin-${PACKAGE}" ]; then
-  SOURCES=("packages/megadoc-plugin-${PACKAGE}/ui")
+  SOURCES=($ROOT/packages/*/ui)
+elif [ -d "${ROOT}/packages/${PACKAGE}/ui" ]; then
+  SOURCES=($ROOT/packages/${PACKAGE}/ui)
+elif [ -d "${ROOT}/packages/megadoc-${PACKAGE}/ui" ]; then
+  SOURCES=($ROOT/packages/megadoc-$PACKAGE/ui)
+elif [ -d "${ROOT}/packages/megadoc-plugin-${PACKAGE}/ui" ]; then
+  SOURCES=($ROOT/packages/megadoc-plugin-$PACKAGE/ui)
 else
   echo "Invalid package '${PACKAGE}'."
   exit 1
 fi
 
-exec ./node_modules/.bin/eslint \
-  -c .eslintrc \
-  -c .eslintrc--ui \
+
+exec "${ROOT}/node_modules/.bin/eslint" \
+  -c "${ROOT}/.eslintrc" \
+  -c "${ROOT}/.eslintrc--ui" \
   "${SOURCES[@]}" $@

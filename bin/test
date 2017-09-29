@@ -12,15 +12,7 @@
 #   - COVERAGE: when set to "1", istanbul will run mocha to generate a coverage
 #     report under /coverage
 
-[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
-  echo "$0: Must be run from megadoc root.";
-  exit 1
-}
-
-source "./bin/_helpers.sh"
-
-nodejs_use_local_packages
-
+ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
 SOURCE_DIRS=""
 
 if [ -z $PACKAGE ]; then
@@ -32,12 +24,14 @@ if [ -z $PACKAGE ]; then
 fi
 
 if [ -z $PACKAGE ]; then
-  SOURCE_DIRS="packages/*/lib"
+  SOURCE_DIRS="${ROOT}/packages/*/lib"
 else
-  if [ -d "packages/${PACKAGE}" ]; then
-    SOURCE_DIRS="packages/${PACKAGE}/lib"
-  elif [ -d "packages/megadoc-plugin-${PACKAGE}" ]; then
-    SOURCE_DIRS="packages/megadoc-plugin-${PACKAGE}/lib"
+  if [ -d "${ROOT}/packages/${PACKAGE}/lib" ]; then
+    SOURCE_DIRS="${ROOT}/packages/${PACKAGE}/lib"
+  elif [ -d "${ROOT}/packages/megadoc-${PACKAGE}/lib" ]; then
+    SOURCE_DIRS="${ROOT}/packages/megadoc-${PACKAGE}/lib"
+  elif [ -d "${ROOT}/packages/megadoc-plugin-${PACKAGE}/lib" ]; then
+    SOURCE_DIRS="${ROOT}/packages/megadoc-plugin-${PACKAGE}/lib"
   else
     echo "Invalid package '${PACKAGE}'."
     exit 1
@@ -50,11 +44,17 @@ else
 fi
 
 if [ "${COVERAGE}" == "1" ]; then
-  ./node_modules/.bin/istanbul cover \
-    --preserve-comments \
-    --report lcov \
-    --report html \
-    ./node_modules/mocha/bin/_mocha -- --reporter dot $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
+  NODE_PATH="${ROOT}/packages:${NODE_PATH}" \
+    "${ROOT}/node_modules/.bin/istanbul" cover \
+      --preserve-comments \
+      --report lcov \
+      --report html \
+      "${ROOT}/node_modules/mocha/bin/_mocha" -- \
+        --reporter dot \
+        $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
 else
-  exec ./node_modules/.bin/mocha --reporter dot $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
+  NODE_PATH="${ROOT}/packages:${NODE_PATH}" \
+    exec "${ROOT}/node_modules/.bin/mocha" \
+      --reporter dot \
+      $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
 fi

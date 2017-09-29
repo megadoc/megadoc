@@ -30,6 +30,7 @@ exports.compile = function(scripts, outputFilePath, { optimize, verbose }, done)
   });
 
   if (optimize) {
+    console.log('Plugin "%s" bundle will be optimized.', id);
     webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
   }
 

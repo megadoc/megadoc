@@ -14,7 +14,17 @@ install:
   - ./bin/setup
 
 script:
-  - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/lerna-prepublish
+  - ./bin/scan-dependency-versions
+  - npm run lint
+  - ./node_modules/.bin/lerna exec
+      --concurrency 1
+      --stream
+      -- NODE_ENV=production
+         PACKAGE="${LERNA_PACKAGE_NAME}"
+         ../../bin/prepublish -S test -S lint
+  - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/test
+  # firefox / chrome aren't working on travis with this config anymore :shrug:
+  # - ./bin/test-ui
   - npm run doc
 
 after_success:

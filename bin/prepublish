@@ -17,25 +17,12 @@
 #
 #   - PACKAGE: the package, in case $1 is not passed
 
-[ -f "./package.json" ] && grep '"name": "megadoc"' ./package.json &> /dev/null || {
-  [ -f "../../package.json" ] && grep '"name": "megadoc"' ../../package.json &> /dev/null && {
-    # echo "$0: re-running from megadoc root"
-
-    cd ../../
-    exec ./bin/prepublish $@
-    exit $?
-  }
-
-  echo "$0: Must be run from megadoc root.";
-  exit 1
-}
+ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
 
 which jq &> /dev/null || {
   echo "$0: jq must be installed"
   exit 1
 }
-
-source "bin/_helpers.sh"
 
 if [[ -z $PACKAGE && -z $LERNA_PACKAGE_NAME && -z $npm_package_name ]]; then
   if [ $# -gt 0 ]; then
@@ -50,13 +37,13 @@ if [[ -z $PACKAGE && -z $LERNA_PACKAGE_NAME && -z $npm_package_name ]]; then
 fi
 
 PACKAGE_NAME="${PACKAGE:-${LERNA_PACKAGE_NAME:-$npm_package_name}}"
-PACKAGE_ROOT="packages/${PACKAGE_NAME}"
+PACKAGE_ROOT="${ROOT}/packages/${PACKAGE_NAME}"
 PROVIDED_UI_LIBRARIES="react"
 IGNORED=()
 
 if [ ! -d "${PACKAGE_ROOT}" ]; then
   PACKAGE_NAME="megadoc-plugin-${PACKAGE}"
-  PACKAGE_ROOT="packages/${PACKAGE_NAME}"
+  PACKAGE_ROOT="${ROOT}/packages/${PACKAGE_NAME}"
 
   if [ ! -d "${PACKAGE_ROOT}" ]; then
     echo "${PACKAGE_NAME} is not a valid megadoc plugin package."
@@ -67,7 +54,7 @@ fi
 function ensure_no_unlisted_dependencies {
   [ -f $PACKAGE_ROOT/package.json ] && {
     out=$(
-      ./node_modules/.bin/depcheck \
+      ${ROOT}/node_modules/.bin/depcheck \
         $PACKAGE_ROOT \
         --json \
         --ignore-dirs="tmp,test_helpers,lib--legacy,ui,doc"
@@ -89,22 +76,40 @@ function ensure_no_unlisted_dependencies {
   }
 }
 
+function run_task {
+  task=$@
+  echo -e "\n[$task] STARTING $(date)"
+
+  $task 2>&1 | while IFS="" read line; do echo -e "[$task] $line"; done
+
+  exit_status=${PIPESTATUS[0]}
+
+  if [[ $exit_status != 0 ]]; then
+    echo -e "[$task] \033[31mFAILED!\033[0m (exit code $exit_status)"
+    exit 1
+  else
+    echo -e "[$task] \033[32mOK\033[0m"
+  fi
+
+  echo -e "[$task] FINISHED $(date)\n"
+}
+
 function lint_sources {
-  ./bin/lint $PACKAGE_NAME
+  "${ROOT}/bin/lint" $PACKAGE_NAME
 }
 
 function lint_ui_sources {
-  ./bin/lint-ui $PACKAGE_NAME
+  "${ROOT}/bin/lint-ui" $PACKAGE_NAME
 }
 
 function run_tests {
-  ./bin/test $PACKAGE_NAME --reporter dot
+  "${ROOT}/bin/test" $PACKAGE_NAME --reporter dot
 }
 
 function build_assets {
   build_script=$(cat $PACKAGE_ROOT/package.json | jq -e -r '.scripts.build')
 
-  if [ $build_script == 'null' ]
+  if [ "${build_script}" == 'null' ]
   then
     if [ ! -f $PACKAGE_ROOT/ui/index.js ]; then
       echo "Package has no UI assets to compile - nothing to do!"
@@ -116,7 +121,7 @@ function build_assets {
       rm -r $PACKAGE_ROOT/dist
     fi
 
-    ./packages/megadoc-cli/bin/megadoc-build-html-plugin.js --optimize \
+    "${ROOT}/packages/megadoc-cli/bin/megadoc-build-html-plugin.js" --optimize \
       "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
       "${PACKAGE_ROOT}/ui/index.js"
   else
