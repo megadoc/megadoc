@@ -1,6 +1,6 @@
 {
   "name": "megadoc-preset-js",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "description": "Collection of megadoc plugins suitable for JavaScript projects.",
   "repository": {
     "type": "git",
@@ -10,10 +10,10 @@
   "author": "Ahmad Amireh",
   "license": "AGPL-3.0",
   "dependencies": {
-    "megadoc-cli": "^6.0.1",
-    "megadoc-compiler": "^6.0.1",
-    "megadoc-html-serializer": "^6.0.1",
-    "megadoc-plugin-js": "^6.0.1",
-    "megadoc-plugin-markdown": "^6.0.1"
+    "megadoc-cli": "^6.1.0",
+    "megadoc-compiler": "^6.1.0",
+    "megadoc-html-serializer": "^6.1.0",
+    "megadoc-plugin-js": "^6.1.0",
+    "megadoc-plugin-markdown": "^6.1.0"
   }
 }

@@ -1,9 +1,9 @@
 {
   "name": "megadoc-markdown-utils",
-  "version": "6.0.1",
+  "version": "6.1.0",
   "main": "lib/index.js",
   "devDependencies": {
-    "megadoc-test-utils": "^6.0.0"
+    "megadoc-test-utils": "^6.1.0"
   },
   "dependencies": {
     "htmlparser2": "3.9.2",
