@@ -9,10 +9,24 @@ const extractSummaryFromMarkdown = function(markdown) {
   })
 };
 
-exports.renderTree = function(state, tree, renderOperations) {
+exports.renderTree = function(state, tree, { decorators = [], linter, renderOperations }) {
+  const codeBlockRendererInjections = {
+    linkify: state.linkResolver.linkify.bind(state.linkResolver),
+    linter,
+  };
+
+  const codeBlockRenderers = R.reduce(function(acc, decorator) {
+    R.forEach(({ lang, renderFn }) => {
+      acc[lang] = R.partial(renderFn, [ codeBlockRendererInjections, decorator.options, ])
+    }, R.path([ 'serializerOptions', 'html', 'codeBlockRenderers' ], decorator.spec) || [])
+
+    return acc;
+  }, {}, decorators)
+
   const reducers = {
     CONVERT_MARKDOWN_TO_HTML: function(data, reduce) {
-      return reduce(state.markdownRenderer(data));
+      const text = reduce(data.text);
+      return reduce(state.markdownRenderer(Object.assign({}, data, { text, codeBlockRenderers })));
     },
 
     LINKIFY_STRING: function(data, reduce) {

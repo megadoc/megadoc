@@ -53,7 +53,10 @@ module.exports = function renderFn(context, renderer, node) {
   const doc = node.properties;
 
   return {
-    description: when(doc.description, x => markdown(linkify({ text: x, contextNode: node }))),
+    description: when(doc.description, x => markdown({
+      text: linkify({ text: x, contextNode: node }),
+      contextNode: node
+    })),
     mixinTargets: when(doc.mixinTargets, x => x.map(function(typeName) {
       return {
         name: typeName,
@@ -71,17 +74,23 @@ module.exports = function renderFn(context, renderer, node) {
       const nextAttributes = {};
 
       if (tag.typeInfo.description) {
-        nextTypeInfo.description = markdown(linkify({
-          text: tag.typeInfo.description,
-          contextNode: node,
-        }));
+        nextTypeInfo.description = markdown({
+          text: linkify({
+            text: tag.typeInfo.description,
+            contextNode: node,
+          }),
+          contextNode: node
+        });
       }
 
       if (TAGS_WITH_STRING.hasOwnProperty(tag.type)) {
-        nextAttributes.string = markdown(linkify({
-          text: tag.string,
+        nextAttributes.string = markdown({
+          text: linkify({
+            text: tag.string,
+            contextNode: node,
+          }),
           contextNode: node,
-        }));
+        });
       }
       else if (tag.type === 'see') {
         nextTypeInfo.name = renderTypeLink({

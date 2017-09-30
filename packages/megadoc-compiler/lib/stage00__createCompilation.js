@@ -1,14 +1,15 @@
 const invariant = require('invariant');
+const R = require('ramda');
 const crypto = require('crypto');
 const scanSources = require('./utils/scanSources');
-const ConfigUtils = require('megadoc-config-utils');
+const { getConfigurablePair } = require('megadoc-config-utils');
 const { pick } = require('ramda');
 const blankProcessor = require('./blankProcessor');
 
 // TODO: extract decorators
 module.exports = function createCompilation(optionWhitelist, state, source) {
   const { config, linter, runOptions } = state;
-  const processorEntry = ConfigUtils.getConfigurablePair(source.processor);
+  const processorEntry = getConfigurablePair(source.processor);
   const files = getSourceFiles({ assetRoot: config.assetRoot, runOptions, source })
   const spec = require(processorEntry.name);
   const paths = extractPaths(spec);
@@ -33,6 +34,7 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     linter,
     processor: paths,
     processorOptions: configure(processorEntry.options || {}),
+    decorators: (source.decorators || []).map(getConfigurablePair).map(createDecorator),
     rawDocuments: null,
     refinedDocuments: null,
     renderOperations: null,
@@ -46,6 +48,18 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     treeOperations: null,
   };
 };
+
+function createDecorator(decoratorEntry) {
+  const spec = require(decoratorEntry.name);
+  const userOptions = decoratorEntry.options;
+  const { configureFn = R.identity } = spec;
+
+  return {
+    name: spec.name,
+    spec,
+    options: configureFn(userOptions),
+  }
+}
 
 function calculateMD5Sum(string) {
   return crypto.createHash('md5').update(string).digest("hex");

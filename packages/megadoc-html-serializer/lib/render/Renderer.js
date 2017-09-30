@@ -1,16 +1,31 @@
 var marked = require('marked');
-var _ = require('lodash');
 var { trimHTML } = require('megadoc-markdown-utils');
 var renderHeading = require('./Renderer__renderHeading');
 var CodeRenderer = require('./Renderer__renderCode');
 var LinkRenderer = require('./Renderer__renderLink');
-var assign = _.assign;
 var NilOptions = ({});
 
 /**
  * Markdown to HTML renderer.
  *
  * @param {Object} config
+ *
+ * @typedef {Renderer~CodeBlockRenderer}
+ *
+ * Install a handler for a certain language code-block. The handler is
+ * expected to return **VALID, FULL HTML**.
+ *
+ * @param {String} language
+ *        The language the renderer is expecting to handle.
+ *
+ * @param {Function} handler
+ *        The rendering routine.
+ *
+ * @example Installing a handler for a custom "dot" language:
+ *
+ *     Renderer.addCodeBlockRenderer("dot", function(code) {
+ *       return '<pre>' + code + '</pre>';
+ *     });
  */
 function Renderer(config) {
   var renderer = new marked.Renderer();
@@ -25,22 +40,22 @@ function Renderer(config) {
   });
 
   var runState, runOptions;
-  var codeBlockRenderers = {};
   var renderCode = CodeRenderer(config.syntaxHighlighting);
   var renderLink = LinkRenderer(config);
 
   function createRunState(options) {
-    var baseURL = options.baseURL || '';
-
     return {
       toc: [],
-      baseURL: config.shortURLs ? null : baseURL,
+      baseURL: null,
       contextNode: options.contextNode
     };
   }
 
   function createRunOptions(options) {
-    return { anchorableHeadings: !options || options.anchorableHeadings !== false };
+    return {
+      anchorableHeadings: options.anchorableHeadings !== false,
+      codeBlockRenderers: options.codeBlockRenderers || NilOptions,
+    };
   }
 
   // this could be heavily optimized, but meh for now
@@ -51,8 +66,9 @@ function Renderer(config) {
   renderer.link = renderLink;
 
   renderer.code = function(code, language) {
-    if (codeBlockRenderers[language]) {
-      return codeBlockRenderers[language](code, {
+    if (runOptions.codeBlockRenderers[language]) {
+      return runOptions.codeBlockRenderers[language]({
+        text: code,
         contextNode: runState.contextNode
       });
     }
@@ -91,54 +107,44 @@ function Renderer(config) {
    * @return {String|Object}
    *         The HTML.
    */
-  var exports = function renderMarkdown(text, options) {
+  function renderMarkdown({
+    text,
+    trimHTML: shouldTrimHTML = false,
+    withTOC = false,
+    sanitize: shouldSanitize = true,
+    contextNode,
+    anchorableHeadings = true,
+    codeBlockRenderers
+  }) {
     var html, toc;
 
-    options = options || NilOptions;
-    runState = createRunState(options);
-    runOptions = createRunOptions(options);
+    runState = createRunState({ contextNode });
+    runOptions = createRunOptions({
+      anchorableHeadings,
+      codeBlockRenderers
+    });
 
-    html = marked(text, assign({}, markedOptions, {
-      sanitize: options.sanitize !== false
+    html = marked(text, Object.assign({}, markedOptions, {
+      sanitize: shouldSanitize !== false
     }));
 
     toc = runState.toc;
 
-    if (options && options.trimHTML) {
+    if (shouldTrimHTML) {
       html = trimHTML(html);
     }
 
     runState = createRunState(NilOptions);
     runOptions = createRunOptions(NilOptions);
 
-    return options.withTOC ? { html: html, toc: toc } : html;
+    return withTOC ? { html: html, toc: toc } : html;
   };
 
-  exports.withTOC = function(text, options) {
-    return exports(text, assign({ withTOC: true }, options));
+  renderMarkdown.withTOC = function(params) {
+    return renderMarkdown(Object.assign({}, params, { withTOC: true }));
   };
 
-  /**
-   * Install a handler for a certain language code-block. The handler is
-   * expected to return **VALID, FULL HTML**.
-   *
-   * @param {String} language
-   *        The language the renderer is expecting to handle.
-   *
-   * @param {Function} handler
-   *        The rendering routine.
-   *
-   * @example Installing a handler for a custom "dot" language:
-   *
-   *     Renderer.addCodeBlockRenderer("dot", function(code) {
-   *       return '<pre>' + code + '</pre>';
-   *     });
-   */
-  exports.addCodeBlockRenderer = function(language, handler) {
-    codeBlockRenderers[language] = handler;
-  };
-
-  return exports;
+  return renderMarkdown;
 }
 
 module.exports = Renderer;

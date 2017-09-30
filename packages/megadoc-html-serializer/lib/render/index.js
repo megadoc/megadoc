@@ -14,7 +14,6 @@ module.exports = function render({ serializer, compilations }, done) {
   });
 
   const linkResolver = new LinkResolver(corpus, {
-    relativeLinks: true,
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
     linter: Linter.for(serializer.compilerConfig),
@@ -44,12 +43,8 @@ module.exports = function render({ serializer, compilations }, done) {
   });
 };
 
-function renderTree(state, compilationWithNode) {
-  const node = compilationWithNode.node;
-  const compilation = compilationWithNode.compilation;
-  const renderOperations = compilation.renderOperations;
-
-  return TreeRenderer.renderTree(state, node, renderOperations);
+function renderTree(state, { node, compilation }) {
+  return TreeRenderer.renderTree(state, node, compilation);
 }
 
 function aggregateTreesIntoCorpus(serializer, compilations) {

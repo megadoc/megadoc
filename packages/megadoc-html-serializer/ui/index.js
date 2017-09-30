@@ -35,7 +35,6 @@ function createMegadoc(config, { plugins }) {
 
     pluginOutletOccupants.forEach(function(occupantSpec) {
       outlets.add(occupantSpec.name, {
-        key: occupantSpec.key || 'default',
         component: occupantSpec.component,
       })
     })

@@ -27,15 +27,19 @@ describe('TreeRenderer', function() {
         ]
       });
 
-      const treeOperations = {
+      const renderOperations = {
         [uidOf('moduleA', tree.documents)]: {
-          text: markdown(tree.documents[0].properties.text)
+          text: markdown({
+            text: tree.documents[0].properties.text,
+            contextNode: tree.documents[0]
+          })
         }
       };
 
       const renderedTree = Subject.renderTree({
-        markdownRenderer: new Renderer({})
-      }, tree, treeOperations);
+        markdownRenderer: new Renderer({}),
+        linkResolver: new LinkResolver(null, {}),
+      }, tree, { renderOperations });
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });
@@ -56,13 +60,79 @@ describe('TreeRenderer', function() {
         ]
       });
 
-      const treeOperations = {};
+      const renderOperations = {};
 
       const renderedTree = Subject.renderTree({
-        markdownRenderer: new Renderer({})
-      }, tree, treeOperations);
+        markdownRenderer: new Renderer({}),
+        linkResolver: new LinkResolver(null, {}),
+      }, tree, { renderOperations });
 
       assert.equal(renderedTree.documents[0].summary, 'lol!')
+    })
+
+    it('uses custom block renderers from decorators', function() {
+      const tree = b.namespace({
+        id: 'test',
+        name: 'Test',
+        documents: [
+          b.document({
+            id: 'moduleA',
+            properties: {
+              text: "```js\nvar x;\n```",
+            }
+          }),
+
+          b.document({
+            id: 'moduleB',
+          })
+        ]
+      });
+
+      const renderOperations = {
+        [uidOf('moduleA', tree.documents)]: {
+          text: markdown({
+            text: tree.documents[0].properties.text,
+            contextNode: tree.documents[0]
+          })
+        }
+      };
+
+      const decorators = [{
+        name: 'test-decorator',
+        spec: {
+          serializerOptions: {
+            html: {
+              codeBlockRenderers: [
+                {
+                  lang: 'js',
+                  renderFn: function({ linkify: linkifyThis }, config, { text, contextNode }) {
+                    return linkifyThis({ text: `${text} + 1`, contextNode: contextNode });
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }]
+
+      const corpus = Corpus({
+        debug: false,
+      }, { linter: NullLinter });
+
+      corpus.add(tree);
+
+      const linkResolver = new LinkResolver(corpus, {
+        ignore: [],
+        injectors: null,
+        linter: NullLinter,
+      });
+
+      const renderedTree = Subject.renderTree({
+        markdownRenderer: new Renderer({}),
+        linkResolver,
+      }, tree, { decorators, renderOperations });
+
+      assert.include(renderedTree.documents[0].properties.text, "var x; + 1")
     })
   });
 
@@ -76,7 +146,7 @@ describe('TreeRenderer', function() {
             id: 'moduleA',
             title: 'Module A',
             meta: {
-              href: 'moduleA.html',
+              href: '/moduleA.html',
             },
             properties: {
               text: 'Hello *World*!',
@@ -85,6 +155,9 @@ describe('TreeRenderer', function() {
 
           b.document({
             id: 'moduleB',
+            meta: {
+              href: '/moduleB.html',
+            },
             properties: {
               text: 'See [[moduleA]]'
             }
@@ -98,17 +171,25 @@ describe('TreeRenderer', function() {
 
       corpus.add(tree);
 
-      const treeOperations = {
+      const renderOperations = {
         [uidOf('moduleA', tree.documents)]: {
-          text: markdown(tree.documents[0].properties.text)
+          text: markdown({
+            text: tree.documents[0].properties.text,
+            contextNode: tree.documents[0],
+          })
         },
         [uidOf('moduleB', tree.documents)]: {
-          text: markdown(linkify(tree.documents[1].properties.text)),
+          text: markdown({
+            text: linkify({
+              text: tree.documents[1].properties.text,
+              contextNode: tree.documents[1],
+            }),
+            contextNode: tree.documents[1],
+          }),
         },
       };
 
       const linkResolver = new LinkResolver(corpus, {
-        relativeLinks: false,
         ignore: [],
         injectors: null,
         linter: NullLinter,
@@ -117,7 +198,7 @@ describe('TreeRenderer', function() {
       const renderedTree = Subject.renderTree({
         markdownRenderer: new Renderer({}),
         linkResolver: linkResolver,
-      }, tree, treeOperations);
+      }, tree, { renderOperations });
 
       assert.include(renderedTree.documents[1].properties.text,
         'See <a href="moduleA.html" class="mega-link--internal">Module A</a>'

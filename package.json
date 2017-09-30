@@ -11,7 +11,7 @@
     "lint": "./bin/lint && ./bin/lint-ui",
     "publish": "lerna publish",
     "prepublish": "./bin/lerna-prepublish",
-    "start": "NODE_PATH=packages ./packages/megadoc-cli/lib/megadoc-edit.js",
+    "start": "NODE_PATH=packages ./packages/megadoc-cli/bin/megadoc-server.js --dev",
     "test": "./bin/test && ./bin/test-ui --single-run"
   },
   "repository": {

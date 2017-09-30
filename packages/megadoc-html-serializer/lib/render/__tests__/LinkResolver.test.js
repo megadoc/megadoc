@@ -66,37 +66,50 @@ describe('LinkResolver', function() {
 
   it('should not blow up with a docstring containing no links', function() {
     assert.doesNotThrow(function() {
-      resolver.linkify({ text: '' });
-      resolver.linkify({ text: null });
+      resolver.linkify({ text: '', contextNode: corpus.at('MD') });
+      resolver.linkify({ text: null, contextNode: corpus.at('MD') });
     });
   });
 
   describe('resolving', function() {
     it('uses an inferred title', function() {
-      assert.equal(
-        resolver.linkify({ text: 'Look! [Zoo]().' }),
-        'Look! [The Zoo](mega:///the-zoo).'
+      assert.include(
+        resolver.linkify({
+          text: 'Look! [Zoo]().',
+          contextNode: corpus.at('MD')
+        }),
+        'Look! [The Zoo]'
       );
     });
 
     it('uses a custom title', function() {
-      assert.equal(
-        resolver.linkify({ text: 'Go [Zoo here]() for candy.' }),
-        'Go [here](mega:///the-zoo) for candy.'
+      assert.include(
+        resolver.linkify({
+          text: 'Go [Zoo here]() for candy.',
+          contextNode: corpus.at('MD')
+        }),
+        'Go [here]'
       );
     });
   });
 
   context('given an escaped link "\\[something]()"', function() {
     it('should leave it alone', function() {
-      assert.equal(resolver.linkify({ text: '\\[something]()' }), '[something]()');
+      assert.equal(resolver.linkify({
+        text: '\\[something]()',
+        contextNode: corpus.at('MD')
+      }), '[something]()');
     });
   });
 
   context('given a link string that contains []', function() {
     it('still considers it a link', function() {
       stubConsoleWarn(/Unable to resolve link to "String\[\]"/);
-      assert.equal(resolver.linkify({ text: '[String[]]()' }), '[String[]](mega://)');
+
+      assert.equal(resolver.linkify({
+        text: '[String[]]()',
+        contextNode: corpus.at('MD')
+      }), '[String[]](mega://)');
     });
   });
 
@@ -106,10 +119,12 @@ describe('LinkResolver', function() {
 
       assert.equal(resolver.linkify({
         text: '[Foo]()',
+        contextNode: corpus.at('MD'),
       }), '[Foo](mega://)')
 
       assert.equal(resolver.linkify({
         text: '[Foo]()',
+        contextNode: corpus.at('MD'),
         format: 'html'
       }), '<a class="mega-link--internal mega-link--broken">Foo</a>')
     });
@@ -143,9 +158,10 @@ describe('LinkResolver', function() {
       assert.equal(
         resolver.linkify({
           text: 'Is it tee time?',
+          contextNode: corpus.at('MD'),
           injectors: [ MonkeyInjector ]
         }),
-        'Is it [tee hee!](mega:///the-zoo) time?'
+        'Is it [tee hee!](mega://the-zoo) time?'
       );
     });
   });

@@ -53,7 +53,10 @@
             thing &&
             typeof thing === 'object' &&
             typeof thing.name === 'string' &&
-            /megadoc-(theme|plugin)-/.test(thing.name)
+            (
+              thing.plugin === true ||
+              /megadoc-(theme|plugin)-/.test(thing.name)
+            )
           );
         })
         .map(function(key) {

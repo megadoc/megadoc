@@ -13,6 +13,7 @@
 
 /node_modules
 /packages/*/node_modules
+/packages--legacy/*/node_modules
 
 /tmp
 !/tmp/.keep

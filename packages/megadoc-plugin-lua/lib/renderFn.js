@@ -4,10 +4,16 @@ module.exports = function renderFn(options, operations, documentNode) {
   const doc = documentNode.properties;
 
   return {
-    description: markdown(linkify({ text: doc.description, contextNode: documentNode })),
+    description: markdown({
+      text: linkify({ text: doc.description, contextNode: documentNode }),
+      contextNode: documentNode
+    }),
     tags: doc.tags.map(tag => {
       return {
-        description: markdown(linkify({ text: tag.description, contextNode: documentNode }))
+        description: markdown({
+          text: linkify({ text: tag.description, contextNode: documentNode }),
+          contextNode: documentNode
+        })
       }
     })
   };

@@ -26,14 +26,16 @@ fi
 if [ -z $PACKAGE ]; then
   SOURCE_DIRS="${ROOT}/packages/*/lib"
 else
-  test_script=$(cat ${ROOT}/packages/${PACKAGE}/package.json | jq -e -r '.scripts.test')
+  [ -f "${ROOT}/packages/${PACKAGE}/package.json" ] && {
+    test_script=$(cat ${ROOT}/packages/${PACKAGE}/package.json | jq -e -r '.scripts.test')
 
-  if [ "${test_script}" != 'null' ]; then
-    {
-      cd ${ROOT}/packages/${PACKAGE}
-      NODE_PATH="${ROOT}/packages/" exec npm test
-    }
-  fi
+    if [ "${test_script}" != 'null' ]; then
+      {
+        cd ${ROOT}/packages/${PACKAGE}
+        NODE_PATH="${ROOT}/packages/" exec npm test
+      }
+    fi
+  }
 
   if [ -d "${ROOT}/packages/${PACKAGE}/lib" ]; then
     SOURCE_DIRS="${ROOT}/packages/${PACKAGE}/lib"

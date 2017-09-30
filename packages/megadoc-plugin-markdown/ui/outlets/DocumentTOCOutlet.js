@@ -15,6 +15,10 @@ module.exports = React.createClass({
   },
 
   render() {
+    if (!this.props.documentNode) {
+      return null;
+    }
+
     return (
       <ArticleTOC flat grouped={this.props.$outletOptions.grouped} {...this.props} />
     );

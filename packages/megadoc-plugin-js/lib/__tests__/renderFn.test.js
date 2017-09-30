@@ -24,12 +24,13 @@ describe('megadoc-plugin-js::renderFn', function() {
 
     HTMLRenderingSuite.assertDidRender(descriptor, {
       location: 'description',
-      using: renderer.markdown(
-        renderer.linkify({
+      using: renderer.markdown({
+        text: renderer.linkify({
           text: document.properties.description,
           contextNode: document,
-        })
-      )
+        }),
+        contextNode: document,
+      })
     });
   });
 
@@ -55,12 +56,13 @@ describe('megadoc-plugin-js::renderFn', function() {
 
       HTMLRenderingSuite.assertDidRender(descriptor, {
         location: 'tags[0].typeInfo.description',
-        using: renderer.markdown(
-          renderer.linkify({
+        using: renderer.markdown({
+          text: renderer.linkify({
             text: document.properties.tags[0].typeInfo.description,
             contextNode: document,
-          })
-        )
+          }),
+          contextNode: document,
+        })
       });
     });
 
@@ -84,12 +86,13 @@ describe('megadoc-plugin-js::renderFn', function() {
 
       HTMLRenderingSuite.assertDidRender(descriptor, {
         location: 'tags[0].string',
-        using: renderer.markdown(
-          renderer.linkify({
+        using: renderer.markdown({
+          text: renderer.linkify({
             text: document.properties.tags[0].string,
             contextNode: document,
-          })
-        )
+          }),
+          contextNode: document,
+        })
       });
     });
   });

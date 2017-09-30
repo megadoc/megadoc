@@ -1,0 +1,34 @@
+@import (reference) "~helpers";
+@import (reference) "~variables";
+
+.plugin-dot {
+  &__container {
+    margin: 2em 0;
+    height: auto;
+    text-align: center;
+
+    svg:not(:root) {
+      max-height: 100%;
+    }
+
+    text {
+      font-weight: normal;
+    }
+  }
+}
+
+.schemable({
+  .plugin-dot__container {
+    text .mega-link--internal {
+      fill: @link;
+    }
+
+    text .mega-link--internal.mega-link--active {
+      fill: @accent;
+    }
+
+    text .mega-link--internal.mega-link--broken {
+      fill: @solarized-red;
+    }
+  }
+});

@@ -1,0 +1,33 @@
+{
+  "name": "megadoc-html-dot",
+  "version": "6.1.0",
+  "description": "Render Graphviz/dot graphs right from Markdown documents.",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/megadoc/megadoc.git"
+  },
+  "keywords": [
+    "megadoc",
+    "plugin",
+    "dot",
+    "graphviz",
+    "nomnoml",
+    "visualization"
+  ],
+  "author": "Ahmad Amireh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/megadoc/megadoc/issues"
+  },
+  "homepage": "https://github.com/megadoc/megadoc#readme",
+  "peerDependencies": {
+    "megadoc-html-serializer": "^6.1.0"
+  },
+  "dependencies": {
+    "nomnoml": "skanaar/nomnoml#726b1b277f8208a9f6f4d37b6c63d6cfac73aee5"
+  },
+  "devDependencies": {
+    "megadoc-test-utils": "^6.1.0"
+  }
+}

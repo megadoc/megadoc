@@ -54,6 +54,12 @@ compileAndWatch(config, {
 
   fd.on('message', function(message) {
     if (message.name === 'ALIVE') {
+      process.on('exit', function() {
+        console.log('Shutting down the server');
+        fd.kill();
+        fd.disconnect();
+      });
+
       fd.send({
         configFilePath,
         host,
@@ -63,6 +69,7 @@ compileAndWatch(config, {
       })
     }
     else if (message.name === 'READY') {
+
       const elapsed = (new Date() - startedAt) / 1000;
       console.log(`[I] Oomph, all set! Took about ${elapsed} seconds.`)
       console.log(`[I] Open "${chalk.bold(`http://${host}:${port}"`)} with a browser to continue.`);

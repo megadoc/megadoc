@@ -1,9 +1,11 @@
 const assert = require('assert');
+const invariant = require('invariant');
 const EventEmitter = require('events').EventEmitter;
 const URI = require('urijs');
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
 const { escape: escapeHTML } = require('lodash');
 const { NoBrokenLinks } = require('../lintingRules')
+const LinkToSelf = {};
 
 /**
  * @param {Corpus} corpus
@@ -17,7 +19,6 @@ function LinkResolver(corpus, options) {
   this.on = this.emitter.on.bind(this.emitter);
   this.off = this.emitter.removeListener.bind(this.emitter);
   this.options = options || {};
-  this.options.relativeLinks = this.options.relativeLinks !== false;
   this.options.ignore = this.options.ignore || {};
   this.defaultInjectors = this.options.injectors || [
     LinkResolver.MegadocLinkInjector,
@@ -46,6 +47,8 @@ LinkResolver.MediaWikiLinkInjector = require('./LinkResolver__MediaWikiLinkStrat
  * @return {String} link.title
  */
 LinkResolver.prototype.lookup = function(params) {
+  const { linter } = this;
+
   assert(typeof params.path === 'string',
     "A lookup requires at least a @path to be specified.");
 
@@ -70,44 +73,55 @@ LinkResolver.prototype.lookup = function(params) {
     return null;
   }
 
+  if (index && !index.node && index.type === 'Namespace') {
+    index = {
+      node: index
+    };
+  }
+
+  if (!index.node) {
+    console.warn(`Index resolved but has no node? ${JSON.stringify(index, null, 4)}`)
+    return null;
+  }
+
   var document = index.node;
   var text = document.title || index.text;
 
   if (!document.meta.href) {
-    // TODO: linter
-    console.warn("Document '%s' can not be linked to as it has no @href.", document.uid);
+    linter.logError({
+      message: "Document can not be linked to as it has no @href.",
+      loc: linter.locationForNode(document)
+    });
+
     return null;
   }
   else if (!text) {
-    // TODO: linter
-    console.warn("Document '%s' can not be linked to as it has no @title.", document.uid);
+    linter.logError({
+      message: "Document can not be linked to as it has no @title.",
+      loc: linter.locationForNode(document)
+    })
+
     return null;
   }
   else {
     return {
       text: text,
       title: document.summary,
-      href: Href(document, this.options)
+      href: Href(document)
     };
   }
 
-  function Href(node, options) {
-    if (params.contextNode && params.contextNode.meta.href && options.relativeLinks) {
-      const relativeHref = URI(node.meta.href).relativeTo(params.contextNode.meta.href).toString();
+  function Href(node) {
+    const relativeHref = URI(node.meta.href).relativeTo(params.contextNode.meta.href).toString();
 
-      // handle links to self or links from an entity to parent since the relative
-      // href will be empty and will be marked as a broken link when in fact it
-      // isn't, so we just use the absolute href:
-      if (relativeHref.length === 0) {
-        return node.meta.href;
-      }
-      else {
-        return relativeHref;
-      }
+    // handle links to self or links from an entity to parent since the relative
+    // href will be empty and will be marked as a broken link when in fact it
+    // isn't, so we just use the absolute href:
+    if (relativeHref.length === 0) {
+      return LinkToSelf;
     }
-    else {
-      return node.meta.href;
-    }
+
+    return relativeHref;
   }
 };
 
@@ -128,6 +142,10 @@ LinkResolver.prototype.lookup = function(params) {
  *
  */
 LinkResolver.prototype.linkify = function(params) {
+  invariant(params.contextNode,
+    `linkify requires a contextNode to be set!`
+  );
+
   var renderLink = this.renderLink.bind(this, params);
   var injectors = params.injectors || this.defaultInjectors;
 
@@ -218,7 +236,17 @@ function generateMarkup(params) {
 }
 
 function generateMarkdownLink(href, text, title) {
-  var buffer = '[' + text + '](mega://' + encodeURI(href);
+  var buffer = '[' + text + ']';
+
+  if (href === LinkToSelf) {
+    buffer += '(mega://link-to-self';
+  }
+  else if (href) {
+    buffer += '(mega://' + encodeURI(href);
+  }
+  else {
+    buffer += '(mega://';
+  }
 
   if (title) {
     buffer += ' "' + normalizeTitle(title) + '"';
@@ -231,14 +259,21 @@ function generateMarkdownLink(href, text, title) {
 
 // TODO: DRY alert, see ./Renderer__renderLink.js
 function generateHTMLLink(href, text, title) {
-  var className = href && href.length ?
-    "mega-link--internal" :
-    "mega-link--internal mega-link--broken"
-  ;
+  var className;
+
+  if (href === LinkToSelf) {
+    className = "mega-link--internal mega-link--active";
+  }
+  else if (href) {
+    className = "mega-link--internal";
+  }
+  else {
+    className = "mega-link--internal mega-link--broken";
+  }
 
   var buffer = '<a class="' + escapeHTML(className) + '"';
 
-  if (href && href.length) {
+  if (href && href !== LinkToSelf) {
     buffer += ' href="' + encodeURI(href) + '"';
   }
 
@@ -248,7 +283,7 @@ function generateHTMLLink(href, text, title) {
 
   buffer += '>' + escapeHTML(text) + '</a>';
 
-  return buffer; // TODO: shouldn't we escape this?
+  return buffer;
 }
 
 function normalizeTitle(title) {

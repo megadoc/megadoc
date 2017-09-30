@@ -2,68 +2,41 @@ var Renderer = require('../Renderer');
 var { assert, multiline } = require('megadoc-test-utils');
 
 describe('Renderer', function() {
-  var subject, spmSubject;
+  var subject;
 
   beforeEach(function() {
     subject = Renderer({
-      shortURLs: true,
-    });
-
-    spmSubject = Renderer({
-      shortURLs: false,
     });
   });
 
   it('renders text into markdown', function() {
-    assert.deepEqual(subject('Look at me!').trim(), '<p>Look at me!</p>');
+    assert.deepEqual(subject({ text: 'Look at me!' }).trim(), '<p>Look at me!</p>');
   });
 
   describe('rendering headings', function() {
     it('generates an anchor that quick-jumps to the primary heading', function() {
-      assert.include(subject('# Hello', { baseURL: '/' }), 'href="#hello"');
-      assert.include(spmSubject('# Hello', { baseURL: '/' }), 'href="#/hello"');
-
-      assert.include(subject('# Hello', { baseURL: '/foo' }), 'href="#hello"');
-      assert.include(spmSubject('# Hello', { baseURL: '/foo' }), 'href="#/foo/hello"');
+      assert.include(subject({ text: '# Hello' }), 'href="#hello"');
+      assert.include(subject({ text: '# Hello' }), 'href="#hello"');
     });
 
     it('generates an anchor that quick-jumps to the heading', function() {
-      assert.include(subject('## Hello'), 'href="#hello"');
-    });
-
-    describe('@options.baseURL', function() {
-      it('accepts a baseURL to scope the heading anchors in', function() {
-        assert.include(subject('## Hello', { baseURL: '/foobar' }),
-          'href="#hello"',
-          'it is ignored in non-single page mode'
-        );
-
-        assert.include(spmSubject('## Hello', { baseURL: '/foobar' }),
-          'href="#/foobar/hello"',
-          'it is respected in single page mode'
-        );
-      });
-
-      it('does not cause side-effects', function() {
-        assert.include(spmSubject('## Hello', { baseURL: '/foobar' }), 'href="#/foobar/hello"');
-        assert.include(spmSubject('## Hello'), 'href="#hello"');
-      });
+      assert.include(subject({ text: '## Hello' }), 'href="#hello"');
     });
   });
 
   describe('@options.trimHTML', function() {
     it('removes the surrounding <p></p>', function() {
-      assert.deepEqual(subject('hello', { trimHTML: true }), 'hello');
+      assert.deepEqual(subject({ text: 'hello', trimHTML: true }), 'hello');
     });
 
     it('leaves other markup intact', function() {
-      assert.deepEqual(subject('_hello_', { trimHTML: true }), '<em>hello</em>')
+      assert.deepEqual(subject({ text: '_hello_', trimHTML: true }), '<em>hello</em>')
     });
   });
 
   describe('rendering links', function() {
     it('does not cause double-escaping of text', function() {
-      var text = subject('hello [<world />](http://foobar)');
+      var text = subject({ text: 'hello [<world />](http://foobar)' });
 
       assert.deepEqual(text.trim(),
         '<p>hello <a href="http://foobar">&lt;world /&gt;</a></p>'
@@ -72,15 +45,15 @@ describe('Renderer', function() {
 
     context('when a link points to a megadoc internal entity', function() {
       it('removes the mega:// prefix from @href', function() {
-        assert.include(subject('hello [world](mega://world)'), 'href="world"');
+        assert.include(subject({ text: 'hello [world](mega://world)' }), 'href="world"');
       });
 
       it('marks it as an internal link', function() {
-        assert.include(subject('hello [world](mega://world)'), 'class="mega-link--internal"');
+        assert.include(subject({ text: 'hello [world](mega://world)' }), 'class="mega-link--internal"');
       });
 
       it('marks it as a broken internal link if it has no href', function() {
-        assert.include(subject('hello [world](mega://)'), 'class="mega-link--internal mega-link--broken"');
+        assert.include(subject({ text: 'hello [world](mega://)' }), 'class="mega-link--internal mega-link--broken"');
       });
     });
 
@@ -93,24 +66,26 @@ describe('Renderer', function() {
       });
 
       it('marks external links with [target="_blank"]', function() {
-        assert.include(subject('hello [world](http://world)'), 'target="_blank"');
+        assert.include(subject({ text: 'hello [world](http://world)' }), 'target="_blank"');
       });
 
       it('does not mark internal links with [target="_blank"]', function() {
-        assert.notInclude(subject('hello [world](mega://world)'), 'target="_blank"');
+        assert.notInclude(subject({ text: 'hello [world](mega://world)' }), 'target="_blank"');
       });
     })
   });
 
   describe('rendering code blocks', function() {
     it('performs syntax highlighting', function() {
-      var text = subject(multiline(function() {;
-        // # Hello
-        //
-        // ```javascript
-        // var foo = 'bar';
-        // ```
-      }, true));
+      var text = subject({
+        text: multiline(function() {;
+          // # Hello
+          //
+          // ```javascript
+          // var foo = 'bar';
+          // ```
+        }, true)
+      });
 
       assert.include(text.trim(),
         'token keyword'
@@ -122,24 +97,24 @@ describe('Renderer', function() {
     var compiled;
 
     beforeEach(function() {
-      subject = spmSubject;
-
-      compiled = subject.withTOC([
-        '# Hello [foo](http://foo.com)',
-        '',
-        '## World!'
-      ].join('\n'), { baseURL: '/foo' });
+      compiled = subject.withTOC({
+        text: [
+          '# Hello [foo](http://foo.com)',
+          '',
+          '## World!'
+        ].join('\n')
+      });
 
       assert.equal(compiled.toc.length, 2);
     });
 
     it('works with a primary heading', function() {
-      assert.equal(compiled.toc[0].id, '/foo/hello-foo');
+      assert.equal(compiled.toc[0].id, 'hello-foo');
       assert.equal(compiled.toc[0].level, 1);
     });
 
     it('works with a secondary heading', function() {
-      assert.equal(compiled.toc[1].id, '/foo/world');
+      assert.equal(compiled.toc[1].id, 'world');
       assert.equal(compiled.toc[1].level, 2);
       assert.equal(compiled.toc[1].text, 'World!');
     });
@@ -164,7 +139,7 @@ describe('Renderer', function() {
         // #### Fourth-level header
       }, true);
 
-      var sections = subject.withTOC(fixture).toc;
+      var sections = subject.withTOC({ text: fixture }).toc;
 
       assert.equal(sections.length, 4);
       assert.deepEqual(sections[1], {
@@ -206,7 +181,7 @@ describe('Renderer', function() {
         // #### Fourth-level header
       }, true);
 
-      var sections = subject.withTOC(fixture).toc;
+      var sections = subject.withTOC({ text: fixture }).toc;
 
       assert.equal(sections.length, 4);
 

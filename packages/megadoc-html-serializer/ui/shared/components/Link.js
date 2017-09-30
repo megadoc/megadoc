@@ -64,7 +64,18 @@ const Link = React.createClass({
   },
 
   isActive(href) {
+    const { to } = this.props;
     const { location } = this.context;
+
+    // because as of 6.1.1 we started linking to Document and Namespace nodes
+    // using both pathname and anchors, so we need to match either when testing
+    // whether the node is active
+    if (to && typeof to === 'object' && to.type !== 'DocumentEntity') {
+      return (
+        href === location.pathname + location.hash ||
+        to.meta.href === location.pathname
+      );
+    }
 
     return (
       href === location.pathname ||

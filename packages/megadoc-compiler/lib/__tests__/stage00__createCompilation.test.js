@@ -5,7 +5,7 @@ const subject = require('../stage00__createCompilation');
 describe('stage00__createCompilation', function() {
   const fileSuite = createFileSuite(this);
 
-  let processorSpec, output;
+  let processorSpec, decoratorSpec, output;
 
   beforeEach(function() {
     fileSuite.createFile('sources/a.js');
@@ -17,6 +17,13 @@ describe('stage00__createCompilation', function() {
       module.exports = {
         parseFnPath: path.resolve(__dirname, './parseFn.js'),
         reduceFnPath: path.resolve(__dirname, './reduceFn.js'),
+      };
+    `);
+
+    decoratorSpec = fileSuite.createFile('decorator.js', `
+      module.exports = {
+        name: 'megadoc-test-decorator',
+        configureFn: options => Object.assign({ defaultOption: true }, options)
       };
     `);
 
@@ -36,7 +43,15 @@ describe('stage00__createCompilation', function() {
         options: {
           foo: 'bar'
         }
-      }
+      },
+      decorators: [
+        {
+          name: decoratorSpec.path,
+          options: {
+            bar: 'baz'
+          }
+        }
+      ]
     });
   });
 
@@ -83,5 +98,17 @@ describe('stage00__createCompilation', function() {
     it('should store the processor options', function() {
       assert.deepEqual(output.processorOptions, { foo: 'bar' });
     });
+  })
+
+  it('should create decorators', function() {
+    assert.deepEqual(output.decorators.length, 1)
+    assert.deepEqual(output.decorators[0].name, 'megadoc-test-decorator')
+    assert.include(output.decorators[0].options, {
+      defaultOption: true
+    }, 'it invokes the decorator configureFn')
+
+    assert.include(output.decorators[0].options, {
+      bar: 'baz'
+    }, 'it passes the user options')
   })
 });

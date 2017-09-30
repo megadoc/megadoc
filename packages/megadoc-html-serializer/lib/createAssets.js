@@ -1,4 +1,5 @@
 const Assets = require('./Assets');
+const R = require('ramda');
 const K = require('./constants');
 const ConfigUtils = require('megadoc-config-utils');
 
@@ -16,7 +17,11 @@ module.exports =  function createAssets(config, compilations) {
     staticAssets: pluginStaticAssets,
     styleSheets: pluginStyleSheets,
     scripts: pluginScripts,
-  } = compilations.map(x => x.serializerOptions.html || {}).reduce(function(map, options) {
+  } = R.flatten([
+    compilations.map(x => x.serializerOptions.html),
+    R.flatten(compilations.map(R.prop('decorators')))
+     .map(R.path([ 'spec', 'serializerOptions', 'html' ]))
+  ]).filter(x => !!x).reduce(function(map, options) {
     if (options.pluginScripts) {
       options.pluginScripts.forEach(x => map.scripts.push(x));
     }

@@ -4,8 +4,10 @@ module.exports = function renderFn(context, operations, documentNode) {
   const doc = documentNode.properties;
 
   return {
-    source: markdown(linkify({ text: doc.source, contextNode: documentNode }), {
-      sanitize: context.options.sanitize !== false
+    source: markdown({
+      text: linkify({ text: doc.source, contextNode: documentNode }),
+      sanitize: context.options.sanitize !== false,
+      contextNode: documentNode
     }),
   };
 };

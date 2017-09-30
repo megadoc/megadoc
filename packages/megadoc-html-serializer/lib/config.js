@@ -276,4 +276,6 @@ module.exports = {
   title: "megadoc",
 
   theme: null,
+
+  plugins: [],
 };
