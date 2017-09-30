@@ -18,5 +18,5 @@ ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
     --concurrency 1 \
     -- NODE_ENV=production \
        PACKAGE="${LERNA_PACKAGE_NAME}" \
-       ../../bin/prepublish -S test -S lint
+       ../../bin/prepublish -O build
 )

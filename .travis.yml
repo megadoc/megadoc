@@ -15,7 +15,8 @@ install:
 
 script:
   - ./bin/scan-dependency-versions
-  - npm run lint
+  - ./bin/lint
+  - ./bin/lint-ui
   - ./node_modules/.bin/lerna exec
       --concurrency 1
       --stream
