@@ -9,11 +9,11 @@ const debugLog = function() {
 module.exports = function reduceFn(options, rawDocument, done) {
   debugLog('Reducing "%s"', rawDocument.id)
 
-  if (rawDocument.isModule) {
-    done(null, reduceModuleDocument(rawDocument));
-  }
-  else if (rawDocument.isNamespace) {
+  if (rawDocument.isNamespace) {
     done(null, reduceNamespaceDocument(rawDocument));
+  }
+  else if (rawDocument.isModule) {
+    done(null, reduceModuleDocument(rawDocument));
   }
   else {
     done(null, reduceEntityDocument(rawDocument));
@@ -23,15 +23,12 @@ module.exports = function reduceFn(options, rawDocument, done) {
 function reduceNamespaceDocument(doc) {
   return b.document({
     id: doc.id,
-    title: doc.title,
+    title: doc.id,
     symbol: '.',
     indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
     filePath: doc.filePath,
     loc: doc.loc,
-    properties: {
-      isNamespace: true,
-      tags: [],
-    },
+    properties: omit(doc, [ 'filePath' ]),
   });
 }
 

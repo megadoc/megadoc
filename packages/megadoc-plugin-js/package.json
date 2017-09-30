@@ -29,6 +29,7 @@
     "lodash": "3.10.1",
     "megadoc-corpus": "^6.1.0",
     "megadoc-linter": "^6.1.0",
+    "ramda": "0.24.1",
     "weakmap": "0.0.6"
   },
   "devDependencies": {

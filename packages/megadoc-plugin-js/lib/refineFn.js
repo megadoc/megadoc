@@ -1,5 +1,6 @@
 const K = require('jsdoc-parser-extended').Constants;
 const Linter = require('megadoc-linter');
+const R = require('ramda');
 const { NoOrphans, NoUnknownTags, NoUnknownNodes, } = require('./lintingRules');
 
 const debugLog = function() {
@@ -13,10 +14,16 @@ module.exports = function refineFn(context, documents, done) {
 
   const config = context.options;
   const linter = Linter.for(context.compilerOptions)
+  const documentIdMap = R.indexBy(R.prop('id'), documents);
+  const namespaceIdMap = {};
 
   const namespaceIds =  documents.reduce(function(map, node) {
-    if (node.namespace && !documents.some(x => x.id === node.namespace)) {
-      map[node.namespace] = node;
+    if (node.namespace) {
+      namespaceIdMap[node.namespace] = true;
+
+      if (!documentIdMap[node.namespace]) {
+        map[node.namespace] = node;
+      }
     }
 
     return map;
@@ -28,14 +35,24 @@ module.exports = function refineFn(context, documents, done) {
     return {
       isNamespace: true,
       id: namespaceId,
-      title: namespaceId,
       filePath: referencingDocument.filePath, // useful for error reporting when there's a UID clash
       loc: referencingDocument.loc,
       tags: [],
     };
   })
 
-  const withNamespaces = documents.concat(namespaceDocuments);
+  const withNamespaceMarkers = documents.map(doc => {
+    if (namespaceIdMap[doc.id] && !doc.isNamespace) {
+      return Object.assign({}, doc, {
+        isNamespace: true
+      });
+    }
+    else {
+      return doc;
+    }
+  })
+
+  const withNamespaces = withNamespaceMarkers.concat(namespaceDocuments);
   const withoutOrphans = discardOrphans(linter, withNamespaces);
 
   if (config.verbose) {

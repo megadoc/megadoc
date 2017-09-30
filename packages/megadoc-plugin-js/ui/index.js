@@ -4,8 +4,8 @@ const ModuleEntitiesOutlet = require('./outlets/ModuleEntitiesOutlet');
 const ModuleHeaderOutlet = require('./outlets/ModuleHeaderOutlet');
 const ModuleIndexOutlet = require('./outlets/ModuleIndexOutlet');
 const ModuleBodyOutlet = require('./outlets/ModuleBodyOutlet');
-const ClassBrowserOutlet = require('./outlets/ClassBrowserOutlet');
-const NamespaceIndexOutlet = require('./outlets/NamespaceIndexOutlet');
+const BrowserOutlet = require('./outlets/BrowserOutlet');
+const NamespaceOutlet = require('./outlets/NamespaceOutlet');
 
 exports.outlets = [
   'JS::Browser',
@@ -29,6 +29,6 @@ exports.outletOccupants = [
   { name: 'JS::ModuleHeader', component: ModuleHeaderOutlet, },
   { name: 'JS::ModuleIndex', component: ModuleIndexOutlet, },
   { name: 'JS::ModuleBody', component: ModuleBodyOutlet, },
-  { name: 'JS::Browser', component: ClassBrowserOutlet, },
-  { name: 'JS::Namespace', component: NamespaceIndexOutlet, },
+  { name: 'JS::Browser', component: BrowserOutlet, },
+  { name: 'JS::Namespace', component: NamespaceOutlet, },
 ]

@@ -1,7 +1,7 @@
 const { def } = require('../lib/CorpusTypes');
 
 /**
- * @namespace T
+ * @module T
  *
  * Corpus type definitions.
  *
@@ -110,7 +110,7 @@ def("Namespace", {
      * @property {String?} [symbol="/"]
      *
      * The symbol is used when generating [[UIDs | CorpusUIDs]] for documents
-     * in the namespace; their UID will effectively be their [[T.Node@id]]
+     * in the namespace; their UID will effectively be their [[T.Node.id]]
      * delimited by this symbol.
      *
      * Usually, you would not need to customize the symbol at the namespace
@@ -130,7 +130,7 @@ def("Namespace", {
     /**
      * @property {String[]} [indexFields=null]
      *
-     * Override the default [[T.Corpus@indexFields]].
+     * Override the default [[T.Corpus.indexFields]].
      *
      * A reason to override the default index fields may be that your documents
      * should not be indexed by their file-paths for example, or that they may
@@ -143,7 +143,7 @@ def("Namespace", {
     indexFields: null,
 
     /**
-     * @inheritdoc T.Corpus@meta
+     * @inheritdoc T.Corpus.meta
      */
     meta: null,
 
@@ -171,14 +171,14 @@ def("Node", {
     /**
      * @property {String}
      *
-     * See [T.Namespace@id]
+     * See [[T.Namespace.id]]
      */
     id: null,
 
     /**
      * @property {String}
      *
-     * See [T.Namespace@title]
+     * See [[T.Namespace.title]]
      */
     title: null,
 
@@ -193,7 +193,7 @@ def("Node", {
      *
      * The file path that this document originates from.
      *
-     * The file path MUST be relative to the [[Config@assetRoot]] and starts
+     * The file path MUST be relative to the [[Config.assetRoot]] and starts
      * with a forward slash.
      */
     filePath: null,
@@ -201,12 +201,12 @@ def("Node", {
     loc: null,
 
     /**
-     * @inheritdoc T.Corpus@meta
+     * @inheritdoc T.Corpus.meta
      */
     meta: null,
 
     /**
-     * @inheritdoc T.Namespace@meta
+     * @inheritdoc T.Namespace.meta
      */
     indexFields: null,
 
@@ -287,7 +287,7 @@ def("Document", {
  *
  * ```dot
  * #direction: right
- * [Cache | mega://T.Document] -> [@id                  | mega://T.DocumentEntity]
+ * [Cache | mega://T.Document] -> [.id                  | mega://T.DocumentEntity]
  * [Cache | mega://T.Document] -> [#add()               | mega://T.DocumentEntity]
  * [Cache | mega://T.Document] -> [#remove()            | mega://T.DocumentEntity]
  * [Cache | mega://T.Document] -> [#clear()             | mega://T.DocumentEntity]

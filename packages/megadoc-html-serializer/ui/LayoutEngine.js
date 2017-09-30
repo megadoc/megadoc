@@ -117,6 +117,11 @@ function match(matchEntry, { documentNode, namespaceNode, pathname }) {
       matchBy === 'namespace' &&
       namespaceNode &&
       matchOn.indexOf(namespaceNode.path) > -1
+    ) ||
+    (
+      matchBy === 'plugin' &&
+      namespaceNode &&
+      matchOn.indexOf(namespaceNode.name) > -1
     )
   );
 };

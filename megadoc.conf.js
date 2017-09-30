@@ -29,35 +29,6 @@ var config = {
 };
 
 config.sources = [
-  // {
-  //   id: 'js__core',
-  //   title: 'API',
-
-  //   include: [
-  //     'packages/megadoc-compiler/lib/**/*.js',
-  //     'packages/megadoc-html-serializer/ui/**/*.js',
-  //   ],
-
-  //   exclude: [
-  //     '**/__tests__/**',
-  //     '**/vendor/**',
-  //   ],
-
-  //   processor: [ 'megadoc-plugin-js', {
-  //     baseURL: '/dev/api',
-  //     useDirAsNamespace: false,
-  //     parserOptions: {
-  //       presets: [
-  //         path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
-  //         path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
-  //       ],
-  //     },
-
-  //     namespaceDirMap: {
-  //       'ui/': 'UI',
-  //     }
-  //   }]
-  // },
   {
     id: 'md__core',
     title: 'Documents',
@@ -84,7 +55,7 @@ config.sources = [
     id: 'md__plugins',
     include: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      baseURL: '/dev/handbook',
+      baseURL: '/dev',
       title: 'Plugin Development',
       fullFolderTitles: false,
       discardIdPrefix: 'dev-',
@@ -97,7 +68,7 @@ config.serializer = [ 'megadoc-html-serializer', {
     '/index.html': '/readme.html'
   },
   rewrite: {
-    '/dev/handbook/api.html': '/dev/api/index.html'
+    '/dev/api.html': '/dev/api/index.html'
   },
   theme: [ 'megadoc-theme-minimalist' ],
 
@@ -161,7 +132,7 @@ config.serializer = [ 'megadoc-html-serializer', {
       links: [
         {
           text: 'Handbook',
-          href: '/dev/handbook/readme.html',
+          href: '/dev/readme.html',
         },
 
         {
@@ -202,23 +173,68 @@ config.serializer = [ 'megadoc-html-serializer', {
         }
       ]
     },
+    {
+      match: { by: 'url', on: '/dev/*' },
+      regions: [
+        {
+          name: 'Core::Content',
+          options: { framed: true },
+          outlets: [
+            { name: 'Markdown::Document', match: { by: 'plugin', on: 'megadoc-plugin-markdown' } },
+            { name: 'JS::ModuleHeader', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
+            { name: 'JS::ModuleIndex', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
+            { name: 'JS::ModuleBody', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
+          ]
+        },
+
+        {
+          name: 'Core::Sidebar',
+          options: { framed: true },
+          outlets: [
+            {
+              name: 'Markdown::Browser',
+              using: 'md__plugins'
+            },
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'megadoc-corpus',
+              }
+            },
+
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-corpus'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-corpus'
+            }
+          ]
+        }
+      ]
+    }
   ],
 }]
 
 addPackageDocumentation('megadoc-corpus', {
-  url: '/dev/corpus'
+  url: '/dev/corpus',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-compiler', {
-  url: '/dev/megadoc-compiler'
+  url: '/dev/megadoc-compiler',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-linter', {
-  url: '/dev/megadoc-linter'
+  url: '/dev/megadoc-linter',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-html-serializer', {
   url: '/dev/megadoc-html-serializer',
+  withLayouts: false,
   js: {
     parserOptions: {
       presets: [
@@ -230,20 +246,24 @@ addPackageDocumentation('megadoc-html-serializer', {
 });
 
 addPackageDocumentation('megadoc-docstring', {
-  url: '/dev/megadoc-docstring'
+  url: '/dev/megadoc-docstring',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-config-utils', {
-  url: '/dev/megadoc-config-utils'
+  url: '/dev/megadoc-config-utils',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-test-utils', {
-  url: '/dev/megadoc-test-utils'
+  url: '/dev/megadoc-test-utils',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-regression-tests', {
   withJS: false,
-  url: '/dev/megadoc-regression-tests'
+  url: '/dev/megadoc-regression-tests',
+  withLayouts: false,
 });
 
 addPackageDocumentation('megadoc-html-dot');
@@ -269,16 +289,19 @@ function addPackageDocumentation(pluginName, options = {}) {
       exclude: [
         '**/__tests__/**'
       ],
+
       processor: [ 'megadoc-plugin-js', Object.assign({
         baseURL: url,
         title: pluginName,
         useDirAsNamespace: false,
         inferModuleIdFromFileName: true,
+        inferNamespaces: false,
 
         namespaceDirMap: {
           'ui/': 'UI',
         },
       }, options.js)],
+
       decorators: [
         [ 'megadoc-html-dot', {
           allowLinks: true
@@ -302,59 +325,61 @@ function addPackageDocumentation(pluginName, options = {}) {
     ]
   });
 
-  config.serializer[1].customLayouts.push({
-    match: { by: 'url', on: url },
-    regions: [
-      {
-        name: 'Core::Sidebar',
-        outlets: [
-          {
-            name: 'Markdown::Browser',
-            using: 'md__' + pluginName,
-            options: { flat: true }
-          },
-          withJS && { name: 'Core::SidebarHeader', options: { text: 'API' } },
-          withJS && {
-            name: 'JS::Browser',
-            using: 'js__' + pluginName,
-            options: { flat: true },
-          },
-        ].filter(truthy)
-      },
-      {
-        name: 'Core::Content',
-        options: { framed: true },
-        outlets: [
-          {
-            name: 'Markdown::Document',
-            match: { by: 'namespace', on: 'md__' + pluginName },
-          },
-          withJS && {
-            name: 'JS::Module',
-            match: { by: 'namespace', on: 'js__' + pluginName },
-          }
-        ].filter(truthy)
-      },
-
-      {
-        name: 'Core::NavBar',
-        options: { framed: true },
-        outlets: [
-          {
-            name: 'Markdown::DocumentTOC',
-            match: {
-              by: 'namespace',
-              on: 'md__' + pluginName
+  if (options.withLayouts !== false) {
+    config.serializer[1].customLayouts.push({
+      match: { by: 'url', on: url },
+      regions: [
+        {
+          name: 'Core::Sidebar',
+          outlets: [
+            {
+              name: 'Markdown::Browser',
+              using: 'md__' + pluginName,
+              options: { flat: true }
             },
-          },
-          withJS && {
-            name: 'JS::ModuleEntities',
-            match: { by: 'namespace', on: 'js__' + pluginName },
-          }
-        ].filter(truthy)
-      }
-    ]
-  });
+            withJS && { name: 'Core::SidebarHeader', options: { text: 'API' } },
+            withJS && {
+              name: 'JS::Browser',
+              using: 'js__' + pluginName,
+              options: { flat: true },
+            },
+          ].filter(truthy)
+        },
+        {
+          name: 'Core::Content',
+          options: { framed: true },
+          outlets: [
+            {
+              name: 'Markdown::Document',
+              match: { by: 'namespace', on: 'md__' + pluginName },
+            },
+            withJS && {
+              name: 'JS::Module',
+              match: { by: 'namespace', on: 'js__' + pluginName },
+            }
+          ].filter(truthy)
+        },
+
+        {
+          name: 'Core::NavBar',
+          options: { framed: true },
+          outlets: [
+            {
+              name: 'Markdown::DocumentTOC',
+              match: {
+                by: 'namespace',
+                on: 'md__' + pluginName
+              },
+            },
+            withJS && {
+              name: 'JS::ModuleEntities',
+              match: { by: 'namespace', on: 'js__' + pluginName },
+            }
+          ].filter(truthy)
+        }
+      ]
+    });
+  }
 }
 
 function truthy(x) {
