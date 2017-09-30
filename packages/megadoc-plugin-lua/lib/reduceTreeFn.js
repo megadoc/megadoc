@@ -2,7 +2,11 @@ module.exports = function reduceTreeFn(context, documents) {
   return [{
     type: 'SET_NAMESPACE_ATTRIBUTES',
     data: {
-      title: context.options.title
+      name: 'megadoc-plugin-lua',
+      title: context.options.title,
+      meta: {
+        href: context.options.baseURL
+      }
     }
   }].concat(
     documents.filter(x => x.properties.receiver).map(function(document) {

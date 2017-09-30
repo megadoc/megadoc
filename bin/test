@@ -26,15 +26,21 @@ fi
 if [ -z $PACKAGE ]; then
   SOURCE_DIRS="${ROOT}/packages/*/lib"
 else
+  test_script=$(cat ${ROOT}/packages/${PACKAGE}/package.json | jq -e -r '.scripts.test')
+
+  if [ "${test_script}" != 'null' ]; then
+    {
+      cd ${ROOT}/packages/${PACKAGE}
+      NODE_PATH="${ROOT}/packages/" exec npm test
+    }
+  fi
+
   if [ -d "${ROOT}/packages/${PACKAGE}/lib" ]; then
     SOURCE_DIRS="${ROOT}/packages/${PACKAGE}/lib"
   elif [ -d "${ROOT}/packages/megadoc-${PACKAGE}/lib" ]; then
     SOURCE_DIRS="${ROOT}/packages/megadoc-${PACKAGE}/lib"
   elif [ -d "${ROOT}/packages/megadoc-plugin-${PACKAGE}/lib" ]; then
     SOURCE_DIRS="${ROOT}/packages/megadoc-plugin-${PACKAGE}/lib"
-  else
-    echo "Invalid package '${PACKAGE}'."
-    exit 1
   fi
 
   stat $SOURCE_DIRS/**/*.test.js &> /dev/null || {
@@ -44,7 +50,7 @@ else
 fi
 
 if [ "${COVERAGE}" == "1" ]; then
-  NODE_PATH="${ROOT}/packages:${NODE_PATH}" \
+  NODE_PATH="${ROOT}/packages/" \
     "${ROOT}/node_modules/.bin/istanbul" cover \
       --preserve-comments \
       --report lcov \
@@ -53,7 +59,7 @@ if [ "${COVERAGE}" == "1" ]; then
         --reporter dot \
         $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"
 else
-  NODE_PATH="${ROOT}/packages:${NODE_PATH}" \
+  NODE_PATH="${ROOT}/packages/" \
     exec "${ROOT}/node_modules/.bin/mocha" \
       --reporter dot \
       $@ "packages/megadoc-test-utils/index.js" "${SOURCE_DIRS}/**/*.test.js"

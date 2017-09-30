@@ -3,7 +3,6 @@ const classSet = require('utils/classSet');
 const resolvePathname = require('utils/resolvePathname');
 const { string, func, node, bool, shape, } = React.PropTypes;
 const { findDOMNode } = require('react-dom');
-const { get } = require('lodash');
 
 const Link = React.createClass({
   contextTypes: {
@@ -11,10 +10,6 @@ const Link = React.createClass({
     location: shape({
       pathname: string.isRequired,
     }).isRequired,
-
-    config: shape({
-      singlePageMode: bool,
-    }),
   },
 
   propTypes: {
@@ -71,10 +66,6 @@ const Link = React.createClass({
   isActive(href) {
     const { location } = this.context;
 
-    if (this.inSinglePageMode()) {
-      return href === location.hash;
-    }
-
     return (
       href === location.pathname ||
       href === location.pathname + location.hash
@@ -89,21 +80,20 @@ const Link = React.createClass({
       return this.props.to;
     }
     else if (this.props.to && typeof this.props.to === 'object') {
-      return this.props.to.meta.href;
+      const { href, anchor } = this.props.to.meta;
+
+      if (this.props.to.type === 'DocumentEntity') {
+        return href;
+      }
+      else {
+        return href + '#' + anchor;
+      }
     }
   },
 
   getRelativeHref(href) {
-    if (this.inSinglePageMode()) {
-      return href;
-    }
-
     return resolvePathname(href, this.context.location.pathname);
   },
-
-  inSinglePageMode() {
-    return !!get(this.context, 'config.singlePageMode');
-  }
 });
 
 

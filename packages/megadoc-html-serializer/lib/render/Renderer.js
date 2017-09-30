@@ -11,7 +11,6 @@ var NilOptions = ({});
  * Markdown to HTML renderer.
  *
  * @param {Object} config
- * @param {Boolean} config.singlePageMode
  */
 function Renderer(config) {
   var renderer = new marked.Renderer();

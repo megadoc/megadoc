@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+const yaml = require('js-yaml');
+const path = require('path');
+const fs = require('fs');
+const cp = require('child_process');
+const chalk = require('chalk');
+const root = path.resolve(__dirname, '..');
+const Parameters = yaml.safeLoad(fs.readFileSync(path.join(root, 'parameters.yml'), 'utf8'));
+
+const Binaries = {
+  Mocha: path.join(root, '../../node_modules/.bin/mocha'),
+};
+
+Parameters.Packages.forEach(Package => {
+  console.log(`${chalk.white('[ ]')} ${Package.Name}`)
+
+  runTests(Package);
+
+  console.log(`${chalk.green('[x]')} ${Package.Name}`)
+});
+
+function runTests(Package) {
+  const { Name } = Package;
+
+  cp.execSync(`PACKAGE="${Name}" ${Binaries.Mocha} ${Parameters.TestDir}/runner.js`, {
+    cwd: root,
+    stdio: 'inherit'
+  });
+}

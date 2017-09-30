@@ -18,6 +18,12 @@
 #   - PACKAGE: the package, in case $1 is not passed
 
 ROOT=$(readlink -f "$0" | xargs dirname | xargs dirname)
+HIGHLIGHT='\033[0;37m'
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+OK='✓'
 
 which jq &> /dev/null || {
   echo "$0: jq must be installed"
@@ -51,7 +57,7 @@ if [ ! -d "${PACKAGE_ROOT}" ]; then
   fi
 fi
 
-function ensure_no_unlisted_dependencies {
+function check_deps {
   [ -f $PACKAGE_ROOT/package.json ] && {
     out=$(
       ${ROOT}/node_modules/.bin/depcheck \
@@ -78,20 +84,20 @@ function ensure_no_unlisted_dependencies {
 
 function run_task {
   task=$@
-  echo -e "\n[$task] STARTING $(date)"
+  echo -e "${YELLOW}[$task]${NC} ? STARTING"
 
-  $task 2>&1 | while IFS="" read line; do echo -e "[$task] $line"; done
+  $task 2>&1 | while IFS="" read line; do echo -e "${YELLOW}[$task]${NC} $line"; done
 
   exit_status=${PIPESTATUS[0]}
 
   if [[ $exit_status != 0 ]]; then
-    echo -e "[$task] \033[31mFAILED!\033[0m (exit code $exit_status)"
+    echo -e "${YELLOW}[$task]${NC} ${RED}FAILED!${NC} (exit code $exit_status)"
     exit 1
   else
-    echo -e "[$task] \033[32mOK\033[0m"
+    echo -e "${YELLOW}[$task]${NC} ${GREEN}${OK} OK${NC}"
   fi
 
-  echo -e "[$task] FINISHED $(date)\n"
+  echo -e ""
 }
 
 function lint_sources {
@@ -129,8 +135,9 @@ function build_assets {
   fi
 }
 
-echo "Preparing \"${PACKAGE_NAME}\" for publishing... hang on tight."
-echo "---------------------------------------------------------------"
+echo -e "${HIGHLIGHT}\"${PACKAGE_NAME}\"${NC}"
+echo -e "${HIGHLIGHT}---------------------------------------------------------------${NC}"
+echo -e ""
 
 declare -a IGNORED=()
 
@@ -164,10 +171,10 @@ while getopts ":S:O:" opt; do
   esac
 done
 
-should_run "check" && run_task ensure_no_unlisted_dependencies
+should_run "check" && run_task check_deps
 should_run "lint" && run_task lint_sources && run_task lint_ui_sources
-should_run "test" && run_task run_tests $@
 should_run "build" && run_task build_assets
+should_run "test" && run_task run_tests $@
 
-echo "Package \"${PACKAGE_NAME}\" is good for publishing, nice work!"
-echo "---------------------------------------------------------------"
+echo -e "${OK} Package \"${PACKAGE_NAME}\" is good for publishing, nice work!"
+echo -e ""

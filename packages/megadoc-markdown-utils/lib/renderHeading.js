@@ -1,5 +1,4 @@
-const normalizeHeading = require('./normalizeHeading');
-const htmlToText = require('./htmlToText');
+const generateAnchor = require('./generateAnchor');
 const markdownToText = require('./markdownToText');
 const RE_TEMPLATE_VARIABLE = /\{\{\s{1}([^\}]+)\s{1}\}\}/g
 
@@ -23,10 +22,7 @@ const HeadingTmpl = template(`
 );
 
 function renderHeading(text, level, state, runOptions) {
-  const scopedId = normalizeHeading(
-    htmlToText(text.split('\n')[0])
-  );
-
+  const scopedId = generateAnchor(text);
   const id = state.baseURL ? joinBySlash(state.baseURL, scopedId) : scopedId;
 
   if (state.toc.some(function(x) { return x.scopedId === scopedId; })) {

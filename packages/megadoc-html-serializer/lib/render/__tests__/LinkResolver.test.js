@@ -59,9 +59,7 @@ describe('LinkResolver', function() {
       })
     );
 
-    corpus.traverse(NodeURIDecorator({
-      singlePageMode: false
-    }));
+    corpus.traverse(NodeURIDecorator({}));
 
     resolver = new LinkResolver(corpus, { linter: NullLinter });
   });

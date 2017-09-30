@@ -27,8 +27,8 @@ elif [ -d "${ROOT}/packages/megadoc-${PACKAGE}/lib" ]; then
 elif [ -d "${ROOT}/packages/megadoc-plugin-${PACKAGE}/lib" ]; then
   SOURCES=($ROOT/packages/megadoc-plugin-$PACKAGE/lib)
 else
-  echo "Invalid package '${PACKAGE}'."
-  exit 1
+  echo "'${PACKAGE}' has no sources to lint."
+  exit 0
 fi
 
 exec "${ROOT}/node_modules/.bin/eslint" -c "${ROOT}/.eslintrc" "${SOURCES[@]}" $@

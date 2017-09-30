@@ -1,0 +1,14 @@
+title: lua_cliargs
+items:
+  - page_url: '/index.html'
+    sidebar_links:
+      - lua_cliargs
+      - cli
+      - set_description
+      - cmd
+      - file
+      - action
+  - page_url: '/cmd.html'
+    body_links:
+      - text: cli#command
+        href: /cli.html##command

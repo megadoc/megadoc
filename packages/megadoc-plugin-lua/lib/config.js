@@ -3,4 +3,5 @@ module.exports = {
 
   source: [ '**/*.lua' ],
   exclude: [],
+  baseURL: undefined,
 };

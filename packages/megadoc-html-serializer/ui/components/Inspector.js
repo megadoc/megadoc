@@ -8,7 +8,6 @@ const { PropTypes } = React;
 
 const Inspector = React.createClass({
   propTypes: {
-    inSinglePageMode: PropTypes.bool,
     isOutletOccupied: PropTypes.func.isRequired,
     corpus: PropTypes.object,
   },
@@ -71,11 +70,10 @@ const Inspector = React.createClass({
   },
 
   getContainerDOMNode() {
-    return this.props.inSinglePageMode ?
-      document.querySelector('.single-page-layout__content') :
+    return (
       document.querySelector('.two-column-layout__right') ||
       document.querySelector('.root__screen')
-    ;
+    );
   },
 
   inspectElement(corpus, el) {

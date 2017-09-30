@@ -3,9 +3,6 @@
   "version": "6.1.0",
   "description": "A generic comment (or \"docstring\") parser.",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha --reporter=min $(find lib -name '*.test.js')"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/megadoc/megadoc.git"

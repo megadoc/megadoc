@@ -11,7 +11,6 @@ module.exports = function generateRuntimeConfig(config, assets) {
 
     banner: config.banner,
     bannerLinks: config.bannerLinks,
-    singlePageMode: config.singlePageMode,
     customLayouts: config.customLayouts,
 
     redirect: config.redirect,

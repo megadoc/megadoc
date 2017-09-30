@@ -2,13 +2,14 @@ const React = require('react');
 const Link = require('components/Link');
 const Sidebar = require('components/Sidebar');
 const { sortBy } = require('lodash');
-const { object, } = React.PropTypes;
+const { bool, object, } = React.PropTypes;
 
 const Browser = React.createClass({
   propTypes: {
     params: object,
     namespaceNode: object.isRequired,
     documentNode: object,
+    expanded: bool,
   },
 
   render() {
@@ -21,7 +22,7 @@ const Browser = React.createClass({
 
   renderModule(documentNode) {
     const { entities } = documentNode;
-    const active = this.props.documentNode === documentNode;
+    const active = this.props.expanded || this.props.documentNode === documentNode;
 
     return (
       <Sidebar.Entry key={documentNode.uid}>

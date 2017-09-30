@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { extractSummary, markdownToText } = require('megadoc-markdown-utils');
+const { extractSummary, generateAnchor, markdownToText } = require('megadoc-markdown-utils');
 const parseTitle = require('./utils/parseTitle');
 const strHumanize = require('./utils/strHumanize');
 
@@ -43,6 +43,7 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
   entry.plainTitle = markdownToText(entry.title);
   entry.fileName = fileName;
   entry.folder = path.dirname(relativeFilePath);
+  entry.anchor = generateAnchor(entry.source);
 
   done(null, [ entry ]);
 };

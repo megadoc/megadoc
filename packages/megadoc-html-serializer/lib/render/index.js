@@ -14,7 +14,7 @@ module.exports = function render({ serializer, compilations }, done) {
   });
 
   const linkResolver = new LinkResolver(corpus, {
-    relativeLinks: !serializerConfig.singlePageMode,
+    relativeLinks: true,
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
     linter: Linter.for(serializer.compilerConfig),
@@ -22,7 +22,7 @@ module.exports = function render({ serializer, compilations }, done) {
 
   const markdownRenderer = new Renderer({
     launchExternalLinksInNewTabs: serializerConfig.launchExternalLinksInNewTabs,
-    shortURLs: !serializerConfig.singlePageMode,
+    shortURLs: true,
     syntaxHighlighting: serializerConfig.syntaxHighlighting,
   });
 

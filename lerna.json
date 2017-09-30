@@ -4,9 +4,6 @@
     "packages/*"
   ],
   "publish": {
-    "ignore": [
-      "dependency-scanner"
-    ]
   },
   "ignore": [],
   "stream": true,

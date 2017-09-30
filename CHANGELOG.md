@@ -1,5 +1,21 @@
 # Changelog
 
+## 6.1.2
+
+- Lua::Browser outlet now supports an `expanded: Boolean` option for expanding
+  all the documents in the browser regardless of whether they're active or not.
+
+This release contains internal changes.
+
+- Created a new package [[megadoc-regression-tests]] for running regression
+  tests against external packages.
+- Links will now always utilize the anchor of a document as well as its
+  pathname. This makes it possible (with a few more adjustments) to restore the
+  "single page layout" mode.
+- Exposed a new markdown helper [[megadoc-markdown-utils.generateAnchor]] for
+  consistently generating heading anchors between the markdown renderer and any
+  plugin that needs to render markdown
+
 ## 6.1.1
 
 - dropped use of `Object.assign` for IE11 compatibility

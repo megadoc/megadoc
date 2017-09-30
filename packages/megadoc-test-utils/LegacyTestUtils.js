@@ -283,7 +283,6 @@ function IntegrationSuite(mochaSuite, suiteOptions) {
   };
 
   exports.engageSinglePageMode = function(customLayout) {
-    exports.set('singlePageMode', true);
     exports.set('customLayouts', [].concat(customLayout));
   };
 

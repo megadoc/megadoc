@@ -79,17 +79,6 @@ module.exports = {
   banner: true,
 
   /**
-   * @property {Boolean}
-   *
-   * Launch megadoc into "single-page" mode where you want to present all
-   * the contents in a single page. This flag MUST be turned in order for
-   * links to work online and offline.
-   *
-   * See the [guides/single-page-md Single Page Mode guide]() for more information.
-   */
-  singlePageMode: false,
-
-  /**
    * @property {Array.<Config~BannerLink>}
    *
    * @typedef {Config~BannerLink}

@@ -54,9 +54,6 @@ function reduceEntityDocument(doc) {
     id: id,
     title: doc.id,
     summaryFields: [ 'description' ],
-    meta: {
-      anchor: encodeURI(id.replace(/[\/\s]+/g, '-'))
-    },
     filePath: doc.filePath,
     loc: doc.loc,
     properties: omit(doc, [ 'filePath' ]),

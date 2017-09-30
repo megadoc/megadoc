@@ -46,10 +46,8 @@ const Layout = React.createClass({
   },
 
   componentWillUpdate(nextProps) {
-    if (!this.context.appState.inSinglePageMode()) {
-      if (nextProps.scope.documentNode !== this.props.scope.documentNode) {
-        scrollToTop();
-      }
+    if (nextProps.scope.documentNode !== this.props.scope.documentNode) {
+      scrollToTop();
     }
   },
 

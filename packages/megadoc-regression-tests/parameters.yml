@@ -1,0 +1,12 @@
+ConfigDir: config
+OutputDir: public
+SourceDir: repos
+TestDir: spec
+
+Packages:
+  - Name: lua_cliargs
+    Source:
+      Type: git
+      Url: https://github.com/amireh/lua_cliargs
+      Branch: master
+      Ref: 076fc27d5fded4b87acc3cf1cb3efe518e167b4a

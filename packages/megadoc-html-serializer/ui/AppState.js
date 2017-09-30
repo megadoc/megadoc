@@ -7,7 +7,6 @@ const createAppState = function(config) {
     layout: config.layout,
     spotlightOpen: false,
     invertedTCL: config.invertedSidebar,
-    singlePageMode: config.singlePageMode,
   };
 
   let AppState = EventEmitter([ 'change', 'layoutChange' ]);
@@ -43,10 +42,6 @@ const createAppState = function(config) {
 
   AppState.isSpotlightOpen = function() {
     return state.spotlightOpen;
-  };
-
-  AppState.inSinglePageMode = function() {
-    return state.singlePageMode;
   };
 
   AppState.invertTwoColumnLayout = function() {

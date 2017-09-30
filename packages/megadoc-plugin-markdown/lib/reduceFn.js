@@ -10,8 +10,11 @@ module.exports = function reduceFn(options, rawDocument, done) {
     title: rawDocument.plainTitle,
     filePath: rawDocument.filePath,
     summary: rawDocument.summary,
-    properties: omit(rawDocument, ['filePath']),
+    properties: omit(rawDocument, [ 'anchor', 'filePath' ]),
     symbol: '#',
+    meta: {
+      anchor: rawDocument.anchor,
+    },
     entities: toc.map(function(section) {
       return b.documentEntity({
         id: section.scopedId,

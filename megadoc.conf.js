@@ -22,6 +22,7 @@ var config = {
     'megadoc-plugin-git': 'md__megadoc-plugin-git/readme',
     'megadoc-plugin-lua': 'md__megadoc-plugin-lua/readme',
     'megadoc-plugin-yard-api': 'md__megadoc-plugin-yard-api/readme',
+    'megadoc-regression-tests': 'md__megadoc-regression-tests/readme',
     'CorpusUIDs': 'md__megadoc-corpus/readme#uids',
   },
 
@@ -194,14 +195,14 @@ config.serializer = [ 'megadoc-html-serializer', {
       match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changelog' ] },
       regions: [
         {
-          name: 'Layout::Content',
+          name: 'Core::Content',
           options: { framed: true },
           outlets: [
             { name: 'Markdown::Document' }
           ]
         },
         {
-          name: 'Layout::Sidebar',
+          name: 'Core::Sidebar',
           outlets: [
             { name: 'Markdown::DocumentTOC' }
           ]
@@ -229,6 +230,7 @@ addPackageDocumentation('megadoc-plugin-markdown');
 addPackageDocumentation('megadoc-plugin-react');
 addPackageDocumentation('megadoc-plugin-reference-graph');
 addPackageDocumentation('megadoc-plugin-yard-api');
+addPackageDocumentation('megadoc-regression-tests', { withJS: false });
 addPackageDocumentation('megadoc-theme-gitbooks');
 addPackageDocumentation('megadoc-theme-qt');
 
@@ -275,14 +277,14 @@ function addPackageDocumentation(pluginName, options) {
   //   match: { by: 'url', on: url },
   //   regions: [
   //     {
-  //       name: 'Layout::Sidebar',
+  //       name: 'Core::Sidebar',
   //       outlets: [
   //         {
   //           name: 'Markdown::Browser',
   //           using: 'md__' + pluginName,
   //           options: { flat: true }
   //         },
-  //         withJS && { name: 'Layout::SidebarHeader', options: { text: 'API' } },
+  //         withJS && { name: 'Core::SidebarHeader', options: { text: 'API' } },
   //         withJS && {
   //           name: 'CJS::ClassBrowser',
   //           using: 'js__' + pluginName,
@@ -291,7 +293,7 @@ function addPackageDocumentation(pluginName, options) {
   //       ].filter(truthy)
   //     },
   //     {
-  //       name: 'Layout::Content',
+  //       name: 'Core::Content',
   //       options: { framed: true },
   //       outlets: [
   //         {
@@ -306,7 +308,7 @@ function addPackageDocumentation(pluginName, options) {
   //     },
 
   //     {
-  //       name: 'Layout::NavBar',
+  //       name: 'Core::NavBar',
   //       options: { framed: true },
   //       outlets: [
   //         {

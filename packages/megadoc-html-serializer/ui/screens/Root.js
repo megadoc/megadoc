@@ -102,10 +102,7 @@ const Root = React.createClass({
         <Outlet name="Core::Meta" />
 
         {config.tooltipPreviews && (
-          <Inspector
-            corpus={this.props.corpus}
-            inSinglePageMode={config.singlePageMode}
-          />
+          <Inspector corpus={this.props.corpus} />
         )}
 
         {config.spotlight && (

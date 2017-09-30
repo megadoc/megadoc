@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+const yaml = require('js-yaml');
+const path = require('path');
+const fs = require('fs');
+const cp = require('child_process');
+const chalk = require('chalk');
+const root = path.resolve(__dirname, '..');
+const Parameters = yaml.safeLoad(fs.readFileSync(path.join(root, 'parameters.yml'), 'utf8'));
+
+const Binaries = {
+  Megadoc: path.join(root, '../megadoc-cli/bin/megadoc-build.js'),
+};
+
+Parameters.Packages.forEach(Package => {
+  console.log(`${chalk.white('[ ]')} ${Package.Name}`)
+
+  buildDocs(Package);
+
+  console.log(`${chalk.green('[x]')} ${Package.Name}`)
+});
+
+function buildDocs(Package) {
+  const { Name } = Package;
+  const configFile = path.join(root, Parameters.ConfigDir, `${Name}.megadoc.conf.js`);
+  const outputDir = path.join(root, Parameters.OutputDir, Name);
+  const assetRoot = path.join(root, Parameters.SourceDir, Name);
+  const nodePath = path.join(root, '../');
+
+  cp.execSync(`rm -rf ${outputDir}`, {
+    cwd: root,
+    stdio: 'inherit'
+  });
+
+  cp.execSync(`NODE_PATH=${nodePath} \\
+    ${Binaries.Megadoc} \\
+      --config ${configFile} \\
+      --output-dir ${outputDir} \\
+      --asset-root ${assetRoot}
+  `, {
+    cwd: root,
+    stdio: 'inherit'
+  });
+}

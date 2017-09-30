@@ -3,10 +3,7 @@ const invariant = require('invariant');
 const { dumpNodeFilePath } = require('megadoc-corpus');
 
 module.exports = function NodeURIDecorator(config) {
-  var g = config.singlePageMode ?
-    HashBasedURIGenerator(config) :
-    FileBasedURIGenerator(config)
-  ;
+  var g = FileBasedURIGenerator(config);
 
   var layoutConfig = config;
   var redirectMap = config.redirect || {};
@@ -198,39 +195,6 @@ function ensureHasValidFilename(x) {
   }
   else {
     return x;
-  }
-}
-
-function HashBasedURIGenerator(/*config*/) {
-  return {
-    NodeURI: flowRight(ensureHasOneLeadingSlash, NodeURI),
-    NodeAnchor: NodeAnchor
-  };
-
-  function NodeURI(node) {
-    if (shouldIgnore(node)) {
-      return ensureLeadingHash(node.meta.href);
-    }
-
-    if (node.type === 'Corpus') {
-      return null;
-    }
-
-    return '#/' + encodeURI(node.path);
-  }
-
-  function NodeAnchor(node) {
-    var href = NodeURI(node);
-
-    if (href) {
-      return href.replace(/^#/, '');
-    }
-  }
-
-  function ensureLeadingHash(s) {
-    if (s) {
-      return s[0] === '#' ? s : '#' + s;
-    }
   }
 }
 

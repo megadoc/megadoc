@@ -54,10 +54,7 @@ const App = React.createClass({
 
     let locationAPI;
 
-    if (config.singlePageMode) {
-      locationAPI = HashLocation;
-    }
-    else if (this.props.location.protocol === 'file:') {
+    if (this.props.location.protocol === 'file:') {
       locationAPI = FileLocation;
     }
     else if (this.props.location.protocol.match(/^https?:/)) {
@@ -212,21 +209,6 @@ function HistoryLocation(options) {
     if (originalLocation && originalLocation.length > 0) {
       location.replace(originalLocation);
     }
-  }
-}
-
-function HashLocation(options) {
-  const emitChange = options.onChange;
-
-  return {
-    start() {
-      window.addEventListener('hashchange', emitChange);
-    },
-    transitionTo() {},
-    refreshScroll() {},
-    stop() {
-      window.removeEventListener('hashchange', emitChange);
-    },
   }
 }
 

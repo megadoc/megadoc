@@ -27,8 +27,8 @@ elif [ -d "${ROOT}/packages/megadoc-${PACKAGE}/ui" ]; then
 elif [ -d "${ROOT}/packages/megadoc-plugin-${PACKAGE}/ui" ]; then
   SOURCES=($ROOT/packages/megadoc-plugin-$PACKAGE/ui)
 else
-  echo "Invalid package '${PACKAGE}'."
-  exit 1
+  echo "'${PACKAGE}' has no sources to lint."
+  exit 0
 fi
 
 

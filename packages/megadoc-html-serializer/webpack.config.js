@@ -35,7 +35,11 @@ var config = {
 };
 
 if (nodeEnv === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      warnings: false
+    }
+  }));
 }
 
 module.exports = commonConfig(config);

@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+const yaml = require('js-yaml');
+const path = require('path');
+const fs = require('fs');
+const cp = require('child_process');
+const chalk = require('chalk');
+const root = path.resolve(__dirname, '..');
+const Parameters = yaml.safeLoad(fs.readFileSync(path.join(root, 'parameters.yml'), 'utf8'));
+
+Parameters.Packages.forEach(Package => {
+  console.log(`${chalk.white('[ ]')} ${Package.Name}`)
+
+  fetchSource(Package);
+
+  console.log(`${chalk.green('[x]')} ${Package.Name}`)
+})
+
+function fetchSource(Package) {
+  switch (Package.Source.Type) {
+    case 'git':
+      return fetchSourceFromGit(Package);
+    default:
+      throw new Error(`Don't know how to fetch sources from "${Package.Source.Type}"`)
+  }
+}
+
+function fetchSourceFromGit(Package) {
+  const { Name } = Package;
+  const { Url, Branch, Ref } = Package.Source;
+  const sourceDir = path.join(root, Parameters.SourceDir, Name);
+
+  const isAlreadyCreated = fs.existsSync(sourceDir);
+
+  if (isAlreadyCreated) {
+    return false;
+  }
+
+  cp.execSync(`
+    git clone "${Url}" --depth 1 --single-branch --no-tags --branch ${Branch} "${sourceDir}"
+  `)
+
+  if (Ref) {
+    cp.execSync(`git fetch origin "${Ref}" && git checkout FETCH_HEAD`, {
+      cwd: sourceDir
+    })
+  }
+
+  return true;
+}

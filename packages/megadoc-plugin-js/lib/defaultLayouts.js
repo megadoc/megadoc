@@ -14,7 +14,7 @@ module.exports.push({
     },
     {
       name: 'Core::Sidebar',
-      outlets: [{ name: 'JS::ClassBrowser' }]
+      outlets: [{ name: 'JS::Browser' }]
     }
   ]
 });
@@ -24,7 +24,7 @@ module.exports.push({
   regions: [
     {
       name: 'Core::Sidebar',
-      outlets: [{ name: 'JS::ClassBrowser' }]
+      outlets: [{ name: 'JS::Browser' }]
     },
 
     {
