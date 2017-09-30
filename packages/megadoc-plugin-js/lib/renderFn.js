@@ -162,6 +162,10 @@ function renderTypeLink(params) {
 
   const builtInType = builtInTypes[typeName.toLowerCase()];
 
+  if (typeName.match(/^['"](.+)['"]$/)) {
+    return `"${typeName.slice(1, -1)}"`;
+  }
+
   if (builtInType) {
     // WTF?
     if (typeof builtInType === 'string') {

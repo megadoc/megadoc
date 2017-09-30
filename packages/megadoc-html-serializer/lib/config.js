@@ -216,7 +216,9 @@ module.exports = {
   },
 
   /**
-   * @property {Array.<Config~Template>}
+   * @property {Array.<Config~Template>} customLayouts
+   *
+   * Customize how the pages are populated and what goes where.
    *
    * @typedef {Config~Template}
    *
@@ -227,7 +229,7 @@ module.exports = {
    * @property {!Object} match
    *           The parameters that control when this configuration applies.
    *
-   * @property {("url"|"uid"|"type"|"namespace")} match.by
+   * @property {Union.<'url'|'uid'|'type'|'namespace'>} match.by
    *           What we should match on.
    *
    * @property {String} match.on

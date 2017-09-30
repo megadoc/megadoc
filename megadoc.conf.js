@@ -70,7 +70,7 @@ config.serializer = [ 'megadoc-html-serializer', {
   rewrite: {
     '/dev/api.html': '/dev/api/index.html'
   },
-  theme: [ 'megadoc-theme-minimalist' ],
+  theme: 'megadoc-theme-minimalist',
 
   linkResolver: {
     schemes: [ 'Megadoc', 'GitHub Wiki' ],
@@ -195,13 +195,13 @@ config.serializer = [ 'megadoc-html-serializer', {
               name: 'Markdown::Browser',
               using: 'md__plugins'
             },
+
             {
               name: 'Core::SidebarHeader',
               options: {
-                text: 'megadoc-corpus',
+                text: 'Corpus',
               }
             },
-
             {
               name: 'Markdown::Browser',
               using: 'md__megadoc-corpus'
@@ -209,7 +209,108 @@ config.serializer = [ 'megadoc-html-serializer', {
             {
               name: 'JS::Browser',
               using: 'js__megadoc-corpus'
-            }
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Compiler',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-compiler'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-compiler'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'HTML',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-html-serializer'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-html-serializer'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Linter',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-linter'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-linter'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Docstring',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-docstring'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-docstring'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Config Utils',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-config-utils'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-config-utils'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Test Utils',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-test-utils'
+            },
+            {
+              name: 'JS::Browser',
+              using: 'js__megadoc-test-utils'
+            },
+
+            {
+              name: 'Core::SidebarHeader',
+              options: {
+                text: 'Regression Tests',
+              }
+            },
+            {
+              name: 'Markdown::Browser',
+              using: 'md__megadoc-regression-tests'
+            },
           ]
         }
       ]
