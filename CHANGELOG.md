@@ -1,11 +1,13 @@
 # Changelog
 
-## 6.1.2
+## 6.2.0
 
 - Lua::Browser outlet now supports an `expanded: Boolean` option for expanding
   all the documents in the browser regardless of whether they're active or not.
+- Dropped use of `Object.assign` for IE11 compatibility
+- megadoc-preset-js now includes megadoc-html-live-server
 
-This release contains internal changes.
+Internal changes:
 
 - Created a new package [[megadoc-regression-tests]] for running regression
   tests against external packages.
@@ -15,10 +17,6 @@ This release contains internal changes.
 - Exposed a new markdown helper [[megadoc-markdown-utils.generateAnchor]] for
   consistently generating heading anchors between the markdown renderer and any
   plugin that needs to render markdown
-
-## 6.1.1
-
-- dropped use of `Object.assign` for IE11 compatibility
 
 ## 6.1.0
 
