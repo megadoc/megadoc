@@ -1,6 +1,6 @@
 {
   "name": "megadoc-html-dot",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "description": "Render Graphviz/dot graphs right from Markdown documents.",
   "main": "lib/index.js",
   "repository": {
@@ -28,6 +28,6 @@
     "nomnoml": "skanaar/nomnoml#726b1b277f8208a9f6f4d37b6c63d6cfac73aee5"
   },
   "devDependencies": {
-    "megadoc-test-utils": "^6.1.0"
+    "megadoc-test-utils": "^6.2.0"
   }
 }

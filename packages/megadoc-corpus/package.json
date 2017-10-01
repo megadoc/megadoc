@@ -5,18 +5,18 @@
   "dependencies": {
     "invariant": "2.2.2",
     "lodash": "3.10.1",
-    "megadoc-linter": "^6.1.0",
+    "megadoc-linter": "^6.2.0",
     "object-assign": "4.0.1",
     "ramda": "0.24.1"
   },
   "description": "",
   "devDependencies": {
-    "megadoc-test-utils": "^6.1.0"
+    "megadoc-test-utils": "^6.2.0"
   },
   "license": "MIT",
   "main": "index.js",
   "name": "megadoc-corpus",
   "readmeFilename": "README.md",
   "scripts": {},
-  "version": "6.1.0"
+  "version": "6.2.0"
 }

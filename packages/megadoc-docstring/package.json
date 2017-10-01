@@ -1,6 +1,6 @@
 {
   "name": "megadoc-docstring",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "description": "A generic comment (or \"docstring\") parser.",
   "main": "index.js",
   "repository": {
@@ -28,6 +28,6 @@
     "jsdoctypeparser": "1.2.0"
   },
   "devDependencies": {
-    "megadoc-test-utils": "^6.1.0"
+    "megadoc-test-utils": "^6.2.0"
   }
 }
