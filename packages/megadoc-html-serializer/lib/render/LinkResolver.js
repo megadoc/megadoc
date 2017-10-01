@@ -73,17 +73,6 @@ LinkResolver.prototype.lookup = function(params) {
     return null;
   }
 
-  if (index && !index.node && index.type === 'Namespace') {
-    index = {
-      node: index
-    };
-  }
-
-  if (!index.node) {
-    console.warn(`Index resolved but has no node? ${JSON.stringify(index, null, 4)}`)
-    return null;
-  }
-
   var node = index.node;
   var text = node.title || index.text;
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.2.3
+
+- Removed a rogue `console.log()` statement.
+- Fixed an issue with the linker not being able to use a node resolved by path
+  directly.
+- Corrected a dependency of megadoc-html-dot
+
+## 6.2.2
+
+- Fixed an issue with document summaries not being generated and thus not being displayed in the expected places (e.g. `<meta />` and link titles)
+
 ## 6.2.1
 
 - corrected dependency issue in megadoc-preset-js

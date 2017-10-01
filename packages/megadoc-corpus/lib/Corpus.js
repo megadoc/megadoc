@@ -169,14 +169,20 @@ function Corpus({ alias: aliases = {} }, { linter }) {
    */
   function resolve(anchor) {
     if (nodes.hasOwnProperty(anchor.text)) {
-      return nodes[anchor.text];
+      return {
+        node: nodes[anchor.text],
+        text: anchor.text,
+      }
     }
     else if (paths.hasOwnProperty(anchor.text)) {
-      return paths[anchor.text];
+      return {
+        node: paths[anchor.text],
+        text: anchor.text,
+      }
     }
 
-    const withContextNode = Object.assign({}, anchor, {
-      contextNode: anchor.contextNode || corpusNode
+    const withContextNode = R.merge(anchor, {
+      contextNode: anchor.contextNode
     });
 
     return (
@@ -188,14 +194,7 @@ function Corpus({ alias: aliases = {} }, { linter }) {
   /** @private */
   function resolveAliasedLink(anchor) {
     if (aliases.hasOwnProperty(anchor.text) && aliases[anchor.text] !== anchor.text) {
-      const aliased = exports.resolve(R.merge(anchor, { text: aliases[anchor.text] }))
-
-      if (aliased) {
-        return {
-          node: aliased,
-          text: anchor.text
-        }
-      }
+      return resolve(R.merge(anchor, { text: aliases[anchor.text] }));
     }
   }
 

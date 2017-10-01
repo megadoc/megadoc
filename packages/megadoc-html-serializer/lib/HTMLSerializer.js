@@ -37,11 +37,9 @@ HTMLSerializer.prototype.renderOne = function(node) {
   const summary = extractSummaryForNode(node);
 
   if (summary) {
-    console.log('node "%s" has summary', node.id, summary.length)
     return R.merge(node, { summary });
   }
   else {
-    console.log('node "%s" has no summary', node.id)
     return node;
   }
 };
