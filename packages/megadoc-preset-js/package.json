@@ -13,6 +13,7 @@
     "megadoc-cli": "^6.1.0",
     "megadoc-compiler": "^6.1.0",
     "megadoc-html-serializer": "^6.1.0",
+    "megadoc-html-live-server": "^6.1.0",
     "megadoc-plugin-js": "^6.1.0",
     "megadoc-plugin-markdown": "^6.1.0"
   }
