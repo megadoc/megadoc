@@ -20,6 +20,9 @@ const TokensPropType = arrayOf(shape({
   })
 }));
 
+/**
+ * @module Spotlight
+ */
 const Spotlight = React.createClass({
   statics: {
     MAX_RESULTS: 15

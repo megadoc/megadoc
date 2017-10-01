@@ -84,9 +84,7 @@ exports.Parser = Parser;
  * @param {String} js
  * @param {Object} options
  * @return {Array}
- * @see exports.parseComment
  */
-
 exports.parseComments = function(js, options){
   options = options || {};
   js = js.replace(/\r\n/gm, '\n');

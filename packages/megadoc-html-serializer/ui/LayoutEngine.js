@@ -3,7 +3,8 @@ const invariant = require('utils/invariant');
 /**
  * @module LayoutEngine
  *
- * @typedef {LayoutOverride}
+ * @typedef {LayoutEngine~LayoutOverride}
+ * @type {Object}
  *
  * A layout override configuration object. This object describes how to render
  * a certain page. By default, megadoc will compute a preferred layout based on
@@ -12,7 +13,7 @@ const invariant = require('utils/invariant');
  * @property {Object} match
  *           The parameters that control when this configuration applies.
  *
- * @property {url|path|filePath|type} match.by
+ * @property {Union.<"url"|"path"|"filePath"|"type">} match.by
  *           What we should match on.
  *
  * @property {String|Array.<String>} match.on
@@ -25,9 +26,10 @@ const invariant = require('utils/invariant');
  *           - If @match.by was set to `type`, this would be the corpus ADT
  *           node type. See [[T]].
  *
- * @property {Array.<LayoutRegion>} regions
+ * @property {Array.<LayoutEngine~LayoutRegion>} regions
  *
- * @typedef {LayoutRegion}
+ * @typedef {LayoutEngine~LayoutRegion}
+ * @type {Object}
  *
  * A configuration object for a specific layout region.
  *
@@ -38,10 +40,11 @@ const invariant = require('utils/invariant');
  *           Options to customize how the region looks like. Refer to each
  *           region's documentation to know what options it supports.
  *
- * @property {Array.<LayoutRegionOutlet>} outlets
+ * @property {Array.<LayoutEngine~LayoutRegionOutlet>} outlets
  *           The outlets to fill the region with.
  *
- * @typedef {LayoutRegionOutlet}
+ * @typedef {LayoutEngine~LayoutRegionOutlet}
+ * @type {Object}
  *
  * @property {String} name
  * @property {Object?} options
@@ -50,7 +53,7 @@ const invariant = require('utils/invariant');
 /**
  * @param {String} href
  * @param {Object} layoutConfig
- * @param {Array.<LayoutOverride>} layoutConfig.customLayouts
+ * @param {Array.<LayoutEngine~LayoutOverride>} layoutConfig.customLayouts
  *
  * @return {String}
  *         The UID of the document to use for the given location.

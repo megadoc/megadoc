@@ -250,7 +250,7 @@ module.exports = {
    * A configuration object for a specific layout region.
    *
    * @property {!String} name
-   *           The name of the region. See [[Layout]] for the regions it defines.
+   *           The name of the region. See [[LayoutEngine]] for the regions it defines.
    *
    * @property {?Object} options
    *           Options to customize how the region looks like. Refer to each

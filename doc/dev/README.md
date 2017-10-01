@@ -6,10 +6,11 @@ unable to do anything useful beyond orchestrating plugins.
 What the core does provide is a compiler that is equipped and configured 
 with several modules your plugin can interact with:
 
-- the [Compiler@assets asset registry]() for registering static assets for serving at run-time, like images and free-form JS scripts (perhaps a Google Analytics snippet)
-- the [Compiler@linkResolver link-resolver]() for "linkifying" blocks of documentation
-- the [Compiler@renderer renderer]() for rendering Markdown to HTML
-- the [Compiler@corpus corpus]() instance for the current compilation
+- ~~the asset registry for registering static assets for serving at run-time,
+  like images and free-form JS scripts (perhaps a Google Analytics snippet)~~
+- ~~the link-resolver for "linkifying" blocks of documentation~~
+- ~~the renderer for rendering Markdown to HTML~~
+- ~~the corpus instance for the current compilation~~
 
 In this guide, we'll create a very basic plugin that reads Markdown files and
 presents them in the UI.
@@ -49,15 +50,15 @@ what it is:
 
 - `dist/` is optional unless you have any UI scripts, then it's mandatory. It
   contains the compiled UI scripts for your plugin which are generated using
-  [[/cli/megadoc-compile]].
+  [[/packages/megadoc-cli/bin/megadoc-build-html-plugin.js]].
 - `lib/` contains the plugin implementation files.
 - `lib/config.js` must contain all the configuration parameters your plugin accepts and they should be documented
 - `lib/index.js` is the entry point for your plugin - the one that the users will be using so it should export a function
 - `ui/` contains the plugin HTML UI implementation files.
 - `package.json` must contain a `peerDependency` on the version of megadoc you're working with
 
-For convenience, you can also clone the [megadoc-plugin-skeleton](https://github.com/megadoc/megadoc/tree/master/packages/megadoc-plugin-skeleton) 
-package which has this wrapped up for you.
+~~For convenience, you can also clone the [megadoc-plugin-skeleton](https://github.com/megadoc/megadoc/tree/master/packages/megadoc-plugin-skeleton) 
+package which has this wrapped up for you.~~
 
 Okay, time to get started!
 
@@ -91,8 +92,8 @@ A compilation is basically a serial process composed of separate phases.
 [render] -> [write]
 ```
 
-Your plugin may hook into any of these stages using the compiler's
-[Compiler#on #on]() routine.
+~~Your plugin may hook into any of these stages using the compiler's
+Compiler#on routine.~~ NOPE
 
 ```javascript
 { // ...
@@ -103,6 +104,7 @@ Your plugin may hook into any of these stages using the compiler's
   }
 }
 ```
+
 
 From now on, the example snippets will assume we're inside the definition of
 the `#run` routine for brevity.
@@ -157,9 +159,11 @@ compiler.on('scan', function(done) {
 ```
 
 The [AssetUtils]() contains a number of helpers for dealing with source files
-and emitted files. The compiler has an instance of that factory configured for
-the current compilation which you can access using
-[Compiler@utils compiler.utils]().
+and emitted files. ~~The compiler has an instance of that factory configured
+for the current compilation which you can access using compiler.utils.~~ This
+is no longer true, assets and their handling is now delegated to the serializer
+and a plugin may only state what assets it needs to be generated and does not
+have to do it manually.
 
 Okay! Now we have scanned the markdown files the user had listed and built a 
 set of abstract representations of them for use in the Corpus. However, we 

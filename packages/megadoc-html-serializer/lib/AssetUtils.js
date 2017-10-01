@@ -14,11 +14,8 @@ var tmpFileId = 0;
  *
  * A bunch of utilities for dealing with asset files.
  *
- * **Do not instantiate this factory directly**, instead, use the
- * [Compiler@utils compiler's instance]().
- *
- * @param  {Object} config
- *         megadoc's runtime config.
+ * @param {Object} config
+ *        [[megadoc-compiler config | packages/megadoc-compiler/lib/config.js]].
  */
 module.exports = function AssetUtils(config) {
   var utils = {

@@ -6,7 +6,7 @@ module.exports = {
    * @property {String}
    *
    * A unique identifier for the plugin. This identifier will also be
-   * used as a baseURL unless you [@baseURL specify it]().
+   * used as a baseURL unless you [.baseURL specify it]().
    */
   id: 'articles',
 
@@ -42,7 +42,7 @@ module.exports = {
   /**
    * @property {String}
    *
-   * When displaying [@fullFolderTitles full-folder titles](), this is the
+   * When displaying [.fullFolderTitles full-folder titles](), this is the
    * symbol that will separate folders apart.
    *
    * For example, for a folder at `docs/support/tier1`, the title would be:

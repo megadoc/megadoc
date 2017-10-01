@@ -9,6 +9,12 @@ const renderRoutines = require('./renderRoutines');
 const defaults = require('./config');
 const { omit } = require('lodash');
 
+/**
+ * @module HTMLSerializer
+ *
+ * @param {js__megadoc-compiler/Config} compilerConfig
+ * @param {Object} userSerializerOptions
+ */
 function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
   this.compilerConfig = compilerConfig;
   this.assetUtils = new AssetUtils(this.compilerConfig);

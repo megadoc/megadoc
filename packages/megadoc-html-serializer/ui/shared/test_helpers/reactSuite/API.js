@@ -4,7 +4,7 @@ const config = require("./config");
 const EventEmitter = require('../../../EventEmitter');
 const { assign } = require('lodash');
 
-/**
+/*
  * @lends TestHelpers.reactSuite
  */
 function ReactSuiteAPI(type, options = { immediatelyAttachToDOM: false }) {
@@ -19,7 +19,7 @@ function ReactSuiteAPI(type, options = { immediatelyAttachToDOM: false }) {
   this.type = type;
 }
 
-/**
+/*
  * @return {HTMLElement}
  *         The DOM node the subject will be attached to if running in inspect
  *         mode or when [#attachToDOM]() is called.
@@ -28,7 +28,7 @@ ReactSuiteAPI.getDOMContainer = function() {
   return config.container;
 };
 
-/**
+/*
  * Render and mount an instance of the test subject.
  *
  * @param  {Object|Function} initialProps
@@ -68,7 +68,7 @@ ReactSuiteAPI.prototype.setProps = function(props) {
   this.subject = render(<this.type {...this.initialProps} {...props} />, this.container);
 };
 
-/**
+/*
  * @return {Boolean}
  *         Whether the subject is currently mounted and can be operated on.
  */
@@ -76,7 +76,7 @@ ReactSuiteAPI.prototype.isRunning = function() {
   return Boolean(this.container);
 };
 
-/**
+/*
  * @return {React.Component}
  *         The instance of the test subject. This is normally found in the
  *         global "subject" variable.
@@ -85,7 +85,7 @@ ReactSuiteAPI.prototype.getSubject = function() {
   return this.subject;
 };
 
-/**
+/*
  * @return {HTMLElement}
  *         The DOM node the subject was mounted on.
  */
@@ -93,7 +93,7 @@ ReactSuiteAPI.prototype.getContainer = function() {
   return this.container;
 };
 
-/**
+/*
  * Unmount and mount the subject again with new initial props.
  *
  * > This will trigger the `componentWillUnmount()` hook!
@@ -120,7 +120,7 @@ ReactSuiteAPI.prototype.remountSubject = function(initialProps, done) {
   }
 };
 
-/**
+/*
  * Remove the previously created instance in [#createSubject](). This will also
  * undo all side-effects to the React and Ember routes.
  *
@@ -147,7 +147,7 @@ ReactSuiteAPI.prototype.removeSubject = function() {
 // DOM Attaching; for ?inspect=true mode.
 // -----------------------------------------------------------------------------
 
-/**
+/*
  * Attach the component to the inspection DOM node which resides in the document
  * DOM tree. This could be needed for things that rely on the visibility of
  * the component.
@@ -172,7 +172,7 @@ ReactSuiteAPI.prototype.attachToDOM = function(callback) {
   }
 };
 
-/**
+/*
  * @return {Boolean}
  *         Whether the component is currently visible in the document DOM tree.
  */
@@ -183,7 +183,7 @@ ReactSuiteAPI.prototype.isAttachedToDOM = function() {
   );
 };
 
-/**
+/*
  * Detach the component from the document DOM tree, rendering it invisible once
  * again.
  */

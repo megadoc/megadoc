@@ -336,14 +336,14 @@ addPackageDocumentation('megadoc-linter', {
 addPackageDocumentation('megadoc-html-serializer', {
   url: '/dev/megadoc-html-serializer',
   withLayouts: false,
-  js: {
-    parserOptions: {
-      presets: [
-        path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
-        path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
-      ],
-    },
-  }
+  // js: {
+  //   parserOptions: {
+  //     presets: [
+  //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
+  //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
+  //     ],
+  //   },
+  // }
 });
 
 addPackageDocumentation('megadoc-docstring', {
@@ -385,10 +385,11 @@ function addPackageDocumentation(pluginName, options = {}) {
     config.sources.push({
       id: 'js__' + pluginName,
       include: [
-        'packages/' + pluginName + '/{lib,ui,defs}**/*.js'
+        'packages/' + pluginName + '/{lib,ui,defs}/**/*.js'
       ],
       exclude: [
-        '**/__tests__/**'
+        '**/__tests__/**',
+        '**/vendor/**',
       ],
 
       processor: [ 'megadoc-plugin-js', Object.assign({
@@ -400,6 +401,13 @@ function addPackageDocumentation(pluginName, options = {}) {
 
         namespaceDirMap: {
           'ui/': 'UI',
+        },
+
+        parserOptions: {
+          presets: [
+            path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
+            path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
+          ],
         },
       }, options.js)],
 

@@ -30,4 +30,4 @@ module.exports = {
 }
 ```
 
-See [megadoc-plugin-markdown.Config Config]() for the available settings.
+See [./lib/config.js]() for the available settings.

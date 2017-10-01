@@ -8,7 +8,7 @@ implementation for resolving links, among other things like plotting
 dependency and co-relation graphs between documents.
 
 Megadoc's HTML serializer is entirely powered by the corpus and exposes 
-[Core.UI.CorpusAPI an API]() for interacting with it - so as an upstream 
+[CorpusAPI an API]() for interacting with it - so as an upstream 
 developer, learning how to use and utilize the corpus will pay off greatly.
 
 ## Design
@@ -115,14 +115,14 @@ same entity from a different document, `Y`, yields nothing.
 Any link that begins with `./` is expected to point to a document that can be
 found relative from the current document's filepath:
 
-    [[./path/to/file]]
+    \[[./path/to/file]]
 
 ### Resolving by (absolute) filepath
 
 Any link that begins with `/` is expected to point to a document that can be
-found at that path, relative to the [[Config@assetRoot]]:
+found at that path, relative to the [[Config.assetRoot]]:
 
-    [[/path/to/file]]
+    \[[/path/to/file]]
 
 Let's look at an example corpus with the following contents:
 

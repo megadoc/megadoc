@@ -36,7 +36,7 @@ what nomnoml supports.
 Want more? Here's a diagram with **links to internal documents**:
 
 ```dot
-[You are here] -> [mega://megadoc-html-dot as "Back to the top"]
+[You are here] -> [mega://packages/megadoc-html-dot/README.md as "Back to the top"]
 ```
 
 ## Installation
@@ -109,7 +109,7 @@ It's totally possible to _frame_ it:
 Which will look something like this:
 
 ```dot
-[Foo | mega://my-broken-link]
+[Foo | mega://packages/megadoc-html-dot/README.md as "My Custom Text"]
 ```
 
 ## Credits

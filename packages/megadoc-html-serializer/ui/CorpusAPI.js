@@ -2,8 +2,20 @@ const console = require("console");
 const { assign } = require('lodash');
 
 /**
- * To access these APIs from within your plugins, use the global instance found
- * at [megadoc@corpus `window.megadoc.corpus`]().
+ * To access these APIs from within your plugins, use the instance found on
+ * React's context by the name of "corpus".
+ *
+ * For example:
+ *
+ *     React.createClass({
+ *       contextTypes: {
+ *         corpus: PropTypes.object
+ *       },
+ *
+ *       render() {
+ *         console.log(this.context.corpus.get('/index.html'));
+ *       }
+ *     })
  */
 function CorpusAPI({ database: shallowCorpus, redirect }) {
   const exports = {};

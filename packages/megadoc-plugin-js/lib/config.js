@@ -134,9 +134,10 @@ module.exports = {
    * something else, pass this in.
    *
    * @callback Config~ParseRoutine
+   *
    * @param {String} sourceCode
    * @param {String} filePath
-   *        File path relative to the [Config@assetRoot](). Use this for error
+   *        File path relative to the [Config.assetRoot](). Use this for error
    *        reporting.
    *
    * @param {String} absoluteFilePath
