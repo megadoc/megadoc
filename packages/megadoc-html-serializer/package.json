@@ -1,6 +1,6 @@
 {
   "name": "megadoc-html-serializer",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack"
@@ -26,7 +26,7 @@
     "lodash": "3.10.1",
     "marked": "0.3.3",
     "megadoc-config-utils": "^6.0.1",
-    "megadoc-corpus": "^6.2.0",
+    "megadoc-corpus": "^6.2.3",
     "megadoc-linter": "^6.2.0",
     "megadoc-markdown-utils": "^6.2.0",
     "normalize.css": "^3.0.3",

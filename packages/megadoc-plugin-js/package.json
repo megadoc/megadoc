@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-js",
-  "version": "6.2.2",
+  "version": "6.2.3",
   "description": "megadoc plugin for JavaScript sources.",
   "main": "lib/index.js",
   "repository": {
@@ -27,7 +27,7 @@
     "babel-types": "6.26.0",
     "jsdoc-parser-extended": "^6.2.0",
     "lodash": "3.10.1",
-    "megadoc-corpus": "^6.2.0",
+    "megadoc-corpus": "^6.2.3",
     "megadoc-linter": "^6.2.0",
     "ramda": "0.24.1",
     "weakmap": "0.0.6"
