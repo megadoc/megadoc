@@ -1,6 +1,6 @@
 {
   "name": "megadoc-cli",
-  "version": "6.2.0",
+  "version": "6.2.2",
   "main": "bin/megadoc.js",
   "bin": {
     "megadoc": "bin/megadoc.js",
@@ -19,15 +19,15 @@
     "ramda": "0.24.1"
   },
   "peerDependencies": {
-    "megadoc-compiler": "^6.2.0",
-    "megadoc-html-dev-server": "^6.2.0",
+    "megadoc-compiler": "^6.2.2",
+    "megadoc-html-dev-server": "^6.2.2",
     "megadoc-html-live-server": "^6.0.1",
-    "megadoc-html-serializer": "^6.2.0"
+    "megadoc-html-serializer": "^6.2.2"
   },
   "devDependencies": {
-    "megadoc-compiler": "^6.2.0",
-    "megadoc-html-dev-server": "^6.2.0",
+    "megadoc-compiler": "^6.2.2",
+    "megadoc-html-dev-server": "^6.2.2",
     "megadoc-html-live-server": "^6.0.1",
-    "megadoc-html-serializer": "^6.2.0"
+    "megadoc-html-serializer": "^6.2.2"
   }
 }
