@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.2.1
+
+- corrected dependency issue in megadoc-preset-js
+
 ## 6.2.0
 
 - Lua::Browser outlet now supports an `expanded: Boolean` option for expanding
