@@ -26,6 +26,7 @@ function reduceNamespaceDocument(doc) {
     title: doc.id,
     symbol: '.',
     indexFields: [ '$uid', '$filePath', 'name', 'aliases' ],
+    summaryFields: [ 'description' ],
     filePath: doc.filePath,
     loc: doc.loc,
     properties: omit(doc, [ 'filePath' ]),

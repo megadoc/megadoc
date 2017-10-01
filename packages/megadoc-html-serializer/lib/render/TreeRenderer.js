@@ -1,13 +1,6 @@
 const R = require('ramda');
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
-const { extractSummary } = require('megadoc-markdown-utils');
-
-const extractSummaryFromMarkdown = function(markdown) {
-  return extractSummary(markdown || '', {
-    plainText: true
-  })
-};
 
 exports.renderTree = function(state, tree, { decorators = [], linter, renderOperations }) {
   const codeBlockRendererInjections = {
@@ -58,16 +51,6 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
 
       if (nextProperties) {
         nextData.properties = nextProperties;
-      }
-    }
-
-    if (node.summaryFields) {
-      const summaryInput = node.summaryFields.reduce(function(value, fieldName) {
-        return value || node.properties[fieldName]
-      }, null);
-
-      if (summaryInput) {
-        nextData.summary = extractSummaryFromMarkdown(summaryInput);
       }
     }
 

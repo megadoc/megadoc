@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { extractSummary, generateAnchor, markdownToText } = require('megadoc-markdown-utils');
+const { generateAnchor, markdownToText } = require('megadoc-markdown-utils');
 const parseTitle = require('./utils/parseTitle');
 const strHumanize = require('./utils/strHumanize');
 
@@ -21,9 +21,6 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
 
   entry.title = getPredefinedTitle(config, relativeFilePath) || parseTitle(entry.source);
   entry.wordCount = entry.source.split(/\s+/).length;
-  entry.summary = extractSummary(entry.source, {
-    plainText: true
-  });
 
   const preformatEntry = getPreformatEntry(config, relativeFilePath);
 

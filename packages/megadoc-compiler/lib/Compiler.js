@@ -226,7 +226,7 @@ function compileTrees(state, done) {
     (
       defineBreakpoint(BREAKPOINT_REDUCE)
       (
-        reduce
+        R.partial(reduce, [ serializer ])
       )
     ),
 

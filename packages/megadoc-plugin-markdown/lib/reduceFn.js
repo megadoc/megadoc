@@ -9,7 +9,7 @@ module.exports = function reduceFn(options, rawDocument, done) {
     id: rawDocument.id,
     title: rawDocument.plainTitle,
     filePath: rawDocument.filePath,
-    summary: rawDocument.summary,
+    summaryFields: [ 'source' ],
     properties: omit(rawDocument, [ 'anchor', 'filePath' ]),
     symbol: '#',
     meta: {

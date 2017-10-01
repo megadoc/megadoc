@@ -84,13 +84,13 @@ LinkResolver.prototype.lookup = function(params) {
     return null;
   }
 
-  var document = index.node;
-  var text = document.title || index.text;
+  var node = index.node;
+  var text = node.title || index.text;
 
-  if (!document.meta.href) {
+  if (!node.meta.href) {
     linter.logError({
       message: "Document can not be linked to as it has no @href.",
-      loc: linter.locationForNode(document)
+      loc: linter.locationForNode(node)
     });
 
     return null;
@@ -98,7 +98,7 @@ LinkResolver.prototype.lookup = function(params) {
   else if (!text) {
     linter.logError({
       message: "Document can not be linked to as it has no @title.",
-      loc: linter.locationForNode(document)
+      loc: linter.locationForNode(node)
     })
 
     return null;
@@ -106,24 +106,24 @@ LinkResolver.prototype.lookup = function(params) {
   else {
     return {
       text: text,
-      title: document.summary,
-      href: Href(document)
+      title: node.summary,
+      href: Href(node, params.contextNode)
     };
   }
-
-  function Href(node) {
-    const relativeHref = URI(node.meta.href).relativeTo(params.contextNode.meta.href).toString();
-
-    // handle links to self or links from an entity to parent since the relative
-    // href will be empty and will be marked as a broken link when in fact it
-    // isn't, so we just use the absolute href:
-    if (relativeHref.length === 0) {
-      return LinkToSelf;
-    }
-
-    return relativeHref;
-  }
 };
+
+function Href(node, contextNode) {
+  const relativeHref = URI(node.meta.href).relativeTo(contextNode.meta.href).toString();
+
+  // handle links to self or links from an entity to parent since the relative
+  // href will be empty and will be marked as a broken link when in fact it
+  // isn't, so we just use the absolute href:
+  if (relativeHref.length === 0) {
+    return LinkToSelf;
+  }
+
+  return relativeHref;
+}
 
 /**
  * Linkify all internal links found in a block of text.
@@ -185,29 +185,29 @@ LinkResolver.prototype.linkify = function(params) {
  */
 LinkResolver.prototype.renderLink = function(params, descriptor) {
   const format = params.format || 'markdown';
-  const contextNode = params.contextNode ?
-    this.corpus.get(params.contextNode.uid) :
-    null
-  ;
-  const link = this.lookup({ path: descriptor.path, contextNode: contextNode });
+  const contextNode = this.corpus.get(params.contextNode.uid);
+  const index = this.lookup({
+    path: descriptor.path,
+    contextNode
+  });
 
   assert(descriptor.hasOwnProperty('source'),
     "Link descriptor must contain a @source attribute!");
 
-  if (link) {
+  if (index) {
     return generateMarkup({
       format: format,
-      href: link.href,
-      text: descriptor.text || link.text,
-      title: descriptor.title || link.title,
+      href: index.href,
+      text: descriptor.text || index.text,
+      title: descriptor.title || index.title,
     });
   }
   else {
     this.linter.logRuleEntry({
       rule: NoBrokenLinks,
       params: descriptor,
-      loc: this.linter.locationForNode(contextNode || params.contextNode),
-    })
+      loc: this.linter.locationForNode(contextNode),
+    });
 
     return generateMarkup({
       format: format,

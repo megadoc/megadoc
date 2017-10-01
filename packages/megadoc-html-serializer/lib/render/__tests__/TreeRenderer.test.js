@@ -44,32 +44,6 @@ describe('TreeRenderer', function() {
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
     });
 
-    it('extracts a summary from one of the "summaryFields" fields', function() {
-      const tree = b.namespace({
-        id: 'test',
-        name: 'Test',
-        documents: [
-          b.document({
-            id: 'moduleA',
-            summaryFields: [ 'description' ],
-            properties: {
-              text: 'Hello *World*!',
-              description: 'lol!'
-            }
-          }),
-        ]
-      });
-
-      const renderOperations = {};
-
-      const renderedTree = Subject.renderTree({
-        markdownRenderer: new Renderer({}),
-        linkResolver: new LinkResolver(null, {}),
-      }, tree, { renderOperations });
-
-      assert.equal(renderedTree.documents[0].summary, 'lol!')
-    })
-
     it('uses custom block renderers from decorators', function() {
       const tree = b.namespace({
         id: 'test',

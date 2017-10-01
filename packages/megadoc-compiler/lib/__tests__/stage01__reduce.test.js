@@ -1,5 +1,6 @@
 const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
 const subject = require('../stage01__reduce');
+const TestSerializer = require('./fixtures/TestSerializer');
 
 describe('stage01__reduce', function() {
   const fileSuite = FileSuite(this);
@@ -30,7 +31,7 @@ describe('stage01__reduce', function() {
       ]
     };
 
-    subject(compilation, function(err, { documents }) {
+    subject(new TestSerializer(), compilation, function(err, { documents }) {
       if (err) {
         done(err);
       }

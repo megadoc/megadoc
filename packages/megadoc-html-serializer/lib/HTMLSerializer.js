@@ -1,3 +1,4 @@
+const R = require('ramda');
 const AssetUtils = require('./AssetUtils');
 const ClientSandbox = require('./emit/ClientSandbox');
 const NodeURIDecorator = require('./NodeURIDecorator');
@@ -7,7 +8,7 @@ const emit = require('./emit');
 const purge = require('./purge');
 const renderRoutines = require('./renderRoutines');
 const defaults = require('./config');
-const { omit } = require('lodash');
+const { extractSummary } = require('megadoc-markdown-utils');
 
 /**
  * @module HTMLSerializer
@@ -20,7 +21,7 @@ function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
   this.assetUtils = new AssetUtils(this.compilerConfig);
   this.config = Object.assign({},
     defaults,
-    omit(userSerializerOptions, [ 'layoutOptions' ]),
+    R.omit([ 'layoutOptions' ], userSerializerOptions),
     userSerializerOptions.layoutOptions
   );
   this.corpusVisitor = NodeURIDecorator(this.config);
@@ -32,6 +33,18 @@ function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
 };
 
 HTMLSerializer.prototype.renderRoutines = renderRoutines;
+HTMLSerializer.prototype.renderOne = function(node) {
+  const summary = extractSummaryForNode(node);
+
+  if (summary) {
+    console.log('node "%s" has summary', node.id, summary.length)
+    return R.merge(node, { summary });
+  }
+  else {
+    console.log('node "%s" has no summary', node.id)
+    return node;
+  }
+};
 
 HTMLSerializer.prototype.start = function(compilations, done) {
   this.state.assets = createAssets(this.config, compilations);
@@ -79,5 +92,18 @@ HTMLSerializer.prototype.stop = function(done) {
     }
   })
 };
+
+function extractSummaryForNode({ summaryFields = [], properties = {} }) {
+  const summaryInput = summaryFields.reduce(function(value, fieldName) {
+    return value || properties[fieldName];
+  }, null);
+
+  if (summaryInput) {
+    return extractSummary(summaryInput, { plainText: true });
+  }
+  else {
+    return null;
+  }
+}
 
 module.exports = HTMLSerializer;

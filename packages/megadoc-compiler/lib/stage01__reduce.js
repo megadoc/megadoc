@@ -5,7 +5,7 @@ const partial = require('./utils/partial');
 const asyncMaybe = require('./utils/asyncMaybe');
 const { assignUID } = require('megadoc-corpus');
 
-module.exports = function reduce(compilation, done) {
+module.exports = function reduce(serializer, compilation, done) {
   const { processor, linter, refinedDocuments } = compilation;
   const context = {
     compilerOptions: compilation.compilerOptions,
@@ -16,7 +16,16 @@ module.exports = function reduce(compilation, done) {
     createMetaContainer,
     setDefaults,
     relativizeFilePaths,
-    assignUID
+    assignUID,
+    // This routine was part of the tree rendering phase but because of
+    // dependencies between the rendering reducers we would have had to do
+    // multiple passes over the tree which is very costly.
+    //
+    // Instead we'll do preemptive per-node mutations in this stage and leave
+    // the pure reducers for the tree rendering phase.
+    typeof serializer.renderOne === 'function' ?
+      serializer.renderOne.bind(serializer) :
+      R.identity
   );
 
   reduceEach(context, refinedDocuments, processor.reduceFnPath, asyncMaybe(function(documents) {

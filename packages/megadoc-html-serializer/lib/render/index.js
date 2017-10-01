@@ -28,8 +28,8 @@ module.exports = function render({ serializer, compilations }, done) {
   const state = {
     compilerConfig: serializer.compilerConfig,
     markdownRenderer,
-    linkResolver: linkResolver,
-    corpus: corpus,
+    linkResolver,
+    corpus,
   };
 
   // todo: distribute
