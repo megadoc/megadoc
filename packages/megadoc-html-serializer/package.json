@@ -1,6 +1,6 @@
 {
   "name": "megadoc-html-serializer",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack"

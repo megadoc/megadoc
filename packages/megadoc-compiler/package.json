@@ -1,6 +1,6 @@
 {
   "name": "megadoc-compiler",
-  "version": "6.2.3",
+  "version": "6.2.4",
   "main": "lib/index.js",
   "scripts": {},
   "dependencies": {
@@ -16,7 +16,7 @@
     "ramda": "0.24.1"
   },
   "devDependencies": {
-    "megadoc-html-serializer": "^6.2.3",
+    "megadoc-html-serializer": "^6.2.4",
     "megadoc-test-utils": "^6.2.0"
   }
 }
