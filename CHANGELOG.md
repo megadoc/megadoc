@@ -4,6 +4,8 @@
 
 - html: fixed an issue that was causing the browser window to scroll back to
   the top in live editing mode
+- cli: fixed dependencies in package; `megadoc-html-live-server` and `megadoc-
+  html-dev-server` are now listed as optional dependencies
 
 ## 6.2.3
 
