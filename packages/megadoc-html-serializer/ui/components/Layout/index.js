@@ -3,6 +3,7 @@ const classSet = require('utils/classSet');
 const Banner = require('./Banner');
 const LayoutScreen = require('./Screen');
 const scrollToTop = require('utils/scrollToTop');
+const { get } = require('lodash');
 const { PropTypes } = React;
 
 const { node, shape, string, arrayOf, array, object, bool, } = React.PropTypes;
@@ -46,7 +47,7 @@ const Layout = React.createClass({
   },
 
   componentWillUpdate(nextProps) {
-    if (nextProps.scope.documentNode !== this.props.scope.documentNode) {
+    if (get(nextProps, 'scope.documentNode.uid') !== get(this.props, 'scope.documentNode.uid')) {
       scrollToTop();
     }
   },

@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.2.4
+
+- html: fixed an issue that was causing the browser window to scroll back to
+  the top in live editing mode
+
 ## 6.2.3
 
 - Removed a rogue `console.log()` statement.
