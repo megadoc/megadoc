@@ -3,7 +3,7 @@ const path = require('path');
 const generateCustomWebpackConfig = require('../../webpack/common');
 const publicModules = require('../../webpack/publicModules');
 
-exports.compile = function(scripts, outputFilePath, { optimize, verbose }, done) {
+exports.compile = function(scripts, outputFilePath, { optimize, sourceMaps, verbose }, done) {
   var id = path.basename(outputFilePath, path.extname(outputFilePath));
 
   if (!scripts.length) {
@@ -12,7 +12,7 @@ exports.compile = function(scripts, outputFilePath, { optimize, verbose }, done)
 
   var webpackConfig = generateCustomWebpackConfig({
     entry: scripts,
-    devtool: false,
+    devtool: sourceMaps ? 'inline-source-map' : false,
 
     output: {
       path: path.dirname(outputFilePath),
@@ -32,6 +32,10 @@ exports.compile = function(scripts, outputFilePath, { optimize, verbose }, done)
   if (optimize) {
     console.log('Plugin "%s" bundle will be optimized.', id);
     webpackConfig.plugins.push(new webpack.optimize.UglifyJsPlugin());
+  }
+
+  if (sourceMaps) {
+    console.log('Plugin "%s" bundle will contain inline source maps.', id);
   }
 
   if (verbose) {

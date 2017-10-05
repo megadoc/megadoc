@@ -113,7 +113,12 @@ function run_tests {
 }
 
 function build_assets {
-  build_script=$(cat $PACKAGE_ROOT/package.json | jq -e -r '.scripts.build')
+  local build_script=$(cat $PACKAGE_ROOT/package.json | jq -e -r '.scripts.build')
+  local flags="--source-maps"
+
+  if [ "${NODE_ENV}" == "production" ]; then
+    flags="--optimize"
+  fi
 
   if [ "${build_script}" == 'null' ]
   then
@@ -127,9 +132,9 @@ function build_assets {
       rm -r $PACKAGE_ROOT/dist
     fi
 
-    "${ROOT}/packages/megadoc-cli/bin/megadoc-build-html-plugin.js" --optimize \
-      "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
-      "${PACKAGE_ROOT}/ui/index.js"
+    "${ROOT}/packages/megadoc-cli/bin/megadoc-build-html-plugin.js" "${flags}" \
+      -o "${PACKAGE_ROOT}/dist/${PACKAGE_NAME}.js" \
+      -e "${PACKAGE_ROOT}/ui/index.js"
   else
     (cd $PACKAGE_ROOT; npm run build)
   fi

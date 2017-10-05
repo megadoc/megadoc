@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.3.0
+
+- megadoc-cli build-html-plugin signature has changed: it now accepts the entry
+  file via the --entry option and the output file via --output
+ 
 ## 6.2.4
 
 - html: fixed an issue that was causing the browser window to scroll back to

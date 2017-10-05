@@ -8,22 +8,18 @@ const { compilePlugin } = require('megadoc-html-serializer/addon');
 program
   .version(pkg.version)
   .description('Compile a megadoc UI plugin.')
-  .arguments('<outfile> <entry_file> [other_entry_files...]')
+  .option('-o, --output [file]')
+  .option('-e, --entry [file]')
   .option('--optimize', 'Build a production-ready version.')
-  .action(function(output, entry, otherEntries) {
-    compilePlugin(
-      [ entry ].concat(otherEntries).map(resolvePath),
-      resolvePath(output),
-      {
-        optimize: program.optimize,
-        verbose: true,
-      },
-      throwOnError
-    );
-  })
+  .option('--source-maps')
   .parse(process.argv)
 ;
 
+compilePlugin([ program.entry ].map(resolvePath), resolvePath(program.output), {
+  optimize: program.optimize,
+  sourceMaps: program.sourceMaps,
+  verbose: true,
+}, throwOnError);
 
 function resolvePath(arg) {
   return path.resolve(arg);

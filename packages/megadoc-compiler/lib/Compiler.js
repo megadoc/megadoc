@@ -67,7 +67,7 @@ exports.run = function run(userConfig, runOptions, done) {
     writeFn: x => profile.benchmarks.push(x)
   });
 
-  const compile = asyncSequence([
+  const boot = asyncSequence([
     asyncify
     (
       mergeWith({ instrument })
@@ -128,6 +128,13 @@ exports.run = function run(userConfig, runOptions, done) {
     instrument.async('boot:start-cluster')
     (
       startCluster
+    ),
+  ])
+
+  const compile = asyncSequence([
+    instrument.async('boot')
+    (
+      boot
     ),
 
     instrument.async('compile')
