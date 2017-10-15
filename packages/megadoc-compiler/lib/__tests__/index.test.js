@@ -55,7 +55,7 @@ describe("megadoc-compiler::compile", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, function(err, result) {
+    }, {}, function(err, result) {
       if (err) {
         return done(err);
       }
@@ -90,7 +90,7 @@ describe("megadoc-compiler::compile", function() {
       ],
     }
 
-    compile(config, function(err, state) {
+    compile(config, {}, function(err, state) {
       if (err) {
         return done(err);
       }
@@ -176,7 +176,7 @@ describe("megadoc-compiler::compile", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, function(err, { compilations }) {
+    }, {}, function(err, { compilations }) {
       if (err) {
         return done(err);
       }

@@ -11,7 +11,6 @@ const parseCommonOptions = require('../lib/parseCommonOptions');
 addCommonOptions(program)
   .description('Generate static documentation.')
   .option('--breakpoint [BREAKPOINT]', 'Debugging breakpoint')
-  .option('--profile')
   .option('--dump-config')
   .option('--dump-corpus <PATH>')
   .option('-w, --watch', 'Run in watch mode.')

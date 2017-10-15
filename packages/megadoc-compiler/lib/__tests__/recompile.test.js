@@ -67,7 +67,7 @@ describe('megadoc-compiler::recompile', function() {
       ],
     }
 
-    compile(config, function(err, state) {
+    compile(config, {}, function(err, state) {
       if (err) {
         return done(err);
       }

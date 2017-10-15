@@ -11,6 +11,7 @@ module.exports = function addCommonOptions(program) {
     .option('--debug', 'print painful diagnostic information')
     .option('-j, --threads [COUNT]', 'number of threads to use for processing (1 means foreground)')
     .option('-k, --concurrency [COUNT]', '', 5)
+    .option('--profile')
   ;
 
   return program;

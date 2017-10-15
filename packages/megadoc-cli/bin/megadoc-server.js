@@ -7,6 +7,8 @@ const parseCommonOptions = require('../lib/parseCommonOptions');
 const { run: compileAndWatch } = require('../lib/compileAndWatch');
 const { fork } = require('child_process');
 const chalk = require('chalk');
+const fs = require('fs');
+const os = require('os');
 
 addCommonOptions(program)
   .description('Serve documentation through a web-server and reflect changes in real-time.')
@@ -37,7 +39,7 @@ console.log('[I] Generating documentation for the first time... please hold on.'
 compileAndWatch(config, {
   purge: true,
   breakpoint: null,
-  profile: false,
+  profile: program.profile,
 }, function(compilationError) {
   if (compilationError) {
     throw compilationError;
@@ -51,6 +53,7 @@ compileAndWatch(config, {
   ;
 
   const { host, port } = program;
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), `megadoc-cli-`));
 
   fd.on('message', function(message) {
     if (message.name === 'ALIVE') {
@@ -65,7 +68,7 @@ compileAndWatch(config, {
         host,
         port,
         sourceFiles: [],
-        tmpDir: config.tmpDir,
+        tmpDir,
       })
     }
     else if (message.name === 'READY') {

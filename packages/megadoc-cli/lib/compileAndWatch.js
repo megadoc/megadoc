@@ -2,6 +2,7 @@ const compiler = require('megadoc-compiler');
 const chokidar = require('chokidar');
 const R = require('ramda');
 const ConfigUtils = require('megadoc-config-utils');
+const printProfile = require('./printProfile');
 
 exports.run = function(config, runOptions, callback = null) {
   compiler.run(config, runOptions, function(err, state) {
@@ -14,6 +15,10 @@ exports.run = function(config, runOptions, callback = null) {
 
     if (err) {
       throw err;
+    }
+
+    if (state.profile) {
+      printProfile(state.profile)
     }
 
     engage(config, runOptions, state)
@@ -47,6 +52,10 @@ function engage(config, runOptions, initialState) {
         }
 
         state = nextState;
+
+        if (state.profile) {
+          printProfile(state.profile)
+        }
 
         const elapsed = (new Date() - startedAt) / 1000;
         console.log(`[I] Done: ${elapsed}s.`);
