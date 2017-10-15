@@ -1,5 +1,21 @@
 # Changelog
 
+## 7.0.0-beta.2
+
+- megadoc-compiler now accepts a `concurrency` option for tuning the number of
+  documents processed concurrently during the parse phase (at the node.js-
+  level)
+- megadoc-compiler: parse phase now accepts decorators
+- megadoc-compiler now supports spawning services that live throughout the
+  lifetime of the compilation process like HTTP servers for decorators to
+  interact with
+- megadoc-compiler: improved performance of boot phase by performing a few
+  tasks in parallel instead of sequentially
+- megadoc-compiler: will now correctly recover from exceptions raised during
+  compilation
+- (internal) megadoc-html-serializer: removed unused symbols in AssetUtils
+- (internal) megadoc-html-serializer: `#stop` is now idempotent
+
 ## 7.0.0-beta.1
 
 - [[megadoc-html-serializer]] MediaWiki link strategy now can handle links

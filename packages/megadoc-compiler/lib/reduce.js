@@ -6,7 +6,7 @@ const asyncMaybe = require('./utils/asyncMaybe');
 const { assignUID } = require('megadoc-corpus');
 
 module.exports = function reduce(serializer, compilation, done) {
-  const { processor, linter, refinedDocuments } = compilation;
+  const { decorations, processor, linter, refinedDocuments } = compilation;
   const context = {
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
@@ -15,6 +15,7 @@ module.exports = function reduce(serializer, compilation, done) {
   const normalize = R.pipe(
     createMetaContainer,
     setDefaults,
+    addDecorationsToMeta,
     relativizeFilePaths,
     assignUID,
     // This routine was part of the tree rendering phase but because of
@@ -70,6 +71,17 @@ module.exports = function reduce(serializer, compilation, done) {
 
       default:
         return node;
+    }
+  }
+
+  function addDecorationsToMeta(node) {
+    const nodeDecorations = decorations[node.filePath]
+
+    if (nodeDecorations) {
+      return R.merge(node, { meta: R.merge(node.meta, nodeDecorations) })
+    }
+    else {
+      return node;
     }
   }
 };

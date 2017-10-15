@@ -13,12 +13,12 @@ describe('reduce', function() {
     `);
 
     const compilation = {
+      compilerOptions: {},
+      decorations: {},
       files: [
         'a',
         'b',
       ],
-
-      compilerOptions: {},
 
       processor: {
         reduceFnPath: reduceFnFile.path,

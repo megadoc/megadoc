@@ -34,31 +34,8 @@ module.exports = function AssetUtils(config) {
       return pathJoin(config.assetRoot, [].slice.call(arguments));
     },
 
-    getPublicAssetPath: function(/*relativePath*/) {
-      return path.join.apply(path, [ 'assets' ].concat([].slice.call(arguments)));
-    },
-
-    /**
-     * Convert a full asset path into one relative to the asset root.
-     *
-     * @param  {String} absolutePath
-     * @return {String}
-     *
-     * @example
-     *
-     *     getRelativeAssetPath("/path/to/project/doc/something.md");
-     *     // => "doc/something.md"
-     */
-    getRelativeAssetPath: function(absolutePath) {
-      return absolutePath.replace(config.assetRoot, '').replace(/^\//, '');
-    },
-
     getOutputPath: function(/*relativePath*/) {
       return pathJoin(config.outputDir, [].slice.call(arguments));
-    },
-
-    getTmpDir: function() {
-      return config.tmpDir;
     },
 
     /**
@@ -131,54 +108,6 @@ module.exports = function AssetUtils(config) {
       else {
         callback();
       }
-    },
-
-    /**
-     * Write some contents to an arbitrary temporary file and get a handle to
-     * its filepath.
-     */
-    writeTmpFile: function(contents, fileName) {
-      var filePath = path.join(
-        config.tmpDir,
-        fileName || ('tmp--' + (tmpFileId++))
-      );
-
-      fs.writeFileSync(filePath, contents);
-
-      return filePath;
-    },
-
-    /**
-     * Glob a bunch of (relative) source paths for files and optionally filter
-     * them.
-     *
-     * @param  {String|String[]} sourcePatterns
-     *         Minimatch-style patterns of source files. These paths are
-     *         expected to be relative to the assetRoot. See [#getAssetPath]().
-     *
-     * @param  {String[]|RegExp[]} rawFilters
-     *         Patterns to filter the globbed file paths by.
-     *
-     * @return {String[]}
-     *         A list of matched files.
-     */
-    globAndFilter: function(sourcePatterns, rawFilters) {
-      var globOpts = { nodir: true };
-      var files = arrayWrap(sourcePatterns).reduce(function(sources, pattern) {
-        return sources.concat(glob.sync(utils.getAssetPath(pattern), globOpts));
-      }, []);
-
-      var filters = arrayWrap(rawFilters);
-
-      return files.filter(function(filePath) {
-        return !filters.some(function(filter) {
-          return filePath.match(filter);
-        });
-      });
-    },
-
-    getWithDefaults: function(object, defaults) {
-      return merge({}, defaults, object);
     },
 
     fs: fs,

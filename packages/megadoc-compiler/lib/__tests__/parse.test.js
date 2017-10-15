@@ -4,6 +4,7 @@ const { createForegroundCluster } = require('divisus');
 
 describe('parse', function() {
   const fileSuite = FileSuite(this);
+  const concurrency = 3
 
   let cluster;
 
@@ -26,21 +27,84 @@ describe('parse', function() {
       `);
 
       const compilation = {
+        decorators: [],
         files: [
           'a',
           'b',
         ],
         processor: {
           parseFnPath: parseFnFile.path,
-        }
+        },
       };
 
-      subject(cluster, compilation, function(err, { rawDocuments }) {
+      subject(cluster, concurrency, compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
         else {
           assert.equal(rawDocuments.length, 2);
+          done();
+        }
+      });
+    });
+
+    it('should invoke the decorator parsers', function(done) {
+      const parseFnFile = fileSuite.createFile('parse.js', `
+        module.exports = function(options, file, done) {
+          done(null, {
+            title: file,
+          });
+        };
+      `);
+
+      const decoratorParseFnFile = fileSuite.createFile('decorator-parse.js', `
+        module.exports = function(context, file, done) {
+          done(null, {
+            something: file + '__decorated',
+          });
+        }
+      `)
+
+      const compilation = {
+        files: [
+          'doc1',
+          'doc2'
+        ],
+
+        processor: {
+          parseFnPath: parseFnFile.path,
+        },
+
+        decorators: [
+          {
+            metaKey: 'myDecorations',
+            parseFnPath: decoratorParseFnFile.path,
+          }
+        ]
+      };
+
+      subject(cluster, concurrency, compilation, function(err, { rawDocuments, decorations }) {
+        if (err) {
+          done(err);
+        }
+        else {
+          assert.equal(rawDocuments.length, 2);
+          assert.equal(rawDocuments[0].title, 'doc1');
+
+          assert.equal(Object.keys(decorations).length, 2)
+
+          assert.deepEqual(decorations['doc1'], {
+            myDecorations: {
+              something: 'doc1__decorated'
+            }
+          })
+
+          assert.deepEqual(decorations['doc2'], {
+            myDecorations: {
+              something: 'doc2__decorated'
+            }
+          })
+
           done();
         }
       });
@@ -56,16 +120,17 @@ describe('parse', function() {
       `);
 
       const compilation = {
+        decorators: [],
         files: [
           'a',
           'b',
         ],
         processor: {
           parseBulkFnPath: parseBulkFnFile.path,
-        }
+        },
       };
 
-      subject(cluster, compilation, function(err, { rawDocuments }) {
+      subject(cluster, 3, compilation, function(err, { rawDocuments }) {
         if (err) {
           done(err);
         }
@@ -88,6 +153,7 @@ describe('parse', function() {
     `);
 
     const compilation = {
+      decorators: [],
       files: [
         'a',
         'b',
@@ -97,7 +163,7 @@ describe('parse', function() {
       }
     };
 
-    subject(cluster, compilation, function(err, { rawDocuments }) {
+    subject(cluster, 3, compilation, function(err, { rawDocuments }) {
       if (err) {
         done(err);
       }

@@ -1,47 +1,101 @@
+const R = require('ramda');
 const async = require('async');
 const invariant = require('invariant');
-const flattenArray = require('./utils/flattenArray');
-const partial = require('./utils/partial');
-const mergeObject = require('./utils/mergeObject');
 const asyncMaybe = require('./utils/asyncMaybe');
+const asyncNoop = (x, y, callback) => callback();
+
 const divisus = require('divisus');
 
 // TODO: apply decorators
-module.exports = function parse(cluster, compilation, done) {
-  const { files, processor } = compilation;
+module.exports = function parse(cluster, concurrency, compilation, done) {
+  const { files, decorators, processor } = compilation;
   const applier = processor.parseFnPath ? parseEach : parseBulk;
-  const fn = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
+  const fnPath = processor.parseFnPath ? processor.parseFnPath : processor.parseBulkFnPath;
   const context = {
     id: compilation.id,
     compilerOptions: compilation.compilerOptions,
     options: compilation.processorOptions,
   };
 
-  applier(cluster, context, files, fn, asyncMaybe(function(rawDocuments) {
-    return mergeObject(compilation, {
-      rawDocuments: flattenArray(rawDocuments),
+  applier(cluster, concurrency, context, files, fnPath, decorators, asyncMaybe(function([ rawDocuments, decorations = [] ]) {
+    return R.merge(compilation, {
+      decorations: decorations.reduce((map, fileDecorations, fileIndex) => {
+        const file = files[fileIndex];
+
+        fileDecorations.forEach((d, decoratorIndex) => {
+          const decorator = decorators[decoratorIndex];
+
+          if (d) {
+            if (!map[file]) {
+              map[file] = {};
+            }
+
+            map[file][decorator.metaKey] = d;
+          }
+        })
+
+        return map;
+      }, {}),
+      rawDocuments: R.flatten(rawDocuments),
     });
   }, done));
 };
 
-// TODO: distribute
-function parseEach(cluster, context, files, fnPath, done) {
+function parseEach(cluster, concurrency, context, files, fnPath, decorators, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(divisus(cluster).fn(fnPath), context);
+  const injectContext = f => R.partial(f, [ context ])
+  const fn = divisus(cluster).fn(fnPath);
+  const metaParsers = decorators.map(decorator => {
+    if (decorator.parseFnPath) {
+      return divisus(cluster).fn(decorator.parseFnPath);
+    }
+    else {
+      return asyncNoop;
+    }
+  })
 
-  async.mapLimit(files, 10, fn, done);
+  if (metaParsers.length) {
+    async.parallel([
+      R.partial(async.mapLimit, [files, concurrency, injectContext(fn) ]),
+      R.partial(async.mapLimit, [
+        files, concurrency, R.partial(async.applyEach, [
+          metaParsers.map(injectContext).map(f => (file, callback) =>{
+            f(file, function(err, decoration) {
+              if (err) {
+                callback(err)
+              }
+              else {
+                callback(null, decoration)
+              }
+            })
+          })
+        ])
+      ]),
+    ], done)
+  }
+  else {
+    async.mapLimit(files, 5, injectContext(fn), function(err, rawDocuments) {
+      if (err) {
+        done(err);
+      }
+      else {
+        done(null, [ rawDocuments, [] ])
+      }
+    })
+  }
 }
 
 // TODO: apply in background
-function parseBulk(cluster, context, files, fnPath, done) {
+// TODO: apply decorators
+function parseBulk(cluster, concurrency, context, files, fnPath, decorators, done) {
   invariant(typeof fnPath === 'string',
     "Expected 'parseBulkFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), context);
+  const fn = R.partial(require(fnPath), [ context ]);
 
-  fn(files, done);
+  fn(files, (err, docs) => done(err, [docs]));
 }

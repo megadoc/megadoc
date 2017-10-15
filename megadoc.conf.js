@@ -35,7 +35,8 @@ config.sources = [
     include: [ 'README.md', 'CHANGELOG.md' ],
     processor: [ 'megadoc-plugin-markdown', {
       baseURL: '/',
-    }]
+    }],
+    decorators: ['megadoc-git-stats'],
   },
 
   // @url: /usage
@@ -47,7 +48,8 @@ config.sources = [
       baseURL: '/usage',
       title: 'Usage',
       fullFolderTitles: false,
-    }]
+    }],
+    decorators: ['megadoc-git-stats'],
   },
 
   // @url: /dev/handbook
@@ -59,7 +61,8 @@ config.sources = [
       title: 'Plugin Development',
       fullFolderTitles: false,
       discardIdPrefix: 'dev-',
-    }]
+    }],
+    decorators: ['megadoc-git-stats'],
   },
 ];
 
@@ -156,13 +159,14 @@ config.serializer = [ 'megadoc-html-serializer', {
 
   customLayouts: [
     {
-      match: { by: 'uid', on: [ 'md__core/readme', 'md__core/changelog' ] },
+      match: { by: 'namespace', on: [ 'md__core' ] },
       regions: [
         {
           name: 'Core::Content',
           options: { framed: true },
           outlets: [
-            { name: 'Markdown::Document' }
+            { name: 'Markdown::Document' },
+            { name: 'GitStats' }
           ]
         },
         {
@@ -184,6 +188,7 @@ config.serializer = [ 'megadoc-html-serializer', {
             { name: 'JS::ModuleHeader', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
             { name: 'JS::ModuleIndex', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
             { name: 'JS::ModuleBody', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
+            { name: 'GitStats' }
           ]
         },
 
@@ -414,7 +419,8 @@ function addPackageDocumentation(pluginName, options = {}) {
       decorators: [
         [ 'megadoc-html-dot', {
           allowLinks: true
-        }]
+        }],
+        [ 'megadoc-git-stats' ]
       ]
     });
   }
@@ -430,7 +436,9 @@ function addPackageDocumentation(pluginName, options = {}) {
     decorators: [
       [ 'megadoc-html-dot', {
         allowLinks: true
-      }]
+      }],
+
+      'megadoc-git-stats'
     ]
   });
 
@@ -465,6 +473,9 @@ function addPackageDocumentation(pluginName, options = {}) {
             withJS && {
               name: 'JS::Module',
               match: { by: 'namespace', on: 'js__' + pluginName },
+            },
+            {
+              name: 'GitStats'
             }
           ].filter(truthy)
         },

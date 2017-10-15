@@ -20,7 +20,9 @@ const reduceTree = require('./reduceTree');
 const refine = require('./refine');
 const render = require('./render');
 const seal = require('./seal');
+const Service = require('./Service');
 const { assocWith, mergeWith, nativeAssoc } = require('./utils');
+
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const {
   BREAKPOINT_COMPILE,
@@ -87,11 +89,6 @@ module.exports = function compile(userConfig, runOptions, done) {
       )
     ),
 
-    instrument.async('boot:create-serializer')
-    (
-      createSerializer
-    ),
-
     instrument.async('boot:create-linter')
     (
       createLinter
@@ -110,10 +107,10 @@ module.exports = function compile(userConfig, runOptions, done) {
             {
               optionWhitelist: [
                 'assetRoot',
+                'debug',
                 'outputDir',
                 'tmpDir',
                 'verbose',
-                'debug',
               ]
             }
           ])
@@ -121,15 +118,36 @@ module.exports = function compile(userConfig, runOptions, done) {
       )
     ),
 
-    instrument.async('boot:start-serializer')
-    (
-      startSerializer
-    ),
+    (state, callback) => async.parallel([
+      instrument.async('boot:start-services')
+      (
+        R.partial(startServices, [state])
+      ),
 
-    instrument.async('boot:start-cluster')
-    (
-      startCluster
-    ),
+      R.curry(async.waterfall)([
+        instrument.async('boot:create-serializer')
+        (
+          R.partial(createSerializer, [state])
+        ),
+
+        instrument.async('boot:start-serializer')
+        (
+          startSerializer
+        ),
+      ]),
+
+      instrument.async('boot:start-cluster')
+      (
+        R.partial(startCluster, [state])
+      ),
+    ], (err, results) => {
+      if (err) {
+        callback(err)
+      }
+      else {
+        callback(null, R.mergeAll([ state ].concat(R.unnest(results))))
+      }
+    })
   ])
 
   const bootCompileAndEmit = asyncSequence([
@@ -152,6 +170,16 @@ module.exports = function compile(userConfig, runOptions, done) {
     )
   ])
 
+  const terminate = error => {
+    process.removeListener('uncaughtException', terminate)
+
+    ensureTeardown(teardownRoutines, () => {
+      throw error
+    })()
+  }
+
+  process.on('uncaughtException', terminate)
+
   instrument.async('total')(bootCompileAndEmit)({
     userConfig,
     runOptions,
@@ -159,6 +187,8 @@ module.exports = function compile(userConfig, runOptions, done) {
       teardownRoutines.push(fn);
     }
   }, ensureTeardown(teardownRoutines, (err, state) => {
+    process.removeListener('uncaughtException', terminate)
+
     if (err instanceof BreakpointError) {
       done(null, err.result);
     }
@@ -186,7 +216,7 @@ function compileTrees(state, done) {
     (
       defineBreakpoint(BREAKPOINT_PARSE)
       (
-        R.partial(parse, [ state.cluster ])
+        R.partial(parse, [ state.cluster, state.config.concurrency, ])
       )
     ),
 
@@ -360,7 +390,7 @@ function startSerializer(state, done) {
     else {
       state.registerTeardownRoutine(serializer.stop.bind(serializer))
 
-      done(null, state);
+      done(null, { serializer });
     }
   });
 }
@@ -384,7 +414,7 @@ function startCluster(state, done) {
         });
       });
 
-      done(null, Object.assign(state, { cluster }));
+      done(null, { cluster });
     }
   });
 }
@@ -395,4 +425,12 @@ function ensureTeardown(fns, done) {
       done(err, result);
     });
   }
+}
+
+function startServices(state, done) {
+  const services = Service.start(Service.DefaultPreset, state);
+
+  state.registerTeardownRoutine(services.down);
+
+  services.up(done);
 }

@@ -2,5 +2,8 @@
   "main": "lib/index.js",
   "name": "megadoc-config-utils",
   "scripts": {},
-  "version": "6.0.1"
+  "version": "6.0.1",
+  "dependencies": {
+    "ramda": "0.24.1"
+  }
 }

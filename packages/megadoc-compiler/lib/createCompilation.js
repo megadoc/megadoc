@@ -16,6 +16,7 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
   const configure = require(paths.configureFnPath);
 
   const id = source.id || calculateMD5Sum(JSON.stringify(source));
+  const { decorators = [] } = source;
 
   invariant(
     typeof spec.parseFnPath === 'string' ||
@@ -26,15 +27,24 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
     "A processor must define a reducing routine found in 'reduceFnPath'."
   );
 
+  const compilerOptions = pick(optionWhitelist, config)
+
   return {
     id,
+    decorators: decorators
+      .map(getConfigurablePair)
+      .map(R.partial(createDecorator, [{
+        compilerOptions,
+        compilationId: id,
+      }]))
+    ,
+    decorations: null,
     documents: null,
     files,
-    compilerOptions: pick(optionWhitelist, config),
+    compilerOptions,
     linter,
     processor: paths,
     processorOptions: configure(processorEntry.options || {}),
-    decorators: (source.decorators || []).map(getConfigurablePair).map(createDecorator),
     rawDocuments: null,
     refinedDocuments: null,
     renderOperations: null,
@@ -49,7 +59,7 @@ module.exports = function createCompilation(optionWhitelist, state, source) {
   };
 };
 
-function createDecorator(decoratorEntry) {
+function createDecorator(configurationContext, decoratorEntry) {
   const spec = require(decoratorEntry.name);
   const userOptions = decoratorEntry.options;
   const { configureFn = R.identity } = spec;
@@ -57,7 +67,10 @@ function createDecorator(decoratorEntry) {
   return {
     name: spec.name,
     spec,
-    options: configureFn(userOptions),
+    services: spec.services,
+    options: configureFn(userOptions, configurationContext),
+    metaKey: spec.metaKey,
+    parseFnPath: spec.parseFnPath,
   }
 }
 

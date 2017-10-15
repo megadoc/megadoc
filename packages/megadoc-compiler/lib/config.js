@@ -36,4 +36,5 @@ module.exports = {
 
   threads: 1,
   alias: {},
+  concurrency: 5,
 };

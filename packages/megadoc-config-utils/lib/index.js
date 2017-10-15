@@ -1,4 +1,6 @@
 const path = require('path');
+const R = require('ramda');
+const RE_TEMPLATE_VARIABLE = /\{\{\s{1}([^\}]+)\s{1}\}\}/g;
 
 function getConfigurablePair(item) {
   if (typeof item === 'string') {
@@ -34,3 +36,9 @@ exports.loadConfigFromFile = function(filePath) {
     assetRoot: userConfig.assetRoot || path.resolve(path.dirname(filePath))
   });
 }
+
+exports.t = R.curry(function t(params, string) {
+  return string.replace(RE_TEMPLATE_VARIABLE, function(match, fragment) {
+    return R.path(fragment.split('.'), params) || match
+  })
+});

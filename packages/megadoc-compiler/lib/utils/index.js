@@ -1,4 +1,5 @@
 const R = require('ramda');
+const async = require('async');
 
 // String -> a -> {k: v} -> {k: v}
 exports.nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {

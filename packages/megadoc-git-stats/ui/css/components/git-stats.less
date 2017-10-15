@@ -1,0 +1,27 @@
+.git-stats {
+  margin: 2rem 0 -3rem 0;
+  padding: 1rem 0;
+
+  &__committers {
+    &-list {
+      margin: 0;
+      padding: 0;
+    }
+
+    &-list-item {
+      display: inline-block;
+      margin: 0;
+
+      & + & {
+        margin-left: 0.5rem;
+      }
+    }
+  }
+}
+
+.schemable({
+  .git-stats {
+    color: @base1;
+    border-top: 1px solid @base2;
+  }
+});

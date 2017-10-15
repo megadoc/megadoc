@@ -37,5 +37,9 @@ module.exports = function parseCommonOptions(program) {
     config.threads = Math.max(parseInt(program.threads, 10), 1)
   }
 
+  if (program.concurrency) {
+    config.concurrency = Math.max(parseInt(program.concurrency, 10), 1)
+  }
+
   return { config: R.merge(defaults, config), configFilePath };
 }

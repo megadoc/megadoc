@@ -10,6 +10,7 @@ module.exports = function addCommonOptions(program) {
     .option('-v, --verbose', 'print diagnostic information')
     .option('--debug', 'print painful diagnostic information')
     .option('-j, --threads [COUNT]', 'number of threads to use for processing (1 means foreground)')
+    .option('-k, --concurrency [COUNT]', '', 5)
   ;
 
   return program;

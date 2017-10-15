@@ -79,6 +79,10 @@ HTMLSerializer.prototype.purge = function(corpusInfo, done) {
 };
 
 HTMLSerializer.prototype.stop = function(done) {
+  if (!this.state.clientSandbox) {
+    return done();
+  }
+
   this.state.clientSandbox.stop(this.state.assets, (err) => {
     if (err) {
       done(err);

@@ -44,7 +44,7 @@ module.exports = function FileSuite(mochaSuite, suiteOptions = {}) {
    * @return {String} file.contents
    */
   exports.createFile = function(fileName, contentsFn) {
-    var filePath = path.join(suiteRoot, fileName || '~file--[guid]');
+    var filePath = path.join(suiteRoot, fileName || interpolateGUID('~file--[guid]'));
     var contents = contentsFn instanceof Function ? multiline(contentsFn) : contentsFn;
 
     fs.ensureDirSync(path.dirname(filePath));
