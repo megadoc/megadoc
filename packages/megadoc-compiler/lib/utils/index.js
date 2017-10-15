@@ -20,3 +20,6 @@ exports.assocWith = R.curry(function assocWith(propName, x) {
 exports.mergeWith = R.curry (function mergeWith(source, x) {
   return Object.assign({}, source, x)
 })
+
+exports.asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
+exports.asyncify = async.asyncify;

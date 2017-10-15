@@ -1,13 +1,9 @@
 var path = require('path');
 var fs = require('fs-extra');
-var glob = require('glob');
-var merge = require('lodash').merge;
 
 function pathJoin(basePath, fragments) {
   return path.resolve.apply(path, [ basePath ].concat(fragments));
 }
-
-var tmpFileId = 0;
 
 /**
  * @module AssetUtils

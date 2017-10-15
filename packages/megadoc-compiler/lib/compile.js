@@ -1,20 +1,11 @@
 const async = require('async');
-const BlankSerializer = require('./BlankSerializer');
+const boot = require('./boot');
 const composeTree = require('./composeTree');
-const ConfigUtils = require('megadoc-config-utils');
 const createBreakpoint = require('./utils/createBreakpoint');
-const createCompilation = require('./createCompilation');
 const createProfiler = require('./utils/createProfiler');
-const defaults = require('./config');
-const divisus = require('divisus');
 const emit = require('./emit');
-const fs = require('fs-extra');
-const Linter = require('megadoc-linter');
 const mergeTrees = require('./mergeTrees');
-const os = require('os');
 const parse = require('./parse');
-const parseConfig = require('./parseConfig');
-const path = require('path');
 const purge = require('./purge');
 const R = require('ramda');
 const reduce = require('./reduce');
@@ -23,10 +14,8 @@ const refine = require('./refine');
 const render = require('./render');
 const seal = require('./seal');
 const teardown = require('./teardown');
-const Service = require('./Service');
-const { assocWith, mergeWith, nativeAssoc } = require('./utils');
+const { assocWith, asyncify, asyncSequence, nativeAssoc } = require('./utils');
 
-const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 const {
   BREAKPOINT_COMPILE,
   BREAKPOINT_PARSE,
@@ -40,7 +29,6 @@ const {
   BREAKPOINT_EMIT_ASSETS,
 } = require('./breakpoints');
 const { BreakpointError } = createBreakpoint;
-const { asyncify } = async;
 
 /**
  * @module Compiler
@@ -72,109 +60,23 @@ module.exports = function compile(userConfig, runOptions, done) {
     writeFn: x => profile.benchmarks.push(x)
   });
 
-  const boot = asyncSequence([
-    asyncify
-    (
-      mergeWith({ instrument })
-    ),
-
-    instrument.async('boot:parse-config')
-    (
-      asyncify(
-        assocWith
-        (
-          'config'
-        )
-        (
-          () => mergeWith(defaults, parseConfig(userConfig))
-        )
-      )
-    ),
-
-    instrument.async('boot:create-temp-directory')
-    (
-      createTempDirectory
-    ),
-
-    instrument.async('boot:create-linter')
-    (
-      createLinter
-    ),
-
-    instrument.async('boot:create-compilations')
-    (
-      asyncify
-      (
-        assocWith
-        (
-          'compilations'
-        )
-        (
-          R.partial(createCompilations, [
-            {
-              optionWhitelist: [
-                'assetRoot',
-                'debug',
-                'outputDir',
-                'tmpDir',
-                'verbose',
-              ]
-            }
-          ])
-        )
-      )
-    ),
-
-    (state, callback) => async.parallel([
-
-      instrument.async('boot:start-services')
-      (
-        R.partial(startServices, [state])
-      ),
-
-      R.curry(async.waterfall)([
-        instrument.async('boot:create-serializer')
-        (
-          R.partial(createSerializer, [state])
-        ),
-
-        instrument.async('boot:start-serializer')
-        (
-          startSerializer
-        ),
-      ]),
-
-      instrument.async('boot:start-cluster')
-      (
-        R.partial(startCluster, [state])
-      ),
-    ], (err, results) => {
-      if (err) {
-        callback(err)
-      }
-      else {
-        callback(null, R.mergeAll([ state ].concat(R.unnest(results))))
-      }
-    })
-  ])
-
   const bootCompileAndEmit = asyncSequence([
     instrument.async('boot')
     (
-      boot
+      boot(instrument)
     ),
 
     instrument.async('compile')
     (
       defineBreakpoint(BREAKPOINT_COMPILE)
       (
-        compileTrees
+        R.partial(compileTrees, [ instrument, defineBreakpoint ])
       )
     ),
 
     instrument.async('emit')
     (
-      sealPurgeAndEmit
+      R.partial(sealPurgeAndEmit, [ instrument, defineBreakpoint ])
     ),
 
     instrument.async('teardown')
@@ -202,9 +104,8 @@ module.exports = function compile(userConfig, runOptions, done) {
   });
 }
 
-function compileTrees(state, done) {
-  const { runOptions, serializer, compilations, instrument } = state;
-  const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
+function compileTrees(instrument, defineBreakpoint, state, done) {
+  const { runOptions, serializer, compilations } = state;
   const prevCompilations = R.pathOr([], ['initialState', 'compilations'], runOptions)
   const findPrevCompilation = compilation => prevCompilations.filter(x => x.id === compilation.id)
 
@@ -304,9 +205,8 @@ function compileTrees(state, done) {
   });
 }
 
-function sealPurgeAndEmit(state, done) {
-  const { compilations, runOptions, serializer, instrument } = state;
-  const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
+function sealPurgeAndEmit(instrument, defineBreakpoint, state, done) {
+  const { compilations, runOptions, serializer } = state;
 
   asyncSequence([
     instrument.async('emit:seal')
@@ -340,110 +240,4 @@ function sealPurgeAndEmit(state, done) {
       done(null, Object.assign({}, state, emitted));
     }
   });
-}
-
-function createSerializer(state, done) {
-  const { config } = state;
-  const serializerSpec = ConfigUtils.getConfigurablePair(config.serializer);
-  let serializer;
-
-  if (!serializerSpec) {
-    serializer = new BlankSerializer()
-  }
-  else {
-    const serializerModule = require(serializerSpec.name);
-    const factory = serializerModule.factory || serializerModule;
-
-    serializer = new factory(config, serializerSpec.options);
-  }
-
-  done(null, Object.assign({}, state, { serializer }));
-}
-
-function createLinter(state, done) {
-  const { config } = state;
-
-  done(null, Object.assign({}, state, { linter: Linter.for(config) }));
-}
-
-function createCompilations({ optionWhitelist }, state) {
-  const compilations = R.map
-    (
-      R.partial(createCompilation, [ optionWhitelist, state ])
-    )
-    (
-      state.config.sources
-    )
-  ;
-
-  return compilations;
-}
-
-function startSerializer(state, done) {
-  const { serializer, compilations } = state;
-
-  // todo: cluster
-  serializer.start(compilations, function(err) {
-    if (err) {
-      done(err);
-    }
-    else {
-      done(null, { serializer });
-    }
-  });
-}
-
-function startCluster(state, done) {
-  const createCluster = state.config.threads === 1 ?
-    divisus.createForegroundCluster :
-    divisus.createCluster
-  ;
-
-  const cluster = createCluster({ size: state.config.threads })
-
-  cluster.start(function(err) {
-    if (err) {
-      done(err);
-    }
-    else {
-      done(null, { cluster });
-    }
-  });
-}
-
-function startServices(state, done) {
-  const services = Service.start(Service.DefaultPreset, state);
-
-  services.up(function(err) {
-    done(err, { services });
-  });
-}
-
-function createTempDirectory(state, done) {
-  const tmpDir = state.config.tmpDir;
-
-  if (tmpDir) {
-    fs.ensureDir(tmpDir, function(err) {
-      if (err) {
-        done(err);
-      }
-      else {
-        done(null, state);
-      }
-    });
-  }
-  else {
-    fs.mkdtemp(path.join(os.tmpdir(), `megadoc-`), function(err, folder) {
-      if (err) {
-        done(err);
-      }
-      else {
-        done(null, Object.assign({}, state, {
-          config: Object.assign({}, state.config, {
-            tmpDir: folder
-          })
-        }))
-      }
-    });
-  }
 }
