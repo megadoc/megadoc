@@ -11,8 +11,10 @@ const emit = require('./emit');
 const fs = require('fs-extra');
 const Linter = require('megadoc-linter');
 const mergeTrees = require('./mergeTrees');
+const os = require('os');
 const parse = require('./parse');
 const parseConfig = require('./parseConfig');
+const path = require('path');
 const purge = require('./purge');
 const R = require('ramda');
 const reduce = require('./reduce');
@@ -20,6 +22,7 @@ const reduceTree = require('./reduceTree');
 const refine = require('./refine');
 const render = require('./render');
 const seal = require('./seal');
+const teardown = require('./teardown');
 const Service = require('./Service');
 const { assocWith, mergeWith, nativeAssoc } = require('./utils');
 
@@ -62,7 +65,6 @@ module.exports = function compile(userConfig, runOptions, done) {
     return compile(userConfig, {}, runOptions);
   }
 
-  const teardownRoutines = [];
   const profile = { benchmarks: [] };
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
   const instrument = createProfiler({
@@ -84,9 +86,14 @@ module.exports = function compile(userConfig, runOptions, done) {
           'config'
         )
         (
-          R.compose(mergeWith(defaults), parseConfig, R.prop('userConfig'))
+          () => mergeWith(defaults, parseConfig(userConfig))
         )
       )
+    ),
+
+    instrument.async('boot:create-temp-directory')
+    (
+      createTempDirectory
     ),
 
     instrument.async('boot:create-linter')
@@ -119,6 +126,7 @@ module.exports = function compile(userConfig, runOptions, done) {
     ),
 
     (state, callback) => async.parallel([
+
       instrument.async('boot:start-services')
       (
         R.partial(startServices, [state])
@@ -167,28 +175,18 @@ module.exports = function compile(userConfig, runOptions, done) {
     instrument.async('emit')
     (
       sealPurgeAndEmit
+    ),
+
+    instrument.async('teardown')
+    (
+      teardown
     )
   ])
-
-  const terminate = error => {
-    process.removeListener('uncaughtException', terminate)
-
-    ensureTeardown(teardownRoutines, () => {
-      throw error
-    })()
-  }
-
-  process.on('uncaughtException', terminate)
 
   instrument.async('total')(bootCompileAndEmit)({
     userConfig,
     runOptions,
-    registerTeardownRoutine(fn) {
-      teardownRoutines.push(fn);
-    }
-  }, ensureTeardown(teardownRoutines, (err, state) => {
-    process.removeListener('uncaughtException', terminate)
-
+  }, (err, state) => {
     if (err instanceof BreakpointError) {
       done(null, err.result);
     }
@@ -201,7 +199,7 @@ module.exports = function compile(userConfig, runOptions, done) {
     else {
       done(null, state);
     }
-  }));
+  });
 }
 
 function compileTrees(state, done) {
@@ -301,13 +299,13 @@ function compileTrees(state, done) {
       done(err);
     }
     else {
-      done(null, nativeAssoc('withTrees', withTrees, state))
+      done(null, nativeAssoc('compilations', withTrees, state))
     }
   });
 }
 
 function sealPurgeAndEmit(state, done) {
-  const { withTrees, runOptions, serializer, instrument } = state;
+  const { compilations, runOptions, serializer, instrument } = state;
   const defineBreakpoint = createBreakpoint(runOptions.breakpoint, runOptions.tap);
 
   asyncSequence([
@@ -334,7 +332,14 @@ function sealPurgeAndEmit(state, done) {
         R.partial(emit, [ serializer ])
       )
     ),
-  ])(withTrees, done);
+  ])(compilations, function(err, emitted) {
+    if (err) {
+      done(err);
+    }
+    else {
+      done(null, Object.assign({}, state, emitted));
+    }
+  });
 }
 
 function createSerializer(state, done) {
@@ -377,19 +382,12 @@ function createCompilations({ optionWhitelist }, state) {
 function startSerializer(state, done) {
   const { serializer, compilations } = state;
 
-  fs.ensureDirSync(state.config.tmpDir);
-
-  // sadness :(
-  state.registerTeardownRoutine(R.partial(fs.remove, [ state.config.tmpDir ]));
-
   // todo: cluster
   serializer.start(compilations, function(err) {
     if (err) {
       done(err);
     }
     else {
-      state.registerTeardownRoutine(serializer.stop.bind(serializer))
-
       done(null, { serializer });
     }
   });
@@ -408,29 +406,44 @@ function startCluster(state, done) {
       done(err);
     }
     else {
-      state.registerTeardownRoutine(function(callback) {
-        cluster.stop(function(e) {
-          callback(e);
-        });
-      });
-
       done(null, { cluster });
     }
   });
 }
 
-function ensureTeardown(fns, done) {
-  return function(err, result) {
-    async.parallel(fns.map(x => async.reflect(x)), function() {
-      done(err, result);
-    });
-  }
-}
-
 function startServices(state, done) {
   const services = Service.start(Service.DefaultPreset, state);
 
-  state.registerTeardownRoutine(services.down);
+  services.up(function(err) {
+    done(err, { services });
+  });
+}
 
-  services.up(done);
+function createTempDirectory(state, done) {
+  const tmpDir = state.config.tmpDir;
+
+  if (tmpDir) {
+    fs.ensureDir(tmpDir, function(err) {
+      if (err) {
+        done(err);
+      }
+      else {
+        done(null, state);
+      }
+    });
+  }
+  else {
+    fs.mkdtemp(path.join(os.tmpdir(), `megadoc-`), function(err, folder) {
+      if (err) {
+        done(err);
+      }
+      else {
+        done(null, Object.assign({}, state, {
+          config: Object.assign({}, state.config, {
+            tmpDir: folder
+          })
+        }))
+      }
+    });
+  }
 }

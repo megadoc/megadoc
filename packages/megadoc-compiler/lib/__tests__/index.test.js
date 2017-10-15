@@ -55,10 +55,12 @@ describe("megadoc-compiler::compile", function() {
         include: fileSuite.join('lib/**/*.md'),
         processor: [ processorFile.path, {} ]
       }],
-    }, function(err, { compilations }) {
+    }, function(err, result) {
       if (err) {
         return done(err);
       }
+
+      const { compilations } = result;
 
       assert.ok(Array.isArray(compilations));
       assert.equal(compilations.length, 1)

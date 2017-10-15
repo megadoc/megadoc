@@ -1,5 +1,3 @@
-var os = require('os');
-
 /**
  * @module Config
  * @preserveOrder
@@ -25,7 +23,7 @@ module.exports = {
    */
   outputDir: 'doc/compiled',
 
-  tmpDir: os.tmpdir(),
+  tmpDir: null,
 
   lintRules: {},
 

@@ -1,7 +1,8 @@
+const R = require('ramda');
 const chalk = require('chalk');
 const columnify = require('columnify');
 const invariant = require('invariant');
-const R = require('ramda');
+const tty = require('./tty');
 const { AsyncPrinter } = require('./printers');
 const LOG_INFO = 1;
 const LOG_WARN = 2;
@@ -77,9 +78,12 @@ exports.for = function(config) {
     locationForNodeAsString: R.pipe(
       R.partial(locationForNode, [config]),
       stringifyNodeLocation
-    )
+    ),
+    tty
   }
 }
+
+exports.tty = tty;
 
 // TODO
 function addToErrorReport(config, error) {
