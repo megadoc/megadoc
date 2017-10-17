@@ -1,6 +1,6 @@
 {
   "name": "megadoc-html-serializer",
-  "version": "6.2.4",
+  "version": "6.3.0",
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack"
@@ -28,7 +28,7 @@
     "megadoc-config-utils": "^6.0.1",
     "megadoc-corpus": "^6.2.3",
     "megadoc-linter": "^6.2.0",
-    "megadoc-markdown-utils": "^6.2.0",
+    "megadoc-markdown-utils": "^6.3.0",
     "normalize.css": "^3.0.3",
     "prismjs": "1.5.0",
     "ramda": "0.24.1",
