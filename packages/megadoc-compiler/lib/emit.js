@@ -1,3 +1,3 @@
-module.exports = function emit(serializer, renderedCorpus, callback) {
-  serializer.emit(renderedCorpus, callback);
+module.exports = function emit(serializer, sealed, callback) {
+  serializer.emit(sealed, callback);
 };

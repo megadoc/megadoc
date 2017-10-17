@@ -17,18 +17,17 @@ const Gravatar = React.createClass({
   },
 
   render: function() {
-    const { props } = this;
     const href = 'https://secure.gravatar.com/avatar/';
-    const query = `?s=${props.size}`;
+    const query = `?s=${this.props.size}`;
 
     return (
       <img
-        alt={props.title}
-        title={props.title}
-        src={href + md5(props.email) + query}
+        alt={this.props.title}
+        title={this.props.title}
+        src={href + md5(this.props.email) + query}
         className="gravatar"
-        width={props.size}
-        height={props.size}
+        width={this.props.size}
+        height={this.props.size}
       />
     );
   }

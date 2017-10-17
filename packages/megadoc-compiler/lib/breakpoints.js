@@ -6,5 +6,5 @@ exports.BREAKPOINT_REDUCE             = 5;
 exports.BREAKPOINT_RENDER             = 6;
 exports.BREAKPOINT_REDUCE_TREE        = 7;
 exports.BREAKPOINT_COMPOSE_TREE       = 8;
-exports.BREAKPOINT_RENDER_CORPUS      = 9;
+exports.BREAKPOINT_SEAL               = 9;
 exports.BREAKPOINT_EMIT_ASSETS        = 10;

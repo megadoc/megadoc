@@ -32,14 +32,14 @@ const GitStats = React.createClass({
     );
   },
 
-  renderCommitter({ n: name, e: email }) {
-    const committer = { email, name };
+  renderCommitter(committer) {
+    const { n: name, e: email } = committer;
 
     return (
-      <li key={committer.email} className="git-stats__committers-list-item">
+      <li key={email} className="git-stats__committers-list-item">
         <Gravatar
-          title={committer.name}
-          email={committer.email}
+          title={name}
+          email={email}
           size={this.props.avatarSize}
         />
       </li>

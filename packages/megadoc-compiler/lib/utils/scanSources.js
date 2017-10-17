@@ -1,6 +1,7 @@
+const R = require('ramda');
+const async = require('async');
 const glob = require('glob');
-const wrapArray = require('./wrapArray');
-const R = require('ramda')
+const listOf = x => Array.isArray(x) ? x : [].concat(x || [])
 
 /**
  * Glob a bunch of (relative) source paths for files and optionally filter
@@ -16,15 +17,24 @@ const R = require('ramda')
  * @return {String[]}
  *         A list of matched files.
  */
-module.exports = function globAndFilter(pattern, include, exclude, rootDir) {
+module.exports = function scanSources({ include, exclude, rootDir }, done) {
   const globOptions = {
     nodir: true,
     absolute: true,
     cwd: rootDir || process.cwd(),
-    ignore: wrapArray(exclude)
+    ignore: listOf(exclude)
   };
 
-  return R.uniq(wrapArray(include).reduce(function(fileList, sourceEntry) {
-    return fileList.concat(glob.sync(sourceEntry, globOptions))
-  }, []));
+  async.map(
+    listOf(include),
+    (sources, callback) => glob(sources, globOptions, callback),
+    function(err, results) {
+      if (err) {
+        done(err);
+      }
+      else {
+        done(null, R.uniq(R.flatten(results)));
+      }
+    }
+  )
 }

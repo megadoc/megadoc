@@ -1,0 +1,14 @@
+{
+  "env": {
+    "mocha": false,
+    "browser": false
+  },
+  "overrides": [
+    {
+      "files": [ "**/*.test.js" ],
+      "env": {
+        "mocha": true
+      }
+    }
+  ]
+}

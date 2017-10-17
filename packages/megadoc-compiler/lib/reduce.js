@@ -1,8 +1,7 @@
 const async = require('async');
 const R = require('ramda');
 const invariant = require('invariant');
-const partial = require('./utils/partial');
-const asyncMaybe = require('./utils/asyncMaybe');
+const { asyncMaybe } = require('./utils');
 const { assignUID } = require('megadoc-corpus');
 
 module.exports = function reduce(serializer, compilation, done) {
@@ -110,7 +109,7 @@ function reduceEach(context, files, fnPath, done) {
     "Expected 'reduceFnPath' to point to a file, but it doesn't."
   );
 
-  const fn = partial(require(fnPath), context);
+  const fn = R.partial(require(fnPath), [context]);
 
   async.mapLimit(files, 10, fn, done);
 }

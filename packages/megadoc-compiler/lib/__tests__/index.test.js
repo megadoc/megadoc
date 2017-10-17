@@ -1,5 +1,5 @@
 const path = require('path');
-const compile = require('../compile');
+const { run: compile } = require('../compile');
 const breakpoints = require('../breakpoints');
 const { assert, createFileSuite, createSinonSuite } = require('megadoc-test-utils')
 
@@ -258,7 +258,7 @@ describe("megadoc-compiler::compile", function() {
       },
       {
         message: 'can render the corpus',
-        breakpoint: breakpoints.BREAKPOINT_RENDER_CORPUS + 1,
+        breakpoint: breakpoints.BREAKPOINT_SEAL + 1,
         output: null,
         nextOutput: null,
       },

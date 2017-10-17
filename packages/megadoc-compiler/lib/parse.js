@@ -1,10 +1,8 @@
 const R = require('ramda');
 const async = require('async');
-const invariant = require('invariant');
-const asyncMaybe = require('./utils/asyncMaybe');
-const asyncNoop = (x, y, callback) => callback();
-
 const divisus = require('divisus');
+const invariant = require('invariant');
+const { asyncMaybe, asyncNoop } = require('./utils');
 
 // TODO: apply decorators
 module.exports = function parse(cluster, concurrency, compilation, done) {

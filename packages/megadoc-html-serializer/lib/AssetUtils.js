@@ -1,5 +1,5 @@
-var path = require('path');
-var fs = require('fs-extra');
+const path = require('path');
+const fs = require('fs-extra');
 
 function pathJoin(basePath, fragments) {
   return path.resolve.apply(path, [ basePath ].concat(fragments));

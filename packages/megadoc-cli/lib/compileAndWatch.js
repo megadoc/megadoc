@@ -1,31 +1,38 @@
-const compiler = require('megadoc-compiler');
+const { Compiler: C } = require('megadoc-compiler');
 const chokidar = require('chokidar');
 const R = require('ramda');
 const ConfigUtils = require('megadoc-config-utils');
 const printProfile = require('./printProfile');
 
 exports.run = function(config, runOptions, callback = null) {
-  compiler.run(config, runOptions, function(err, state) {
-    if (err && callback) {
+  const compiler = C.create(R.merge(runOptions, { purge: true }));
+
+  C.boot(compiler)(config, function(err, booted) {
+    if (err) {
       return callback(err);
     }
-    else if (callback) {
-      callback();
-    }
 
-    if (err) {
-      throw err;
-    }
+    C.start(compiler)(booted, function(startErr, started) {
+      if (startErr) {
+        return callback(startErr);
+      }
 
-    if (state.profile) {
-      printProfile(state.profile)
-    }
+      C.compileAndEmit(compiler)(started, function(compileErr, compiled) {
+        if (compileErr) {
+          return C.stop(compiler)(started, function() {
+            return callback(compileErr);
+          });
+        }
 
-    engage(config, runOptions, state)
+        callback();
+
+        engage(config, runOptions, compiler, compiled);
+      })
+    });
   });
 };
 
-function engage(config, runOptions, initialState) {
+function engage(config, runOptions, initialCompiler, initialState) {
   console.log('[I] Initial compilation done. Will now be watching for changes...');
 
   const watcher = new chokidar.FSWatcher({
@@ -35,7 +42,12 @@ function engage(config, runOptions, initialState) {
     followSymlinks: false
   });
 
+  let compiler = initialCompiler;
   let state = initialState;
+
+  const teardown = () => {
+    C.stop(compiler)(state, function() {});
+  };
 
   watcher
     .on('add', function() {
@@ -45,17 +57,21 @@ function engage(config, runOptions, initialState) {
       console.log('[I] File modified, re-generating...');
 
       const startedAt = new Date();
+      const nextCompiler = C.create(R.merge(runOptions, {
+        changedSources: [ file ],
+        initialState: state,
+        purge: true,
+      }))
 
-      recompile(config, runOptions, state, [ file ], function(err, nextState) {
+      C.compileAndEmit(nextCompiler)(state, function(err, nextState) {
         if (err) {
           throw err;
         }
 
         state = nextState;
+        compiler = nextCompiler;
 
-        if (state.profile) {
-          printProfile(state.profile)
-        }
+        maybePrintProfile(compiler)
 
         const elapsed = (new Date() - startedAt) / 1000;
         console.log(`[I] Done: ${elapsed}s.`);
@@ -79,6 +95,7 @@ function engage(config, runOptions, initialState) {
   process.on('exit', function() {
     console.log('Cleaning up');
     watcher.close();
+    teardown();
     console.log('Bye!');
   });
 
@@ -88,10 +105,10 @@ function engage(config, runOptions, initialState) {
   });
 }
 
-function recompile(config, runOptions, initialState, changedSources, done) {
-  compiler.run(config, R.merge(runOptions, {
-    changedSources,
-    initialState,
-    purge: true,
-  }), done);
+function maybePrintProfile(compiler) {
+  if (compiler.profile) {
+    printProfile({
+      benchmarks: compiler.profiles
+    })
+  }
 }

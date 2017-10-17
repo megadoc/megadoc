@@ -7,7 +7,7 @@ describe('createCompilation', function() {
 
   let processorSpec, decoratorSpec, output;
 
-  beforeEach(function() {
+  beforeEach(function(done) {
     fileSuite.createFile('sources/a.js');
     fileSuite.createFile('sources/b.md');
 
@@ -27,13 +27,11 @@ describe('createCompilation', function() {
       };
     `);
 
-    output = subject([ 'publicOption' ], {
-      config: {
-        publicOption: 1,
-        privateOption: 2,
-        assetRoot: fileSuite.getRootDirectory()
+    subject({
+      assetRoot: fileSuite.getRootDirectory(),
+      compilerOptions: {
+        publicOption: 1
       },
-      runOptions: {},
     }, {
       include: [
         'sources/**/*.js',
@@ -52,6 +50,14 @@ describe('createCompilation', function() {
           }
         }
       ]
+    }, function(err, _output) {
+      if (err) {
+        done(err);
+      }
+      else {
+        output = _output;
+        done();
+      }
     });
   });
 
@@ -78,21 +84,24 @@ describe('createCompilation', function() {
   });
 
   context('given a pair of processor config', function() {
-    beforeEach(function() {
-      output = subject([], {
-        config: { commonOption: 1 },
-        runOptions: {},
-      },
-        {
-          pattern: /\.js$/,
-          include: [
-            path.join(fileSuite.getRootDirectory(), 'sources'),
-          ],
-          processor: [processorSpec.path, {
-            foo: 'bar'
-          }]
+    beforeEach(function(done) {
+      subject({}, {
+        pattern: /\.js$/,
+        include: [
+          path.join(fileSuite.getRootDirectory(), 'sources'),
+        ],
+        processor: [processorSpec.path, {
+          foo: 'bar'
+        }]
+      }, function(err, _output) {
+        if (err) {
+          done(err);
         }
-      );
+        else {
+          output = _output
+          done()
+        }
+      });
     });
 
     it('should store the processor options', function() {

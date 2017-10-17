@@ -1,25 +1,32 @@
-const R = require('ramda');
 const async = require('async');
-
-// String -> a -> {k: v} -> {k: v}
-exports.nativeAssoc = R.curry(function nativeAssoc(propName, propValue, x) {
-  return Object.assign({}, x, { [propName]: propValue });
-});
-
-// String -> {k: v} -> ???
-exports.assocWith = R.curry(function assocWith(propName, x) {
-  return R.over
-  (
-    R.lens(R.identity, exports.nativeAssoc(propName))
-  )
-  (
-    x
-  );
-})
-
-exports.mergeWith = R.curry (function mergeWith(source, x) {
-  return Object.assign({}, source, x)
-})
 
 exports.asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
 exports.asyncify = async.asyncify;
+
+exports.asyncEnsure = f => g => (x, callback) => {
+  try {
+    g(x, function(err, result) {
+      f(x, function() {
+        callback(err, result);
+      })
+    })
+  }
+  catch (e) {
+    f(x, function() {
+      callback(e);
+    })
+  }
+};
+
+exports.asyncMaybe = function(f, done) {
+  return (err, x) => {
+    if (err) {
+      done(err);
+    }
+    else {
+      done(null, f(x));
+    }
+  }
+};
+
+exports.asyncNoop = (x, y, callback) => callback();

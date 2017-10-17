@@ -13,7 +13,7 @@ module.exports = function refine(compilation, done) {
       done(err);
     }
     else {
-      done(null, mergeObject(compilation, { refinedDocuments: refinedDocuments }))
+      done(null, mergeObject(compilation, { refinedDocuments }))
     }
   });
 };

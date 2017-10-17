@@ -34,6 +34,7 @@ module.exports = function ShellService({ compilerOptions, timeout }, serviceSpec
           timer = clearTimeout(timer);
 
           callback(new Error(`megadoc: service "${name}" exited abnormally with ${code}`))
+          subProcess = null
         }
       };
 

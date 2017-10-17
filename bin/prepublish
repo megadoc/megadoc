@@ -63,7 +63,7 @@ function check_deps {
       ${ROOT}/node_modules/.bin/depcheck \
         $PACKAGE_ROOT \
         --json \
-        --ignore-dirs="tmp,test_helpers,lib--legacy,ui,doc"
+        --ignore-dirs="tmp,test_helpers,lib--legacy,ui,doc,examples"
       )
 
     # for some reason the --ignores flag is, well, being ignored by depcheck
