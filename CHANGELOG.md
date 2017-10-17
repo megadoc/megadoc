@@ -4,6 +4,7 @@
 
 - megadoc-cli build-html-plugin signature has changed: it now accepts the entry
   file via the --entry option and the output file via --output
+- fixed a rare crash caused during rendering of markdown headings
  
 ## 6.2.4
 

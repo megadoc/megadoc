@@ -22,7 +22,7 @@ const HeadingTmpl = template(`
 );
 
 function renderHeading(text, level, state, runOptions) {
-  const scopedId = generateAnchor(text);
+  let scopedId = generateAnchor(text);
   const id = state.baseURL ? joinBySlash(state.baseURL, scopedId) : scopedId;
 
   if (state.toc.some(function(x) { return x.scopedId === scopedId; })) {
