@@ -1,12 +1,16 @@
 const React = require('react');
 const Article = require('../components/Article')
 const { object } = React.PropTypes;
+const { PropTypes } = React;
 
 module.exports = React.createClass({
   displayName: 'Markdown::DocumentOutlet',
 
   propTypes: {
     documentNode: object,
+    $outletOptions: PropTypes.shape({
+      className: PropTypes.string
+    }),
   },
 
   render() {
@@ -15,7 +19,7 @@ module.exports = React.createClass({
     }
 
     return (
-      <Article {...this.props} />
+      <Article {...this.props} {...this.props.$outletOptions} />
     );
   }
 });

@@ -13,6 +13,7 @@ const Article = React.createClass({
   },
 
   propTypes: {
+    className: string,
     documentNode: shape({
       source: string,
     }).isRequired,
@@ -22,7 +23,7 @@ const Article = React.createClass({
     const article = this.props.documentNode.properties;
 
     return (
-      <div>
+      <div className={this.props.className}>
         <HighlightedText>{article.source}</HighlightedText>
 
         {this.context.config.disqus && (
