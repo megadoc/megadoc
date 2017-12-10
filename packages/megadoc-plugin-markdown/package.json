@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-markdown",
-  "version": "6.3.0",
+  "version": "6.4.0",
   "description": "Markdown documentation generator for megadoc.",
   "main": "lib/index.js",
   "repository": {
