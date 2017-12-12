@@ -1,12 +1,15 @@
 const React = require('react');
 const Button = require('components/Button');
+const Icon = require('components/Icon');
 const classSet = require('classnames');
 
 const SidebarSearchOutlet = React.createClass({
   propTypes: {
     $outletOptions:  React.PropTypes.shape({
       text:  React.PropTypes.string.isRequired,
+      title: React.PropTypes.string,
       className:  React.PropTypes.string,
+      icon: React.PropTypes.bool,
     }),
   },
 
@@ -15,15 +18,24 @@ const SidebarSearchOutlet = React.createClass({
   },
 
   render() {
-    const text = this.props.$outletOptions.text || 'Search';
+    const options = this.props.$outletOptions;
+    const text = options.text || 'Search';
+    const { title } = options;
 
     return (
       <Button
-        title={`${text} (Ctrl+K or CMD+K)`}
-        className={classSet(this.props.$outletOptions.className, 'sidebar-search-button')}
+        title={`${title || text} (Ctrl+K or CMD+K)`}
+        className={classSet(options.className, 'sidebar-search-button')}
         onClick={this.toggleSpotlight}
-        children={text}
-      />
+      >
+        {options.icon && (
+          <span>
+            <Icon className="icon-search" />
+            {' '}
+          </span>
+        )}
+        {text}
+      </Button>
     );
   },
 

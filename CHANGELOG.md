@@ -1,5 +1,29 @@
 # Changelog
 
+## 6.5.0
+
+- the outlet `Core::Link` provided by megadoc-html-serializer now accepts a new
+  option `activePattern: String` that can be used to control which URLs the
+  link should be marked active over. This pattern can be a Regular Expression.
+- the outlet `Core::SidebarSearch` provided by megadoc-html-serializer now
+  accepts two new options: `title: String` for overriding the HTML title of the
+  link, and `icon: Boolean` which when enabled will cause the outlet to render
+  a search icon before the text (if any)
+- new outlet `Core::Widget` provided by megadoc-html-serializer to group
+  arbitrary outlets into an HTML tag (defaults to `div`). This can be used to
+  create custom banners / navigation outlets.
+- browser outlets in the following packages now add a unified `megadoc-
+  document-browser` class name to the root component of their output in case
+  the user wants to customize their styling. This applies to:
+  - `megadoc-plugin-js`
+  - `megadoc-plugin-markdown`
+  - `megadoc-plugin-lua`
+
+## 6.4.0
+
+- the outlet `Markdown::Article` now accepts a `className: String` property for
+  specifying a custom class name for the resulting HTML node
+
 ## 6.3.0
 
 - megadoc-cli build-html-plugin signature has changed: it now accepts the entry

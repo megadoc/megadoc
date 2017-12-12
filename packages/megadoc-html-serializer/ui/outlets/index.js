@@ -18,6 +18,7 @@ module.exports = function registerOutlets(outlets) {
   outlets.define('Core::SidebarLink');
   outlets.define('Core::SidebarSearch');
   outlets.define('Core::Text');
+  outlets.define('Core::Widget');
 
   outlets.add('Core::SidebarHeader', {
     component: require('./SidebarHeaderOutlet')
@@ -47,4 +48,7 @@ module.exports = function registerOutlets(outlets) {
     component: require('./TextOutlet')
   })
 
+  outlets.add('Core::Widget', {
+    component: require('./WidgetOutlet')
+  })
 }

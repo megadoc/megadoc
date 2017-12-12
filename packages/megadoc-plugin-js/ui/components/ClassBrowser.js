@@ -74,7 +74,7 @@ var ClassBrowser = React.createClass({
     const shouldDisplayName = namespaces.length > 1;
 
     return (
-      <nav className="class-browser__listing">
+      <nav className="megadoc-document-browser class-browser__listing">
         {namespaces.map(this.renderNamespace.bind(null, shouldDisplayName))}
 
         {this.props.withControls && hasPrivateModules && (

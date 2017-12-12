@@ -24,7 +24,7 @@ var Browser = React.createClass({
     const { namespaceNode } = this.props;
 
     return (
-      <nav>
+      <nav className="megadoc-document-browser markdown-browser">
         <div>
           {Array.isArray(namespaceNode.config.folders) && namespaceNode.config.folders.length > 0 ?
             FolderHierarchy(namespaceNode).map(this.renderFolder) :

@@ -12,6 +12,7 @@ const LinkOutlet = React.createClass({
 
   propTypes: {
     $outletOptions: shape({
+      activePattern: string,
       href: string,
       className:  string,
       to:  string,
@@ -23,9 +24,10 @@ const LinkOutlet = React.createClass({
   render() {
     const options = this.props.$outletOptions;
     const linkAttrs = {
+      activePattern: options.activePattern,
       title: options.title,
       className: options.className,
-      children: options.text
+      children: options.text,
     }
 
     if (options.to) {

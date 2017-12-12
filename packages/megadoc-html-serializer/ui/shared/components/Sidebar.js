@@ -9,7 +9,7 @@ const SidebarTree = React.createClass({
 
   render() {
     return (
-      <nav className="sidebar-tree">
+      <nav className="megadoc-document-browser sidebar-tree">
         {this.props.children}
       </nav>
     );

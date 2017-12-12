@@ -26,11 +26,15 @@ const Link = React.createClass({
     className: string,
     children: node,
     active: bool,
+    activePattern: string,
   },
 
   render() {
     const href = this.getHref();
-    const isActive = this.props.active || this.isActive(href);
+    const isActive = this.props.active || this.isActive(href) || (
+      this.props.activePattern &&
+      this.context.location.pathname.match(this.props.activePattern)
+    );
 
     if (!href) {
       console.warn(
@@ -49,6 +53,9 @@ const Link = React.createClass({
         children={this.props.children}
         className={classSet(this.props.className, {
           'active': isActive,
+          'mega-link': true,
+          'mega-link--active': isActive,
+          'mega-link--functional': !!href,
           'mega-link--internal mega-link--broken': !href
         })}
       />
