@@ -273,4 +273,12 @@ module.exports = {
    * will become links and the user gets to view those namespace pages.
    */
   linkToNamespacesInBrowser: false,
+
+  hideBlankParameters: true,
+  hideBlankReturns: true,
+  hidePrivateSymbols: true,
+  expandReturnedFunctionSignature: true,
+
+  showTypeDefsInBrowser: false,
+  showTypeDefPropertiesInBrowser: true,
 };

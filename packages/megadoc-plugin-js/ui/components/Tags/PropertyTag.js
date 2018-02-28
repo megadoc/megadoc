@@ -32,19 +32,20 @@ const PropertyTag = React.createClass({
     const description = typeInfo.description || doc && doc.description;
     const defaultValue = typeInfo.defaultValue || doc && describeNode(doc.nodeInfo);
     const collapsed = this.isCollapsed();
+    const collapsible = this.isCollapsible() && (description && description.length)
 
     return (
       <div className={classSet("property-tag", {
-        'collapsible': this.isCollapsible(),
+        'collapsible': collapsible,
         'collapsible--collapsed': this.isCollapsed(),
       })}>
         <header
           className={classSet("property-tag__header anchorable-heading", {
-            "collapsible-header": this.isCollapsible()
+            "collapsible-header": collapsible
           })}
           onClick={this.toggleCollapsed}
         >
-          {this.isCollapsible() && this.renderCollapser()}
+          {collapsible && this.renderCollapser()}
           {anchor && <HeadingAnchor.Anchor href={this.props.anchor} />}
           {anchor && <HeadingAnchor.Link href={this.props.anchor} />}
 

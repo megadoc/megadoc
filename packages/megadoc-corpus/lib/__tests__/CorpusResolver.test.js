@@ -100,6 +100,12 @@ describe('CorpusResolver', function() {
                   b.documentEntity({
                     id: '@name',
                     filePath: '/js/lib/core/Y.js',
+                    entities: [
+                      b.documentEntity({
+                        id: '@nameType',
+                        filePath: '/js/lib/core/Y.js',
+                      })
+                    ]
                   })
                 ]
               }),
@@ -127,6 +133,7 @@ describe('CorpusResolver', function() {
     { from: "MD/X"             , to: "X"               , res: "MD/X",             /* text: 'X' */ },
     { from: "MD/X"             , to: "Core.X"          , res: "JS/Core.X",        text: 'Core.X' },
     { from: "MD/Y"             , to: "X"               , res: "MD/X",             /* text: 'X' */ },
+    { from: "MD/Y"             , to: "JS/Core.Y@name@nameType"       , res: "JS/Core.Y@name@nameType" },
 
     // it should not use private indices:
     //

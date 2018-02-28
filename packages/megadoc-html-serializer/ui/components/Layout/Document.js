@@ -1,8 +1,9 @@
 const React = require('react');
+const classSet = require('classnames')
 const Document = React.createClass({
   render() {
     return (
-      <div className="doc-content" {...this.props} />
+      <div {...this.props} className={classSet("doc-content", this.props.className)} />
     );
   }
 });

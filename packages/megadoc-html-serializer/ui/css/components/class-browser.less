@@ -1,5 +1,6 @@
 .class-browser {
   @indent: 1.25em;
+  @vertical-indent: 0.5rem;
 
   &__entry {
     word-break: break-word;
@@ -20,6 +21,7 @@
 
   &__methods, &__sections {
     padding-left: @indent;
+    margin: @vertical-indent 0;
 
     &:empty {
       display: none;

@@ -1,7 +1,6 @@
 const React = require('react');
 const { findWhere, where } = require("lodash");
 const Outlet = require('components/Outlet');
-const Link = require('components/Link');
 const Doc = require('./Doc');
 const ObjectSynopsis = require('./ObjectSynopsis');
 const SeeTag = require('./Tags/SeeTag');
@@ -27,26 +26,11 @@ const ModuleBody = React.createClass({
     const doc = documentNode.properties;
     const moduleDocs = documentNode.entities.map(x => x.properties);
     const renderableType = DocClassifier.getDisplayType(documentNode);
-    const mixedInTargets = getMixedInTargets(documentNode, this.props.namespaceNode);
-    const withoutTypedefs = moduleDocs.filter(x => !DocClassifier.isTypeDef(x))
-    const typedefs = moduleDocs.filter(DocClassifier.isTypeDef)
+    const withoutTypeDefs = moduleDocs.filter(x => !DocClassifier.isTypeDef(x))
+    const typedefs = documentNode.entities.filter(x => DocClassifier.isTypeDef(x.properties))
 
     return (
       <div>
-        {mixedInTargets.length > 0 && [
-          <p key="mixinTargets__header" className="doc-group__header">
-            This module is mixed-in by the following modules:
-          </p>,
-
-          <ol key="mixinTargets__listing">
-            {mixedInTargets.map(x => (
-              <li key={x.uid}>
-                <Link to={x}>{x.title}</Link>
-              </li>
-            ))}
-          </ol>
-        ]}
-
         {renderableType === 'Factory' && (
           this.renderConstructor(doc, "Instance Constructor")
         )}
@@ -60,24 +44,24 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderExamples(doc)}
-        {this.renderStaticMethods(doc, withoutTypedefs)}
-        {this.renderCallbacks(doc, withoutTypedefs)}
+        {this.renderStaticMethods(doc, withoutTypeDefs)}
+        {this.renderCallbacks(doc, withoutTypeDefs)}
         {this.renderTypeDefs(doc, typedefs)}
         {this.renderProperties(
           doc,
-          withoutTypedefs,
+          withoutTypeDefs,
           (scope) => !isStaticProperty(scope),
           "Instance Properties"
         )}
 
         {this.renderProperties(
           doc,
-          withoutTypedefs,
+          withoutTypeDefs,
           isStaticProperty,
           "Static Properties"
         )}
 
-        {this.renderMethods(doc, withoutTypedefs)}
+        {this.renderMethods(doc, withoutTypeDefs)}
         {this.renderAdditionalResources(doc)}
       </div>
     );
@@ -94,6 +78,8 @@ const ModuleBody = React.createClass({
           withAdditionalResources={false}
           collapsible={false}
           doc={doc}
+          config={this.props.namespaceNode.config}
+          headingTag="h3"
         />
       </div>
     );
@@ -211,6 +197,7 @@ const ModuleBody = React.createClass({
             withTitle={false}
             collapsible={false}
             doc={doc}
+            config={this.props.namespaceNode.config}
           />
         )}
       </PropertyTag>
@@ -253,27 +240,48 @@ const ModuleBody = React.createClass({
     );
   },
 
-  renderTypeDefs(doc, typedefs) {
-    const ordered = orderAwareSort(doc, typedefs, 'id');
-
-    if (!ordered.length) {
+  renderTypeDefs(doc, typedefNodes) {
+    if (!typedefNodes.length) {
       return null;
     }
 
+    const orderedNodes = orderAwareSort.asNodes({ properties: doc }, typedefNodes, 'id');
+
     return (
       <DocGroup label="Type Definitions" tagName="ul" className="class-view__type-def-list">
-        {ordered.map(typedefDoc => {
+        {orderedNodes.map(typedefNode => {
+          const typedefDoc = typedefNode.properties
+          const propertyTags = typedefDoc.tags.filter(x => x.type === 'property')
+          const memberPropertyTags = (typedefNode.entities || []).reduce((list, entity) => {
+            return list.concat(
+              entity.properties.tags.filter(x => x.type === 'property').map(propertyTag => {
+                return Object.assign({}, propertyTag, { anchor: entity.meta.anchor })
+              })
+            )
+          }, [])
+
+          const allPropertyTags = propertyTags.concat(memberPropertyTags)
+
           return (
             <Doc
               key={typedefDoc.id}
               doc={typedefDoc}
               anchor={this.getEntityAnchor(typedefDoc)}
+              config={this.props.namespaceNode.config}
+              headingTag="h3"
             >
-              {typedefDoc.tags.filter(x => x.type === 'property').map((tag, i) => {
+              {allPropertyTags.length > 0 && (
+                <h4 className="tag-group__header">
+                  {"Properties"}
+                </h4>
+              )}
+
+              {allPropertyTags.map((tag, i) => {
                 return (
                   <PropertyTag
                     key={i}
                     typeInfo={tag.typeInfo}
+                    anchor={tag.anchor}
                   />
                 )
               })}
@@ -290,6 +298,8 @@ const ModuleBody = React.createClass({
         key={doc.id}
         doc={doc}
         anchor={this.getEntityAnchor(doc)}
+        config={this.props.namespaceNode.config}
+        headingTag="h3"
       />
     );
   },
@@ -318,6 +328,8 @@ const ModuleBody = React.createClass({
         key={doc.id}
         doc={doc}
         anchor={this.getEntityAnchor(doc)}
+        config={this.props.namespaceNode.config}
+        headingTag="h3"
       />
     );
   },
@@ -331,33 +343,7 @@ function isStaticProperty(scope) {
   return [
     K.SCOPE_PROTOTYPE,
     K.SCOPE_INSTANCE
-  ].indexOf(scope) === -1 || scope ;
-}
-
-function getMixedInTargets(node, namespaceNode) {
-  const { uid } = node;
-
-  return namespaceNode.documents.reduce(findMatchingDocuments, []);
-
-  function findMatchingDocuments(list, documentNode) {
-    if (match(documentNode)) {
-      list.push(documentNode);
-    }
-
-    if (documentNode.documents) {
-      documentNode.documents.reduce(findMatchingDocuments, list);
-    }
-
-    return list;
-  }
-
-  function match(x) {
-    return (
-      x.properties &&
-      x.properties.mixinTargets &&
-      x.properties.mixinTargets.some(y => y.uid === uid)
-    );
-  }
+  ].indexOf(scope) === -1;
 }
 
 module.exports = ModuleBody;

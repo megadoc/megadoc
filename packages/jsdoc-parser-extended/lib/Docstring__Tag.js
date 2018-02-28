@@ -133,9 +133,12 @@ function Tag(commentNode, params) {
     case 'name':
     case 'alias':
     case 'lends':
-    case 'mixes':
     case 'see':
       this.typeInfo.name = commentNode.name;
+      break;
+    case 'mixes':
+    case 'extends':
+      this.typeInfo.name = grabNameFromNameOrType(commentNode)
       break;
   }
 
@@ -193,3 +196,7 @@ module.exports = Tag;
 //     return type;
 //   }
 // }
+
+function grabNameFromNameOrType(commentNode) {
+  return commentNode.name || commentNode.type;
+}

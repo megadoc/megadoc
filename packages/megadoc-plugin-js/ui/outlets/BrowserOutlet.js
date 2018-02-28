@@ -1,6 +1,6 @@
 const React = require('react');
 const ClassBrowser = require('../components/ClassBrowser');
-const { object, shape, bool, } = React.PropTypes;
+const { array, object, shape, bool, } = React.PropTypes;
 
 module.exports = React.createClass({
   displayName: 'JS::BrowserOutlet',
@@ -11,6 +11,7 @@ module.exports = React.createClass({
     $outletOptions: shape({
       flat: bool,
       linkNamespaces: bool,
+      filter: array,
     })
   },
 
@@ -23,6 +24,7 @@ module.exports = React.createClass({
         withControls={this.props.namespaceNode.enableSidebarControls !== false}
         flat={this.props.$outletOptions.flat}
         linkToNamespaces={this.props.$outletOptions.linkNamespaces}
+        filter={this.props.$outletOptions.filter}
       />
     );
   }

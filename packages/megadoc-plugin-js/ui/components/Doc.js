@@ -18,8 +18,10 @@ const Doc = React.createClass({
     anchor: string,
     children: React.PropTypes.node,
     doc: object.isRequired,
+    config: object.isRequired,
     collapsible: bool,
     expanded: bool,
+    headingTag: string,
     withExamples: bool,
     withTitle: bool,
     withDescription: bool,
@@ -28,6 +30,7 @@ const Doc = React.createClass({
 
   getDefaultProps: function() {
     return {
+      headingTag: 'h4',
       withTitle: true,
       withDescription: true,
       withExamples: true
@@ -54,11 +57,17 @@ const Doc = React.createClass({
     const { doc, anchor } = this.props;
     const description = doc.description;
     const deprecatedTag = doc.tags.filter((t) => t.type === 'deprecated')[0];
+    const isPrivate = DocClassifier.isPrivate(doc)
+    const HeadingTag = this.props.headingTag || 'h4'
+
+    if (isPrivate && this.props.config.hidePrivateSymbols) {
+      return null
+    }
 
     return (
       <div className={className}>
         {this.props.withTitle && (
-          <h4
+          <HeadingTag
             className={
               classSet({
                 "doc-entity__header": true,
@@ -92,7 +101,7 @@ const Doc = React.createClass({
                 <span className="doc-entity__modifier doc-entity__protected">PROTECTED</span>
               )}
 
-              {DocClassifier.isPrivate(doc) && (
+              {isPrivate && (
                 <span className="doc-entity__modifier doc-entity__private">PRIVATE</span>
               )}
 
@@ -104,7 +113,7 @@ const Doc = React.createClass({
                 <span className="doc-entity__modifier doc-entity__async">DEPRECATED</span>
               )}
             </HeadingAnchor.Text>
-          </h4>
+          </HeadingTag>
         )}
 
         <div className="doc-entity__description">
@@ -123,6 +132,7 @@ const Doc = React.createClass({
           <DocTags
             tags={doc.tags}
             doc={doc}
+            config={this.props.config}
             withExamples={this.props.withExamples}
             withAdditionalResources={this.props.withAdditionalResources}
           />

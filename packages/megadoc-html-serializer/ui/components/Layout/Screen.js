@@ -87,12 +87,12 @@ const LayoutScreen = React.createClass({
   },
 
   renderContent() {
-    const ContentTag = this.getOutletTag('Core::Content');
+    const [ ContentTag, contentProps ] = this.getOutletTag('Core::Content');
     const { footer } = this.props.config;
 
     return (
       <div>
-        <ContentTag>
+        <ContentTag className={contentProps.className}>
           {this.renderRegion('Core::Content') || <NotFound />}
         </ContentTag>
 
@@ -110,11 +110,11 @@ const LayoutScreen = React.createClass({
       return null;
     }
 
-    const ContentTag = this.getOutletTag('Core::NavBar');
+    const { ContentTag, contentProps } = this.getOutletTag('Core::NavBar');
 
     return (
       <Sticky>
-        <ContentTag>
+        <ContentTag className={contentProps.className}>
           <p>Contents</p>
 
           {this.renderRegion('Core::NavBar')}
@@ -171,13 +171,14 @@ const LayoutScreen = React.createClass({
   getOutletTag(regionName) {
     const spec = this.props.regions.filter(x => x.name === regionName)[0];
 
-    if (spec) {
-      if (spec.options && spec.options.framed) {
-        return Document;
-      }
+    if (spec && spec.options && spec.options.framed) {
+      return [ Document, spec.options || {} ];
+    }
+    else if (spec) {
+      return [ 'div', spec.options || {} ]
     }
 
-    return 'div';
+    return [ 'div', {} ];
   },
 });
 

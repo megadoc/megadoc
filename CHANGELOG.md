@@ -1,5 +1,24 @@
 # Changelog
 
+## 7.0.0-beta.1
+
+- [[megadoc-html-serializer]] MediaWiki link strategy now can handle links
+  spread across multiple lines
+- [[megadoc-plugin-js]] improved handling for typedefs
+- [[megadoc-plugin-js]] improved rendering of function signatures that span
+  multiple lines
+- [[megadoc-plugin-js]] now supports the `@extends` jsdoc tag
+- [[megadoc-plugin-js]] new options:
+  - `hideBlankParameters` (defaults to `true`)
+  - `hideBlankReturns` (defaults to `true`)
+  - `hidePrivateSymbols` (defaults to `true`)
+  - `expandReturnedFunctionSignature` (defaults to `true`)
+  - `showTypeDefsInBrowser` (defaults to `false`)
+  - `showTypeDefPropertiesInBrowser` (defaults to `true`)
+- [[megadoc-plugin-markdown]] will no longer render a folder in the browser if
+  it has no documents
+
+
 ## 6.5.0
 
 - the outlet `Core::Link` provided by megadoc-html-serializer now accepts a new

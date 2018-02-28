@@ -28,8 +28,9 @@ const ArticleTOC = React.createClass({
   render() {
     const sections = SectionTree(this.props.documentNode);
     const rootSections = sections.filter(x => x.root);
+    const hasChildren = rootSections.some(branch => branch.children.length > 0)
 
-    if (!rootSections.length) {
+    if (!hasChildren) {
       return null;
     }
 
@@ -42,7 +43,7 @@ const ArticleTOC = React.createClass({
     }
 
     return (
-      <div>
+      <div className="markdown-toc">
         {rootSections.map(this.renderTree.bind(null, sections))}
       </div>
     );

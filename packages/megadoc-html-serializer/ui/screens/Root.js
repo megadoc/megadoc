@@ -230,7 +230,7 @@ function isHashPointingToAnchor(location) {
   const anchor = location.hash.replace(/^#/, '');
   const selfNode = findDOMNode(this);
 
-  return anchor && anchor.length > 0 && !!selfNode.querySelector(`a[name="${anchor}"]`);
+  return anchor && anchor.length > 0 && selfNode && !!selfNode.querySelector(`a[name="${anchor}"]`);
 }
 
 module.exports = Root;

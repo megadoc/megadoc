@@ -73,7 +73,7 @@ function resolve(anchor, options = {}, _state) {
     }
 
     if (!result && node.entities) { // Document
-      node.entities.some(visitLeafNode);
+      node.entities.some(visitBranchNode);
     }
 
     if (!result && node.documents) { // Namespace | Document
@@ -101,23 +101,6 @@ function resolve(anchor, options = {}, _state) {
         }
 
         markVisited(childNode);
-      }
-
-      return !!result;
-    }
-
-    function visitLeafNode(childNode) {
-      if (!hasVisited(childNode)) {
-        trace("- Checking entity '%s'...", childNode.path);
-
-        markVisited(childNode);
-
-        if (matches(term, childNode, inFriendBranch)) {
-          result = {
-            node: childNode,
-            text: inFriendBranch ? getPrivateNodeIndex(childNode) : childNode.title || term,
-          };
-        }
       }
 
       return !!result;
@@ -159,7 +142,7 @@ function getPrivateNodeIndex(node) {
 }
 
 function isLeaf(node) {
-  return node.type === 'DocumentEntity';
+  return node.type === 'DocumentEntity' && !node.entities;
 }
 
 function resolveByFilePath(anchor, options) {

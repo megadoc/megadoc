@@ -14,6 +14,7 @@ var TabularTagGroup = React.createClass({
     tagType: React.PropTypes.string,
     alwaysGroup: React.PropTypes.bool,
     tags: React.PropTypes.array,
+    hideIfEmpty: React.PropTypes.bool,
 
     renderer: React.PropTypes.func,
     className: React.PropTypes.string,
@@ -38,6 +39,9 @@ var TabularTagGroup = React.createClass({
     var className;
 
     if (tags.length === 0) {
+      return null;
+    }
+    else if (this.props.hideIfEmpty && tags.every(tagIsBlank)) {
       return null;
     }
     else if (tags.length === 1 && !this.props.alwaysGroup) {
@@ -107,5 +111,9 @@ var TabularTagGroup = React.createClass({
     );
   }
 });
+
+function tagIsBlank({ string }) {
+  return !string || !string.length === 0
+}
 
 module.exports = TabularTagGroup;

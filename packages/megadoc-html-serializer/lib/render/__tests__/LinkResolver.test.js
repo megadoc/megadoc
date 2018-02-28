@@ -23,6 +23,18 @@ describe('LinkResolver', function() {
             id: 'X',
             title: 'Gone to the Zoo',
             filePath: '/doc/articles/X.md',
+            entities: [
+              b.documentEntity({
+                id: '.Y',
+                filePath: '/doc/articles/X.md',
+                entities: [
+                  b.documentEntity({
+                    id: '.Z',
+                    filePath: '/doc/articles/X.md',
+                  })
+                ]
+              })
+            ]
           }),
 
           b.document({
@@ -147,6 +159,16 @@ describe('LinkResolver', function() {
     assert.equal(link.href, 'articles/Z');
   });
 
+  describe('generating HREF', function() {
+    context('for an entity nested under another entity...', function() {
+      it('uses the target entity anchor prefixed by the enclosing document path', function() {
+        const link = resolver.lookup({ path: 'MD/X/.Y.Z', contextNode: corpus.at('MD/Y') })
+
+        assert.ok(link)
+        assert.equal(link.href, 'X#.Y.Z')
+      })
+    })
+  })
   describe('custom injectors', function() {
     function MonkeyInjector(text, render) {
       return text.replace(/tee/g, function() {

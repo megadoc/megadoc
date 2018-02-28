@@ -3,6 +3,7 @@ const Link = require('components/Link');
 const HotItemIndicator = require('components/HotItemIndicator');
 const { ROOT_FOLDER_ID } = require('constants');
 const ArticleTOC = require('./ArticleTOC');
+const filterDocuments = require('utils/filterDocuments')
 const { object } = React.PropTypes;
 
 var Browser = React.createClass({
@@ -12,6 +13,7 @@ var Browser = React.createClass({
     documentEntityNode: object,
     expanded: React.PropTypes.bool,
     flat: React.PropTypes.bool,
+    filter: React.PropTypes.array,
   },
 
   getInitialState() {
@@ -26,10 +28,13 @@ var Browser = React.createClass({
     return (
       <nav className="megadoc-document-browser markdown-browser">
         <div>
-          {Array.isArray(namespaceNode.config.folders) && namespaceNode.config.folders.length > 0 ?
-            FolderHierarchy(namespaceNode).map(this.renderFolder) :
-            namespaceNode.documents.map(this.renderArticle)
-          }
+          {Array.isArray(namespaceNode.config.folders) && namespaceNode.config.folders.length > 0 ? (
+            FolderHierarchy(namespaceNode).map(this.renderFolder)
+          ) : (
+            namespaceNode.documents
+              .filter(filterDocuments(this.props.filter))
+              .map(this.renderArticle)
+          )}
         </div>
       </nav>
     );
@@ -45,6 +50,11 @@ var Browser = React.createClass({
 
   renderFolder(folder) {
     const { documents } = folder;
+    const filtered = filterDocuments(this.props.filter)(documents)
+
+    if (!filtered.length) {
+      return null;
+    }
 
     return (
       <div key={folder.path} className="class-browser__category">

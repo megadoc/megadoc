@@ -98,6 +98,8 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
     return filePathMap[filePath];
   };
 
+  exports.getByUID = getByUID
+
   Object.defineProperty(exports, 'length', {
     configurable: false,
     writable: false,
@@ -247,6 +249,9 @@ function CorpusTree(corpus) {
         set = 'documents';
       }
     }
+    else if (parentNode.type === 'DocumentEntity') {
+      set = 'entities'
+    }
 
     if (set) {
       parentNode[set].push(node);
@@ -268,6 +273,9 @@ function CorpusTree(corpus) {
       node.documents = [];
       node.entities = [];
     }
+    else if (node.type === 'DocumentEntity') {
+      node.entities = []
+    }
 
     return node;
   }
@@ -285,6 +293,19 @@ function getNamespaceOfNode(rootNode) {
   }
 }
 
+function getDocumentOfNode(rootNode) {
+  let node = rootNode;
+
+  while (node.type !== 'Document' && node.parentNode) {
+    node = node.parentNode;
+  }
+
+  if (node.type === 'Document') {
+    return node;
+  }
+}
+
 module.exports = CorpusAPI;
 module.exports.getNamespaceOfNode = getNamespaceOfNode;
+module.exports.getDocumentOfNode = getDocumentOfNode;
 module.exports.hrefOf = getHref;

@@ -40,3 +40,14 @@ exports.linkifyFragment = function linkifyFragment(params) {
     contextNode: params.contextNode
   });
 };
+
+exports.resolveUID = function resolveUID(params) {
+  invariant(!!params.contextNode,
+    "contextNode must be specified for a link!"
+  );
+
+  return CompositeValue.create('RESOLVE_UID', {
+    text: params.text,
+    contextNode: params.contextNode
+  });
+};

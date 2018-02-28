@@ -88,9 +88,13 @@ Doc.prototype.toJSON = function(registry) {
     doc.id = (doc.receiver || '<<unknown>>') + doc.symbol + this.id;
   }
 
-
   doc.mixinTargets = doc.tags
     .filter(function(tag) { return tag.type === 'mixes'; })
+    .map(function(tag) { return tag.typeInfo.name; })
+  ;
+
+  doc.superClasses = doc.tags
+    .filter(function(tag) { return tag.type === 'extends'; })
     .map(function(tag) { return tag.typeInfo.name; })
   ;
 

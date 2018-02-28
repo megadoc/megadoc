@@ -40,6 +40,15 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
           }
         )
       );
+    },
+
+    RESOLVE_UID: function(data, reduce) {
+      const index = state.corpus.resolve({
+        text: data.text,
+        contextNode: data.contextNode
+      })
+
+      return reduce(index ? index.node.uid : undefined)
     }
   };
 

@@ -16,6 +16,16 @@ const Module = React.createClass({
     documentEntityNode: React.PropTypes.object,
   },
 
+  childContextTypes: {
+    config: React.PropTypes.object
+  },
+
+  getChildContext() {
+    return {
+      config: this.props.namespaceNode.config
+    }
+  },
+
   render() {
     const { documentNode, namespaceNode } = this.props;
     const { config } = namespaceNode;

@@ -82,6 +82,13 @@ const ModuleHeader = React.createClass({
                   <span key={x.name}>, <span dangerouslySetInnerHTML={{__html: x.html || x.name}} /></span>
                 ))
             )}
+
+            {hasSuperClasses(documentNode) && (
+              documentNode.properties.superClasses
+                .map(x => (
+                  <span key={x.name}>, <span dangerouslySetInnerHTML={{__html: x.html || x.name}} /></span>
+                ))
+            )}
           </span>
         </Heading>
 
@@ -100,10 +107,18 @@ const ModuleHeader = React.createClass({
 });
 
 function hasMixinTargets(node) {
-  return (
+  return Boolean(
     node.properties &&
     node.properties.mixinTargets &&
     node.properties.mixinTargets.length > 0
+  );
+}
+
+function hasSuperClasses(node) {
+  return Boolean(
+    node.properties &&
+    node.properties.superClasses &&
+    node.properties.superClasses.length > 0
   );
 }
 

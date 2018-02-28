@@ -57,8 +57,23 @@ module.exports = function renderFn(context, renderer, node) {
       text: linkify({ text: x, contextNode: node }),
       contextNode: node
     })),
+
     mixinTargets: when(doc.mixinTargets, x => x.map(function(typeName) {
       return {
+        uid: renderer.resolveUID({ text: typeName, contextNode: node }),
+        name: typeName,
+        html: renderTypeLink({
+          typeName: typeName,
+          renderer: renderer,
+          builtInTypes: builtInTypes,
+          contextNode: node,
+        })
+      };
+    })),
+
+    superClasses: when(doc.superClasses, x => x.map(function(typeName) {
+      return {
+        uid: renderer.resolveUID({ text: typeName, contextNode: node }),
         name: typeName,
         html: renderTypeLink({
           typeName: typeName,

@@ -18,6 +18,7 @@ const HANDLED_TAGS = [
   'constructor',
   'deprecated',
   'example',
+  'extends',
   'memberOf',
   'method',
   'module',
@@ -40,6 +41,7 @@ var DocTags = React.createClass({
   displayName: 'DocTags',
 
   propTypes: {
+    config: React.PropTypes.object.isRequired,
     tags: React.PropTypes.array,
     callbacks: React.PropTypes.array,
     withExamples: React.PropTypes.bool,
@@ -65,14 +67,28 @@ var DocTags = React.createClass({
     var unhandledTags = this.props.tags.filter(function(tag) {
       return HANDLED_TAGS.indexOf(tag.type) === -1;
     });
+    const { config } = this.props;
 
     return (
       <div className="doc-entity__tags">
-        <TabularTagGroup alwaysGroup tagName="div" tags={paramTags} renderer={ParamTag}>
+        <TabularTagGroup
+          alwaysGroup
+          tagName="div"
+          tags={paramTags}
+          renderer={ParamTag}
+          hideIfEmpty={config.hideBlankParameters}
+        >
           Parameters ({paramTags.length})
         </TabularTagGroup>
 
-        <TabularTagGroup alwaysGroup tagName="div" tags={returnTags} tagType="return" renderer={ReturnTag}>
+        <TabularTagGroup
+          alwaysGroup
+          tagName="div"
+          tags={returnTags}
+          tagType="return"
+          renderer={ReturnTag}
+          hideIfEmpty={config.hideBlankReturns}
+        >
           {returnTags.length > 1 ? 'Return Values' : 'Return Value'}
         </TabularTagGroup>
 

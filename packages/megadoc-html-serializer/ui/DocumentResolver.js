@@ -105,7 +105,7 @@ function buildDocumentContext(node) {
 
   if (node.type === 'DocumentEntity') {
     ctx.documentEntityNode = node;
-    ctx.documentNode = node.parentNode;
+    ctx.documentNode = CorpusAPI.getDocumentOfNode(node);
     ctx.namespaceNode = CorpusAPI.getNamespaceOfNode(node);
   }
   else if (node.type === 'Document') {

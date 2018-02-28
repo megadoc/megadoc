@@ -1,10 +1,10 @@
 {
-  "lerna": "2.2.0",
+  "lerna": "2.10.2",
   "packages": [
     "packages/*"
   ],
   "publish": {},
   "ignore": [],
   "stream": true,
-  "version": "6.5.0"
+  "version": "7.0.0-beta.1"
 }

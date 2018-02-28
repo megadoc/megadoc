@@ -8,7 +8,8 @@ const HotItemIndicator = require('components/HotItemIndicator');
 const { sortBy } = require('lodash');
 const orderAwareSort = require('../utils/orderAwareSort');
 const DocClassifier = require('../utils/DocClassifier');
-const { object, bool, } = React.PropTypes;
+const filterDocuments = require('utils/filterDocuments');
+const { array, object, bool, } = React.PropTypes;
 
 var ClassBrowser = React.createClass({
   propTypes: {
@@ -18,6 +19,8 @@ var ClassBrowser = React.createClass({
     namespaceNode: object,
     flat: bool,
     linkNamespaces: bool,
+    showTypeDefs: bool,
+    filter: array,
   },
 
   getInitialState() {
@@ -28,7 +31,8 @@ var ClassBrowser = React.createClass({
 
   getDefaultProps() {
     return {
-      withControls: true
+      showTypeDefs: false,
+      withControls: true,
     };
   },
 
@@ -92,16 +96,26 @@ var ClassBrowser = React.createClass({
 
   renderNamespace(shouldDisplayName, ns) {
     let documents = ns.documents;
+
     const { config } = this.props.namespaceNode;
     const shouldHidePrivateModules = (
-      config.showPrivateModules === false ||
+      config.hidePrivateSymbols ||
       !this.state.showPrivateModules
     );
+
+    const showTypeDefs = (
+      this.props.showTypeDefs ||
+      config.showTypeDefsInBrowser
+    )
 
     if (shouldHidePrivateModules) {
       documents = ns.documents.filter(x => {
         return !DocClassifier.isPrivate(x.properties);
       });
+    }
+
+    if (!showTypeDefs) {
+      documents = documents.filter(x => !DocClassifier.isTypeDef(x.properties))
     }
 
     if (documents.length === 0) {
@@ -132,7 +146,7 @@ var ClassBrowser = React.createClass({
           this.renderModuleEntities(ns.entities)
         )}
 
-        {sortBy(documents, 'id').map(this.renderModule)}
+        {sortBy(documents, 'id').filter(filterDocuments(this.props.filter)).map(this.renderModule)}
       </div>
     );
   },
@@ -176,7 +190,16 @@ var ClassBrowser = React.createClass({
       console.log('weird docNode:', documentNode);
     }
 
-    const entityDocuments = orderAwareSort.asNodes(documentNode, documentNode.entities, 'id');
+    const { hidePrivateSymbols } = this.props.namespaceNode.config
+    const visible = entityNode => (
+      !hidePrivateSymbols || !DocClassifier.isPrivate(entityNode.properties)
+    )
+
+    const entityDocuments = orderAwareSort.asNodes(
+      documentNode,
+      documentNode.entities.filter(visible),
+      'id'
+    );
 
     return (
       <ul className="class-browser__methods">
@@ -186,6 +209,11 @@ var ClassBrowser = React.createClass({
   },
 
   renderEntity(node) {
+    const shouldDisplayTypeDefProperties = (
+      this.props.showTypeDefProperties ||
+      this.props.namespaceNode.config.showTypeDefPropertiesInBrowser
+    )
+
     return (
       <li key={node.uid} className="class-browser__methods-entity">
         <Link
@@ -193,6 +221,10 @@ var ClassBrowser = React.createClass({
           children={(node.properties.symbol || '') + node.properties.name}
           title={node.title}
         />
+
+        {shouldDisplayTypeDefProperties && DocClassifier.isTypeDef(node.properties) && (
+          this.renderModuleEntities(node)
+        )}
       </li>
     );
   },

@@ -1,4 +1,12 @@
 var RE_MEDIA_WIKI_LINK = /(.?)\[\[((?:.|\s)+?)\]\]/g;
+var RE_NEWLINE = /\n/g;
+var trim = function(x) {
+  return x.trim()
+}
+
+var discardNewlines = function(x) {
+  return x.replace(RE_NEWLINE, '')
+}
 
 // MediaWiki scheme for linking. The syntax is:
 //
@@ -16,11 +24,11 @@ function MediaWikiLinkInjector(docstring, renderLink) {
     var pathFragments = pathFragment.split('|');
 
     if (pathFragments.length > 1)  {
-      path = pathFragments.slice(1).join('|').trim();
+      path = pathFragments.slice(1).map(trim).map(discardNewlines).join('|');
       text = pathFragments[0].trim();
     }
     else {
-      path = pathFragment;
+      path = pathFragment.trim();
     }
 
     return leadingChar + renderLink({

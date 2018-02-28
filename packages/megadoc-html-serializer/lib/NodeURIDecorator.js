@@ -71,7 +71,7 @@ module.exports = function NodeURIDecorator(config) {
     }
 
     node.meta.href = href;
-    node.meta.anchor = g.NodeAnchor(node);
+    node.meta.anchor = g.NodeAnchor(node, traversalContext);
 
     if (node.type !== 'DocumentEntity') {
       invariant(typeof node.meta.href === 'string',
@@ -92,6 +92,8 @@ module.exports = function NodeURIDecorator(config) {
   }
 };
 
+const DONT_INCLUDE = {}
+
 function FileBasedURIGenerator(config) {
   var extension = config.emittedFileExtension || '';
   var RE = extension.length > 0 && new RegExp(extension + '$');
@@ -101,10 +103,10 @@ function FileBasedURIGenerator(config) {
     NodeAnchor: NodeAnchor
   };
 
-  function NodeURI(node, traversalContext) {
+  function NodeURI(node, traversalContext, includeEntityAnchor) {
     const { getParentOf } = traversalContext;
 
-    if (shouldIgnore(node)) {
+    if (shouldIgnore(node) && includeEntityAnchor !== DONT_INCLUDE) {
       return node.type === 'DocumentEntity' ?
         node.meta.href :
         ensureHasExtension(
@@ -122,7 +124,15 @@ function FileBasedURIGenerator(config) {
         invariant(false, `Node has no parent! ${dumpNodeFilePath(node)}`);
       }
 
-      return NodeURI(parentNode, traversalContext) + '#' + NodeAnchor(node);
+      if (includeEntityAnchor === DONT_INCLUDE) {
+        return NodeURI(parentNode, traversalContext, includeEntityAnchor);
+      }
+      else if (parentNode.type === 'DocumentEntity') {
+        return NodeURI(parentNode, traversalContext, DONT_INCLUDE) + '#' + NodeAnchor(node, traversalContext);
+      }
+      else {
+        return NodeURI(parentNode, traversalContext) + '#' + NodeAnchor(node, traversalContext);
+      }
     }
     else if (node.type === 'Document') {
       if (!parentNode) {
@@ -170,15 +180,25 @@ function FileBasedURIGenerator(config) {
     return NodeURI(node, traversalContext).replace(RE, '').replace(/\/index$/, '');
   }
 
-  function NodeAnchor(node) {
+  function NodeAnchor(node, traversalContext) {
+    const { getParentOf } = traversalContext;
+
     if (node.meta.hasOwnProperty('anchor')) {
       return node.meta.anchor;
     }
-    else if (node.type !== 'Corpus') {
-      return encodeURI(node.id.replace(/[\/\s]+/g, '-'));
+    else if (node.type === 'Corpus') {
+      return null;
     }
     else {
-      return null;
+      const parentNode = getParentOf(node);
+      const anchor = encodeURI(node.id.replace(/[\/\s]+/g, '-'));
+
+      if (parentNode.type === 'DocumentEntity') {
+        return NodeAnchor(parentNode, traversalContext) + anchor
+      }
+      else {
+        return anchor
+      }
     }
   }
 

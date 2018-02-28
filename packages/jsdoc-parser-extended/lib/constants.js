@@ -63,6 +63,7 @@ exports.KNOWN_TAGS = [
   'deprecated',
   'example',
   'export',
+  'extends',
   'interface',
   'lends',
   'memberOf',
