@@ -1,9 +1,9 @@
 const path = require('path');
-const Compiler = require("../Compiler");
-const { run: compile } = Compiler;
+const compile = require('../compile');
+const breakpoints = require('../breakpoints');
 const { assert, createFileSuite, createSinonSuite } = require('megadoc-test-utils')
 
-describe("megadoc-compiler::Compiler", function() {
+describe("megadoc-compiler::compile", function() {
   const fileSuite = createFileSuite(this);
   let processorFile;
 
@@ -195,7 +195,7 @@ describe("megadoc-compiler::Compiler", function() {
         processor: [ processorFile.path, {} ]
       }],
     }, {
-      breakpoint: Compiler.BREAKPOINT_REFINE,
+      breakpoint: breakpoints.BREAKPOINT_REFINE,
     }, function(err, compilation) {
       if (err) {
         return done(err);
@@ -213,56 +213,56 @@ describe("megadoc-compiler::Compiler", function() {
     const stages = [
       {
         message: 'can merge with a change tree',
-        breakpoint: Compiler.BREAKPOINT_MERGE_CHANGE_TREE + 1,
+        breakpoint: breakpoints.BREAKPOINT_MERGE_CHANGE_TREE + 1,
         output: 'rawDocuments',
         nextOutput: 'refinedDocuments',
       },
 
       {
         message: 'can parse',
-        breakpoint: Compiler.BREAKPOINT_PARSE + 1,
+        breakpoint: breakpoints.BREAKPOINT_PARSE + 1,
         output: 'rawDocuments',
         nextOutput: 'refinedDocuments',
       },
       {
         message: 'can refine',
-        breakpoint: Compiler.BREAKPOINT_REFINE + 1,
+        breakpoint: breakpoints.BREAKPOINT_REFINE + 1,
         output: 'refinedDocuments',
         nextOutput: 'documents',
       },
       {
         message: 'can reduce',
-        breakpoint: Compiler.BREAKPOINT_REDUCE + 1,
+        breakpoint: breakpoints.BREAKPOINT_REDUCE + 1,
         output: 'documents',
         nextOutput: 'renderOperations',
       },
       {
         message: 'can render',
-        breakpoint: Compiler.BREAKPOINT_RENDER + 1,
+        breakpoint: breakpoints.BREAKPOINT_RENDER + 1,
         output: 'renderOperations',
         nextOutput: 'treeOperations',
       },
       {
         message: 'can reduce a tree',
-        breakpoint: Compiler.BREAKPOINT_REDUCE_TREE + 1,
+        breakpoint: breakpoints.BREAKPOINT_REDUCE_TREE + 1,
         output: 'treeOperations',
         nextOutput: null,
       },
       {
         message: 'can compose a tree',
-        breakpoint: Compiler.BREAKPOINT_COMPOSE_TREE + 1,
+        breakpoint: breakpoints.BREAKPOINT_COMPOSE_TREE + 1,
         output: 'tree',
         nextOutput: 'corpus',
       },
       {
         message: 'can render the corpus',
-        breakpoint: Compiler.BREAKPOINT_RENDER_CORPUS + 1,
+        breakpoint: breakpoints.BREAKPOINT_RENDER_CORPUS + 1,
         output: null,
         nextOutput: null,
       },
       {
         message: 'can emit the assets',
-        breakpoint: Compiler.BREAKPOINT_EMIT_ASSETS + 1,
+        breakpoint: breakpoints.BREAKPOINT_EMIT_ASSETS + 1,
         output: null,
         nextOutput: null,
       },

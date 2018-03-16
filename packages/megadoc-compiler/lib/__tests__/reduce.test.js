@@ -1,8 +1,8 @@
 const { assert, createFileSuite: FileSuite } = require('megadoc-test-utils');
-const subject = require('../stage01__reduce');
+const subject = require('../reduce');
 const TestSerializer = require('./fixtures/TestSerializer');
 
-describe('stage01__reduce', function() {
+describe('reduce', function() {
   const fileSuite = FileSuite(this);
 
   it('should pass each file through to the reducer', function(done) {

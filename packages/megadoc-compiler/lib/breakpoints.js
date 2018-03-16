@@ -1,0 +1,10 @@
+exports.BREAKPOINT_COMPILE            = 1;
+exports.BREAKPOINT_PARSE              = 2;
+exports.BREAKPOINT_MERGE_CHANGE_TREE  = 3;
+exports.BREAKPOINT_REFINE             = 4;
+exports.BREAKPOINT_REDUCE             = 5;
+exports.BREAKPOINT_RENDER             = 6;
+exports.BREAKPOINT_REDUCE_TREE        = 7;
+exports.BREAKPOINT_COMPOSE_TREE       = 8;
+exports.BREAKPOINT_RENDER_CORPUS      = 9;
+exports.BREAKPOINT_EMIT_ASSETS        = 10;

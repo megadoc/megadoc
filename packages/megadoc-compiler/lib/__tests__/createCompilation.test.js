@@ -1,8 +1,8 @@
 const { assert, createFileSuite } = require('megadoc-test-utils');
 const path = require('path');
-const subject = require('../stage00__createCompilation');
+const subject = require('../createCompilation');
 
-describe('stage00__createCompilation', function() {
+describe('createCompilation', function() {
   const fileSuite = createFileSuite(this);
 
   let processorSpec, decoratorSpec, output;

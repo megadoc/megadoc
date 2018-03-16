@@ -1,8 +1,8 @@
 const { assert, createFileSuite: FileSuite, createSinonSuite: SinonSuite } = require('megadoc-test-utils');
-const subject = require('../stage05__emit');
+const subject = require('../emit');
 const b = require('megadoc-corpus').builders;
 
-describe('stage05__emit', function() {
+describe('emit', function() {
   const fileSuite = FileSuite(this);
   const sinon = SinonSuite(this);
 

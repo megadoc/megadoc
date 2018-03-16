@@ -1,40 +1,41 @@
-const fs = require('fs-extra');
 const async = require('async');
-const R = require('ramda');
-const ConfigUtils = require('megadoc-config-utils');
-const defaults = require('./config');
-const createCompilation = require('./stage00__createCompilation');
-const parse = require('./stage01__parse');
-const reduce = require('./stage01__reduce');
-const refine = require('./stage01__refine');
-const render = require('./stage01__render');
-const reduceTree = require('./stage02__reduceTree');
-const mergeTrees = require('./mergeTrees');
-const composeTree = require('./stage03__composeTree');
-const seal = require('./stage04__seal');
-const purge = require('./stage05__purge');
-const emit = require('./stage05__emit');
-const parseConfig = require('./parseConfig');
 const BlankSerializer = require('./BlankSerializer');
+const composeTree = require('./composeTree');
+const ConfigUtils = require('megadoc-config-utils');
 const createBreakpoint = require('./utils/createBreakpoint');
+const createCompilation = require('./createCompilation');
 const createProfiler = require('./utils/createProfiler');
+const defaults = require('./config');
+const divisus = require('divisus');
+const emit = require('./emit');
+const fs = require('fs-extra');
 const Linter = require('megadoc-linter');
+const mergeTrees = require('./mergeTrees');
+const parse = require('./parse');
+const parseConfig = require('./parseConfig');
+const purge = require('./purge');
+const R = require('ramda');
+const reduce = require('./reduce');
+const reduceTree = require('./reduceTree');
+const refine = require('./refine');
+const render = require('./render');
+const seal = require('./seal');
 const { assocWith, mergeWith, nativeAssoc } = require('./utils');
 const asyncSequence = fns => async.seq.apply(async, fns.filter(x => !!x));
+const {
+  BREAKPOINT_COMPILE,
+  BREAKPOINT_PARSE,
+  BREAKPOINT_MERGE_CHANGE_TREE,
+  BREAKPOINT_REFINE,
+  BREAKPOINT_REDUCE,
+  BREAKPOINT_RENDER,
+  BREAKPOINT_REDUCE_TREE,
+  BREAKPOINT_COMPOSE_TREE,
+  BREAKPOINT_RENDER_CORPUS,
+  BREAKPOINT_EMIT_ASSETS,
+} = require('./breakpoints');
 const { BreakpointError } = createBreakpoint;
 const { asyncify } = async;
-const divisus = require('divisus');
-
-const BREAKPOINT_COMPILE            = exports.BREAKPOINT_COMPILE            = 1;
-const BREAKPOINT_PARSE              = exports.BREAKPOINT_PARSE              = 2;
-const BREAKPOINT_MERGE_CHANGE_TREE  = exports.BREAKPOINT_MERGE_CHANGE_TREE  = 3;
-const BREAKPOINT_REFINE             = exports.BREAKPOINT_REFINE             = 4;
-const BREAKPOINT_REDUCE             = exports.BREAKPOINT_REDUCE             = 5;
-const BREAKPOINT_RENDER             = exports.BREAKPOINT_RENDER             = 6;
-const BREAKPOINT_REDUCE_TREE        = exports.BREAKPOINT_REDUCE_TREE        = 7;
-const BREAKPOINT_COMPOSE_TREE       = exports.BREAKPOINT_COMPOSE_TREE       = 8;
-const BREAKPOINT_RENDER_CORPUS      = exports.BREAKPOINT_RENDER_CORPUS      = 9;
-const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 10;
 
 /**
  * @module Compiler
@@ -54,9 +55,9 @@ const BREAKPOINT_EMIT_ASSETS        = exports.BREAKPOINT_EMIT_ASSETS        = 10
  * @param {Boolean} [runOptions.stats=false]
  *        Turn this on if you want to generate compile-time statistics.
  */
-exports.run = function run(userConfig, runOptions, done) {
+module.exports = function compile(userConfig, runOptions, done) {
   if (arguments.length === 2) {
-    return run(userConfig, {}, runOptions);
+    return compile(userConfig, {}, runOptions);
   }
 
   const teardownRoutines = [];
@@ -131,7 +132,7 @@ exports.run = function run(userConfig, runOptions, done) {
     ),
   ])
 
-  const compile = asyncSequence([
+  const bootCompileAndEmit = asyncSequence([
     instrument.async('boot')
     (
       boot
@@ -151,7 +152,7 @@ exports.run = function run(userConfig, runOptions, done) {
     )
   ])
 
-  instrument.async('total')(compile)({
+  instrument.async('total')(bootCompileAndEmit)({
     userConfig,
     runOptions,
     registerTeardownRoutine(fn) {

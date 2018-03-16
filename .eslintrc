@@ -62,7 +62,7 @@
     "wrap-iife": [2, "any"],
     "no-undef-init": 2,
     "no-delete-var": 2,
-    "no-use-before-define": [2, "nofunc"],
+    "no-use-before-define": 0,
     "dot-location": [2, "property"],
     "curly": [2, "multi-line"],
     "no-shadow": 2,

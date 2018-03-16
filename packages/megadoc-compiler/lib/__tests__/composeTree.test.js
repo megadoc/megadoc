@@ -1,6 +1,5 @@
-require('../Compiler')
 const { assert, createBuildersWithUIDs, uidOf, createSinonSuite } = require('megadoc-test-utils');
-const composeTree = require('../stage03__composeTree');
+const composeTree = require('../composeTree');
 const b = createBuildersWithUIDs(require('megadoc-corpus'));
 const { NullLinter } = require('megadoc-linter');
 

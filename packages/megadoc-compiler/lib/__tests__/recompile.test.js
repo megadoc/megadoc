@@ -1,6 +1,5 @@
-const Compiler = require('../Compiler');
+const compile = require('../compile');
 const R = require('ramda');
-const { run: compile } = Compiler;
 const { assert, createFileSuite, createSinonSuite } = require('megadoc-test-utils')
 
 describe('megadoc-compiler::recompile', function() {
