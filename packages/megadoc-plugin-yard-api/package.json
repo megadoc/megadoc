@@ -27,5 +27,8 @@
     "object-assign": "4.0.1",
     "megadoc-corpus": "^6.2.3",
     "megadoc-html-serializer": "^6.5.0"
+  },
+  "devDependencies": {
+    "megadoc-test-utils": "^6.2.0"
   }
 }
