@@ -30,17 +30,19 @@ const Properties = React.createClass({
       <div>
         {this.props.children}
 
-        <ul className="argument-listing">
-          {this.props.tags.map(this.renderArgument)}
-        </ul>
+        <table className="argument-listing">
+          <tbody>
+            {this.props.tags.map(this.renderArgument)}
+          </tbody>
+        </table>
       </div>
     );
   },
 
   renderArgument(tag) {
     return (
-      <li key={tag.name} className="argument-listing__argument">
-        <div className="argument-listing__argument-details">
+      <tr key={tag.name} className="argument-listing__argument">
+        <td className="argument-listing__argument-details">
           <code className="argument-listing__argument-name">{tag.name}</code>
 
           <span className="argument-listing__argument-type">
@@ -56,9 +58,9 @@ const Properties = React.createClass({
           {tag.is_required && (
             <span className="argument-listing__argument-required">Required</span>
           )}
-        </div>
+        </td>
 
-        <div className="argument-listing__argument-text">
+        <td className="argument-listing__argument-text">
           {tag.text.length > 0 && (
             <MarkdownText>{tag.text}</MarkdownText>
           )}
@@ -66,8 +68,8 @@ const Properties = React.createClass({
           {tag.text.length === 0 && (
             <em className="type-mute">No description provided.</em>
           )}
-        </div>
-      </li>
+        </td>
+      </tr>
     );
   }
 });

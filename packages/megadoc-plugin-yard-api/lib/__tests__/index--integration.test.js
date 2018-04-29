@@ -1,21 +1,11 @@
-var Subject = require("../");
-var assert = require('chai').assert;
-var IntegrationSuite = require('megadoc-test-utils/LegacyTestUtils').IntegrationSuite;
+const path = require('path');
+const { createIntegrationSuite } = require('megadoc-test-utils');
 
-describe("[Integration] megadoc-plugin-yard-api", function() {
-  var suite = IntegrationSuite(this);
+describe('[integration] megadoc-plugin-yard-api', function() {
+  const integrationSuite = createIntegrationSuite(this);
 
-  beforeEach(function() {
-    suite.set('plugins', [
-      Subject({
-        verbose: false,
-        skipScan: true,
-        routeName: 'test',
-        source: 'lib/**/*.json'
-      })
-    ]);
-
-    suite.createFile('lib/a.json', function() {;
+  it('works', function(done) {
+    integrationSuite.createFile('lib/a.json', function() {;
       // {
       //   "id": "admin_account_configs",
       //   "title": "Admin - Account_Configs",
@@ -69,7 +59,7 @@ describe("[Integration] megadoc-plugin-yard-api", function() {
       // }
     });
 
-    suite.createFile('lib/b.json', function() {;
+    integrationSuite.createFile('lib/b.json', function() {;
       // {
       //   "id": "author_users",
       //   "title": "Author - Users",
@@ -97,36 +87,52 @@ describe("[Integration] megadoc-plugin-yard-api", function() {
       //   "endpoints": []
       // }
     });
-  });
 
-  it('works', function(done) {
-    suite.run(function(err, stats) {
-      if (err) { return done(err); }
+    integrationSuite.compile({
+      sources: [
+        {
+          include: [
+            `lib/*.json`
+          ],
+          processor: {
+            name: path.resolve(__dirname, '../index.js'),
+            options: {
+              scan: false,
+              routeName: '/test',
+              name: 'YARD-API Test',
+            }
+          }
+        }
+      ]
+    }, function(err) {
+      if (err) {
+        return done(err);
+      }
 
-      assert.equal(stats['yard-api:test'].apiCount, 2);
-      assert.equal(stats['yard-api:test'].objectCount, 1);
-      assert.equal(stats['yard-api:test'].endpointCount, 1);
-
-      suite.assertFileWasRendered('test/admin_account_configs.html', {
+      integrationSuite.assertFileWasRendered('test/admin_account_configs.html', {
         text: 'Admin config information'
       });
 
       // it linkifies stuff in @example_response and @example_request
-      suite.assertFileWasRendered('test/admin_account_configs.html', {
-        html: '"response": "<a class="mega-link--internal" href="author_users.html#test-author_users-user_response">API::UserResponse</a>'
-      });
+      //
+      // SKIP: does this really make sense? the content is rendered as a code
+      // block...
+      //
+      // integrationSuite.assertFileWasRendered('test/admin_account_configs.html', {
+      //   html: '"response": "<a class="mega-link--internal" href="author_users.html#test-author_users-user_response">API::UserResponse</a>'
+      // });
 
       // it renders the objects
-      suite.assertFileWasRendered('test/author_users.html', {
+      integrationSuite.assertFileWasRendered('test/author_users.html', {
         text: 'UserResponse'
       });
 
       // it renders the endpoints
-      suite.assertFileWasRendered('test/admin_account_configs.html', {
+      integrationSuite.assertFileWasRendered('test/admin_account_configs.html', {
         text: 'This endpoint returns the admin config information.'
       });
 
       done();
-    });
+    })
   });
 });

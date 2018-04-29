@@ -10,14 +10,16 @@ const ControllerOutlet = React.createClass({
   },
 
   render() {
+    const { documentNode } = this.props
+
+    if (!documentNode) {
+      return null
+    }
+
     return (
       <Component config={this.props.namespaceNode.config} {...this.props} />
     );
   }
 });
 
-megadoc.outlets.add('YARD-API::Controller', {
-  key: 'YARD-API::Controller',
-  component: ControllerOutlet
-});
-
+module.exports = ControllerOutlet

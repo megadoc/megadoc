@@ -181,13 +181,9 @@ function Corpus({ alias: aliases = {} }, { linter }) {
       }
     }
 
-    const withContextNode = R.merge(anchor, {
-      contextNode: anchor.contextNode
-    });
-
     return (
-      resolveLink(withContextNode, { getParentOf: exports.getParentOf }) ||
-      resolveAliasedLink(withContextNode)
+      resolveLink(anchor, { getParentOf: exports.getParentOf }) ||
+      resolveAliasedLink(anchor)
     );
   }
 

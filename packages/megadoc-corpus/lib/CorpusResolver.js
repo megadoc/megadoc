@@ -11,7 +11,7 @@ function resolve(anchor, options = {}, _state) {
     "ArgumentError: resolve request requires a 'text' term to resolve.");
 
   assert(anchor && anchor.contextNode && typeof anchor.contextNode === 'object',
-    "ArgumentError: resolve request requires a contextNode to resolve from.");
+    "ArgumentError: resolve request (\"" + anchor.text + "\") requires a contextNode to resolve from.");
 
   var index;
   var term = anchor.text;

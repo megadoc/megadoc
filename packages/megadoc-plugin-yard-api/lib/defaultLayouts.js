@@ -3,15 +3,15 @@ module.exports = [
     match: { by: 'type', on: [ 'Document', 'DocumentEntity' ] },
     regions: [
       {
-        name: 'Layout::Content',
+        name: 'Core::Content',
         options: { framed: true },
         outlets: [
           { name: 'YARD-API::Controller' },
-          { name: 'Layout::Content' },
+          { name: 'Core::Content' },
         ]
       },
       {
-        name: 'Layout::Sidebar',
+        name: 'Core::Sidebar',
         outlets: [
           { name: 'YARD-API::Browser' }
         ]
@@ -22,7 +22,7 @@ module.exports = [
     match: { by: 'type', on: [ 'Namespace' ] },
     regions: [
       {
-        name: 'Layout::Sidebar',
+        name: 'Core::Sidebar',
         outlets: [
           { name: 'YARD-API::Browser' }
         ]

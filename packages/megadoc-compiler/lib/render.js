@@ -12,7 +12,12 @@ module.exports = function render(renderRoutines, compilation, done) {
   const renderOperations = documents.reduce(function(map, document) {
     const documentRenderingDescriptor = fn(context, renderRoutines, document);
 
-    if (documentRenderingDescriptor) {
+    if (Array.isArray(documentRenderingDescriptor)) {
+      documentRenderingDescriptor.forEach(([ uid, descriptor ]) => {
+        map[uid] = descriptor
+      })
+    }
+    else if (documentRenderingDescriptor) {
       map[document.uid] = documentRenderingDescriptor;
     }
 

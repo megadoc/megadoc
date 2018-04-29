@@ -6,4 +6,16 @@ module.exports = {
   skipScan: false,
   routeName: 'api',
   title: 'API',
+  builtInTypes: [
+    'Array',
+    'Boolean',
+    'Fixnum',
+    'Float',
+    'Hash',
+    'Integer',
+    'Number',
+    'Numeric',
+    'Object',
+    'String',
+  ],
 };

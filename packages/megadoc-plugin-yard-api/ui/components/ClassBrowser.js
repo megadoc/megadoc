@@ -1,8 +1,6 @@
 const React = require("react");
 const Link = require('components/Link');
 const Checkbox = require('components/Checkbox');
-const Storage = require('core/Storage');
-const EXPAND_ALL = require('../constants').CFG_CLASS_BROWSER_EXPAND_ALL;
 const { isAPIObject, isAPIEndpoint } = require('../utils');
 const { object } = React.PropTypes;
 
@@ -10,6 +8,12 @@ const APIClassBrowser = React.createClass({
   propTypes: {
     namespaceNode: object,
     documentNode: object,
+  },
+
+  getInitialState() {
+    return {
+      expanded: false
+    }
   },
 
   render() {
@@ -79,7 +83,7 @@ const APIClassBrowser = React.createClass({
     return (
       <div className="class-browser__controls">
         <Checkbox
-          checked={!!Storage.get(EXPAND_ALL)}
+          checked={this.state.expanded}
           onChange={this.toggleExpandedState}
           children="Expand all resources"
         />
@@ -88,11 +92,11 @@ const APIClassBrowser = React.createClass({
   },
 
   toggleExpandedState() {
-    Storage.set(EXPAND_ALL, !Storage.get(EXPAND_ALL));
+    this.setState({ expanded: !this.state.expanded })
   },
 
   isExpanded(documentNode) {
-    return Storage.get(EXPAND_ALL) || (
+    return this.state.expanded || (
       this.props.documentNode && this.props.documentNode.uid === documentNode.uid
     );
   }

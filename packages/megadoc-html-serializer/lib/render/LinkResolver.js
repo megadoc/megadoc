@@ -174,7 +174,19 @@ LinkResolver.prototype.linkify = function(params) {
  */
 LinkResolver.prototype.renderLink = function(params, descriptor) {
   const format = params.format || 'markdown';
-  const contextNode = this.corpus.get(params.contextNode.uid);
+  const contextNode = this.corpus.get(params.contextNode.uid) || this.corpus.at(params.contextNode.path);
+
+  assert(contextNode,
+    `Node linking to "${descriptor.path}" with path "${params.contextNode.path}" is not registered in Corpus!
+
+    DUMP
+    ----
+    Corpus nodes:
+
+${JSON.stringify(this.corpus.dump(), null, 4)}
+    `
+  )
+
   const index = this.lookup({
     path: descriptor.path,
     contextNode

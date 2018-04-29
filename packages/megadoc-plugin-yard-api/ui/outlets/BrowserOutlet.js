@@ -16,8 +16,4 @@ const BrowserOutlet = React.createClass({
   }
 });
 
-megadoc.outlets.add('YARD-API::Browser', {
-  key: 'YARD-API::Browser',
-  component: BrowserOutlet
-});
-
+module.exports = BrowserOutlet

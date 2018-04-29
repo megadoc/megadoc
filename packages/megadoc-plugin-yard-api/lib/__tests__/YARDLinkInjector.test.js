@@ -1,6 +1,6 @@
-var subject = require("../YARDLinkInjector");
-var assert = require('chai').assert;
-var TestUtils = require('megadoc-test-utils/LegacyTestUtils');
+const { assert } = require('megadoc-test-utils');
+const TestUtils = require('megadoc-test-utils/LegacyTestUtils');
+const subject = require("../YARDLinkInjector");
 
 describe("YARDLinkInjector", function() {
   var sinon = TestUtils.sinonSuite(this);

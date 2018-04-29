@@ -47,7 +47,9 @@ const APIResource = React.createClass({
     );
   },
 
+  /* eslint-disable react/prop-types */
   renderQuickLinks({ endpoints, objects }) {
+  /* eslint-enable react/prop-types */
     if (!endpoints.length && !objects.length) {
       return null;
     }

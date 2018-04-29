@@ -2,22 +2,28 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 0;
 }
 
 .argument-listing__argument {
   padding: 0;
   margin: 2em 0;
-  display: block;
   min-height: 4em;
+  border: none;
+}
+
+.argument-listing__argument-details,
+.argument-listing__argument-text {
+  vertical-align: top;
+  border: none;
 }
 
 .argument-listing__argument-details {
-  /*display: inline-block;*/
   width: 40%;
   max-width: 260px;
   text-align: right;
-  vertical-align: top;
-  float: left;
 }
 
 .argument-listing__argument-name,

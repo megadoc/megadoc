@@ -37,6 +37,7 @@ exports.linkifyFragment = function linkifyFragment(params) {
   return CompositeValue.create('LINKIFY_FRAGMENT', {
     text: params.text,
     format: params.format,
+    injectors: params.injectors,
     contextNode: params.contextNode
   });
 };

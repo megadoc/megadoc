@@ -201,6 +201,7 @@ module.exports = {
       'javascript',
       'markdown',
       'ruby',
+      'json',
     ],
 
     /**

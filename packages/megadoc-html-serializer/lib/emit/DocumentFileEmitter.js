@@ -5,9 +5,12 @@ module.exports = function DocumentFileEmitter(params) {
   const ui = params.ui;
   const corpus = params.corpus;
 
-  return function emitDocumentFile(uid, done) {
+  return function emitDocumentFile(uid, _done) {
     const node = typeof uid === 'string' ? corpus[uid] : uid;
     const href = node.meta && node.meta.href;
+    const done = () => {
+      process.nextTick(_done)
+    }
 
     if (node.type === 'DocumentEntity') {
       return done();
