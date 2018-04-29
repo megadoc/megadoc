@@ -5,13 +5,13 @@ node_js:
 
 install:
   - npm install --ignore-scripts
-  - ./node_modules/.bin/lerna bootstrap
+  - ./node_modules/.bin/lerna bootstrap --ignore megadoc-regression-tests
 
 script:
   - ./bin/scan-dependency-versions
   - ./bin/lint
   - ./bin/lint-ui
-  - ./node_modules/.bin/lerna exec --concurrency 1 --stream -- NODE_ENV=production PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish -S test -S lint
+  - ./node_modules/.bin/lerna exec --ignore megadoc-regression-tests --concurrency 1 --stream -- NODE_ENV=production PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish -S test -S lint
   - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/test
   - npm run doc
 
