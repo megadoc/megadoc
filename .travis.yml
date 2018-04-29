@@ -1,31 +1,18 @@
 sudo: false
 language: node_js
-addons:
-  firefox: latest
 node_js:
   - "stable"
 
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3 # give xvfb some time to start
-
 install:
-  - ./bin/setup
+  - npm install --ignore-scripts
+  - ./node_modules/.bin/lerna bootstrap
 
 script:
   - ./bin/scan-dependency-versions
   - ./bin/lint
   - ./bin/lint-ui
-  - ./node_modules/.bin/lerna exec
-      --concurrency 1
-      --stream
-      -- NODE_ENV=production
-         PACKAGE="${LERNA_PACKAGE_NAME}"
-         ../../bin/prepublish -S test -S lint
+  - ./node_modules/.bin/lerna exec --concurrency 1 --stream -- NODE_ENV=production PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish -S test -S lint
   - COVERAGE=1 MEGADOC_TEST_TIMEOUT=60000 ./bin/test
-  # firefox / chrome aren't working on travis with this config anymore :shrug:
-  # - ./bin/test-ui
   - npm run doc
 
 after_success:

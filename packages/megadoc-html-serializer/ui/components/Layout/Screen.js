@@ -87,7 +87,7 @@ const LayoutScreen = React.createClass({
   },
 
   renderContent() {
-    const [ ContentTag, contentProps ] = this.getOutletTag('Core::Content');
+    const [ ContentTag, contentProps = {} ] = this.getOutletTag('Core::Content');
     const { footer } = this.props.config;
 
     return (
@@ -110,7 +110,7 @@ const LayoutScreen = React.createClass({
       return null;
     }
 
-    const { ContentTag, contentProps } = this.getOutletTag('Core::NavBar');
+    const [ ContentTag, contentProps = {} ] = this.getOutletTag('Core::NavBar');
 
     return (
       <Sticky>
