@@ -17,7 +17,8 @@
   - `showTypeDefPropertiesInBrowser` (defaults to `true`)
 - [[megadoc-plugin-markdown]] will no longer render a folder in the browser if
   it has no documents
-
+- [[megadoc-plugin-yard-api]] is a thing once again
+- [[megadoc-plugin-markdown]] fixed various issues re folder rendering
 
 ## 6.5.0
 
