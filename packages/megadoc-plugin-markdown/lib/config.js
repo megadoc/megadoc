@@ -52,6 +52,8 @@ module.exports = {
    */
   fullFolderTitleDelimiter: ' - ',
 
+  rootFolderTitle: '/',
+
   /**
    * @property {Boolean}
    *

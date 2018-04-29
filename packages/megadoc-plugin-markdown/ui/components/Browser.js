@@ -4,6 +4,7 @@ const HotItemIndicator = require('components/HotItemIndicator');
 const { ROOT_FOLDER_ID } = require('constants');
 const ArticleTOC = require('./ArticleTOC');
 const filterDocuments = require('utils/filterDocuments')
+const strHumanize = require('../../lib/utils/strHumanize');
 const { object } = React.PropTypes;
 
 var Browser = React.createClass({
@@ -50,17 +51,22 @@ var Browser = React.createClass({
 
   renderFolder(folder) {
     const { documents } = folder;
-    const filtered = filterDocuments(this.props.filter)(documents)
+    const filtered = documents.filter(filterDocuments(this.props.filter))
+    const { config } = this.props.namespaceNode;
 
     if (!filtered.length) {
       return null;
     }
 
+    const effectiveFolderTitle = folder.title === '.' ? config.rootFolderTitle : folder.title
+
     return (
       <div key={folder.path} className="class-browser__category">
-        <h3 className="class-browser__category-name">
-          {folder.title === '.' ? '/' : folder.title}
-        </h3>
+        {effectiveFolderTitle && effectiveFolderTitle.length > 0 && (
+          <h3 className="class-browser__category-name">
+            {effectiveFolderTitle}
+          </h3>
+        )}
 
         <div>
           {documents.map(this.renderArticle)}
@@ -101,12 +107,10 @@ var Browser = React.createClass({
   renderTOC(documentNode) {
     return <ArticleTOC documentNode={documentNode} />
   },
-
 });
 
 function FolderHierarchy(namespaceNode) {
   const { assign, findWhere, sortBy } = require('lodash');
-  const strHumanize = require('../../lib/utils/strHumanize');
   const { config, documents } = namespaceNode;
   const folders = {};
 
@@ -120,7 +124,7 @@ function FolderHierarchy(namespaceNode) {
     folders[folderPath].documents.push(documentNode);
   });
 
-  for (let folderPath in folders) {
+  Object.keys(folders).forEach(folderPath => {
     const folder = folders[folderPath];
 
     if (folder.series) {
@@ -136,7 +140,7 @@ function FolderHierarchy(namespaceNode) {
         return 1;
       }
     });
-  }
+  })
 
   // TODO: can we please do this at compile-time instead??
   //
