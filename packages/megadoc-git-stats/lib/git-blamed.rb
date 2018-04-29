@@ -13,10 +13,10 @@ class GitBlamed
       git shortlog -e -s -n HEAD -- "#{file}"
     `
 
-    JSON.dump(parse(file: file, buffer: buffer))
+    JSON.dump(parse(file, buffer))
   end
 
-  def parse(file:, buffer:)
+  def parse(file, buffer)
     lines = buffer.split("\n").map(&:strip)
 
     unless lines.empty?
