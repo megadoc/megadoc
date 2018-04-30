@@ -66,6 +66,7 @@ const BannerMenu = React.createClass({
             <Link
               href={this.context.documentURI.withExtension(this.props.href)}
               active={isActive}
+              activePattern={this.props.activePattern}
             >
               {this.props.text} {icon}
             </Link>

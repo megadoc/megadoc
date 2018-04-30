@@ -102,7 +102,9 @@ const Banner = React.createClass({
 
     return (
       <BannerItem key={link.text}>
-        <Link href={getLinkHref(this, link)}>{link.text}</Link>
+        <Link href={getLinkHref(this, link)} activePattern={link.activePattern}>
+          {link.text}
+        </Link>
       </BannerItem>
     );
   },
