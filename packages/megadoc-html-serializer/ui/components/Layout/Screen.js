@@ -170,15 +170,11 @@ const LayoutScreen = React.createClass({
 
   getOutletTag(regionName) {
     const spec = this.props.regions.filter(x => x.name === regionName)[0];
+    const options = spec && spec.options || {}
+    const noFrame = options.framed === false
+    const tagType = noFrame ? 'div' : Document
 
-    if (spec && spec.options && spec.options.framed) {
-      return [ Document, spec.options || {} ];
-    }
-    else if (spec) {
-      return [ 'div', spec.options || {} ]
-    }
-
-    return [ 'div', {} ];
+    return [ tagType, options ]
   },
 });
 
