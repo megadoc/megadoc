@@ -1,10 +1,11 @@
-var parseComment = require('./parseComment');
-var assert = require('assert');
-var _ = require('lodash');
-var K = require('./constants');
-var Tag = require('./Docstring__Tag');
-var extractIdInfo = require('./Docstring__extractIdInfo');
-var collectDescription = require('./Docstring__collectDescription');
+const parseComment = require('./parseComment');
+const assert = require('assert');
+const _ = require('lodash');
+const K = require('./constants');
+const Tag = require('./Docstring__Tag');
+const extractIdInfo = require('./Docstring__extractIdInfo');
+const collectDescription = require('./Docstring__collectDescription');
+const { CommentAnnotations } = require('./lintingRules')
 
 /**
  * An object representing a JSDoc comment (parsed using dox).
@@ -17,22 +18,40 @@ function Docstring(comment, params) {
     return Object.assign(this, comment);
   }
 
-  var commentNode;
+  const { nodeLocation, linter } = params
+
+  let commentNode;
 
   try {
     commentNode = parseComment(comment);
   }
   catch(e) {
-    throw new Error('comment could not be parsed: "' + e.message + '":\n' + comment);
+    linter.logRuleEntry({
+      rule: CommentAnnotations,
+      params: {
+        commentString: comment,
+        parseError: e
+      },
+      loc: linter.locationForNode(nodeLocation)
+    })
+
+    this.invalid = true
+
+    return this
   }
 
   if (commentNode.length === 0) {
-    if (params.ignoreCommentParseError) {
-      commentNode = [{ tags: [] }];
-    }
-    else {
-      throw new Error('invalid annotation in comment block:\n' + comment);
-    }
+    linter.logRuleEntry({
+      rule: CommentAnnotations,
+      params: {
+        commentString: comment
+      },
+      loc: linter.locationForNode(nodeLocation)
+    })
+
+    this.invalid = true
+
+    return this
   }
 
   assert(commentNode.length === 1,
@@ -40,6 +59,7 @@ function Docstring(comment, params) {
     'Source:\n' + comment
   );
 
+  this.loc = params.linter.locationForNodeWithOffset(params.nodeLocation, commentNode[0].line)
   this.tags = commentNode[0].tags.map(function(tagNode) {
     return new Tag(tagNode, params);
   });
@@ -111,6 +131,7 @@ Docstring.prototype.toJSON = function() {
     'name',
     'namespace',
     'description',
+    'loc',
   ]);
 
   docstring.tags = this.tags.map(function(tag) {
@@ -119,6 +140,10 @@ Docstring.prototype.toJSON = function() {
 
   return docstring;
 };
+
+Dpt.isInvalid = function() {
+  return this.invalid || this.tags.some(tag => tag.invalid)
+}
 
 Dpt.isModule = function() {
   return this.hasTag('module') || this.hasTag('class');

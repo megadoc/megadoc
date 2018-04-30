@@ -2,12 +2,14 @@ var Docstring = require('../Docstring');
 var assert = require('chai').assert;
 var multiline = require('multiline-slash');
 var EventEmitter = require('events');
+const { NullLinter } = require('megadoc-linter')
 
 function parse(strGenerator) {
   var comment = multiline(strGenerator);
 
   return new Docstring(comment, {
     config: {},
+    linter: NullLinter,
     emitter: new EventEmitter()
   });
 };

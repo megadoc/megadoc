@@ -1,6 +1,7 @@
-var parseTypes = require('./Docstring__parseTypeString');
+const parseTypes = require('./Docstring__parseTypeString');
+const { TypeExpressions } = require('./lintingRules')
 
-function TypeInfo(commentNode) {
+function TypeInfo(commentNode, { linter, nodeLocation }) {
   var description = commentNode.description;
   var name = (commentNode.name || '').trim();
   var typeInfo = {};
@@ -46,7 +47,21 @@ function TypeInfo(commentNode) {
   }
 
   if (hasType) {
-    typeInfo.type = parseTypes(commentNode.type);
+    try {
+      typeInfo.type = parseTypes(commentNode.type);
+    }
+    catch (e) {
+      linter.logRuleEntry({
+        rule: TypeExpressions,
+        params: {
+          typeString: commentNode.type,
+          typeError: e
+        },
+        loc: linter.locationForNodeWithOffset(nodeLocation, commentNode.line)
+      })
+
+      typeInfo.type = { name: commentNode.type }
+    }
 
     if (!typeInfo.type || !typeInfo.type.name) {
       delete typeInfo.type;

@@ -3,6 +3,7 @@ const TestUtils = require('../TestUtils');
 const K = require('../constants');
 const { assert, stubConsoleWarn, createSinonSuite } = require('megadoc-test-utils')
 const { NullLinter } = require('megadoc-linter')
+const { CommentAnnotations } = require('../lintingRules')
 
 var parseInline = TestUtils.parseInline;
 
@@ -26,7 +27,7 @@ describe('CJS::Parser::Main', function() {
 
   it('should warn about invalid docstrings', function() {
     sinon.stub(console, 'warn');
-    sinon.spy(NullLinter, 'logError')
+    sinon.spy(NullLinter, 'logRuleEntry')
 
     parseInline(function() {;
       // /**
@@ -38,8 +39,12 @@ describe('CJS::Parser::Main', function() {
       //
       //  module.exports = Something;
     });
-    assert.calledWith(NullLinter.logError, sinon.match({
-      message: sinon.match('invalid annotation in comment block')
+
+    assert.calledWith(NullLinter.logRuleEntry, sinon.match({
+      rule: CommentAnnotations,
+      params: sinon.match({
+        commentString: sinon.match.string
+      })
     }))
   });
 

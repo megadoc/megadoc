@@ -2,7 +2,7 @@ const { LOG_ERROR, LOG_WARN } = require('megadoc-linter')
 
 exports.NoUnknownTags = {
   name: 'js/no-unknown-tags',
-  messageFn: tag => `Unknown tag "${tag.type}"`,
+  messageFn: tag => `"${tag.type}" is not a recognized tag`,
   defaults: {
     level: LOG_WARN
   }
@@ -10,7 +10,7 @@ exports.NoUnknownTags = {
 
 exports.NoOrphans = {
   name: 'js/no-orphans',
-  messageFn: doc => `Unable to map "${doc.id}" to any module, it will be discarded.`,
+  messageFn: doc => `"${doc.id}" could not be mapped to any module`,
   defaults: {
     level: LOG_ERROR
   }
@@ -19,7 +19,7 @@ exports.NoOrphans = {
 exports.NoUnknownNodes = {
   name: 'js/no-unknown-nodes',
   messageFn: doc => (
-    `Document "${doc.id}" is unrecognized. This probably means megadoc ` +
+    `"${doc.id}" syntax node type is unrecognized. This probably means megadoc ` +
     `does not know how to handle it yet.`
   ),
   defaults: {

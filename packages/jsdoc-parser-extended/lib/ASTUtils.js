@@ -166,6 +166,9 @@ Utils.getLocation = function(node) {
   if (t.isVariableDeclaration(node) && node.declarations[0].init) {
     loc = node.declarations[0].init.loc;
   }
+  else if (t.isObjectProperty(node) && node.key) {
+    loc = node.key.loc;
+  }
   else if (node) {
     loc = node.loc;
   }

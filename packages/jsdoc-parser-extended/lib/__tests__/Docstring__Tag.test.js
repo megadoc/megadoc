@@ -1,16 +1,19 @@
-var Tag = require('../Docstring__Tag');
-var EventEmitter = require('events');
-var commentParser = require('../parseComment');
-var assert = require('chai').assert;
-var multiline = require('multiline-slash');
+const Tag = require('../Docstring__Tag');
+const EventEmitter = require('events');
+const commentParser = require('../parseComment');
+const multiline = require('multiline-slash');
+const { NullLinter } = require('megadoc-linter')
+const { TypeExpressions } = require('../lintingRules')
+const { assert, createSinonSuite } = require('megadoc-test-utils')
 
-var parse = function(strGenerator, options, filePath) {
+var parse = function(strGenerator, options, context = { filePath: undefined }) {
   var comment = typeof strGenerator === 'function' ? multiline(strGenerator) : strGenerator;
   var node = commentParser(comment);
 
   return new Tag(node[0].tags[0], {
     config: options || {},
-    filePath: filePath,
+    filePath: context.filePath,
+    linter: NullLinter,
     emitter: new EventEmitter()
   });
 };
@@ -464,4 +467,34 @@ describe('CJS::Parser::Docstring::Tag', function() {
       ].join('\n'));
     });
   });
+
+  describe('type annotation error reporting', function() {
+    const sinon = createSinonSuite(this);
+
+    it('reports the line of the comment in file', function() {
+      sinon.spy(NullLinter, 'logRuleEntry')
+
+      const tag = parse(function() {;
+        // /**
+        //  * @property {(Object) -> Object} foo
+        //  */
+      }, {}, {
+        commentNode: {
+          loc: {
+            start: {
+              line: 3
+            }
+          }
+        }
+      });
+
+      // assert.ok(tag.invalid)
+      assert.calledWith(NullLinter.logRuleEntry, sinon.match({
+        rule: TypeExpressions,
+        params: sinon.match({
+          typeString: '(Object) -> Object'
+        })
+      }))
+    })
+  })
 });

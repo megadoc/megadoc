@@ -75,6 +75,7 @@ exports.for = function(config) {
     logError: R.partial(logError, [config]),
     logConfigurationError: R.partial(logConfigurationError, [config]),
     locationForNode: R.partial(locationForNode, [config]),
+    locationForNodeWithOffset: R.partial(locationForNodeWithOffset, [config]),
     locationForNodeAsString: R.pipe(
       R.partial(locationForNode, [config]),
       stringifyNodeLocation
@@ -86,8 +87,8 @@ exports.for = function(config) {
 exports.tty = tty;
 
 // TODO
-function addToErrorReport(config, error) {
-  console.error(error && error.stack || error)
+function addToErrorReport(/*config, error*/) {
+  // console.error(error && error.stack || error)
 }
 
 /**
@@ -245,6 +246,16 @@ function locationForNode(config, node) {
   }
 }
 
+function locationForNodeWithOffset(config, node, offset) {
+  const loc = locationForNode(config, node)
+
+  if (typeof loc.line === 'number') {
+    loc.line += offset
+  }
+
+  return loc
+}
+
 function stringifyNodeLocation(loc = {}) {
   const { filePath, line } = loc
 
@@ -270,6 +281,7 @@ exports.NullLinter = {
   logError: R.T,
   logConfigurationError: R.T,
   locationForNode: R.always(null),
+  locationForNodeWithOffset: R.always(null),
   locationForNodeAsString: R.always(null),
   getRelativeFilePath: R.identity,
 }

@@ -28,6 +28,15 @@ Doc.prototype.toJSON = function(registry) {
   var plainNodeInfo = this.nodeInfo.toJSON();
   var plainDocstring = this.docstring.toJSON();
 
+  // not all babel AST nodes are heterogeneous as far as "loc" goes, so we rely
+  // on ASTUtils.getLocation to get to that property but it doesn't cover all
+  // possible node types.. in which case we'll fallback to the location provided
+  // by the Docstring which is less accurate but still good
+  var effectiveLoc = plainNodeInfo.loc.start.line === '?' ?
+    { start: { line: plainDocstring.loc ? plainDocstring.loc.line : '?' } } :
+    { start: { line: plainNodeInfo.loc.start.line } }
+  ;
+
   var doc = {
     aliases: null,
     description: plainDocstring.description,
@@ -36,15 +45,21 @@ Doc.prototype.toJSON = function(registry) {
     isModule: this.isModule(),
     isDefaultExportedSymbol: plainNodeInfo.isDefaultExportedSymbol,
     isExportedSymbol: plainNodeInfo.isExportedSymbol || this.docstring.markedAsExportedSymbol(),
-    loc: plainNodeInfo.loc,
-    line: null,
+    loc: effectiveLoc,
+    // we'll need this for @preserveOrder support
+    line: effectiveLoc.start.line,
     mixinTargets: null,
     name: DocUtils.getNameOf(this),
     namespace: plainDocstring.namespace,
     nodeInfo: this.nodeInfo.getContext(),
     receiver: plainNodeInfo.receiver,
     symbol: null,
-    tags: plainDocstring.tags,
+    tags: plainDocstring.tags.map(tag => {
+      // megadoc-plugin-js relies on this
+      tag.line = tag.loc ? tag.loc.line : undefined
+
+      return tag
+    }),
     type: DocUtils.getTypeNameOf(this),
   };
 
@@ -99,14 +114,6 @@ Doc.prototype.toJSON = function(registry) {
   ;
 
   doc.aliases = Object.keys(this.docstring.aliases);
-
-  // we'll need this for @preserveOrder support
-  if (doc.loc) {
-    doc.line = doc.loc.start.line;
-    doc.tags.forEach(function(tag) {
-      tag.line = doc.line;
-    });
-  }
 
   return doc;
 };

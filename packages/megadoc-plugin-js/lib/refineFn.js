@@ -137,6 +137,6 @@ function combine(maps) {
 function getDocLocation(doc) {
   return {
     filePath: doc.filePath,
-    line: doc.line
+    line: doc.line || R.path([ 'loc', 'start', 'line' ], doc)
   }
 }

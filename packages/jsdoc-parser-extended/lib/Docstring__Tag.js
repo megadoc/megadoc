@@ -12,11 +12,12 @@ var TypeAliases = {
  * @param {Object} options.customTags
  * @param {Boolean} [options.namedReturnTags=true]
  *
- * @param {String} nodeLocation
+ * @param {Object} nodeLocation
+ * @param {String} nodeLocation.filePath
+ * @param {Number} nodeLocation.loc.start.line
  */
 function Tag(commentNode, params) {
   var options = params.config || {};
-  var nodeLocation = params.nodeLocation;
   var customTags = options.customTags;
 
   if (commentNode.errors && commentNode.errors.length) {
@@ -32,6 +33,8 @@ function Tag(commentNode, params) {
     (options.tagAliases && options.tagAliases[commentNode.tag]) ||
     commentNode.tag
   );
+
+  this.loc = params.linter.locationForNodeWithOffset(params.nodeLocation, commentNode.line)
 
   /**
    * @property {String}
@@ -86,7 +89,12 @@ function Tag(commentNode, params) {
     case 'throws':
     case 'example':
     case 'interface':
-      this.typeInfo = TypeInfo(commentNode, nodeLocation);
+      this.typeInfo = TypeInfo(commentNode, params);
+
+      if (!this.typeInfo) {
+        this.invalid = true;
+        return this
+      }
 
       // fixup for return tags when we're not expecting them to be named
       if (this.type === 'return' && this.typeInfo.name && options.namedReturnTags === false) {
@@ -98,13 +106,23 @@ function Tag(commentNode, params) {
 
     case 'export':
     case 'type':
-      this.typeInfo = TypeInfo(commentNode, nodeLocation);
+      this.typeInfo = TypeInfo(commentNode, params);
+
+      if (!this.typeInfo) {
+        this.invalid = true;
+        return this
+      }
 
       break;
 
     case 'method':
-      this.typeInfo = TypeInfo(commentNode, nodeLocation);
+      this.typeInfo = TypeInfo(commentNode, params);
       this.typeInfo.type = { name: K.TYPE_FUNCTION };
+
+      if (!this.typeInfo) {
+        this.invalid = true;
+        return this
+      }
 
       break;
 
@@ -143,7 +161,7 @@ function Tag(commentNode, params) {
   }
 
   if (customTags && customTags.hasOwnProperty(this.type)) {
-    this.useCustomTagDefinition(commentNode, customTags[this.type], nodeLocation);
+    this.useCustomTagDefinition(commentNode, customTags[this.type], params);
   }
 
   return this;
@@ -159,15 +177,20 @@ Tag.prototype.toJSON = function() {
   }.bind(this), {});
 };
 
-Tag.prototype.useCustomTagDefinition = function(commentNode, customTag, nodeLocation) {
+Tag.prototype.useCustomTagDefinition = function(commentNode, customTag, params) {
   var customAttributes = customTag.attributes || [];
 
   if (customTag.withTypeInfo) {
-    this.typeInfo = TypeInfo(commentNode, nodeLocation);
+    this.typeInfo = TypeInfo(commentNode, params);
+
+    if (!this.typeInfo) {
+      this.invalid = true;
+      return this
+    }
   }
 
   if (customTag.process instanceof Function) {
-    customTag.process(createCustomTagAPI(this, customAttributes), nodeLocation);
+    customTag.process(createCustomTagAPI(this, customAttributes), params);
   }
 };
 

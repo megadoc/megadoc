@@ -23,17 +23,11 @@ function Parser({ linter }) {
 }
 
 Parser.prototype.parseFile = function(filePath, config) {
-  try {
-    this.parseString(
-      fs.readFileSync(filePath, 'utf-8'),
-      config,
-      filePath
-    );
-  }
-  catch(e) {
-    console.error('Failed to parse ' + filePath);
-    throw e;
-  }
+  this.parseString(
+    fs.readFileSync(filePath, 'utf-8'),
+    config,
+    filePath
+  );
 };
 
 Parser.prototype.parseString = function(str, config, filePath) {
@@ -110,7 +104,7 @@ function getCommentPool(path) {
       debugLog('Discarded %d comments identified as duplicate', commentPool.length - withoutDuplicates.length)
     }
 
-    return withoutDuplicates.map(x => x.value);
+    return withoutDuplicates;
   }
 }
 
@@ -127,12 +121,15 @@ Parser.prototype.walk = function(ast, config, filePath) {
       var commentPool = getCommentPool(path);
 
       if (commentPool) {
-        commentPool.forEach(function(comment, index) {
+        commentPool.forEach(function(commentNode, index) {
+          const comment = commentNode.value
+
           if (comment[0] === '*') {
             debugLog('Found a docstring comment at %s', dumpLocation(path.node, 'line'));
 
             parseComment({
               comment,
+              commentNode,
               config,
               filePath,
               isClosestToNode: index === commentPool.length-1,
@@ -214,6 +211,7 @@ Parser.prototype.toJSON = function() {
 
 function parseComment({
   comment,
+  commentNode,
   config,
   filePath,
   isClosestToNode,
@@ -227,9 +225,18 @@ function parseComment({
   var docstring = new Docstring(comment === null ? '' : '/*' + comment + '*/', {
     config: config,
     filePath: filePath,
-    nodeLocation: nodeLocation,
+    linter,
+    commentNode,
+    nodeLocation: {
+      filePath,
+      loc: commentNode.loc
+    },
     ignoreCommentParseError: comment === null,
   });
+
+  if (docstring.isInvalid()) {
+    return false;
+  }
 
   if (docstring.isInternal()) {
     debugLog('Discarding @internal document:', dumpLocation(path.node, 'line'))
