@@ -23,7 +23,7 @@ const GitStats = React.createClass({
 
     return (
       <div className="git-stats">
-        <p>Last edited on {formatDate(lastCommittedAt)} and authored by:</p>
+        <p>Last edit was made on {formatDate(lastCommittedAt)}. Authors include:</p>
 
         <ul className="git-stats__committers-list">
           {sortBy(this.props.authors, 'c').map(this.renderCommitter)}
