@@ -81,11 +81,11 @@ var Browser = React.createClass({
     let title = article.title || '';
 
     if (this.state.groupByFolder &&
-      article.folderTitle !== ROOT_FOLDER_ID &&
-      article.folderTitle !== '.') {
+      article.folder !== ROOT_FOLDER_ID &&
+      article.folder !== '.') {
 
-      if (title.indexOf(article.folderTitle + '/') === 0) {
-        title = title.substr(article.folderTitle.length + 1 /* '/' */);
+      if (title.indexOf(article.folder + '/') === 0) {
+        title = title.substr(article.folder.length + 1 /* '/' */);
       }
     }
 
