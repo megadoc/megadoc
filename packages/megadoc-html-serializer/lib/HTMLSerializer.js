@@ -16,7 +16,7 @@ const { extractSummary } = require('megadoc-markdown-utils');
  * @param {js__megadoc-compiler/Config} compilerConfig
  * @param {Object} userSerializerOptions
  */
-function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
+function HTMLSerializer(compilerConfig, userSerializerOptions = {}, deps) {
   this.compilerConfig = compilerConfig;
   this.assetUtils = new AssetUtils(this.compilerConfig);
   this.config = Object.assign({},
@@ -28,7 +28,7 @@ function HTMLSerializer(compilerConfig, userSerializerOptions = {}) {
 
   this.state = {
     assets: null,
-    clientSandbox: new ClientSandbox(this.config),
+    clientSandbox: deps && deps.clientSandbox || new ClientSandbox(this.config),
   };
 };
 

@@ -8,7 +8,7 @@ const proxyAssets = require('./proxyAssets');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
 const Compiler = require('megadoc-compiler');
-const { ClientSandbox, constants: K, extractRuntimeParameters } = require('megadoc-html-serializer/addon');
+const { constants: K, extractRuntimeParameters } = require('megadoc-html-serializer/addon');
 const R = require('ramda');
 
 const run = async.seq(
@@ -26,27 +26,32 @@ const run = async.seq(
 
   // grab assets / config from a running serializer instance
   (state, done) => {
-    const restoreClientSandbox = stubClientSandbox();
+    const clientSandbox = {
+      start: (x, callback) => callback(),
+      stop: (x, callback) => callback()
+    }
+
     const compiler = Compiler.create({})
 
-    Compiler.boot(compiler)(state.compilerConfig, function(err, compilationState) {
-      restoreClientSandbox();
-
+    Compiler.boot(compiler)(state.compilerConfig, function(err, { serializer, compilations }) {
       if (err) {
         done(err);
       }
       else {
-        const { serializer } = compilationState
+        serializer.state.clientSandbox = clientSandbox
+        serializer.start(compilations, function(startError) {
+          const { assets } = serializer.state
+          const { config: serializerConfig } = serializer
 
-        serializer.start(compilationState.compilations, function(serializerErr) {
-          if (serializerErr) {
-            done(serializerErr);
+          if (startError) {
+            done(startError);
           }
           else {
             serializer.stop(function() {
+
               done(null, Object.assign({}, state, {
-                assets: serializer.state.assets,
-                serializerConfig: serializer.config,
+                assets,
+                serializerConfig,
               }))
             })
           }
@@ -113,22 +118,4 @@ function startServer({
   app.use(serveStatic(contentBase, { etag: false }));
 
   http.createServer(app).listen(port, host, done);
-}
-
-
-function stubClientSandbox() {
-  const { start, stop } = ClientSandbox.prototype;
-
-  ClientSandbox.prototype.start = function(_, callback) {
-    callback();
-  }
-
-  ClientSandbox.prototype.stop = function(_, callback) {
-    callback();
-  }
-
-  return function restoreClientSandbox() {
-    ClientSandbox.prototype.stop = stop;
-    ClientSandbox.prototype.start = start;
-  }
 }

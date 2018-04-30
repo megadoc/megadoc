@@ -474,7 +474,7 @@ describe('CJS::Parser::Docstring::Tag', function() {
     it('reports the line of the comment in file', function() {
       sinon.spy(NullLinter, 'logRuleEntry')
 
-      const tag = parse(function() {;
+      parse(function() {;
         // /**
         //  * @property {(Object) -> Object} foo
         //  */
