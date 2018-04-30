@@ -7,7 +7,7 @@ const serveStatic = require('serve-static');
 const proxyAssets = require('./proxyAssets');
 const configureWebpack = require('./configureWebpack');
 const addWebpack = require('./addWebpack');
-const { run: compile, BREAKPOINT_COMPILE } = require('megadoc-compiler');
+const Compiler = require('megadoc-compiler');
 const { ClientSandbox, constants: K, extractRuntimeParameters } = require('megadoc-html-serializer/addon');
 const R = require('ramda');
 
@@ -24,29 +24,33 @@ const run = async.seq(
     ], runtimeConfig)));
   },
 
+  // grab assets / config from a running serializer instance
   (state, done) => {
-    let assets;
-    let serializerConfig;
-
     const restoreClientSandbox = stubClientSandbox();
+    const compiler = Compiler.create({})
 
-    compile(state.compilerConfig, {
-      breakpoint: BREAKPOINT_COMPILE,
-      tap: compilationState => {
-        assets = compilationState.serializer.state.assets;
-        serializerConfig = compilationState.serializer.config;
-      }
-    }, function(err) {
+    Compiler.boot(compiler)(state.compilerConfig, function(err, compilationState) {
       restoreClientSandbox();
 
       if (err) {
         done(err);
       }
       else {
-        done(null, Object.assign({}, state, {
-          assets,
-          serializerConfig
-        }))
+        const { serializer } = compilationState
+
+        serializer.start(compilationState.compilations, function(serializerErr) {
+          if (serializerErr) {
+            done(serializerErr);
+          }
+          else {
+            serializer.stop(function() {
+              done(null, Object.assign({}, state, {
+                assets: serializer.state.assets,
+                serializerConfig: serializer.config,
+              }))
+            })
+          }
+        });
       }
     })
   },

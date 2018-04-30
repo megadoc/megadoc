@@ -3,7 +3,7 @@
 const program = require('commander');
 const pkg = require('../package');
 const { run: compile } = require('megadoc-compiler');
-const { run: compileAndWatch } = require('../lib/compileAndWatch');
+const compileAndWatch = require('../lib/compileAndWatch');
 const printProfile = require('../lib/printProfile');
 const addCommonOptions = require('../lib/addCommonOptions');
 const parseCommonOptions = require('../lib/parseCommonOptions');

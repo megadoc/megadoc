@@ -1,11 +1,25 @@
+/**
+ * @module Config
+ */
 module.exports = {
-  command: 'bundle exec rake yard_api',
-  source: 'public/doc/api/**/*.json',
-  exclude: null,
+  /**
+   * @property {Boolean}
+   */
   showEndpointPath: false,
-  skipScan: false,
-  routeName: 'api',
+
+  /**
+   * @property {String}
+   */
+  routeName: '/api',
+
+  /**
+   * @property {String}
+   */
   title: 'API',
+
+  /**
+   * @property {Array.<String>}
+   */
   builtInTypes: [
     'Array',
     'Boolean',

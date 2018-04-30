@@ -4,6 +4,8 @@ This plugin parses Rails controllers that are documented in the YARD-API format.
 
 ## Configuration
 
+See [[./lib/config.js]]
+
 ```javascript
 // megadoc.conf.js
 

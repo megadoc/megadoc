@@ -1,10 +1,10 @@
-const { Compiler: C } = require('megadoc-compiler');
+const C = require('megadoc-compiler');
 const chokidar = require('chokidar');
 const R = require('ramda');
 const ConfigUtils = require('megadoc-config-utils');
 const printProfile = require('./printProfile');
 
-exports.run = function(config, runOptions, callback = null) {
+module.exports = function(config, runOptions, callback = null) {
   const compiler = C.create(R.merge(runOptions, { purge: true }));
 
   C.boot(compiler)(config, function(err, booted) {

@@ -119,6 +119,11 @@ config.serializer = [ 'megadoc-html-serializer', {
         },
 
         {
+          text: 'Ruby on Rails (YARD API)',
+          href: '/plugins/megadoc-plugin-yard-api/readme.html',
+        },
+
+        {
           text: 'Theme - Qt',
           href: '/plugins/megadoc-theme-qt/readme.html',
         },
@@ -377,6 +382,7 @@ addPackageDocumentation('megadoc-plugin-git');
 addPackageDocumentation('megadoc-plugin-js');
 addPackageDocumentation('megadoc-plugin-lua');
 addPackageDocumentation('megadoc-plugin-markdown');
+addPackageDocumentation('megadoc-plugin-yard-api');
 addPackageDocumentation('megadoc-theme-minimalist');
 addPackageDocumentation('megadoc-theme-qt');
 
