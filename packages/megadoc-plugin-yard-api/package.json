@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-yard-api",
-  "version": "7.0.0-beta.1",
+  "version": "7.0.0-beta.2",
   "description": "A YARD-API/Rails documentation generator plugin for megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/megadoc/megadoc#readme",
   "dependencies": {
-    "megadoc-corpus": "^7.0.0-beta.1",
-    "megadoc-html-serializer": "^7.0.0-beta.1",
+    "megadoc-corpus": "^7.0.0-beta.2",
+    "megadoc-html-serializer": "^7.0.0-beta.2",
     "object-assign": "4.0.1"
   },
   "devDependencies": {
-    "megadoc-test-utils": "^6.2.0"
+    "megadoc-test-utils": "^7.0.0-beta.2"
   }
 }

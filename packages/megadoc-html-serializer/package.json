@@ -1,6 +1,6 @@
 {
   "name": "megadoc-html-serializer",
-  "version": "7.0.0-beta.1",
+  "version": "7.0.0-beta.2",
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack"
@@ -25,10 +25,10 @@
     "less-loader": "2.0.0",
     "lodash": "3.10.1",
     "marked": "0.3.3",
-    "megadoc-config-utils": "^6.0.1",
-    "megadoc-corpus": "^7.0.0-beta.1",
-    "megadoc-linter": "^6.2.0",
-    "megadoc-markdown-utils": "^6.3.0",
+    "megadoc-config-utils": "^7.0.0-beta.2",
+    "megadoc-corpus": "^7.0.0-beta.2",
+    "megadoc-linter": "^7.0.0-beta.2",
+    "megadoc-markdown-utils": "^7.0.0-beta.2",
     "normalize.css": "^3.0.3",
     "prismjs": "1.5.0",
     "ramda": "0.24.1",
@@ -50,7 +50,7 @@
     "karma-mocha": "0.1.10",
     "karma-sourcemap-loader": "0.3.3",
     "karma-webpack": "1.7.0",
-    "megadoc-test-utils": "^6.2.0",
+    "megadoc-test-utils": "^7.0.0-beta.2",
     "react-drill": "2.2.1",
     "sinon": "2.4.1"
   }
