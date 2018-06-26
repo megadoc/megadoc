@@ -4,6 +4,7 @@ const columnify = require('columnify');
 const invariant = require('invariant');
 const tty = require('./tty');
 const { AsyncPrinter } = require('./printers');
+const LOG_OFF = 0;
 const LOG_INFO = 1;
 const LOG_WARN = 2;
 const LOG_ERROR = 3;
@@ -58,7 +59,7 @@ exports.for = function(config) {
       lastFile: null,
       printer: AsyncPrinter({
         print: R.partial(logManyMessages, [config]),
-        frequency: 50,
+        frequency: R.propOr(50, 'lintReportingFrequency'),
       }),
     });
   }
@@ -182,8 +183,11 @@ function logMessage(config, { rule, loc, message, level = LOG_INFO }) {
 
 // for lack of a better buffering implementation :D
 function logManyMessages(config, messages) {
-  const byFile = R.groupBy(R.prop('filePath'), messages)
   const state = globalStates.get(config)
+  const byFile = R.groupBy(
+    R.prop('filePath'),
+    messages.filter(x => R.path([ 'lintRules', x.rule ], config) !== LOG_OFF)
+  )
 
   R.forEachObjIndexed((fileMessages, filePath) => {
     if (state.lastFile !== filePath) {
