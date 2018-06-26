@@ -45,7 +45,7 @@ HTMLSerializer.prototype.renderOne = function(node) {
 };
 
 HTMLSerializer.prototype.start = function(compilations, done) {
-  this.state.assets = createAssets(this.config, compilations);
+  this.state.assets = createAssets(this.config, this.compilerConfig, compilations);
   this.state.clientSandbox.start(this.state.assets, done);
 };
 

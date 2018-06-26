@@ -1,9 +1,10 @@
 const Assets = require('./Assets');
 const R = require('ramda');
+const glob = require('glob');
 const K = require('./constants');
 const ConfigUtils = require('megadoc-config-utils');
 
-module.exports =  function createAssets(config, compilations) {
+module.exports =  function createAssets(config, compilerConfig, compilations) {
   const assets = new Assets();
   const themeSpec = ConfigUtils.getConfigurablePair(config.theme);
   const themePlugin = themeSpec ? require(themeSpec.name) : {
@@ -61,7 +62,7 @@ module.exports =  function createAssets(config, compilations) {
   // 3. theme plugins
   // 4. user config
   assets.addStyleOverrides(styleOverrides);
-  staticAssets.filter(isTruthy).forEach(x => { assets.add(x); });
+  expandGlob(compilerConfig.assetRoot, staticAssets.filter(isTruthy)).forEach(x => { assets.add(x); });
   styleSheets.filter(isTruthy).forEach(x => { assets.addStyleSheet(x); });
   scripts.filter(isTruthy).forEach(x => { assets.addPluginScript(x); });
 
@@ -84,4 +85,10 @@ function createStyleOverrides(config, themePlugin) {
 
 function isTruthy(x) {
   return !!x;
+}
+
+function expandGlob(assetRoot, list) {
+  return list.reduce(function(expanded, pattern) {
+    return expanded.concat(glob.sync(pattern, { cwd: assetRoot }))
+  }, [])
 }
