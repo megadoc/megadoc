@@ -161,6 +161,10 @@ const Root = React.createClass({
         }
       },
 
+      () => {
+        return corpus.getHrefOfFirstAvailableNamespace();
+      },
+
       // oh snap ?
       () => '/index.html'
     ].reduce((found, f) => found || f(), null);

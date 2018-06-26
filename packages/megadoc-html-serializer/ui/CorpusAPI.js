@@ -108,6 +108,21 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
 
   exports.getNamespaceOfDocument = getNamespaceOfDocument;
 
+  exports.getHrefOfFirstAvailableNamespace = function() {
+    if (exports.getByURI('/index.html')) {
+      return '/index.html'
+    }
+
+    return shallowCorpus.reduce((href, node) => {
+      if (href) {
+        return href
+      }
+      else {
+        return getHref(node)
+      }
+    }, null)
+  };
+
   /**
    * @memberOf CorpusAPI
    *
