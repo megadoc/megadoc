@@ -92,7 +92,7 @@ var Browser = React.createClass({
     return (
       <div key={documentNode.uid}>
         <Link to={documentNode} className="class-browser__entry-link">
-          {article.plainTitle}
+          {documentNode.title}
 
           {documentNode.meta.gitStats && (
             <HotItemIndicator timestamp={documentNode.meta.gitStats.lastCommittedAt} />
@@ -154,18 +154,17 @@ function FolderHierarchy(namespaceNode) {
 
     // generate a title
     if (!folder.title) {
-      if (config.fullFolderTitles) {
-        folder.title = folderPath
-          .replace(config.commonPrefix, '')
-          .split('/')
-          .map(strHumanize)
-          .join(config.fullFolderTitleDelimiter)
-        ;
+      const normalFolderPath = folderPath
+        .replace(config.commonPrefix, '')
+        .replace(new RegExp(config.discardFolderPrefix || ''), '')
+
+      let fragments = normalFolderPath.split('/')
+
+      if (!config.fullFolderTitles) {
+        fragments = fragments.slice(-1)
       }
-      else {
-        const fragments = folderPath.split('/');
-        folder.title = strHumanize(fragments[fragments.length-1]);
-      }
+
+      folder.title = fragments.map(strHumanize).join(config.fullFolderTitleDelimiter);
     }
 
     return folder;
