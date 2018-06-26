@@ -9,5 +9,6 @@ module.exports = {
 
   outletOccupants: [
     { name: 'GitStats', component: GitStatsOutlet, },
+    { name: 'Core::Content', component: GitStatsOutlet },
   ]
 }

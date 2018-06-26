@@ -1,0 +1,7 @@
+{
+  "name": "anno",
+  "version": "1.0.0",
+  "devDependencies": {
+    "source-map-support": "0.5.4"
+  }
+}

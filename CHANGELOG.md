@@ -1,5 +1,29 @@
 # Changelog
 
+## 7.0.0
+
+- megadoc-plugin-markdown: a new option for normalizing folder titles
+  `@discardFolderPrefix`
+- megadoc-plugin-markdown: improved support for folders
+- megadoc-plugin-markdown: improved performance of the parser by combining
+  multiple analysis (TOC, title, word count, summary) into a single pass. It's
+  still horrible as we still have to do 2 passes to get at the meta-data as
+  well as the rendered content but - baby steps.
+- megadoc-html-serializer: now accepts minimatch/glob patterns for static
+  assets to be copied
+- megadoc-html-serializer: a new rendering routine "escapeHTML" has been added
+  in particular for use when linking types that have arbitrary input (e.g. a
+  symbol for an array like `Array.<>` that can be customized by a user)
+- megadoc-plugin-yard-api: 
+- megadoc-plugin-js: fixed an issue with the `@deprecated` tag not rendering
+  its content as HTML but as plain-text instead
+
+## 7.0.0-beta.3
+
+- [[megadoc-cli]] now supports filtering sources to compile using tags; two new
+  options have been introduced `-t, --only` and `-e, --exclude` for applying a
+  whitelist and a blacklist of tags respectively
+
 ## 7.0.0-beta.2
 
 - megadoc-compiler now accepts a `concurrency` option for tuning the number of

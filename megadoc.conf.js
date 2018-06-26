@@ -88,6 +88,12 @@ config.serializer = [ 'megadoc-html-serializer', {
     {
       text: 'Usage',
       href: '/usage/readme',
+      links: [
+        {
+          text: 'Command Line Interface',
+          href: '/cli/readme.html'
+        }
+      ]
     },
 
     {
@@ -327,6 +333,11 @@ config.serializer = [ 'megadoc-html-serializer', {
     }
   ],
 }]
+
+addPackageDocumentation('megadoc-cli', {
+  url: '/cli',
+  withLayouts: false,
+});
 
 addPackageDocumentation('megadoc-corpus', {
   url: '/dev/corpus',
