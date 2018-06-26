@@ -1,8 +1,15 @@
+require('react-drill/lib/dependencies/ReactTestUtils')(require('react-addons-test-utils'))
+require('react-drill/addons/cheerio').activate()
+
 const { stubConsoleWarn, stubConsoleError } = require('./watchConsole');
+const { drill, m } = require('react-drill');
 const sinon = require('sinon');
 const R = require('ramda');
 const RE_SURROUNDING_NEWLINES = /^\n+|\n\s*$/g;
 
+exports.$ = require('cheerio')
+exports.drill = drill;
+exports.m = m;
 exports.sinonSuite = require('./SinonSuite');
 exports.sinon = require('sinon');
 exports.createSinonSuite = require('./SinonSuite');
