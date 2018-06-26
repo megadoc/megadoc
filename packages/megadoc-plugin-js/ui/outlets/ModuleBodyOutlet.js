@@ -11,7 +11,7 @@ module.exports = React.createClass({
   },
 
   render() {
-    if (!this.props.documentNode.properties) {
+    if (!this.props.documentNode) {
       return null;
     }
 

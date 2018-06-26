@@ -16,6 +16,10 @@ module.exports = React.createClass({
   },
 
   render() {
+    if (!this.props.documentNode) {
+      return null;
+    }
+
     return (
       <div>
         <NamespaceIndex
