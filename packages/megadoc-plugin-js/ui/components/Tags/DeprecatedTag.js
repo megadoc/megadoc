@@ -9,7 +9,7 @@ var DeprecatedTag = React.createClass({
       <blockquote className="blockquote--warning">
         <p><strong>Deprecated</strong></p>
 
-        {this.props.string}
+        <div dangerouslySetInnerHTML={{ __html: this.props.string }} />
       </blockquote>
     );
   }
