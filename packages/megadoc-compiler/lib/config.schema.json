@@ -17,6 +17,12 @@
           "include": {
             "type": [ "string", "array" ]
           },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
           "processor": {
             "anyOf": [
               { "type": "string" },

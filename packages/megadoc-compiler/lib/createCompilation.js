@@ -58,6 +58,7 @@ function createCompilation({
       // order to calculate a common prefix
       sourcePatterns: source.include,
       stats: {},
+      tags: listOf(source.tags || source.id),
       tree: null,
       treeOperations: null,
     });
@@ -112,6 +113,10 @@ function getSourceFiles({ assetRoot, changedSources, source }, done) {
       );
     }
   });
+}
+
+function listOf(x) {
+  return Array.isArray(x) ? x : [].concat(x || [])
 }
 
 module.exports = R.curry(createCompilation);

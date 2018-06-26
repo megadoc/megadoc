@@ -19,19 +19,13 @@ addCommonOptions(program)
   .parse(process.argv)
 ;
 
-const { config } = parseCommonOptions(program);
+const { config, runOptions } = parseCommonOptions(program);
 
 if (program.dumpConfig) {
   console.log('Config:\n', config);
 }
 
 console.log('megadoc: version "%s".', pkg.version);
-
-const runOptions = {
-  purge: program.purge,
-  profile: program.profile,
-  breakpoint: asNumberOrNull(program.breakpoint),
-};
 
 if (program.watch) {
   compileAndWatch(config, runOptions);
@@ -56,15 +50,4 @@ else {
     const elapsed = (new Date() - startedAt) / 1000
     console.log(`Done: ${elapsed}s.`);
   });
-}
-
-function asNumberOrNull(x) {
-  const asNumber = parseInt(x, 10);
-
-  if (isNaN(asNumber)) {
-    return null;
-  }
-  else {
-    return asNumber
-  }
 }

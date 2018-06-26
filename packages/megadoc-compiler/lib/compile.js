@@ -50,6 +50,8 @@ const createCompiler = ({
   initialState = null,
   profile = false,
   purge: purgeOption = true,
+  includedTags = [],
+  excludedTags = [],
   tap,
 }) => {
   const profiles = [];
@@ -67,10 +69,12 @@ const createCompiler = ({
     profiles,
     profile: !!profile,
     purge: purgeOption,
+    excludedTags,
+    includedTags,
   }
 }
 
-const boot = ({ changedSources, instrument }) => asyncSequence([
+const boot = ({ changedSources, instrument, excludedTags, includedTags }) => asyncSequence([
   instrument.async('boot:parse-config')
   (
     asyncify(
@@ -100,6 +104,7 @@ const boot = ({ changedSources, instrument }) => asyncSequence([
         compilerOptions: R.pick([
           'assetRoot',
           'debug',
+          'lintRules',
           'outputDir',
           'tmpDir',
           'verbose',
@@ -112,7 +117,21 @@ const boot = ({ changedSources, instrument }) => asyncSequence([
         }
         else {
           callback(null, Object.assign({}, state, {
-            compilations
+            compilations: compilations.filter(compilation => {
+              const containedIn = tagList => (
+                R.intersection(tagList, compilation.tags).length > 0
+              )
+
+              if (excludedTags.length > 0 && containedIn(excludedTags)) {
+                return false
+              }
+              else if (includedTags.length > 0 && !containedIn(includedTags)) {
+                return false
+              }
+              else {
+                return true
+              }
+            })
           }))
         }
       }

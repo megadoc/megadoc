@@ -11,6 +11,8 @@ module.exports = function addCommonOptions(program) {
     .option('--debug', 'print painful diagnostic information')
     .option('-j, --threads [COUNT]', 'number of threads to use for processing (1 means foreground)')
     .option('-k, --concurrency [COUNT]', '', 5)
+    .option('-t, --only [TAG]', 'compile only the sources tagged with the specified tag(s) or id', [])
+    .option('-e, --exclude [TAG]', 'do not compile sources tagged with the specified tag(s) or id', [])
     .option('--profile')
   ;
 

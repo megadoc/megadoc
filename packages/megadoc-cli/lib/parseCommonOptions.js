@@ -12,6 +12,7 @@ module.exports = function parseCommonOptions(program) {
   }
 
   const config = loadConfigFromFile(configFilePath);
+  const runOptions = {}
 
   if (program.outputDir) {
     config.outputDir = path.resolve(program.outputDir);
@@ -41,5 +42,26 @@ module.exports = function parseCommonOptions(program) {
     config.concurrency = Math.max(parseInt(program.concurrency, 10), 1)
   }
 
-  return { config: R.merge(defaults, config), configFilePath };
+  runOptions.breakpoint = asNumberOrNull(program.breakpoint);
+  runOptions.excludedTags = [].concat(program.exclude || [])
+  runOptions.includedTags = [].concat(program.only || [])
+  runOptions.profile = program.profile;
+  runOptions.purge = program.purge;
+
+  return {
+    config: R.merge(defaults, config),
+    configFilePath,
+    runOptions
+  };
+}
+
+function asNumberOrNull(x) {
+  const asNumber = parseInt(x, 10);
+
+  if (isNaN(asNumber)) {
+    return null;
+  }
+  else {
+    return asNumber
+  }
 }

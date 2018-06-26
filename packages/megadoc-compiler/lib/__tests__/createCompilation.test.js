@@ -2,7 +2,7 @@ const { assert, createFileSuite } = require('megadoc-test-utils');
 const path = require('path');
 const subject = require('../createCompilation');
 
-describe('createCompilation', function() {
+describe('megadoc-compiler::createCompilation', function() {
   const fileSuite = createFileSuite(this);
 
   let processorSpec, decoratorSpec, output;
@@ -121,3 +121,44 @@ describe('createCompilation', function() {
     }, 'it passes the user options')
   })
 });
+
+describe('megadoc-compiler::createCompilation', function() {
+  const fileSuite = createFileSuite(this);
+  const run = done => spec => callback => subject({
+    assetRoot: fileSuite.getRootDirectory()
+  }, Object.assign({
+    include: [ 'sources/**/*.js', ],
+    processor: require.resolve('../blankProcessor/index.js')
+  }, spec), function(err, _output) {
+    if (err) {
+      done(err);
+    }
+    else {
+      callback(_output)
+      done();
+    }
+  });
+
+  it('accepts custom tags', function(done) {
+    run(done)({
+      id: 'foo',
+      tags: [ 'a', 'b' ]
+    })(output => {
+      assert.deepEqual(output.tags, [ 'a', 'b' ])
+    })
+  })
+
+  it('tags a compilation by its id if no tags are defined', function(done) {
+    run(done)({
+      id: 'foo'
+    })(output => {
+      assert.deepEqual(output.tags, [ 'foo' ])
+    })
+  })
+
+  it('does not tag a compilation by id if the id was auto-generated', function(done) {
+    run(done)({})(output => {
+      assert.deepEqual(output.tags, [])
+    })
+  })
+})

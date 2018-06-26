@@ -31,16 +31,15 @@ catch (e) {
   process.exit(1);
 }
 
-const { config, configFilePath } = parseCommonOptions(program);
+const { config, configFilePath, runOptions } = parseCommonOptions(program);
 const startedAt = new Date();
 
 console.log('[I] Generating documentation for the first time... please hold on.');
 
-compileAndWatch(config, {
+compileAndWatch(config, Object.assign({}, runOptions, {
   purge: true,
   breakpoint: null,
-  profile: program.profile,
-}, function(compilationError) {
+}), function(compilationError) {
   if (compilationError) {
     throw compilationError;
   }

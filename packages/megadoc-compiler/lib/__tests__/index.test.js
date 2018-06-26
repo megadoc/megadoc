@@ -1,4 +1,5 @@
 const path = require('path');
+const R = require('ramda');
 const { run: compile } = require('../compile');
 const breakpoints = require('../breakpoints');
 const { assert, createFileSuite, createSinonSuite } = require('megadoc-test-utils')
@@ -325,6 +326,38 @@ describe("megadoc-compiler::compile", function() {
 
       assert.ok(profile);
       assert.notEqual(profile.benchmarks.length, 0)
+
+      done();
+    });
+  })
+
+  it('selects only tagged compilations', function(done) {
+    compile({
+      assetRoot: fileSuite.getRootDirectory(),
+      sources: [{
+        id: 'untagged',
+        include: fileSuite.join('lib/**/*.md'),
+        processor: [ processorFile.path, {} ]
+      }, {
+        id: 'tagged--matching',
+        tags: [ 'a' ],
+        include: fileSuite.join('lib/**/a.md'),
+        processor: processorFile.path
+      }, {
+        id: 'tagged--not-matching',
+        tags: [ 'b' ],
+        include: fileSuite.join('lib/**/b.md'),
+        processor: processorFile.path,
+      }],
+    }, {
+      includedTags: [ 'a' ]
+    }, function(err, { compilations }) {
+      if (err) {
+        return done(err);
+      }
+
+      assert.equal(compilations.length, 1)
+      assert.deepEqual(compilations.map(R.prop('id')), [ 'tagged--matching' ])
 
       done();
     });
