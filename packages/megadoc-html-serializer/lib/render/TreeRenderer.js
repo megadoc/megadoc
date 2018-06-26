@@ -1,6 +1,7 @@
 const R = require('ramda');
 const CompositeValue = require('./CompositeValue');
 const transformValue = require('./transformValue');
+const { escapeHTML } =  require('megadoc-markdown-utils')
 
 exports.renderTree = function(state, tree, { decorators = [], linter, renderOperations }) {
   const codeBlockRendererInjections = {
@@ -23,7 +24,8 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
     },
 
     LINKIFY_STRING: function(data, reduce) {
-      return reduce(state.linkResolver.linkify(data));
+      const text = reduce(data.text);
+      return reduce(state.linkResolver.linkify(Object.assign({}, data, { text })));
     },
 
     LINKIFY_FRAGMENT: function(data, reduce) {
@@ -49,6 +51,10 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
       })
 
       return reduce(index ? index.node.uid : undefined)
+    },
+
+    ESCAPE_HTML: function(data, reduce) {
+      return reduce(escapeHTML(data.text))
     }
   };
 

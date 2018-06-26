@@ -4,7 +4,6 @@ module.exports = [
     regions: [
       {
         name: 'Core::Content',
-        options: { framed: true },
         outlets: [
           { name: 'YARD-API::Controller' },
           { name: 'Core::Content' },

@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { generateAnchor, markdownToText } = require('megadoc-markdown-utils');
-const parseTitle = require('./utils/parseTitle');
+const { analyzeDocument, generateAnchor } = require('megadoc-markdown-utils');
 const strHumanize = require('./utils/strHumanize');
 
 module.exports = function parseFn(context, absoluteFilePath, done) {
@@ -19,8 +18,10 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
     .replace(/\W/g, '-')
   ;
 
-  entry.title = getPredefinedTitle(config, relativeFilePath) || parseTitle(entry.source);
-  entry.wordCount = entry.source.split(/\s+/).length;
+  const stats = analyzeDocument(entry.source)
+
+  entry.title = getPredefinedTitle(config, relativeFilePath) || stats.title;
+  entry.wordCount = stats.wordCount;
 
   const preformatEntry = getPreformatEntry(config, relativeFilePath);
 
@@ -37,10 +38,11 @@ module.exports = function parseFn(context, absoluteFilePath, done) {
     entry.title = path.basename(relativeFilePath);
   }
 
-  entry.plainTitle = markdownToText(entry.title);
   entry.fileName = fileName;
   entry.folder = path.dirname(relativeFilePath);
   entry.anchor = generateAnchor(entry.source);
+  entry.headings = stats.headings
+  entry.summary = stats.summary
 
   done(null, [ entry ]);
 };

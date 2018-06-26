@@ -7,15 +7,11 @@ const bind = (node, descriptor) => ([ node.uid, descriptor ])
 const isInternalLink = x => x[0] === '{' && x[x.length-1] === '}'
 
 module.exports = function renderFn({ options }, defaultOperations, documentNode) {
-  const operations = {
-    markdown: defaultOperations.markdown,
-
+  const operations = Object.assign({}, defaultOperations, {
     linkify: params => defaultOperations.linkify(Object.assign(params, {
       injectors: [ YARDLinkInjector ]
     })),
-
-    linkifyFragment: defaultOperations.linkifyFragment,
-  }
+  })
 
   const { markdown, linkify } = operations;
   const doc = documentNode.properties;
@@ -147,6 +143,9 @@ const TagRenderers = [
           text: linkType(options, operations, TypeInfo(tag.text), contextNode)
         }
       }
+      else {
+        return { text: tag.text }
+      }
     },
   },
 ]
@@ -170,26 +169,31 @@ function renderEndpointTag(options, operations, tag, contextNode) {
   }
 }
 
-function linkType(options, { markdown, linkifyFragment }, typeInfo, contextNode) {
+function linkType(options, { escapeHTML, markdown, linkify }, typeInfo, contextNode) {
   const builtInTypes = options.builtInTypes || []
-  let link = typeInfo.name;
+  const {
+    arrayTypeStartSymbol,
+    arrayTypeEndSymbol
+  } = options
 
   if (builtInTypes.indexOf(typeInfo.name) === -1) {
-    link = markdown({
+    const link = `[${typeInfo.name}]()`;
+    const typedLink = typeInfo.isArray ? `${arrayTypeStartSymbol}${link}${arrayTypeEndSymbol}` : link;
+
+    return markdown({
       contextNode,
-      text: linkifyFragment({
-        text: typeInfo.name,
+      text: linkify({
+        text: escapeHTML({
+          text: typedLink
+        }),
         contextNode,
       }),
-      trimHTML: true
+      trimHTML: true,
+      sanitize: true
     });
   }
-
-  if (typeInfo.isArray) {
-    return 'Array.&lt;' + link + '&gt;';
-  }
   else {
-    return link;
+    return typeInfo.name
   }
 }
 

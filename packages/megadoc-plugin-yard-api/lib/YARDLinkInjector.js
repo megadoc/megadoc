@@ -1,4 +1,4 @@
-var RE_YARD_LINK = /\{(API::[\w\_]+)(\[\])?\}|\{Array\.?\<(API::[\w\_]+)\>\}/g;
+var RE_YARD_LINK = /\{(API::[\w\_]+)(\[\])?\}/g;
 
 module.exports = function YARDLinkInjector(text, renderLink) {
   return text.replace(RE_YARD_LINK, function(original, path1, hasBrackets, path2) {

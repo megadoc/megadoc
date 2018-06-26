@@ -29,6 +29,7 @@
     "object-assign": "4.0.1"
   },
   "devDependencies": {
+    "megadoc-compiler": "^7.0.0-beta.2",
     "megadoc-test-utils": "^7.0.0-beta.2"
   }
 }

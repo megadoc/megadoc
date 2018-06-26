@@ -28,8 +28,8 @@ describe("YARDLinkInjector", function() {
     }));
   });
 
-  it('works using {Array.<API::Foo>}', function() {
-    subject('{Array.<API::Foo>}', onResolve);
+  it('works using Array.<{API::Foo}>', function() {
+    subject('Array.<{API::Foo}>', onResolve);
 
     assert.calledWith(onResolve, sinon.match({
       path: 'API::Foo',

@@ -1,4 +1,5 @@
 const b = require('megadoc-corpus').builders;
+const listOf = x => Array.isArray(x) ? x : [].concat(x || [])
 
 module.exports = (options, rawDocument, done) => {
   const firstDefSource = rawDocument.endpoints.reduce(function(x, endpoint) {
@@ -7,8 +8,8 @@ module.exports = (options, rawDocument, done) => {
 
   const filePath = firstDefSource ? firstDefSource[0] : undefined
   const loc = firstDefSource ? { start: { line: firstDefSource[1] } } : undefined
-  const endpointDocuments = rawDocument.endpoints.map(reduceEndpointDocument)
-  const objectDocuments = rawDocument.objects.map(reduceObjectDocument).map(x => {
+  const endpointDocuments = listOf(rawDocument.endpoints).map(reduceEndpointDocument)
+  const objectDocuments = listOf(rawDocument.objects).map(reduceObjectDocument).map(x => {
     if (!x.filePath) {
       x.filePath = filePath
     }

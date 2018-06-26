@@ -52,3 +52,9 @@ exports.resolveUID = function resolveUID(params) {
     contextNode: params.contextNode
   });
 };
+
+exports.escapeHTML = function escapeHTML(params) {
+  return CompositeValue.create('ESCAPE_HTML', {
+    text: params.text
+  });
+};

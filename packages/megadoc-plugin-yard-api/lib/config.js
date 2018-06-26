@@ -32,4 +32,14 @@ module.exports = {
     'Object',
     'String',
   ],
+
+  /**
+   * @property {String}
+   */
+  arrayTypeStartSymbol: 'Array.<',
+
+  /**
+   * @property {String}
+   */
+  arrayTypeEndSymbol: '>',
 };
