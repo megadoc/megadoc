@@ -14,7 +14,6 @@
 - megadoc-html-serializer: a new rendering routine "escapeHTML" has been added
   in particular for use when linking types that have arbitrary input (e.g. a
   symbol for an array like `Array.<>` that can be customized by a user)
-- megadoc-plugin-yard-api: 
 - megadoc-plugin-js: fixed an issue with the `@deprecated` tag not rendering
   its content as HTML but as plain-text instead
 
