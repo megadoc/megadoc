@@ -45,7 +45,7 @@ function Renderer(config) {
 
   function createRunState(options) {
     return {
-      toc: [],
+      headings: [],
       baseURL: null,
       contextNode: options.contextNode
     };
@@ -100,23 +100,18 @@ function Renderer(config) {
    *        Turn this off if you do not want the headings to have anchors -
    *        the [name] attribute and the .anchorable-heading stuff.
    *
-   * @param {Boolean} [options.withTOC=false]
-   *        Turn this on if you want the ToC meta-data. The return value will
-   *        be an object of the shape: `{ html: String, toc: Array.<Object> }`.
-   *
    * @return {String|Object}
    *         The HTML.
    */
   function renderMarkdown({
     text,
     trimHTML: shouldTrimHTML = false,
-    withTOC = false,
     sanitize: shouldSanitize = true,
     contextNode,
     anchorableHeadings = true,
     codeBlockRenderers
   }) {
-    var html, toc;
+    var html;
 
     runState = createRunState({ contextNode });
     runOptions = createRunOptions({
@@ -128,8 +123,6 @@ function Renderer(config) {
       sanitize: shouldSanitize !== false
     }));
 
-    toc = runState.toc;
-
     if (shouldTrimHTML) {
       html = trimHTML(html);
     }
@@ -137,11 +130,7 @@ function Renderer(config) {
     runState = createRunState(NilOptions);
     runOptions = createRunOptions(NilOptions);
 
-    return withTOC ? { html: html, toc: toc } : html;
-  };
-
-  renderMarkdown.withTOC = function(params) {
-    return renderMarkdown(Object.assign({}, params, { withTOC: true }));
+    return html;
   };
 
   return renderMarkdown;

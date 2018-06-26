@@ -1,5 +1,4 @@
-const generateAnchor = require('./generateAnchor');
-const markdownToText = require('./markdownToText');
+const generateHeading = require('./generateHeading');
 const RE_TEMPLATE_VARIABLE = /\{\{\s{1}([^\}]+)\s{1}\}\}/g
 
 const template = string => params => (
@@ -22,44 +21,26 @@ const HeadingTmpl = template(`
 );
 
 function renderHeading(text, level, state, runOptions) {
-  let scopedId = generateAnchor(text);
-  const id = state.baseURL ? joinBySlash(state.baseURL, scopedId) : scopedId;
+  const heading = generateHeading(text, level, state.headings)
 
-  if (state.toc.some(function(x) { return x.scopedId === scopedId; })) {
-    scopedId = level + scopedId;
-  }
+  state.headings.push(heading)
 
-  // TODO: gief a markdown analyzer, really...
-  state.toc.push({
-    id: id,
-    scopedId: scopedId,
-    level: level,
-    html: text,
-    text: markdownToText(text).trim()
-  });
-
-  if (runOptions.anchorableHeadings && id && id.length) {
+  if (runOptions.anchorableHeadings && heading.id && heading.id.length) {
     return AnchorableHeadingTmpl({
       // we need to strip any leading # because in SinglePageMode all baseURL
       // values will have that
-      id: stripLeadingHash(id),
-      level: level,
-      text: text,
+      id: stripLeadingHash(heading.id),
+      level: heading.level,
+      text: heading.text,
     });
   }
   else {
-    return HeadingTmpl({ level: level, text: text });
+    return HeadingTmpl({ level: heading.level, text: heading.text });
   }
 };
 
 function stripLeadingHash(x) {
   return x[0] === '#' ? x.slice(1) : x;
-}
-
-function joinBySlash(a, b) {
-  var shouldDelimit = a && a[a.length-1] !== '/';
-
-  return a + (shouldDelimit ? '/' : '') + b;
 }
 
 module.exports = renderHeading;

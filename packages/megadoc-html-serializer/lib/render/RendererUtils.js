@@ -3,4 +3,3 @@ exports.markdownToText = require('megadoc-markdown-utils').markdownToText;
 exports.normalizeHeading = require('megadoc-markdown-utils').normalizeHeading;
 exports.trimHTML = require('megadoc-markdown-utils').trimHTML;
 exports.extractSummary = require('megadoc-markdown-utils').extractSummary;
-exports.extractTOC = require('megadoc-markdown-utils').extractTOC;

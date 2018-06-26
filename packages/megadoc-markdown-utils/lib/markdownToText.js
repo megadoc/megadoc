@@ -1,12 +1,5 @@
 const marked = require('marked');
-const htmlToText = require('./htmlToText');
-const markdownToTextOptions = ({
-  tables: false,
-  smartLists: false,
-  sanitize: false,
-  breaks: false,
-  linkify: false
-});
+const PlainTextRenderer = require('marked-plaintext')
 
 /**
  * @module
@@ -19,7 +12,7 @@ const markdownToTextOptions = ({
  *         The plain-text (no HTML inside of it) string.
  */
 function markdownToText(md) {
-  return htmlToText(marked(md, markdownToTextOptions));
+  return marked(md, { renderer: new PlainTextRenderer })
 }
 
 module.exports = markdownToText;
