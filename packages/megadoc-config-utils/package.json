@@ -2,7 +2,7 @@
   "main": "lib/index.js",
   "name": "megadoc-config-utils",
   "scripts": {},
-  "version": "7.0.0-beta.2",
+  "version": "7.0.0",
   "dependencies": {
     "ramda": "0.24.1"
   }

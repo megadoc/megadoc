@@ -1,6 +1,6 @@
 {
   "name": "megadoc-git-stats",
-  "version": "7.0.0-beta.2",
+  "version": "7.0.0",
   "description": "Collect stats from git for files parsed by megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -25,6 +25,6 @@
     "md5": "2.2.1"
   },
   "devDependencies": {
-    "megadoc-test-utils": "^7.0.0-beta.2"
+    "megadoc-test-utils": "^7.0.0"
   }
 }
