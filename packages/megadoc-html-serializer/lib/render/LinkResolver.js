@@ -3,8 +3,8 @@ const invariant = require('invariant');
 const EventEmitter = require('events').EventEmitter;
 const URI = require('urijs');
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
-const { escape: escapeHTML } = require('lodash');
 const { NoBrokenLinks } = require('../lintingRules')
+const { escapeHTML, markdownToText } = require('megadoc-markdown-utils');
 const LinkToSelf = {};
 
 /**
@@ -279,7 +279,7 @@ function generateHTMLLink(href, text, title) {
   }
 
   if (title) {
-    buffer += ' title="' + escapeHTML(normalizeTitle(title)) + '"';
+    buffer += ' title="' + normalizeTitle(title) + '"';
   }
 
   buffer += '>' + escapeHTML(text) + '</a>';
@@ -288,7 +288,7 @@ function generateHTMLLink(href, text, title) {
 }
 
 function normalizeTitle(title) {
-  return title.replace(/\n+/g, ' ');
+  return markdownToText(title).replace(/\n+/g, ' ');
 }
 
 module.exports = LinkResolver;
