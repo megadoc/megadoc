@@ -14,11 +14,21 @@ module.exports = React.createClass({
   },
 
   render() {
+    const { config } = this.props.namespaceNode;
+    const options = this.props.$outletOptions;
+
     return (
       <div className="js-module-header-outlet">
         <ModuleHeader
           documentNode={this.props.documentNode || this.props.namespaceNode}
-          showSourcePaths={this.props.$outletOptions.showFilePath !== false}
+          showSourcePaths={
+            options.showFilePath !== false &&
+            config.showSourcePaths !== false
+          }
+          showNamespace={
+            options.showNamespace !== false &&
+            config.showNamespaceInModuleHeader !== false
+          }
           generateAnchor={false}
         />
       </div>
