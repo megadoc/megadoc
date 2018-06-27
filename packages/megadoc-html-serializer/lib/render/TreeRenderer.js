@@ -17,6 +17,17 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
     return acc;
   }, {}, decorators)
 
+  const sealState = {
+    edgeGraph: state.edgeGraph
+  }
+
+  const sealDecorations = decorators.filter(x => x.sealFnPath).map(decorator => {
+    return {
+      seal: require(decorator.sealFnPath),
+      metaKey: decorator.metaKey
+    }
+  })
+
   const reducers = {
     CONVERT_MARKDOWN_TO_HTML: function(data, reduce) {
       const text = reduce(data.text);
@@ -77,7 +88,26 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
       nextData.entities = node.entities.map(visitNode);
     }
 
+    if (sealDecorations.length) {
+      nextData.meta = applySealDecorations(node)
+    }
+
     return R.merge(node, nextData);
+  }
+
+  function applySealDecorations(node) {
+    return sealDecorations.reduce(function(nextMeta, decorator) {
+      const decoration = decorator.seal(sealState, node)
+
+      if (decoration) {
+        return Object.assign(nextMeta, {
+          [decorator.metaKey]: decoration
+        })
+      }
+      else {
+        return nextMeta
+      }
+    }, node.meta)
   }
 
   return visitNode(tree);

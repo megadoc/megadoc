@@ -36,7 +36,8 @@ config.sources = [
     processor: [ 'megadoc-plugin-markdown', {
       baseURL: '/',
     }],
-    decorators: ['megadoc-git-stats'],
+    decorators: ['megadoc-git-stats', 'megadoc-plugin-reference-graph'],
+    tags: [ 'readme' ],
   },
 
   // @url: /usage
@@ -49,7 +50,7 @@ config.sources = [
       title: 'Usage',
       fullFolderTitles: false,
     }],
-    decorators: ['megadoc-git-stats'],
+    decorators: ['megadoc-git-stats', 'megadoc-plugin-reference-graph'],
   },
 
   // @url: /dev/handbook
@@ -62,7 +63,7 @@ config.sources = [
       fullFolderTitles: false,
       discardIdPrefix: 'dev-',
     }],
-    decorators: ['megadoc-git-stats'],
+    decorators: ['megadoc-git-stats', 'megadoc-plugin-reference-graph'],
   },
 ];
 
@@ -177,7 +178,8 @@ config.serializer = [ 'megadoc-html-serializer', {
           options: { framed: true },
           outlets: [
             { name: 'Markdown::Document' },
-            { name: 'GitStats' }
+            { name: 'ReferenceGraph' },
+            { name: 'GitStats' },
           ]
         },
         {
@@ -199,6 +201,7 @@ config.serializer = [ 'megadoc-html-serializer', {
             { name: 'JS::ModuleHeader', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
             { name: 'JS::ModuleIndex', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
             { name: 'JS::ModuleBody', match: { by: 'plugin', on: 'megadoc-plugin-js' } },
+            { name: 'ReferenceGraph' },
             { name: 'GitStats' }
           ]
         },
@@ -455,7 +458,8 @@ function addPackageDocumentation(pluginName, options = {}) {
         allowLinks: true
       }],
 
-      'megadoc-git-stats'
+      'megadoc-git-stats',
+      'megadoc-plugin-reference-graph',
     ]
   });
 
@@ -491,9 +495,8 @@ function addPackageDocumentation(pluginName, options = {}) {
               name: 'JS::Module',
               match: { by: 'namespace', on: 'js__' + pluginName },
             },
-            {
-              name: 'GitStats'
-            }
+            { name: 'ReferenceGraph' },
+            { name: 'GitStats' },
           ].filter(truthy)
         },
 

@@ -23,7 +23,7 @@ const refine = require('./refine');
 const render = require('./render');
 const seal = require('./seal');
 const Service = require('./Service');
-const { asyncify, asyncEnsure, asyncSequence } = require('./utils');
+const { asyncify, asyncEnsure, asyncNoop, asyncSequence } = require('./utils');
 const { tty } = require('megadoc-linter');
 const {
   BREAKPOINT_COMPILE,
@@ -532,4 +532,4 @@ exports.compile = compile;
 exports.compileAndEmit = compileAndEmit
 exports.emit    = sealPurgeAndEmit;
 exports.stop    = stop;
-exports.utils = { asyncEnsure };
+exports.utils = { asyncEnsure, asyncNoop };

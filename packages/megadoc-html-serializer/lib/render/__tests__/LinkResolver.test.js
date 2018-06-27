@@ -73,7 +73,10 @@ describe('LinkResolver', function() {
 
     corpus.traverse(NodeURIDecorator({}));
 
-    resolver = new LinkResolver(corpus, { linter: NullLinter });
+    resolver = new LinkResolver(corpus, {
+      linter: NullLinter,
+      edgeGraph: {}
+    });
   });
 
   it('should not blow up with a docstring containing no links', function() {

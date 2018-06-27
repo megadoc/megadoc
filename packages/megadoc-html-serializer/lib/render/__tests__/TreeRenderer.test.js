@@ -38,7 +38,7 @@ describe('TreeRenderer', function() {
 
       const renderedTree = Subject.renderTree({
         markdownRenderer: new Renderer({}),
-        linkResolver: new LinkResolver(null, {}),
+        linkResolver: new LinkResolver(null, { edgeGraph: {} }),
       }, tree, { renderOperations });
 
       assert.include(renderedTree.documents[0].properties.text, 'Hello <em>World</em>!')
@@ -99,6 +99,7 @@ describe('TreeRenderer', function() {
         ignore: [],
         injectors: null,
         linter: NullLinter,
+        edgeGraph: {},
       });
 
       const renderedTree = Subject.renderTree({
@@ -167,6 +168,7 @@ describe('TreeRenderer', function() {
         ignore: [],
         injectors: null,
         linter: NullLinter,
+        edgeGraph: {},
       });
 
       const renderedTree = Subject.renderTree({

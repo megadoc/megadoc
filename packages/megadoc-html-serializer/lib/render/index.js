@@ -13,10 +13,13 @@ module.exports = function render({ serializer, compilations }, done) {
     return { node, compilation: compilations[index] };
   });
 
+  const edgeGraph = {}
+
   const linkResolver = new LinkResolver(corpus, {
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
     linter: Linter.for(serializer.compilerConfig),
+    edgeGraph
   });
 
   const markdownRenderer = new Renderer({
@@ -30,6 +33,7 @@ module.exports = function render({ serializer, compilations }, done) {
     markdownRenderer,
     linkResolver,
     corpus,
+    edgeGraph,
   };
 
   // todo: distribute
@@ -39,7 +43,7 @@ module.exports = function render({ serializer, compilations }, done) {
   done(null, {
     corpus,
     renderedCorpus,
-    edgeGraph: null
+    edgeGraph
   });
 };
 

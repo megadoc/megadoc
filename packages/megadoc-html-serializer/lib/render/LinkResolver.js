@@ -1,6 +1,5 @@
 const assert = require('assert');
 const invariant = require('invariant');
-const EventEmitter = require('events').EventEmitter;
 const URI = require('urijs');
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
 const { NoBrokenLinks } = require('../lintingRules')
@@ -14,10 +13,6 @@ const LinkToSelf = {};
 function LinkResolver(corpus, options) {
   this.corpus = corpus;
   this.resolvers = [];
-
-  this.emitter = new EventEmitter();
-  this.on = this.emitter.on.bind(this.emitter);
-  this.off = this.emitter.removeListener.bind(this.emitter);
   this.options = options || {};
   this.options.ignore = this.options.ignore || {};
   this.defaultInjectors = this.options.injectors || [
@@ -26,6 +21,7 @@ function LinkResolver(corpus, options) {
   ];
 
   this.linter = options.linter;
+  this.edgeGraph = options.edgeGraph;
 
   return this;
 }
@@ -96,7 +92,8 @@ LinkResolver.prototype.lookup = function(params) {
     return {
       text: text,
       title: node.summary,
-      href: Href(node, params.contextNode)
+      href: Href(node, params.contextNode),
+      uid: node.uid,
     };
   }
 };
@@ -196,6 +193,12 @@ ${JSON.stringify(this.corpus.dump(), null, 4)}
     "Link descriptor must contain a @source attribute!");
 
   if (index) {
+    if (!this.edgeGraph[index.uid]) {
+      this.edgeGraph[index.uid] = []
+    }
+
+    this.edgeGraph[index.uid].push(['i', contextNode.uid]);
+
     return generateMarkup({
       format: format,
       href: index.href,

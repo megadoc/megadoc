@@ -77,6 +77,7 @@ function createDecorator(configurationContext, decoratorEntry) {
     options: configureFn(userOptions, configurationContext),
     metaKey: spec.metaKey,
     parseFnPath: spec.parseFnPath,
+    sealFnPath: spec.sealFnPath,
   }
 }
 
