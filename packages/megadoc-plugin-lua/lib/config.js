@@ -1,7 +1,14 @@
+/**
+ * @module Config
+ */
 module.exports = {
-  routeName: 'lua',
+  /**
+   * @property {String}
+   */
+  url: '/lua',
 
-  source: [ '**/*.lua' ],
-  exclude: [],
-  baseURL: undefined,
+  /**
+   * @property {String}
+   */
+  title: 'Lua',
 };

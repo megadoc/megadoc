@@ -14,7 +14,8 @@ const b = Types.builders;
  *
  * The Corpus public API.
  */
-function Corpus({ alias: aliases = {} }, { linter }) {
+function Corpus(config, { linter }) {
+  const { alias: aliases = {} } = config;
   const exports = {};
   const nodes = {};
   const paths = {};
@@ -25,7 +26,7 @@ function Corpus({ alias: aliases = {} }, { linter }) {
     indexFields: [ '$path', '$filePath' ],
   });
 
-  const buildIndices = CorpusIndexer(exports);
+  const buildIndices = CorpusIndexer(exports, config);
 
   /**
    * @method add

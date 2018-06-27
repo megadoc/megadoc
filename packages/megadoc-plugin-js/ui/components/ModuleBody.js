@@ -46,7 +46,6 @@ const ModuleBody = React.createClass({
         {this.renderExamples(doc)}
         {this.renderStaticMethods(doc, withoutTypeDefs)}
         {this.renderCallbacks(doc, withoutTypeDefs)}
-        {this.renderTypeDefs(doc, typedefs)}
         {this.renderProperties(
           doc,
           withoutTypeDefs,
@@ -62,6 +61,7 @@ const ModuleBody = React.createClass({
         )}
 
         {this.renderMethods(doc, withoutTypeDefs)}
+        {this.renderTypeDefs(doc, typedefs)}
         {this.renderAdditionalResources(doc)}
       </div>
     );

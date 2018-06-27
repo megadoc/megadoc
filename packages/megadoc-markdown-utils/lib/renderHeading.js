@@ -27,7 +27,7 @@ function renderHeading(text, level, state, runOptions) {
 
   if (runOptions.anchorableHeadings && heading.id && heading.id.length) {
     return AnchorableHeadingTmpl({
-      // we need to strip any leading # because in SinglePageMode all baseURL
+      // we need to strip any leading # because in SinglePageMode all url
       // values will have that
       id: stripLeadingHash(heading.id),
       level: heading.level,

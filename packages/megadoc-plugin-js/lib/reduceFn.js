@@ -60,6 +60,7 @@ function reduceEntityDocument(doc) {
     },
     indexFields: [
       '$uid',
+      '$filePath',
       'id',
       'aliases',
     ],

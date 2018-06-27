@@ -76,7 +76,7 @@ describe('megadoc-plugin-yard-api::renderFn', function() {
             processor: {
               name: path.resolve(__dirname, '../index.js'),
               options: {
-                routeName: '/test',
+                url: '/test',
                 name: 'YARD-API Test',
               }
             }

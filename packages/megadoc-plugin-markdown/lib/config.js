@@ -5,14 +5,6 @@ module.exports = {
   /**
    * @property {String}
    *
-   * A unique identifier for the plugin. This identifier will also be
-   * used as a baseURL unless you [.baseURL specify it]().
-   */
-  id: 'articles',
-
-  /**
-   * @property {String}
-   *
    * The title is displayed in certain contexts like the [Spotlight]().
    * It should be descriptive but very brief.
    */
@@ -26,7 +18,7 @@ module.exports = {
    * A value of `/docs` would make a document file called `README.md` be
    * reachable at `/docs/readme.html`.
    */
-  baseURL: undefined,
+  url: undefined,
 
   /**
    * @property {Boolean}

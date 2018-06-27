@@ -5,7 +5,7 @@ const { curry } = require('lodash');
 // An index of value 0 is considered private and is accessible only to the node
 // and its "friends". Indices of higher values are not significant in their
 // value and merely denote that they are visible to all nodes.
-module.exports = curry(function buildIndices(corpus, node) {
+module.exports = curry(function buildIndices(corpus, options, node) {
   if (node.type === 'Namespace') {
     return {};
   }
@@ -17,7 +17,7 @@ module.exports = curry(function buildIndices(corpus, node) {
       generateIdIndices(corpus, node, indices);
     }
     else if (field === '$filePath') {
-      const filePathIndex = getFilePathIndex(corpus, node);
+      const filePathIndex = getFilePathIndex(corpus, options, node);
 
       if (filePathIndex) {
         const relativeFilePath = filePathIndex
@@ -103,17 +103,31 @@ function withoutLeadingSlash(x) {
   return x[0] === '/' ? x.slice(1) : x;
 }
 
-function buildEntityFileIndex(corpus, node) {
+function buildEntityFileIndex(corpus, options, node) {
   const parentNode = corpus.getParentOf(node);
 
   return (
     (node.filePath || parentNode.filePath) +
-    (parentNode.symbol || '') +
+    symbolOf(options, parentNode) +
     node.id
   );
 }
 
-function getFilePathIndex(corpus, node) {
+function symbolOf(options, node) {
+  const { symbol = '' } = node;
+
+  if (options.anchoredFilePathIndices && symbol === '#') {
+    return '#';
+  }
+  else if (options.anchoredFilePathIndices) {
+    return `#${symbol}`;
+  }
+  else {
+    return symbol;
+  }
+}
+
+function getFilePathIndex(corpus, options, node) {
   // for entities, we want to index by the enclosing document's filepath
   // followed by the id of the entity for links like:
   //
@@ -121,7 +135,7 @@ function getFilePathIndex(corpus, node) {
   //     /lib/X.js@name
   if (node.type === 'DocumentEntity') {
     if (node.filePath || corpus.getParentOf(node).filePath) {
-      return buildEntityFileIndex(corpus, node);
+      return buildEntityFileIndex(corpus, options, node);
     }
   }
   else if (node.filePath) {

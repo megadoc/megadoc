@@ -42,7 +42,6 @@ module.exports = function configure(userOptions) {
   }
 
   return Object.assign({}, config, {
-    // baseURL: config.baseURL || config.id,
     parserConfig: parserConfig,
   });
 };

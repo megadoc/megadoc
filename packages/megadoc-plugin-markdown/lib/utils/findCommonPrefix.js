@@ -1,5 +1,5 @@
 /**
- * @namespace Core.Utils
+ * @internal
  *
  * Given a list of strings, find the common substring they all start with.
  * Very useful for extracting relative paths from a list of paths.

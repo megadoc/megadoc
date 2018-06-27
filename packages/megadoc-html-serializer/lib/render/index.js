@@ -52,7 +52,7 @@ function renderTree(state, { node, compilation }) {
 }
 
 function aggregateTreesIntoCorpus(serializer, compilations) {
-  const corpus = Corpus(serializer.compilerConfig, { linter: Linter.NullLinter });
+  const corpus = Corpus(serializer.compilerConfig.corpus, { linter: Linter.NullLinter });
 
   const rootNodes = compilations.map(function(compilation) {
     const serializerOptions = compilation.serializerOptions.html || {};
@@ -68,7 +68,7 @@ function aggregateTreesIntoCorpus(serializer, compilations) {
 }
 
 function aggregateRenderedTreesIntoCorpus({ compilerConfig }, trees) {
-  const corpus = Corpus(compilerConfig, { linter: Linter.for(compilerConfig) });
+  const corpus = Corpus(compilerConfig.corpus, { linter: Linter.for(compilerConfig) });
 
   trees.forEach(R.unary(corpus.add));
 

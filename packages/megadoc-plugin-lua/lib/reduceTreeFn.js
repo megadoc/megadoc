@@ -5,7 +5,7 @@ module.exports = function reduceTreeFn(context, documents) {
       name: 'megadoc-plugin-lua',
       title: context.options.title,
       meta: {
-        href: context.options.baseURL
+        href: context.options.url
       }
     }
   }].concat(

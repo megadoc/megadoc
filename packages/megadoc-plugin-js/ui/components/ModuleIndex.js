@@ -3,6 +3,7 @@ const Link = require('components/Link');
 const TypeNames = require('../components/Tags/TypeNames');
 const FunctionSignature = require('../components/FunctionSignature');
 const DocClassifier = require('../utils/DocClassifier');
+const orderAwareSort = require('../utils/orderAwareSort');
 const { bool, object, } = React.PropTypes;
 
 const ModuleIndex = React.createClass({
@@ -29,7 +30,11 @@ const ModuleIndex = React.createClass({
     const staticMembers = getByClassification(documentNode, [
       DocClassifier.isStaticMethod,
       DocClassifier.isStaticProperty,
+    ], [
+      DocClassifier.isTypeDef
     ])
+
+    const typedefs = getByClassification(documentNode, [ DocClassifier.isTypeDef ]);
 
     const publicStaticMembers = staticMembers
       .filter(x => DocClassifier.isPublic(x.properties))
@@ -43,17 +48,21 @@ const ModuleIndex = React.createClass({
       staticMembers,
       memberFuctions,
       memberProperties,
-      exportedSymbols
+      exportedSymbols,
+      typedefs
     ]);
+
+    const order = x => orderAwareSort.asNodes(this.props.documentNode, x, 'id');
 
     return (
       <div className="js-document-index">
-        {exportedSymbols.length > 0 && this.renderExportedSymbols('Exported Symbols', exportedSymbols)}
-        {memberFuctions.length > 0 && this.renderMethodGroup('Public Functions', memberFuctions)}
-        {memberProperties.length > 0 && this.renderPropertyGroup('Public Properties', memberProperties)}
-        {publicStaticMembers.length > 0 && this.renderMethodGroup('Public Static Members', publicStaticMembers)}
-        {privateStaticMembers.length > 0 && this.renderMethodGroup('Private Static Members', privateStaticMembers)}
-        {others.length > 0 && this.renderGroupByContextType('Other', others)}
+        {exportedSymbols.length > 0 && this.renderExportedSymbols('Exported Symbols', order(exportedSymbols))}
+        {memberFuctions.length > 0 && this.renderMethodGroup('Public Functions', order(memberFuctions))}
+        {memberProperties.length > 0 && this.renderPropertyGroup('Public Properties', order(memberProperties))}
+        {publicStaticMembers.length > 0 && this.renderMethodGroup('Public Static Members', order(publicStaticMembers))}
+        {privateStaticMembers.length > 0 && this.renderMethodGroup('Private Static Members', order(privateStaticMembers))}
+        {typedefs.length > 0 && this.renderGroupByContextType('Types', order(typedefs))}
+        {others.length > 0 && this.renderGroupByContextType('Other', order(others))}
       </div>
     );
   },
@@ -216,9 +225,12 @@ const ModuleIndex = React.createClass({
   }
 });
 
-function getByClassification(documentNode, klassifiers) {
+function getByClassification(documentNode, klassifiers, notKlassifiers = []) {
   return documentNode.entities.filter(x => {
-    return klassifiers.some(fn => fn(x.properties));
+    return (
+      klassifiers.some(fn => fn(x.properties)) &&
+      !notKlassifiers.some(fn => fn(x.properties))
+    );
   });
 }
 

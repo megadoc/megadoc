@@ -42,7 +42,7 @@ exports.sources = [
     include: 'src/**/*.lua',
     processor: ['megadoc-plugin-lua', {
       title: 'lua_cliargs',
-      baseURL: '/'
+      url: '/'
     }],
   }
 ];

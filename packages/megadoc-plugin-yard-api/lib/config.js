@@ -10,7 +10,7 @@ module.exports = {
   /**
    * @property {String}
    */
-  routeName: '/api',
+  url: '/api',
 
   /**
    * @property {String}

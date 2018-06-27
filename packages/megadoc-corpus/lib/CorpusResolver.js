@@ -142,7 +142,7 @@ function getPrivateNodeIndex(node) {
 }
 
 function isLeaf(node) {
-  return node.type === 'DocumentEntity' && !node.entities;
+  return node.type === 'DocumentEntity' && (!node.entities || !node.entities.length);
 }
 
 function resolveByFilePath(anchor, options) {

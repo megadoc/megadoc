@@ -18,7 +18,7 @@ const ReferenceGraph = React.createClass({
       return null;
     }
 
-    const inbound = documentNode.meta.references.inbound.filter(uid => uid !== documentNode.uid).map(uid =>
+    const inbound = documentNode.meta.references.filter(uid => uid !== documentNode.uid).map(uid =>
       this.context.corpus.getByUID(uid)
     )
 

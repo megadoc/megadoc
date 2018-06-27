@@ -11,7 +11,7 @@ module.exports = function reduceTree(context, documents) {
       config: omit(context.options, [ 'parserConfig' ]), // omit parserConfig or what?
       indexFields: [ '$uid', '$filePath', 'aliases' ],
       meta: {
-        href: context.options.baseURL || undefined
+        href: context.options.url || undefined
       }
     }
   });

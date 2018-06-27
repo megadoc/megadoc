@@ -1,5 +1,17 @@
-var path = require('path');
-var config = {
+const path = require('path');
+const yaml = require('js-yaml');
+const fs = require('fs');
+const glob = require('glob');
+const root = path.resolve(__dirname)
+
+const manifests = glob.sync(path.join(root, 'packages/*/.megadoc.yml')).map(file => {
+  return {
+    name: path.basename(path.dirname(file)),
+    spec: yaml.safeLoad(fs.readFileSync(file, 'utf8'))
+  }
+})
+
+const config = {
   assetRoot: path.resolve(__dirname),
 
   title: 'megadoc',
@@ -7,9 +19,9 @@ var config = {
   disqus: false,
   showSettingsLinkInBanner: false,
   tooltipPreviews: false,
-  corpus: {
-    indexByFilepath: true,
-  },
+  // corpus: {
+  //   indexByFilepath: true,
+  // },
 
   assets: [
     { 'packages/megadoc-corpus/doc/corpus-resolver.png': 'images/corpus-resolver.png' },
@@ -34,7 +46,7 @@ config.sources = [
     title: 'Documents',
     include: [ 'README.md', 'CHANGELOG.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      baseURL: '/',
+      url: '/',
     }],
     decorators: ['megadoc-git-stats', 'megadoc-plugin-reference-graph'],
     tags: [ 'readme' ],
@@ -46,11 +58,12 @@ config.sources = [
     title: 'Documents',
     include: [ 'doc/usage/**/*.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      baseURL: '/usage',
+      url: '/usage',
       title: 'Usage',
       fullFolderTitles: false,
     }],
     decorators: ['megadoc-git-stats', 'megadoc-plugin-reference-graph'],
+    tags: [ 'usage' ]
   },
 
   // @url: /dev/handbook
@@ -58,7 +71,7 @@ config.sources = [
     id: 'md__plugins',
     include: [ 'doc/dev/**/*.md', 'doc/dev-cookbook/**/*.md' ],
     processor: [ 'megadoc-plugin-markdown', {
-      baseURL: '/dev',
+      url: '/dev',
       title: 'Plugin Development',
       fullFolderTitles: false,
       discardIdPrefix: 'dev-',
@@ -102,42 +115,42 @@ config.serializer = [ 'megadoc-html-serializer', {
       links: [
         {
           text: 'Dot (graphs)',
-          href: '/plugins/megadoc-html-dot/readme.html',
+          href: '/plugins/dot/readme.html',
         },
 
         {
           text: 'Git',
-          href: '/plugins/megadoc-plugin-git/readme.html',
+          href: '/plugins/git-stats/readme.html',
         },
 
         {
           text: 'JavaScript',
-          href: '/plugins/megadoc-plugin-js/readme.html',
+          href: '/plugins/js/readme.html',
         },
 
         {
           text: 'Markdown',
-          href: '/plugins/megadoc-plugin-markdown/readme.html',
+          href: '/plugins/markdown/readme.html',
         },
 
         {
           text: 'Lua',
-          href: '/plugins/megadoc-plugin-lua/readme.html',
+          href: '/plugins/lua/readme.html',
         },
 
         {
           text: 'Ruby on Rails (YARD API)',
-          href: '/plugins/megadoc-plugin-yard-api/readme.html',
+          href: '/plugins/yard-api/readme.html',
         },
 
         {
           text: 'Theme - Qt',
-          href: '/plugins/megadoc-theme-qt/readme.html',
+          href: '/themes/qt/readme.html',
         },
 
         {
           text: 'Theme - Minimalist',
-          href: '/plugins/megadoc-theme-minimalist/readme.html',
+          href: '/themes/minimalist/readme.html',
         },
       ]
     },
@@ -337,74 +350,82 @@ config.serializer = [ 'megadoc-html-serializer', {
   ],
 }]
 
-addPackageDocumentation('megadoc-cli', {
-  url: '/cli',
-  withLayouts: false,
-});
+manifests.forEach(({ name, spec }) => {
+  addPackageDocumentation(name, {
+    url: spec.url,
+    withJS: spec.js !== false,
+    layouts: spec.layouts !== false
+  })
+})
 
-addPackageDocumentation('megadoc-corpus', {
-  url: '/dev/corpus',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-cli', {
+//   url: '/cli',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-compiler', {
-  url: '/dev/megadoc-compiler',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-corpus', {
+//   url: '/dev/corpus',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-linter', {
-  url: '/dev/megadoc-linter',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-compiler', {
+//   url: '/dev/megadoc-compiler',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-html-serializer', {
-  url: '/dev/megadoc-html-serializer',
-  withLayouts: false,
-  // js: {
-  //   parserOptions: {
-  //     presets: [
-  //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
-  //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
-  //     ],
-  //   },
-  // }
-});
+// addPackageDocumentation('megadoc-linter', {
+//   url: '/dev/megadoc-linter',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-docstring', {
-  url: '/dev/megadoc-docstring',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-html-serializer', {
+//   url: '/dev/megadoc-html-serializer',
+//   layouts: false,
+//   // js: {
+//   //   parserOptions: {
+//   //     presets: [
+//   //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-es2015'),
+//   //       path.resolve(__dirname, 'packages/megadoc-html-serializer/node_modules/babel-preset-react'),
+//   //     ],
+//   //   },
+//   // }
+// });
 
-addPackageDocumentation('megadoc-config-utils', {
-  url: '/dev/megadoc-config-utils',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-docstring', {
+//   url: '/dev/megadoc-docstring',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-test-utils', {
-  url: '/dev/megadoc-test-utils',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-config-utils', {
+//   url: '/dev/megadoc-config-utils',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-regression-tests', {
-  withJS: false,
-  url: '/dev/megadoc-regression-tests',
-  withLayouts: false,
-});
+// addPackageDocumentation('megadoc-test-utils', {
+//   url: '/dev/megadoc-test-utils',
+//   layouts: false,
+// });
 
-addPackageDocumentation('megadoc-html-dot');
-addPackageDocumentation('megadoc-plugin-git');
-addPackageDocumentation('megadoc-plugin-js');
-addPackageDocumentation('megadoc-plugin-lua');
-addPackageDocumentation('megadoc-plugin-markdown');
-addPackageDocumentation('megadoc-plugin-yard-api');
-addPackageDocumentation('megadoc-theme-minimalist');
-addPackageDocumentation('megadoc-theme-qt');
+// addPackageDocumentation('megadoc-regression-tests', {
+//   withJS: false,
+//   url: '/dev/megadoc-regression-tests',
+//   layouts: false,
+// });
+
+// addPackageDocumentation('megadoc-html-dot');
+// addPackageDocumentation('megadoc-plugin-git');
+// addPackageDocumentation('megadoc-plugin-js');
+// addPackageDocumentation('megadoc-plugin-lua');
+// addPackageDocumentation('megadoc-plugin-markdown');
+// addPackageDocumentation('megadoc-plugin-yard-api');
+// addPackageDocumentation('megadoc-theme-minimalist');
+// addPackageDocumentation('megadoc-theme-qt');
 
 module.exports = config;
 
 function addPackageDocumentation(pluginName, options = {}) {
   var url = options.url || ('/plugins/' + pluginName);
-  var withJS = options.withJS !== false;
+  var withJS = options.withJS;
 
   if (withJS) {
     config.sources.push({
@@ -418,11 +439,18 @@ function addPackageDocumentation(pluginName, options = {}) {
       ],
 
       processor: [ 'megadoc-plugin-js', Object.assign({
-        baseURL: url,
+        url: url,
         title: pluginName,
         useDirAsNamespace: false,
         inferModuleIdFromFileName: true,
         inferNamespaces: false,
+
+        builtInTypes: [
+          {
+            name: 'Glob',
+            href: 'https://github.com/isaacs/node-glob'
+          }
+        ],
 
         namespaceDirMap: {
           'ui/': 'UI',
@@ -440,8 +468,11 @@ function addPackageDocumentation(pluginName, options = {}) {
         [ 'megadoc-html-dot', {
           allowLinks: true
         }],
-        [ 'megadoc-git-stats' ]
-      ]
+        [ 'megadoc-git-stats' ],
+        [ 'megadoc-plugin-reference-graph' ],
+      ],
+
+      tags: [ pluginName ],
     });
   }
 
@@ -451,7 +482,7 @@ function addPackageDocumentation(pluginName, options = {}) {
     exclude: [ '**/node_modules/**', '**/__tests__/**' ],
     processor: [ 'megadoc-plugin-markdown', {
       title: pluginName,
-      baseURL: url,
+      url: url,
     }],
     decorators: [
       [ 'megadoc-html-dot', {
@@ -460,10 +491,11 @@ function addPackageDocumentation(pluginName, options = {}) {
 
       'megadoc-git-stats',
       'megadoc-plugin-reference-graph',
-    ]
+    ],
+    tags: [ pluginName ],
   });
 
-  if (options.withLayouts !== false) {
+  if (options.layouts) {
     config.serializer[1].customLayouts.push({
       match: { by: 'url', on: url },
       regions: [

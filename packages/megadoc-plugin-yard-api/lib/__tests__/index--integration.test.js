@@ -98,7 +98,7 @@ describe('[integration] megadoc-plugin-yard-api', function() {
             name: path.resolve(__dirname, '../index.js'),
             options: {
               scan: false,
-              routeName: '/test',
+              url: '/test',
               name: 'YARD-API Test',
             }
           }

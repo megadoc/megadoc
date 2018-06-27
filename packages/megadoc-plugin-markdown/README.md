@@ -1,33 +1,19 @@
 # megadoc-plugin-markdown
 
-Read markdown files and render them as HTML with syntax highlighting and linking.
+Render [Markdown](https://daringfireball.net/projects/markdown/) documents as
+HTML with syntax highlighting and linking. The renderer supports [Github
+Flavored Markdown](https://github.github.com/gfm/) and Megadoc's [[linking |
+doc/usage/linking.md]] system.
 
 ## Installation
 
-    npm install megadoc megadoc-plugin-markdown
+    npm install megadoc-plugin-markdown
 
 ## Usage
 
-Let's assume we have a source folder like this:
+This is [[processor plugin | doc/usage/plugins.md#processors]] and can be
+configured as such.
 
-```text
-|-- docs/usage.md
-|-- docs/help.md
-| README.md
-```
+## Configuration
 
-We can build up a plugin to parse these files as such:
-
-```javascript
-// @file: megadoc.conf.js
-module.exports = {
-  plugins: [
-    require('megadoc-plugin-markdown')({
-      id: 'articles',
-      source: [ 'README.md', 'docs/**/*.md' ]
-    })
-  ]
-}
-```
-
-See [./lib/config.js]() for the available settings.
+Refer to the [[available settings | ./lib/config.js]].

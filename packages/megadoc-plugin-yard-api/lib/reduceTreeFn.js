@@ -9,7 +9,7 @@ module.exports = function reduceTree(context/*, documents*/) {
       config: {},
       indexFields: [ 'title', 'shorthandTitle' ],
       meta: {
-        href: context.options.routeName || undefined
+        href: context.options.url || undefined
       }
     }
   });

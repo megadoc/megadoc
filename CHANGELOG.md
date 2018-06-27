@@ -1,5 +1,17 @@
 # Changelog
 
+## 8.0.0
+
+- megadoc-plugin-js: renamed `baseURL` option to `url`
+- megadoc-plugin-lua: renamed `routeName` option to `url`
+- megadoc-plugin-markdown: renamed `baseURL` option to `url`
+- megadoc-plugin-yard-api: renamed `baseURL` option to `url`
+
+## 7.1.0
+
+- restored support for indexing "Related Documents" via the
+  megadoc-plugin-reference-graphs
+
 ## 7.0.0
 
 - megadoc-plugin-markdown: a new option for normalizing folder titles

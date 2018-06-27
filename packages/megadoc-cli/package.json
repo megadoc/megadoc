@@ -12,7 +12,7 @@
     "chalk": "2.1.0",
     "chokidar": "1.6.1",
     "cli-table": "0.3.1",
-    "commander": "2.11.0",
+    "commander": "2.15.1",
     "lodash": "3.10.1",
     "megadoc-config-utils": "^7.0.0",
     "megadoc-linter": "^7.0.0",
