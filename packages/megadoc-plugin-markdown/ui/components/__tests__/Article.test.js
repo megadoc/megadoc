@@ -5,7 +5,7 @@ const { assert } = require('chai');
 const { object, } = React.PropTypes;
 
 describe("Markdown::Components::Article", function() {
-  reactSuite(this, React.createClass({
+  const rs = reactSuite(this, React.createClass({
     childContextTypes: {
       location: object,
       config: object,
@@ -33,6 +33,6 @@ describe("Markdown::Components::Article", function() {
   });
 
   it('renders', function() {
-    assert(subject.isMounted());
+    assert(rs.subject.isMounted());
   });
 });

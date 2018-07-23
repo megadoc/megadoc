@@ -51,7 +51,7 @@ const Properties = React.createClass({
 
           {(tag.accepted_values || []).length > 0 && (
             <span className="argument-listing__argument-values">
-              <span>[ {tag.accepted_values.join(', ')} ]</span>
+              <span>( {tag.accepted_values.join(' | ')} )</span>
             </span>
           )}
 

@@ -9,17 +9,20 @@ module.exports = (options, rawDocument, done) => {
   const filePath = firstDefSource ? firstDefSource[0] : undefined
   const loc = firstDefSource ? { start: { line: firstDefSource[1] } } : undefined
   const endpointDocuments = listOf(rawDocument.endpoints).map(reduceEndpointDocument)
-  const objectDocuments = listOf(rawDocument.objects).map(reduceObjectDocument).map(x => {
-    if (!x.filePath) {
-      x.filePath = filePath
-    }
+  const objectDocuments = listOf(rawDocument.objects)
+    .map(addCodeTitle)
+    .map(reduceObjectDocument).map(x => {
+      if (!x.filePath) {
+        x.filePath = filePath
+      }
 
-    if (!x.loc) {
-      x.loc = loc
-    }
+      if (!x.loc) {
+        x.loc = loc
+      }
 
-    return x
-  })
+      return x
+    })
+  ;
 
   done(null, b.document({
     id: rawDocument.id,
@@ -32,6 +35,12 @@ module.exports = (options, rawDocument, done) => {
   }))
 }
 
+function addCodeTitle(objectDocument) {
+  return Object.assign({}, objectDocument, {
+    codeTitle: [ objectDocument.controller, objectDocument.title ].join('::')
+  })
+}
+
 function reduceObjectDocument(rawDocument) {
   return b.documentEntity({
     id: rawDocument.scoped_id,
@@ -41,6 +50,7 @@ function reduceObjectDocument(rawDocument) {
       entityType: 'api-object',
       indexDisplayName: rawDocument.title + ' (Object)',
     },
+    indexFields: [ 'title', 'shorthandTitle', 'codeTitle' ],
     properties: rawDocument
   });
 }

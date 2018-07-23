@@ -6,7 +6,7 @@ const { drill, m } = require('react-drill');
 const Link = require('components/Link');
 
 describe('JS::Components::ClassBrowser', function() {
-  const suite = reactSuite(this, stubRoutingContext(Subject), {
+  const rs = reactSuite(this, stubRoutingContext(Subject), {
     namespaceNode: {
       config: {},
       documents: [
@@ -53,23 +53,23 @@ describe('JS::Components::ClassBrowser', function() {
   });
 
   it('renders', function() {
-    assert.ok(subject.isMounted());
+    assert.ok(rs.subject.isMounted());
   });
 
   it('links to modules using their short-names', function() {
-    drill(subject).find(Link, m.hasText('Localized Cache Name'));
-    drill(subject).find(Link, m.hasText('Localized CarBumper Name'));
+    drill(rs.subject).find(Link, m.hasText('Localized Cache Name'));
+    drill(rs.subject).find(Link, m.hasText('Localized CarBumper Name'));
   });
 
   context('given an active module document...', function() {
     beforeEach(function() {
-      suite.setProps({
-        documentNode: subject.props.namespaceNode.documents[0]
+      rs.setProps({
+        documentNode: rs.subject.props.namespaceNode.documents[0]
       });
     });
 
     it('renders links to its entities', function() {
-      drill(subject).find(Link, m.hasText('#add'))
+      drill(rs.subject).find(Link, m.hasText('#add'))
     });
   });
 });

@@ -29,19 +29,21 @@ const failOnConsoleError = function() {
   }
 };
 
-beforeEach(function() {
-  expectedMessages.splice(0);
+exports.watchConsole = function() {
+  beforeEach(function() {
+    expectedMessages.splice(0);
 
-  console.warn = failOnConsoleWarn;
-  console.error = failOnConsoleError;
-})
+    console.warn = failOnConsoleWarn;
+    console.error = failOnConsoleError;
+  })
 
-afterEach(function() {
-  console.error = error;
-  console.warn = warn;
+  afterEach(function() {
+    console.error = error;
+    console.warn = warn;
 
-  expectedMessages.splice(0);
-});
+    expectedMessages.splice(0);
+  });
+}
 
 exports.stubConsoleWarn = function(message) {
   expectedMessages.push({ level: LEVEL_WARN, text: message });

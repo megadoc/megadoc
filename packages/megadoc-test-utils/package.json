@@ -19,6 +19,7 @@
   },
   "peerDependencies": {
     "megadoc-compiler": "^6.0.0-beta.3",
+    "megadoc-corpus": "^7.0.0",
     "megadoc-html-serializer": "^6.0.0-beta.5"
   }
 }

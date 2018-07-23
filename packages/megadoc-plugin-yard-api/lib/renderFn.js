@@ -1,26 +1,29 @@
 const YARDLinkInjector = require('./YARDLinkInjector');
 const isAPIObject = require('./utils').isAPIObject;
 const isAPIEndpoint = require('./utils').isAPIEndpoint;
-const CODE_TAGS = [ 'example_request', 'example_response' ];
+const {
+  MediaWikiLinkStrategy,
+  MegadocLinkStrategy
+} = require('megadoc-html-serializer')
+
+const injectors = [ YARDLinkInjector, MegadocLinkStrategy, MediaWikiLinkStrategy ]
 
 const bind = (node, descriptor) => ([ node.uid, descriptor ])
 const isInternalLink = x => x[0] === '{' && x[x.length-1] === '}'
 
-module.exports = function renderFn({ options }, defaultOperations, documentNode) {
-  const operations = Object.assign({}, defaultOperations, {
-    linkify: params => defaultOperations.linkify(Object.assign(params, {
-      injectors: [ YARDLinkInjector ]
-    })),
-  })
-
+module.exports = function renderFn({ options }, operations, documentNode) {
   const { markdown, linkify } = operations;
   const doc = documentNode.properties;
 
   return [
-    bind(doc, {
+    bind(documentNode, {
       text: markdown({
         contextNode: documentNode,
-        text: linkify({ text: doc.text, contextNode: documentNode }),
+        text: linkify({
+          text: extractDescriptionString(doc.text),
+          injectors,
+          contextNode: documentNode
+        }),
       }),
     }),
   ].concat(
@@ -34,7 +37,6 @@ module.exports = function renderFn({ options }, defaultOperations, documentNode)
   );
 };
 
-
 function renderObject(options, operations, node, contextNode) {
   const { markdown, linkify } = operations;
 
@@ -42,7 +44,8 @@ function renderObject(options, operations, node, contextNode) {
     text: markdown({
       contextNode,
       text: linkify({
-        text: node.properties.text,
+        text: extractDescriptionString(node.properties.text),
+        injectors,
         contextNode
       })
     }),
@@ -56,7 +59,7 @@ function renderObject(options, operations, node, contextNode) {
 function renderAPIObjectSchemaField(options, operations, field, contextNode) {
   return {
     types: field.types.map(type => {
-      return linkType(options, operations, TypeInfo(type), contextNode)
+      return linkType(options, operations, type, contextNode)
     })
   }
 }
@@ -67,7 +70,11 @@ function renderEndpoint(options, operations, node) {
   return {
     text: markdown({
       contextNode: node,
-      text: linkify({ text: node.properties.text, contextNode: node }),
+      text: linkify({
+        text: extractDescriptionString(node.properties.text),
+        injectors,
+        contextNode: node
+      }),
     }),
 
     tags: node.properties.tags.map(tag => {
@@ -78,21 +85,28 @@ function renderEndpoint(options, operations, node) {
 
 const TagRenderers = [
   {
-    types: CODE_TAGS,
+    types: [ 'example_request', 'example_response' ],
     render: (options, operations, tag, contextNode) => {
-      const { markdown, linkify } = operations
-      const linkifiedCodeBlock = linkify({
-        contextNode,
-        format: 'html',
-        text: '```json\n' + tag.text + '\n```',
-      });
+      const { codeBlock, markdown, linkify } = operations
 
       return {
         text: markdown({
-          contextNode,
           sanitize: false,
-          trimHTML: false,
-          text: linkifiedCodeBlock,
+          contextNode,
+          text: linkify({
+            contextNode,
+            format: 'html',
+            injectors,
+            text: markdown({
+              contextNode,
+              sanitize: true,
+              trimHTML: false,
+              text: codeBlock({
+                syntax: 'json',
+                text: tag.text
+              })
+            })
+          })
         })
       }
     },
@@ -108,12 +122,13 @@ const TagRenderers = [
           contextNode,
           text: linkify({
             text: tag.text,
+            injectors,
             contextNode
           })
         }),
 
         types: tag.types.map(function(type) {
-          return linkType(options, operations, TypeInfo(type), contextNode);
+          return linkType(options, operations, type, contextNode);
         }),
       }
 
@@ -132,6 +147,7 @@ const TagRenderers = [
             contextNode,
             text: linkify({
               text: tag.text,
+              injectors,
               contextNode
             }),
             trimHTML: true,
@@ -140,7 +156,7 @@ const TagRenderers = [
       }
       else if (isInternalLink(tag.text)) {
         return {
-          text: linkType(options, operations, TypeInfo(tag.text), contextNode)
+          text: linkType(options, operations, tag.text, contextNode)
         }
       }
       else {
@@ -169,51 +185,40 @@ function renderEndpointTag(options, operations, tag, contextNode) {
   }
 }
 
-function linkType(options, { escapeHTML, markdown, linkify }, typeInfo, contextNode) {
-  const builtInTypes = options.builtInTypes || []
-  const {
-    arrayTypeStartSymbol,
-    arrayTypeEndSymbol
-  } = options
+function linkType(options, { escapeHTML, markdown, linkify }, docstring, contextNode) {
+  const typeInfo = getTypeInfo(docstring)
 
-  if (builtInTypes.indexOf(typeInfo.name) === -1) {
-    const link = `[${typeInfo.name}]()`;
-    const typedLink = typeInfo.isArray ? `${arrayTypeStartSymbol}${link}${arrayTypeEndSymbol}` : link;
+  if (options.builtInTypes && options.builtInTypes.indexOf(typeInfo.name) > -1) {
+    return typeInfo.name;
+  }
 
-    return markdown({
+  const { arrayTypeStartSymbol = '', arrayTypeEndSymbol = '' } = options
+  const link = `[${typeInfo.name}]()`;
+  const typedLink = typeInfo.isArray ? `${arrayTypeStartSymbol}${link}${arrayTypeEndSymbol}` : link;
+
+  return markdown({
+    contextNode,
+    text: linkify({
       contextNode,
-      text: linkify({
-        text: escapeHTML({
-          text: typedLink
-        }),
-        contextNode,
+      text: escapeHTML({
+        text: typedLink
       }),
-      trimHTML: true,
-      sanitize: true
-    });
-  }
-  else {
-    return typeInfo.name
-  }
+    }),
+    sanitize: true,
+    trimHTML: true,
+  });
 }
 
-function TypeInfo(docstring) {
-  var isArray;
-  var typeStr = docstring;
-
-  if (docstring.match(/^Array\<(.*)\>$|^(.*)\[\]$/)) {
-    typeStr = RegExp.$1 || RegExp.$2;
-    isArray = true;
+function getTypeInfo(docstring) {
+  if (docstring.match(/^Array\<(.+?)\>$|^(.+?)\[\]$/)) {
+    return Object.assign(getTypeInfo(RegExp.$1 || RegExp.$2), { isArray: true })
   }
-
-  if (isInternalLink(typeStr)) {
-    typeStr = typeStr.slice(1, -1)
+  else if (isInternalLink(docstring)) {
+    return getTypeInfo(docstring.slice(1, -1))
   }
-
-  return {
-    name: typeStr,
-    isArray: isArray
-  };
+  else {
+    return { name: docstring, isArray: false }
+  }
 }
 
 function listOf(x) {
@@ -222,5 +227,17 @@ function listOf(x) {
   }
   else {
     return [ x ]
+  }
+}
+
+function extractDescriptionString(text) {
+  if (typeof text === 'string') {
+    return text
+  }
+  else if (text && typeof text.description === 'string') {
+    return text.description
+  }
+  else {
+    return null
   }
 }
