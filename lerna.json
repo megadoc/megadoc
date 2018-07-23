@@ -6,6 +6,7 @@
   "publish": {},
   "ignore": [
     "anno",
+    "megadoc-link-resolver",
     "megadoc-regression-tests"
   ],
   "stream": true,

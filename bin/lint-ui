@@ -32,7 +32,4 @@ else
 fi
 
 
-exec "${ROOT}/node_modules/.bin/eslint" \
-  -c "${ROOT}/.eslintrc" \
-  -c "${ROOT}/.eslintrc--ui" \
-  "${SOURCES[@]}" $@
+exec "${ROOT}/node_modules/.bin/eslint" -c "${ROOT}/.eslintrc" "${SOURCES[@]}" "$@"
