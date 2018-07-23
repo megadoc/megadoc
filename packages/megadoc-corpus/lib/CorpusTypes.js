@@ -2,6 +2,7 @@ const R = require('ramda');
 const typeDefs = {};
 const builders = {};
 const camelizeCache = {};
+const createEmptyObject = () => ({})
 
 /**
  * @module CorpusTypes
@@ -17,9 +18,9 @@ const camelizeCache = {};
  * @param  {String} typeName
  * @param  {Object} typeDef
  */
-function def(typeName, typeDef) {
+function def(typeName, typeDef, typeFactory = createEmptyObject) {
   typeDefs[typeName] = typeDef;
-  builders[camelize(typeName)] = createTypeBuilder(typeName, typeDef);
+  builders[camelize(typeName)] = createTypeBuilder(typeName, typeFactory);
 }
 
 // const omitInternalFields = R.without([
@@ -57,12 +58,12 @@ function ensureHasSymbol(node) {
   }
 }
 
-function createTypeBuilder(type) {
+function createTypeBuilder(type, factory) {
   return props => R.pipe(
     assignNodeType(type),
     ensureHasMetaContainer,
     ensureHasSymbol
-  )(R.merge({}, props));
+  )(R.merge(factory(), props));
 }
 
 function camelize(str, lowerFirst) {

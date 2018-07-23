@@ -273,7 +273,7 @@ def("Document", {
     documents: null,
     entities: null,
   }
-});
+}, () => ({ documents: [], entities: [], properties: {} }));
 
 /**
  * @module T.DocumentEntity
@@ -304,7 +304,7 @@ def("DocumentEntity", { // terminal
      */
     parentNodeUID: null,
   }
-});
+}, () => ({ properties: {} }));
 
 /**
  * @module T.Property
