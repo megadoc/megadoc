@@ -1,9 +1,9 @@
 {
   "name": "megadoc-linter",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "main": "lib/index.js",
   "devDependencies": {
-    "megadoc-test-utils": "^7.0.0"
+    "megadoc-test-utils": "^7.1.0"
   },
   "dependencies": {
     "chalk": "2.1.0",

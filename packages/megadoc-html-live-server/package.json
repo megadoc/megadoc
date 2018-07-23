@@ -1,10 +1,10 @@
 {
   "name": "megadoc-html-live-server",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "main": "lib/index.js",
   "dependencies": {
     "connect": "3.6.5",
-    "megadoc-config-utils": "^7.0.0",
+    "megadoc-config-utils": "^7.1.0",
     "serve-static": "1.12.6",
     "webpack": "1.15.0",
     "webpack-dev-middleware": "1.6.1",

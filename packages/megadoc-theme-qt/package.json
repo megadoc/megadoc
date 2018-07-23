@@ -1,6 +1,6 @@
 {
   "name": "megadoc-theme-qt",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "A theme for megadoc after Qt documentation pages.",
   "main": "lib/index.js",
   "repository": {
