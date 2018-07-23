@@ -1,8 +1,10 @@
 var Prism = require('prismjs');
-var assign = require('lodash').assign;
+
+require('prismjs/plugins/autolinker/prism-autolinker')
+require('prismjs/plugins/keep-markup/prism-keep-markup')
 
 function CodeRenderer(userConfig) {
-  var config = assign({
+  var config = Object.assign({
     defaultLanguage: null,
     languages: [],
     aliases: {}

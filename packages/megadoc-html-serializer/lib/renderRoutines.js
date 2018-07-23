@@ -13,6 +13,18 @@ exports.markdown = function markdown(params) {
   return CompositeValue.create('CONVERT_MARKDOWN_TO_HTML', params);
 };
 
+exports.codeBlock = function codeBlock(params) {
+  invariant(typeof params.text === 'string' || CompositeValue.isCompositeValue(params.text),
+    `"text" must be specified for codeBlock!`
+  );
+
+  invariant(typeof params.syntax === 'string',
+    `"syntax" must be specified for codeBlock!`
+  );
+
+  return CompositeValue.create('WRAP_AS_MARKDOWN_CODE_BLOCK', params);
+}
+
 // TODO: is it possible to stop accepting custom contextNodes?
 // TODO: use contextNodeId instead of actual node
 exports.linkify = function linkify(params) {
@@ -23,8 +35,10 @@ exports.linkify = function linkify(params) {
   );
 
   return CompositeValue.create('LINKIFY_STRING', {
+    contextNode: params.contextNode,
+    format: params.format,
+    injectors: params.injectors,
     text: text,
-    contextNode: params.contextNode
   });
 };
 

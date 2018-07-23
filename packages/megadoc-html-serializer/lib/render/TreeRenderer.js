@@ -34,6 +34,11 @@ exports.renderTree = function(state, tree, { decorators = [], linter, renderOper
       return reduce(state.markdownRenderer(Object.assign({}, data, { text, codeBlockRenderers })));
     },
 
+    WRAP_AS_MARKDOWN_CODE_BLOCK: function(data, reduce) {
+      const wrapper = '```'
+      return reduce(`${wrapper}${data.syntax}\n${reduce(data.text)}\n${wrapper}`);
+    },
+
     LINKIFY_STRING: function(data, reduce) {
       const text = reduce(data.text);
       return reduce(state.linkResolver.linkify(Object.assign({}, data, { text })));

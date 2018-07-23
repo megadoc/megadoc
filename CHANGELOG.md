@@ -6,6 +6,11 @@
 - megadoc-plugin-lua: renamed `routeName` option to `url`
 - megadoc-plugin-markdown: renamed `baseURL` option to `url`
 - megadoc-plugin-yard-api: renamed `baseURL` option to `url`
+- megadoc-html-serializer: fixed bug where the `linkify` rendering routine
+  wasn't forwarding the options to the link resolver (e.g. `format` and
+  `injectors`)
+- megadoc-html-serializer: now supports another rendering routine `codeBlock`
+  for pre-formatting a block of text as a markdown code block
 
 ## 7.1.0
 
