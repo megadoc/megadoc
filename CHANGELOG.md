@@ -1,7 +1,9 @@
 # Changelog
 
-## 8.0.0
+## 7.1.0
 
+- restored support for indexing "Related Documents" via the
+  megadoc-plugin-reference-graphs
 - megadoc-plugin-js: renamed `baseURL` option to `url`
 - megadoc-plugin-lua: renamed `routeName` option to `url`
 - megadoc-plugin-markdown: renamed `baseURL` option to `url`
@@ -11,11 +13,6 @@
   `injectors`)
 - megadoc-html-serializer: now supports another rendering routine `codeBlock`
   for pre-formatting a block of text as a markdown code block
-
-## 7.1.0
-
-- restored support for indexing "Related Documents" via the
-  megadoc-plugin-reference-graphs
 
 ## 7.0.0
 

@@ -1,6 +1,7 @@
 {
   "name": "megadoc",
-  "version": "6.0.0-beta.4",
+  "version": "0.0.0",
+  "private": true,
   "description": "Fast and sleek and modular documentation generator.",
   "scripts": {
     "build": "NODE_ENV=production packages/megadoc-html-serializer/node_modules/.bin/webpack --config packages/megadoc-html-serializer/webpack.config.js --display-chunks",
