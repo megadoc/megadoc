@@ -1,3 +1,4 @@
+/* eslint-env node */
 const path = require('path');
 const yaml = require('js-yaml');
 const fs = require('fs');

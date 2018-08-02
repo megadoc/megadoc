@@ -1,0 +1,9 @@
+**/node_modules
+**/.cpcache
+
+/*.log
+/.local
+/doc
+/node_modules/
+/packages/*/dist
+/packages--legacy

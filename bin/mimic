@@ -1,0 +1,83 @@
+#!/bin/bash
+
+if [[ -z $MIMIC_UID ]]; then
+  echo "$0: missing MIMIC_UID (pass \`id -u\`)" 1>&2
+  exit 1
+fi
+
+if [[ -z $MIMIC_GID ]]; then
+  echo "$0: missing MIMIC_GID (pass \`id -G\`)" 1>&2
+  exit 1
+fi
+
+MIMIC_GROUP="donkey"
+MIMIC_USER="donkey"
+IFS=$' ' read -r -a MIMIC_GID_LIST <<< "$MIMIC_GID"
+MIMIC_PRIMARY_GID="${MIMIC_GID_LIST[0]}"
+
+create_groups() {
+  local letter="a"
+  local group
+
+  for gid in "${MIMIC_GID_LIST[@]}"; do
+    if [[ ${gid} == "${MIMIC_GID_LIST[0]}" ]]; then
+      group="$MIMIC_GROUP"
+    else
+      group="mimic-$letter"
+    fi
+
+    groupadd --non-unique --gid "${gid}" "$group" || exit $?
+
+    letter="$(echo "$letter" | tr "0-9a-z" "1-9a-z_")"
+  done
+}
+
+create_user() {
+  echo "CREATE_MAIL_SPOOL=no" >> /etc/default/useradd &&
+  useradd \
+    --no-create-home \
+    --uid "$MIMIC_UID" \
+    --gid "$MIMIC_PRIMARY_GID" \
+    --groups "$(IFS=, ; echo "${MIMIC_GID_LIST[*]}")" \
+    --no-log-init \
+    --non-unique \
+    --shell /bin/sh \
+    "$MIMIC_USER"
+}
+
+create_home() {
+  if [[ ! -d /home/$MIMIC_USER ]]; then
+    mkdir -p "/home/$MIMIC_USER" || exit $?
+  fi
+
+  chown "$MIMIC_USER:$MIMIC_GROUP" "/home/$MIMIC_USER"
+}
+
+grant_docker_acces_to_donkey() {
+  if [[ -a /var/run/docker.sock ]]; then
+    local gid
+
+    gid="$(stat -c '%g' /var/run/docker.sock)" &&
+    groupadd --non-unique --gid "${gid}" "donkey-docker" &&
+    usermod -a -G "${gid}" "$MIMIC_USER"
+  fi
+}
+
+restrict_vault_password_file() {
+  if [[ -f ${ANSIBLE_VAULT_PASSWORD_FILE} ]]; then
+    chown "$MIMIC_USER":"$MIMIC_GROUP" "${ANSIBLE_VAULT_PASSWORD_FILE}" &&
+    chmod 0400 "${ANSIBLE_VAULT_PASSWORD_FILE}"
+  fi
+}
+
+# shellcheck disable=SC2015
+create_groups &&
+create_user &&
+create_home &&
+grant_docker_acces_to_donkey &&
+restrict_vault_password_file || {
+  echo "$0: unable to masquerade as \"$MIMIC_UID\":\"$MIMIC_PRIMARY_GID\"" 1>&2
+  exit 1
+}
+
+sudo -u donkey -- "$@"
