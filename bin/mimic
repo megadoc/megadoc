@@ -28,7 +28,7 @@ create_groups() {
 
     groupadd --non-unique --gid "${gid}" "$group" || exit $?
 
-    letter="$(echo "$letter" | tr "0-9a-z" "1-9a-z_")"
+    letter="$(echo "$letter" | tr "_0-9a-zA-Z" "0-9a-zA-Z_")"
   done
 }
 
