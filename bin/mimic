@@ -16,19 +16,16 @@ IFS=$' ' read -r -a MIMIC_GID_LIST <<< "$MIMIC_GID"
 MIMIC_PRIMARY_GID="${MIMIC_GID_LIST[0]}"
 
 create_groups() {
-  local letter="a"
   local group
 
   for gid in "${MIMIC_GID_LIST[@]}"; do
     if [[ ${gid} == "${MIMIC_GID_LIST[0]}" ]]; then
       group="$MIMIC_GROUP"
     else
-      group="mimic-$letter"
+      group="mimic-$(cat /proc/sys/kernel/random/uuid)"
     fi
 
     groupadd --non-unique --gid "${gid}" "$group" || exit $?
-
-    letter="$(echo "$letter" | tr "_0-9a-zA-Z" "0-9a-zA-Z_")"
   done
 }
 
