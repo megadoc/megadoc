@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-markdown",
-  "version": "7.1.0",
+  "version": "7.1.1",
   "description": "Markdown documentation generator for megadoc.",
   "main": "lib/index.js",
   "repository": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "lodash": "3.10.1",
     "megadoc-corpus": "^7.1.0",
-    "megadoc-html-serializer": "^7.1.0",
+    "megadoc-html-serializer": "^7.1.1",
     "megadoc-markdown-utils": "^7.1.0"
   },
   "devDependencies": {
