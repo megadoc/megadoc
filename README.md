@@ -14,11 +14,11 @@ documents, and Ruby on Rails APIs.
 
 ## Getting started
 
-See the [/doc/usage/README.md usage](../master/doc/usage/README.md) guide to set up Megadoc for your project.
+See the [/doc/usage/README.md usage](./doc/usage/README.md) guide to set up Megadoc for your project.
 
 ## Hacking
 
-See the [/doc/dev/README.md Developer's Handbook](../master/doc/dev/README.md) for extending megadoc.
+See the [/doc/dev/README.md Developer's Handbook](./doc/dev/README.md) for extending megadoc.
 
 ### UI tests
 
