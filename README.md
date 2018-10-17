@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/megadoc/megadoc.svg)](https://travis-ci.org/megadoc/megadoc) [![Coverage Status](https://coveralls.io/repos/github/tinydoc/tinydoc/badge.svg?branch=master)](https://coveralls.io/github/tinydoc/tinydoc?branch=master)
 
 Megadoc is a documentation generator that is able to scan and analyze documentation found in different sources and present them in a coherent UI.
-Example sources include source-files like JavaScript or Lua modules, Markdown 
+Example sources include source-files like JavaScript or Lua modules, Markdown
 documents, and Ruby on Rails APIs.
 
 ## Motivation
@@ -14,11 +14,11 @@ documents, and Ruby on Rails APIs.
 
 ## Getting started
 
-See the [/doc/usage/README.md usage]() guide to set up Megadoc for your project.
+See the [/doc/usage/README.md usage](./doc/usage/README.md) guide to set up Megadoc for your project.
 
 ## Hacking
 
-See the [/doc/dev/README.md Developer's Handbook]() for extending megadoc.
+See the [/doc/dev/README.md Developer's Handbook](./doc/dev/README.md) for extending megadoc.
 
 ### UI tests
 
