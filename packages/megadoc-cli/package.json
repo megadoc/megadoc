@@ -1,6 +1,6 @@
 {
   "name": "megadoc-cli",
-  "version": "7.1.1",
+  "version": "7.2.0",
   "main": "bin/megadoc.js",
   "bin": {
     "megadoc": "bin/megadoc.js",
@@ -27,9 +27,9 @@
     "megadoc-html-live-server": "^7.1.0"
   },
   "devDependencies": {
-    "megadoc-compiler": "^7.1.1",
-    "megadoc-html-dev-server": "^7.1.1",
-    "megadoc-html-live-server": "^7.1.0",
-    "megadoc-html-serializer": "^7.1.1"
+    "megadoc-compiler": "^7.2.0",
+    "megadoc-html-dev-server": "^7.2.0",
+    "megadoc-html-live-server": "^7.2.0",
+    "megadoc-html-serializer": "^7.2.0"
   }
 }

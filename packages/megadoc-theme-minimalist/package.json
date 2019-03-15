@@ -1,6 +1,6 @@
 {
   "name": "megadoc-theme-minimalist",
-  "version": "7.1.0",
+  "version": "7.2.0",
   "description": "A theme for megadoc after Qt documentation pages.",
   "main": "lib/index.js",
   "repository": {
