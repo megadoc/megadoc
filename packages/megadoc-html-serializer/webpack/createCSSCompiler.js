@@ -2,6 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ROOT = path.resolve(__dirname, '..');
+const rootDirectories = [
+  path.join(ROOT, 'node_modules'),
+  path.resolve(__dirname, '..', '..', '..', 'node_modules'),
+  '/node_modules'
+]
 
 module.exports = ({ files, outputDir, outputFileName, styleOverrides }) => ({
   output: {
@@ -15,12 +20,14 @@ module.exports = ({ files, outputDir, outputFileName, styleOverrides }) => ({
 
   resolve: {
     extensions: [ '', '.less', '.css' ],
-    modulesDirectories: [ path.join(ROOT, 'node_modules') ],
+    modulesDirectories: [ 'node_modules' ],
+    root: rootDirectories,
     fallback: path.join(ROOT, 'ui/css')
   },
 
   resolveLoader: {
-    root: path.join(ROOT, 'node_modules'),
+    root: rootDirectories,
+    modulesDirectories: [ 'node_modules' ],
   },
 
   module: {

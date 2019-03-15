@@ -1,6 +1,6 @@
 const React = require('react');
 const classSet = require('utils/classSet');
-const { string, bool, node, } = React.PropTypes;
+const { string, node, } = React.PropTypes;
 
 exports.Anchor = React.createClass({
   displayName: 'HeadingAnchor.Anchor',

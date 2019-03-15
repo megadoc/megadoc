@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.2.1
+
+- fixed regression in compiling stylesheets where node modules could not be
+  resolved
+
 ## 7.2.0
 
 - html.styleSheet will now be resolved from assetRoot if it's not absolute

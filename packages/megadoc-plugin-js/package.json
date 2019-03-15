@@ -33,7 +33,7 @@
     "weakmap": "0.0.6"
   },
   "devDependencies": {
-    "async": "2.3.0",
+    "async": "2.5.0",
     "megadoc-test-utils": "^7.1.0"
   }
 }

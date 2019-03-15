@@ -1,6 +1,7 @@
 **/node_modules
 **/.cpcache
 
+/Dockerfile
 /*.log
 /.local
 /doc
