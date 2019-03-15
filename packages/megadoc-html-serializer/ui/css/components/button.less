@@ -1,0 +1,36 @@
+.btn {
+  padding: @whitespace/2 @whitespace;
+  line-height: inherit;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  font-family: inherit;
+}
+
+.schemable({
+  .btn {
+    background: @base2;
+    color: inherit;
+    transition: background 0.08s ease-out 0s;
+
+    &:hover {
+      background: @base3;
+    }
+
+    &:active, &--active {
+      background: @base3;
+      box-shadow: 0 0 0 1px darken(@base2, 5%) inset;
+      outline: none;
+    }
+
+    &:focus, &--focus {
+      box-shadow:
+        0 0 0 1px darken(@base2, 5%) inset,
+        0 0 0 2px negation(@base1, @base2) inset
+      ;
+
+      outline: none;
+    }
+  }
+});

@@ -13,7 +13,7 @@ const R = require('ramda');
 
 const run = async.seq(
   (options, done) => {
-    const runtimeConfig = extractRuntimeParameters({ configFilePath: options.configFilePath });
+    const runtimeConfig = extractRuntimeParameters({ config: options.actualConfig });
 
     done(null, Object.assign({}, options, R.pick([
       'compilerConfig',

@@ -3,10 +3,15 @@
 @import "helpers";
 @import "typography";
 @import "font";
-@import "tables";
-@import "forms";
 @import "./utils/margin";
 @import "./utils/padding";
+
+@import "./dom/anchors";
+@import "./dom/blockquotes";
+@import "./dom/forms";
+@import "./dom/headings";
+@import "./dom/lists";
+@import "./dom/tables";
 
 html {
   position: relative;
@@ -27,49 +32,6 @@ body {
           box-sizing: border-box;
 }
 
-a {
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: bold;
-
-  &:hover, &:focus {
-    text-decoration: underline;
-  }
-
-  &.active {
-    font-weight: bold;
-  }
-
-  &[target="_blank"] {
-    .mark-link-external();
-  }
-}
-
-.schemable({
-  a.mega-link {
-    &--broken {
-      color: @solarized-red;
-    }
-
-    &--active {
-      color: @accent;
-    }
-  }
-});
-
-h1, h2, h3 {
-  margin: 1.25em 0;
-  font-weight: 700;
-}
-
-h4, h5, h6 {
-  font-weight: 700;
-}
-
-ul, ol {
-  padding-left: @whitespace;
-}
-
 img {
   max-width: 100%;
 }
@@ -79,17 +41,6 @@ img {
   cursor: default;
 }
 
-
-.btn {
-  padding: @whitespace/2 @whitespace;
-  line-height: inherit;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9em;
-  letter-spacing: 1px;
-  font-family: inherit;
-}
-
 .float--right {
   float: right;
 }
@@ -97,24 +48,9 @@ img {
   float: left;
 }
 
-blockquote {
-  border-left-width: 0.5em;
-  border-left-style: solid;
-  padding-left: 1em;
-  margin: 1.5em 0;
-}
-
 .schemable({
   background-color: @base3;
   color: @base0;
-
-  a, a:visited {
-    color: @link;
-  }
-
-  a.active {
-    color: @accent;
-  }
 
   hr {
     border: none;
@@ -122,67 +58,31 @@ blockquote {
     background: none;
   }
 
-  code {
-    background-color: @code;
-  }
-
-  .btn {
-    background: @base2;
-    color: inherit;
-    transition: background 0.08s ease-out 0s;
-
-    &:hover {
-      background: @base3;
-    }
-
-    &:active, &--active {
-      background: @base3;
-      box-shadow: 0 0 0 1px darken(@base2, 5%) inset;
-      outline: none;
-    }
-
-    &:focus, &--focus {
-      box-shadow:
-        0 0 0 1px darken(@base2, 5%) inset,
-        0 0 0 2px negation(@base1, @base2) inset
-      ;
-
-      outline: none;
-    }
-  }
-
-  blockquote {
-    border-left-color: @border-color;
-    color: @base1;
-
-    &.warning, &.blockquote--warning {
-      border-color: @solarized-red;
-    }
-  }
 });
 
-@import "components/root";
 @import "components/banner";
-@import 'components/footer';
-@import "components/color-scheme-switcher";
-@import "components/collapsible";
-@import "components/doc-content";
-@import "components/two-column-layout";
-@import "components/multi-page-layout";
-@import "components/markdown-text";
-@import 'components/class-browser';
-@import "components/hljs";
+@import "components/button";
 @import "components/checkbox";
+@import "components/collapsible";
+@import "components/color-scheme-switcher";
+@import "components/doc-content";
+@import "components/hljs";
+@import "components/markdown-text";
+@import "components/multi-page-layout";
 @import "components/radio";
+@import "components/root";
 @import "components/settings";
-@import 'components/disqus';
-@import 'components/hot-item-indicator';
+@import "components/two-column-layout";
 @import 'components/anchorable-heading';
+@import 'components/class-browser';
+@import 'components/disqus';
+@import 'components/error-message';
+@import 'components/footer';
+@import 'components/hot-item-indicator';
+@import 'components/index-table';
+@import 'components/not-found';
 @import 'components/resizable';
 @import 'components/sidebar';
 @import 'components/spotlight';
-@import 'components/tooltip';
-@import 'components/error-message';
-@import 'components/index-table';
 @import 'components/sticky-container';
-@import 'components/not-found';
+@import 'components/tooltip';

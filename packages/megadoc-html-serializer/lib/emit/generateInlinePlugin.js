@@ -11,7 +11,7 @@ module.exports = function generateInlinePlugin({ config, outputPath }) {
     }`)
   }
 
-  if (outletOccupants.length === 0) {
+  if (outletOccupants.length === 0 && config.plugins.length === 0) {
     return false;
   }
 

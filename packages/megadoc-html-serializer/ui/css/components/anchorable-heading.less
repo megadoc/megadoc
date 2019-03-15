@@ -4,25 +4,25 @@
   background-clip: padding-box;
 
   &__link {
-    font-size: 14px;
+    display: inline-block;
+    font-size: inherit;
     font-weight: normal;
-    margin-left: -18px;
-    vertical-align: middle;
-    padding-right: 4px;
+    line-height: 1;
+    margin-left: -1.5rem;
     opacity: 0;
+    padding-right: 0;
+    text-align: left;
+    text-decoration: none;
+    vertical-align: baseline;
+    width: 1.5rem;
 
-    &:hover, &:active, &:focus {
-      text-decoration: none;
-      font-weight: normal;
-      outline: none;
+    &:before {
+      content: '#';
     }
 
-    &--trailing {
-      margin-left: 1em;
-      padding-right: 0.4em;
-      font-size: 1em;
-      text-decoration: none;
-      vertical-align: middle;
+    &:hover, &:active, &:focus {
+      font-weight: normal;
+      outline: none;
     }
   }
 
@@ -43,6 +43,24 @@
   .anchorable-heading__link {
     color: @base1;
     .unmark-link-external()
+  }
+
+  @keyframes animatedBackgroundColor {
+    0%   { background-color: transparent; }
+    20%  { background-color: fade(@link, 15%); }
+    60%  { background-color: fade(@link, 10%); }
+    100% { background-position: transparent; }
+  }
+
+  .anchorable-heading__anchor:target + .anchorable-heading__link + .anchorable-heading__text,
+  .anchorable-heading__anchor:target + .anchorable-heading__text {
+    animation: animatedBackgroundColor 2.5s ease-out normal;
+  }
+
+  .anchorable-heading__link {
+    &, &:visited {
+      color: lighten(@base1, 20%);
+    }
   }
 });
 

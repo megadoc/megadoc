@@ -1,6 +1,7 @@
 const Assets = require('./Assets');
 const R = require('ramda');
 const glob = require('glob');
+const path = require('path');
 const K = require('./constants');
 const ConfigUtils = require('megadoc-config-utils');
 
@@ -43,13 +44,17 @@ module.exports =  function createAssets(config, compilerConfig, compilations) {
   })
 
   const staticAssets = pluginStaticAssets.concat(config.assets).concat(themePlugin.assets);
-  const styleSheets = [ K.CORE_STYLE_ENTRY ]
+  const styleSheets = (
+    config.includeBaseStyles !== false ? [ K.CORE_STYLE_ENTRY ] : []
+  )
     .concat(pluginStyleSheets)
     .concat(themePlugin.styleSheets)
     .concat([
       config.styleSheet,
       config.stylesheet,
-    ])
+    ].filter(x => !!x).map(file => {
+      return path.resolve(compilerConfig.assetRoot, file)
+    }))
   ;
 
   const scripts = pluginScripts.concat(themePlugin.pluginScripts);

@@ -1,10 +1,9 @@
 const path = require('path');
-const { getOptionsFromPair, loadConfigFromFile } = require('megadoc-config-utils');
+const { getOptionsFromPair } = require('megadoc-config-utils');
 const { CONFIG_FILE, STYLES_FILE } = require('../lib/constants');
 const HTMLSerializer = require('../lib/HTMLSerializer');
 
-function extractRuntimeParameters({ configFilePath }) {
-  const config = loadConfigFromFile(configFilePath);
+function extractRuntimeParameters({ config }) {
   const serializer = new HTMLSerializer(config, getOptionsFromPair(config.serializer) || {});
   const { runtimeOutputPath } = serializer.config;
   const runtimeConfigFilePath = serializer.assetUtils.getOutputPath(runtimeOutputPath, CONFIG_FILE);

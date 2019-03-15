@@ -52,13 +52,11 @@ exports.Link = React.createClass({
   propTypes: {
     href: string,
     className: string,
-    trailing: bool,
   },
 
   render() {
     const className = classSet(this.props.className, {
       "anchorable-heading__link": true,
-      "anchorable-heading__link--trailing": Boolean(this.props.trailing),
       "icon": true,
       "icon-link": true,
     });

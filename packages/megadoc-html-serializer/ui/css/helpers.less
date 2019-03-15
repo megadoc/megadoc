@@ -70,16 +70,19 @@
 }
 
 .mark-link-external() {
-  margin-right: 16px;
+  margin-right: 0.75rem;
+
+  a[target="_blank"]:after {
+  }
 
   &:after {
     .iconify('\e615');
     pointer-events: none;
     display: inline-block;
-    margin-left: 3px;
+    margin-left: 0.1rem;
+    font-size: 0.75rem;
     font-weight: 100;
     color: inherit;
-    opacity: 0.5;
     position: absolute;
   }
 }

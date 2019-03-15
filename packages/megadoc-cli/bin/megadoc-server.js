@@ -39,7 +39,7 @@ console.log('[I] Generating documentation for the first time... please hold on.'
 compileAndWatch(config, Object.assign({}, runOptions, {
   purge: true,
   breakpoint: null,
-}), function(compilationError) {
+}), function(compilationError, actualConfig) {
   if (compilationError) {
     throw compilationError;
   }
@@ -63,6 +63,7 @@ compileAndWatch(config, Object.assign({}, runOptions, {
       });
 
       fd.send({
+        actualConfig,
         configFilePath,
         host,
         port,

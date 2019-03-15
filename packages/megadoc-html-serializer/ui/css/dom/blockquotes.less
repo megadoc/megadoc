@@ -1,0 +1,17 @@
+blockquote {
+  border-left-width: 0.5em;
+  border-left-style: solid;
+  padding-left: 1em;
+  margin: 1.5em 0;
+}
+
+.schemable({
+  blockquote {
+    border-left-color: @border-color;
+    color: @base1;
+
+    &.warning, &.blockquote--warning {
+      border-color: @solarized-red;
+    }
+  }
+});

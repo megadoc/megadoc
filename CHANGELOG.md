@@ -1,5 +1,14 @@
 # Changelog
 
+## 7.2.0
+
+- html.styleSheet will now be resolved from assetRoot if it's not absolute
+- added option `html.includeBaseStyles` which can be set to false to completely
+  disable megadoc's core styling
+- reorganized some of the DOM styling into `dom/` stylesheets
+- live and dev html servers will now properly use the evaluated config as used
+  by the compiler
+
 ## 7.1.0
 
 - restored support for indexing "Related Documents" via the

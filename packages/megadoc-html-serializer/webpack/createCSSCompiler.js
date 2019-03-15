@@ -15,7 +15,7 @@ module.exports = ({ files, outputDir, outputFileName, styleOverrides }) => ({
 
   resolve: {
     extensions: [ '', '.less', '.css' ],
-    modulesDirectories: [ 'node_modules' ],
+    modulesDirectories: [ path.join(ROOT, 'node_modules') ],
     fallback: path.join(ROOT, 'ui/css')
   },
 
@@ -33,7 +33,9 @@ module.exports = ({ files, outputDir, outputFileName, styleOverrides }) => ({
       {
         test: /\.less$/,
         loader: ExtractTextPlugin.extract(
-          'style', 'css?importLoaders=1!less?' + JSON.stringify({ modifyVars: styleOverrides })
+          'style', 'css?importLoaders=1!less?' + JSON.stringify({
+            modifyVars: styleOverrides
+          })
         )
       },
     ]

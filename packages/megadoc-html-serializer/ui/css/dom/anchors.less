@@ -1,0 +1,28 @@
+a {
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
+
+  &[target="_blank"] {
+    .mark-link-external();
+  }
+}
+
+.schemable({
+  a, a:visited {
+    color: @link;
+  }
+
+  a.active,
+  a.mega-link--active {
+    color: @accent;
+  }
+
+  a.mega-link--broken,
+  a.mega-link--broken:visited {
+    color: @solarized-red;
+  }
+});

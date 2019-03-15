@@ -8,7 +8,7 @@ const addWebpack = require('./addWebpack');
 const { extractRuntimeParameters } = require('megadoc-html-serializer/addon');
 
 const run = (options, done) => {
-  const runtimeConfig = extractRuntimeParameters({ configFilePath: options.configFilePath });
+  const runtimeConfig = extractRuntimeParameters({ config: options.actualConfig });
   const state = Object.assign({}, options, runtimeConfig);
 
   startServer(state, function(err) {

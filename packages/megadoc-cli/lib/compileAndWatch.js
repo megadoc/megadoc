@@ -24,7 +24,7 @@ module.exports = function(config, runOptions, callback = null) {
           });
         }
 
-        callback();
+        callback(null, compiled.config);
 
         engage(config, runOptions, compiler, compiled);
       })
