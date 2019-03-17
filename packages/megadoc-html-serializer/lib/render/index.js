@@ -14,15 +14,18 @@ module.exports = function render({ serializer, compilations }, done) {
   });
 
   const edgeGraph = {}
+  const linter = Linter.for(serializer.compilerConfig)
 
   const linkResolver = new LinkResolver(corpus, {
     ignore: serializerConfig.linkResolver.ignore,
     injectors: serializerConfig.linkResolver.injectors,
-    linter: Linter.for(serializer.compilerConfig),
+    linter,
     edgeGraph
   });
 
   const markdownRenderer = new Renderer({
+    corpus,
+    linter,
     launchExternalLinksInNewTabs: serializerConfig.launchExternalLinksInNewTabs,
     shortURLs: true,
     syntaxHighlighting: serializerConfig.syntaxHighlighting,

@@ -1,5 +1,12 @@
 # Changelog
 
+## 8.0.0
+
+- (BREAKING) Markdown links are now inspected to see if they point to a Megadoc
+  resource and are marked as internal if they do. This makes regular Markdown
+  links equivalent to custom notations like Megadoc's `[text](mega://href)` or 
+  MediaWiki's `[[text | href]]`.
+
 ## 7.2.1
 
 - fixed regression in compiling stylesheets where node modules could not be

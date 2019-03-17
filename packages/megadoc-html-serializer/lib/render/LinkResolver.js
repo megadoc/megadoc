@@ -1,6 +1,6 @@
 const assert = require('assert');
 const invariant = require('invariant');
-const URI = require('urijs');
+const generateRelativeHref = require('./generateRelativeHref');
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
 const { NoBrokenLinks } = require('../lintingRules')
 const { escapeHTML, markdownToText } = require('megadoc-markdown-utils');
@@ -92,24 +92,11 @@ LinkResolver.prototype.lookup = function(params) {
     return {
       text: text,
       title: node.summary,
-      href: Href(node, params.contextNode),
+      href: generateRelativeHref(node, params.contextNode),
       uid: node.uid,
     };
   }
 };
-
-function Href(node, contextNode) {
-  const relativeHref = URI(node.meta.href).relativeTo(contextNode.meta.href).toString();
-
-  // handle links to self or links from an entity to parent since the relative
-  // href will be empty and will be marked as a broken link when in fact it
-  // isn't, so we just use the absolute href:
-  if (relativeHref.length === 0) {
-    return LinkToSelf;
-  }
-
-  return relativeHref;
-}
 
 /**
  * Linkify all internal links found in a block of text.

@@ -41,7 +41,7 @@ function Renderer(config) {
 
   var runState, runOptions;
   var renderCode = CodeRenderer(config.syntaxHighlighting);
-  var renderLink = LinkRenderer(config);
+  var renderLink = LinkRenderer(config, () => runState.contextNode);
 
   function createRunState(options) {
     return {
