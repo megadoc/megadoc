@@ -1,7 +1,6 @@
 FROM node:8.11.3-alpine as builder
 
-ENV MEGADOC_VERSION "7.2.1" \
-    NODE_ENV="production"
+ENV NODE_ENV="production"
 
 RUN apk add --no-cache bash git jq
 
@@ -67,7 +66,7 @@ RUN npx lerna exec \
       -- \
         PACKAGE="${LERNA_PACKAGE_NAME}" ../../bin/prepublish -O build
 
-FROM alpine:3.9
+FROM alpine:3.9 as production
 
 RUN apk add --no-cache git ruby ruby-etc ruby-json ruby-webrick shadow sudo
 

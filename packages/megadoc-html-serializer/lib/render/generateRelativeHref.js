@@ -1,4 +1,5 @@
 const URI = require('urijs');
+const LinkToSelf = {};
 
 function generateRelativeHref(node, contextNode) {
   const relativeHref = URI(node.meta.href).relativeTo(contextNode.meta.href).toString();
@@ -14,3 +15,4 @@ function generateRelativeHref(node, contextNode) {
 }
 
 module.exports = generateRelativeHref
+module.exports.LinkToSelf = LinkToSelf;

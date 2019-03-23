@@ -9,6 +9,7 @@ module.exports = {
         command: path.resolve(__dirname, 'git-blamed.rb'),
         args: [ ],
         env: {
+          PATH: process.env.PATH,
           PORT: 17654
         }
       },

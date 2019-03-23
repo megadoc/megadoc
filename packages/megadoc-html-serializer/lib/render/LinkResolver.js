@@ -4,7 +4,7 @@ const generateRelativeHref = require('./generateRelativeHref');
 const dumpNodeFilePath = require('megadoc-corpus').dumpNodeFilePath;
 const { NoBrokenLinks } = require('../lintingRules')
 const { escapeHTML, markdownToText } = require('megadoc-markdown-utils');
-const LinkToSelf = {};
+const { LinkToSelf } = generateRelativeHref
 
 /**
  * @param {Corpus} corpus

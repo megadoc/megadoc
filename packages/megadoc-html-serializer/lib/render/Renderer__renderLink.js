@@ -65,7 +65,10 @@ function LinkRenderer(config, getContextNode) {
     let tagString = '<a';
 
     tagString += ` href="${normalHref}"`
-    tagString += ` class="${classList.join(' ')}"`
+
+    if (classList.length > 0) {
+      tagString += ` class="${classList.join(' ')}"`
+    }
 
     if (title) {
       tagString += ` title="${title}"`;
