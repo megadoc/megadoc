@@ -14,6 +14,7 @@ const {
 
 module.exports = function configureWebpack({
   assets,
+  assetUtils,
   additionalFiles,
   runtimeConfig,
   runtimeConfigFilePath,
@@ -30,6 +31,7 @@ module.exports = function configureWebpack({
   )
 
   const hasInlinePlugin = generateInlinePlugin({
+    assetUtils,
     config: serializerConfig,
     outputPath: inlinePluginPath,
   });

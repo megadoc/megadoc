@@ -39,6 +39,12 @@ module.exports = {
   emitFiles: true,
   emittedFileExtension: '.html',
 
+  /**
+   * @property {Array.<String>}
+   * Scripts to include as plugins. These scripts are compiled implicitly.
+   */
+  extensions: [],
+
   runtimeOutputPath: 'assets',
 
   /**

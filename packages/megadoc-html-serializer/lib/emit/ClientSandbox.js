@@ -27,27 +27,21 @@ ClientSandbox.prototype.start = function(assets, done) {
 
   fakeWindowContext.expose('webpackJsonp_megadoc', global.webpackJsonp_megadoc);
   fakeWindowContext.expose('MEGADOC_PUBLIC_MODULES', require(COMMON_BUNDLE));
+  fakeWindowContext.expose('exports', assets.pluginScripts.reduce(function(acc, filePath) {
+    return Object.assign(acc, require(filePath));
+  }, {}))
 
   this.state.megadocClient = require(MAIN_BUNDLE);
-
-  this.state.runtimePlugins = assets.pluginScripts.map(function(filePath) {
-    const pluginExports = require(filePath);
-
-    return pluginExports[Object.keys(pluginExports)[0]];
-  });
-
 
   done();
 };
 
 ClientSandbox.prototype.createClient = function(assets, corpus) {
-  // TODO DRY alert, see HTMLSerializer__write.js
-  const runtimeConfig = Object.assign(generateRuntimeConfig(this.config, assets), {
-    plugins: this.state.runtimePlugins,
-    database: corpus
-  });
-
-  return this.state.megadocClient.createClient(runtimeConfig);
+  return this.state.megadocClient.createClient(generateRuntimeConfig({
+    assets,
+    config: this.config,
+    corpus,
+  }));
 };
 
 ClientSandbox.prototype.stop = function(assets, done) {

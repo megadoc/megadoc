@@ -4,7 +4,7 @@ const DocumentTOCOutlet = require('./outlets/DocumentTOCOutlet');
 const InspectorOutlet = require('./outlets/InspectorOutlet');
 
 module.exports = {
-  name: 'megadoc-plugin-lua',
+  name: 'megadoc-plugin-markdown',
   outlets: [
     'Markdown::Document',
     'Markdown::DocumentTOC',

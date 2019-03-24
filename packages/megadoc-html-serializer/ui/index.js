@@ -6,8 +6,40 @@ const AppState = require('./AppState');
 const App = require('./screens/App');
 const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
+const registerOutlets = require('./outlets');
 
-function createMegadoc(config, { plugins }) {
+const scrapePlugins = () => {
+  return Object
+    .keys(window.exports)
+    .filter(function(key) {
+      const thing = window.exports[key]
+
+      return (
+        (
+          thing && typeof thing === 'object' && thing.plugin === true
+        ) ||
+        (
+          /megadoc-(theme|plugin)-/.test(key)
+        )
+      );
+    })
+    .map(function(key) {
+      return window.exports[key];
+    })
+    .reduce((acc, exportedObject) => {
+      // accept a list of plugins from a single file (e.g. for inline plugins)
+      const plugins = Array.isArray(exportedObject) ? exportedObject : [ exportedObject ]
+
+      // resolve es6 default imports
+      return acc.concat(
+        plugins.map(x => x.hasOwnProperty('default') ? x.default : x)
+      )
+    }, [])
+  ;
+}
+
+function createMegadoc(config) {
+  const plugins = scrapePlugins()
   const outlets = OutletManager({
     strict: true,
     verbose: false
@@ -18,9 +50,10 @@ function createMegadoc(config, { plugins }) {
     redirect: config.redirect
   });
 
-  require('./outlets')(outlets)
+  registerOutlets(outlets)
 
   plugins.forEach(function({
+    name,
     outlets: pluginOutlets = [],
     outletOccupants: pluginOutletOccupants = [],
   }) {
@@ -49,7 +82,7 @@ function createMegadoc(config, { plugins }) {
 }
 
 exports.createClient = function(config) {
-  const megadoc = createMegadoc(config, { plugins: config.plugins });
+  const megadoc = createMegadoc(config);
 
   return {
     render: function(href, done) {
@@ -74,9 +107,8 @@ exports.createClient = function(config) {
 exports.startApp = function(config, {
   startingDocumentUID,
   startingDocumentHref,
-  plugins
 }) {
-  const megadoc = createMegadoc(config, { plugins });
+  const megadoc = createMegadoc(config);
   const mountPath = MountPath(megadoc.corpus.get(startingDocumentUID), startingDocumentHref);
 
   console.log('Mount path = "%s".', mountPath);

@@ -1,29 +1,36 @@
 const fs = require('fs');
 
-module.exports = function generateInlinePlugin({ config, outputPath }) {
-  const outletOccupants = [];
+module.exports = function generateInlinePlugin({ assetUtils, config, outputPath }) {
+  const items = []
 
   if (config.notFoundComponent) {
-    outletOccupants.push(`{
-      name: 'Core::NotFound',
-      key: 'Inline::NotFound',
-      component: require("${config.notFoundComponent}")
-    }`)
+    items.push(`
+      module.exports.push({
+        name: 'not-found-plugin',
+        outletOccupants: [
+          {
+            name: 'Core::NotFound',
+            key: 'Inline::NotFound',
+            component: require("${config.notFoundComponent}")
+          }
+        ]
+      })
+    `)
   }
 
-  if (outletOccupants.length === 0 && config.plugins.length === 0) {
-    return false;
+  if (config.extensions) {
+    config.extensions.forEach(file => {
+      items.unshift(`module.exports.push(require("${assetUtils.getAssetPath(file)}"))`)
+    })
   }
 
-  const entry = `
-    exports.name = 'megadoc-plugin-inline';
-    exports.outletOccupants = [
-    ${outletOccupants.join(",\n")}
-    ]
-  `;
+  if (items.length === 0) {
+    return false
+  }
 
+  items.unshift(`module.exports = []`)
 
-  fs.writeFileSync(outputPath, entry, 'utf8');
+  fs.writeFileSync(outputPath, items.join("\n"), 'utf8');
 
   return true;
 }

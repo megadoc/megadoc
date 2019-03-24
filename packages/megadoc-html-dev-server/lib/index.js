@@ -40,6 +40,7 @@ const run = async.seq(
       else {
         serializer.state.clientSandbox = clientSandbox
         serializer.start(compilations, function(startError) {
+          const { assetUtils } = serializer
           const { assets } = serializer.state
           const { config: serializerConfig } = serializer
 
@@ -51,6 +52,7 @@ const run = async.seq(
 
               done(null, Object.assign({}, state, {
                 assets,
+                assetUtils,
                 serializerConfig,
               }))
             })
@@ -80,6 +82,7 @@ module.exports = run;
 
 function startServer({
   assets,
+  assetUtils,
   contentBase,
   host,
   port,
@@ -96,6 +99,7 @@ function startServer({
     webpackConfig: configureWebpack({
       additionalFiles: sourceFiles,
       assets,
+      assetUtils,
       runtimeConfig,
       runtimeConfigFilePath,
       runtimeOutputPath,

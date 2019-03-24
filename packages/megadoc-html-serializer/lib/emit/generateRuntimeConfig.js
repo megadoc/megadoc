@@ -1,7 +1,7 @@
 const path = require('path');
 const { VERSION } = require('../constants');
 
-module.exports = function generateRuntimeConfig(config, assets) {
+module.exports = function generateRuntimeConfig({ assets, config, corpus }) {
   return {
     collapsibleSidebar: !!config.collapsibleSidebar,
 
@@ -12,6 +12,7 @@ module.exports = function generateRuntimeConfig(config, assets) {
     banner: config.banner,
     bannerLinks: config.bannerLinks,
     customLayouts: config.customLayouts,
+    database: corpus,
 
     redirect: config.redirect,
     rewrite: config.rewrite,

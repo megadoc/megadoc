@@ -45,29 +45,9 @@
     <script>
       window.startingDocumentUID = "<%- obj.startingDocumentUID || null %>";
       window.startingDocumentHref = "<%- obj.startingDocumentHref || null %>";
-      window.MEGADOC_PLUGINS = Object.keys(exports)
-        .filter(function(key) {
-          var thing = exports[key];
-
-          return (
-            thing &&
-            typeof thing === 'object' &&
-            typeof thing.name === 'string' &&
-            (
-              thing.plugin === true ||
-              /megadoc-(theme|plugin)-/.test(thing.name)
-            )
-          );
-        })
-        .map(function(key) {
-          return exports[key];
-        })
-      ;
-
       exports['megadoc'].startApp(exports['megadoc__config'], {
         startingDocumentUID: window.startingDocumentUID,
         startingDocumentHref: window.startingDocumentHref,
-        plugins: window.MEGADOC_PLUGINS,
       });
     </script>
   </body>

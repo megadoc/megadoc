@@ -78,10 +78,11 @@ function doEmitAssets(compilation, done) {
 }
 
 function compileInlineScripts(compilation, done) {
-  const { assets, compilerConfig, serializerConfig } = compilation;
+  const { assets, assetUtils, compilerConfig, serializerConfig } = compilation;
   const inlinePluginPath = path.join(compilerConfig.tmpDir, 'megadoc-plugin-inline.source.js');
   const inlinePluginRuntimePath = path.join(compilerConfig.tmpDir, 'megadoc-plugin-inline.js');
   const hasInlineScripts = generateInlinePlugin({
+    assetUtils,
     config: serializerConfig,
     outputPath: inlinePluginPath,
   });

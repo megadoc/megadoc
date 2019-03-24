@@ -1,10 +1,11 @@
 **/node_modules
 **/.cpcache
 
-/Dockerfile
 /*.log
 /.local
+
 /doc
+/Dockerfile
 /node_modules/
-/packages/*/dist
 /packages--legacy
+/packages/*/dist

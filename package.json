@@ -13,6 +13,7 @@
     "publish": "lerna publish",
     "prepublish": "./bin/lerna-prepublish",
     "start": "NODE_PATH=packages ./packages/megadoc-cli/bin/megadoc-server.js --dev",
+    "megadoc": "NODE_PATH=packages ./packages/megadoc-cli/bin/megadoc.js",
     "test": "./bin/test && ./bin/test-ui --single-run"
   },
   "repository": {

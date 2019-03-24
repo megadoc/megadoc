@@ -10,7 +10,6 @@ if (module.hot) {
     exports['megadoc'].startApp(exports['megadoc__config'], {
       startingDocumentUID: window.startingDocumentUID,
       startingDocumentHref: window.startingDocumentHref,
-      plugins: window.MEGADOC_PLUGINS,
     });
   })
 }

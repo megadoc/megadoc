@@ -8,12 +8,13 @@ Object.defineProperty(exports, 'megadoc__config', {
   set: function() {}
 })
 
-module.hot.accept('megadoc-config-file', function() {
-  config = require('megadoc-config-file');
+if (module.hot) {
+  module.hot.accept('megadoc-config-file', function() {
+    config = require('megadoc-config-file');
 
-  exports['megadoc'].startApp(config, {
-    startingDocumentUID: window.startingDocumentUID,
-    startingDocumentHref: window.startingDocumentHref,
-    plugins: window.MEGADOC_PLUGINS,
-  });
-})
+    exports['megadoc'].startApp(config, {
+      startingDocumentUID: window.startingDocumentUID,
+      startingDocumentHref: window.startingDocumentHref,
+    });
+  })
+}

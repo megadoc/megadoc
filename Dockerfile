@@ -68,7 +68,7 @@ RUN npx lerna exec \
 
 FROM alpine:3.9 as production
 
-RUN apk add --no-cache git ruby ruby-etc ruby-json ruby-webrick shadow sudo
+RUN apk add --no-cache bash git ruby ruby-etc ruby-json ruby-webrick s6 shadow
 
 COPY --from=builder /usr/local/src /usr/local/src
 COPY --from=builder /usr/local/bin/* /usr/local/bin/

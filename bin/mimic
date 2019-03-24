@@ -50,31 +50,14 @@ create_home() {
   chown "$MIMIC_USER:$MIMIC_GROUP" "/home/$MIMIC_USER"
 }
 
-grant_docker_acces_to_donkey() {
-  if [[ -a /var/run/docker.sock ]]; then
-    local gid
-
-    gid="$(stat -c '%g' /var/run/docker.sock)" &&
-    groupadd --non-unique --gid "${gid}" "donkey-docker" &&
-    usermod -a -G "${gid}" "$MIMIC_USER"
-  fi
-}
-
-restrict_vault_password_file() {
-  if [[ -f ${ANSIBLE_VAULT_PASSWORD_FILE} ]]; then
-    chown "$MIMIC_USER":"$MIMIC_GROUP" "${ANSIBLE_VAULT_PASSWORD_FILE}" &&
-    chmod 0400 "${ANSIBLE_VAULT_PASSWORD_FILE}"
-  fi
-}
-
 # shellcheck disable=SC2015
 create_groups &&
 create_user &&
-create_home &&
-grant_docker_acces_to_donkey &&
-restrict_vault_password_file || {
+create_home || {
   echo "$0: unable to masquerade as \"$MIMIC_UID\":\"$MIMIC_PRIMARY_GID\"" 1>&2
   exit 1
 }
 
-sudo -u donkey -- "$@"
+chown -R donkey:donkey /usr/local/src/packages/megadoc-html-serializer/tmp
+
+s6-setuidgid donkey exec "$@"
