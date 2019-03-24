@@ -2,7 +2,7 @@ const React = require("react");
 const Link = require("components/Link");
 const Icon = require('components/Icon');
 const classSet = require('utils/classSet');
-const DocumentURI = require('../../DocumentURI');
+const DocumentURI = require('../../../DocumentURI');
 const getLinkHref = require('./getLinkHref');
 const { string, oneOf, arrayOf, shape, } = React.PropTypes;
 

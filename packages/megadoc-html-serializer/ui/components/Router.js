@@ -6,7 +6,7 @@ const { OutletProvider } = require('react-transclusion');
 
 const { PropTypes } = React;
 
-const App = React.createClass({
+const Router = React.createClass({
   propTypes: {
     appState: PropTypes.object.isRequired,
     config: PropTypes.object.isRequired,
@@ -145,7 +145,7 @@ const App = React.createClass({
   },
 });
 
-module.exports = App;
+module.exports = Router;
 
 /**
  * Requirements:

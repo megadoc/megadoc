@@ -1,15 +1,15 @@
 const React = require("react");
 const { findDOMNode } = require('react-dom');
 const { Outlet } = require('react-transclusion');
-const SpotlightManager = require('../components/SpotlightManager');
-const Inspector = require('../components/Inspector');
-const Layout = require('../components/Layout');
-const ScrollSpy = require('../components/ScrollSpy');
+const CorpusAPI = require('../CorpusAPI');
 const DocumentResolver = require('../DocumentResolver');
 const DocumentURI = require('../DocumentURI');
+const Inspector = require('../shared/components/Inspector');
+const Layout = require('../shared/components/Layout');
 const LayoutTemplate = require('../LayoutTemplate');
-const CorpusAPI = require('../CorpusAPI');
-const NotFound = require('./NotFound');
+const NotFound = require('../shared/components/NotFound');
+const ScrollSpy = require('../shared/components/ScrollSpy');
+const SpotlightManager = require('../shared/components/SpotlightManager');
 const { assign } = require('lodash');
 const { object, func, } = React.PropTypes;
 

@@ -4,7 +4,7 @@ const Spotlight = require('./Spotlight');
 const domContains = require('utils/domContains');
 const { KC_ESCAPE } = require('constants');
 const { bool, func, object, string, } = React.PropTypes;
-const DocumentURI = require('../DocumentURI');
+const DocumentURI = require('../../DocumentURI');
 
 const SpotlightManager = React.createClass({
   propTypes: {

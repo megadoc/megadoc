@@ -3,7 +3,7 @@ const console = require("console");
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const AppState = require('./AppState');
-const App = require('./components/App');
+const Router = require('./components/Router');
 const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
 const {
@@ -83,7 +83,7 @@ exports.createClient = function(config) {
   return {
     render: function(href, done) {
       done(null, renderToString(
-        <App
+        <Router
           config={megadoc.appConfig}
           appState={megadoc.appState}
           corpus={megadoc.corpus}
@@ -110,7 +110,7 @@ exports.startApp = function(config, {
   console.log('Mount path = "%s".', mountPath);
 
   render(
-    <App
+    <Router
       config={megadoc.appConfig}
       appState={megadoc.appState}
       corpus={megadoc.corpus}
@@ -121,10 +121,6 @@ exports.startApp = function(config, {
     document.querySelector('#__app__')
   );
 };
-
-// const megadoc = window.megadoc = createMegadoc(config);
-
-// module.exports = megadoc;
 
 function MountPath(currentDocument, startingHref) {
   if (currentDocument) {
