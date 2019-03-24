@@ -1,6 +1,6 @@
 {
   "name": "megadoc-plugin-js",
-  "version": "7.1.0",
+  "version": "8.0.0",
   "description": "megadoc plugin for JavaScript sources.",
   "main": "lib/index.js",
   "repository": {
