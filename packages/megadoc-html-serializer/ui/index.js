@@ -3,10 +3,13 @@ const console = require("console");
 const { render } = require('react-dom');
 const { renderToString } = require('react-dom/server');
 const AppState = require('./AppState');
-const App = require('./screens/App');
+const App = require('./components/App');
 const CorpusAPI = require('./CorpusAPI');
 const { OutletManager } = require('react-transclusion');
-const registerOutlets = require('./outlets');
+const {
+  outlets: coreOutlets,
+  outletOccupants: coreOutletOccupants
+} = require('./outlets');
 
 const scrapePlugins = () => {
   return Object
@@ -50,28 +53,21 @@ function createMegadoc(config) {
     redirect: config.redirect
   });
 
-  registerOutlets(outlets)
-
-  plugins.forEach(function({
-    name,
-    outlets: pluginOutlets = [],
-    outletOccupants: pluginOutletOccupants = [],
-  }) {
-    pluginOutlets.forEach(function(outletSpec) {
-      if (typeof outletSpec === 'string') {
-        outlets.define(outletSpec)
-      }
-      else {
-        // TODO ?
-      }
+  plugins
+    .reduce((acc, x) => acc.concat(x.outlets || []), coreOutlets)
+    .forEach(outlet => {
+      outlets.define(outlet)
     })
+  ;
 
-    pluginOutletOccupants.forEach(function(occupantSpec) {
-      outlets.add(occupantSpec.name, {
-        component: occupantSpec.component,
+  plugins
+    .reduce((acc, x) => acc.concat(x.outletOccupants || []), coreOutletOccupants)
+    .forEach(occupant => {
+      outlets.add(occupant.name, {
+        component: occupant.component,
       })
     })
-  });
+  ;
 
   return {
     appConfig: config,
