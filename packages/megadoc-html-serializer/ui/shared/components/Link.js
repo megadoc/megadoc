@@ -1,32 +1,36 @@
 const React = require('react');
 const classSet = require('utils/classSet');
 const resolvePathname = require('utils/resolvePathname');
-const { string, func, node, bool, shape, } = React.PropTypes;
+const { PropTypes } = React;
 const { findDOMNode } = require('react-dom');
 
 const Link = React.createClass({
   contextTypes: {
-    navigate: func.isRequired,
-    location: shape({
-      pathname: string.isRequired,
+    corpus: PropTypes.object,
+    navigate: PropTypes.func.isRequired,
+    location: PropTypes.shape({
+      pathname: PropTypes.string.isRequired,
     }).isRequired,
   },
 
   propTypes: {
-    to: shape({
-      meta: shape({
-        href: string.isRequired
-      }).isRequired
-    }),
-    href: string,
-    id: string,
-    name: string,
-    title: string,
-    onClick: func,
-    className: string,
-    children: node,
-    active: bool,
-    activePattern: string,
+    to: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.shape({
+        meta: PropTypes.shape({
+          href: PropTypes.string.isRequired
+        }).isRequired
+      })
+    ]),
+    href: PropTypes.string,
+    id: PropTypes.string,
+    name: PropTypes.string,
+    title: PropTypes.string,
+    onClick: PropTypes.func,
+    className: PropTypes.string,
+    children: PropTypes.node,
+    active: PropTypes.bool,
+    activePattern: PropTypes.string,
   },
 
   render() {
@@ -95,23 +99,31 @@ const Link = React.createClass({
       return this.props.href;
     }
     else if (typeof this.props.to === 'string') {
-      return this.props.to;
-    }
-    else if (this.props.to && typeof this.props.to === 'object') {
-      const { href, anchor } = this.props.to.meta;
+      const node = this.resolveNode(this.props.to)
 
-      if (this.props.to.type === 'DocumentEntity') {
-        return href;
+      if (node) {
+        return node.meta.href
       }
       else {
-        return href + '#' + anchor;
+        return null;
       }
+    }
+    else if (this.props.to && typeof this.props.to === 'object') {
+      return this.props.to.meta.href
     }
   },
 
   getRelativeHref(href) {
     return resolvePathname(href, this.context.location.pathname);
   },
+
+  resolveNode(id) {
+    const { corpus } = this.context;
+
+    return [ corpus.getByURI, corpus.getByFilePath, corpus.get ].reduce(function(found, f) {
+      return found || f(id)
+    }, null)
+  }
 });
 
 
