@@ -98,7 +98,11 @@ const Root = React.createClass({
     }
 
     return (
-      <Outlet name="Core::LayoutWrapper" forwardChildren elementProps={this.props}>
+      <Outlet
+        name="Core::LayoutWrapper"
+        forwardChildren
+        elementProps={Object.assign({ pathname, scope, template }, this.props)}
+      >
         <Outlet name="Core::Meta" />
 
         {config.tooltipPreviews && (
