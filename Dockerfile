@@ -48,7 +48,7 @@ COPY . /usr/local/src
 
 RUN npx lerna exec \
       --stream \
-      --concurrency 1 \
+      --concurrency 5 \
       --scope=megadoc-cli \
       --scope=megadoc-compiler \
       --scope=megadoc-git-stats \

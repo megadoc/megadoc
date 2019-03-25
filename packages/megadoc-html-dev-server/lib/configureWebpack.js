@@ -164,11 +164,6 @@ function addReactHotLoader(loaders) {
 function addInlineCSSLoader({ assets }, loaders) {
   return loaders.concat([
     {
-      test: /\.(png|woff|woff2|eot|ttf|svg)$/,
-      loader: 'url-loader?limit=100000'
-    },
-
-    {
       test: /\.less$/,
       loaders: [
         'style-loader',

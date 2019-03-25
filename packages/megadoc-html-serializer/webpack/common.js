@@ -26,7 +26,11 @@ var baseConfig = {
   },
 
   resolveLoader: {
-    root: path.join(root, 'node_modules'),
+    root: [
+      path.join(root, 'node_modules'),
+      // hoisted modules:
+      path.resolve(root, '..', '..', 'node_modules'),
+    ],
   },
 
   node: {
@@ -38,6 +42,10 @@ var baseConfig = {
 
     loaders: [
       {
+        test: /\.(png|woff|woff2|eot|ttf|svg)$/,
+        loader: 'url-loader?limit=1048576'
+      },
+      {
         id: 'js-loaders',
         test: /\.js$/,
         exclude: [
@@ -45,15 +53,14 @@ var baseConfig = {
           /ui\/vendor/,
           /node_modules/
         ],
-        loaders: [
-          'babel-loader?' + JSON.stringify({
-            babelrc: false,
-            presets: [
-              require.resolve('babel-preset-es2015'),
-              require.resolve('babel-preset-react'),
-            ]
-          })
-        ],
+        loader: require.resolve('babel-loader'),
+        query:{
+          babelrc: false,
+          presets: [
+            require.resolve('babel-preset-es2015'),
+            require.resolve('babel-preset-react'),
+          ]
+        }
       },
     ]
   }
