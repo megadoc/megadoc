@@ -1,6 +1,7 @@
 const React = require("react");
 const HighlightedText = require('components/HighlightedText');
 const Disqus = require('components/Disqus');
+const classSet = require('classnames')
 
 const { shape, string, object, oneOfType, bool, } = React.PropTypes;
 
@@ -23,7 +24,7 @@ const Article = React.createClass({
     const article = this.props.documentNode.properties;
 
     return (
-      <div className={this.props.className}>
+      <div className={classSet(this.props.className, this.props.documentNode.path)}>
         <HighlightedText>{article.source}</HighlightedText>
 
         {this.context.config.disqus && (
