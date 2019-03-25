@@ -1,5 +1,6 @@
 const React = require("react");
 const classSet = require('utils/classSet');
+const ScrollFix = require('components/ScrollFix');
 const Banner = require('./Banner');
 const LayoutScreen = require('./Screen');
 const scrollToTop = require('utils/scrollToTop');
@@ -46,12 +47,6 @@ const Layout = React.createClass({
     };
   },
 
-  componentWillUpdate(nextProps) {
-    if (get(nextProps, 'scope.documentNode.uid') !== get(this.props, 'scope.documentNode.uid')) {
-      scrollToTop();
-    }
-  },
-
   render() {
     const { template, config } = this.props;
     const className = classSet({
@@ -66,6 +61,8 @@ const Layout = React.createClass({
 
     return (
       <div className={className}>
+        <ScrollFix scope={this.props.scope} />
+
         {config.banner && (
           <Banner
             links={config.bannerLinks || []}
