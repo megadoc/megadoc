@@ -22,9 +22,15 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
   const corpus = CorpusTree(shallowCorpus);
   const { pathMap, filePathMap, hrefMap } = shallowCorpus.reduce((map, { uid }) => {
     const node = getByUID(uid);
+    const href = getHref(node)
 
     map.pathMap[node.path] = node;
-    map.hrefMap[getHref(node)] = node;
+
+    if (!map.hrefMap[href]) {
+      map.hrefMap[href] = []
+    }
+
+    map.hrefMap[href].push(node);
 
     if (node.type !== 'DocumentEntity') {
       map.filePathMap[node.filePath] = node;
@@ -75,7 +81,9 @@ function CorpusAPI({ database: shallowCorpus, redirect }) {
     }
 
     if (hrefMap.hasOwnProperty(uri)) {
-      return hrefMap[uri];
+      // prefer Document nodes first if nodes are competing for a url (like
+      // /index.html)
+      return hrefMap[uri].sort(a => a.type === 'Document' ? -1 : 1)[0];
     }
 
     // Ok, if we still didn't match any node but there's an anchor in the URL
