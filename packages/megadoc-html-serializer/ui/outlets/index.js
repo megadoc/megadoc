@@ -9,6 +9,7 @@ exports.outlets = [
   'Core::Meta',
   'Core::NavBar',
   'Core::NotFound',
+  'Core::Root',
   'Core::Sidebar',
   'Core::SidebarHeader',
   'Core::SidebarHeaderLink',

@@ -8,6 +8,7 @@ const Link = React.createClass({
   contextTypes: {
     corpus: PropTypes.object,
     navigate: PropTypes.func.isRequired,
+    resolveHref: PropTypes.func,
     location: PropTypes.shape({
       pathname: PropTypes.string.isRequired,
     }).isRequired,
@@ -95,6 +96,23 @@ const Link = React.createClass({
   },
 
   getHref() {
+    if (this.context.resolveHref) {
+      let targetNode
+
+      if (this.props.to && typeof this.props.to === 'object') {
+        targetNode = this.props.to
+      }
+      else if (typeof this.props.to === 'string') {
+        targetNode = this.resolveNode(this.props.to)
+      }
+
+      const href = this.context.resolveHref(this.props, targetNode)
+
+      if (href !== 42) {
+        return href
+      }
+    }
+
     if (this.props.href) {
       return this.props.href;
     }

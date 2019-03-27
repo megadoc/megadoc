@@ -63,9 +63,7 @@ function createMegadoc(config) {
   plugins
     .reduce((acc, x) => acc.concat(x.outletOccupants || []), coreOutletOccupants)
     .forEach(occupant => {
-      outlets.add(occupant.name, {
-        component: occupant.component,
-      })
+      outlets.add(occupant.name, occupant)
     })
   ;
 

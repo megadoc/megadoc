@@ -2,7 +2,7 @@ const React = require('react');
 const Root = require('./Root');
 const DocumentURI = require('../DocumentURI');
 const DocumentResolver = require('../DocumentResolver');
-const { OutletProvider } = require('react-transclusion');
+const { OutletProvider, Outlet } = require('react-transclusion');
 
 const { PropTypes } = React;
 
@@ -106,25 +106,31 @@ const Router = React.createClass({
 
   render() {
     const { location } = this.props;
+    const elementProps = {
+      onNavigate: this.navigate,
+      onTransitionTo: this.locationAPI.transitionTo,
+      onRefreshScroll: this.locationAPI.refreshScroll,
+      config: this.props.config,
+      corpus: this.props.corpus,
+      appState: this.props.appState,
+      documentURI: this.documentURI,
+      documentResolver: this.documentResolver,
+      location: {
+        pathname: this.documentURI.normalize(location.pathname),
+        hash: this.state.hashDisabled ? '' : location.hash,
+        origin: location.origin,
+        protocol: location.protocol,
+      }
+    }
 
     return (
       <OutletProvider outletManager={this.props.outletManager}>
-        <Root
-          onNavigate={this.navigate}
-          onTransitionTo={this.locationAPI.transitionTo}
-          onRefreshScroll={this.locationAPI.refreshScroll}
-          config={this.props.config}
-          corpus={this.props.corpus}
-          appState={this.props.appState}
-          documentURI={this.documentURI}
-          documentResolver={this.documentResolver}
-          location={{
-            pathname: this.documentURI.normalize(location.pathname),
-            hash: this.state.hashDisabled ? '' : location.hash,
-            origin: location.origin,
-            protocol: location.protocol,
-          }}
-        />
+        <Outlet
+          name="Core::Root"
+          elementProps={elementProps}
+        >
+          <Root {...elementProps} />
+        </Outlet>
       </OutletProvider>
     );
   },
